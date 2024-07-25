@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import static android.view.Gravity.CENTER_VERTICAL;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -15,37 +16,34 @@ import java.util.List;
 
 import kore.botssdk.R;
 
-public class MiniTableRowItemAdapter extends RecyclerView.Adapter<MiniTableRowItemAdapter.ViewHolder> {
+public class TableHeaderAdapter extends RecyclerView.Adapter<TableHeaderAdapter.ViewHolder> {
+
     private final String RIGHT = "right";
     private final String CENTER = "center";
-    private List<Object> rowItems;
-    private List<List<String>> headers;
+    private final List<List<String>> tableItems;
     private boolean isEnabled;
     private final LayoutInflater layoutInflater;
 
-    public MiniTableRowItemAdapter(Context context, List<Object> rowItems, List<List<String>> headers) {
+    public TableHeaderAdapter(Context context, List<List<String>> tableItems, boolean isEnabled) {
         layoutInflater = LayoutInflater.from(context);
-        this.rowItems = rowItems;
-        this.headers = headers;
+        this.isEnabled = isEnabled;
+        this.tableItems = tableItems;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(layoutInflater.inflate(R.layout.mini_table_item, parent, false));
+        return new ViewHolder(layoutInflater.inflate(R.layout.table_row_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Object rowItem = getItem(position);
-        if (rowItem == null) return;
-        List<String> cols = headers.get(position);
-
-        holder.value.setText((CharSequence) rowItem);
-        holder.value.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-
-        if (cols.size() > 1) {
-            switch (cols.get(1)) {
+        List<String> item = getItem(position);
+        if (item == null) return;
+        holder.value.setText(item.get(0));
+        holder.value.setGravity(Gravity.START | CENTER_VERTICAL);
+        if (item.size() > 1) {
+            switch (item.get(1)) {
                 case CENTER:
                     holder.value.setGravity(Gravity.CENTER);
                     break;
@@ -54,23 +52,15 @@ public class MiniTableRowItemAdapter extends RecyclerView.Adapter<MiniTableRowIt
                     break;
             }
         }
-
     }
 
-    private Object getItem(int position) {
-        return rowItems != null ? rowItems.get(position) : null;
+    private List<String> getItem(int position) {
+        return tableItems != null ? tableItems.get(position) : null;
     }
 
     @Override
     public int getItemCount() {
-        return rowItems.size();
-    }
-
-    public void populateData(List<Object> rowItems, List<List<String>> headers, boolean isEnabled) {
-        this.rowItems = rowItems;
-        this.headers = headers;
-        this.isEnabled = isEnabled;
-        notifyDataSetChanged();
+        return tableItems == null ? 0 : tableItems.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

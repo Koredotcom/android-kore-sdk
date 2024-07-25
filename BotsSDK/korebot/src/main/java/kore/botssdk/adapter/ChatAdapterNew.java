@@ -21,6 +21,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.view.tableview.TableResponsiveView;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
 import kore.botssdk.viewholders.BarChartTemplateHolder;
 import kore.botssdk.viewholders.BaseViewHolderNew;
@@ -38,6 +39,7 @@ import kore.botssdk.viewholders.PieChartTemplateHolder;
 import kore.botssdk.viewholders.RequestTextTemplateHolderNew;
 import kore.botssdk.viewholders.ResponseTextTemplateHolderNew;
 import kore.botssdk.viewholders.TableListTemplateHolder;
+import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
 
 public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
 
@@ -90,6 +92,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
     public static final int TEMPLATE_CARD = 13;
     public static final int TEMPLATE_BAR_CHART = 14;
     public static final int TEMPLATE_MINI_TABLE = 15;
+    public static final int TEMPLATE_TABLE_RESPONSIVE = 16;
+    public static final int TEMPLATE_TABLE = 17;
 
     public ChatAdapterNew(Context context) {
         super();
@@ -129,6 +133,9 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                     case BotResponse.TEMPLATE_TYPE_PIECHART:
                         return TEMPLATE_PIE_CHART;
                     case BotResponse.TEMPLATE_TYPE_TABLE:
+                        if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
+                            return TEMPLATE_TABLE_RESPONSIVE;
+                        }
                         break;
                     case BotResponse.CUSTOM_TABLE_TEMPLATE:
                         break;
@@ -222,6 +229,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                 return new BarChartTemplateHolder(ownLayoutInflater.inflate(R.layout.template_bar_chart, parent, false));
             case TEMPLATE_MINI_TABLE:
                 return new MiniTableTemplateHolder(ownLayoutInflater.inflate(R.layout.template_mini_table, parent, false));
+            case TEMPLATE_TABLE_RESPONSIVE:
+                return new TableResponsiveTemplateHolder(ownLayoutInflater.inflate(R.layout.template_table_responsive, parent, false));
             default:
                 return new ResponseTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.template_bubble_text, parent, false));
         }

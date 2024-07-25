@@ -14,14 +14,14 @@ import java.util.List;
 
 import kore.botssdk.R;
 
-public class MiniTableRowAdapter extends RecyclerView.Adapter<MiniTableRowAdapter.ViewHolder> {
-    private List<List<Object>> rowItems;
-    private List<List<String>> headers;
-    private boolean isEnabled;
+public class TableRowAdapter extends RecyclerView.Adapter<TableRowAdapter.ViewHolder> {
+    private final List<List<String>> rowItems;
+    private final List<List<String>> headers;
+    private final boolean isEnabled;
     private final LayoutInflater layoutInflater;
 
 
-    public MiniTableRowAdapter(Context context, List<List<Object>> rowItems, List<List<String>> headers, boolean isEnabled) {
+    public TableRowAdapter(Context context, List<List<String>> rowItems, List<List<String>> headers, boolean isEnabled) {
         layoutInflater = LayoutInflater.from(context);
         this.rowItems = rowItems;
         this.headers = headers;
@@ -31,12 +31,12 @@ public class MiniTableRowAdapter extends RecyclerView.Adapter<MiniTableRowAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(layoutInflater.inflate(R.layout.mini_table_row, parent, false));
+        return new ViewHolder(layoutInflater.inflate(R.layout.table_row, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        List<Object> rowModel = getItem(position);
+        List<String> rowModel = getItem(position);
         if (rowModel == null) return;
         holder.rvContent.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.table_data_row_odd));
 
@@ -45,10 +45,10 @@ public class MiniTableRowAdapter extends RecyclerView.Adapter<MiniTableRowAdapte
         }
         holder.rvContent.setLayoutManager(new GridLayoutManager(holder.itemView.getContext(), rowItems.get(position).size()));
 
-        holder.rvContent.setAdapter(new MiniTableRowItemAdapter(holder.itemView.getContext(), rowItems.get(position), headers));
+        holder.rvContent.setAdapter(new TableRowItemAdapter(holder.itemView.getContext(), rowItems.get(position), headers));
     }
 
-    private List<Object> getItem(int position) {
+    private List<String> getItem(int position) {
         return rowItems != null ? rowItems.get(position) : null;
     }
 

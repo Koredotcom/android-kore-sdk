@@ -42,8 +42,8 @@ public class MiniTablePagerAdapter extends RecyclerView.Adapter<MiniTablePagerAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotMiniTableModel miniTableModel = getItem(position);
         if (miniTableModel == null) return;
-        MiniTableHeaderAdapter headerAdapter = new MiniTableHeaderAdapter(holder.itemView.getContext(), miniTableModel.getPrimary(), isEnabled);
-        MiniTableRowAdapter itemAdapter = new MiniTableRowAdapter(holder.itemView.getContext(), miniTableModel.getAdditional(), miniTableModel.getPrimary(), isEnabled);
+        TableHeaderAdapter headerAdapter = new TableHeaderAdapter(holder.itemView.getContext(), miniTableModel.getPrimary(), isEnabled);
+        TableRowAdapter itemAdapter = new TableRowAdapter(holder.itemView.getContext(), miniTableModel.getAdditional(), miniTableModel.getPrimary(), isEnabled);
         holder.rvHeader.setLayoutManager(new GridLayoutManager(holder.itemView.getContext(), miniTableModel.getPrimary().size()));
         holder.rvContent.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext(), LinearLayoutManager.VERTICAL, false));
         holder.rvHeader.setAdapter(headerAdapter);
