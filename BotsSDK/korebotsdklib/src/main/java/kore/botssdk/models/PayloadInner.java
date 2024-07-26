@@ -35,12 +35,19 @@ public class PayloadInner {
         this.text = text;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    private String label;
     private String text;
     private String pie_type;
     private String Auto_adjust_X_axis;
     private List<String> X_axis;
     private String direction;
     private boolean stacked;
+
+    private String carousel_type;
     private String layout;
     private Skill skill;
     private String composeText;
@@ -473,6 +480,7 @@ public class PayloadInner {
 
     private ArrayList<BotListWidgetModel> listWidgetModels;
     private ArrayList<BotCarouselModel> carouselElements;
+    private ArrayList<BotCarouselStackModel> carouselStackElements;
     private ArrayList<ContactTemplateModel> contactTemplateModels;
     private ArrayList<CardTemplateModel> cardTemplateModels;
     private ArrayList<BotListModel> listElements;
@@ -680,6 +688,10 @@ public class PayloadInner {
         return template_type;
     }
 
+    public String getCarousel_type() {
+        return carousel_type;
+    }
+
     public String getText() {
         return text;
     }
@@ -706,6 +718,10 @@ public class PayloadInner {
 
     public ArrayList<BotCarouselModel> getCarouselElements() {
         return carouselElements;
+    }
+
+    public ArrayList<BotCarouselStackModel> getCarouselStackElements() {
+        return carouselStackElements;
     }
 
     public ArrayList<BotListModel> getListElements() {
@@ -773,9 +789,15 @@ public class PayloadInner {
                 elementsAsString = gson.toJson(elements);
                 if (!BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equals(template_type)) {
                     if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
-                        Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
-                        }.getType();
-                        carouselElements = gson.fromJson(elementsAsString, carouselType);
+                        if (carousel_type != null && carousel_type.equals(BotResponse.STACKED)) {
+                            Type carouselType = new TypeToken<ArrayList<BotCarouselStackModel>>() {
+                            }.getType();
+                            carouselStackElements = gson.fromJson(elementsAsString, carouselType);
+                        } else {
+                            Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
+                            }.getType();
+                            carouselElements = gson.fromJson(elementsAsString, carouselType);
+                        }
                     } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
                         Type carouselType = new TypeToken<ArrayList<BotCarouselModel>>() {
                         }.getType();

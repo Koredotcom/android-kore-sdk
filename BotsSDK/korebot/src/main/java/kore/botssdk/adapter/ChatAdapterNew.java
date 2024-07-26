@@ -28,7 +28,10 @@ import kore.botssdk.viewholders.BaseViewHolderNew;
 import kore.botssdk.viewholders.ButtonLinkTemplateHolder;
 import kore.botssdk.viewholders.ButtonTemplateHolder;
 import kore.botssdk.viewholders.CardTemplateHolder;
+import kore.botssdk.viewholders.CarouselStackedTemplateHolder;
 import kore.botssdk.viewholders.CarouselTemplateHolder;
+import kore.botssdk.viewholders.ClockTemplateHolder;
+import kore.botssdk.viewholders.DropDownTemplateHolder;
 import kore.botssdk.viewholders.FormTemplateHolder;
 import kore.botssdk.viewholders.LineChartTemplateHolder;
 import kore.botssdk.viewholders.ListTemplateHolder;
@@ -82,18 +85,21 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
     public static final int TEMPLATE_BUTTON_LINK = 3;
     public static final int TEMPLATE_LIST_VIEW = 4;
     public static final int TEMPLATE_CAROUSEL = 5;
-    public static final int TEMPLATE_LIST = 6;
-    public static final int TEMPLATE_PIE_CHART = 7;
-    public static final int TEMPLATE_ADVANCED_LIST_TEMPLATE = 8;
-    public static final int TEMPLATE_LINE_CHART = 9;
-    public static final int TEMPLATE_FORM = 10;
-    public static final int TEMPLATE_TABLE_LIST = 11;
-    public static final int TEMPLATE_LIST_WIDGET_2 = 12;
-    public static final int TEMPLATE_CARD = 13;
-    public static final int TEMPLATE_BAR_CHART = 14;
-    public static final int TEMPLATE_MINI_TABLE = 15;
-    public static final int TEMPLATE_TABLE_RESPONSIVE = 16;
-    public static final int TEMPLATE_TABLE = 17;
+    public static final int TEMPLATE_CAROUSEL_STACKED = 6;
+    public static final int TEMPLATE_LIST = 7;
+    public static final int TEMPLATE_PIE_CHART = 8;
+    public static final int TEMPLATE_ADVANCED_LIST_TEMPLATE = 9;
+    public static final int TEMPLATE_LINE_CHART = 10;
+    public static final int TEMPLATE_FORM = 11;
+    public static final int TEMPLATE_TABLE_LIST = 12;
+    public static final int TEMPLATE_LIST_WIDGET_2 = 13;
+    public static final int TEMPLATE_CARD = 14;
+    public static final int TEMPLATE_BAR_CHART = 15;
+    public static final int TEMPLATE_MINI_TABLE = 16;
+    public static final int TEMPLATE_TABLE_RESPONSIVE = 17;
+    public static final int TEMPLATE_TABLE = 18;
+    public static final int TEMPLATE_CLOCK = 19;
+    public static final int TEMPLATE_DROP_DOWN = 20;
 
     public ChatAdapterNew(Context context) {
         super();
@@ -127,6 +133,9 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                     case BotResponse.TEMPLATE_TYPE_QUICK_REPLIES:
                         return TEMPLATE_BUBBLE_RESPONSE;
                     case BotResponse.TEMPLATE_TYPE_CAROUSEL:
+                        if (payInner.getCarousel_type() != null && payInner.getCarousel_type().equals(BotResponse.STACKED)) {
+                            return TEMPLATE_CAROUSEL_STACKED;
+                        }
                         return TEMPLATE_CAROUSEL;
                     case BotResponse.TEMPLATE_TYPE_LIST:
                         return TEMPLATE_LIST;
@@ -139,6 +148,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                         break;
                     case BotResponse.CUSTOM_TABLE_TEMPLATE:
                         break;
+                    case BotResponse.TEMPLATE_TYPE_CLOCK:
+                        return TEMPLATE_CLOCK;
                     case BotResponse.TEMPLATE_TYPE_MINITABLE:
                         return TEMPLATE_MINI_TABLE;
                     case BotResponse.TEMPLATE_TYPE_MULTI_SELECT:
@@ -162,7 +173,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                     case BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2:
                         return TEMPLATE_LIST_WIDGET_2;
                     case BotResponse.TEMPLATE_DROPDOWN:
-                        break;
+                        return TEMPLATE_DROP_DOWN;
                     case BotResponse.CARD_TEMPLATE:
                         return TEMPLATE_CARD;
                     default:
@@ -211,6 +222,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                 return new ListTemplateHolder(ownLayoutInflater.inflate(R.layout.template_list, parent, false));
             case TEMPLATE_CAROUSEL:
                 return new CarouselTemplateHolder(ownLayoutInflater.inflate(R.layout.template_carousel, parent, false));
+            case TEMPLATE_CAROUSEL_STACKED:
+                return new CarouselStackedTemplateHolder(ownLayoutInflater.inflate(R.layout.template_carousel_stacked, parent, false));
             case TEMPLATE_PIE_CHART:
                 return new PieChartTemplateHolder(ownLayoutInflater.inflate(R.layout.template_pie_chart, parent, false));
             case TEMPLATE_ADVANCED_LIST_TEMPLATE:
@@ -231,6 +244,10 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                 return new MiniTableTemplateHolder(ownLayoutInflater.inflate(R.layout.template_mini_table, parent, false));
             case TEMPLATE_TABLE_RESPONSIVE:
                 return new TableResponsiveTemplateHolder(ownLayoutInflater.inflate(R.layout.template_table_responsive, parent, false));
+            case TEMPLATE_CLOCK:
+                return new ClockTemplateHolder(ownLayoutInflater.inflate(R.layout.template_clock, parent, false));
+            case TEMPLATE_DROP_DOWN:
+                return new DropDownTemplateHolder(ownLayoutInflater.inflate(R.layout.template_dropdown, parent, false));
             default:
                 return new ResponseTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.template_bubble_text, parent, false));
         }

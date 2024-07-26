@@ -10,9 +10,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 import kore.botssdk.R;
 import kore.botssdk.adapter.TableHeaderAdapter;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotTableDataModel;
 import kore.botssdk.models.PayloadInner;
 
 public class TableTemplateHolder extends BaseViewHolderNew {
@@ -28,8 +32,7 @@ public class TableTemplateHolder extends BaseViewHolderNew {
         rvTableView = itemView.findViewById(R.id.rvTableView);
         rvTableViewHeader = itemView.findViewById(R.id.rvTableViewHeader);
         rvTableView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-
-//        rvTableView.addItemDecoration(DividerItemDecoration(itemView.getContext(), LinearLayoutManager.VERTICAL))
+        rvTableView.addItemDecoration(new VerticalSpaceItemDecoration(LinearLayoutManager.VERTICAL));
 
     }
 
@@ -37,8 +40,9 @@ public class TableTemplateHolder extends BaseViewHolderNew {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        //        rvTableView.setAdapter(new TableTemplateAdapter(itemView.getContext(), payload[BotResponseConstants.KEY_ELEMENTS] as List<Map<String, *>>, cols)
+        List<BotTableDataModel> rows = payloadInner.getTable_elements_data();
         rvTableViewHeader.setLayoutManager(new GridLayoutManager(itemView.getContext(), payloadInner.getColumns().size()));
         rvTableViewHeader.setAdapter(new TableHeaderAdapter(itemView.getContext(), payloadInner.getColumns(), isLastItem()));
+//        rvTableView.setAdapter(new TableRowAdapter(itemView.getContext(), rows, payloadInner.getColumns(), isLastItem()));
     }
 }
