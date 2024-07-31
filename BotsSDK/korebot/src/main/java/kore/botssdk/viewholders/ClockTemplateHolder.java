@@ -7,8 +7,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSeekBar;
 
+import java.util.Map;
+
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotResponse;
 
 public class ClockTemplateHolder extends BaseViewHolderNew {
     private final String MERIDIAN_AM = "AM";
@@ -19,6 +22,8 @@ public class ClockTemplateHolder extends BaseViewHolderNew {
     private final TextView minutesText;
     private final TextView amPm;
     private final TextView confirm;
+
+    private String msgId;
 
     public ClockTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
@@ -32,9 +37,11 @@ public class ClockTemplateHolder extends BaseViewHolderNew {
 
     @Override
     public void bind(BaseBotMessage baseBotMessage) {
+        msgId = ((BotResponse) baseBotMessage).getMessageId();
         setSeekbarListener(seekbarHours, seekbarMinutes);
         setSeekbarListener(seekbarMinutes, seekbarHours);
-        String selectedTime = itemView.getContext().getString(R.string.default_click_time);
+        Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
+        String selectedTime = contentState != null ? (String) contentState.get(BotResponse.SELECTED_TIME) : itemView.getContext().getString(R.string.default_click_time);
         if (!selectedTime.isEmpty()) {
             String[] currentTime = selectedTime.split(":");
             hoursText.setText(currentTime[0]);
@@ -98,11 +105,8 @@ public class ClockTemplateHolder extends BaseViewHolderNew {
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (!isLastItem()) return;
-//                onClockChange(
-//                                id,
-//                                "${binding.hoursText.text}:${binding.minutesText.text}:${binding.amPm.text}",
-//                                BotResponseConstants.SELECTED_TIME
-//                        )
+                String selTime = hoursText.getText().toString() + ":" + minutesText.getText().toString() + ":" + amPm.getText().toString();
+                contentStateListener.onSelect(msgId, selTime, BotResponse.SELECTED_TIME);
             }
         });
     }

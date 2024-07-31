@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatRadioButton
+        android:id="@+id/rbItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:minHeight="30dp"
+        android:textColor="@color/kora_grey"
+        android:textSize="14sp"
+        tools:text="Shanmuga" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginBottom="6dp"
+        android:textColor="@color/footer_color_dark_grey"
+        android:textSize="12sp"
+        tools:text="description" />
+</androidx.appcompat.widget.LinearLayoutCompat>

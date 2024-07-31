@@ -47,6 +47,8 @@ public class PayloadInner {
     private String direction;
     private boolean stacked;
 
+    private List<FeedbackRatingModel> numbersArrays;
+
     private String carousel_type;
     private String layout;
     private Skill skill;
@@ -83,6 +85,16 @@ public class PayloadInner {
     private String fileName;
     private boolean url_present;
     private boolean isSortEnabled;
+
+    private List<RadioOptionModel> radioOptions;
+
+    public List<FeedbackRatingModel> getNumbersArrays() {
+        return numbersArrays;
+    }
+
+    public List<RadioOptionModel> getRadioOptions() {
+        return radioOptions;
+    }
 
     public boolean isSortEnabled() {
         return isSortEnabled;

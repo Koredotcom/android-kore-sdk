@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -10,8 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import kore.botssdk.R;
+import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
@@ -23,7 +25,6 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.tableview.TableResponsiveView;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
 import kore.botssdk.viewholders.AttachmentTemplateHolder;
 import kore.botssdk.viewholders.BarChartTemplateHolder;
@@ -35,6 +36,7 @@ import kore.botssdk.viewholders.CarouselStackedTemplateHolder;
 import kore.botssdk.viewholders.CarouselTemplateHolder;
 import kore.botssdk.viewholders.ClockTemplateHolder;
 import kore.botssdk.viewholders.DropDownTemplateHolder;
+import kore.botssdk.viewholders.FeedbackTemplateHolder;
 import kore.botssdk.viewholders.FormTemplateHolder;
 import kore.botssdk.viewholders.LineChartTemplateHolder;
 import kore.botssdk.viewholders.ListTemplateHolder;
@@ -42,12 +44,13 @@ import kore.botssdk.viewholders.ListViewTemplateHolder;
 import kore.botssdk.viewholders.ListWidgetTemplateHolder;
 import kore.botssdk.viewholders.MiniTableTemplateHolder;
 import kore.botssdk.viewholders.PieChartTemplateHolder;
+import kore.botssdk.viewholders.RadioOptionsTemplateHolder;
 import kore.botssdk.viewholders.RequestTextTemplateHolderNew;
 import kore.botssdk.viewholders.ResponseTextTemplateHolderNew;
 import kore.botssdk.viewholders.TableListTemplateHolder;
 import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
 
-public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
+public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> implements ChatContentStateListener {
 
     //    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
 //    final Context context;
@@ -104,6 +107,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
     public static final int TEMPLATE_CLOCK = 19;
     public static final int TEMPLATE_DROP_DOWN = 20;
     public static final int TEMPLATE_IMAGE = 21;
+    public static final int TEMPLATE_FEEDBACK = 22;
+    public static final int TEMPLATE_RADIO_OPTIONS = 23;
 
     public ChatAdapterNew(Context context) {
         super();
@@ -171,7 +176,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                     case BotResponse.TEMPLATE_TYPE_TABLE_LIST:
                         return TEMPLATE_TABLE_LIST;
                     case BotResponse.TEMPLATE_TYPE_FEEDBACK:
-                        break;
+                        return TEMPLATE_FEEDBACK;
                     case BotResponse.TEMPLATE_TYPE_LIST_WIDGET:
                         break;
                     case BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2:
@@ -182,6 +187,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                         return TEMPLATE_CARD;
                     case BotResponse.COMPONENT_TYPE_IMAGE:
                         return TEMPLATE_IMAGE;
+                    case BotResponse.TEMPLATE_TYPE_RADIO_OPTIONS:
+                        return TEMPLATE_RADIO_OPTIONS;
                     default:
                         if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
                             if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -274,6 +281,10 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                 return new DropDownTemplateHolder(ownLayoutInflater.inflate(R.layout.template_dropdown, parent, false));
             case TEMPLATE_IMAGE:
                 return new AttachmentTemplateHolder(ownLayoutInflater.inflate(R.layout.image_template, parent, false));
+            case TEMPLATE_FEEDBACK:
+                return new FeedbackTemplateHolder(ownLayoutInflater.inflate(R.layout.template_feedback, parent, false));
+            case TEMPLATE_RADIO_OPTIONS:
+                return new RadioOptionsTemplateHolder(ownLayoutInflater.inflate(R.layout.template_radio_options, parent, false));
             default:
                 return new ResponseTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.template_bubble_text, parent, false));
         }
@@ -283,6 +294,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
     public void onBindViewHolder(@NonNull final BaseViewHolderNew holder, final int position) {
         boolean isLastItem = position == baseBotMessageArrayList.size() - 1;
         holder.setIsLastItem(isLastItem);
+        holder.setContentStateListener(this);
         holder.setComposeFooterInterface(composeFooterInterface);
         holder.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.bind(getItem(position));
@@ -347,5 +359,37 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
             compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
         }
         return compModel;
+    }
+
+    @Override
+    public void onFeedbackSelected(String id, int selectedPosition) {
+    }
+
+    @Override
+    public void onMultiSelectItems(String id, String key, List<String> selItems, boolean isChecked) {
+    }
+
+    @Override
+    public void onSelect(String id, Object value, String key) {
+        BotResponse response = null;
+        int index = 0;
+        int foundIndex = -1;
+        for (BaseBotMessage item : baseBotMessageArrayList) {
+            if (item instanceof BotResponse) {
+                response = (BotResponse) item;
+                if (response.getMessageId().equals(id)) {
+                    foundIndex = index;
+                    Map<String, Object> map = new HashMap<>();
+                    map.put(key, value);
+                    response.setContentState(map);
+                }
+            }
+            index++;
+        }
+        if (foundIndex != -1) {
+            baseBotMessageArrayList.remove(foundIndex);
+            baseBotMessageArrayList.add(foundIndex, response);
+            notifyItemChanged(foundIndex);
+        }
     }
 }

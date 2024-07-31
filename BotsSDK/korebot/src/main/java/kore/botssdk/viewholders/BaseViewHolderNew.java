@@ -36,6 +36,7 @@ import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
+import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BaseBotMessage;
@@ -63,6 +64,7 @@ public abstract class BaseViewHolderNew extends RecyclerView.ViewHolder {
 
     protected ComposeFooterInterface composeFooterInterface;
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    protected ChatContentStateListener contentStateListener;
 
     public BaseViewHolderNew(@NonNull View itemView, Context mContext) {
         super(itemView);
@@ -360,5 +362,9 @@ public abstract class BaseViewHolderNew extends RecyclerView.ViewHolder {
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         PayloadOuter payloadOuter = componentModel.getPayload();
         return payloadOuter;
+    }
+
+    public void setContentStateListener(ChatContentStateListener contentStateListener) {
+        this.contentStateListener = contentStateListener;
     }
 }

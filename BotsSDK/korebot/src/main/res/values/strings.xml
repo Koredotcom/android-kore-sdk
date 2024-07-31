@@ -179,6 +179,7 @@
     <string name="bot_not_connected">Unable to connect to the bot. Please try again later</string>
     <string name="colon">:</string>
     <string name="default_click_time">12:00:AM</string>
+    <string name="what_can_be_improved">What can be Improved ?</string>
 
     <string-array name="attachments_strings">
        <!-- <item>Take Photo</item>-->
