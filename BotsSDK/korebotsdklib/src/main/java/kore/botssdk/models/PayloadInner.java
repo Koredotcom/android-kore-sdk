@@ -11,9 +11,7 @@ import java.util.List;
 
 import kore.botssdk.models.CalEventsTemplateModel.Duration;
 
-/**
- * Created by Ramachandra Pradeep on 12/15/2016.
- */
+@SuppressWarnings("UnKnownNullness")
 public class PayloadInner {
 
     public void setTemplate_type(String template_type) {
