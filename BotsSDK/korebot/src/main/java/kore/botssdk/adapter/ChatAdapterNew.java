@@ -2,6 +2,7 @@ package kore.botssdk.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -19,10 +20,12 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.tableview.TableResponsiveView;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
+import kore.botssdk.viewholders.AttachmentTemplateHolder;
 import kore.botssdk.viewholders.BarChartTemplateHolder;
 import kore.botssdk.viewholders.BaseViewHolderNew;
 import kore.botssdk.viewholders.ButtonLinkTemplateHolder;
@@ -100,6 +103,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
     public static final int TEMPLATE_TABLE = 18;
     public static final int TEMPLATE_CLOCK = 19;
     public static final int TEMPLATE_DROP_DOWN = 20;
+    public static final int TEMPLATE_IMAGE = 21;
 
     public ChatAdapterNew(Context context) {
         super();
@@ -176,6 +180,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                         return TEMPLATE_DROP_DOWN;
                     case BotResponse.CARD_TEMPLATE:
                         return TEMPLATE_CARD;
+                    case BotResponse.COMPONENT_TYPE_IMAGE:
+                        return TEMPLATE_IMAGE;
                     default:
                         if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
                             if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type())) {
@@ -189,6 +195,24 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
 //                            timeStampsTextView.setText("");
 //                            message = "default";
                         }
+                        break;
+                }
+            } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
+
+                if (!StringUtils.isNullOrEmpty(payInner.getVideoUrl())) {
+                    payOuter.setType(BundleConstants.MEDIA_TYPE_VIDEO);
+                    return TEMPLATE_IMAGE;
+                } else if (!StringUtils.isNullOrEmpty(payInner.getAudioUrl())) {
+                    payOuter.setType(BundleConstants.MEDIA_TYPE_AUDIO);
+                    return TEMPLATE_IMAGE;
+                }
+            } else if (!StringUtils.isNullOrEmpty(payOuter.getType())) {
+                switch (payOuter.getType()) {
+                    case BotResponse.COMPONENT_TYPE_IMAGE:
+                    case BotResponse.COMPONENT_TYPE_AUDIO:
+                    case BotResponse.COMPONENT_TYPE_VIDEO:
+                        return TEMPLATE_IMAGE;
+                    default:
                         break;
                 }
             }
@@ -248,6 +272,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> {
                 return new ClockTemplateHolder(ownLayoutInflater.inflate(R.layout.template_clock, parent, false));
             case TEMPLATE_DROP_DOWN:
                 return new DropDownTemplateHolder(ownLayoutInflater.inflate(R.layout.template_dropdown, parent, false));
+            case TEMPLATE_IMAGE:
+                return new AttachmentTemplateHolder(ownLayoutInflater.inflate(R.layout.image_template, parent, false));
             default:
                 return new ResponseTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.template_bubble_text, parent, false));
         }

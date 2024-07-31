@@ -43,30 +43,35 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
+        String clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
+        String clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
 
         //Set botId, This value is mandatory
-        String botId = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
+        String botId = "st-b9889c46-218c-58f7-838f-73ae9203488c";
 
         //Set identity, This value is mandatory
-        String identity = "Please enter identity";
+        String identity = "email@kore.com";
 
         //Set botName, This value is mandatory
         String botName = "Kore.ai Bot";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "https://platform.kore.ai/";
+        String serverUrl = "https://bots.kore.ai/";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "https://platform.kore.ai/";
+        String brandingUrl = "https://bots.kore.ai/";
+
+        //Set jwtServerUrl, This value is mandatory
+        String jwtServerUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
 
         //Set Server url
         SDKConfig.setServerUrl(serverUrl);
         //Set Branding url
         SDKConfig.setBrandingUrl(brandingUrl);
+        //Set Jwt Server url
+        SDKConfig.setJwtTokenUrl(jwtServerUrl);
 
         //Initialize the bot with bot config
         //You can pass client id and client secret as empty when you pass jwt token

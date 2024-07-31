@@ -32,12 +32,7 @@ public class SDKConfig
         SDKConfiguration.Server.setBrandingUrl(url);
     }
 
-    public static void setTokenUrl(String url)
-    {
-        SDKConfiguration.Server.setTokenUrl(url);
-    }
-
-    public static void setJWTUrl(String url)
+    public static void setJwtTokenUrl(String url)
     {
         SDKConfiguration.JWTServer.setJwtServerUrl(url);
     }

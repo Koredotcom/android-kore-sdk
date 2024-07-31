@@ -356,4 +356,9 @@ public abstract class BaseViewHolderNew extends RecyclerView.ViewHolder {
         if (payloadOuter == null) return null;
         return payloadOuter.getPayload();
     }
+    protected PayloadOuter getPayloadOuter(BaseBotMessage baseBotMessage) {
+        ComponentModel componentModel = getComponentModel(baseBotMessage);
+        PayloadOuter payloadOuter = componentModel.getPayload();
+        return payloadOuter;
+    }
 }

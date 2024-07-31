@@ -20,28 +20,9 @@ public class SDKConfiguration {
     /**
      * bot init text  and related settings
      */
-    private static boolean TRIGGER_INIT_MESSAGE = false;
-    private static String INIT_MESSAGE = "Welpro";
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static final boolean APPLY_FONT_STYLE = true;
     protected static HashMap<String, View> hsh = new HashMap<>();
-
-    public static boolean isTriggerInitMessage() {
-        return TRIGGER_INIT_MESSAGE;
-    }
-
-    public static void setTriggerInitMessage(boolean triggerInitMessage) {
-        TRIGGER_INIT_MESSAGE = triggerInitMessage;
-    }
-
-    public static String getInitMessage() {
-        return INIT_MESSAGE;
-    }
-
-    public static void setInitMessage(String initMessage) {
-        INIT_MESSAGE = initMessage;
-    }
-
 
     public static boolean isApplyFontStyle() {
         return APPLY_FONT_STYLE;
@@ -53,9 +34,9 @@ public class SDKConfiguration {
             JWT_SERVER_URL = jwtServerUrl;
         }
 
-        static String JWT_SERVER_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
+        static String JWT_SERVER_URL = "PLEASE_ENTER_JWT_SERVER_URL";
 
-        static String jwt_token = "";
+        static String jwt_token = "PLEASE_ENTER_JWT_TOKEN";
 
         public static void setJwt_token(String jwt_token) {
             JWTServer.jwt_token = jwt_token;
@@ -76,22 +57,17 @@ public class SDKConfiguration {
             SERVER_URL = serverUrl;
         }
 
-        static String KORE_BOT_SERVER_URL = "";
+        static String KORE_BOT_SERVER_URL = "PLEASE_ENTER_KORE_BOT_SERVER_URL";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
-        public static String SERVER_URL = "";
-        public static String TOKEN_SERVER_URL = "";
-        public static String Branding_SERVER_URL = "";
-        public static String koreAPIUrl = "";
+        public static String SERVER_URL = "PLEASE_ENTER_SERVER_URL";
+        public static String Branding_SERVER_URL = "PLEASE_ENTER_";
+        public static String koreAPIUrl = "PLEASE_ENTER_KORE_API_URL";
         public static HashMap<String, Object> queryParams = new HashMap<>();
 
         public static RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
 
         public static void setBrandingUrl(String url) {
             Branding_SERVER_URL = url;
-        }
-
-        public static void setTokenUrl(String url) {
-            TOKEN_SERVER_URL = url;
         }
 
         public static void setQueryParams(HashMap<String, Object> queryParams) {
@@ -125,17 +101,17 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
 
-        public static String client_id = "";
-        public static String client_secret = "";
-        public static String identity = "";
-        public static String bot_name = "";
-        public static String bot_id = "";
+        public static String client_id = "PLEASE_ENTER_CLIENT_ID";
+        public static String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
+        public static String identity = "PLEASE_ENTER_IDENTITY";
+        public static String bot_name = "PLEASE_ENTER_BOT_NAME";
+        public static String bot_id = "PLEASE_ENTER_BOT_ID";
         public static boolean enable_ack_delivery = false;
         public static boolean isWebHook = false;
-        public static final String webHook_client_id = "Please enter clientId";
-        public static final String webHook_client_secret = "Please enter clientSecret";
-        public static final String webHook_identity = "Please enter Identity";
-        public static final String webHook_bot_id = "Please enter botId";
+        public static final String webHook_client_id = "PLEASE_ENTER_WEBHOOK_CLIENT_ID";
+        public static final String webHook_client_secret = "PLEASE_ENTER_WEBHOOK_CLIENT_SECRET";
+        public static final String webHook_identity = "PLEASE_ENTER_WEBHOOK_IDENTITY";
+        public static final String webHook_bot_id = "PLEASE_ENTER_WEBHOOK_BOT_ID";
 
         //Weebhook
         // for webhook based communication use following option
@@ -186,7 +162,6 @@ public class SDKConfiguration {
             BubbleColors.leftLinkColor = leftLinkColor;
         }
 
-
         public static String rightBubbleUnSelected = APP_REQ_COLOR;
         public static String leftBubbleSelected = "#D3D3D3";
         public static String leftBubbleUnSelected = "#f8f9f8";
@@ -198,7 +173,6 @@ public class SDKConfiguration {
         public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static boolean showIcon = false;
-
         public static boolean showIconTop = true;
 
         public static int getIcon() {
@@ -224,20 +198,10 @@ public class SDKConfiguration {
             return profileColor;
         }
 
-        public static void setProfileColor(String profileColor) {
-            BubbleColors.profileColor = profileColor;
-        }
-
         static String profileColor = APP_REQ_COLOR;
-
-        public static void setQuickReplyColor(String quickReplyColor) {
-            BubbleColors.quickReplyColor = quickReplyColor;
-        }
-
         public static String quickReplyColor = "#EEEEF0";
         public static String quickReplyTextColor = "#000000";
         public static String quickBorderColor = "#000000";
-
     }
 
     public static boolean isTimeStampsRequired() {

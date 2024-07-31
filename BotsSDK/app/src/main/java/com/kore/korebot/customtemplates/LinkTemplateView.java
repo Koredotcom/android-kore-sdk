@@ -20,10 +20,10 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 import kore.botssdk.R;
+import kore.botssdk.fileupload.utils.StringUtils;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.CustomTemplateView;
 
 public class LinkTemplateView extends CustomTemplateView {
