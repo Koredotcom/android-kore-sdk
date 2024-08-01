@@ -6,7 +6,9 @@ import static android.view.View.VISIBLE;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -54,15 +56,19 @@ public class PdfTemplateHolder extends BaseViewHolderNew {
     private final Gson gson = new Gson();
     private final ProgressBar pbDownload;
 
+    public static PdfTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pdf_download_view, parent, false);
+        return new PdfTemplateHolder(view);
+    }
 
-    public PdfTemplateHolder(@NonNull View view, Context mContext) {
-        super(view, mContext);
+    private PdfTemplateHolder(@NonNull View view) {
+        super(view, view.getContext());
 
         lvPdfs = view.findViewById(R.id.lvPdfs);
         ivPdfDownload = view.findViewById(R.id.ivPdfDownload);
         pbDownload = view.findViewById(R.id.pbDownload);
 
-        this.context = mContext;
+        this.context = view.getContext();
     }
 
     @Override
@@ -122,9 +128,8 @@ public class PdfTemplateHolder extends BaseViewHolderNew {
                         Toast.makeText(context, "Statement saved successfully under Downloads", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    try
-                    {
-                        if(response.errorBody() != null) {
+                    try {
+                        if (response.errorBody() != null) {
                             JSONObject jObjError = new JSONObject(response.errorBody().string());
                             Toast.makeText(itemView.getContext(), jObjError.getString("errorMessage"), Toast.LENGTH_LONG).show();
                         }

@@ -3,8 +3,9 @@ package kore.botssdk.viewholders;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,10 +18,13 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.AutoExpandListView;
-import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class AdvancedListTemplateHolder extends BaseViewHolderNew {
-    public AdvancedListTemplateHolder(@NonNull View itemView) {
+    public static AdvancedListTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_advanced_list_template, parent, false);
+        return new AdvancedListTemplateHolder(view);
+    }
+    private AdvancedListTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
     }
 

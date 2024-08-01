@@ -3,8 +3,10 @@ package kore.botssdk.viewholders;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -34,7 +36,12 @@ public class LineChartTemplateHolder extends BaseViewHolderNew implements OnChar
     private CustomMarkerView markerView;
     private LineChart lineChart;
 
-    public LineChartTemplateHolder(@NonNull View itemView) {
+    public static LineChartTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_line_chart, parent, false);
+        return new LineChartTemplateHolder(view);
+    }
+
+    private LineChartTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

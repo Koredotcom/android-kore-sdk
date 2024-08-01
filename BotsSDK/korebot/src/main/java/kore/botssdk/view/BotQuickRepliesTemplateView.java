@@ -77,7 +77,7 @@ public class BotQuickRepliesTemplateView extends ViewGroup {
 
             QuickRepliesTemplateAdapter quickRepliesAdapter = null;
             if (recyclerView.getAdapter() == null) {
-                quickRepliesAdapter = new QuickRepliesTemplateAdapter(getContext(), recyclerView);
+                quickRepliesAdapter = new QuickRepliesTemplateAdapter(getContext(), recyclerView, isEnabled());
                 recyclerView.setAdapter(quickRepliesAdapter);
                 quickRepliesAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                 quickRepliesAdapter.setComposeFooterInterface(composeFooterInterface);

@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
@@ -24,7 +23,12 @@ public class DropDownTemplateHolder extends BaseViewHolderNew {
     private final TextView tvDropDownTitle;
     private final Spinner spinner;
 
-    public DropDownTemplateHolder(@NonNull View itemView) {
+    public static DropDownTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_dropdown, parent, false);
+        return new DropDownTemplateHolder(view);
+    }
+
+    private DropDownTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         tvDropDownTitle = itemView.findViewById(R.id.tvDropDownTitle);
         spinner = itemView.findViewById(R.id.spinner);

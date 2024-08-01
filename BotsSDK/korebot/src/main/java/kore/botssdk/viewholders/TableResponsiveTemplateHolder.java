@@ -4,7 +4,9 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -30,7 +32,12 @@ public class TableResponsiveTemplateHolder extends BaseViewHolderNew {
     private final TextView tvShowMore;
     private final RecyclerView rvTableView;
 
-    public TableResponsiveTemplateHolder(@NonNull View itemView) {
+    public static TableResponsiveTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_table_responsive, parent, false);
+        return new TableResponsiveTemplateHolder(view);
+    }
+
+    private TableResponsiveTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

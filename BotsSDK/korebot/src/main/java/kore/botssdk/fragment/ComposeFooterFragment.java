@@ -300,8 +300,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     public void changeThemeBackGround(String widgetFooterColor, String widgetFooterHintColor) {
-        rlFooter.setBackgroundColor(Color.parseColor(widgetFooterColor));
-        editTextMessage.setHintTextColor(Color.parseColor(widgetFooterHintColor));
+        if (widgetFooterColor != null) rlFooter.setBackgroundColor(Color.parseColor(widgetFooterColor));
+        if (widgetFooterHintColor != null) editTextMessage.setHintTextColor(Color.parseColor(widgetFooterHintColor));
     }
 
     void toggleTTSButton() {

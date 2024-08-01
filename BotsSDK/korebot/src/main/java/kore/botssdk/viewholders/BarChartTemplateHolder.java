@@ -3,7 +3,9 @@ package kore.botssdk.viewholders;
 import static kore.botssdk.models.BotResponsePayLoadText.BAR_CHART_DIRECTION_VERTICAL;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -40,7 +42,12 @@ public class BarChartTemplateHolder extends BaseViewHolderNew implements OnChart
     private final BarChart barChart;
     private final HorizontalBarChart horizontalBarChart;
 
-    public BarChartTemplateHolder(@NonNull View itemView) {
+    public static BarChartTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_bar_chart, parent, false);
+        return new BarChartTemplateHolder(view);
+    }
+
+    private BarChartTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,15 +28,19 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
-import kore.botssdk.viewholders.AttachmentTemplateHolder;
+import kore.botssdk.viewholders.AgentTransferTemplateHolder;
+import kore.botssdk.viewholders.MediaTemplateHolder;
+import kore.botssdk.viewholders.BankingFeedbackTemplateHolder;
 import kore.botssdk.viewholders.BarChartTemplateHolder;
 import kore.botssdk.viewholders.BaseViewHolderNew;
+import kore.botssdk.viewholders.BeneficiaryTemplateHolder;
 import kore.botssdk.viewholders.ButtonLinkTemplateHolder;
 import kore.botssdk.viewholders.ButtonTemplateHolder;
 import kore.botssdk.viewholders.CardTemplateHolder;
 import kore.botssdk.viewholders.CarouselStackedTemplateHolder;
 import kore.botssdk.viewholders.CarouselTemplateHolder;
 import kore.botssdk.viewholders.ClockTemplateHolder;
+import kore.botssdk.viewholders.ContactCardTemplateHolder;
 import kore.botssdk.viewholders.DropDownTemplateHolder;
 import kore.botssdk.viewholders.FeedbackTemplateHolder;
 import kore.botssdk.viewholders.FormTemplateHolder;
@@ -43,12 +49,14 @@ import kore.botssdk.viewholders.ListTemplateHolder;
 import kore.botssdk.viewholders.ListViewTemplateHolder;
 import kore.botssdk.viewholders.ListWidgetTemplateHolder;
 import kore.botssdk.viewholders.MiniTableTemplateHolder;
+import kore.botssdk.viewholders.PdfTemplateHolder;
 import kore.botssdk.viewholders.PieChartTemplateHolder;
 import kore.botssdk.viewholders.RadioOptionsTemplateHolder;
 import kore.botssdk.viewholders.RequestTextTemplateHolderNew;
 import kore.botssdk.viewholders.ResponseTextTemplateHolderNew;
 import kore.botssdk.viewholders.TableListTemplateHolder;
 import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
+import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 
 public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> implements ChatContentStateListener {
 
@@ -106,13 +114,18 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
     public static final int TEMPLATE_TABLE = 18;
     public static final int TEMPLATE_CLOCK = 19;
     public static final int TEMPLATE_DROP_DOWN = 20;
-    public static final int TEMPLATE_IMAGE = 21;
+    public static final int TEMPLATE_MEDIA = 21;
     public static final int TEMPLATE_FEEDBACK = 22;
     public static final int TEMPLATE_RADIO_OPTIONS = 23;
+    public static final int TEMPLATE_WELCOME_QUICK_REPLIES = 24;
+    public static final int TEMPLATE_NOTIFICATIONS = 25;
+    public static final int TEMPLATE_CONTACT_CARD = 26;
+    public static final int TEMPLATE_BANKING_FEEDBACK = 27;
+    public static final int TEMPLATE_PDF_DOWNLOAD = 28;
+    public static final int TEMPLATE_BENEFICIARY = 29;
 
     public ChatAdapterNew(Context context) {
         super();
-//        this.context = context;
         ownLayoutInflater = LayoutInflater.from(context);
         baseBotMessageArrayList = new ArrayList<>();
     }
@@ -139,8 +152,6 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
                 switch (payInner.getTemplate_type()) {
                     case BotResponse.TEMPLATE_TYPE_BUTTON:
                         return TEMPLATE_BUTTON;
-                    case BotResponse.TEMPLATE_TYPE_QUICK_REPLIES:
-                        return TEMPLATE_BUBBLE_RESPONSE;
                     case BotResponse.TEMPLATE_TYPE_CAROUSEL:
                         if (payInner.getCarousel_type() != null && payInner.getCarousel_type().equals(BotResponse.STACKED)) {
                             return TEMPLATE_CAROUSEL_STACKED;
@@ -177,8 +188,6 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
                         return TEMPLATE_TABLE_LIST;
                     case BotResponse.TEMPLATE_TYPE_FEEDBACK:
                         return TEMPLATE_FEEDBACK;
-                    case BotResponse.TEMPLATE_TYPE_LIST_WIDGET:
-                        break;
                     case BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2:
                         return TEMPLATE_LIST_WIDGET_2;
                     case BotResponse.TEMPLATE_DROPDOWN:
@@ -186,39 +195,38 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
                     case BotResponse.CARD_TEMPLATE:
                         return TEMPLATE_CARD;
                     case BotResponse.COMPONENT_TYPE_IMAGE:
-                        return TEMPLATE_IMAGE;
+                        return TEMPLATE_MEDIA;
                     case BotResponse.TEMPLATE_TYPE_RADIO_OPTIONS:
                         return TEMPLATE_RADIO_OPTIONS;
+                    case BotResponse.TEMPLATE_TYPE_WELCOME_QUICK_REPLIES:
+                        return TEMPLATE_WELCOME_QUICK_REPLIES;
+                    case BotResponse.TEMPLATE_TYPE_NOTIFICATIONS:
+                        return TEMPLATE_NOTIFICATIONS;
+                    case BotResponse.CONTACT_CARD_TEMPLATE:
+                        return TEMPLATE_CONTACT_CARD;
+                    case BotResponse.TEMPLATE_BANKING_FEEDBACK:
+                        return TEMPLATE_BANKING_FEEDBACK;
+                    case BotResponse.TEMPLATE_PDF_DOWNLOAD:
+                        return TEMPLATE_PDF_DOWNLOAD;
+                    case BotResponse.TEMPLATE_BENEFICIARY:
+                        return TEMPLATE_BENEFICIARY;
                     default:
-                        if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
-                            if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type())) {
-//                                message = payInner.getText();
-                            } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText_message())) {
-//                                message = payInner.getText_message();
-                            }
-                        } else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type())) {
-//                            message = payInner.getTemplate_type();
-                        } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {
-//                            timeStampsTextView.setText("");
-//                            message = "default";
-                        }
-                        break;
+                        return TEMPLATE_BUBBLE_RESPONSE;
                 }
             } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
-
                 if (!StringUtils.isNullOrEmpty(payInner.getVideoUrl())) {
                     payOuter.setType(BundleConstants.MEDIA_TYPE_VIDEO);
-                    return TEMPLATE_IMAGE;
+                    return TEMPLATE_MEDIA;
                 } else if (!StringUtils.isNullOrEmpty(payInner.getAudioUrl())) {
                     payOuter.setType(BundleConstants.MEDIA_TYPE_AUDIO);
-                    return TEMPLATE_IMAGE;
+                    return TEMPLATE_MEDIA;
                 }
             } else if (!StringUtils.isNullOrEmpty(payOuter.getType())) {
                 switch (payOuter.getType()) {
                     case BotResponse.COMPONENT_TYPE_IMAGE:
                     case BotResponse.COMPONENT_TYPE_AUDIO:
                     case BotResponse.COMPONENT_TYPE_VIDEO:
-                        return TEMPLATE_IMAGE;
+                        return TEMPLATE_MEDIA;
                     default:
                         break;
                 }
@@ -242,51 +250,63 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
     public BaseViewHolderNew onCreateViewHolder(@NonNull ViewGroup parent, int i) {
         switch (i) {
             case TEMPLATE_BUBBLE_REQUEST:
-                return new RequestTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.template_bubble_text, parent, false));
+                return RequestTextTemplateHolderNew.getInstance(parent);
             case TEMPLATE_BUTTON:
-                return new ButtonTemplateHolder(ownLayoutInflater.inflate(R.layout.template_button, parent, false));
+                return ButtonTemplateHolder.getInstance(parent);
             case TEMPLATE_BUTTON_LINK:
-                return new ButtonLinkTemplateHolder(ownLayoutInflater.inflate(R.layout.template_button_link, parent, false));
+                return ButtonLinkTemplateHolder.getInstance(parent);
             case TEMPLATE_LIST_VIEW:
-                return new ListViewTemplateHolder(ownLayoutInflater.inflate(R.layout.template_list_view, parent, false));
+                return ListViewTemplateHolder.getInstance(parent);
             case TEMPLATE_LIST:
-                return new ListTemplateHolder(ownLayoutInflater.inflate(R.layout.template_list, parent, false));
+                return ListTemplateHolder.getInstance(parent);
             case TEMPLATE_CAROUSEL:
-                return new CarouselTemplateHolder(ownLayoutInflater.inflate(R.layout.template_carousel, parent, false));
+                return CarouselTemplateHolder.getInstance(parent);
             case TEMPLATE_CAROUSEL_STACKED:
-                return new CarouselStackedTemplateHolder(ownLayoutInflater.inflate(R.layout.template_carousel_stacked, parent, false));
+                return CarouselStackedTemplateHolder.getInstance(parent);
             case TEMPLATE_PIE_CHART:
-                return new PieChartTemplateHolder(ownLayoutInflater.inflate(R.layout.template_pie_chart, parent, false));
+                return PieChartTemplateHolder.getInstance(parent);
             case TEMPLATE_ADVANCED_LIST_TEMPLATE:
-                return new AdvancedListTemplateHolder(ownLayoutInflater.inflate(R.layout.template_advanced_list_template, parent, false));
+                return AdvancedListTemplateHolder.getInstance(parent);
             case TEMPLATE_LINE_CHART:
-                return new LineChartTemplateHolder(ownLayoutInflater.inflate(R.layout.template_line_chart, parent, false));
+                return LineChartTemplateHolder.getInstance(parent);
             case TEMPLATE_FORM:
-                return new FormTemplateHolder(ownLayoutInflater.inflate(R.layout.template_form, parent, false));
+                return FormTemplateHolder.getInstance(parent);
             case TEMPLATE_TABLE_LIST:
-                return new TableListTemplateHolder(ownLayoutInflater.inflate(R.layout.template_table_list, parent, false));
+                return TableListTemplateHolder.getInstance(parent);
             case TEMPLATE_LIST_WIDGET_2:
-                return new ListWidgetTemplateHolder(ownLayoutInflater.inflate(R.layout.template_list_widget, parent, false));
+                return ListWidgetTemplateHolder.getInstance(parent);
             case TEMPLATE_CARD:
-                return new CardTemplateHolder(ownLayoutInflater.inflate(R.layout.template_card, parent, false));
+                return CardTemplateHolder.getInstance(parent);
             case TEMPLATE_BAR_CHART:
-                return new BarChartTemplateHolder(ownLayoutInflater.inflate(R.layout.template_bar_chart, parent, false));
+                return BarChartTemplateHolder.getInstance(parent);
             case TEMPLATE_MINI_TABLE:
-                return new MiniTableTemplateHolder(ownLayoutInflater.inflate(R.layout.template_mini_table, parent, false));
+                return MiniTableTemplateHolder.getInstance(parent);
             case TEMPLATE_TABLE_RESPONSIVE:
-                return new TableResponsiveTemplateHolder(ownLayoutInflater.inflate(R.layout.template_table_responsive, parent, false));
+                return TableResponsiveTemplateHolder.getInstance(parent);
             case TEMPLATE_CLOCK:
-                return new ClockTemplateHolder(ownLayoutInflater.inflate(R.layout.template_clock, parent, false));
+                return ClockTemplateHolder.getInstance(parent);
             case TEMPLATE_DROP_DOWN:
-                return new DropDownTemplateHolder(ownLayoutInflater.inflate(R.layout.template_dropdown, parent, false));
-            case TEMPLATE_IMAGE:
-                return new AttachmentTemplateHolder(ownLayoutInflater.inflate(R.layout.image_template, parent, false));
+                return DropDownTemplateHolder.getInstance(parent);
+            case TEMPLATE_MEDIA:
+                return MediaTemplateHolder.getInstance(parent);
             case TEMPLATE_FEEDBACK:
-                return new FeedbackTemplateHolder(ownLayoutInflater.inflate(R.layout.template_feedback, parent, false));
+                return FeedbackTemplateHolder.getInstance(parent);
             case TEMPLATE_RADIO_OPTIONS:
-                return new RadioOptionsTemplateHolder(ownLayoutInflater.inflate(R.layout.template_radio_options, parent, false));
+                return RadioOptionsTemplateHolder.getInstance(parent);
+            case TEMPLATE_WELCOME_QUICK_REPLIES:
+                return WelcomeQuickRepliesTemplateHolder.getInstance(parent);
+            case TEMPLATE_NOTIFICATIONS:
+                return AgentTransferTemplateHolder.getInstance(parent);
+            case TEMPLATE_CONTACT_CARD:
+                return ContactCardTemplateHolder.getInstance(parent);
+            case TEMPLATE_BANKING_FEEDBACK:
+                return BankingFeedbackTemplateHolder.getInstance(parent);
+            case TEMPLATE_PDF_DOWNLOAD:
+                return PdfTemplateHolder.getInstance(parent);
+            case TEMPLATE_BENEFICIARY:
+                return BeneficiaryTemplateHolder.getInstance(parent);
             default:
-                return new ResponseTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.template_bubble_text, parent, false));
+                return ResponseTextTemplateHolderNew.getInstance(parent);
         }
     }
 
@@ -329,7 +349,6 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
         SelectionUtils.resetSelectionTasks();
         SelectionUtils.resetSelectionSlots();
         isAlpha = false;
-//        submitList(baseBotMessageArrayList);
         if (baseBotMessageArrayList.size() == 1) {
             notifyItemInserted(0);
         } else {
@@ -339,12 +358,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
-//        prepareHeaderMap();
-//        if (selectedItem != -1) {
-//            selectedItem = selectedItem + list.size() - 1;
-//        }
         notifyItemRangeInserted(0, list.size() - 1);
-//        submitList(baseBotMessageArrayList);
     }
 
     public void addMissedBaseBotMessages(ArrayList<BaseBotMessage> list) {

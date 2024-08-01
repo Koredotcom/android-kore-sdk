@@ -29,10 +29,13 @@ public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReply
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int quickReplyFontColor;
 
-    public QuickRepliesTemplateAdapter(Context context, RecyclerView parentRecyclerView) {
+    private boolean isEnabled = true;
+
+    public QuickRepliesTemplateAdapter(Context context, RecyclerView parentRecyclerView, boolean isEnabled) {
         this.context = context;
         this.parentRecyclerView = parentRecyclerView;
         quickReplyFontColor = Color.parseColor("#3F51B5");
+        this.isEnabled = isEnabled;
     }
 
     @NonNull
@@ -57,40 +60,33 @@ public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReply
 
         holder.getQuickReplyTitle().setText(quickReplyTemplate.getTitle());
 
-        holder.getQuickReplyRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position =  parentRecyclerView.getChildAdapterPosition(v);
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
+        holder.getQuickReplyRoot().setOnClickListener(v -> {
+            if (!isEnabled) return;
+            int position1 = parentRecyclerView.getChildAdapterPosition(v);
+            QuickReplyTemplate quickReplyTemplate1 = quickReplyTemplateArrayList.get(position1);
 
-                    String quickReplyPayload;
-                    try {
-                        quickReplyPayload = (String) quickReplyTemplate.getPayload();
-                    }catch (Exception e)
-                    {
-                        try {
-                            QuickRepliesPayloadModel quickRepliesPayloadModel = (QuickRepliesPayloadModel) quickReplyTemplate.getPayload();
-                            quickReplyPayload = quickRepliesPayloadModel.getName();
-                        }
-                        catch (Exception exception)
-                        {
-                            quickReplyPayload = "";
-                        }
-                    }
-
-                    if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getContent_type())) {
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
-                    } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
-                    }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),quickReplyPayload,false);
-                    }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
-                    }else{
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
-                    }
+            String quickReplyPayload;
+            try {
+                quickReplyPayload = (String) quickReplyTemplate1.getPayload();
+            } catch (Exception e) {
+                try {
+                    QuickRepliesPayloadModel quickRepliesPayloadModel = (QuickRepliesPayloadModel) quickReplyTemplate1.getPayload();
+                    quickReplyPayload = quickRepliesPayloadModel.getName();
+                } catch (Exception exception) {
+                    quickReplyPayload = "";
                 }
+            }
+
+            if (isEnabled && composeFooterInterface != null && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
+                composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload, false);
+            } else if (invokeGenericWebViewInterface != null && BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
+                invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
+            } else if (isEnabled && composeFooterInterface != null && BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
+                composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload, false);
+            } else if (invokeGenericWebViewInterface != null && BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
+                invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
+            } else if (isEnabled && composeFooterInterface != null) {
+                composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload, false);
             }
         });
     }

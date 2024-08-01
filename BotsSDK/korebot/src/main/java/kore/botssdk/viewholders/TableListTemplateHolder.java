@@ -2,7 +2,9 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -19,7 +21,12 @@ import kore.botssdk.view.AutoExpandListView;
 public class TableListTemplateHolder extends BaseViewHolderNew {
     private final AutoExpandListView autoExpandListView;
 
-    public TableListTemplateHolder(@NonNull View itemView) {
+    public static TableListTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_table_list, parent, false);
+        return new TableListTemplateHolder(view);
+    }
+
+    private TableListTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

@@ -3,7 +3,6 @@ package com.kore.korebot.customtemplates;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
 import android.view.View;
@@ -28,8 +27,8 @@ public class LinkTemplateHolder extends BaseViewHolderNew {
     private final TextView tvPdfName;
     private final ProgressBar pbDownload;
 
-    public LinkTemplateHolder(@NonNull View view, Context mContext) {
-        super(view, mContext);
+    public LinkTemplateHolder(@NonNull View view) {
+        super(view, view.getContext());
 
         tvPdfName = view.findViewById(kore.botssdk.R.id.tv_pdf_item_title);
         ivPdfDownload = view.findViewById(kore.botssdk.R.id.ivPdfDownload);

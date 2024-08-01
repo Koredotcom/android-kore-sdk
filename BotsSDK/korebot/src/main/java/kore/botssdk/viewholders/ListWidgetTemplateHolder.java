@@ -16,7 +16,9 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -62,7 +64,12 @@ public class ListWidgetTemplateHolder extends BaseViewHolderNew {
     private final TextView meetingDesc;
     private final SharedPreferences sharedPreferences;
 
-    public ListWidgetTemplateHolder(@NonNull View itemView) {
+    public static ListWidgetTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_list_widget, parent, false);
+        return new ListWidgetTemplateHolder(view);
+    }
+
+    private ListWidgetTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

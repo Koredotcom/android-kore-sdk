@@ -3,7 +3,9 @@ package kore.botssdk.viewholders;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.graphics.Color;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -32,7 +34,12 @@ public class PieChartTemplateHolder extends BaseViewHolderNew {
     private final PieChart pieChart;
     private final String PIE_TYPE_DONUT = "donut";
 
-    public PieChartTemplateHolder(@NonNull View itemView) {
+    public static PieChartTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_pie_chart, parent, false);
+        return new PieChartTemplateHolder(view);
+    }
+
+    private PieChartTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

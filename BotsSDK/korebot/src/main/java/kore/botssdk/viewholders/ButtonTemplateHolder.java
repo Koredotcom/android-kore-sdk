@@ -2,7 +2,11 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -18,7 +22,13 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.PayloadInner;
 
 public class ButtonTemplateHolder extends BaseViewHolderNew {
-    public ButtonTemplateHolder(@NonNull View itemView) {
+
+    public static ButtonTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_button, parent, false);
+        return new ButtonTemplateHolder(view);
+    }
+
+    private ButtonTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

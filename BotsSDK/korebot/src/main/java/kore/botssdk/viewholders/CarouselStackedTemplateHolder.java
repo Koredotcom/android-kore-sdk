@@ -3,7 +3,9 @@ package kore.botssdk.viewholders;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -20,7 +22,12 @@ import kore.botssdk.views.coverflow.RecyclerCoverFlow;
 public class CarouselStackedTemplateHolder extends BaseViewHolderNew {
     private final RecyclerCoverFlow recyclerCoverFlow;
 
-    public CarouselStackedTemplateHolder(@NonNull View itemView) {
+    public static CarouselStackedTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_carousel_stacked, parent, false);
+        return new CarouselStackedTemplateHolder(view);
+    }
+
+    private CarouselStackedTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

@@ -17,6 +17,7 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -47,8 +48,7 @@ import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-public class AttachmentTemplateHolder extends BaseViewHolderNew
-{
+public class MediaTemplateHolder extends BaseViewHolderNew {
     private final ImageView ivImage;
     private final TextView tvFileName, tvAudioVideoTiming;
     private SharedPreferences sharedPreferences;
@@ -68,7 +68,12 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
     private final TextView tvTheme1;
     private final TextView tvVideoTitle;
 
-    public AttachmentTemplateHolder(@NonNull View view) {
+    public static MediaTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_media, parent, false);
+        return new MediaTemplateHolder(view);
+    }
+
+    private MediaTemplateHolder(@NonNull View view) {
         super(view, view.getContext());
         LinearLayout llAttachment = view.findViewById(R.id.llAttachment);
         ivImage = view.findViewById(R.id.ivImage);
@@ -105,7 +110,7 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
         String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(view.getContext().getResources(), R.drawable.theme1_left_bubble_bg, view.getContext().getTheme());
 
-        if(leftDrawable != null) {
+        if (leftDrawable != null) {
             leftDrawable.setColor(Color.parseColor(leftBgColor));
             leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
             llAttachment.setBackground(leftDrawable);
@@ -133,8 +138,7 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
 
-        switch (payloadOuter.getType())
-        {
+        switch (payloadOuter.getType()) {
             case BundleConstants.MEDIA_TYPE_IMAGE:
                 llAudio.setVisibility(GONE);
                 rlVideo.setVisibility(GONE);
@@ -143,19 +147,16 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                 tvVideoTitle.setVisibility(GONE);
                 tvFileName.setVisibility(GONE);
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
-                {
+                if (!StringUtils.isNullOrEmpty(payloadInner.getText())) {
                     tvVideoTitle.setVisibility(VISIBLE);
                     tvVideoTitle.setText(payloadInner.getText());
                 }
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                {
+                if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
                     tvFileName.setVisibility(VISIBLE);
                     String fileName = payloadInner.getUrl().substring(payloadInner.getUrl().lastIndexOf("/") + 1);
 
-                    if(!StringUtils.isNullOrEmpty(fileName))
-                    {
+                    if (!StringUtils.isNullOrEmpty(fileName)) {
                         tvFileName.setText(fileName);
                     }
 
@@ -174,42 +175,36 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                 llAudio.setVisibility(VISIBLE);
                 tvVideoTitle.setVisibility(GONE);
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
-                {
+                if (!StringUtils.isNullOrEmpty(payloadInner.getText())) {
                     tvVideoTitle.setVisibility(VISIBLE);
                     tvVideoTitle.setText(payloadInner.getText());
                 }
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
-                {
-                    try
-                    {
+                if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl())) {
+                    try {
                         Uri uri = Uri.parse(payloadInner.getAudioUrl());
                         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         player.setDataSource(itemView.getContext(), uri);
                         player.prepareAsync();
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
-                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                {
-                    try
-                    {
+                } else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
+                    try {
                         Uri uri = Uri.parse(payloadInner.getUrl());
                         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         player.setDataSource(itemView.getContext(), uri);
                         player.prepareAsync();
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
                 tvFileName.setVisibility(VISIBLE);
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                     tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
-                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                     tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
 
                 player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -223,35 +218,28 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         player.seekTo(1);
-                        ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(itemView.getContext().getResources(),R.drawable.ic_paly_black, itemView.getContext().getTheme()));
+                        ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.ic_paly_black, itemView.getContext().getTheme()));
                         ivAudioPlayPauseIcon.setTag(true);
                     }
                 });
 
                 ivAudioPlayPauseIcon.setTag(true);
-                ivAudioPlayPauseIcon.setOnClickListener(new View.OnClickListener()
-                {
+                ivAudioPlayPauseIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
-                        if((boolean)v.getTag())
-                        {
+                    public void onClick(View v) {
+                        if ((boolean) v.getTag()) {
                             ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.ic_pause_black, itemView.getContext().getTheme()));
-                            try
-                            {
+                            try {
                                 player.start();
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             v.setTag(false);
-                        }
-                        else
-                        {
+                        } else {
                             ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.ic_paly_black, itemView.getContext().getTheme()));
-                            try
-                            {
+                            try {
                                 player.pause();
-                            } catch(Exception e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
                             }
                             v.setTag(true);
@@ -259,25 +247,20 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                     }
                 });
 
-                tvTheme1.setOnClickListener(new View.OnClickListener()
-                {
+                tvTheme1.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
+                    public void onClick(View v) {
                         popupWindow.dismiss();
-                        if(checkForPermissionAccessAndRequest())
-                        {
+                        if (checkForPermissionAccessAndRequest()) {
                             KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_AUDIO, "");
-                            if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                            if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
                                 KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
-                            else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                            else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                 KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
-                        }
-                        else if(composeFooterInterface != null)
-                        {
-                            if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                        } else if (composeFooterInterface != null) {
+                            if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
                                 composeFooterInterface.externalReadWritePermission(payloadInner.getAudioUrl());
-                            else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                            else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                 composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
                         }
                     }
@@ -291,39 +274,38 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                 llAudio.setVisibility(GONE);
                 tvVideoTitle.setVisibility(GONE);
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
-                {
+                if (!StringUtils.isNullOrEmpty(payloadInner.getText())) {
                     tvVideoTitle.setVisibility(VISIBLE);
                     tvVideoTitle.setText(payloadInner.getText());
                 }
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                     vvAttachment.setVideoPath(payloadInner.getVideoUrl());
-                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                     vvAttachment.setVideoPath(payloadInner.getUrl());
 
-                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)vvAttachment.getLayoutParams();
-                layoutParams.height=(int)(190 * dp1);
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) vvAttachment.getLayoutParams();
+                layoutParams.height = (int) (190 * dp1);
                 vvAttachment.setLayoutParams(layoutParams);
                 ivImage.setVisibility(GONE);
                 rlVideo.setVisibility(VISIBLE);
                 vvAttachment.setVisibility(VISIBLE);
 
-                vvAttachment.setOnPreparedListener(new MediaPlayer.OnPreparedListener()  {
+                vvAttachment.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         setVideoProgress();
                     }
                 });
 
-                if(payloadInner.getVideoCurrentPosition() > 0)
+                if (payloadInner.getVideoCurrentPosition() > 0)
                     setVideoPosition(payloadInner.getVideoCurrentPosition());
 
                 tvFileName.setVisibility(VISIBLE);
 
-                if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                     tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
-                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                     tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
 
                 vvAttachment.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -343,20 +325,15 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                 });
 
                 ivPlayPauseIcon.setTag(true);
-                ivPlayPauseIcon.setOnClickListener(new View.OnClickListener()
-                {
+                ivPlayPauseIcon.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
-                        if((boolean)v.getTag())
-                        {
+                    public void onClick(View v) {
+                        if ((boolean) v.getTag()) {
                             ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.ic_pause_icon, itemView.getContext().getTheme()));
                             vvAttachment.requestFocus();
                             vvAttachment.start();
                             v.setTag(false);
-                        }
-                        else
-                        {
+                        } else {
                             ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(itemView.getContext().getResources(), R.drawable.ic_play_icon, itemView.getContext().getTheme()));
                             vvAttachment.pause();
                             v.setTag(true);
@@ -368,8 +345,7 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
 
                 vvAttachment.setOnTouchListener(new View.OnTouchListener() {
                     @Override
-                    public boolean onTouch(View v, MotionEvent event)
-                    {
+                    public boolean onTouch(View v, MotionEvent event) {
                         llPlayControls.setVisibility(VISIBLE);
                         hideToolBar();
                         return false;
@@ -381,9 +357,9 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                     public void onClick(View v) {
 
                         Intent intent = new Intent(itemView.getContext(), VideoFullScreenActivity.class);
-                        if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                             intent.putExtra("VideoUrl", payloadInner.getVideoUrl());
-                        else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                             intent.putExtra("VideoUrl", payloadInner.getUrl());
 
                         intent.putExtra("CurrentPosition", current_pos);
@@ -392,25 +368,20 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
                     }
                 });
 
-                tvTheme1.setOnClickListener(new View.OnClickListener()
-                {
+                tvTheme1.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v)
-                    {
+                    public void onClick(View v) {
                         popupWindow.dismiss();
-                        if(checkForPermissionAccessAndRequest())
-                        {
+                        if (checkForPermissionAccessAndRequest()) {
                             KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
-                            if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                            if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                 KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
-                            else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                            else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                 KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
-                        }
-                        else if(composeFooterInterface != null)
-                        {
-                            if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        } else if (composeFooterInterface != null) {
+                            if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                 composeFooterInterface.externalReadWritePermission(payloadInner.getVideoUrl());
-                            else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                            else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                 composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
                         }
                     }
@@ -419,45 +390,38 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
         }
     }
 
-    private SharedPreferences getSharedPreferences(Context context)
-    {
+    private SharedPreferences getSharedPreferences(Context context) {
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         return sharedPreferences;
     }
 
-    private void hideToolBar()
-    {
+    private void hideToolBar() {
         new Handler().postDelayed(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 llPlayControls.setVisibility(GONE);
 
-                if(popupWindow != null)
+                if (popupWindow != null)
                     popupWindow.dismiss();
             }
         }, 5000);
     }
 
-    private void setVideoPosition(double current_position)
-    {
-        sbVideo.setProgress((int)current_position);
-        vvAttachment.seekTo((int)current_position);
+    private void setVideoPosition(double current_position) {
+        sbVideo.setProgress((int) current_position);
+        vvAttachment.seekTo((int) current_position);
     }
 
-    public void onEvent(VideoTimerEvent event)
-    {
-        if(vvAttachment.getVisibility() == VISIBLE)
-        {
-            sbVideo.setProgress((int)event.getCurrentPos());
-            vvAttachment.seekTo((int)event.getCurrentPos());
+    public void onEvent(VideoTimerEvent event) {
+        if (vvAttachment.getVisibility() == VISIBLE) {
+            sbVideo.setProgress((int) event.getCurrentPos());
+            vvAttachment.seekTo((int) event.getCurrentPos());
             ivAudioPlayPauseIcon.performClick();
         }
     }
 
     // display video progress
-    public void setVideoProgress()
-    {
+    public void setVideoProgress() {
         //get the video duration
         current_pos = vvAttachment.getCurrentPosition();
         total_duration = vvAttachment.getDuration();
@@ -467,15 +431,13 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
 
         Runnable runnable = new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     current_pos = vvAttachment.getCurrentPosition();
-                    tvVideoTiming.setText(StringUtils.timeConversion((long) current_pos)+"/"+StringUtils.timeConversion((long) total_duration));
+                    tvVideoTiming.setText(StringUtils.timeConversion((long) current_pos) + "/" + StringUtils.timeConversion((long) total_duration));
                     sbVideo.setProgress((int) current_pos);
                     handler.postDelayed(this, 1000);
-                } catch (IllegalStateException ed){
+                } catch (IllegalStateException ed) {
                     ed.printStackTrace();
                 }
             }
@@ -502,15 +464,13 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
         });
     }
 
-    private boolean checkForPermissionAccessAndRequest()
-    {
+    private boolean checkForPermissionAccessAndRequest() {
         return KaPermissionsHelper.hasPermission(itemView.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
 
     // display video progress
-    public void setAudioProgress()
-    {
+    public void setAudioProgress() {
         //get the video duration
         current_audio_pos = player.getCurrentPosition();
         total_audio_duration = player.getDuration();
@@ -520,15 +480,13 @@ public class AttachmentTemplateHolder extends BaseViewHolderNew
 
         Runnable runnable = new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     current_audio_pos = player.getCurrentPosition();
-                    tvAudioVideoTiming.setText(StringUtils.timeConversion((long) current_audio_pos)+"/"+StringUtils.timeConversion((long) total_audio_duration));
+                    tvAudioVideoTiming.setText(StringUtils.timeConversion((long) current_audio_pos) + "/" + StringUtils.timeConversion((long) total_audio_duration));
                     sbAudioVideo.setProgress((int) current_audio_pos);
                     handler.postDelayed(this, 1000);
-                } catch (IllegalStateException ed){
+                } catch (IllegalStateException ed) {
                     ed.printStackTrace();
                 }
             }

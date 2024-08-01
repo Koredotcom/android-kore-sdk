@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -31,7 +33,12 @@ public class FormTemplateHolder extends BaseViewHolderNew {
     private final TextView btFieldButton;
     private final String leftTextColor;
 
-    public FormTemplateHolder(@NonNull View itemView) {
+    public static FormTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_form, parent, false);
+        return new FormTemplateHolder(view);
+    }
+
+    private FormTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
 
         autoExpandListView = itemView.findViewById(R.id.multi_select_list);

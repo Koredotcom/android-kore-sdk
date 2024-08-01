@@ -2,9 +2,10 @@ package kore.botssdk.viewholders;
 
 import static android.view.View.VISIBLE;
 
-import android.content.Context;
 import android.graphics.Rect;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -43,8 +44,13 @@ public class BankingFeedbackTemplateHolder extends BaseViewHolderNew implements 
     private final EditText edtSuggestions;
     private final LinearLayout feedback_layout;
 
-    public BankingFeedbackTemplateHolder(@NonNull View view, Context mContext) {
-        super(view, mContext);
+    public static BankingFeedbackTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.banking_feedback_template, parent, false);
+        return new BankingFeedbackTemplateHolder(view);
+    }
+
+    private BankingFeedbackTemplateHolder(@NonNull View view) {
+        super(view, view.getContext());
         feedback_layout = view.findViewById(R.id.feedback_layout);
         lvExperience = view.findViewById(R.id.lvExperience);
         tvFeedbackHeading = view.findViewById(R.id.tvFeedbackHeading);

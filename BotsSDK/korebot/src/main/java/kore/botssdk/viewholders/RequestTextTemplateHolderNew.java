@@ -5,7 +5,9 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -22,7 +24,11 @@ import kore.botssdk.view.LinkifyTextView;
 
 public class RequestTextTemplateHolderNew extends BaseViewHolderNew {
 
-    public RequestTextTemplateHolderNew(@NonNull View view) {
+    public static RequestTextTemplateHolderNew getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_bubble_text, parent, false);
+        return new RequestTextTemplateHolderNew(view);
+    }
+    private RequestTextTemplateHolderNew(@NonNull View view) {
         super(view, view.getContext());
         initBubbleText((LinearLayoutCompat) view, true);
     }

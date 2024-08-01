@@ -6,6 +6,7 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,7 +30,11 @@ import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.AutoExpandListView;
 
 public class ListViewTemplateHolder extends BaseViewHolderNew {
-    public ListViewTemplateHolder(@NonNull View itemView) {
+    public static ListViewTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_list_view, parent, false);
+        return new ListViewTemplateHolder(view);
+    }
+    private ListViewTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();

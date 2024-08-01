@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -31,7 +33,11 @@ public class ButtonLinkTemplateHolder extends BaseViewHolderNew {
     private final TextView tvButtonLinkTitle;
     private final Context context;
 
-    public ButtonLinkTemplateHolder(@NonNull View itemView) {
+    public static ButtonLinkTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_button_link, parent, false);
+        return new ButtonLinkTemplateHolder(view);
+    }
+    private ButtonLinkTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         context = itemView.getContext();
         autoExpandListView = itemView.findViewById(R.id.botCustomButtonList);
@@ -68,7 +74,6 @@ public class ButtonLinkTemplateHolder extends BaseViewHolderNew {
         BotButtonLinkTemplateAdapter buttonTypeAdapter = new BotButtonLinkTemplateAdapter(context, payloadInner.getButtons(), 1);
         buttonTypeAdapter.setEnabled(isLastItem());
         autoExpandListView.setAdapter(buttonTypeAdapter);
-//        buttonTypeAdapter.setCheckedPosition(payloadInner.getCheckedPosition());
         buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
         buttonTypeAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         buttonTypeAdapter.notifyDataSetChanged();

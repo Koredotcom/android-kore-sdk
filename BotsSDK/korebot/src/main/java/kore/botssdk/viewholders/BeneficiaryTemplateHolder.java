@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,22 +33,27 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.AutoExpandListView;
 
-public class BotBeneficiaryTemplateHolder extends BaseViewHolderNew implements ListClickableListner {
+public class BeneficiaryTemplateHolder extends BaseViewHolderNew implements ListClickableListner {
 
     private final AutoExpandListView autoExpandListView;
     private final TextView botCustomListViewButton;
     private final LinearLayout botCustomListRoot;
     private PayloadInner payloadInner;
 
-    public BotBeneficiaryTemplateHolder(@NonNull View itemView, Context mContext) {
-        super(itemView, mContext);
+    public static BeneficiaryTemplateHolder getInstance(ViewGroup parent) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bot_custom_list_view_template, parent, false);
+        return new BeneficiaryTemplateHolder(view);
+    }
+
+    private BeneficiaryTemplateHolder(@NonNull View itemView) {
+        super(itemView, itemView.getContext());
 
         botCustomListRoot = itemView.findViewById(R.id.botCustomListRoot);
         autoExpandListView = itemView.findViewById(R.id.botCustomListView);
         botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
-        KaFontUtils.applyCustomFont(mContext, itemView);
+        KaFontUtils.applyCustomFont(itemView.getContext(), itemView);
 
-        SharedPreferences sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         String quickWidgetColor = SDKConfiguration.BubbleColors.quickReplyColor;
         String quickReplyFontColor = SDKConfiguration.BubbleColors.quickReplyTextColor;
@@ -66,18 +73,17 @@ public class BotBeneficiaryTemplateHolder extends BaseViewHolderNew implements L
         BotListViewMoreDataModel botListViewMoreDataModel = payloadInner.getMoreData();
         ArrayList<BotBeneficiaryModel> botListModelArrayList = payloadInner.getBotBeneficiaryModels();
         ArrayList<BotButtonModel> botButtonModelArrayList = payloadInner.getButtons();
-        int moreCount =  payloadInner.getMoreCount();
+        int moreCount = payloadInner.getMoreCount();
 
-        if(botListViewMoreDataModel != null)
+        if (botListViewMoreDataModel != null)
             LogUtils.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
-        if (botListModelArrayList != null && botListModelArrayList.size() > 0)
-        {
+        if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
             this.payloadInner = payloadInner;
             itemView.setAlpha((payloadInner.isIs_end() ? 0.4f : 1.0f));
 
             BotBeneficiaryTemplateAdapter botListTemplateAdapter = null;
-            if(moreCount != 0 && botListModelArrayList.size() > moreCount)
+            if (moreCount != 0 && botListModelArrayList.size() > moreCount)
                 botListTemplateAdapter = new BotBeneficiaryTemplateAdapter(itemView.getContext(), moreCount);
             else
                 botListTemplateAdapter = new BotBeneficiaryTemplateAdapter(itemView.getContext(), botListModelArrayList.size());
@@ -85,21 +91,20 @@ public class BotBeneficiaryTemplateHolder extends BaseViewHolderNew implements L
             autoExpandListView.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            botListTemplateAdapter.setListClickableInterface(BotBeneficiaryTemplateHolder.this);
+            botListTemplateAdapter.setListClickableInterface(BeneficiaryTemplateHolder.this);
             botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
             botListTemplateAdapter.setListClickable(payloadInner.isIs_end());
             botListTemplateAdapter.notifyDataSetChanged();
 
             botCustomListRoot.setVisibility(VISIBLE);
-            if(botButtonModelArrayList != null && botButtonModelArrayList.size() > 0)
-            {
+            if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
                 botCustomListViewButton.setText(Html.fromHtml(botButtonModelArrayList.get(0).getTitle()));
                 botCustomListViewButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
                         bottomSheetDialog.setisFromFullView(false);
-                        bottomSheetDialog.setSkillName("skillName","trigger");
+                        bottomSheetDialog.setSkillName("skillName", "trigger");
 //                        bottomSheetDialog.setData(botListModelArrayList);
                         bottomSheetDialog.setHeaderVisible(true);
                         bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
@@ -110,19 +115,14 @@ public class BotBeneficiaryTemplateHolder extends BaseViewHolderNew implements L
 
 
                 botCustomListViewButton.setVisibility(botListModelArrayList.size() > moreCount ? VISIBLE : GONE);
-            }
-            else
-            {
-                if(moreCount != 0)
-                {
+            } else {
+                if (moreCount != 0) {
                     botCustomListViewButton.setVisibility(botListModelArrayList.size() > moreCount ? VISIBLE : GONE);
                     botCustomListViewButton.setText(Html.fromHtml(itemView.getResources().getString(R.string.show_more)));
                 }
 
             }
-        }
-        else
-        {
+        } else {
             botCustomListRoot.setVisibility(GONE);
             botCustomListViewButton.setVisibility(GONE);
         }
@@ -130,7 +130,7 @@ public class BotBeneficiaryTemplateHolder extends BaseViewHolderNew implements L
 
     @Override
     public void listClicked(boolean isListClicked) {
-        if(payloadInner != null)
+        if (payloadInner != null)
             payloadInner.setIs_end(true);
     }
 }

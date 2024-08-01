@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
@@ -81,6 +82,7 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
         if (botCarouselModel.getButtons() != null) {
             CarouselItemButtonAdapter botCarouselItemButtonAdapter = new CarouselItemButtonAdapter(holder.itemView.getContext());
             holder.buttons.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
+            holder.buttons.addItemDecoration(new VerticalSpaceItemDecoration(2));
             holder.buttons.setAdapter(botCarouselItemButtonAdapter);
             botCarouselItemButtonAdapter.setComposeFooterInterface(composeFooterInterface);
             botCarouselItemButtonAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
