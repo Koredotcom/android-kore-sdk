@@ -1,7 +1,7 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kore.botssdk.R;
 import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -24,15 +23,15 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
 import kore.botssdk.viewholders.AgentTransferTemplateHolder;
-import kore.botssdk.viewholders.MediaTemplateHolder;
 import kore.botssdk.viewholders.BankingFeedbackTemplateHolder;
 import kore.botssdk.viewholders.BarChartTemplateHolder;
-import kore.botssdk.viewholders.BaseViewHolderNew;
+import kore.botssdk.viewholders.BaseViewHolder;
 import kore.botssdk.viewholders.BeneficiaryTemplateHolder;
 import kore.botssdk.viewholders.ButtonLinkTemplateHolder;
 import kore.botssdk.viewholders.ButtonTemplateHolder;
@@ -48,6 +47,7 @@ import kore.botssdk.viewholders.LineChartTemplateHolder;
 import kore.botssdk.viewholders.ListTemplateHolder;
 import kore.botssdk.viewholders.ListViewTemplateHolder;
 import kore.botssdk.viewholders.ListWidgetTemplateHolder;
+import kore.botssdk.viewholders.MediaTemplateHolder;
 import kore.botssdk.viewholders.MiniTableTemplateHolder;
 import kore.botssdk.viewholders.PdfTemplateHolder;
 import kore.botssdk.viewholders.PieChartTemplateHolder;
@@ -58,15 +58,10 @@ import kore.botssdk.viewholders.TableListTemplateHolder;
 import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
 import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 
-public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> implements ChatContentStateListener {
+public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
 
-    //    private static String LOG_TAG = ChatAdapter.class.getSimpleName();
-//    final Context context;
-//    private Activity activityContext;
-    private final LayoutInflater ownLayoutInflater;
     private final HashMap<String, Integer> headersMap = new HashMap<>();
     private boolean isAlpha = false;
-
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -124,9 +119,12 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
     public static final int TEMPLATE_PDF_DOWNLOAD = 28;
     public static final int TEMPLATE_BENEFICIARY = 29;
 
+    public static final int TEMPLATE_CUSTOM_TEMPLATES = 30;
+
+    private HashMap<Integer, String> customTemplates = new HashMap<>();
+
     public ChatAdapterNew(Context context) {
         super();
-        ownLayoutInflater = LayoutInflater.from(context);
         baseBotMessageArrayList = new ArrayList<>();
     }
 
@@ -149,6 +147,9 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
             PayloadInner payInner;
             payInner = payOuter.getPayload();
             if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
+                int customTemplateType = getCustomTemplateType(payInner.getTemplate_type());
+                if (customTemplateType != -1) return customTemplateType;
+
                 switch (payInner.getTemplate_type()) {
                     case BotResponse.TEMPLATE_TYPE_BUTTON:
                         return TEMPLATE_BUTTON;
@@ -230,9 +231,43 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
                     default:
                         break;
                 }
+                int customTemplateType = getCustomTemplateType(payOuter.getType());
+                if (customTemplateType != -1) return customTemplateType;
+//                if (SDKConfiguration.getCustomTemplateViewHolder(payOuter.getType()) != null) {
+//                    Class<?> clazz = SDKConfiguration.getCustomTemplateViewHolder(payOuter.getType());
+//                    if (clazz != null) {
+//                        if (clazz.getSuperclass() != null && clazz.getSuperclass().isAssignableFrom(BaseViewHolderNew.class)) {
+//                            customTemplateType = payOuter.getType();
+//                            return TEMPLATE_CUSTOM_TEMPLATES;
+//                        }
+//                        Log.e("Error", "Custom template view holder should inherit from " + BaseViewHolderNew.class.getSimpleName());
+//                    }
+//                }
             }
             return TEMPLATE_BUBBLE_RESPONSE;
         }
+    }
+
+    private int getCustomTemplateType(String templateType) {
+        Class<?> clazz = SDKConfiguration.getCustomTemplateViewHolder(templateType);
+        if (clazz != null) {
+            if (clazz.getSuperclass() != null && clazz.getSuperclass().isAssignableFrom(BaseViewHolder.class)) {
+                List<String> templateTypes = new ArrayList<>(customTemplates.values());
+                if (!templateTypes.contains(templateType)) {
+                    int type = TEMPLATE_CUSTOM_TEMPLATES + customTemplates.size();
+                    customTemplates.put(type, templateType);
+                    return type;
+                } else {
+                    for (Integer key : customTemplates.keySet()) {
+                        if (customTemplates.get(key) != null && customTemplates.get(key).equals(templateType)) {
+                            return key;
+                        }
+                    }
+                }
+            }
+            Log.e("Error", "Custom template view holder should inherit from " + BaseViewHolder.class.getSimpleName());
+        }
+        return -1;
     }
 
     public int getItemType(int position) {
@@ -247,8 +282,11 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
 
     @NonNull
     @Override
-    public BaseViewHolderNew onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        switch (i) {
+    public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (customTemplates.containsKey(viewType)) {
+            return getCustomTemplate(parent, SDKConfiguration.getCustomTemplateViewHolder(customTemplates.get(viewType)));
+        }
+        switch (viewType) {
             case TEMPLATE_BUBBLE_REQUEST:
                 return RequestTextTemplateHolderNew.getInstance(parent);
             case TEMPLATE_BUTTON:
@@ -311,7 +349,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final BaseViewHolderNew holder, final int position) {
+    public void onBindViewHolder(@NonNull final BaseViewHolder holder, final int position) {
         boolean isLastItem = position == baseBotMessageArrayList.size() - 1;
         holder.setIsLastItem(isLastItem);
         holder.setContentStateListener(this);
@@ -328,6 +366,22 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolderNew> impl
     @Override
     public int getItemCount() {
         return baseBotMessageArrayList.size();
+    }
+
+    private BaseViewHolder getCustomTemplate(ViewGroup parent, Class<?> clazzType) {
+        Class<?> clazz = null;
+        Method method = null;
+        BaseViewHolder holder = null;
+        try {
+            clazz = Class.forName(clazzType.getName());
+            // Get the method by name and parameter types
+            method = clazz.getDeclaredMethod("getInstance", ViewGroup.class);
+            // Invoke the static method with the parameter and get the result
+            holder = (BaseViewHolder) method.invoke(null, parent);
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return holder;
     }
 
     public boolean isAlpha() {

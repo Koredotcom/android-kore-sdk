@@ -2,8 +2,6 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.PayloadInner;
 
-public class ButtonTemplateHolder extends BaseViewHolderNew {
+public class ButtonTemplateHolder extends BaseViewHolder {
 
     public static ButtonTemplateHolder getInstance(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_button, parent, false);

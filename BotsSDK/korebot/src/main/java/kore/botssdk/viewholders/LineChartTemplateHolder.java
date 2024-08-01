@@ -32,7 +32,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.CustomMarkerView;
 
-public class LineChartTemplateHolder extends BaseViewHolderNew implements OnChartGestureListener {
+public class LineChartTemplateHolder extends BaseViewHolder implements OnChartGestureListener {
     private CustomMarkerView markerView;
     private LineChart lineChart;
 

@@ -4,15 +4,16 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
-public class SDKConfig
-{
-    public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView)
-    {
+public class SDKConfig {
+    public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
     }
 
-    public static void initialize(String botId, String botName, String clientId, String clientName, String identity, String jwtToken)
-    {
+    public static void setCustomTemplateViewHolder(@NonNull String templateName, @NonNull Class<?> templateViewHolder) {
+        SDKConfiguration.setCustomTemplateViewHolder(templateName, templateViewHolder);
+    }
+
+    public static void initialize(String botId, String botName, String clientId, String clientName, String identity, String jwtToken) {
         SDKConfiguration.Client.setBot_id(botId);
         SDKConfiguration.Client.setBot_name(botName);
         SDKConfiguration.Client.setClient_id(clientId);
@@ -21,19 +22,16 @@ public class SDKConfig
         SDKConfiguration.JWTServer.setJwt_token(jwtToken);
     }
 
-    public static void setServerUrl(String url)
-    {
+    public static void setServerUrl(String url) {
         SDKConfiguration.Server.setServerUrl(url);
         SDKConfiguration.Server.setKoreBotServerUrl(url);
     }
 
-    public static void setBrandingUrl(String url)
-    {
+    public static void setBrandingUrl(String url) {
         SDKConfiguration.Server.setBrandingUrl(url);
     }
 
-    public static void setJwtTokenUrl(String url)
-    {
+    public static void setJwtTokenUrl(String url) {
         SDKConfiguration.JWTServer.setJwtServerUrl(url);
     }
 

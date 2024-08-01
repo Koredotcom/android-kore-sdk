@@ -19,7 +19,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotTableDataModel;
 import kore.botssdk.models.PayloadInner;
 
-public class TableTemplateHolder extends BaseViewHolderNew {
+public class TableTemplateHolder extends BaseViewHolder {
     private final RecyclerView rvTableView;
     private final RecyclerView rvTableViewHeader;
 

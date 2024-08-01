@@ -17,7 +17,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.CardTemplateModel;
 import kore.botssdk.models.PayloadInner;
 
-public class CardTemplateHolder extends BaseViewHolderNew {
+public class CardTemplateHolder extends BaseViewHolder {
     private final RecyclerView rvCards;
 
     public static CardTemplateHolder getInstance(ViewGroup parent) {

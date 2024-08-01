@@ -54,7 +54,7 @@ import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.LinkifyTextView;
 
-public abstract class BaseViewHolderNew extends RecyclerView.ViewHolder {
+public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     private final Context context;
     private GradientDrawable leftDrawable;
     private final String REGEX_CHAR = "%%.*?%%";
@@ -66,7 +66,7 @@ public abstract class BaseViewHolderNew extends RecyclerView.ViewHolder {
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     protected ChatContentStateListener contentStateListener;
 
-    public BaseViewHolderNew(@NonNull View itemView, Context mContext) {
+    public BaseViewHolder(@NonNull View itemView, Context mContext) {
         super(itemView);
         this.context = mContext;
     }

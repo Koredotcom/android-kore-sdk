@@ -32,7 +32,7 @@ import kore.botssdk.utils.Utility;
 import kore.botssdk.view.AutoExpandListView;
 
 @SuppressWarnings("UnKnownNullness")
-public class BankingFeedbackTemplateHolder extends BaseViewHolderNew implements FeedbackExperienceUpdateListner {
+public class BankingFeedbackTemplateHolder extends BaseViewHolder implements FeedbackExperienceUpdateListner {
     private final AutoExpandListView lvExperience, lvFeedback;
     private final TextView tvFeedbackHeading;
     private final TextView tvEmpathyMessage;

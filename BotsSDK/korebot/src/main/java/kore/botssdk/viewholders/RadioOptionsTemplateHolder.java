@@ -19,7 +19,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.RadioOptionModel;
 
-public class RadioOptionsTemplateHolder extends BaseViewHolderNew {
+public class RadioOptionsTemplateHolder extends BaseViewHolder {
     private final TextView title;
     private final RecyclerView list;
     private final TextView confirm;

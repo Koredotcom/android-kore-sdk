@@ -15,7 +15,7 @@ import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 
-public class ClockTemplateHolder extends BaseViewHolderNew {
+public class ClockTemplateHolder extends BaseViewHolder {
     private final String MERIDIAN_AM = "AM";
     private final String MERIDIAN_PM = "PM";
     private final AppCompatSeekBar seekbarHours;

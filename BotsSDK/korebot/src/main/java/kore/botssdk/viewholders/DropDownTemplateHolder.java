@@ -19,7 +19,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.DropDownElementsModel;
 import kore.botssdk.models.PayloadInner;
 
-public class DropDownTemplateHolder extends BaseViewHolderNew {
+public class DropDownTemplateHolder extends BaseViewHolder {
     private final TextView tvDropDownTitle;
     private final Spinner spinner;
 

@@ -48,7 +48,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PdfTemplateHolder extends BaseViewHolderNew {
+public class PdfTemplateHolder extends BaseViewHolder {
 
     private final ImageView ivPdfDownload;
     private final AutoExpandListView lvPdfs;

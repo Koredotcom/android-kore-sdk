@@ -21,7 +21,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.PayloadInner;
 
-public class CarouselTemplateHolder extends BaseViewHolderNew {
+public class CarouselTemplateHolder extends BaseViewHolder {
     private final RecyclerView viewPager;
 
     public static CarouselTemplateHolder getInstance(ViewGroup parent) {

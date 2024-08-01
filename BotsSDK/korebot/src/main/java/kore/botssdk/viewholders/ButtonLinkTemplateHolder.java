@@ -28,7 +28,7 @@ import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.AutoExpandListView;
 
-public class ButtonLinkTemplateHolder extends BaseViewHolderNew {
+public class ButtonLinkTemplateHolder extends BaseViewHolder {
     private final AutoExpandListView autoExpandListView;
     private final TextView tvButtonLinkTitle;
     private final Context context;

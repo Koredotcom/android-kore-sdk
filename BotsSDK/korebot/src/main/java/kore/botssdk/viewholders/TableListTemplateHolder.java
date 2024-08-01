@@ -18,7 +18,7 @@ import kore.botssdk.models.BotTableListModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.AutoExpandListView;
 
-public class TableListTemplateHolder extends BaseViewHolderNew {
+public class TableListTemplateHolder extends BaseViewHolder {
     private final AutoExpandListView autoExpandListView;
 
     public static TableListTemplateHolder getInstance(ViewGroup parent) {

@@ -27,7 +27,7 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.AutoExpandListView;
 
-public class FormTemplateHolder extends BaseViewHolderNew {
+public class FormTemplateHolder extends BaseViewHolder {
     private final AutoExpandListView autoExpandListView;
     private final TextView tvFormTemplateTitle;
     private final TextView btFieldButton;

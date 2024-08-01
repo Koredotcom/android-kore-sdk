@@ -21,7 +21,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.AutoExpandListView;
 
-public class ListTemplateHolder extends BaseViewHolderNew {
+public class ListTemplateHolder extends BaseViewHolder {
     public static ListTemplateHolder getInstance(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_list, parent, false);
         return new ListTemplateHolder(view);

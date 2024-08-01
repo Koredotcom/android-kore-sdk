@@ -23,6 +23,7 @@ public class SDKConfiguration {
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static final boolean APPLY_FONT_STYLE = true;
     protected static HashMap<String, View> hsh = new HashMap<>();
+    protected static HashMap<String, Class<?>> hshViewHolders = new HashMap<>();
 
     public static boolean isApplyFontStyle() {
         return APPLY_FONT_STYLE;
@@ -219,6 +220,14 @@ public class SDKConfiguration {
 
     public static HashMap<String, View> getCustomTemplateView() {
         return hsh;
+    }
+    public static void setCustomTemplateViewHolder(String templateName, Class<?> viewHolder) {
+        hshViewHolders.put(templateName, viewHolder);
+        Log.e("HashMap Count", hshViewHolders.size() + "");
+    }
+
+    public static Class<?> getCustomTemplateViewHolder(String templateType) {
+        return hshViewHolders.get(templateType);
     }
 
 }

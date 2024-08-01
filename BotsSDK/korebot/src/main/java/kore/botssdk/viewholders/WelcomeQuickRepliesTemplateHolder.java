@@ -22,7 +22,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.QuickReplyTemplate;
 
-public class WelcomeQuickRepliesTemplateHolder extends BaseViewHolderNew {
+public class WelcomeQuickRepliesTemplateHolder extends BaseViewHolder {
     private final RecyclerView recyclerView;
 
     public static WelcomeQuickRepliesTemplateHolder getInstance(ViewGroup parent) {

@@ -38,7 +38,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-public class FeedbackTemplateHolder extends BaseViewHolderNew implements View.OnClickListener {
+public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnClickListener {
     private final TextView tvFeedbackTemplateTitle;
     private final ImageView icon1;
     private final ImageView icon2;

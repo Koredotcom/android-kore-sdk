@@ -22,7 +22,7 @@ import kore.botssdk.models.ContactTemplateModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 
-public class ContactCardTemplateHolder extends BaseViewHolderNew {
+public class ContactCardTemplateHolder extends BaseViewHolder {
     private final RecyclerView recyclerView;
     private final TextView botListViewTitle;
 

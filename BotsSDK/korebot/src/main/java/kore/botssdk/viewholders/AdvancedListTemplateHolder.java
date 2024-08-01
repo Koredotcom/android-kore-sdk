@@ -19,7 +19,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.AutoExpandListView;
 
-public class AdvancedListTemplateHolder extends BaseViewHolderNew {
+public class AdvancedListTemplateHolder extends BaseViewHolder {
     public static AdvancedListTemplateHolder getInstance(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_advanced_list_template, parent, false);
         return new AdvancedListTemplateHolder(view);

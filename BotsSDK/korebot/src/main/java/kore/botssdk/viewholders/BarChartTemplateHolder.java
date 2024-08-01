@@ -35,7 +35,7 @@ import kore.botssdk.models.BotBarChartDataModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.CustomMarkerView;
 
-public class BarChartTemplateHolder extends BaseViewHolderNew implements OnChartValueSelectedListener {
+public class BarChartTemplateHolder extends BaseViewHolder implements OnChartValueSelectedListener {
     private final int BAR_STACKED = 0;
     private final int BAR_VERTICAL = 1;
     private final int BAR_HORIZONTAL = 2;

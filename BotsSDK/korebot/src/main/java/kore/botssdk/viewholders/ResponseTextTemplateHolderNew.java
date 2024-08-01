@@ -15,7 +15,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.StringUtils;
 
-public class ResponseTextTemplateHolderNew extends BaseViewHolderNew {
+public class ResponseTextTemplateHolderNew extends BaseViewHolder {
     public static ResponseTextTemplateHolderNew getInstance(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_bubble_text, parent, false);
         return new ResponseTextTemplateHolderNew(view);

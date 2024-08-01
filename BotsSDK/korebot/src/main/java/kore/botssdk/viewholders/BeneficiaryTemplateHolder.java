@@ -33,7 +33,7 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.AutoExpandListView;
 
-public class BeneficiaryTemplateHolder extends BaseViewHolderNew implements ListClickableListner {
+public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListClickableListner {
 
     private final AutoExpandListView autoExpandListView;
     private final TextView botCustomListViewButton;

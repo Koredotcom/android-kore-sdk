@@ -17,7 +17,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.AutoExpandListView;
 
-public class MultiSelectTemplateHolder extends BaseViewHolderNew {
+public class MultiSelectTemplateHolder extends BaseViewHolder {
     private final AutoExpandListView autoExpandListView;
     private final View multiSelectLayout;
 

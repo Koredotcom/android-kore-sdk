@@ -3,6 +3,8 @@ package com.kore.korebot.customtemplates;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Environment;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -26,17 +28,17 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.viewholders.BaseViewHolder;
 
-public class LinkTemplateHolder extends BaseViewHolder {
+public class NewTemplateHolder extends BaseViewHolder {
     private final ImageView ivPdfDownload;
     private final TextView tvPdfName;
     private final ProgressBar pbDownload;
 
-    public static LinkTemplateHolder getInstance(ViewGroup parent) {
+    public static NewTemplateHolder getInstance(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pdf_download_view, parent, false);
-        return new LinkTemplateHolder(view);
+        return new NewTemplateHolder(view);
     }
 
-    private LinkTemplateHolder(@NonNull View view) {
+    private NewTemplateHolder(@NonNull View view) {
         super(view, view.getContext());
 
         tvPdfName = view.findViewById(kore.botssdk.R.id.tv_pdf_item_title);
@@ -49,7 +51,9 @@ public class LinkTemplateHolder extends BaseViewHolder {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
 
-        tvPdfName.setText(payloadInner.getFileName());
+        tvPdfName.setTextColor(Color.RED);
+        tvPdfName.setTypeface(Typeface.DEFAULT_BOLD);
+        tvPdfName.setText("Custom Pie chart");
         ivPdfDownload.setOnClickListener(v -> {
             File fileLocation = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + File.separator + payloadInner.getFileName());
             if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {

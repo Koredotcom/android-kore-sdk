@@ -48,7 +48,7 @@ import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-public class MediaTemplateHolder extends BaseViewHolderNew {
+public class MediaTemplateHolder extends BaseViewHolder {
     private final ImageView ivImage;
     private final TextView tvFileName, tvAudioVideoTiming;
     private SharedPreferences sharedPreferences;

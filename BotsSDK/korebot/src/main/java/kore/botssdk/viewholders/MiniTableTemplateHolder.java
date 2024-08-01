@@ -16,7 +16,7 @@ import kore.botssdk.adapter.MiniTablePagerAdapter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 
-public class MiniTableTemplateHolder extends BaseViewHolderNew {
+public class MiniTableTemplateHolder extends BaseViewHolder {
     private final RecyclerView recyclerView;
     private final MiniTablePagerAdapter adapter;
 

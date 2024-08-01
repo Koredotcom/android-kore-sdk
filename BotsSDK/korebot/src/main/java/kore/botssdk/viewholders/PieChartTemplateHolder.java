@@ -30,7 +30,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.CustomMarkerView;
 
-public class PieChartTemplateHolder extends BaseViewHolderNew {
+public class PieChartTemplateHolder extends BaseViewHolder {
     private final PieChart pieChart;
     private final String PIE_TYPE_DONUT = "donut";
 

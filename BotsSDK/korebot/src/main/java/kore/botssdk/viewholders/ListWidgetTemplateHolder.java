@@ -49,7 +49,7 @@ import kore.botssdk.models.HeaderOptionsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
 
-public class ListWidgetTemplateHolder extends BaseViewHolderNew {
+public class ListWidgetTemplateHolder extends BaseViewHolder {
     private final RecyclerView botCustomListView;
     private ListWidgetAdapter listWidgetAdapter = null;
     private final TextView botCustomListViewButton;

@@ -22,7 +22,7 @@ import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.view.LinkifyTextView;
 
-public class RequestTextTemplateHolderNew extends BaseViewHolderNew {
+public class RequestTextTemplateHolderNew extends BaseViewHolder {
 
     public static RequestTextTemplateHolderNew getInstance(ViewGroup parent) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_bubble_text, parent, false);

@@ -19,7 +19,7 @@ import kore.botssdk.models.BotCarouselStackModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.views.coverflow.RecyclerCoverFlow;
 
-public class CarouselStackedTemplateHolder extends BaseViewHolderNew {
+public class CarouselStackedTemplateHolder extends BaseViewHolder {
     private final RecyclerCoverFlow recyclerCoverFlow;
 
     public static CarouselStackedTemplateHolder getInstance(ViewGroup parent) {

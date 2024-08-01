@@ -25,7 +25,7 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.viewUtils.CircleTransform;
 
-public class AgentTransferTemplateHolder extends BaseViewHolderNew {
+public class AgentTransferTemplateHolder extends BaseViewHolder {
     private final TextView tvAgentCardText;
     private final ImageView ivAgentImage;
     private final TextView tvAgentName;
