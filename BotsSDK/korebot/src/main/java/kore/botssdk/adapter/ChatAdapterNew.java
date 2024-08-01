@@ -56,6 +56,7 @@ import kore.botssdk.viewholders.RequestTextTemplateHolderNew;
 import kore.botssdk.viewholders.ResponseTextTemplateHolderNew;
 import kore.botssdk.viewholders.TableListTemplateHolder;
 import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
+import kore.botssdk.viewholders.TableTemplateHolder;
 import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 
 public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
@@ -163,10 +164,11 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                     case BotResponse.TEMPLATE_TYPE_PIECHART:
                         return TEMPLATE_PIE_CHART;
                     case BotResponse.TEMPLATE_TYPE_TABLE:
-                        if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
-                            return TEMPLATE_TABLE_RESPONSIVE;
-                        }
-                        break;
+//                        if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
+//                            return TEMPLATE_TABLE_RESPONSIVE;
+//                        } else {
+                            return TEMPLATE_TABLE;
+//                        }
                     case BotResponse.CUSTOM_TABLE_TEMPLATE:
                         break;
                     case BotResponse.TEMPLATE_TYPE_CLOCK:
@@ -321,6 +323,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                 return MiniTableTemplateHolder.getInstance(parent);
             case TEMPLATE_TABLE_RESPONSIVE:
                 return TableResponsiveTemplateHolder.getInstance(parent);
+            case TEMPLATE_TABLE:
+                return TableTemplateHolder.getInstance(parent);
             case TEMPLATE_CLOCK:
                 return ClockTemplateHolder.getInstance(parent);
             case TEMPLATE_DROP_DOWN:

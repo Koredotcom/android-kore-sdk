@@ -61,7 +61,7 @@ public class SDKConfiguration {
         static String KORE_BOT_SERVER_URL = "PLEASE_ENTER_KORE_BOT_SERVER_URL";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static String SERVER_URL = "PLEASE_ENTER_SERVER_URL";
-        public static String Branding_SERVER_URL = "PLEASE_ENTER_";
+        public static String Branding_SERVER_URL = "PLEASE_ENTER_BRANDING_SERVER_URL";
         public static String koreAPIUrl = "PLEASE_ENTER_KORE_API_URL";
         public static HashMap<String, Object> queryParams = new HashMap<>();
 

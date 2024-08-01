@@ -3,10 +3,13 @@ package com.kore.korebot;
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -18,11 +21,13 @@ import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateView;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.TimeZone;
 
-import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
@@ -43,28 +48,28 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
+        String clientId = getConfigValue("clientId");//PLEASE_ENTER_BOT_CLIENT_ID
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
+        String clientSecret = getConfigValue("clientSecret");//PLEASE_ENTER_BOT_CLIENT_SECRET
 
         //Set botId, This value is mandatory
-        String botId = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
+        String botId = getConfigValue("botId");//PLEASE_ENTER_BOT_ID
 
         //Set identity, This value is mandatory
-        String identity = "Please enter identity";
+        String identity = getConfigValue("identity");//PLEASE_ENTER_IDENTITY
 
         //Set botName, This value is mandatory
-        String botName = "Kore.ai Bot";
+        String botName = getConfigValue("botName");//PLEASE_ENTER_BOT_NAME
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "https://platform.kore.ai/";
+        String serverUrl = getConfigValue("serverUrl");//PLEASE_ENTER_SERVER_URL
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "https://platform.kore.ai/";
+        String brandingUrl = getConfigValue("brandingUrl");//PLEASE_ENTER_BRANDING_SERVER_URL
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
+        String jwtServerUrl = getConfigValue("jwtServerUrl");//PLEASE_ENTER_JWT_SERVER_URL
 
         //Set Server url
         SDKConfig.setServerUrl(serverUrl);
@@ -81,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
 
         //Flag to show the bot icon beside the bot response
-        SDKConfiguration.BubbleColors.showIcon = false;
+        SDKConfiguration.BubbleColors.showIcon = true;
 
         //Flag to show the bot icon in top position or bottom of the bot response
         SDKConfiguration.BubbleColors.showIconTop = false;
@@ -150,5 +155,20 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissionLauncher.launch(POST_NOTIFICATIONS);
             }
         }
+    }
+
+    public String getConfigValue(String name) {
+        try {
+            InputStream rawResource = getResources().openRawResource(R.raw.config);
+            Properties properties = new Properties();
+            properties.load(rawResource);
+            return properties.getProperty(name);
+        } catch (Resources.NotFoundException e) {
+            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
+        } catch (IOException e) {
+            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
+        }
+
+        return null;
     }
 }
