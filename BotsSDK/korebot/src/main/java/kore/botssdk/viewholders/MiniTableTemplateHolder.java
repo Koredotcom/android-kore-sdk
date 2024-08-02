@@ -1,7 +1,5 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,8 +24,6 @@ public class MiniTableTemplateHolder extends BaseViewHolder {
     private MiniTableTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
         recyclerView = itemView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));

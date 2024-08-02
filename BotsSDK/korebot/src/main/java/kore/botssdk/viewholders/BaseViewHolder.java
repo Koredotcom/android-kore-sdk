@@ -90,6 +90,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         } else {
             params.setMarginStart(ChatAdapterItemDecoration.messageMargin / 2);
         }
+        if (SDKConfiguration.BubbleColors.showIcon && !SDKConfiguration.BubbleColors.showIconTop) {
+            ImageView botIcon = itemView.findViewById(R.id.bot_icon);
+            params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
+            params.gravity = Gravity.BOTTOM;
+        }
         this.context = context;
     }
 
@@ -178,6 +183,10 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         if (!isBotRequest) {
+            if (!(this instanceof ResponseTextTemplateHolder)) {
+                LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) bubbleText.getLayoutParams();
+                params.bottomMargin = ChatAdapterItemDecoration.commonVerticalMargin * 2;
+            }
             Typeface regular = KaFontUtils.getCustomTypeface("regular", context);
             String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
             String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);

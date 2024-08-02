@@ -166,7 +166,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
 
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
-//        botsBubblesListView.setItemViewCacheSize(100);
+        botsBubblesListView.setItemViewCacheSize(100);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -239,7 +239,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     private void setupAdapter() {
-        botsChatAdapter = new ChatAdapterNew(getActivity());
+        botsChatAdapter = new ChatAdapterNew();
         botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 //        botsChatAdapter.setActivityContext(getActivity());

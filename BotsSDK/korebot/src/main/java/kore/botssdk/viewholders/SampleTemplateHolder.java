@@ -14,8 +14,6 @@ public class SampleTemplateHolder extends BaseViewHolder {
     public SampleTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
     }
 

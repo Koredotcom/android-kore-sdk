@@ -1,6 +1,5 @@
 package kore.botssdk.adapter;
 
-import android.content.Context;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -49,6 +48,7 @@ import kore.botssdk.viewholders.ListViewTemplateHolder;
 import kore.botssdk.viewholders.ListWidgetTemplateHolder;
 import kore.botssdk.viewholders.MediaTemplateHolder;
 import kore.botssdk.viewholders.MiniTableTemplateHolder;
+import kore.botssdk.viewholders.MultiSelectTemplateHolder;
 import kore.botssdk.viewholders.PdfTemplateHolder;
 import kore.botssdk.viewholders.PieChartTemplateHolder;
 import kore.botssdk.viewholders.RadioOptionsTemplateHolder;
@@ -89,6 +89,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
 
     private final ArrayList<BaseBotMessage> baseBotMessageArrayList;
 
+    public static final int TEMPLATE_CUSTOM_TEMPLATES = 100;
     public static final int TEMPLATE_BUBBLE_RESPONSE = 0;
     public static final int TEMPLATE_BUBBLE_REQUEST = 1;
     public static final int TEMPLATE_BUTTON = 2;
@@ -119,12 +120,11 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
     public static final int TEMPLATE_BANKING_FEEDBACK = 27;
     public static final int TEMPLATE_PDF_DOWNLOAD = 28;
     public static final int TEMPLATE_BENEFICIARY = 29;
+    public static final int TEMPLATE_MULTI_SELECT = 30;
 
-    public static final int TEMPLATE_CUSTOM_TEMPLATES = 30;
+    private final HashMap<Integer, String> customTemplates = new HashMap<>();
 
-    private HashMap<Integer, String> customTemplates = new HashMap<>();
-
-    public ChatAdapterNew(Context context) {
+    public ChatAdapterNew() {
         super();
         baseBotMessageArrayList = new ArrayList<>();
     }
@@ -176,7 +176,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                     case BotResponse.TEMPLATE_TYPE_MINITABLE:
                         return TEMPLATE_MINI_TABLE;
                     case BotResponse.TEMPLATE_TYPE_MULTI_SELECT:
-                        break;
+                        return TEMPLATE_MULTI_SELECT;
                     case BotResponse.ADVANCED_LIST_TEMPLATE:
                         return TEMPLATE_ADVANCED_LIST_TEMPLATE;
                     case BotResponse.TEMPLATE_TYPE_LINECHART:
@@ -337,6 +337,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                 return PdfTemplateHolder.getInstance(parent);
             case TEMPLATE_BENEFICIARY:
                 return BeneficiaryTemplateHolder.getInstance(parent);
+            case TEMPLATE_MULTI_SELECT:
+                return MultiSelectTemplateHolder.getInstance(parent);
             default:
                 return ResponseTextTemplateHolder.getInstance(parent);
         }

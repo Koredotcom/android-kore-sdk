@@ -1,7 +1,5 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,8 +38,6 @@ public class PieChartTemplateHolder extends BaseViewHolder {
     private PieChartTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
         pieChart = itemView.findViewById(R.id.pieChart);
     }

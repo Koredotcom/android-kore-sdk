@@ -2,7 +2,6 @@ package kore.botssdk.viewholders;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
 import android.text.Html;
@@ -36,8 +35,6 @@ public class ListViewTemplateHolder extends BaseViewHolder {
     private ListViewTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
     }
 

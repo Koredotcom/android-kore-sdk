@@ -1,7 +1,5 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,8 +28,6 @@ public class CarouselTemplateHolder extends BaseViewHolder {
     private CarouselTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
         viewPager = itemView.findViewById(R.id.carouselViewpager);
         viewPager.setLayoutManager(new LinearLayoutManager(viewPager.getContext(), LinearLayoutManager.HORIZONTAL, false));

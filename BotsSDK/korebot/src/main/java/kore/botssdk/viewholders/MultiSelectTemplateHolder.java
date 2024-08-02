@@ -1,8 +1,7 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -20,12 +19,13 @@ import kore.botssdk.view.AutoExpandListView;
 public class MultiSelectTemplateHolder extends BaseViewHolder {
     private final AutoExpandListView autoExpandListView;
     private final View multiSelectLayout;
+    public static MultiSelectTemplateHolder getInstance(ViewGroup parent) {
+        return new MultiSelectTemplateHolder(createView(R.layout.template_multi_select, parent));
+    }
 
     public MultiSelectTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
         autoExpandListView = itemView.findViewById(R.id.multi_select_list);
         autoExpandListView.setVerticalScrollBarEnabled(false);

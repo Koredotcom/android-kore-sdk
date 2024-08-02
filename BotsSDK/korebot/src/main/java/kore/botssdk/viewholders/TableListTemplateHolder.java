@@ -1,7 +1,5 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -27,8 +25,6 @@ public class TableListTemplateHolder extends BaseViewHolder {
     private TableListTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
         autoExpandListView = itemView.findViewById(R.id.botCustomListView);
     }

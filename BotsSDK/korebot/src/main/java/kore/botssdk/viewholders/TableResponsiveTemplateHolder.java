@@ -38,8 +38,6 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
     private TableResponsiveTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) layoutBubble.getLayoutParams();
-        params.bottomMargin = (int) (10 * dp1);
         initBubbleText(layoutBubble, false);
         rvTableView = itemView.findViewById(R.id.rvTableView);
         tvShowMore = itemView.findViewById(R.id.tvShowMore);
