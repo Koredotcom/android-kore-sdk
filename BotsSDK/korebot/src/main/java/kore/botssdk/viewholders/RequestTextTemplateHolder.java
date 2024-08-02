@@ -5,7 +5,6 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,27 +21,27 @@ import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.view.LinkifyTextView;
 
-public class RequestTextTemplateHolderNew extends BaseViewHolder {
+public class RequestTextTemplateHolder extends BaseViewHolder {
 
-    public static RequestTextTemplateHolderNew getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_bubble_text, parent, false);
-        return new RequestTextTemplateHolderNew(view);
+    public static RequestTextTemplateHolder getInstance(ViewGroup parent) {
+        return new RequestTextTemplateHolder(createView(R.layout.template_bubble_text, parent));
     }
-    private RequestTextTemplateHolderNew(@NonNull View view) {
+
+    private RequestTextTemplateHolder(@NonNull View view) {
         super(view, view.getContext());
-        initBubbleText((LinearLayoutCompat) view, true);
+        LinearLayoutCompat layoutBubble = view.findViewById(R.id.layoutBubble);
+        initBubbleText(layoutBubble, true);
     }
 
     @Override
     public void bind(BaseBotMessage baseBotMessage) {
-        RestResponse.BotMessage message = ((BotRequest)baseBotMessage).getMessage();
-        String msg =  message!= null ? message.getBody() : "";
+        RestResponse.BotMessage message = ((BotRequest) baseBotMessage).getMessage();
+        String msg = message != null ? message.getBody() : "";
         setRequestText(msg);
     }
 
     private void setRequestText(String textualContent) {
         LinkifyTextView bubbleText = itemView.findViewById(R.id.bubble_text);
-//        if (bubbleText == null) return;
         bubbleText.setText("");
         Context context = bubbleText.getContext();
         if (textualContent != null && !textualContent.isEmpty()) {

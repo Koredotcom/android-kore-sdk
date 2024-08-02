@@ -14,6 +14,8 @@ import java.util.Objects;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import kore.botssdk.models.BotResponse;
+
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
@@ -51,6 +53,7 @@ public class DateUtils {
     public static final Format calendar_list_format2 = new SimpleDateFormat("EEE, MMM d, ", Locale.ENGLISH);
     public static final Format calendar_list_req_format2 = new SimpleDateFormat("EEE, MMM d ", Locale.ENGLISH);
     public static final SimpleDateFormat chat_bubble_dateTime = new SimpleDateFormat("EE MMM dd yyyy 'at' hh:mm:ss a", Locale.ENGLISH);
+    public static final SimpleDateFormat date24Time = new SimpleDateFormat("HH:mm", Locale.ENGLISH);
     public static final Format calendar_event_list_format1 = new SimpleDateFormat("EEE, d MMM", Locale.ENGLISH);
 
     private static final Format dateMonthDay = new SimpleDateFormat("MMM dd", Locale.ENGLISH);
@@ -66,6 +69,8 @@ public class DateUtils {
     public static final Format calendar_allday_time_format = new SimpleDateFormat("EE, MMM dd, hh:mm a", Locale.ENGLISH);
 
     public static final Format dnd_time_format = new SimpleDateFormat("hh:mm a, MMM dd", Locale.ENGLISH);
+
+    private static final Format dynamicDate = new SimpleDateFormat(BotResponse.DATE_FORMAT, Locale.ENGLISH);
 
     public static String getTimeStamp(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
         if (timeStamp == null || timeStamp.isEmpty()) return "";
@@ -96,7 +101,7 @@ public class DateUtils {
     }
 
     public static String getTimeInAmPm(long dateInMs) {
-        return chat_bubble_dateTime.format(new Date(dateInMs));
+        return date24Time.format(new Date(dateInMs));
     }
 
     /**
@@ -188,7 +193,7 @@ public class DateUtils {
         } else if (isTomorrow(lastModified)) {
             time = "Tomorrow, " + dateMonthDay.format(new Date(lastModified));
         } else {
-            time = currentYear == messageYear ? dateWeekMsg.format(new Date(lastModified)) : dateWeekDay.format(new Date(lastModified));
+            time = dynamicDate.format(new Date(lastModified));
         }
 
 

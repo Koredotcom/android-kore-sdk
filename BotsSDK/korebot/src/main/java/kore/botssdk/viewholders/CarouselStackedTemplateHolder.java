@@ -3,7 +3,6 @@ package kore.botssdk.viewholders;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -23,8 +22,7 @@ public class CarouselStackedTemplateHolder extends BaseViewHolder {
     private final RecyclerCoverFlow recyclerCoverFlow;
 
     public static CarouselStackedTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_carousel_stacked, parent, false);
-        return new CarouselStackedTemplateHolder(view);
+        return new CarouselStackedTemplateHolder(createView(R.layout.template_carousel_stacked, parent));
     }
 
     private CarouselStackedTemplateHolder(@NonNull View itemView) {

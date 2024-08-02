@@ -6,7 +6,6 @@ import static android.view.View.VISIBLE;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -57,8 +56,7 @@ public class PdfTemplateHolder extends BaseViewHolder {
     private final ProgressBar pbDownload;
 
     public static PdfTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pdf_download_view, parent, false);
-        return new PdfTemplateHolder(view);
+        return new PdfTemplateHolder(createView(R.layout.pdf_download_view, parent));
     }
 
     private PdfTemplateHolder(@NonNull View view) {

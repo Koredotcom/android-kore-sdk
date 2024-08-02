@@ -33,6 +33,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.SDKConfiguration;
 
 /**
  * Created by Pradeep Mahato on 06-Jun-16.
@@ -121,6 +122,14 @@ public class Utils {
             botResponse.setMessageId(msgId);
         }
         botResponse.setCreatedOn(createdOn);
+        try {
+            long timeMillis = botResponse.getTimeInMillis(createdOn, true);
+            botResponse.setCreatedInMillis(timeMillis);
+            botResponse.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+            botResponse.setTimeStamp(botResponse.prepareTimeStamp(timeMillis));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
         BotInfoModel bInfo = new BotInfoModel(botName, streamId, null);
         botResponse.setBotInfo(bInfo);
@@ -189,6 +198,14 @@ public class Utils {
             botResponse.setMessageId(msgId);
         }
         botResponse.setCreatedOn(createdOn);
+        try {
+            long timeMillis = botResponse.getTimeInMillis(createdOn, true);
+            botResponse.setCreatedInMillis(timeMillis);
+            botResponse.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+            botResponse.setTimeStamp(botResponse.prepareTimeStamp(timeMillis));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
         BotInfoModel bInfo = new BotInfoModel(botName, streamId, null);
         botResponse.setBotInfo(bInfo);
@@ -209,7 +226,6 @@ public class Utils {
         ArrayList<BotResponseMessage> message = new ArrayList<>(1);
         message.add(botResponseMessage);
         botResponse.setMessage(message);
-
 
         return botResponse;
     }
@@ -371,7 +387,6 @@ public class Utils {
     public static long getTimeInMillis(String timeStamp) throws ParseException {
         if (timeStamp == null || timeStamp.isEmpty()) return System.currentTimeMillis();
         return isoFormatter.parse(timeStamp).getTime();
-
     }
 
     public static String ah(String accessToken) {

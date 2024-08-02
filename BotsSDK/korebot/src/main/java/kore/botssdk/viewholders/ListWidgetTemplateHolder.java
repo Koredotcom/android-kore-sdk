@@ -16,7 +16,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -65,8 +64,7 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
     private final SharedPreferences sharedPreferences;
 
     public static ListWidgetTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_list_widget, parent, false);
-        return new ListWidgetTemplateHolder(view);
+        return new ListWidgetTemplateHolder(createView(R.layout.template_list_widget, parent));
     }
 
     private ListWidgetTemplateHolder(@NonNull View itemView) {

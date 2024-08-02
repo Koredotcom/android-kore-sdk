@@ -2,7 +2,6 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,8 +22,7 @@ import kore.botssdk.view.AutoExpandListView;
 
 public class ListTemplateHolder extends BaseViewHolder {
     public static ListTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_list, parent, false);
-        return new ListTemplateHolder(view);
+        return new ListTemplateHolder(createView(R.layout.template_list, parent));
     }
 
     private ListTemplateHolder(@NonNull View itemView) {

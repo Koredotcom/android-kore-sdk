@@ -24,8 +24,7 @@ public class DropDownTemplateHolder extends BaseViewHolder {
     private final Spinner spinner;
 
     public static DropDownTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_dropdown, parent, false);
-        return new DropDownTemplateHolder(view);
+        return new DropDownTemplateHolder(createView(R.layout.template_dropdown, parent));
     }
 
     private DropDownTemplateHolder(@NonNull View itemView) {

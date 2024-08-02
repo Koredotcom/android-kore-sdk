@@ -1,6 +1,5 @@
 package kore.botssdk.viewholders;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,8 +20,7 @@ public class CardTemplateHolder extends BaseViewHolder {
     private final RecyclerView rvCards;
 
     public static CardTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_card, parent, false);
-        return new CardTemplateHolder(view);
+        return new CardTemplateHolder(createView(R.layout.template_card, parent));
     }
 
     private CardTemplateHolder(@NonNull View itemView) {

@@ -3,7 +3,6 @@ package kore.botssdk.viewholders;
 import static kore.botssdk.models.BotResponsePayLoadText.BAR_CHART_DIRECTION_VERTICAL;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -43,8 +42,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
     private final HorizontalBarChart horizontalBarChart;
 
     public static BarChartTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_bar_chart, parent, false);
-        return new BarChartTemplateHolder(view);
+        return new BarChartTemplateHolder(createView(R.layout.template_bar_chart, parent));
     }
 
     private BarChartTemplateHolder(@NonNull View itemView) {

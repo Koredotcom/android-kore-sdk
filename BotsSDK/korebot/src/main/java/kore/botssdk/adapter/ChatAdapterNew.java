@@ -52,8 +52,8 @@ import kore.botssdk.viewholders.MiniTableTemplateHolder;
 import kore.botssdk.viewholders.PdfTemplateHolder;
 import kore.botssdk.viewholders.PieChartTemplateHolder;
 import kore.botssdk.viewholders.RadioOptionsTemplateHolder;
-import kore.botssdk.viewholders.RequestTextTemplateHolderNew;
-import kore.botssdk.viewholders.ResponseTextTemplateHolderNew;
+import kore.botssdk.viewholders.RequestTextTemplateHolder;
+import kore.botssdk.viewholders.ResponseTextTemplateHolder;
 import kore.botssdk.viewholders.TableListTemplateHolder;
 import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
 import kore.botssdk.viewholders.TableTemplateHolder;
@@ -167,7 +167,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
 //                        if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
 //                            return TEMPLATE_TABLE_RESPONSIVE;
 //                        } else {
-                            return TEMPLATE_TABLE;
+                        return TEMPLATE_TABLE;
 //                        }
                     case BotResponse.CUSTOM_TABLE_TEMPLATE:
                         break;
@@ -235,16 +235,6 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                 }
                 int customTemplateType = getCustomTemplateType(payOuter.getType());
                 if (customTemplateType != -1) return customTemplateType;
-//                if (SDKConfiguration.getCustomTemplateViewHolder(payOuter.getType()) != null) {
-//                    Class<?> clazz = SDKConfiguration.getCustomTemplateViewHolder(payOuter.getType());
-//                    if (clazz != null) {
-//                        if (clazz.getSuperclass() != null && clazz.getSuperclass().isAssignableFrom(BaseViewHolderNew.class)) {
-//                            customTemplateType = payOuter.getType();
-//                            return TEMPLATE_CUSTOM_TEMPLATES;
-//                        }
-//                        Log.e("Error", "Custom template view holder should inherit from " + BaseViewHolderNew.class.getSimpleName());
-//                    }
-//                }
             }
             return TEMPLATE_BUBBLE_RESPONSE;
         }
@@ -290,7 +280,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
         }
         switch (viewType) {
             case TEMPLATE_BUBBLE_REQUEST:
-                return RequestTextTemplateHolderNew.getInstance(parent);
+                return RequestTextTemplateHolder.getInstance(parent);
             case TEMPLATE_BUTTON:
                 return ButtonTemplateHolder.getInstance(parent);
             case TEMPLATE_BUTTON_LINK:
@@ -348,14 +338,21 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
             case TEMPLATE_BENEFICIARY:
                 return BeneficiaryTemplateHolder.getInstance(parent);
             default:
-                return ResponseTextTemplateHolderNew.getInstance(parent);
+                return ResponseTextTemplateHolder.getInstance(parent);
         }
     }
 
     @Override
     public void onBindViewHolder(@NonNull final BaseViewHolder holder, final int position) {
         boolean isLastItem = position == baseBotMessageArrayList.size() - 1;
+        BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(position);
         holder.setIsLastItem(isLastItem);
+        holder.setMsgTime(baseBotMessage.getTimeStamp(), baseBotMessage instanceof BotRequest);
+        if (baseBotMessage instanceof BotResponse) {
+            holder.setBotIcon(((BotResponse) baseBotMessage).getIcon());
+        }
+        Integer headerPosition = headersMap.get(baseBotMessage.getFormattedDate());
+        holder.setTimeStamp(headerPosition != null && headerPosition == position ? baseBotMessage.getFormattedDate() : null);
         holder.setContentStateListener(this);
         holder.setComposeFooterInterface(composeFooterInterface);
         holder.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -416,13 +413,25 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
 
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
-        notifyItemRangeInserted(0, list.size() - 1);
+        prepareHeaderMap();
+        notifyDataSetChanged();
     }
 
     public void addMissedBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(list);
-//        submitList(baseBotMessageArrayList);
+        prepareHeaderMap();
         notifyItemRangeInserted((baseBotMessageArrayList.size() - 1) - (list.size() - 1), list.size() - 1);
+    }
+
+    private void prepareHeaderMap() {
+        int i;
+        headersMap.clear();
+        for (i = 0; i < baseBotMessageArrayList.size(); i++) {
+            BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
+            if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
+                headersMap.put(baseBotMessage.getFormattedDate(), i);
+            }
+        }
     }
 
     private ComponentModel getComponentModel(BaseBotMessage baseBotMessage) {
@@ -431,14 +440,6 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
             compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
         }
         return compModel;
-    }
-
-    @Override
-    public void onFeedbackSelected(String id, int selectedPosition) {
-    }
-
-    @Override
-    public void onMultiSelectItems(String id, String key, List<String> selItems, boolean isChecked) {
     }
 
     @Override

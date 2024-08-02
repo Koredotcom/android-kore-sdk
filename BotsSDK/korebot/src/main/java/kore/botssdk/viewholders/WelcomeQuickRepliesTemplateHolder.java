@@ -2,7 +2,6 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,8 +25,7 @@ public class WelcomeQuickRepliesTemplateHolder extends BaseViewHolder {
     private final RecyclerView recyclerView;
 
     public static WelcomeQuickRepliesTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_welcome_quick_replies, parent, false);
-        return new WelcomeQuickRepliesTemplateHolder(view);
+        return new WelcomeQuickRepliesTemplateHolder(createView(R.layout.template_welcome_quick_replies, parent));
     }
 
     private WelcomeQuickRepliesTemplateHolder(@NonNull View itemView) {

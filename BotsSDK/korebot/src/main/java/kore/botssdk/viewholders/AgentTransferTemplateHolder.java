@@ -2,7 +2,6 @@ package kore.botssdk.viewholders;
 
 import static android.view.View.GONE;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,8 +34,7 @@ public class AgentTransferTemplateHolder extends BaseViewHolder {
     private final LinearLayout llAgentDetails;
 
     public static AgentTransferTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.agent_transfer_template, parent, false);
-        return new AgentTransferTemplateHolder(view);
+        return new AgentTransferTemplateHolder(createView(R.layout.agent_transfer_template, parent));
     }
 
     private AgentTransferTemplateHolder(@NonNull View itemView) {

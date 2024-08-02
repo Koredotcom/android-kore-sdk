@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -34,8 +33,7 @@ public class FormTemplateHolder extends BaseViewHolder {
     private final String leftTextColor;
 
     public static FormTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_form, parent, false);
-        return new FormTemplateHolder(view);
+        return new FormTemplateHolder(createView(R.layout.template_form, parent));
     }
 
     private FormTemplateHolder(@NonNull View itemView) {

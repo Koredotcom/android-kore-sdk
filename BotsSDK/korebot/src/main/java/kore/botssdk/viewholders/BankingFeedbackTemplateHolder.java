@@ -3,7 +3,6 @@ package kore.botssdk.viewholders;
 import static android.view.View.VISIBLE;
 
 import android.graphics.Rect;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -45,8 +44,7 @@ public class BankingFeedbackTemplateHolder extends BaseViewHolder implements Fee
     private final LinearLayout feedback_layout;
 
     public static BankingFeedbackTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.banking_feedback_template, parent, false);
-        return new BankingFeedbackTemplateHolder(view);
+        return new BankingFeedbackTemplateHolder(createView(R.layout.banking_feedback_template, parent));
     }
 
     private BankingFeedbackTemplateHolder(@NonNull View view) {

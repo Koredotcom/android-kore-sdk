@@ -3,7 +3,6 @@ package kore.botssdk.viewholders;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,12 +32,10 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.CustomMarkerView;
 
 public class LineChartTemplateHolder extends BaseViewHolder implements OnChartGestureListener {
-    private CustomMarkerView markerView;
-    private LineChart lineChart;
+    private final LineChart lineChart;
 
     public static LineChartTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_line_chart, parent, false);
-        return new LineChartTemplateHolder(view);
+        return new LineChartTemplateHolder(createView(R.layout.template_line_chart, parent));
     }
 
     private LineChartTemplateHolder(@NonNull View itemView) {
@@ -50,7 +47,7 @@ public class LineChartTemplateHolder extends BaseViewHolder implements OnChartGe
         lineChart = itemView.findViewById(R.id.lineChart);
         lineChart.getDescription().setEnabled(false);
         lineChart.setTouchEnabled(true);
-        markerView = new CustomMarkerView(itemView.getContext(), R.layout.marker_content);
+        CustomMarkerView markerView = new CustomMarkerView(itemView.getContext(), R.layout.marker_content);
         lineChart.setMarker(markerView);
         lineChart.setOnChartGestureListener(this);
     }

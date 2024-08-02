@@ -2,7 +2,6 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,8 +20,7 @@ public class MiniTableTemplateHolder extends BaseViewHolder {
     private final MiniTablePagerAdapter adapter;
 
     public static MiniTableTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_mini_table, parent, false);
-        return new MiniTableTemplateHolder(view);
+        return new MiniTableTemplateHolder(createView(R.layout.template_mini_table, parent));
     }
 
     private MiniTableTemplateHolder(@NonNull View itemView) {

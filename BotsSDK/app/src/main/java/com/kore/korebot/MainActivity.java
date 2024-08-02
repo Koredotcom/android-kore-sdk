@@ -19,7 +19,9 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import com.kore.korebot.customtemplates.LinkTemplateHolder;
 import com.kore.korebot.customtemplates.LinkTemplateView;
+import com.kore.korebot.customtemplates.NewTemplateHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,6 +31,7 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.BotChatActivity;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
@@ -84,6 +87,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Inject the custom template like below
         SDKConfig.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
+        //Inject the custom template like below
+        SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
+//        SDKConfig.setCustomTemplateViewHolder(BotResponse.TEMPLATE_TYPE_PIECHART, NewTemplateHolder.class);
 
         //Flag to show the bot icon beside the bot response
         SDKConfiguration.BubbleColors.showIcon = true;

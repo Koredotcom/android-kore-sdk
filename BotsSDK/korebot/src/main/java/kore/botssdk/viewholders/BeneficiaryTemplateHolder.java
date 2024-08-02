@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.Html;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -41,8 +40,7 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
     private PayloadInner payloadInner;
 
     public static BeneficiaryTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.bot_custom_list_view_template, parent, false);
-        return new BeneficiaryTemplateHolder(view);
+        return new BeneficiaryTemplateHolder(createView(R.layout.bot_custom_list_view_template, parent));
     }
 
     private BeneficiaryTemplateHolder(@NonNull View itemView) {

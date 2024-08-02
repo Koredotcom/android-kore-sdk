@@ -1,6 +1,5 @@
 package kore.botssdk.viewholders;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -28,8 +27,7 @@ public class ClockTemplateHolder extends BaseViewHolder {
     private String msgId;
 
     public static ClockTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_clock, parent, false);
-        return new ClockTemplateHolder(view);
+        return new ClockTemplateHolder(createView(R.layout.template_clock, parent));
     }
 
     private ClockTemplateHolder(@NonNull View itemView) {

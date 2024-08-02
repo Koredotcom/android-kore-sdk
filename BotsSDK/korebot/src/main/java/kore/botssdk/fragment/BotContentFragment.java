@@ -48,7 +48,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.R;
-import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.adapter.ChatAdapterNew;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
 import kore.botssdk.listener.BotContentFragmentUpdate;
@@ -127,6 +126,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     String jwt;
     String pattern = "M-DD-YYYY";
 
+    private LinearLayoutManager layoutManager;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -165,7 +166,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
 
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
-        botsBubblesListView.setItemViewCacheSize(100);
+//        botsBubblesListView.setItemViewCacheSize(100);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -243,7 +244,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 //        botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.addItemDecoration(new ChatAdapterItemDecoration());
-        botsBubblesListView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        layoutManager = new LinearLayoutManager(requireContext());
+        botsBubblesListView.setLayoutManager(layoutManager);
         botsBubblesListView.setAdapter(botsChatAdapter);
         quickReplyView.setComposeFooterInterface(composeFooterInterface);
         quickReplyView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -446,18 +448,32 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private final int limit = 10;
 
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom) {
+        int firstItemPosition = 0;
+        if (botsChatAdapter.getItemCount() > 0) {
+            firstItemPosition = ((LinearLayoutManager) botsBubblesListView.getLayoutManager()).findFirstVisibleItemPosition();
+        }
         botsChatAdapter.addBaseBotMessages(list);
         if (scrollToBottom) {
             scrollToBottom();
+        } else if (botsChatAdapter.getItemCount() > 0) {
+            int finalFirstItemPosition = firstItemPosition + list.size();
+            botsBubblesListView.post(() -> layoutManager.scrollToPositionWithOffset(finalFirstItemPosition, 0));
         }
     }
 
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom, boolean isFirst) {
+        int firstItemPosition = 0;
+        if (botsChatAdapter.getItemCount() > 0) {
+            firstItemPosition = ((LinearLayoutManager) botsBubblesListView.getLayoutManager()).findFirstVisibleItemPosition();
+        }
         if (isFirst) botsChatAdapter.addBaseBotMessages(list);
         else botsChatAdapter.addMissedBaseBotMessages(list);
 
         if (scrollToBottom) {
             scrollToBottom();
+        } else if (botsChatAdapter.getItemCount() > 0) {
+            int finalFirstItemPosition = firstItemPosition + list.size();
+            botsBubblesListView.post(() -> layoutManager.scrollToPositionWithOffset(finalFirstItemPosition, 0));
         }
     }
 
@@ -497,10 +513,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                         PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
                                         BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
+                                        r.setIcon(history.getIcon());
                                         msgs.add(r);
                                     } catch (com.google.gson.JsonSyntaxException ex) {
                                         BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
+                                        r.setIcon(history.getIcon());
                                         msgs.add(r);
                                     }
                                 } else {
@@ -518,6 +536,14 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                         long cTime = DateUtils.isoFormatter.parse(msg.getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
+                                        try {
+                                            long timeMillis = botRequest.getTimeInMillis(msg.getCreatedOn(), true);
+                                            botRequest.setCreatedInMillis(timeMillis);
+                                            botRequest.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+                                            botRequest.setTimeStamp(botRequest.prepareTimeStamp(timeMillis));
+                                        } catch (ParseException e) {
+                                            throw new RuntimeException(e);
+                                        }
                                         msgs.add(botRequest);
 
                                     } catch (Exception e) {

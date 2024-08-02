@@ -17,7 +17,11 @@ import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -25,6 +29,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.emojione.tools.Client;
 import com.google.gson.Gson;
 
@@ -36,6 +42,7 @@ import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
+import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
 import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -56,7 +63,6 @@ import kore.botssdk.view.LinkifyTextView;
 
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     private final Context context;
-    private GradientDrawable leftDrawable;
     private final String REGEX_CHAR = "%%.*?%%";
     private final Gson gson = new Gson();
     private boolean isLastItem = true;
@@ -66,13 +72,53 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     protected ChatContentStateListener contentStateListener;
 
-    public BaseViewHolder(@NonNull View itemView, Context mContext) {
+    protected static View createView(int layoutId, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View baseView = inflater.inflate(R.layout.base_view_holder, parent, false);
+        View childView = inflater.inflate(layoutId, null);
+        LinearLayoutCompat contentLayout = (LinearLayoutCompat) baseView.findViewById(R.id.contentLayout);
+        contentLayout.addView(childView, LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+        return baseView;
+    }
+
+    public BaseViewHolder(@NonNull View itemView, Context context) {
         super(itemView);
-        this.context = mContext;
+        TextView timeStamp = itemView.findViewById(R.id.time_stamp);
+        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) timeStamp.getLayoutParams();
+        if (this instanceof RequestTextTemplateHolder) {
+            params.setMarginEnd(ChatAdapterItemDecoration.messageMargin / 2);
+        } else {
+            params.setMarginStart(ChatAdapterItemDecoration.messageMargin / 2);
+        }
+        this.context = context;
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setBotIcon(String iconUrl) {
+        ImageView botIcon = itemView.findViewById(R.id.bot_icon);
+        if (botIcon != null) {
+            boolean isShowIcon = SDKConfiguration.BubbleColors.showIcon && iconUrl != null;
+            botIcon.setVisibility(isShowIcon ? View.VISIBLE : View.GONE);
+            if (isShowIcon) {
+                Glide.with(context).load(iconUrl).error(R.drawable.ic_launcher).into(new DrawableImageViewTarget(botIcon));
+            }
+        }
+    }
+
+    public void setMsgTime(String msgTime, boolean isBotRequest) {
+        TextView msgTimeView = itemView.findViewById(R.id.msg_time);
+        LinearLayoutCompat contentLayout = itemView.findViewById(R.id.contentLayout);
+        if (isBotRequest) contentLayout.setGravity(Gravity.END);
+        msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        TextView timeStampView = itemView.findViewById(R.id.time_stamp);
+        timeStampView.setVisibility(timeStamp != null && !timeStamp.isEmpty() ? View.VISIBLE : View.GONE);
+        timeStampView.setText(timeStamp);
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -137,7 +183,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
             String leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
 
-            leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_left_bubble_bg, context.getTheme());
+            GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_left_bubble_bg, context.getTheme());
 
             if (themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
                 leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme2_left_bubble, context.getTheme());
@@ -358,6 +404,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         if (payloadOuter == null) return null;
         return payloadOuter.getPayload();
     }
+
     protected PayloadOuter getPayloadOuter(BaseBotMessage baseBotMessage) {
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         PayloadOuter payloadOuter = componentModel.getPayload();

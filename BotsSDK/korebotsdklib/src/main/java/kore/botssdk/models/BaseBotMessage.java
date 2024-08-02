@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.DateUtils;
 
 /**
@@ -31,6 +32,9 @@ public abstract class BaseBotMessage {
     protected boolean isSend;
     protected String createdOn;
     private long createdInMillis;
+
+    private String formattedDate = "";
+    private String timeStamp = "";
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
 
     public abstract boolean isSend();
@@ -41,6 +45,14 @@ public abstract class BaseBotMessage {
 
     public String getCreatedOn() {
         return createdOn;
+    }
+
+    public void setFormattedDate(String formattedDate) {
+        this.formattedDate = formattedDate;
+    }
+
+    public void setTimeStamp(String timeStamp) {
+        this.timeStamp = timeStamp;
     }
 
     public long getCreatedInMillis() {
@@ -54,7 +66,7 @@ public abstract class BaseBotMessage {
         return createdInMillis;
     }
 
-    private long getTimeInMillis(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
+    public long getTimeInMillis(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
         if (timeStamp == null || timeStamp.isEmpty()) return System.currentTimeMillis();
         return isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
 
@@ -65,6 +77,19 @@ public abstract class BaseBotMessage {
     }
 
     public String getFormattedDate() {
-        return DateUtils.formattedSentDateV6(getCreatedInMillis());
+        return formattedDate;//DateUtils.formattedSentDateV6(getCreatedInMillis());
+    }
+
+    public String getTimeStamp() {
+        return timeStamp;//prepareTimeStamp(getCreatedInMillis(), SDKConfiguration.Client.bot_name);
+    }
+
+    public String prepareTimeStamp(Long milliSecs) {
+        if (this instanceof BotRequest) {
+            return "<big><b>" + SDKConfiguration.Client.bot_name + "</b></big>" + " " + DateUtils.getTimeInAmPm(milliSecs) + ", " +
+                    DateUtils.formattedSentDateV6(milliSecs);
+        } else {
+            return (DateUtils.getTimeInAmPm(milliSecs) + ", " + DateUtils.formattedSentDateV6(milliSecs)) + "<big><b>" + " You" + "</b></big>";
+        }
     }
 }

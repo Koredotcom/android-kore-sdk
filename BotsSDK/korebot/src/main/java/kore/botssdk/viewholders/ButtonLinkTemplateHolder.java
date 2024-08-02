@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -34,8 +33,7 @@ public class ButtonLinkTemplateHolder extends BaseViewHolder {
     private final Context context;
 
     public static ButtonLinkTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_button_link, parent, false);
-        return new ButtonLinkTemplateHolder(view);
+        return new ButtonLinkTemplateHolder(createView(R.layout.template_button_link, parent));
     }
     private ButtonLinkTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());

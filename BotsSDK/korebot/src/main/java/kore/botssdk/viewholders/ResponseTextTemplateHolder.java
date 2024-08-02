@@ -1,6 +1,5 @@
 package kore.botssdk.viewholders;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -15,13 +14,12 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.StringUtils;
 
-public class ResponseTextTemplateHolderNew extends BaseViewHolder {
-    public static ResponseTextTemplateHolderNew getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_bubble_text, parent, false);
-        return new ResponseTextTemplateHolderNew(view);
+public class ResponseTextTemplateHolder extends BaseViewHolder {
+    public static ResponseTextTemplateHolder getInstance(ViewGroup parent) {
+        return new ResponseTextTemplateHolder(createView(R.layout.template_bubble_text, parent));
     }
 
-    private ResponseTextTemplateHolderNew(@NonNull View view) {
+    private ResponseTextTemplateHolder(@NonNull View view) {
         super(view, view.getContext());
         initBubbleText((LinearLayoutCompat) view, false);
     }

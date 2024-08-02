@@ -69,8 +69,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
     private final TextView tvVideoTitle;
 
     public static MediaTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_media, parent, false);
-        return new MediaTemplateHolder(view);
+        return new MediaTemplateHolder(createView(R.layout.template_media, parent));
     }
 
     private MediaTemplateHolder(@NonNull View view) {

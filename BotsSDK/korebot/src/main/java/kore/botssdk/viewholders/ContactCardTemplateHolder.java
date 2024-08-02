@@ -3,7 +3,6 @@ package kore.botssdk.viewholders;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -27,8 +26,7 @@ public class ContactCardTemplateHolder extends BaseViewHolder {
     private final TextView botListViewTitle;
 
     public static ContactCardTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_contact_card, parent, false);
-        return new ContactCardTemplateHolder(view);
+        return new ContactCardTemplateHolder(createView(R.layout.template_contact_card, parent));
     }
 
     private ContactCardTemplateHolder(@NonNull View itemView) {

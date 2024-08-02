@@ -6,7 +6,6 @@ import static kore.botssdk.models.BotResponse.VIEW_STAR;
 import static kore.botssdk.models.BotResponse.VIEW_THUMBS_UP_DOWN;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -56,8 +55,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
     private String msgId;
 
     public static FeedbackTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_feedback, parent, false);
-        return new FeedbackTemplateHolder(view);
+        return new FeedbackTemplateHolder(createView(R.layout.template_feedback, parent));
     }
 
     private FeedbackTemplateHolder(@NonNull View itemView) {

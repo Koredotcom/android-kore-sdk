@@ -2,7 +2,6 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,8 +21,7 @@ public class TableListTemplateHolder extends BaseViewHolder {
     private final AutoExpandListView autoExpandListView;
 
     public static TableListTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_table_list, parent, false);
-        return new TableListTemplateHolder(view);
+        return new TableListTemplateHolder(createView(R.layout.template_table_list, parent));
     }
 
     private TableListTemplateHolder(@NonNull View itemView) {

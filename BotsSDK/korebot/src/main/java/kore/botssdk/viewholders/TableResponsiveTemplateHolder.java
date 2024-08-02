@@ -4,7 +4,6 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,8 +20,8 @@ import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.TableHeaderAdapter;
-import kore.botssdk.adapter.TableRowAdapter;
 import kore.botssdk.adapter.TableResponsiveAdapter;
+import kore.botssdk.adapter.TableRowAdapter;
 import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotTableDataModel;
@@ -33,8 +32,7 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
     private final RecyclerView rvTableView;
 
     public static TableResponsiveTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_table_responsive, parent, false);
-        return new TableResponsiveTemplateHolder(view);
+        return new TableResponsiveTemplateHolder(createView(R.layout.template_table_responsive, parent));
     }
 
     private TableResponsiveTemplateHolder(@NonNull View itemView) {

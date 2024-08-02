@@ -1,6 +1,5 @@
 package kore.botssdk.viewholders;
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -25,8 +24,7 @@ public class RadioOptionsTemplateHolder extends BaseViewHolder {
     private final TextView confirm;
 
     public static RadioOptionsTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.template_radio_options, parent, false);
-        return new RadioOptionsTemplateHolder(view);
+        return new RadioOptionsTemplateHolder(createView(R.layout.template_radio_options, parent));
     }
 
     private RadioOptionsTemplateHolder(@NonNull View itemView) {

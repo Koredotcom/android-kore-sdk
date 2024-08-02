@@ -55,6 +55,7 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -604,6 +605,15 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 return;
             }
+            if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
+            try {
+                long timeMillis = botResponse.getTimeInMillis(botResponse.getCreatedOn(), true);
+                botResponse.setCreatedInMillis(timeMillis);
+                botResponse.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+                botResponse.setTimeStamp(botResponse.prepareTimeStamp(timeMillis));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
 
             if (botClient != null && enable_ack_delivery)
                 botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
@@ -653,9 +663,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-
-                    if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
-
                     botContentFragment.addMessageToBotChatAdapter(botResponse);
                     textToSpeech(botResponse);
                     botContentFragment.setQuickRepliesIntoFooter(botResponse);

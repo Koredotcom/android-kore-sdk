@@ -1,13 +1,9 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,12 +14,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.TableHeaderAdapter;
 import kore.botssdk.adapter.TableTemplateAdapter;
 import kore.botssdk.adapter.TableTemplateHeaderAdapter;
 import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
-import kore.botssdk.models.BotTableDataModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.view.tableview.model.MiniTableModel;
 
@@ -41,8 +35,7 @@ public class TableTemplateHolder extends BaseViewHolder {
     }
 
     public static TableTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.table_template, parent, false);
-        return new TableTemplateHolder(view);
+        return new TableTemplateHolder(createView(R.layout.table_template, parent));
     }
 
     @Override
