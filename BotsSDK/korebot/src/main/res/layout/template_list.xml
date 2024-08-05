@@ -33,16 +33,11 @@
             android:visibility="gone"
             tools:text="Title" />
 
-        <kore.botssdk.view.AutoExpandListView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/botCustomListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="#eeeef2"
-            android:dividerHeight="1dp"
-            android:footerDividersEnabled="true"
-            android:headerDividersEnabled="true"
-            android:padding="2dp"
-            android:scrollbars="none" />
+            android:background="#eeeef2" />
 
         <kore.botssdk.views.CustomTextView
             android:id="@+id/botCustomListViewButton"

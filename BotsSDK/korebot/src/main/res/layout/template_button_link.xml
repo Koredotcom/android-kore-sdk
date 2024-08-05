@@ -16,12 +16,8 @@
         android:textSize="@dimen/text_size_sub_header"
         tools:text="Title" />
 
-    <kore.botssdk.view.AutoExpandListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/botCustomButtonList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:divider="@color/white"
-        android:dividerHeight="1dp"
-        android:listSelector="@android:color/transparent"
-        android:scrollbars="none" />
+        android:layout_height="wrap_content"/>
 </LinearLayout>

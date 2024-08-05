@@ -13,21 +13,19 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
-
-import java.util.ArrayList;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotFormTemplateAdapter;
+import kore.botssdk.adapter.FormTemplateAdapter;
 import kore.botssdk.models.BaseBotMessage;
-import kore.botssdk.models.BotFormTemplateModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.AutoExpandListView;
 
 public class FormTemplateHolder extends BaseViewHolder {
-    private final AutoExpandListView autoExpandListView;
+    private final RecyclerView recyclerView;
     private final TextView tvFormTemplateTitle;
     private final TextView btFieldButton;
     private final String leftTextColor;
@@ -39,8 +37,9 @@ public class FormTemplateHolder extends BaseViewHolder {
     private FormTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
 
-        autoExpandListView = itemView.findViewById(R.id.multi_select_list);
-        autoExpandListView.setVerticalScrollBarEnabled(false);
+        recyclerView = itemView.findViewById(R.id.multi_select_list);
+        recyclerView.setVerticalScrollBarEnabled(false);
+        recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         KaFontUtils.applyCustomFont(itemView.getContext(), itemView);
         tvFormTemplateTitle = itemView.findViewById(R.id.tvform_template_title);
         btFieldButton = itemView.findViewById(R.id.btfieldButton);
@@ -65,18 +64,10 @@ public class FormTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        ArrayList<BotFormTemplateModel> items = new ArrayList<>();
-
-        if (payloadInner.getBotFormTemplateModels() != null && payloadInner.getBotFormTemplateModels().size() > 0)
-            items.addAll(payloadInner.getBotFormTemplateModels());
 
         tvFormTemplateTitle.setText(payloadInner.getHeading());
-        BotFormTemplateAdapter botFormTemplateAdapter = new BotFormTemplateAdapter(itemView.getContext(), payloadInner.getBotFormTemplateModels());
-        botFormTemplateAdapter.setBotFormTemplates(items);
-        botFormTemplateAdapter.setEnabled(isLastItem());
-        botFormTemplateAdapter.setTextColor(leftTextColor);
-        autoExpandListView.setAdapter(botFormTemplateAdapter);
-        botFormTemplateAdapter.notifyDataSetChanged();
+        FormTemplateAdapter botFormTemplateAdapter = new FormTemplateAdapter(payloadInner.getBotFormTemplateModels(), leftTextColor);
+        recyclerView.setAdapter(botFormTemplateAdapter);
 
         if (!StringUtils.isNullOrEmpty(leftTextColor)) {
             tvFormTemplateTitle.setTextColor(Color.parseColor(leftTextColor));
@@ -89,10 +80,10 @@ public class FormTemplateHolder extends BaseViewHolder {
 
         btFieldButton.setOnClickListener(view -> {
             if (composeFooterInterface != null && isLastItem()) {
-                int listLength = autoExpandListView.getChildCount();
+                int listLength = recyclerView.getChildCount();
                 StringBuilder sb = new StringBuilder();
                 for (int i = 0; i < listLength; i++) {
-                    view = autoExpandListView.getChildAt(i);
+                    view = recyclerView.getChildAt(i);
                     EditText et = view.findViewById(R.id.edtFormInput);
                     sb.append(et.getText().toString());
                 }

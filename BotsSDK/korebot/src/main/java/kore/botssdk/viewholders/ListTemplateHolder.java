@@ -1,22 +1,26 @@
 package kore.botssdk.viewholders;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListTemplateAdapter;
+import kore.botssdk.adapter.ListTemplateAdapter;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.view.AutoExpandListView;
 
 public class ListTemplateHolder extends BaseViewHolder {
     public static ListTemplateHolder getInstance(ViewGroup parent) {
@@ -31,24 +35,20 @@ public class ListTemplateHolder extends BaseViewHolder {
 
     @Override
     public void bind(BaseBotMessage baseBotMessage) {
-        AutoExpandListView autoExpandListView = itemView.findViewById(R.id.botCustomListView);
+        RecyclerView recyclerView = itemView.findViewById(R.id.botCustomListView);
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         ArrayList<BotListModel> listElements = payloadInner.getListElements();
         ArrayList<BotButtonModel> buttons = payloadInner.getButtons();
-        BotListTemplateAdapter botListTemplateAdapter;
-        if (autoExpandListView.getAdapter() == null) {
-            botListTemplateAdapter = new BotListTemplateAdapter(itemView.getContext(), autoExpandListView);
-            autoExpandListView.setAdapter(botListTemplateAdapter);
-            botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
-            botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        } else {
-            botListTemplateAdapter = (BotListTemplateAdapter) autoExpandListView.getAdapter();
-        }
-        botListTemplateAdapter.setBotListModelArrayList(listElements);
-        botListTemplateAdapter.notifyDataSetChanged();
+        recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int) (1*dp1)));
+        ListTemplateAdapter botListTemplateAdapter;
+        botListTemplateAdapter = new ListTemplateAdapter(listElements, isLastItem());
+        recyclerView.setAdapter(botListTemplateAdapter);
+        botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
+        botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         if (buttons != null && buttons.size() > 0) {
             botCustomListViewButton.setText(buttons.get(0).getTitle());
             botCustomListViewButton.setOnClickListener(v -> {

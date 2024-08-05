@@ -18,12 +18,11 @@
         android:textSize="@dimen/text_size_header"
         android:textStyle="bold" />
 
-    <kore.botssdk.view.AutoExpandListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/multi_select_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:divider="@null"
         android:visibility="visible" />
 
     <kore.botssdk.views.CustomTextViewBold

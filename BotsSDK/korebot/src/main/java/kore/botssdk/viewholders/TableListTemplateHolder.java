@@ -1,22 +1,26 @@
 package kore.botssdk.viewholders;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotTableListTemplateAdapter;
+import kore.botssdk.adapter.TableListTemplateAdapter;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotTableListModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.AutoExpandListView;
 
 public class TableListTemplateHolder extends BaseViewHolder {
-    private final AutoExpandListView autoExpandListView;
+    private final RecyclerView recyclerView;
 
     public static TableListTemplateHolder getInstance(ViewGroup parent) {
         return new TableListTemplateHolder(createView(R.layout.template_table_list, parent));
@@ -26,7 +30,9 @@ public class TableListTemplateHolder extends BaseViewHolder {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         initBubbleText(layoutBubble, false);
-        autoExpandListView = itemView.findViewById(R.id.botCustomListView);
+        recyclerView = itemView.findViewById(R.id.botCustomListView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int) (1 * dp1)));
     }
 
     @Override
@@ -35,12 +41,10 @@ public class TableListTemplateHolder extends BaseViewHolder {
         if (payloadInner == null) return;
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         ArrayList<BotTableListModel> botListModelArrayList = payloadInner.getTableListElements();
-        BotTableListTemplateAdapter botListTemplateAdapter;
-        botListTemplateAdapter = new BotTableListTemplateAdapter(itemView.getContext(), autoExpandListView, 4);
-        autoExpandListView.setAdapter(botListTemplateAdapter);
+        TableListTemplateAdapter botListTemplateAdapter;
+        botListTemplateAdapter = new TableListTemplateAdapter(botListModelArrayList, isLastItem());
         botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
-        botListTemplateAdapter.notifyDataSetChanged();
+        recyclerView.setAdapter(botListTemplateAdapter);
     }
 }

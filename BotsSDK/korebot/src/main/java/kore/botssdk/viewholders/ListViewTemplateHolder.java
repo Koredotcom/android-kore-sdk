@@ -12,20 +12,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotListViewTemplateAdapter;
+import kore.botssdk.adapter.ListViewTemplateAdapter;
 import kore.botssdk.dialogs.ListActionSheetFragment;
 import kore.botssdk.dialogs.ListMoreActionSheetFragment;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.LogUtils;
-import kore.botssdk.view.AutoExpandListView;
 
 public class ListViewTemplateHolder extends BaseViewHolder {
     public static ListViewTemplateHolder getInstance(ViewGroup parent) {
@@ -48,18 +50,20 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         ArrayList<BotButtonModel> botButtonModelArrayList = payloadInner.getButtons();
         int moreCount = payloadInner.getMoreCount();
         Context context = itemView.getContext();
-        AutoExpandListView autoExpandListView = itemView.findViewById(R.id.botCustomListView);
+        RecyclerView recyclerView = itemView.findViewById(R.id.botCustomListView);
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
         ViewGroup botCustomListRoot = itemView.findViewById(R.id.botCustomListRoot);
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(10));
         if (listElements != null && listElements.size() > 0) {
             int size = moreCount != 0 && listElements.size() > moreCount ? moreCount : listElements.size();
-            BotListViewTemplateAdapter botListTemplateAdapter = new BotListViewTemplateAdapter(context, autoExpandListView, size);
-            autoExpandListView.setAdapter(botListTemplateAdapter);
+            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(context, listElements, isLastItem(), size);
+            botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
+            botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+            recyclerView.setAdapter(botListTemplateAdapter);
             if (isLastItem()) botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            botListTemplateAdapter.setBotListModelArrayList(listElements);
-            botListTemplateAdapter.notifyDataSetChanged();
 
             if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
                 botCustomListViewButton.setText(Html.fromHtml("<u>" + botButtonModelArrayList.get(0).getTitle() + "</u>"));

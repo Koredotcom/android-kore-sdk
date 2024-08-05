@@ -15,9 +15,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.text.HtmlCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.BotButtonLinkTemplateAdapter;
+import kore.botssdk.adapter.ButtonLinkTemplateAdapter;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
@@ -25,20 +28,22 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
-import kore.botssdk.view.AutoExpandListView;
 
 public class ButtonLinkTemplateHolder extends BaseViewHolder {
-    private final AutoExpandListView autoExpandListView;
+    private final RecyclerView recyclerView;
     private final TextView tvButtonLinkTitle;
     private final Context context;
 
     public static ButtonLinkTemplateHolder getInstance(ViewGroup parent) {
         return new ButtonLinkTemplateHolder(createView(R.layout.template_button_link, parent));
     }
+
     private ButtonLinkTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         context = itemView.getContext();
-        autoExpandListView = itemView.findViewById(R.id.botCustomButtonList);
+        recyclerView = itemView.findViewById(R.id.botCustomButtonList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int) (1 * dp1)));
         tvButtonLinkTitle = itemView.findViewById(R.id.tvButtonLinkTitle);
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
@@ -69,11 +74,9 @@ public class ButtonLinkTemplateHolder extends BaseViewHolder {
             tvButtonLinkTitle.setVisibility(View.GONE);
         }
 
-        BotButtonLinkTemplateAdapter buttonTypeAdapter = new BotButtonLinkTemplateAdapter(context, payloadInner.getButtons(), 1);
-        buttonTypeAdapter.setEnabled(isLastItem());
-        autoExpandListView.setAdapter(buttonTypeAdapter);
+        ButtonLinkTemplateAdapter buttonTypeAdapter = new ButtonLinkTemplateAdapter(payloadInner.getButtons(), isLastItem());
+        recyclerView.setAdapter(buttonTypeAdapter);
         buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
         buttonTypeAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        buttonTypeAdapter.notifyDataSetChanged();
     }
 }

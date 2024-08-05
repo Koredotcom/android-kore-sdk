@@ -11,21 +11,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <kore.botssdk.view.AutoExpandListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/botCustomListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@color/color_dfdfeb"
-        android:dividerHeight="1dp"
-        android:footerDividersEnabled="true"
-        android:headerDividersEnabled="true"
-        android:padding="2dp"
-        android:scrollbars="none" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/dimen_10dp"
-        android:background="#ffffff" />
+        android:layout_marginBottom="10dp" />
 
     <TextView
         android:id="@+id/botCustomListViewButton"
@@ -35,7 +25,7 @@
         android:gravity="end|center_vertical"
         android:text="@string/more"
         android:textColor="@android:color/holo_blue_dark"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/workBenchListViewButton"
