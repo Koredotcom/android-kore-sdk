@@ -1,7 +1,5 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 import android.view.View;
 
 import androidx.annotation.NonNull;

@@ -83,6 +83,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public BaseViewHolder(@NonNull View itemView, Context context) {
         super(itemView);
+        this.context = context;
         TextView timeStamp = itemView.findViewById(R.id.time_stamp);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) timeStamp.getLayoutParams();
         if (this instanceof RequestTextTemplateHolder) {
@@ -95,7 +96,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
             params.gravity = Gravity.BOTTOM;
         }
-        this.context = context;
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -115,9 +115,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     public void setMsgTime(String msgTime, boolean isBotRequest) {
         TextView msgTimeView = itemView.findViewById(R.id.msg_time);
-        LinearLayoutCompat contentLayout = itemView.findViewById(R.id.contentLayout);
-        if (isBotRequest) contentLayout.setGravity(Gravity.END);
-        msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
+        msgTimeView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? View.VISIBLE : View.GONE);
+        if (SDKConfiguration.isTimeStampsRequired()) {
+            LinearLayoutCompat contentLayout = itemView.findViewById(R.id.contentLayout);
+            if (isBotRequest) contentLayout.setGravity(Gravity.END);
+            msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
+        }
     }
 
     public void setTimeStamp(String timeStamp) {

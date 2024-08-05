@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Environment;
 import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,8 +33,7 @@ public class NewTemplateHolder extends BaseViewHolder {
     private final ProgressBar pbDownload;
 
     public static NewTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pdf_download_view, parent, false);
-        return new NewTemplateHolder(view);
+        return new NewTemplateHolder(createView(R.layout.pdf_download_view, parent));
     }
 
     private NewTemplateHolder(@NonNull View view) {

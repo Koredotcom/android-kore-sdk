@@ -164,11 +164,11 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                     case BotResponse.TEMPLATE_TYPE_PIECHART:
                         return TEMPLATE_PIE_CHART;
                     case BotResponse.TEMPLATE_TYPE_TABLE:
-//                        if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
-//                            return TEMPLATE_TABLE_RESPONSIVE;
-//                        } else {
-                        return TEMPLATE_TABLE;
-//                        }
+                        if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
+                            return TEMPLATE_TABLE_RESPONSIVE;
+                        } else {
+                            return TEMPLATE_TABLE;
+                        }
                     case BotResponse.CUSTOM_TABLE_TEMPLATE:
                         break;
                     case BotResponse.TEMPLATE_TYPE_CLOCK:

@@ -5,7 +5,6 @@ import static android.view.View.VISIBLE;
 
 import android.os.Environment;
 import android.util.Base64;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,8 +31,7 @@ public class LinkTemplateHolder extends BaseViewHolder {
     private final ProgressBar pbDownload;
 
     public static LinkTemplateHolder getInstance(ViewGroup parent) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.pdf_download_view, parent, false);
-        return new LinkTemplateHolder(view);
+        return new LinkTemplateHolder(createView(R.layout.pdf_download_view, parent));
     }
 
     private LinkTemplateHolder(@NonNull View view) {
