@@ -175,6 +175,9 @@ public class SDKConfiguration {
         public static final boolean BubbleUI = false;
         public static boolean showIcon = false;
         public static boolean showIconTop = true;
+        public static boolean showAttachment = true;
+        public static boolean showASRMicroPhone = true;
+        public static boolean showTextToSpeech = true;
 
         public static int getIcon() {
             return icon;

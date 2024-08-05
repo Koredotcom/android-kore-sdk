@@ -97,6 +97,15 @@ public class MainActivity extends AppCompatActivity {
         //Flag to show the bot icon in top position or bottom of the bot response
         SDKConfiguration.BubbleColors.showIconTop = false;
 
+        //Flag to show the Speech to text micro phone icon
+        SDKConfiguration.BubbleColors.showASRMicroPhone = false;
+
+        //Flag to show the text to speech Speaker icon
+        SDKConfiguration.BubbleColors.showTextToSpeech = false;
+
+        //Flag to show the attachment icon
+        SDKConfiguration.BubbleColors.showAttachment = true;
+
         //Flag to show timestamp of each bot and user messages
         SDKConfiguration.setTimeStampsRequired(false);
 
