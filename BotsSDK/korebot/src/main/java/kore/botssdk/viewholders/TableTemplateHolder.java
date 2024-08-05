@@ -49,7 +49,7 @@ public class TableTemplateHolder extends BaseViewHolder {
         int size = ((ArrayList<?>) payloadInner.getElements()).size();
         for (int j = 0; j < size; j++) {
             MiniTableModel model = new MiniTableModel();
-            model.setElements(((ArrayList)(((LinkedTreeMap)((ArrayList) payloadInner.getElements()).get(j))).get("Values")));
+            model.setElements((List<Object>) (((LinkedTreeMap<?,?>)((ArrayList<?>) payloadInner.getElements()).get(j))).get("Values"));
             lists.add(model);
         }
 

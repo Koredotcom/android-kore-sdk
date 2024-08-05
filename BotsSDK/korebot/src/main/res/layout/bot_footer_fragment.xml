@@ -103,12 +103,12 @@
 
                     <ImageView
                         android:id="@+id/attachemnt"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
                         android:layout_gravity="center_vertical"
                         android:importantForAccessibility="no"
-                        android:padding="8dp"
-                        android:visibility="visible"
+                        android:padding="3dp"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/attachment_comp" />
 
                     <LinearLayout
@@ -195,10 +195,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
                     android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:id="@+id/llSend"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/ic_send_bg"
+                        android:gravity="center"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/sendTv"
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_margin="@dimen/dimen_5dp"
+                            android:background="@drawable/ic_send_small" />
+
+                    </LinearLayout>
+
                     <TextView
-                        android:id="@+id/sendTv"
+                        android:id="@+id/sendTv1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
@@ -214,14 +234,12 @@
 
                     <ImageView
                         android:id="@+id/rec_audio_img"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
                         android:layout_gravity="center_vertical"
-                        android:alpha="0.70"
                         android:importantForAccessibility="no"
-                        android:padding="5dp"
                         android:src="@drawable/ic_mic"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/audio_speak_tts"
@@ -230,9 +248,12 @@
                         android:layout_gravity="center_vertical"
                         android:alpha="0.70"
                         android:importantForAccessibility="no"
-                        android:padding="5dp"
+                        android:paddingStart="@dimen/dimen_0"
+                        android:paddingTop="@dimen/dimen_5dp"
+                        android:paddingEnd="5dp"
+                        android:paddingBottom="@dimen/dimen_5dp"
                         android:src="@drawable/ic_volume_up_black_24dp"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
                 </LinearLayout>
 

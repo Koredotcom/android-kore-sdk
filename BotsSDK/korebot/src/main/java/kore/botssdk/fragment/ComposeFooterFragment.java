@@ -152,10 +152,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         isDisabled = disabled;
     }
 
-    boolean isDisabled, isFirstTime, isTTSEnabled = true;
+    boolean isDisabled, isFirstTime, isTTSEnabled = false;
     ComposeFooterInterface composeFooterInterface;
     TTSUpdate ttsUpdate;
-    LinearLayout linearLayoutProgress;
+    LinearLayout linearLayoutProgress, llSend;
     BotOptionsModel botOptionsModel;
     ReUsableListViewActionSheet listViewActionSheet;
     AttachmentOptionsAdapter adapter;
@@ -222,6 +222,13 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         progress = view.findViewById(R.id.progress);
         attachemnt = view.findViewById(R.id.attachemnt);
         rlFooter = view.findViewById(R.id.rlFooter);
+        llSend = view.findViewById(R.id.llSend);
+
+        if (SDKConfiguration.BubbleColors.showAttachment) attachemnt.setVisibility(View.VISIBLE);
+
+        if (SDKConfiguration.BubbleColors.showTextToSpeech) audio_speak_tts.setVisibility(View.VISIBLE);
+
+        if (SDKConfiguration.BubbleColors.showASRMicroPhone) rec_audio_img.setVisibility(View.VISIBLE);
 
         attachment_recycler = view.findViewById(R.id.attachment_recycler);
         attachment_recycler.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -258,17 +265,17 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     public void updateUI() {
-        if (sendButton != null) {
-            sendButton.setEnabled(!isDisabled && !isFirstTime);
-            sendButton.setAlpha(sendButton.isEnabled() ? 1.0f : 0.5f);
+        if (llSend != null) {
+            llSend.setEnabled(!isDisabled && !isFirstTime);
+            llSend.setAlpha(llSend.isEnabled() ? 1.0f : 0.5f);
         }
     }
 
     private void setListener() {
         if (isDisabled && isFirstTime) {
-            sendButton.setOnClickListener(null);
+            llSend.setOnClickListener(null);
         } else {
-            sendButton.setOnClickListener(composeFooterSendBtOnClickListener);
+            llSend.setOnClickListener(composeFooterSendBtOnClickListener);
         }
 
     }
@@ -361,19 +368,20 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.length() == 0) {
-                sendButton.setVisibility(View.GONE);
-                rec_audio_img.setVisibility(View.VISIBLE);
+                llSend.setVisibility(View.GONE);
+
+                if (SDKConfiguration.BubbleColors.showASRMicroPhone) rec_audio_img.setVisibility(View.VISIBLE);
 
                 if (isAgentConnected && botClient != null)
                     botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
 
-            } else if ((sendButton.getVisibility() != View.VISIBLE)
-                    || (s.length() > 0 && sendButton.getVisibility() != View.VISIBLE)) {
+            } else if ((llSend.getVisibility() != View.VISIBLE)
+                    || (s.length() > 0 && llSend.getVisibility() != View.VISIBLE)) {
 
                 if (isAgentConnected && botClient != null)
                     botClient.sendReceipts(BundleConstants.TYPING, "");
 
-                sendButton.setVisibility(View.VISIBLE);
+                llSend.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
             }
         }
@@ -473,16 +481,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     public boolean isTTSEnabled() {
         return isTTSEnabled;
-    }
-
-    private void stopRecording() {
-        if (editTextMessage.getText().toString().trim().length() == 0) {
-            rec_audio_img.setVisibility(View.VISIBLE);
-            sendButton.setVisibility(View.GONE);
-        } else {
-            rec_audio_img.setVisibility(View.GONE);
-            sendButton.setVisibility(View.VISIBLE);
-        }
     }
 
     private void requestMicrophonePermission() {
@@ -1003,11 +1001,13 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     public void enableOrDisableSendButton(boolean enable) {
 
         if (composebarAttachmentAdapter.getItemCount() > 0 || enable) {
-            sendButton.setVisibility(View.VISIBLE);
+            llSend.setVisibility(View.VISIBLE);
             rec_audio_img.setVisibility(View.GONE);
         } else {
-            rec_audio_img.setVisibility(View.VISIBLE);
-            sendButton.setVisibility(View.GONE);
+            if (SDKConfiguration.BubbleColors.showASRMicroPhone)
+                rec_audio_img.setVisibility(View.VISIBLE);
+
+            llSend.setVisibility(View.GONE);
         }
     }
 
