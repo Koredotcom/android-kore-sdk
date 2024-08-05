@@ -4,6 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +32,8 @@ public class TableTemplateHolder extends BaseViewHolder {
         rvTableViewHeader = itemView.findViewById(R.id.rvTableViewHeader);
         rvTableView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.VERTICAL, false));
         rvTableView.addItemDecoration(new VerticalSpaceItemDecoration(LinearLayoutManager.VERTICAL));
-
+        LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
+        initBubbleText(layoutBubble, false);
     }
 
     public static TableTemplateHolder getInstance(ViewGroup parent) {
@@ -42,6 +44,7 @@ public class TableTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         rvTableViewHeader.setLayoutManager(new GridLayoutManager(itemView.getContext(), payloadInner.getColumns().size()));
         rvTableViewHeader.setAdapter(new TableTemplateHeaderAdapter(itemView.getContext(), payloadInner.getColumns(), isLastItem()));
 

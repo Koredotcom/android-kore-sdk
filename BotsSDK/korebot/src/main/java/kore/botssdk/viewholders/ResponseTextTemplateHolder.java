@@ -33,11 +33,11 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
         boolean isError = false;
         if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
             message = payOuter.getText();
-//                return new ResponseTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.layout_bubble_text_template, parent, false), payOuter.getText());
         } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
             message = payOuter.getPayload().getText();
             isError = true;
-//                return new ResponseTextTemplateHolderNew(ownLayoutInflater.inflate(R.layout.layout_bubble_text_template, parent, false), payOuter.getPayload().getText());
+        } else if (payOuter.getType().equals(BotResponse.COMPONENT_TYPE_TEXT)) {
+            message = payOuter.getText();
         }
         PayloadInner payInner;
         if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
@@ -52,8 +52,7 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
         } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type()))
             message = payInner.getTemplate_type();
         else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {
-//                            timeStampsTextView.setText("");
-            message = "default";
+            message = "";
         }
         if (!isError) {
             setResponseText((LinearLayoutCompat) itemView, message);

@@ -864,13 +864,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
                 processPayload("", botResponse);
             } catch (Exception e) {
-                PayloadInner payloadInner = new PayloadInner();
-                payloadInner.setTemplate_type("text");
+//                PayloadInner payloadInner = new PayloadInner();
+//                payloadInner.setTemplate_type("text");
 
                 PayloadOuter payloadOuter = new PayloadOuter();
                 payloadOuter.setText(text);
                 payloadOuter.setType("text");
-                payloadOuter.setPayload(payloadInner);
+//                payloadOuter.setPayload(payloadInner);
 
                 ComponentModel componentModel = new ComponentModel();
                 componentModel.setType("text");
@@ -887,6 +887,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 botResponse.setType("text");
                 botResponse.setMessage(arrBotResponseMessages);
                 botResponse.setMessageId(messageId);
+                botResponse.setIcon(SDKConfiguration.BubbleColors.getIcon_url());
 
                 if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon())) botResponse.setIcon(botMetaModel.getIcon());
 
