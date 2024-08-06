@@ -10,12 +10,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <kore.botssdk.view.AutoExpandListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/multi_select_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/round_rect"
-        android:divider="@null"
-        android:padding="2dp"
         android:visibility="visible" />
 </androidx.appcompat.widget.LinearLayoutCompat>
