@@ -884,7 +884,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     void processFileUpload(String fileName, String filePath, String extn, String mediaType, String thumbnailFilePath, String orientation) {
 
-        long fileLimit = getFileMaxSize();
         if (!SDKConfiguration.Client.isWebHook) {
             KoreWorker.getInstance().addTask(new UploadBulkFile(fileName,
                     filePath, "bearer " + SocketWrapper.getInstance(requireActivity()).getAccessToken(),
@@ -1031,18 +1030,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 fileName = realPath.substring(startInd, endInd);
             }
 
-            Bitmap thumbnail = null;
             String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
-//            if (!isCapturedVideo) {
-//                int videoThumbnailIndexId = BitmapUtils.getVideoIdFromFilePath(requireActivity(), selectedImage);
-//                thumbnail = MediaStore.Video.Thumbnails.getThumbnail(requireActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
-//            } else {
-//                thumbnail = ThumbnailUtils.createVideoThumbnail(realPath, MediaStore.Video.Thumbnails.MINI_KIND);
-//            }
-
-//            if (thumbnail == null) {
-            thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
-//            }
+            Bitmap thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
 
             Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
             thumbnail = overlay(thumbnail, hover);
