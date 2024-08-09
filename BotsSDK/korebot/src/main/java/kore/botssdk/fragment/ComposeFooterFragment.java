@@ -1220,7 +1220,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 attachmentKey.put("localFilePath", mediaFilePath);
                 attachmentKey.put("fileExtn", MEDIA_TYPE);
                 attachmentKey.put("thumbnailURL", thumbnailURL);
-                ((BotChatActivity) requireActivity()).mediaAttachment(attachmentKey);
+                addAttachmentToAdapter(attachmentKey);
             } else {
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
                 if (!TextUtils.isEmpty(errorMsg)) {
@@ -1249,67 +1249,4 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         String enterprise_msg = "File uploads are limited to " + attachment.getSize() + "MB\nunder the Enterprise Plan";
 //        new Freemium(requireActivity(), freemiumData, null).showFreemiumDialog(true,enterprise_msg);
     }
-
-    public void setSectionSelected(/*SECTION_TYPE sectionSelected*/) {
-//        animateLayoutVisible();
-//        Log.d("IKIDO", "setting current state " + sectionSelected);
-        /*try{
-            throw new Exception("IKIDO");
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
-       /* current_state = sectionSelected;
-        switch (sectionSelected) {
-            *//*case SECTION_YOU:
-                setYouSelected(true);
-                setKnowledgeSelected(false);
-                setComposeSectionSelected(false);
-                animateLayoutGone();
-                break;
-            case SECTION_COMPOSE:
-                setYouSelected(false);
-                setKnowledgeSelected(false);
-                setComposeSectionSelected(true);
-                break;*//*
-            case SECTION_COMPOSE_WITH_COMPOSE_BAR:
-                showComposeBarOnly();
-                break;
-            case SECTION_COMPOSE_OPEN:
-                keyBoardAction();
-                break;
-            *//*case SECTION_KNOWLEDGE:
-                animateLayoutGone();
-                setYouSelected(false);
-                setKnowledgeSelected(true);
-                setComposeSectionSelected(false);
-                break;*//*
-
-        }*/
-    }
-
-    /*AudioTaskListener mListener = new AudioTaskListener() {
-        @Override
-        public void onCloseButtonClicked(int resultCode) {
-            editTextMessage.setEnabled(true);
-            try {
-                FragmentManager fm = requireActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.remove(fm.findFragmentByTag(TapToSpeakFragmentTag));
-                ft.commit();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            stopRecording();
-        }
-
-        @Override
-        public void audioDataToTextView(String text) {
-            if (tapToSpeakFragment != null && !tapToSpeakFragment.isDetached() && tapToSpeakFragment.getState() == AudioRecorder.State.RECORDING) {
-                editTextMessage.setText(text);
-                editTextMessage.setSelection(editTextMessage.getText().length());
-            }
-        }
-    };*/
-
 }

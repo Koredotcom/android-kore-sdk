@@ -107,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfiguration.BubbleColors.showAttachment = true;
 
         //Flag to show timestamp of each bot and user messages
-        SDKConfiguration.setTimeStampsRequired(false);
+        SDKConfiguration.setTimeStampsRequired(true);
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {

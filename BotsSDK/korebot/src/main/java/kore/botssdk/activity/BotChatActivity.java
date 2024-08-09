@@ -1146,7 +1146,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 koreMedia.setMediafileId(mediaFileId);
                 koreMedia.setMediaThumbnail(thumbnailURL);
 
-                composeFooterFragment.setSectionSelected();
                 messageHandler.postDelayed(new Runnable() {
                     public void run() {
                         HashMap<String, String> attachmentKey = new HashMap<>();
@@ -1170,7 +1169,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     };
 
     public void mediaAttachment(HashMap<String, String> attachmentKey) {
-        composeFooterFragment.setSectionSelected();
         messageHandler.postDelayed(new Runnable() {
             public void run() {
                 composeFooterFragment.addAttachmentToAdapter(attachmentKey);

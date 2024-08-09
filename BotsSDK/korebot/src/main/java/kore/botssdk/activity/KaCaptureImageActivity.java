@@ -161,21 +161,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
     }
 
-    private boolean checkForPermissionAccess() {
-        if (CHOOSE_TYPE_CAMERA.equalsIgnoreCase(imagePickType)) {
-            return KaPermissionsHelper.hasPermission(this,Manifest.permission.CAMERA);
-        } else if (CHOOSE_TYPE_IMAGE_VIDEO.equalsIgnoreCase(imagePickType) ||
-                CHOOSE_TYPE_GALLERY.equalsIgnoreCase(imagePickType) ||
-                CHOOSE_TYPE_VIDEO_GALLERY.equalsIgnoreCase((imagePickType))) {
-            return Build.VERSION.SDK_INT >= 33 ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_IMAGES) : KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE);
-        } else if (CHOOSE_TYPE_FILE.equalsIgnoreCase(imagePickType)) {
-            return Build.VERSION.SDK_INT >= 33 ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_IMAGES) : KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE);
-        } else {
-            LogUtils.e(LOG_TAG, "no pickType found. Please assign one and invoke this activity, again.");
-            return false;
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
         if (requestCode == CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST) {
@@ -316,7 +301,22 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                                     finishOperation(selectedFile, fileExtn, result.getResultCode());
 
                                 } else {
-                                    new SaveFileTask(selectedFile, result.getResultCode());
+                                    Cursor returnCursor =
+                                            getContentResolver().query(selectedFile, null, null, null, null);
+                                    if(returnCursor != null)
+                                    {
+                                        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                                        returnCursor.moveToFirst();
+                                        MEDIA_FILENAME =  returnCursor.getString(nameIndex);
+                                        fileExtn = BitmapUtils.getExtensionFromFileName(MEDIA_FILENAME);  // will not be null but "" and will return as not whitelisted
+                                        MEDIA_FILE_PATH = KaMediaUtils.saveFileToKoreWithStream(KaCaptureImageActivity.this, selectedFile ,MEDIA_FILENAME,fileExtn);
+                                        returnCursor.close();
+
+                                        if(MEDIA_FILE_PATH != null) {
+                                            MEDIA_FILENAME = MEDIA_FILE_PATH.substring(MEDIA_FILE_PATH.lastIndexOf("/") + 1);
+                                        }
+                                        finishOperation(null,fileExtn,result.getResultCode());
+                                    }
                                 }
                             }
                         }
