@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.kore.korebot.model.ResponsePayload;
@@ -26,12 +28,13 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.CustomTemplateView;
 
+@SuppressWarnings("UnKnownNullness")
 public class LinkTemplateView extends CustomTemplateView {
     private ImageView ivPdfDownload;
     private TextView tvPdfName;
     private Context context;
     private ProgressBar pbDownload;
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
 
     public LinkTemplateView(Context context) {
         super(context);
@@ -39,7 +42,7 @@ public class LinkTemplateView extends CustomTemplateView {
     }
 
     @Override
-    public void populateTemplate(String botResponse, boolean isLast) {
+    public void populateTemplate(@NonNull String botResponse, boolean isLast) {
         if(!StringUtils.isNullOrEmpty(botResponse))
         {
             Type botResp = new TypeToken<ResponsePayload>() {}.getType();

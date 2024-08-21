@@ -124,20 +124,9 @@ final Context context;
 
         if(getItemViewType(holder.getBindingAdapterPosition()) == BUBBLE_RIGHT_LAYOUT)
         {
-            // call Animation function
-            setAnimation(holder.itemView, position);
+//            // call Animation function
+//            setAnimation(holder.itemView, position);
 
-            holder.baseBubbleLayout.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    if(selectedItem != -1){
-                        notifyItemChanged(selectedItem);
-                    }
-                    selectedItem = holder.getBindingAdapterPosition();
-                    holder.baseBubbleLayout.setTimeStampVisible();
-                    return true;
-                }
-            });
             holder.baseBubbleLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -146,8 +135,8 @@ final Context context;
                 }
             });
         }
-        else
-            setLeftAnimation(holder.itemView, position);
+//        else
+//            setLeftAnimation(holder.itemView, position);
 
     }
 
@@ -157,24 +146,24 @@ final Context context;
         }else return !getItem(position).isSend() && !getItem(position - 1).isSend();
     }
 
-    private void setAnimation(View viewToAnimate, int position) {
-        // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition) {
-            ScaleAnimation anim = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.REVERSE, 1.0f, Animation.REVERSE, 1.0f);
-            anim.setDuration(800);//to make duration random number between [0,501)
-            viewToAnimate.startAnimation(anim);
-            lastPosition = position;
-        }
-    }
-    private void setLeftAnimation(View viewToAnimate, int position) {
-        // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition) {
-            ScaleAnimation anim = new ScaleAnimation(-0.5f, 1.0f, -0.5f, 1.0f, Animation.REVERSE, 0.0f, Animation.REVERSE, 0.5f);
-            anim.setDuration(1000);
-            viewToAnimate.startAnimation(anim);
-            lastPosition = position;
-        }
-    }
+//    private void setAnimation(View viewToAnimate, int position) {
+//        // If the bound view wasn't previously displayed on screen, it's animated
+//        if (position > lastPosition) {
+//            ScaleAnimation anim = new ScaleAnimation(0.7f, 1.0f, 0.7f, 1.0f, Animation.REVERSE, 1.0f, Animation.REVERSE, 1.0f);
+//            anim.setDuration(800);//to make duration random number between [0,501)
+//            viewToAnimate.startAnimation(anim);
+//            lastPosition = position;
+//        }
+//    }
+//    private void setLeftAnimation(View viewToAnimate, int position) {
+//        // If the bound view wasn't previously displayed on screen, it's animated
+//        if (position > lastPosition) {
+//            ScaleAnimation anim = new ScaleAnimation(-0.5f, 1.0f, -0.5f, 1.0f, Animation.REVERSE, 0.0f, Animation.REVERSE, 0.5f);
+//            anim.setDuration(1000);
+//            viewToAnimate.startAnimation(anim);
+//            lastPosition = position;
+//        }
+//    }
 
 
     @Override
@@ -278,10 +267,7 @@ final Context context;
         headersMap.clear();
         for (i = 0; i < baseBotMessageArrayList.size(); i++) {
             BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
-            if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
-                headersMap.put(baseBotMessage.getFormattedDate(), i);
-            }
+            headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
         }
-
     }
 }

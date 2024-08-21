@@ -55,8 +55,8 @@ public class SDKConfiguration {
         }
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static final boolean IS_ANONYMOUS_USER = false;
-        public static String SERVER_URL = "https://bots.kore.ai/";
-        public static final String Branding_SERVER_URL = "https://bots.kore.ai/";
+        public static String SERVER_URL = "https://platform.kore.ai/";
+        public static final String Branding_SERVER_URL = "https://platform.kore.ai/";
         public static final String koreAPIUrl = "https://bots.kore.ai/";
 
         public static HashMap<String, Object> queryParams = new HashMap<>();
@@ -71,9 +71,9 @@ public class SDKConfiguration {
     }
 
     public static class Client {
-        public static String client_id = "cs-a8239f06-c548-5ac3-b9c4-3129f2fc5b89";
-        public static String client_secret = "+oTGPYWMjQ8g4kixEJwh7p0nD4bd+sVcru/YdXxNN/k=";
-        public static String bot_id = "st-27172eec-8b47-5bc5-bd1b-842a99e92d29";
+        public static String client_id = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
+        public static String client_secret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
+        public static String bot_id = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
         public static String identity = "example@kore.com";
         public static String bot_name = "Giga";
 

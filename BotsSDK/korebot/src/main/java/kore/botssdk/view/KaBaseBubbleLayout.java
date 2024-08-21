@@ -48,8 +48,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     Activity activityContext;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    protected float dp1, dp2, dp4, dp10,dp12, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21,
-            dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
+    protected float dp1, dp2, dp4, dp10, dp12, dp14, dp283, dp81, dp91, dp100, dp6, dp13, dp15, dp21, dp28, dp33, dp44, dp50, dp106, dp160, dp253, dp226;
     protected float screenWidth;
     protected int senderImageRadius, bubbleCornerRadius;
     private boolean leftSide;
@@ -58,9 +57,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected boolean isGroupMessage = false;
     protected int[] textMediaDimen;
     protected int[] maxBubbleDimen;
-    //  protected int[] headerLayoutDimen;
     protected int[] maxContentDimen;
-
     protected int BUBBLE_ARROW_WIDTH = 0;
     protected int BUBBLE_RIGHT_ARROW_WIDTH = 0;
     protected int BUBBLE_LEFT_ARROW_WIDTH = 0;
@@ -79,8 +76,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected int BUBBLE_LEFT_BORDER = 0;
     protected int BUBBLE_RIGHT_BORDER = 0;
     protected final int BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT = 0;
-    protected int BUBBLE_CONTENT_LEFT_BORDER = 0; //TODO remove this...
-    protected int BUBBLE_CONTENT_RIGHT_BORDER = 0; //TODO remove this...
+    protected int BUBBLE_CONTENT_LEFT_BORDER = 0;
+    protected int BUBBLE_CONTENT_RIGHT_BORDER = 0;
     protected int BUBBLE_LEFT_PROFILE_PIC = 0;
     protected final int BUBBLE_SEPARATION_DISTANCE = 0;
     protected int BUBBLE_GROUPING_TIMELINE = 0;
@@ -92,15 +89,13 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected final int RIGHT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleSelected);
     protected final int RIGHT_COLOR_UNSELECTED = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleUnSelected);
     protected final int LEFT_COLOR_SELECTED = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected);
-    protected final int LEFT_COLOR_UNSELECTED =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleUnSelected);
-    protected final int BUBBLE_WHITE_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.whiteColor);
+    protected final int LEFT_COLOR_UNSELECTED = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleUnSelected);
+    protected final int BUBBLE_WHITE_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.whiteColor);
     protected final int LEFT_BUBBLE_BORDER_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleBorderColor);
-    protected final int LEFT_BUBBLE_LINK_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftLinkColor);
+    protected final int LEFT_BUBBLE_LINK_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.leftLinkColor);
     protected final int RIGHT_BUBBLE_LINK_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightLinkColor);
-    protected final int LEFT_TEXT_COLOR =  Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleTextColor);
+    protected final int LEFT_TEXT_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleTextColor);
     protected final int RIGHT_TEXT_COLOR = Color.parseColor(SDKConfiguration.BubbleColors.rightBubbleTextColor);
-
-
 
 
     protected final int WHITE_COLOR = 0xffffffff;
@@ -155,7 +150,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     //    protected int[] dimens;
     protected int textColor;
     protected int textMediaLayoutGravity = BubbleConstants.GRAVITY_LEFT;
-    protected GradientDrawable leftGradientDrawable,rightGradientDrawable;
+    protected GradientDrawable leftGradientDrawable, rightGradientDrawable;
 
     LayoutInflater ownLayoutInflater;
     protected TextView timeStampsTextView;
@@ -188,8 +183,8 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
     private void init() {
-        initiliazeCoordinates();
-        if(isDoDrawBubbleBackground()) {
+        initializeCoordinates();
+        if (isDoDrawBubbleBackground()) {
             setWillNotDraw(false);
             paint = new Paint();
             paint.setXfermode(null);
@@ -201,12 +196,12 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
 
-    public void setTimeStampVisible(){
+    public void setTimeStampVisible() {
         timeStampsTextView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? VISIBLE : GONE);
     }
-    private void initiliazeCoordinates() {
-        if (AppControl.getInstance() != null
-                && AppControl.getInstance().getDimensionUtil() != null) {
+
+    private void initializeCoordinates() {
+        if (AppControl.getInstance() != null && AppControl.getInstance().getDimensionUtil() != null) {
             dp1 = DimensionUtil.dp1;
             dp4 = 4 * dp1;
             dp2 = 2 * dp1;
@@ -234,7 +229,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             BUBBLE_CONTENT_LEFT_MARGIN = (int) dp14;
             BUBBLE_CONTENT_TOP_MARGIN = 0;
             BUBBLE_CONTENT_RIGHT_MARGIN = (int) dp14;
-            BUBBLE_CONTENT_BOTTOM_MARGIN = (int)(BubbleUI ?  (8 * dp1) : 21 * dp1);
+            BUBBLE_CONTENT_BOTTOM_MARGIN = (int) (BubbleUI ? (8 * dp1) : 21 * dp1);
             BUBBLE_CONTENT_RIGHT_LIST_MARGIN = (int) (dp1 * 40);
             senderImageRadius = (int) (dp1 * 17); // Change this value if sender image width and height is changed
             bubbleCornerRadius = (int) dp15;
@@ -266,19 +261,17 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
 
-    private GradientDrawable getGradientBubble( ){
-        if(leftGradientDrawable == null) {
-            leftGradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[]{LEFT_COLOR_UNSELECTED,LEFT_COLOR_UNSELECTED});
+    private GradientDrawable getGradientBubble() {
+        if (leftGradientDrawable == null) {
+            leftGradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{LEFT_COLOR_UNSELECTED, LEFT_COLOR_UNSELECTED});
             leftGradientDrawable.setShape(GradientDrawable.RECTANGLE);
             leftGradientDrawable.setGradientRadius((float) (Math.sqrt(2) * 60));
-            leftGradientDrawable.setStroke((int)dp1,LEFT_BUBBLE_BORDER_COLOR);
+            leftGradientDrawable.setStroke((int) dp1, LEFT_BUBBLE_BORDER_COLOR);
             leftGradientDrawable.setGradientType(GradientDrawable.LINEAR_GRADIENT);
             leftGradientDrawable.setCornerRadii(new float[]{dp12, dp12, dp12, dp12, isLeftSide() ? dp12 : dp1, isLeftSide() ? dp12 : dp1, !isLeftSide() ? dp12 : dp1, !isLeftSide() ? dp12 : dp1});
         }
-        if(rightGradientDrawable == null) {
-            rightGradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM,
-                    new int[]{RIGHT_COLOR_UNSELECTED,RIGHT_COLOR_UNSELECTED});
+        if (rightGradientDrawable == null) {
+            rightGradientDrawable = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[]{RIGHT_COLOR_UNSELECTED, RIGHT_COLOR_UNSELECTED});
 
 
             rightGradientDrawable.setShape(GradientDrawable.RECTANGLE);
@@ -287,28 +280,27 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
             rightGradientDrawable.setCornerRadii(new float[]{dp12, dp12, dp12, dp12, isLeftSide() ? dp12 : dp1, isLeftSide() ? dp12 : dp1, !isLeftSide() ? dp12 : dp1, !isLeftSide() ? dp12 : dp1});
         }
 
-        return  isLeftSide() ? leftGradientDrawable : rightGradientDrawable;
+        return isLeftSide() ? leftGradientDrawable : rightGradientDrawable;
     }
 
     abstract int getLinkTextColor();
+
     private void viewAddition() {
         ownLayoutInflater = LayoutInflater.from(context);
 
-        bubbleTextMediaLayout = ViewProvider.getTextMediaLayout(context,getLinkTextColor());
+        bubbleTextMediaLayout = ViewProvider.getTextMediaLayout(context, getLinkTextColor());
         bubbleTextMediaLayout.setRestrictedLayoutWidth(BubbleViewUtil.getBubbleContentWidth());
-        //  bubbleTextMediaLayout.setRestrictedLayoutHeight(BubbleViewUtil.getBubbleContentHeight());
         bubbleTextMediaLayout.widthStyle = BubbleConstants.WRAP_CONTENT;
         addView(bubbleTextMediaLayout);
 
-        botButtonView = ViewProvider.getBotButtonView(context,null);
+        botButtonView = ViewProvider.getBotButtonView(context, null);
         addView(botButtonView);
 
         meetingSlotsView = ViewProvider.getMeetingSlotsView(context);
         meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
-        //  meetingSlotsView.setRestrictedLayoutWidth(BubbleViewUtil.getSlotsContentWidth());
         addView(meetingSlotsView);
 
-        botContactTemplateView = ViewProvider.getBotContactView(context,null);
+        botContactTemplateView = ViewProvider.getBotContactView(context, null);
         addView(botContactTemplateView);
 
         multiSelectView = ViewProvider.getMultiSelectView(context);
@@ -322,14 +314,13 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
         meetingConfirmationView = ViewProvider.getMeetingConfirmationView(context);
         meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
-        //   meetingConfirmationView.setRestrictedLayoutWidth(BubbleViewUtil.getMeetingSlotConfirmationWidth());
         addView(meetingConfirmationView);
 
         attendeeSlotSelectionView = ViewProvider.getAttendeeSlotSelectionView(context);
         attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
         addView(attendeeSlotSelectionView);
 
-        botListTemplateView = ViewProvider.getBotListTempleteView(context);
+        botListTemplateView = ViewProvider.getBotListTemplateView(context);
         addView(botListTemplateView);
 
         botCarouselView = ViewProvider.getBotCarousalView(context);
@@ -375,7 +366,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         verticalListView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 
         timeStampsTextView = ViewProvider.getTimeStampTextView(context);
-        timeStampsTextView.setPadding(0,(int)dp1*3  ,0,0);
+        timeStampsTextView.setPadding(0, (int) dp1 * 3, 0, 0);
         addView(timeStampsTextView);
 
         timeLineView = ViewProvider.getTimeLineView(context);
@@ -389,15 +380,15 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         botFormTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botFormTemplateView);
 
-        botListViewTemplateView = ViewProvider.getBotListViewTempleteView(context);
+        botListViewTemplateView = ViewProvider.getBotListViewTemplateView(context);
         botListViewTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botListViewTemplateView);
 
-        botListWidgetTemplateView = ViewProvider.getBotListWidgetTempleteView(context);
+        botListWidgetTemplateView = ViewProvider.getBotListWidgetTemplateView(context);
         botListWidgetTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botListWidgetTemplateView);
 
-        botTableListTemplateView = ViewProvider.getBotTableListTempleteView(context);
+        botTableListTemplateView = ViewProvider.getBotTableListTemplateView(context);
         botTableListTemplateView.setComposeFooterInterface(composeFooterInterface);
         addView(botTableListTemplateView);
 
@@ -443,7 +434,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         pdfDownloadView = ViewProvider.getPdfListView(context);
         addView(pdfDownloadView);
 
-        botButtonLinkTemplateView = ViewProvider.getBotButtonLinkView(context,null);
+        botButtonLinkTemplateView = ViewProvider.getBotButtonLinkView(context, null);
         addView(botButtonLinkTemplateView);
 
         botBeneficiaryTemplateView = ViewProvider.getBotBeneficiaryTemplateView(context);
@@ -466,19 +457,18 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     }
 
 
-
     abstract void initializeBubbleBorderPass1();
 
     abstract void initializeBubbleBorderPass2();
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if(isDoDrawBubbleBackground()) {
+        if (isDoDrawBubbleBackground()) {
             //First clear everything
             clearCanvas(canvas);
 
             //Set the Paint
-            setPaintStroke(paint, !isSelected());
+            setPaintStroke(paint);
             drawBubbleBackground(canvas);
         }
     }
@@ -491,7 +481,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         canvas.drawRect(rect, paint);
     }
 
-    protected void setPaintStroke(Paint paint, boolean forBorder) {
+    protected void setPaintStroke(Paint paint) {
         setPaintColor(paint);
         paint.setStrokeWidth(dp1);
         paint.setStyle(Paint.Style.FILL_AND_STROKE);
@@ -514,25 +504,25 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botContactTemplateView != null) {
             botContactTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(verticalListView != null){
+        if (verticalListView != null) {
             verticalListView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(meetingSlotsView != null){
+        if (meetingSlotsView != null) {
             meetingSlotsView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(multiSelectView != null){
+        if (multiSelectView != null) {
             multiSelectView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(universalSearchView !=null){
+        if (universalSearchView != null) {
             universalSearchView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(meetingConfirmationView != null){
+        if (meetingConfirmationView != null) {
             meetingConfirmationView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(attendeeSlotSelectionView != null){
+        if (attendeeSlotSelectionView != null) {
             attendeeSlotSelectionView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(botFormTemplateView != null){
+        if (botFormTemplateView != null) {
             botFormTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
         if (botListViewTemplateView != null) {
@@ -550,28 +540,26 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (agentTransferTemplateView != null) {
             agentTransferTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(feedbackTemplateView != null){
+        if (feedbackTemplateView != null) {
             feedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(listWidgetView != null){
+        if (listWidgetView != null) {
             listWidgetView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(botDropDownTemplateView != null) {
+        if (botDropDownTemplateView != null) {
             botDropDownTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(imageTemplateView != null) {
+        if (imageTemplateView != null) {
             imageTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(tableView != null)
-            tableView.setComposeFooterInterface(composeFooterInterface);
+        if (tableView != null) tableView.setComposeFooterInterface(composeFooterInterface);
 
-        if(botCustomTableView != null)
-            botCustomTableView.setComposeFooterInterface(composeFooterInterface);
+        if (botCustomTableView != null) botCustomTableView.setComposeFooterInterface(composeFooterInterface);
 
-        if(bankingFeedbackTemplateView != null) {
+        if (bankingFeedbackTemplateView != null) {
             bankingFeedbackTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(resultsTemplateView != null) {
+        if (resultsTemplateView != null) {
             resultsTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
         if (botButtonLinkTemplateView != null) {
@@ -580,19 +568,20 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botBeneficiaryTemplateView != null) {
             botBeneficiaryTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(buttonDeepLinkTemplateView != null){
+        if (buttonDeepLinkTemplateView != null) {
             buttonDeepLinkTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(advancedListTemplateView != null){
+        if (advancedListTemplateView != null) {
             advancedListTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(cardTemplateView != null){
+        if (cardTemplateView != null) {
             cardTemplateView.setComposeFooterInterface(composeFooterInterface);
         }
-        if(advancedMultiSelectView != null){
+        if (advancedMultiSelectView != null) {
             advancedMultiSelectView.setComposeFooterInterface(composeFooterInterface);
         }
     }
+
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
         if (botCarouselView != null) {
@@ -613,10 +602,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (botContactTemplateView != null) {
             botContactTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(universalSearchView != null){
+        if (universalSearchView != null) {
             universalSearchView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(botFormTemplateView != null){
+        if (botFormTemplateView != null) {
             botFormTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if (botListViewTemplateView != null) {
@@ -634,30 +623,30 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         if (agentTransferTemplateView != null) {
             agentTransferTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(feedbackTemplateView != null){
+        if (feedbackTemplateView != null) {
             feedbackTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(listWidgetView != null){
+        if (listWidgetView != null) {
             listWidgetView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(tableView != null){
+        if (tableView != null) {
             tableView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(botCustomTableView != null){
+        if (botCustomTableView != null) {
             botCustomTableView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(botDropDownTemplateView != null) {
+        if (botDropDownTemplateView != null) {
             botDropDownTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
 
-        if(imageTemplateView != null) {
+        if (imageTemplateView != null) {
             imageTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
 
-        if(bankingFeedbackTemplateView != null) {
+        if (bankingFeedbackTemplateView != null) {
             bankingFeedbackTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
-        if(resultsTemplateView != null) {
+        if (resultsTemplateView != null) {
             resultsTemplateView.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         }
         if (botButtonLinkTemplateView != null) {
@@ -683,25 +672,21 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
     protected void drawBubbleBackground(Canvas canvas) {
         int rectLeft = bubbleTextMediaLayout.getLeft() - BUBBLE_CONTENT_LEFT_MARGIN;
         int rectTop = bubbleTextMediaLayout.getTop() - (BUBBLE_CONTENT_TOP_MARGIN);// + BUBBLE_FORWARD_LAYOUT_HEIGHT_CONSIDERATION_FOR_PAINT);
-        int rectBottom = 0;
+        int rectBottom;
         if (botButtonView.getMeasuredHeight() > 0) {
-            rectBottom = (int)(botButtonView.getBottom()+ dp1);
-        }else if(meetingSlotsView.getMeasuredHeight() > 0){
+            rectBottom = (int) (botButtonView.getBottom() + dp1);
+        } else if (meetingSlotsView.getMeasuredHeight() > 0) {
             rectBottom = (int) (meetingSlotsView.getBottom() + dp1);
-        } else if(meetingConfirmationView.getMeasuredHeight() > 0){
+        } else if (meetingConfirmationView.getMeasuredHeight() > 0) {
             rectBottom = (meetingConfirmationView.getBottom());
         } else {
             rectBottom = bubbleTextMediaLayout.getBottom() + BUBBLE_CONTENT_BOTTOM_MARGIN;
         }
-        int rectRight = Collections.max(Arrays.asList(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN,
-                botButtonView.getRight(),
-                meetingSlotsView.getRight()+ (int)dp2,meetingConfirmationView.getRight()));
+        int rectRight = Collections.max(Arrays.asList(bubbleTextMediaLayout.getRight() + BUBBLE_CONTENT_RIGHT_MARGIN, botButtonView.getRight(), meetingSlotsView.getRight() + (int) dp2, meetingConfirmationView.getRight()));
 
         GradientDrawable gradientDrawable = getGradientBubble();
-        gradientDrawable.setBounds(new Rect(rectLeft,rectTop,rectRight,rectBottom));
+        gradientDrawable.setBounds(new Rect(rectLeft, rectTop, rectRight, rectBottom));
         gradientDrawable.draw(canvas);
-
-        // ViewProvider.drawRoundRect(canvas, new RectF(rectLeft,rectTop,rectRight,rectBottom), paint,(int)(dp12),(int)(dp12),(int)(!isLeftSide() ?  dp12 : dp1),(int)(isLeftSide() ?  dp12 : dp1));
     }
 
     @Override
@@ -709,7 +694,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         super.onFinishInflate();
     }
 
-    public void fillBubbleLayout(int position,boolean isLastItem, BaseBotMessage baseBotMessage) {
+    public void fillBubbleLayout(int position, boolean isLastItem, BaseBotMessage baseBotMessage) {
 
         bubbleTextMediaLayout.gravity = textMediaLayoutGravity;
         BUBBLE_GROUPING_TIMELINE = 0;
@@ -719,10 +704,10 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         // Bubble Text Media
         populateBubbleTextMedia(baseBotMessage, componentModel, isLastItem);
-        timeStampsTextView.setText(isLeftSide() ? HtmlCompat.fromHtml("<big><b>" + SDKConfiguration.Client.bot_name + "</b></big>"+" "+ DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())+", "+DateUtils.formattedSentDate(baseBotMessage.getCreatedInMillis()), HtmlCompat.FROM_HTML_MODE_COMPACT) : HtmlCompat.fromHtml(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis())+", "+DateUtils.formattedSentDate(baseBotMessage.getCreatedInMillis()) + "<big><b>" +" You"+"</b></big>", HtmlCompat.FROM_HTML_MODE_COMPACT));
+        timeStampsTextView.setText(isLeftSide() ? HtmlCompat.fromHtml("<big><b>" + SDKConfiguration.Client.bot_name + "</b></big>" + " " + DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()) + ", " + DateUtils.formattedSentDate(baseBotMessage.getCreatedInMillis()), HtmlCompat.FROM_HTML_MODE_COMPACT) : HtmlCompat.fromHtml(DateUtils.getTimeInAmPm(baseBotMessage.getCreatedInMillis()) + ", " + DateUtils.formattedSentDate(baseBotMessage.getCreatedInMillis()) + "<big><b>" + " You" + "</b></big>", HtmlCompat.FROM_HTML_MODE_COMPACT));
 
         // Bubble Templates
-        populateForTemplates(position,isLastItem,componentModel,baseBotMessage);
+        populateForTemplates(position, isLastItem, componentModel, baseBotMessage);
 
         // timeLineView.setGravity(Gravity.CENTER);
         timeStampsTextView.setGravity(isLeftSide() ? Gravity.START : Gravity.END);
@@ -754,36 +739,27 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
 
     protected void determineTextColor() {
         if (isLeftSide()) {
-            if (isSelected()) {
-                textColor = LEFT_TEXT_COLOR;
-            } else {
-                textColor = LEFT_TEXT_COLOR;
-            }
+            textColor = LEFT_TEXT_COLOR;
         } else {
-            if (isSelected()) {
-                textColor = RIGHT_TEXT_COLOR;
-            } else {
-                textColor = RIGHT_TEXT_COLOR;
-            }
+            textColor = RIGHT_TEXT_COLOR;
         }
     }
 
-    protected void populateForTemplates(int position,boolean isLastItem,ComponentModel componentModel,BaseBotMessage baseBotMessage) {
+    protected void populateForTemplates(int position, boolean isLastItem, ComponentModel componentModel, BaseBotMessage baseBotMessage) {
     }
 
     protected void populateBubbleTextMedia(BaseBotMessage baseBotMessage, ComponentModel componentModel, boolean _isclickable) {
 
         String message = null;
-        String textColor = "#000000";
+        String textColor;
         bubbleTextMediaLayout.setClickable(_isclickable);
         if (baseBotMessage.isSend() && baseBotMessage instanceof BotRequest) {
-            if(((BotRequest) baseBotMessage).getMessage() != null)
-                message = (String)((BotRequest) baseBotMessage).getMessage().getBody();
+            if (((BotRequest) baseBotMessage).getMessage() != null) message = (String) ((BotRequest) baseBotMessage).getMessage().getBody();
             bubbleTextMediaLayout.populateTextSenders(message);
         } else if (componentModel != null) {
             String compType = componentModel.getType();
             PayloadOuter payOuter = componentModel.getPayload();
-            if(payOuter != null) message = payOuter.getText();
+            if (payOuter != null) message = payOuter.getText();
             else return;
             if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
                 message = payOuter.getText();
@@ -802,10 +778,7 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         }
 
 
-
     }
-
-    /*  abstract protected void populateHeaderLayout(int position, BaseBotMessage baseBotMessage);*/
 
     protected void textViewCosmeticChanges() {
 
@@ -822,31 +795,31 @@ public abstract class KaBaseBubbleLayout extends ViewGroup {
         //STEP 1: Retrieve TextMedia Layout dimensional value... and also FooterLayoutDimentionalValue
         textMediaDimen = new int[]{bubbleTextMediaLayout.getMeasuredWidth(), bubbleTextMediaLayout.getMeasuredHeight()};
 
-        //STEP 2: Store additional informations required in further stage of UI rendering...
+        //STEP 2: Store additional information's required in further stage of UI rendering...
         maxBubbleDimen = new int[2];
         maxContentDimen = new int[2];
 
-        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN  + textMediaDimen[1]+BUBBLE_CONTENT_BOTTOM_MARGIN;
+        maxContentDimen[1] = BUBBLE_CONTENT_TOP_MARGIN + textMediaDimen[1] + BUBBLE_CONTENT_BOTTOM_MARGIN;
         //   headerLayoutDimen = new int[2];
     }
 
     /**
      * Initialises variables for Paint constructions.
-     * This method should be called only after views before layed out
+     * This method should be called only after views before played out
      */
     protected void initializeBubbleDimensionalParametersPhase1() {
-        // Initialze Bubble Border
+        // Initialize Bubble Border
         initializeBubbleBorderPass1();
-        // Initiliaze bubbleContent Dimens [ NOTE: MUST BE DONE AFTER VIEW POPULATION ]
+        // Initialize bubbleContent Dimens [ NOTE: MUST BE DONE AFTER VIEW POPULATION ]
         initializeBubbleContentDimen();
     }
 
     /**
      * Initialises variables for Paint constructions.
-     * This method should be called only after views after layed out
+     * This method should be called only after views after played out
      */
     protected void initializeBubbleDimensionalParametersPhase2() {
-        // Initialze Bubble Border
+        // Initialize Bubble Border
         initializeBubbleBorderPass2();
     }
 

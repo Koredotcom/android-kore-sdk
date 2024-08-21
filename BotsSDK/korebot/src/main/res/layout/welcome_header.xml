@@ -5,19 +5,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dimen_2dp"
-    android:background="@drawable/welcome_header_bg"
-    android:padding="@dimen/dimen_15dp">
+    android:background="@drawable/welcome_header_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/llInnerHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_10dp"
         android:background="@drawable/welcome_header_bg"
         android:paddingStart="@dimen/dimen_15dp"
         android:paddingTop="@dimen/dimen_25dp"
         android:paddingEnd="@dimen/dimen_15dp"
         android:paddingBottom="@dimen/dimen_15dp">
+
+        <ImageView
+            android:id="@+id/ivWelcomeLogo"
+            android:layout_width="@dimen/welcome_icon_size"
+            android:layout_height="@dimen/welcome_icon_size"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/scb_logo"
+            app:layout_constraintBottom_toTopOf="@+id/tvWelcomeHeader"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/tvWelcomeHeader"

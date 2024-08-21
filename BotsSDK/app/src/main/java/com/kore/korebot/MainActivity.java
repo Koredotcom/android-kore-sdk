@@ -77,11 +77,11 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == PermissionManager.REQUEST_CODE_ASK_PERMISSIONS) {
             int grantedRes = 0;
             for (int i = 0; i < permissions.length; i++) {
-                String permision = permissions[i];
+                String permission = permissions[i];
                 int grantResult = grantResults[i];
                 boolean isLastPermission = i == (permissions.length - 1);
 
-                Log.d(TAG, "onRequestPermissionsResult: permision: " + permision);
+                Log.d(TAG, "onRequestPermissionsResult: permission: " + permission);
                 Log.d(TAG, "onRequestPermissionsResult: grantResult: " + grantResult);
                 Log.d(TAG, "isLastPermission: " + isLastPermission);
 

@@ -40,11 +40,9 @@
                 android:layout_marginBottom="2dp"
                 android:choiceMode="singleChoice"
                 android:divider="@android:color/transparent"
-                android:layoutAnimation="@anim/layout_animation"
                 android:listSelector="@color/white"
                 android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
-                android:transcriptMode="normal"
                 android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
