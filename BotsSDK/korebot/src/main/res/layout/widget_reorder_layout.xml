@@ -65,6 +65,7 @@
         android:id="@+id/recycler_reorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         android:layout_below="@+id/r_layout"
         android:layout_marginTop="16dp"
         android:background="@color/white">

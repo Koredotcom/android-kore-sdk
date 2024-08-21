@@ -41,6 +41,7 @@
                 android:id="@+id/summary_items_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:layout_gravity="start"
                 android:adapter="@{myAdapter}"
                 android:layout_below="@id/summary_title"

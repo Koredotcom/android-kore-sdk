@@ -14,6 +14,7 @@
         android:id="@+id/multi_select_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         android:background="@drawable/round_rect"
         android:visibility="visible" />
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -164,6 +164,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRatingScale"
             android:layout_width="match_parent"
+            android:nestedScrollingEnabled="false"
             android:layout_height="match_parent" />
     </RelativeLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

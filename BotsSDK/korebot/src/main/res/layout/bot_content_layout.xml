@@ -75,6 +75,7 @@
                 android:layout_gravity="start"
                 android:layout_marginBottom="2dp"
                 android:choiceMode="singleChoice"
+                android:nestedScrollingEnabled="false"
                 android:divider="@android:color/transparent"
                 android:listSelector="@color/white"
                 android:orientation="vertical"

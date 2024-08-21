@@ -51,7 +51,7 @@
                 android:paddingHorizontal="4dp"
                 android:textColor="#B0B0B0"
                 android:textIsSelectable="true"
-                android:textSize="10sp" />
+                android:textSize="@dimen/text_size_very_small" />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

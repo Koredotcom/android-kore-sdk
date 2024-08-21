@@ -8,11 +8,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTableHeader"
         android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
         android:layout_height="wrap_content"
         android:background="@drawable/round_rect_table_header" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTableContent"
         android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
         android:layout_height="wrap_content" />
 </androidx.appcompat.widget.LinearLayoutCompat>

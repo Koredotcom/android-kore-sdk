@@ -32,6 +32,7 @@
         android:id="@+id/rvTableResponsive"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         android:layout_below="@+id/llTableResponsive"
         android:layout_marginStart="@dimen/dimen_15dp"
         android:layout_marginEnd="@dimen/dimen_40dp"

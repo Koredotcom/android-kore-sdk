@@ -110,6 +110,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             if (isShowIcon) {
                 Glide.with(context).load(iconUrl).error(R.drawable.ic_launcher).into(new DrawableImageViewTarget(botIcon));
             }
+
+            if(SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.BubbleColors.showIconTop) {
+                LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
+                params.topMargin = (int) (21 * dp1);
+            }
         }
     }
 

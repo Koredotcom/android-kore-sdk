@@ -73,6 +73,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
                         android:adapter="@{myAdapter}"
+                        android:nestedScrollingEnabled="false"
                         android:choiceMode="singleChoice"
                         android:clipToPadding="true"
                         android:fadeScrollbars="true"

@@ -18,12 +18,14 @@
         android:id="@+id/rvTableViewHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
         android:layout_below="@+id/ivCancel"
         android:background="@drawable/round_rect_table_header" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTableView"
         android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rvTableViewHeader" />
 </RelativeLayout>

@@ -16,7 +16,6 @@
         android:id="@+id/botCustomListRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dimen_20dp"
         android:background="@drawable/theme_1_button_bg"
         android:orientation="vertical"
         android:paddingTop="4dp"
@@ -174,6 +173,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/botCustomListView"
             android:layout_width="match_parent"
+            android:nestedScrollingEnabled="false"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dimen_3dp"
             android:divider="@android:color/transparent"
