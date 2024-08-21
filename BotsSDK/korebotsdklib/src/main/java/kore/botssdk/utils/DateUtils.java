@@ -182,14 +182,12 @@ public class DateUtils {
         // OVERRIDE SOME symbols WHILE RETAINING OTHERS
         symbols.setAmPmStrings(new String[]{"am", "pm"});
         dateWeekDay.setDateFormatSymbols(symbols);
-        int messageYear = Integer.parseInt(yearFormat.format(new Date(lastModified)));
-        int currentYear = Integer.parseInt(yearFormat.format(new Date()));
 
         String time = "";
         if (android.text.format.DateUtils.isToday(lastModified)) {
-            time = "Today, " + dateMonthDay.format(new Date(lastModified));
+            time = "Today";
         } else if (isYesterday(lastModified)) {
-            time = "Yesterday, " + dateMonthDay.format(new Date(lastModified));
+            time = "Yesterday";
         } else if (isTomorrow(lastModified)) {
             time = "Tomorrow, " + dateMonthDay.format(new Date(lastModified));
         } else {

@@ -427,6 +427,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         editor.putString(BotResponse.WIDGET_BORDER_COLOR, brandingModel.getWidgetBorderColor());
         editor.putString(BotResponse.BUTTON_BORDER_COLOR, brandingModel.getButtonBorderColor());
         editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, brandingModel.getWidgetDividerColor());
+        editor.putString(BotResponse.BUBBLE_STYLE, brandingModel.getChatBubbleStyle());
         editor.apply();
 
         SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getButtonActiveBgColor();
@@ -784,6 +785,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     public void onStop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (isAgentTransfer && botClient != null) {
+                botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+            }
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+            editor.putInt(BotResponse.HISTORY_COUNT, 0);
+            editor.apply();
+        }
+
         BotSocketConnectionManager.getInstance().unSubscribe();
         super.onStop();
     }
@@ -1261,6 +1273,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                     brandingModel.setWidgetFooterBorderColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
                                     brandingModel.setWidgetFooterHintColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
                                     brandingModel.setWidgetFooterHintText(brandingNewDos.getFooter().getCompose_bar().getPlaceholder());
+                                    brandingModel.setChatBubbleStyle(brandingNewDos.getChat_bubble().getStyle());
                                     onEvent(brandingModel);
 
                                 } catch (Exception ex) {
@@ -1491,4 +1504,5 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
         builder.setMessage(R.string.bot_not_connected).setCancelable(false).setPositiveButton(R.string.ok, dialogClickListener).show();
     }
+
 }

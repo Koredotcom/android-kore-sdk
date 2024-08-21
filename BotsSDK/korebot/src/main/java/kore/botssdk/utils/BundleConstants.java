@@ -28,6 +28,12 @@ public class BundleConstants {
     public static final String ICON = "icon";
     public static final String BUTTON = "button";
     public static final String DROP_DOWN = "dropdown";
+
+    public static final String ROUNDED = "rounded";
+    public static final String SQUARE = "square";
+    public static final String CIRCLE = "circle";
+    public static final String RECTANGLE = "rectangle";
+    public static final String BUBBLE_STYLE = "style";
     public static final int TYPING_STATUS_TIME = 1000; //in millisecond
     public static final String[] DELAY_MESSAGES = { "I’m working on it…", "Still, working on it…",
             "This is taking a bit longer. Please wait…", "Things are slower than usual today. Please wait…",

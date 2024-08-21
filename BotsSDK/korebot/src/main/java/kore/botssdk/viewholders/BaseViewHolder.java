@@ -53,6 +53,7 @@ import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -121,9 +122,14 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public void setMsgTime(String msgTime, boolean isBotRequest) {
         TextView msgTimeView = itemView.findViewById(R.id.msg_time);
         msgTimeView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? View.VISIBLE : View.GONE);
+        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams)msgTimeView.getLayoutParams();
+
         if (SDKConfiguration.isTimeStampsRequired()) {
             LinearLayoutCompat contentLayout = itemView.findViewById(R.id.contentLayout);
-            if (isBotRequest) contentLayout.setGravity(Gravity.END);
+            if (isBotRequest) {
+                contentLayout.setGravity(Gravity.END);
+                params.rightMargin = (int)(5 * dp1);
+            }
             msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
         }
     }
@@ -189,6 +195,21 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         bubbleText.setVisibility(View.GONE);
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
+        String leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
+        String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9");
+        String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#000000");
+        String bubble_style = sharedPreferences.getString(BundleConstants.BUBBLE_STYLE, "rounded");
+
+        //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
+        float[] roundedRadii = {16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};
+        float[] recRightRadii = {8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] recLeftRadii = {2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] sqrRightRadii = {8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1};
+        float[] balRightRadii = {8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] sqrLeftRadii = {8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1};
+        float[] balLeftRadii = {2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        final boolean circle = bubble_style.equalsIgnoreCase(BundleConstants.ROUNDED) || bubble_style.equalsIgnoreCase(BundleConstants.CIRCLE);
 
         if (!isBotRequest) {
             if (!(this instanceof ResponseTextTemplateHolder)) {
@@ -196,18 +217,18 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 params.bottomMargin = ChatAdapterItemDecoration.commonVerticalMargin * 2;
             }
             Typeface regular = KaFontUtils.getCustomTypeface("regular", context);
-            String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
-            String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-            String leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
+
 
             GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_left_bubble_bg, context.getTheme());
-
-            if (themeName.equalsIgnoreCase(BotResponse.THEME_NAME_2))
-                leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme2_left_bubble, context.getTheme());
 
             if (leftDrawable != null) {
                 leftDrawable.setColor(Color.parseColor(leftBgColor));
                 leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
+
+                if (circle) leftDrawable.setCornerRadii(roundedRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE)) leftDrawable.setCornerRadii(recLeftRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE)) leftDrawable.setCornerRadii(sqrLeftRadii);
+                else leftDrawable.setCornerRadii(balLeftRadii);
             }
             layoutBubble.setGravity(Gravity.START);
             bubbleText.setTypeface(regular);
@@ -217,15 +238,24 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             bubbleText.setLinkTextColor(Color.parseColor(SDKConfiguration.BubbleColors.leftLinkColor));
         } else {
             layoutBubble.setGravity(Gravity.END);
+
             Typeface medium = KaFontUtils.getCustomTypeface("medium", context);
-            String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9");
-            String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#000000");
+
             GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_right_bubble_bg, context.getTheme());
 
             if (rightDrawable != null) {
                 rightDrawable.setColor(Color.parseColor(rightBgColor));
                 rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightBgColor));
+
+                if (circle) rightDrawable.setCornerRadii(roundedRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE)) rightDrawable.setCornerRadii(recRightRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE)) rightDrawable.setCornerRadii(sqrRightRadii);
+                else rightDrawable.setCornerRadii(balRightRadii);
             }
+
+            LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) bubbleText.getLayoutParams();
+            params.rightMargin = (int) (5 * dp1);
+
             bubbleText.setLinkTextColor(Color.parseColor(SDKConfiguration.BubbleColors.rightLinkColor));
             bubbleText.setTypeface(medium);
             bubbleText.setBackground(rightDrawable);

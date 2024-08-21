@@ -40,6 +40,7 @@ import kore.botssdk.events.ProfileColorUpdateEvent;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.EntityEditModel;
 import kore.botssdk.utils.BubbleConstants;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -51,7 +52,6 @@ import kore.botssdk.view.viewUtils.LayoutUtils;
 import kore.botssdk.view.viewUtils.MeasureUtils;
 
 /**
- * Created by Pradeep Mahato on 31-May-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class TextMediaLayout extends ViewGroup {
@@ -103,17 +103,18 @@ public class TextMediaLayout extends ViewGroup {
         botContentTextView = new LinkifyTextView(getContext());
 
         sharedPreferences = getSharedPreferences();
-        String leftbgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
+        String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
         rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
-        String rightbgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
+        String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
         themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+        String bubble_style = sharedPreferences.getString(BundleConstants.BUBBLE_STYLE, "rounded");
 
         rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_right_bubble_bg, getContext().getTheme());
 
         if(rightDrawable != null) {
-            rightDrawable.setColor(Color.parseColor(rightbgColor));
-            rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightbgColor));
+            rightDrawable.setColor(Color.parseColor(rightBgColor));
+            rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightBgColor));
         }
 
         leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
@@ -122,9 +123,40 @@ public class TextMediaLayout extends ViewGroup {
             leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme2_left_bubble, getContext().getTheme());
 
         if(leftDrawable != null) {
-            leftDrawable.setColor(Color.parseColor(leftbgColor));
-            leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftbgColor));
+            leftDrawable.setColor(Color.parseColor(leftBgColor));
+            leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
         }
+
+        //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
+        float[] roundedRadii = {16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};
+        float[] recRightRadii = {8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] recLeftRadii = {2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] sqrRightRadii = {8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1};
+        float[] balRightRadii = {8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+        float[] sqrLeftRadii = {8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1};
+        float[] balLeftRadii = {2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1};
+
+        final boolean circle = bubble_style.equalsIgnoreCase(BundleConstants.ROUNDED) || bubble_style.equalsIgnoreCase(BundleConstants.CIRCLE);
+        if (rightDrawable != null) {
+            rightDrawable.setColor(Color.parseColor(rightBgColor));
+            rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightBgColor));
+
+            if (circle) rightDrawable.setCornerRadii(roundedRadii);
+            else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE)) rightDrawable.setCornerRadii(recRightRadii);
+            else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE)) rightDrawable.setCornerRadii(sqrRightRadii);
+            else rightDrawable.setCornerRadii(balRightRadii);
+        }
+
+        if (leftDrawable != null) {
+            leftDrawable.setColor(Color.parseColor(leftBgColor));
+            leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
+
+            if (circle) leftDrawable.setCornerRadii(roundedRadii);
+            else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE)) leftDrawable.setCornerRadii(recLeftRadii);
+            else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE)) leftDrawable.setCornerRadii(sqrLeftRadii);
+            else leftDrawable.setCornerRadii(balLeftRadii);
+        }
+
 
         RelativeLayout.LayoutParams txtVwParams = new RelativeLayout.LayoutParams(
                 LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);

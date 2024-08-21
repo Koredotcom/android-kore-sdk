@@ -24,6 +24,15 @@ public class BrandingModel
     private String widgetDividerColor;
     private String widgetBodyColor;
     private String botName;
+    private String chatBubbleStyle;
+
+    public String getChatBubbleStyle() {
+        return chatBubbleStyle;
+    }
+
+    public void setChatBubbleStyle(String chatBubbleStyle) {
+        this.chatBubbleStyle = chatBubbleStyle;
+    }
 
     public String getWidgetFooterHintText() {
         return widgetFooterHintText;
