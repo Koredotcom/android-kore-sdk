@@ -2,7 +2,7 @@ package kore.botssdk.adapter;
 
 import static android.view.View.GONE;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -50,7 +50,7 @@ import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.AutoExpandListView;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 @SuppressLint("UnknownNullness")
 public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonClickListner {

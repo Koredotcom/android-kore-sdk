@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvVideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_play_icon" />
 
-                    <kore.botssdk.views.CustomTextView
+                    <kore.botssdk.view.CustomTextView
                         android:id="@+id/tvVideoTiming"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
                     android:importantForAccessibility="no"
                     android:src="@drawable/ic_paly_black" />
 
-                <kore.botssdk.views.CustomTextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tvAudioVideoTiming"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
@@ -192,7 +192,7 @@
             android:layout_height="200dp"
             android:visibility="gone" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvFileName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

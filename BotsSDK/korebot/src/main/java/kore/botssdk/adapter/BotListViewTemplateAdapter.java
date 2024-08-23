@@ -1,6 +1,6 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -30,7 +30,7 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 @SuppressLint("UnknownNullness")
 public class BotListViewTemplateAdapter extends BaseAdapter {
     private ArrayList<BotListModel> botListModelArrayList = new ArrayList<>();

@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/rvTableViewHeader" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/botTableShowMoreButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

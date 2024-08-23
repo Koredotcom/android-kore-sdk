@@ -62,8 +62,8 @@ import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewHolder.EmptyWidgetViewHolder;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewholders.EmptyWidgetViewHolder;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 @SuppressLint("UnknownNullness")
 public class ListWidgetAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {

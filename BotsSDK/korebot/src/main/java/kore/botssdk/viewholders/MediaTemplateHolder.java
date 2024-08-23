@@ -46,7 +46,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.DimensionUtil;
 
 public class MediaTemplateHolder extends BaseViewHolder {
     private final ImageView ivImage;

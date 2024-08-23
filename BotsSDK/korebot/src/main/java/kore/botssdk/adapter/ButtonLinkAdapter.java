@@ -25,7 +25,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.DimensionUtil;
 
 @SuppressLint("UnknownNullness")
 public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.DeepLinkViewHolder>

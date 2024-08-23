@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotBeneficiaryTemplateAdapter;
 import kore.botssdk.dialogs.ListActionSheetFragment;
-import kore.botssdk.listener.ListClickableListner;
+import kore.botssdk.listener.ListClickableListener;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBeneficiaryModel;
 import kore.botssdk.models.BotButtonModel;
@@ -32,7 +32,7 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.AutoExpandListView;
 
-public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListClickableListner {
+public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListClickableListener {
 
     private final AutoExpandListView autoExpandListView;
     private final TextView botCustomListViewButton;

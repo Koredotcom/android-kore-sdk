@@ -22,8 +22,8 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotTableListRowItemsModel;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.DimensionUtil;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class BotTableListInnerAdapter extends BaseAdapter
 {

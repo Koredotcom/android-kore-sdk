@@ -3,7 +3,6 @@ package kore.botssdk.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,7 +18,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContentModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class ListWidgetDetailsAdapter extends BaseAdapter
 {

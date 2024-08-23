@@ -18,7 +18,7 @@ import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.FeedbackRatingModel;
-import kore.botssdk.views.CustomTextView;
+import kore.botssdk.view.CustomTextView;
 
 public class FeedbackRatingScaleAdapter extends RecyclerView.Adapter<FeedbackRatingScaleAdapter.ViewHolder> {
     private final List<FeedbackRatingModel> items;

@@ -4,7 +4,7 @@ import static kore.botssdk.models.BotResponse.VIEW_CSAT;
 import static kore.botssdk.models.BotResponse.VIEW_NPS;
 import static kore.botssdk.models.BotResponse.VIEW_STAR;
 import static kore.botssdk.models.BotResponse.VIEW_THUMBS_UP_DOWN;
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +35,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.FeedbackRatingModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.DimensionUtil;
 
 public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnClickListener {
     private final TextView tvFeedbackTemplateTitle;

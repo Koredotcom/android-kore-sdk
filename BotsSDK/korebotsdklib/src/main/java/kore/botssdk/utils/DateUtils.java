@@ -3,6 +3,7 @@ package kore.botssdk.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 
+import java.sql.Timestamp;
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.ParseException;
@@ -349,6 +350,27 @@ public class DateUtils {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static long getDateFromFormat(String date, String format, int addDays) {
+        if (date == null || date.isEmpty())
+            return 0;
+        try
+        {
+            if(format.contains("YYYY")) {
+                format = format.replace("YYYY", "yyyy");
+            }
+
+            if(format.contains("/") && date.contains("-"))
+                date = date.replaceAll("-", "/");
+
+            SimpleDateFormat df = new SimpleDateFormat(format.replace("DD", "dd"), Locale.US);
+            Timestamp ts = new Timestamp(Objects.requireNonNull(df.parse(date)).getTime());
+            return ts.getTime() + ((long) addDays * 24 * 60 * 60 * 1000);
+        } catch (ParseException e) {
+            Calendar calendar = Calendar.getInstance();
+            return calendar.getTimeInMillis() - ((long) addDays * 24 * 60 * 60 * 1000);
+        }
     }
 
     public static String getAnnoucementDateDDMMM(long dateformat) {

@@ -25,7 +25,7 @@ import kore.botssdk.models.BotListWidgetModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class BotListWidgetTemplateAdapter extends BaseAdapter {
     private ArrayList<BotListWidgetModel> botListModelArrayList = new ArrayList<>();

@@ -14,7 +14,7 @@
         style="@android:style/Widget.DeviceDefault.Light.CompoundButton.RadioButton"/>
 
 
-    <kore.botssdk.views.CustomTextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvExperience"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

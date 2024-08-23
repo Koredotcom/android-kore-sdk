@@ -14,10 +14,6 @@ import kore.botssdk.R;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.Utility;
 
-/**
- * Created by Shiva Krishna on 1/22/2018.
- */
-
 public class ReUsableListViewActionSheet extends Dialog {
     private final Context mContext;
     private final LayoutInflater layoutInflater;

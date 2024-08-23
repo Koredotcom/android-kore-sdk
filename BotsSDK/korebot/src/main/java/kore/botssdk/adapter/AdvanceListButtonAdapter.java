@@ -38,7 +38,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.Widget;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 @SuppressLint("UnknownNullness")
 public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListButtonAdapter.ButtonViewHolder> {

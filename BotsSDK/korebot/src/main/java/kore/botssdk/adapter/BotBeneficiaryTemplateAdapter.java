@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,11 +24,10 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.ListClickableListner;
+import kore.botssdk.listener.ListClickableListener;
 import kore.botssdk.models.BotBeneficiaryModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
     private ArrayList<BotBeneficiaryModel> botListModelArrayList = new ArrayList<>();
@@ -133,7 +131,7 @@ public class BotBeneficiaryTemplateAdapter extends BaseAdapter {
     public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
     }
 
-    public void setListClickableInterface(@NonNull ListClickableListner listClickableInterface) {
+    public void setListClickableInterface(@NonNull ListClickableListener listClickableInterface) {
     }
 
     private void initializeViewHolder(View view) {

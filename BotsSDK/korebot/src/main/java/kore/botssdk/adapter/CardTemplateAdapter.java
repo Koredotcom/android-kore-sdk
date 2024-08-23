@@ -1,7 +1,7 @@
 package kore.botssdk.adapter;
 
 import static android.view.View.GONE;
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -38,7 +38,7 @@ import kore.botssdk.models.CardTemplateModel;
 import kore.botssdk.models.HeaderStyles;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapter.CardViewHolder> implements AdvanceButtonClickListner
 {

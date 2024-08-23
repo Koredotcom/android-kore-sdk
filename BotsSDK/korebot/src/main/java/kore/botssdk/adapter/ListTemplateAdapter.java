@@ -23,7 +23,7 @@ import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapter.ViewHolder> {
     private ComposeFooterInterface composeFooterInterface;

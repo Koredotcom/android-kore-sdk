@@ -20,8 +20,8 @@ import kore.botssdk.models.QuickRepliesPayloadModel;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewholders.QuickReplyViewHolder;
+import kore.botssdk.viewUtils.DimensionUtil;
 
 /**
  * Created by Pradeep Mahato on 28/7/17.

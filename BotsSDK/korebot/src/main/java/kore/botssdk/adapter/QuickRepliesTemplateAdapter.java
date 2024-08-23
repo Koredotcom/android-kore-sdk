@@ -18,7 +18,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickRepliesPayloadModel;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
+import kore.botssdk.viewholders.QuickReplyViewHolder;
 
 public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
 

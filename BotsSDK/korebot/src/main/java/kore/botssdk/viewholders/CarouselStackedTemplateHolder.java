@@ -14,7 +14,7 @@ import kore.botssdk.adapter.CarouselStackTemplateAdapter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotCarouselStackModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.views.coverflow.RecyclerCoverFlow;
+import kore.botssdk.view.coverflow.RecyclerCoverFlow;
 
 public class CarouselStackedTemplateHolder extends BaseViewHolder {
     private final RecyclerCoverFlow recyclerCoverFlow;

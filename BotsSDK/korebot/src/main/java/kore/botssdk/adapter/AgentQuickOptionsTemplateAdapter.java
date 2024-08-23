@@ -15,7 +15,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
+import kore.botssdk.viewholders.QuickReplyViewHolder;
 
 public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
     ArrayList<BotButtonModel> quickReplyTemplateArrayList;

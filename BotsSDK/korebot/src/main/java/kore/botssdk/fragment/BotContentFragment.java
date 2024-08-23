@@ -7,18 +7,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.text.Html;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.AttrRes;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -27,17 +22,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.datepicker.CalendarConstraints;
+import com.google.android.material.datepicker.CompositeDateValidator;
+import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
@@ -54,7 +51,6 @@ import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
-import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.BotHistoryMessage;
@@ -77,8 +73,8 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
+import kore.botssdk.view.DotsTextView;
 import kore.botssdk.view.QuickReplyView;
-import kore.botssdk.views.DotsTextView;
 import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -92,21 +88,18 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     RecyclerView botsBubblesListView;
     ChatAdapterNew botsChatAdapter;
     QuickReplyView quickReplyView;
-    String LOG_TAG = BotContentFragment.class.getSimpleName();
     LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
     private DotsTextView typingStatusItemDots;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    ThemeChangeListener themeChangeListener;
     boolean shallShowProfilePic;
     private String mChannelIconURL;
     private String mBotNameInitials;
     TTSUpdate ttsUpdate;
     private int mBotIconId;
     boolean fetching = false;
-    private boolean hasMore = true;
-    TextView headerView, tvTheme1, tvTheme2;
+    TextView headerView;
     final Gson gson = new Gson();
     SwipeRefreshLayout swipeRefreshLayout;
     LinearLayoutManager mLayoutManager;
@@ -119,12 +112,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     long oneYearForward;
     Pair<Long, Long> todayPair;
     Pair<Long, Long> nextMonthPair;
-    ImageView ivThemeSwitcher, ivChaseLogo;
-    PopupWindow popupWindow;
-    View popUpView;
     TextView tvChaseTitle;
     String jwt;
-    String pattern = "M-DD-YYYY";
 
     private LinearLayoutManager layoutManager;
 
@@ -133,14 +122,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.bot_content_layout, null);
-        // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true;
-        popUpView = inflater.inflate(R.layout.theme_change_layout, null);
-        popupWindow = new PopupWindow(popUpView, width, height, focusable);
         findViews(view);
-        findThemeViews(popUpView);
         getBundleInfo();
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
@@ -155,8 +137,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         headerView = view.findViewById(R.id.filesSectionHeader);
         swipeRefreshLayout = view.findViewById(R.id.swipeContainerChat);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
-        ivThemeSwitcher = view.findViewById(R.id.ivThemeSwitcher);
-        ivChaseLogo = view.findViewById(R.id.ivChaseLogo);
         tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
         botHeaderLayout = view.findViewById(R.id.header_layout);
         headerView.setVisibility(View.GONE);
@@ -182,43 +162,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     }
 
                 }
-            }
-        });
-
-        ivThemeSwitcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.showAtLocation(ivThemeSwitcher, Gravity.TOP | Gravity.RIGHT, 80, 220);
-            }
-        });
-
-    }
-
-    public void findThemeViews(View view) {
-        tvTheme1 = view.findViewById(R.id.tvTheme1);
-        tvTheme2 = view.findViewById(R.id.tvTheme2);
-
-        tvTheme1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                SharedPreferences.Editor editor = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-                editor.apply();
-
-                themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_1);
-            }
-        });
-
-        tvTheme2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                SharedPreferences.Editor editor = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-                editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_2);
-                editor.apply();
-
-                themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_2);
             }
         });
     }
@@ -261,10 +204,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-    }
-
-    public void setThemeChangeInterface(ThemeChangeListener themeChangeListener) {
-        this.themeChangeListener = themeChangeListener;
     }
 
     private void getBundleInfo() {
@@ -311,16 +250,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     PayloadOuter payOuter = compModel.getPayload();
                     PayloadInner payInner = payOuter.getPayload();
                     if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        Calendar cal = Calendar.getInstance();
-                        cal.setTimeInMillis(MaterialDatePicker.todayInUtcMilliseconds());
-                        int strYear = cal.get(Calendar.YEAR);
-                        int strMonth = cal.get(Calendar.MONTH);
-                        int strDay = cal.get(Calendar.DAY_OF_MONTH);
-                        String minDate = strMonth + "-" + strDay + "-" + strYear;
-
                         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
+                        builder.setCalendarConstraints(minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
                         try {
@@ -349,6 +282,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
+                        builder.setCalendarConstraints(minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
                         try {
@@ -383,14 +317,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
             }
         }
-    }
-
-    private static int resolveOrThrow(Context context, @AttrRes int attributeResId) {
-        TypedValue typedValue = new TypedValue();
-        if (context.getTheme().resolveAttribute(attributeResId, typedValue, true)) {
-            return typedValue.data;
-        }
-        throw new IllegalArgumentException(context.getResources().getResourceName(attributeResId));
     }
 
     private ArrayList<QuickReplyTemplate> getQuickReplies(BotResponse botResponse) {
@@ -450,7 +376,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom) {
         int firstItemPosition = 0;
         if (botsChatAdapter.getItemCount() > 0) {
-            firstItemPosition = ((LinearLayoutManager) botsBubblesListView.getLayoutManager()).findFirstVisibleItemPosition();
+            firstItemPosition = ((LinearLayoutManager) Objects.requireNonNull(botsBubblesListView.getLayoutManager())).findFirstVisibleItemPosition();
         }
         botsChatAdapter.addBaseBotMessages(list);
         if (scrollToBottom) {
@@ -464,7 +390,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom, boolean isFirst) {
         int firstItemPosition = 0;
         if (botsChatAdapter.getItemCount() > 0) {
-            firstItemPosition = ((LinearLayoutManager) botsBubblesListView.getLayoutManager()).findFirstVisibleItemPosition();
+            firstItemPosition = ((LinearLayoutManager) Objects.requireNonNull(botsBubblesListView.getLayoutManager())).findFirstVisibleItemPosition();
         }
         if (isFirst) botsChatAdapter.addBaseBotMessages(list);
         else botsChatAdapter.addMissedBaseBotMessages(list);
@@ -491,7 +417,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private Observable<ServerBotMsgResponse> getHistoryRequest(final int _offset, final int limit) {
         return Observable.create(new ObservableOnSubscribe<ServerBotMsgResponse>() {
             @Override
-            public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) throws Exception {
+            public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) {
                 try {
                     ServerBotMsgResponse re = new ServerBotMsgResponse();
 
@@ -499,9 +425,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     Response<BotHistory> rBody = _resp.execute();
                     BotHistory history = rBody.body();
 
-                    if (rBody.isSuccessful()) {
+                    if (rBody.isSuccessful() && history != null) {
                         List<BotHistoryMessage> messages = history.getMessages();
-                        ArrayList<BaseBotMessage> msgs = null;
+                        ArrayList<BaseBotMessage> msgs;
                         if (messages != null && messages.size() > 0) {
                             msgs = new ArrayList<>();
                             for (int index = 0; index < messages.size(); index++) {
@@ -533,7 +459,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = DateUtils.isoFormatter.parse(msg.getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         try {
@@ -553,7 +479,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                             }
 
                             re.setBotMessages(msgs);
-                            re.setOriginalSize(messages != null ? messages.size() : 0);
+                            re.setOriginalSize(messages.size());
                         }
                     }
 
@@ -569,7 +495,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private Observable<ServerBotMsgResponse> getWebHookHistoryRequest(final int limit) {
         return Observable.create(new ObservableOnSubscribe<ServerBotMsgResponse>() {
             @Override
-            public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) throws Exception {
+            public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) {
                 try {
                     ServerBotMsgResponse re = new ServerBotMsgResponse();
 
@@ -577,9 +503,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     Response<BotHistory> rBody = _resp.execute();
                     BotHistory history = rBody.body();
 
-                    if (rBody.isSuccessful()) {
+                    if (rBody.isSuccessful() && history != null) {
                         List<BotHistoryMessage> messages = history.getMessages();
-                        ArrayList<BaseBotMessage> msgs = null;
+                        ArrayList<BaseBotMessage> msgs;
                         if (messages != null && messages.size() > 0) {
                             msgs = new ArrayList<>();
                             for (int index = 0; index < messages.size(); index++) {
@@ -609,7 +535,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = DateUtils.isoFormatter.parse(msg.getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         msgs.add(botRequest);
@@ -621,7 +547,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                             }
 
                             re.setBotMessages(msgs);
-                            re.setOriginalSize(messages != null ? messages.size() : 0);
+                            re.setOriginalSize(messages.size());
                         }
                     }
 
@@ -665,56 +591,58 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     /*
       Limit selectable Date range
     */
-    private CalendarConstraints.Builder limitRange(String date, String format) {
+    private CalendarConstraints.Builder minRange(String startDate, String date, String format) {
 
-        CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+        if (StringUtils.isNullOrEmpty(date) && StringUtils.isNullOrEmpty(startDate)) {
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
 
-        Calendar calendarStart = Calendar.getInstance();
-        Calendar calendarEnd = Calendar.getInstance();
+            return constraintsBuilderRange;
+        } else if (!StringUtils.isNullOrEmpty(startDate) && !StringUtils.isNullOrEmpty(date)) {
+            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, format, 0));
+            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
 
-//        int year = 2020;
-//        int startMonth = 1;
-//        int startDate = 1;
-//
-//        calendarStart.set(year, startMonth - 1, startDate);
+            ArrayList<CalendarConstraints.DateValidator> listValidators =
+                    new ArrayList<CalendarConstraints.DateValidator>();
+            listValidators.add(dateValidatorMin);
+            listValidators.add(dateValidatorMax);
 
-        Date endDate = stringToDate(date, format);
-        calendarStart.setTime(endDate);
+            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(validators);
 
-        long minDate = calendarStart.getTimeInMillis();
-        long maxDate = calendarEnd.getTimeInMillis();
+            return constraintsBuilderRange;
+        } else if (!StringUtils.isNullOrEmpty(startDate)) {
+            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, format, 0));
 
+            ArrayList<CalendarConstraints.DateValidator> listValidators =
+                    new ArrayList<CalendarConstraints.DateValidator>();
+            listValidators.add(dateValidatorMin);
 
-        constraintsBuilderRange.setStart(minDate);
-        constraintsBuilderRange.setEnd(maxDate);
-        constraintsBuilderRange.setValidator(new RangeValidator(minDate, maxDate));
+            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(validators);
 
-        return constraintsBuilderRange;
-    }
+            return constraintsBuilderRange;
+        } else if (!StringUtils.isNullOrEmpty(date)) {
+            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
 
-    /*
-      Limit selectable Date range
-    */
-    private CalendarConstraints.Builder minRange(String date, String format) {
+            ArrayList<CalendarConstraints.DateValidator> listValidators =
+                    new ArrayList<CalendarConstraints.DateValidator>();
+            listValidators.add(dateValidatorMax);
 
-        CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-        constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
+            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(validators);
 
-        return constraintsBuilderRange;
-    }
+            return constraintsBuilderRange;
+        } else {
+            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
+            constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
 
-    private Date stringToDate(String aDate, String aFormat) {
-
-        SimpleDateFormat format = new SimpleDateFormat(pattern);
-        try {
-            return format.parse(aDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
+            return constraintsBuilderRange;
         }
-
-        return null;
     }
-
 
     static class RangeValidator implements CalendarConstraints.DateValidator {
 
@@ -763,7 +691,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     }
 
-
     private void loadWebHookChatHistory(final int limit) {
         if (fetching) {
             if (swipeRefreshLayout != null) {
@@ -801,7 +728,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 }
 
                 if ((list == null || list.size() < limit) && offset != 0) {
-                    hasMore = false;
                 }
             }
 
@@ -859,8 +785,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     addMessagesToBotChatAdapter(list, offset == 0);
                 }
 
-                if ((list == null || list.size() < limit) && offset != 0) {
-                    hasMore = false;
+                if (list != null) {
+                    list.size();
                 }
             }
 
@@ -968,7 +894,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private Observable<ServerBotMsgResponse> getHistoryRequest(final int _offset, final int limit, boolean setIconUrl) {
         return Observable.create(new ObservableOnSubscribe<ServerBotMsgResponse>() {
             @Override
-            public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) throws Exception {
+            public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) {
                 try {
                     ServerBotMsgResponse re = new ServerBotMsgResponse();
 
@@ -1012,7 +938,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = DateUtils.isoFormatter.parse(((BotHistoryMessage) msg).getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         msgs.add(botRequest);

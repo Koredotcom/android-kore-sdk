@@ -13,7 +13,7 @@
         android:background="@drawable/card_template_bg"
         android:orientation="vertical">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvOnlyTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                 android:layout_marginStart="@dimen/dimen_10dp"
                 android:layout_toEndOf="@id/rlImage">
 
-                <kore.botssdk.views.CustomTextViewBold
+                <kore.botssdk.view.CustomTextViewBold
                     android:id="@+id/bot_list_item_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -79,7 +79,7 @@
                     android:textColor="@color/txtFontBlack"
                     android:textSize="@dimen/text_size_normal" />
 
-                <kore.botssdk.views.CustomTextViewBold
+                <kore.botssdk.view.CustomTextViewBold
                     android:id="@+id/tvheaderExtraTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -103,7 +103,7 @@
             </LinearLayout>
 
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/bot_list_item_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

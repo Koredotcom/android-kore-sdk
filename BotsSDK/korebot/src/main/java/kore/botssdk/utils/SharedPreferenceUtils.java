@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kore.botssdk.applicationcontrol.ACMModel;
 import kore.botssdk.models.limits.Announcement;
 import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.models.limits.Knowledge;
@@ -211,25 +210,6 @@ public class SharedPreferenceUtils {
         editor.putInt(Key, defaultValue);
         editor.apply();
     }
-
-    public static void saveAppControlList(ACMModel list, String userId){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString(APP_CONTROLS_EDITOR_KEY+userId,json);
-        editor.commit();
-    }
-
-    public static ACMModel getAppControlList( String userId){
-        String jsonStr = sharedPreferences.getString(APP_CONTROLS_EDITOR_KEY+userId, null);
-        if(jsonStr != null){
-            Gson gson = new Gson();
-            return gson.fromJson(jsonStr,ACMModel.class);
-        }
-        return null;
-    }
-
-
 
     public void putAnnouncmentKey(boolean isPersonalAnnoucement)
     {

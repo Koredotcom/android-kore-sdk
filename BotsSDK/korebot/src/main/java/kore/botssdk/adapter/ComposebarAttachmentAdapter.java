@@ -20,7 +20,7 @@ import java.util.HashMap;
 import kore.botssdk.R;
 import kore.botssdk.listener.AttachmentListner;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.FileUtils;
+import kore.botssdk.viewUtils.FileUtils;
 
 public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<ComposebarAttachmentAdapter.ImageAttachView> {
 

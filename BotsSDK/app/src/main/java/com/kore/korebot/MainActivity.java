@@ -3,7 +3,6 @@ package com.kore.korebot;
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -20,8 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
-import com.kore.korebot.customtemplates.LinkTemplateView;
-import com.kore.korebot.customtemplates.NewTemplateHolder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,7 +28,6 @@ import java.util.Properties;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
@@ -86,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken);
 
         //Inject the custom template like below
-        SDKConfig.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
-        //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
 //        SDKConfig.setCustomTemplateViewHolder(BotResponse.TEMPLATE_TYPE_PIECHART, NewTemplateHolder.class);
 
@@ -95,13 +89,13 @@ public class MainActivity extends AppCompatActivity {
         SDKConfiguration.BubbleColors.showIcon = true;
 
         //Flag to show the bot icon in top position or bottom of the bot response
-        SDKConfiguration.BubbleColors.showIconTop = false;
+        SDKConfiguration.BubbleColors.showIconTop = true;
 
         //Flag to show the Speech to text micro phone icon
-        SDKConfiguration.BubbleColors.showASRMicroPhone = false;
+        SDKConfiguration.BubbleColors.showASRMicroPhone = true;
 
         //Flag to show the text to speech Speaker icon
-        SDKConfiguration.BubbleColors.showTextToSpeech = false;
+        SDKConfiguration.BubbleColors.showTextToSpeech = true;
 
         //Flag to show the attachment icon
         SDKConfiguration.BubbleColors.showAttachment = true;

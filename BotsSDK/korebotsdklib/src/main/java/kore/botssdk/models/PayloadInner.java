@@ -55,6 +55,7 @@ public class PayloadInner {
     private String heading;
     private String title;
     private String endDate;
+    private String startDate;
     private String format;
     private String boxShadow;
     private String seeMore;
@@ -318,6 +319,10 @@ public class PayloadInner {
 
     public String getEndDate() {
         return endDate;
+    }
+
+    public String getStartDate() {
+        return startDate;
     }
 
     public void setFormat(String endDate) {

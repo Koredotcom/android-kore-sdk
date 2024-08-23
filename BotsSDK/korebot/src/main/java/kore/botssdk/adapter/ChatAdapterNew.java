@@ -24,7 +24,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.SelectionUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
 import kore.botssdk.viewholders.AgentTransferTemplateHolder;
@@ -403,8 +402,6 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
         if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
             headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() - 1);
         }
-        SelectionUtils.resetSelectionTasks();
-        SelectionUtils.resetSelectionSlots();
         isAlpha = false;
         if (baseBotMessageArrayList.size() == 1) {
             notifyItemInserted(0);

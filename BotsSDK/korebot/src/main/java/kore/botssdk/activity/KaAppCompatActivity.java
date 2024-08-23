@@ -28,7 +28,7 @@ import kore.botssdk.models.BotData;
 import kore.botssdk.models.KaUserProfileModel;
 import kore.botssdk.utils.AppUtils;
 import kore.botssdk.utils.ToastUtils;
-import kore.botssdk.views.SyncingDialog;
+import kore.botssdk.view.SyncingDialog;
 
 
 public abstract class KaAppCompatActivity extends AppCompatActivity {

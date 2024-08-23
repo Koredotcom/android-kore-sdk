@@ -22,7 +22,7 @@ import kore.botssdk.R;
 import kore.botssdk.models.Widget;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class AdvanceListdetailsAdapter extends BaseAdapter
 {

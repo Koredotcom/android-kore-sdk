@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.models.ContactTemplateModel;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.CircleTransform;
+import kore.botssdk.viewUtils.CircleTransform;
 
 public class ContactCardItemAdapter extends RecyclerView.Adapter<ContactCardItemAdapter.ViewHolder> {
     private final ArrayList<ContactTemplateModel> models;

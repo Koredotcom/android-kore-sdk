@@ -1,6 +1,6 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,7 +24,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotTableListRowItemsModel;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class TableListInnerAdapter extends RecyclerView.Adapter<TableListInnerAdapter.ViewHolder> {
     private final List<BotTableListRowItemsModel> botTableListModels;

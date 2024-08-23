@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <kore.botssdk.views.CustomTextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/time_stamp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/msg_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

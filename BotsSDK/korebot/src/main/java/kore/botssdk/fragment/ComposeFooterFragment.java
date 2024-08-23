@@ -8,9 +8,9 @@ import static kore.botssdk.activity.KaCaptureImageActivity.THUMBNAIL_FILE_PATH;
 import static kore.botssdk.utils.BitmapUtils.getBufferSize;
 import static kore.botssdk.utils.BitmapUtils.rotateIfNecessary;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.view.viewUtils.FileUtils.EXT_JPG;
-import static kore.botssdk.view.viewUtils.FileUtils.EXT_PNG;
-import static kore.botssdk.view.viewUtils.FileUtils.EXT_VIDEO;
+import static kore.botssdk.viewUtils.FileUtils.EXT_JPG;
+import static kore.botssdk.viewUtils.FileUtils.EXT_PNG;
+import static kore.botssdk.viewUtils.FileUtils.EXT_VIDEO;
 
 import android.Manifest;
 import android.animation.Animator;
@@ -67,7 +67,6 @@ import androidx.core.content.FileProvider;
 import androidx.core.content.PermissionChecker;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -116,7 +115,6 @@ import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
@@ -125,7 +123,7 @@ import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.utils.Utility;
-import kore.botssdk.view.viewUtils.FileUtils;
+import kore.botssdk.viewUtils.FileUtils;
 import kore.botssdk.websocket.SocketWrapper;
 
 /**
@@ -484,8 +482,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     private void requestMicrophonePermission() {
-        AppPermissionsHelper.requestForPermission(requireActivity(), new String[]{
-                Manifest.permission.RECORD_AUDIO}, REQUEST_RECORD_AUDIO);
+        KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
+                Manifest.permission.RECORD_AUDIO);
     }
 
     @Override

@@ -1,11 +1,6 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -22,7 +16,6 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 

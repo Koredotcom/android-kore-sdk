@@ -7,7 +7,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvPageTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <kore.botssdk.views.CustomTextViewBold
+                <kore.botssdk.view.CustomTextViewBold
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -69,7 +69,7 @@
                     android:importantForAccessibility="no" />
             </LinearLayout>
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:textColor="@color/txtFontBlack"
                 android:textSize="@dimen/text_size_normal" />
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvFullDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
             android:importantForAccessibility="no" />
 
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvTaskName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

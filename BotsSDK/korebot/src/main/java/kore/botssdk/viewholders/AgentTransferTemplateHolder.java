@@ -2,6 +2,7 @@ package kore.botssdk.viewholders;
 
 import static android.view.View.GONE;
 
+import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,8 +22,7 @@ import kore.botssdk.adapter.AgentQuickOptionsTemplateAdapter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.AgentTransferTemplateView;
-import kore.botssdk.view.viewUtils.CircleTransform;
+import kore.botssdk.viewUtils.CircleTransform;
 
 public class AgentTransferTemplateHolder extends BaseViewHolder {
     private final TextView tvAgentCardText;
@@ -49,7 +49,7 @@ public class AgentTransferTemplateHolder extends BaseViewHolder {
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, LinearLayoutManager.HORIZONTAL);
         rvAgentButtons.setLayoutManager(staggeredGridLayoutManager);
         rvAgentButtons.setItemAnimator(new DefaultItemAnimator());
-        rvAgentButtons.addItemDecoration(new AgentTransferTemplateView.VerticalSpaceItemDecoration(15));
+        rvAgentButtons.addItemDecoration(new VerticalSpaceItemDecoration(15));
     }
 
     @Override
@@ -82,6 +82,21 @@ public class AgentTransferTemplateHolder extends BaseViewHolder {
                 ivAgentImage.setVisibility(View.VISIBLE);
                 Picasso.get().load(payloadInner.getImage_url()).transform(circleTransform).into(ivAgentImage);
             }
+        }
+    }
+
+    public static class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        public VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, @NonNull View view, @NonNull RecyclerView parent,
+                                   @NonNull RecyclerView.State state) {
+            outRect.bottom = verticalSpaceHeight;
         }
     }
 }

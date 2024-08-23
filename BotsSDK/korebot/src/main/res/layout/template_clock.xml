@@ -15,7 +15,7 @@
         android:paddingStart="10dp"
         android:paddingEnd="@dimen/dimen_0">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/hours_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +25,7 @@
             android:textSize="16sp"
             tools:text="12" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="2dp"
@@ -34,7 +34,7 @@
             android:textColor="@color/black"
             android:textSize="16sp" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/minutes_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             android:textSize="16sp"
             tools:text="00" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/am_pm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/confirm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

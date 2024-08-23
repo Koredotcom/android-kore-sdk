@@ -1,6 +1,6 @@
 package kore.botssdk.view;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

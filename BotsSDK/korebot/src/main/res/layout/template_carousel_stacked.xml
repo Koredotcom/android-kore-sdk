@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <kore.botssdk.views.coverflow.RecyclerCoverFlow
+    <kore.botssdk.view.coverflow.RecyclerCoverFlow
         android:id="@+id/rcfCarousel"
         android:layout_width="match_parent"
         android:layout_height="250dp"

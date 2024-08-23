@@ -1,9 +1,5 @@
 package kore.botssdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 26-Feb-18.
- */
-
 public class AutoSuggestions {
     public String getType() {
         return type;

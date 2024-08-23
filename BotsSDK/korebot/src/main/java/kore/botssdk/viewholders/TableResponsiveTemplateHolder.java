@@ -1,6 +1,6 @@
 package kore.botssdk.viewholders;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.app.Dialog;
 import android.content.Context;
