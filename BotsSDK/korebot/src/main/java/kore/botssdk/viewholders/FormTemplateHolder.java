@@ -9,6 +9,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class FormTemplateHolder extends BaseViewHolder {
     private final TextView tvFormTemplateTitle;
     private final TextView btFieldButton;
     private final String leftTextColor;
+    private final LinearLayout llFormRoot;
 
     public static FormTemplateHolder getInstance(ViewGroup parent) {
         return new FormTemplateHolder(createView(R.layout.template_form, parent));
@@ -36,7 +38,7 @@ public class FormTemplateHolder extends BaseViewHolder {
 
     private FormTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
-
+        llFormRoot = itemView.findViewById(R.id.llFormRoot);
         recyclerView = itemView.findViewById(R.id.multi_select_list);
         recyclerView.setVerticalScrollBarEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
@@ -56,7 +58,7 @@ public class FormTemplateHolder extends BaseViewHolder {
         if (leftDrawable != null) {
             leftDrawable.setColor(Color.parseColor(leftBgColor));
             leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
-            itemView.setBackground(leftDrawable);
+            llFormRoot.setBackground(leftDrawable);
         }
     }
 

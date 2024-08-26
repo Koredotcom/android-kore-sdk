@@ -400,6 +400,19 @@ public class PayloadInner {
     private ArrayList<BotFormTemplateModel> formFields;
     private ArrayList<FeedbackSmileyModel> smileyArrays;
     private ArrayList<FeedbackStarModel> starArrays;
+
+    private ArrayList<AdvancedMultiSelectModel> advancedMultiSelectModels;
+
+    public ArrayList<AdvancedMultiSelectModel> getAdvancedMultiSelectModels() {
+        return advancedMultiSelectModels;
+    }
+
+    private int limit;
+
+    public int getLimit() {
+        return limit;
+    }
+
     private Object cards;
     private ArrayList<AdvancedListModel> listItems;
     private ArrayList<BotBeneficiaryModel> botBeneficiaryModels;
@@ -929,6 +942,10 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<DropDownElementsModel>>() {
                         }.getType();
                         dropDownElementsModels = gson.fromJson(elementsAsString, listType);
+                    } else if (BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE.equals(template_type)) {
+                        Type listType = new TypeToken<ArrayList<AdvancedMultiSelectModel>>() {
+                        }.getType();
+                        advancedMultiSelectModels = gson.fromJson(elementsAsString, listType);
                     }
                 } else {
                     //Special case where we are getting multiple types of template responses in a single template(knowledge retrieval or universal search)

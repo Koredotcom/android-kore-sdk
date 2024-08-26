@@ -244,7 +244,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             composebarAttachmentAdapter = new ComposebarAttachmentAdapter(requireActivity(), new AttachmentListner() {
                 @Override
                 public void onRemoveAttachment() {
-
+                    attachment_recycler.setVisibility(View.GONE);
                     enableOrDisableSendButton(composebarAttachmentAdapter.getItemCount() > 0 || !TextUtils.isEmpty(editTextMessage.getText().toString().trim()));
                 }
             });
@@ -984,6 +984,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
+        attachment_recycler.setVisibility(View.VISIBLE);
         composebarAttachmentAdapter.addAttachment(attachmentKey);
         if (composebarAttachmentAdapter.getItemCount() > 0) {
             enableOrDisableSendButton(true);

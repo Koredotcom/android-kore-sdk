@@ -25,6 +25,7 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.viewholders.AdvanceMultiSelectTemplateHolder;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
 import kore.botssdk.viewholders.AgentTransferTemplateHolder;
 import kore.botssdk.viewholders.BankingFeedbackTemplateHolder;
@@ -58,6 +59,7 @@ import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
 import kore.botssdk.viewholders.TableTemplateHolder;
 import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 
+@SuppressWarnings("UnKnownNullness")
 public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
 
     private final HashMap<String, Integer> headersMap = new HashMap<>();
@@ -120,6 +122,7 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
     public static final int TEMPLATE_PDF_DOWNLOAD = 28;
     public static final int TEMPLATE_BENEFICIARY = 29;
     public static final int TEMPLATE_MULTI_SELECT = 30;
+    public static final int TEMPLATE_ADVANCE_MULTI_SELECT = 31;
 
     private final HashMap<Integer, String> customTemplates = new HashMap<>();
 
@@ -212,6 +215,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                         return TEMPLATE_PDF_DOWNLOAD;
                     case BotResponse.TEMPLATE_BENEFICIARY:
                         return TEMPLATE_BENEFICIARY;
+                    case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE:
+                        return TEMPLATE_ADVANCE_MULTI_SELECT;
                     default:
                         return TEMPLATE_BUBBLE_RESPONSE;
                 }
@@ -338,6 +343,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                 return BeneficiaryTemplateHolder.getInstance(parent);
             case TEMPLATE_MULTI_SELECT:
                 return MultiSelectTemplateHolder.getInstance(parent);
+            case TEMPLATE_ADVANCE_MULTI_SELECT:
+                return AdvanceMultiSelectTemplateHolder.getInstance(parent);
             default:
                 return ResponseTextTemplateHolder.getInstance(parent);
         }
