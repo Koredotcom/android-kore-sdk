@@ -38,14 +38,9 @@ public class MainActivity extends AppCompatActivity {
         SDKConfiguration.Server.setCustomData(getCustomData());
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
-        launchBotBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchBotChatActivity();
-            }
-        });
+        launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
 
-        appPermissionCheck();
+//        appPermissionCheck();
     }
 
     private void appPermissionCheck() {

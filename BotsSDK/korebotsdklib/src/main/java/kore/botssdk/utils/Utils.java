@@ -37,11 +37,12 @@ import kore.botssdk.models.PayloadOuter;
 public class Utils {
 
     public static final SimpleDateFormat isoFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH);
+
     /**
      * Retrieve The version name of this package, as specified by the manifest
      *
      * @param context
-     * @return 
+     * @return
      */
     public static String getVersion(Context context) {
         try {
@@ -51,6 +52,7 @@ public class Utils {
             return "";
         }
     }
+
     public static void showToast(final Context context, final String message) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
@@ -59,8 +61,10 @@ public class Utils {
             }
         });
     }
+
     /**
      * Get the package version
+     *
      * @param context
      * @return
      */
@@ -71,6 +75,7 @@ public class Utils {
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
+
     public static boolean isNullOrEmpty(CharSequence charSequence) {
         return charSequence == null || charSequence.toString().isEmpty();
     }
@@ -78,6 +83,7 @@ public class Utils {
     public static boolean isWebURL(String url) {
         return !isNullOrEmpty(url) && android.util.Patterns.WEB_URL.matcher(url).matches();
     }
+
     public static boolean isWebURL(CharSequence url) {
         return !isNullOrEmpty(url) && android.util.Patterns.WEB_URL.matcher(url).matches();
     }
@@ -85,33 +91,40 @@ public class Utils {
     public static boolean isPhoneNo(String text) {
         return !isNullOrEmpty(text) && Patterns.PHONE.matcher(text).matches();
     }
-    public static BotResponse buildBotMessage(String msg, String streamId,String botName){
 
+    public static BotResponse buildBotMessage(String msg, String streamId, String botName) {
         Calendar calendar = Calendar.getInstance();
         long date = System.currentTimeMillis();
         int offset = TimeZone.getDefault().getOffset(date);
         calendar.setTimeInMillis(date - offset);
 
-        return buildBotMessage(msg,streamId,botName, BaseBotMessage.isoFormatter.format(calendar.getTime()));
-
+        return buildBotMessage(msg, streamId, botName, BaseBotMessage.isoFormatter.format(calendar.getTime()));
     }
 
-    public static BotResponse buildBotMessage(String msg, String streamId,String botName, String createdOn){
-        return buildBotMessage(msg,streamId,botName,createdOn,null);
+    public static BotResponse buildBotMessage(String msg, String streamId, String botName, String createdOn) {
+        return buildBotMessage(msg, streamId, botName, createdOn, null);
     }
 
-    public static BotResponse buildBotMessage(String msg, String streamId,String botName, String createdOn, String msgId){
+    public static BotResponse buildBotMessage(String msg, String streamId, String botName, String createdOn, String msgId) {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
         botResponse.setFrom("bot");
 
-        if(msgId != null){
+        if (msgId != null) {
             botResponse.setMessageId(msgId);
         }
         botResponse.setCreatedOn(createdOn);
+        try {
+            long timeMillis = botResponse.getTimeInMillis(createdOn, true);
+            botResponse.setCreatedInMillis(timeMillis);
+            botResponse.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+            botResponse.setTimeStamp(botResponse.prepareTimeStamp(timeMillis));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
-        BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
+        BotInfoModel bInfo = new BotInfoModel(botName, streamId, null);
         botResponse.setBotInfo(bInfo);
 
         BotResponseMessage botResponseMessage = new BotResponseMessage();
@@ -134,7 +147,8 @@ public class Utils {
     }
 
     private static final String inPayload = "{\"template_type\":\"kora_summary_help\",\"elements\":[{\"text\":\"How can I help you?\",\"buttons\":[{\"type\":\"postback\",\"title\":\"Schedule a meeting\",\"payload\":\"Schedule a meeting\"},{\"type\":\"postback\",\"title\":\"Set a reminder\",\"payload\":\"Set a reminder\"},{\"type\":\"postback\",\"title\":\"Create task\",\"payload\":\"Create task\"}]}],\"isNewVolley\":true}";
-    public static String buildHelpMessage(){
+
+    public static String buildHelpMessage() {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
@@ -143,7 +157,7 @@ public class Utils {
         botResponse.setMessageId("");
         botResponse.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
 
-        BotInfoModel bInfo = new BotInfoModel("","",null);
+        BotInfoModel bInfo = new BotInfoModel("", "", null);
         botResponse.setBotInfo(bInfo);
 
         BotResponseMessage botResponseMessage = new BotResponseMessage();
@@ -154,7 +168,7 @@ public class Utils {
 
         PayloadOuter pOuter = new PayloadOuter();
         pOuter.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
-        PayloadInner payloadInner = new Gson().fromJson(inPayload,PayloadInner.class);
+        PayloadInner payloadInner = new Gson().fromJson(inPayload, PayloadInner.class);
         pOuter.setPayload(payloadInner);
 
         cModel.setPayload(pOuter);
@@ -163,22 +177,29 @@ public class Utils {
         message.add(botResponseMessage);
         botResponse.setMessage(message);
 
-
         return new Gson().toJson(botResponse);
     }
 
-    public static BotResponse buildBotMessage(PayloadOuter pOuter, String streamId,String botName, String createdOn, String msgId){
+    public static BotResponse buildBotMessage(PayloadOuter pOuter, String streamId, String botName, String createdOn, String msgId) {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
         botResponse.setFrom("bot");
 
-        if(msgId != null){
+        if (msgId != null) {
             botResponse.setMessageId(msgId);
         }
         botResponse.setCreatedOn(createdOn);
+        try {
+            long timeMillis = botResponse.getTimeInMillis(createdOn, true);
+            botResponse.setCreatedInMillis(timeMillis);
+            botResponse.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+            botResponse.setTimeStamp(botResponse.prepareTimeStamp(timeMillis));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
-        BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
+        BotInfoModel bInfo = new BotInfoModel(botName, streamId, null);
         botResponse.setBotInfo(bInfo);
 
         BotResponseMessage botResponseMessage = new BotResponseMessage();
@@ -187,16 +208,21 @@ public class Utils {
         ComponentModel cModel = new ComponentModel();
         cModel.setType(BotResponse.COMPONENT_TYPE_TEMPLATE);
 
+        if (pOuter != null && pOuter.getPayload() != null) {
+            PayloadInner inner = pOuter.getPayload();
+            inner.convertElementToAppropriate();
+            pOuter.setPayload(inner);
+        }
         cModel.setPayload(pOuter);
         botResponseMessage.setComponent(cModel);
         ArrayList<BotResponseMessage> message = new ArrayList<>(1);
         message.add(botResponseMessage);
         botResponse.setMessage(message);
 
-
         return botResponse;
     }
-    public static BotResponse buildBotMessageForConversationEnd(long time,String botName,String streamId){
+
+    public static BotResponse buildBotMessageForConversationEnd(long time, String botName, String streamId) {
         BotResponse botResponse = new BotResponse();
 
         botResponse.setType("bot_response");
@@ -204,7 +230,7 @@ public class Utils {
 
         botResponse.setCreatedOn(BaseBotMessage.isoFormatter.format(time));
 
-        BotInfoModel bInfo = new BotInfoModel(botName,streamId,null);
+        BotInfoModel bInfo = new BotInfoModel(botName, streamId, null);
         botResponse.setBotInfo(bInfo);
 
         BotResponseMessage botResponseMessage = new BotResponseMessage();
@@ -231,35 +257,35 @@ public class Utils {
         return botResponse;
     }
 
-    public static BotResponse getLastReceivedMsg(ArrayList<BaseBotMessage> list){
-        if(list != null && list.size()>0){
-            int index = list.size()-1;
-            for(;index>=0;index--)
-                if(!list.get(index).isSend()){
+    public static BotResponse getLastReceivedMsg(ArrayList<BaseBotMessage> list) {
+        if (list != null && list.size() > 0) {
+            int index = list.size() - 1;
+            for (; index >= 0; index--)
+                if (!list.get(index).isSend()) {
                     return (BotResponse) list.get(index);
                 }
         }
         return null;
     }
 
-    public static boolean shouldShowHelp(BotResponse msg){
+    public static boolean shouldShowHelp(BotResponse msg) {
         boolean shouldShowHelp = true;
         if (msg != null) {
             ComponentModel components = msg.getMessage().get(0).getComponent();
             try {
                 PayloadOuter outer = components.getPayload();
-                if(outer != null) {
+                if (outer != null) {
                     PayloadInner payloadInner = outer.getPayload();
                     if (payloadInner != null && !StringUtils.isNullOrEmpty(payloadInner.getTemplate_type())) {
                         if (payloadInner.getTemplate_type().equals(BotResponse.TEMPLATE_TYPE_HIDDEN_DIALOG)) {
                             shouldShowHelp = true;
-                        }else {
+                        } else {
                             shouldShowHelp = isGreaterThanFifteenMins(msg.getCreatedOn());
                         }
-                    }else {
+                    } else {
                         shouldShowHelp = isGreaterThanFifteenMins(msg.getCreatedOn());
                     }
-                }else{
+                } else {
                     shouldShowHelp = isGreaterThanFifteenMins(msg.getCreatedOn());
                 }
             } catch (com.google.gson.JsonSyntaxException ex) {
@@ -270,7 +296,7 @@ public class Utils {
         return shouldShowHelp;
     }
 
-    private static boolean isGreaterThanFifteenMins(String time){
+    private static boolean isGreaterThanFifteenMins(String time) {
         long timeStampMillis = 0;
         try {
             timeStampMillis = DateUtils.isoFormatter.parse(time).getTime() + TimeZone.getDefault().getRawOffset();
@@ -318,6 +344,7 @@ public class Utils {
 
         return buffer.toString();
     }
+
     public static void showHideVirtualKeyboard(Activity activity, View view, boolean show) {
         if (activity == null) {
             return;
@@ -350,33 +377,35 @@ public class Utils {
     }
 
     public static long getTimeInMillis(String timeStamp) throws ParseException {
-        if(timeStamp == null || timeStamp.isEmpty())return System.currentTimeMillis();
+        if (timeStamp == null || timeStamp.isEmpty()) return System.currentTimeMillis();
         return isoFormatter.parse(timeStamp).getTime();
 
     }
-    public static String ah(String accessToken){
-        return "bearer "+accessToken;
+
+    public static String ah(String accessToken) {
+        return "bearer " + accessToken;
     }
-    public static int getMaxLinesOfText(String text,float width,int currentTextSize){
+
+    public static int getMaxLinesOfText(String text, float width, int currentTextSize) {
         Rect bounds = new Rect();
         Paint paint = new Paint();
         paint.setTextSize(currentTextSize);
         paint.getTextBounds(text, 0, text.length(), bounds);
-        return  (int) Math.ceil((float) bounds.width() / width);
+        return (int) Math.ceil((float) bounds.width() / width);
     }
 
-    public static HashMap<String, Object> jsonToMap(String jsonString){
-        HashMap<String,Object> map = null;
+    public static HashMap<String, Object> jsonToMap(String jsonString) {
+        HashMap<String, Object> map = null;
         try {
             map = new Gson().fromJson(jsonString, new TypeToken<HashMap<String, Object>>() {
             }.getType());
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return map;
     }
 
-    public static String accessTokenHeader(String accessToken){
-        return "bearer " + accessToken ;
+    public static String accessTokenHeader(String accessToken) {
+        return "bearer " + accessToken;
     }
 }

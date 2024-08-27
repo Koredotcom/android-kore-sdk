@@ -31,8 +31,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 
 @SuppressLint("UnknownNullness")
-public class FeedbackTemplateView extends LinearLayout implements View.OnClickListener, ListClickListner
-{
+public class FeedbackTemplateView extends LinearLayout implements View.OnClickListener, ListClickListner {
     private TextView tvfeedback_template_title;
     private ImageView icon_1, icon_2, icon_3, icon_4, icon_5;
     private final Context mContext;
@@ -111,7 +110,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
                 position = (int) rating;
                 payloadInner.setEmojiPosition(position);
 
-                if(fromUser)
+                if (fromUser)
                     updateData();
             }
         });
@@ -120,30 +119,24 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
 
     public void populateData(final PayloadInner payloadInnerOut) {
 
-        if (payloadInnerOut != null)
-        {
+        if (payloadInnerOut != null) {
             this.payloadInner = payloadInnerOut;
             tvfeedback_template_title.setText(payloadInner.getText());
 
-            if(payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_STAR))
-            {
+            if (payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_STAR)) {
                 emojis.setVisibility(GONE);
                 rbFeedback.setVisibility(VISIBLE);
                 rlViewNPS.setVisibility(GONE);
                 rbFeedback.setRating(payloadInner.getEmojiPosition());
-            }
-            else if(payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_NPS)
-                    && payloadInner.getNumbersArrays() != null && payloadInner.getNumbersArrays().size() > 0)
-            {
+            } else if (payloadInner.getView().equalsIgnoreCase(BotResponse.VIEW_NPS)
+                    && payloadInner.getNumbersArrays() != null && payloadInner.getNumbersArrays().size() > 0) {
                 emojis.setVisibility(GONE);
                 rbFeedback.setVisibility(GONE);
                 rlViewNPS.setVisibility(VISIBLE);
 
                 rvRatingScale.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
-                rvRatingScale.setAdapter(feedbackRatingScaleAdapter = new FeedbackRatingScaleAdapter(mContext, payloadInner.getNumbersArrays(), composeFooterInterface, FeedbackTemplateView.this, ratingPosition));
-            }
-            else
-            {
+                rvRatingScale.setAdapter(feedbackRatingScaleAdapter = new FeedbackRatingScaleAdapter("", payloadInner.getNumbersArrays(), isEnabled(), ratingPosition));
+            } else {
                 emojis.setVisibility(VISIBLE);
                 rbFeedback.setVisibility(GONE);
                 rlViewNPS.setVisibility(GONE);
@@ -152,11 +145,10 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
                 loademojis(payloadInner.getEmojiPosition());
             }
 
-            if(payloadInner.getSliderView() && !payloadInner.getDialogCancel())
-            {
+            if (payloadInner.getSliderView() && !payloadInner.getDialogCancel()) {
                 payloadInner.setDialogCancel(true);
                 FeedbackActionSheetFragment bottomSheetDialog = new FeedbackActionSheetFragment();
-                bottomSheetDialog.setSkillName("skillName","trigger");
+                bottomSheetDialog.setSkillName("skillName", "trigger");
                 bottomSheetDialog.setData(payloadInner);
                 bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                 bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -166,8 +158,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     }
 
     @Override
-    public void onClick(View v)
-    {
+    public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.icon_1) {
             resetAll();
@@ -198,9 +189,8 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
         }
     }
 
-    void updateData()
-    {
-        composeFooterInterface.onSendClick((position)+"", (position)+"", false);
+    void updateData() {
+        composeFooterInterface.onSendClick((position) + "", (position) + "", false);
     }
 
     private void resetAll() {
@@ -235,7 +225,7 @@ public class FeedbackTemplateView extends LinearLayout implements View.OnClickLi
     @Override
     public void listItemClicked(int position) {
         ratingPosition = position;
-        if(feedbackRatingScaleAdapter != null)
-            feedbackRatingScaleAdapter.setEnabled(ratingPosition);
+//        if(feedbackRatingScaleAdapter != null)
+//            feedbackRatingScaleAdapter.setEnabled(ratingPosition);
     }
 }

@@ -29,6 +29,13 @@ public interface KoreMedia{
 	String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
 	String CHOOSE_TYPE_FILE = "choose_file";
 	String CHOOSE_TYPE_CAMERA = "camera";
+
+	public static String CHOOSE_TYPE_IMAGE_PICK = "choose";
+	public static String CHOOSE_TYPE_VIDEO_PICK = "choose_video";
+	public static String CHOOSE_TYPE_DOCUMENT_PICK = "choose_file";
+	public static String CHOOSE_TYPE_CAPTURE_IMAGE = "camera";
+	public static String CHOOSE_TYPE_CAPTURE_VIDEO = "video";
+
 	String FOR_MESSAGE = "message";
 	String FOR_PROFILE = "profile";
 	

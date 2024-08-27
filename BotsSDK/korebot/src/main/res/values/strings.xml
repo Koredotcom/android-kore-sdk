@@ -286,5 +286,9 @@
     <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
     <string name="bot_not_connected">Unable to connect to the bot. Please try again later</string>
     <string name="ok">OK</string>
+    <string name="default_click_time">12:00:AM</string>
+    <string name="see_more">See More</string>
+    <string name="colon">:</string>
+    <string name="what_can_be_improved">What can be Improved ?</string>
 
 </resources>

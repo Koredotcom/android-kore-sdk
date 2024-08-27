@@ -49,6 +49,8 @@ public class BundleConstants {
     public static final String CHOOSE_TYPE_GALLERY = "choose";
     public static final String ROUNDED = "rounded";
     public static final String RECTANGLE = "rectangle";
+    public static final String CIRCLE = "circle";
+    public static final String SQUARE = "square";
     public static final String COLOR = "color";
     public static final String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
     public static final String CHOOSE_TYPE_FILE = "choose_file";
@@ -63,9 +65,11 @@ public class BundleConstants {
     public static final int CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST = 1234;
     public static final int CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST = 1434;
     public static final int CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST = 3453;
+    public static final int CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST = 3454;
     public static final String MESSAGE_DELIVERED = "message_delivered";
     public static final String MESSAGE_READ = "message_read";
     public static final String STOP_TYPING = "stop_typing";
     public static final String TYPING = "typing";
     public static final String DESTROY_EVENT = "destroy-event";
+    public static final String CENTER = "center";
 }

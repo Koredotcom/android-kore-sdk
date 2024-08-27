@@ -93,7 +93,7 @@ public class BankingFeedbackTemplateView extends LinearLayout implements Feedbac
             lvExperience.setAdapter(bankingFeedbackTemplateAdapter = new BankingFeedbackTemplateAdapter(getContext(), payloadInner.getExperienceContent(), BankingFeedbackTemplateView.this, isEnabled));
             tvFeedbackHeading.setText(payloadInner.getHeading());
             lvFeedback.setAdapter(new BankingFeedbackListAdapter(getContext(), payloadInner.getFeedbackList(), BankingFeedbackTemplateView.this, isEnabled));
-            rvButtons.setAdapter(new BankingFeedbackButtonsAdapter(getContext(), payloadInner.getButtons(), BankingFeedbackTemplateView.this, isEnabled));
+            rvButtons.setAdapter(new BankingFeedbackButtonsAdapter(payloadInner.getButtons(), BankingFeedbackTemplateView.this, isEnabled));
 
 //            if(isEnabled)
 //            {

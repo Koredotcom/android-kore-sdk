@@ -48,7 +48,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -256,7 +255,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             composebarAttachmentAdapter = new ComposebarAttachmentAdapter(getActivity(), new AttachmentListner() {
                 @Override
                 public void onRemoveAttachment() {
-
+                    attachment_recycler.setVisibility(View.GONE);
                     enableOrDisableSendButton(composebarAttachmentAdapter.getItemCount() > 0 || !TextUtils.isEmpty(editTextMessage.getText().toString().trim()));
                 }
             });
@@ -507,51 +506,43 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         @Override
         public void onClick(View v) {
             String msg = editTextMessage.getText().toString();
-
-            if (StringUtils.isNullOrEmpty(msg)) {
-                if (!StringUtils.isNullOrEmpty(text_view_speech.getText().toString())) {
-                    msg = text_view_speech.getText().toString();
-                    llSpeechSend.setVisibility(View.GONE);
-                    ivSpeaker.setVisibility(View.VISIBLE);
-                    text_view_speech.setVisibility(View.GONE);
-                    newMenuLogo.setVisibility(View.VISIBLE);
-                    ivAttachment.setVisibility(View.VISIBLE);
-                    keyboard_img.setVisibility(View.VISIBLE);
-                    speakerText.setText(requireActivity().getString(R.string.tap_to_speak));
-                    speechStarted(false);
-                }
-            }
-
             if (!msg.trim().isEmpty()) {
                 if (composebarAttachmentAdapter.getItemCount() > 0) {
-                    if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
+                    if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png")
+                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg")
+                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                     else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp4"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                    else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
+                    else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3")
+                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                     else
                         sendMessageAttachmentText(msg + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
 
-                } else sendMessageText(msg);
+                } else
+                    sendMessageText(msg);
 
                 editTextMessage.setText("");
                 composebarAttachmentAdapter.clearAll();
-                attachment_recycler.setVisibility(View.GONE);
-
-//                enableOrDisableSendButton(false);
+                enableOrDisableSendButton(false);
             } else if (composebarAttachmentAdapter.getItemCount() > 0) {
-                if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
+                if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png")
+                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg")
+                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                 else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp4"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
+                else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3")
+                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                 else
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.attachment) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
 
                 composebarAttachmentAdapter.clearAll();
+                enableOrDisableSendButton(false);
             }
+            attachment_recycler.setVisibility(View.GONE);
         }
     };
     final View.OnClickListener keyboardIconClickListener = new View.OnClickListener() {
@@ -639,7 +630,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-
     void animateLayoutVisible(View view) {
         view.setVisibility(View.VISIBLE);
         view.animate().translationY(0).alpha(1.0f).setDuration(500).setListener(null);
@@ -653,7 +643,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 view.setVisibility(View.GONE);
             }
         });
-
     }
 
     void onButtonClick() {
@@ -742,17 +731,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     void showSpeechNotSupportedDialog() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        SpeechUtil.redirectUserToGoogleAppOnPlayStore(requireActivity());
-                        break;
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    SpeechUtil.redirectUserToGoogleAppOnPlayStore(requireActivity());
+                    break;
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        break;
-                }
+                case DialogInterface.BUTTON_NEGATIVE:
+                    break;
             }
         };
 
@@ -788,31 +774,26 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             ArrayList<String> options = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.attachments_strings)));
             adapter = new AttachmentOptionsAdapter(requireActivity(), options);
             listViewActionSheet.setAdapter(adapter);
-            listViewActionSheet.getOptionsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    launchSelectedMode(position);
-                }
-            });
+            listViewActionSheet.getOptionsListView().setOnItemClickListener((parent, view, position, id) -> launchSelectedMode(position));
         }
     }
 
     void launchSelectedMode(int position) {
         switch (position) {
             case 4:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_CAMERA, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAPTURE_IMAGE, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
                 break;
             case 0:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_GALLERY, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_IMAGE_PICK, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
                 break;
             case 3:
-                launchVideoRecorder();
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAPTURE_VIDEO, REQ_VIDEO_CAPTURE, BundleConstants.MEDIA_TYPE_VIDEO);
                 break;
             case 1:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_VIDEO_GALLERY, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_VIDEO_PICK, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
                 break;
             case 2:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_FILE, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
+                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_DOCUMENT_PICK, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
                 break;
 
 
@@ -887,7 +868,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         photoPickerIntent.putExtra("pickType", chooseType);
         photoPickerIntent.putExtra("fileContext", BundleConstants.FOR_MESSAGE);
         photoPickerIntent.putExtra("mediaType", mediaType);
-        activityImageResultLaunch.launch(photoPickerIntent);
+        if (reqCode == REQ_VIDEO) {
+            activityVideoResultLaunch.launch(photoPickerIntent);
+        } else {
+            activityImageResultLaunch.launch(photoPickerIntent);
+        }
     }
 
     final ActivityResultLauncher<Intent> activityImageResultLaunch = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -1074,6 +1059,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
         attachment_recycler.setVisibility(View.VISIBLE);
         composebarAttachmentAdapter.addAttachment(attachmentKey);
+        if (composebarAttachmentAdapter.getItemCount() > 0) {
+            enableOrDisableSendButton(true);
+        }
     }
 
     /**

@@ -33,7 +33,7 @@ public class AppUtils {
                 return true;
             }
         } catch (Exception e) {
-            Log.w(TAG, "oops: "+e);
+            Log.w(TAG, "oops-7: "+e);
         }
         return false;
     }

@@ -4,16 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.AdvanceMultiSelectCollectionsAdapter;
 import kore.botssdk.adapter.AdvancedMultiSelectAdapter;
 import kore.botssdk.listener.AdvanceMultiSelectListner;
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -54,7 +50,7 @@ public class AdvancedMultiSelectView extends LinearLayout implements AdvanceMult
     ComposeFooterInterface composeFooterInterface;
 
     private void init(Context context) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.advance_multi_select_view, this, true);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.template_advanced_multi_select, this, true);
         autoExpandListView = view.findViewById(R.id.multi_select_list);
         LinearLayout llAdvanceSection = view.findViewById(R.id.llAdvanceSection);
         autoExpandListView.setVerticalScrollBarEnabled(false);
@@ -62,7 +58,6 @@ public class AdvancedMultiSelectView extends LinearLayout implements AdvanceMult
         tvViewMore = view.findViewById(R.id.tvViewMore);
         tvAdvanceDone = view.findViewById(R.id.tvAdvanceDone);
     }
-
 
     public void populateData(final PayloadInner payloadInner, boolean isEnabled) {
 
@@ -73,9 +68,9 @@ public class AdvancedMultiSelectView extends LinearLayout implements AdvanceMult
             multiSelectButtonAdapter = new AdvancedMultiSelectAdapter(getContext());
             multiSelectButtonAdapter.setMultiSelectModels(payloadInner.getAdvancedMultiSelectModels());
             multiSelectButtonAdapter.setEnabled(isEnabled);
-            multiSelectButtonAdapter.setComposeFooterInterface(composeFooterInterface);
-            multiSelectButtonAdapter.setAdvanceMultiListner(AdvancedMultiSelectView.this);
-            autoExpandListView.setAdapter(multiSelectButtonAdapter);
+//            multiSelectButtonAdapter.setComposeFooterInterface(composeFooterInterface);
+//            multiSelectButtonAdapter.setAdvanceMultiListener(AdvancedMultiSelectView.this);
+//            autoExpandListView.setAdapter(multiSelectButtonAdapter);
 
             if(payloadInner.getAdvancedMultiSelectModels().size() > payloadInner.getLimit())
                 tvViewMore.setVisibility(VISIBLE);

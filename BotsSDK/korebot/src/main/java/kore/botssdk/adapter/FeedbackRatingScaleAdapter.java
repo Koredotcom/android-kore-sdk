@@ -24,86 +24,85 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ListClickListner;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.FeedbackNumberModel;
+import kore.botssdk.models.FeedbackRatingModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.views.CustomTextView;
+
 @SuppressLint("UnknownNullness")
 public class FeedbackRatingScaleAdapter extends RecyclerView.Adapter<FeedbackRatingScaleAdapter.ViewHolder>{
-    private final ArrayList<FeedbackNumberModel> model;
-    final RoundedCornersTransform roundedCornersTransform;
-    ComposeFooterInterface composeFooterInterface;
-    ListClickListner listClickListner;
-    int selectedPosition = -1;
-    Context context;
+    private final List<FeedbackRatingModel> items;
+    private final boolean isEnabled;
+    private int selectedPos = -1;
+    private ComposeFooterInterface composeFooterInterface;
+    private ChatContentStateListener listener;
+    private final String msgId;
 
-    public FeedbackRatingScaleAdapter(Context context, ArrayList<FeedbackNumberModel> model, ComposeFooterInterface composeFooterInterface, ListClickListner listClickListner, int selectedPos) {
-        this.model = model;
-        this.context = context;
-        this.roundedCornersTransform = new RoundedCornersTransform();
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
-        this.listClickListner = listClickListner;
-        this.selectedPosition = selectedPos;
+    }
+
+    public void setListener(ChatContentStateListener listener) {
+        this.listener = listener;
+    }
+
+    public FeedbackRatingScaleAdapter(String msgId, List<FeedbackRatingModel> items, boolean isEnabled, int selectedPos) {
+        this.msgId = msgId;
+        this.selectedPos = selectedPos;
+        this.items = items;
+        this.isEnabled = isEnabled;
     }
 
     @NonNull
     @Override
-    public FeedbackRatingScaleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.feedback_scale_cell, parent, false);
-
+        View listItem = layoutInflater.inflate(R.layout.feedback_rating_scale_cell, parent, false);
         return new ViewHolder(listItem);
     }
 
     @Override
-    public void onBindViewHolder(FeedbackRatingScaleAdapter.ViewHolder holder, int position) {
-        FeedbackNumberModel botListModel = model.get(position);
-        holder.tvRating.setText(String.valueOf(botListModel.getNumberId()));
-
-        holder.tvRating.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botListModel.getColor())));
-        holder.tvRating.setTextColor(ContextCompat.getColor(context, R.color.gray_modern));
-
-        if(selectedPosition == position)
-        {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        FeedbackRatingModel ratingModel = items.get(position);
+        Context context = holder.tvRating.getContext();
+        holder.tvRating.setText(String.valueOf(ratingModel.getNumberId()));
+        if (selectedPos == position) {
             holder.tvRating.setTextColor(ContextCompat.getColor(context, R.color.white));
             holder.tvRating.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(context, R.color.primary)));
+        } else {
+            holder.tvRating.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(ratingModel.getColor())));
+            holder.tvRating.setTextColor(ContextCompat.getColor(context, R.color.gray_modern));
         }
-
-
-        holder.tvRating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v)
-            {
-                if(selectedPosition == -1)
-                {
-                    listClickListner.listItemClicked(holder.getBindingAdapterPosition());
-                    composeFooterInterface.onSendClick(String.valueOf(botListModel.getNumberId()), true);
-                }
+        holder.tvRating.setOnClickListener(view -> {
+            if (!isEnabled) return;
+            if (listener != null) listener.onSelect(msgId, position, BotResponse.SELECTED_FEEDBACK);
+            if (composeFooterInterface != null) {
+                composeFooterInterface.onSendClick(ratingModel.getNumberId() + "", ratingModel.getNumberId() + "", false);
             }
         });
     }
 
-    public void setEnabled(int selectedPosition) {
-        this.selectedPosition = selectedPosition;
-        notifyItemChanged(selectedPosition);
-    }
-
     @Override
     public int getItemCount() {
-        return model.size();
+        return 0;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        final TextView tvRating;
-        public ViewHolder(View itemView) {
+        CustomTextView tvRating;
+
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            this.tvRating = itemView.findViewById(R.id.tvRatingScale);
+            tvRating = itemView.findViewById(R.id.tvRatingScale);
         }
     }
 }

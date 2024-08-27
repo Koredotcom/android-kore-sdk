@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_15dp"
+    android:background="@drawable/bottom_right_rounded_rectangle"
+    android:orientation="vertical"
+    android:paddingLeft="@dimen/dimen_10dp"
+    android:paddingTop="@dimen/dimen_10dp"
+    android:paddingRight="@dimen/dimen_10dp"
+    android:paddingBottom="@dimen/dimen_10dp">
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/botListViewTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:paddingStart="@dimen/dimen_5dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_20dp"
+        android:paddingBottom="@dimen/dimen_10dp"
+        android:text="@string/title"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="@dimen/text_size_normal"
+        android:visibility="gone" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/botCustomListView"
+        android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:layout_height="wrap_content"
+        android:divider="#eeeef2"
+        android:padding="2dp" />
+
+    <kore.botssdk.views.CustomTextView
+        android:id="@+id/botCustomListViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="visible" />
+</LinearLayout>

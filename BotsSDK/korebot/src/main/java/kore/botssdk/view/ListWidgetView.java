@@ -95,7 +95,7 @@ public class ListWidgetView extends LinearLayout {
             @Override
             public void onClick(View view) {
                 ListWidgetActionSheetFragment bottomSheetDialog = new ListWidgetActionSheetFragment();
-                bottomSheetDialog.setisFromFullView(false);
+                bottomSheetDialog.setIsFromFullView(false);
                 bottomSheetDialog.setSkillName("skillName","trigger");
 
                 if(!StringUtils.isNullOrEmpty(model.getTitle()))
@@ -110,7 +110,7 @@ public class ListWidgetView extends LinearLayout {
         });
 
         dp1 = (int) Utility.convertDpToPixel(context, 1);
-        listWidgetAdapter = new ListWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, "");
+        listWidgetAdapter = new ListWidgetAdapter(getContext(), BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET);
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {

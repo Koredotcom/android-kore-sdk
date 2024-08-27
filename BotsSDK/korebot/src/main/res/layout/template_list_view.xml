@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/template_bubble_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/botCustomListRoot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/botCustomListView"
+            android:layout_width="match_parent"
+            android:nestedScrollingEnabled="false"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dimen_3dp"
+            android:padding="2dp" />
+
+        <kore.botssdk.views.CustomTextView
+            android:id="@+id/botCustomListViewButton"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:gravity="end|center_vertical"
+            android:text="@string/show_more"
+            android:textColor="@android:color/holo_blue_dark"
+            android:visibility="visible" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</androidx.appcompat.widget.LinearLayoutCompat>

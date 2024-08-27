@@ -51,14 +51,12 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
     private BottomSheetDialog bottomSheetDialog;
     private SharedPreferences sharedPreferences;
     private String title;
+    private String skillName;
 
-    public void setSkillName(String skillName, String trigger) {
+    public void setSkillName(String skillName) {
         this.skillName = skillName;
-        this.trigger = trigger;
     }
 
-    private String skillName;
-    private String trigger;
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,

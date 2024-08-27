@@ -1,6 +1,7 @@
 package kore.botssdk.models;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -18,6 +19,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_CAROUSEL_ADV = "carouselAdv";
     public static final String TEMPLATE_TYPE_QUICK_REPLIES = "quick_replies";
     public static final String TEMPLATE_TYPE_FORM_ACTIONS = "form_actions";
+    public static final String TEMPLATE_TYPE_CLOCK = "clockTemplate";
+    public static final String TEMPLATE_TYPE_RADIO_OPTIONS = "radioOptionTemplate";
     public static final String COMPONENT_TYPE_TEMPLATE = "template";
     public static final String COMPONENT_TYPE_TEXT = "text";
     public static final String COMPONENT_TYPE_ERROR = "error";
@@ -37,6 +40,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String  TEMPLATE_TYPE_ATTENDEE_SLOTS = "attendee_slots_template";
     public static final String VIEW_STAR = "star";
     public static final String VIEW_NPS = "NPS";
+    public static final String VIEW_CSAT = "CSAT";
+    public static final String VIEW_THUMBS_UP_DOWN = "ThumbsUpDown";
     static final String TEMPLATE_TYPE_PICKER = "picker";
     public static final String TEMPLATE_TYPE_SESSION_END = "session_end";
     public static final String TEMPLATE_TYPE_SHOW_PROGRESS = "show_progress";
@@ -83,6 +88,11 @@ public class BotResponse extends BaseBotMessage {
     public static final String EVENT = "EVENT";
     public static final String HISTORY_COUNT = "HISTORY_COUNT";
     public static final String LIVE_AGENT = "live_agent";
+    public static final String SELECTED_TIME = "selected_time";
+    public static final String SELECTED_FEEDBACK = "selectedFeedback";
+    public static final String SELECTED_ITEM = "selected_item";
+    public static final String STACKED = "stacked";
+    public static final String TABLE_VIEW_RESPONSIVE = "responsive";
 
     //widgets
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";
@@ -122,6 +132,7 @@ public class BotResponse extends BaseBotMessage {
     private String timestamp;
     private String key;
     private boolean fromAgent = false;
+    private Map<String, Object> contentState;
 
     public void setFromAgent(boolean fromAgent) {
         this.fromAgent = fromAgent;
@@ -187,5 +198,12 @@ public class BotResponse extends BaseBotMessage {
     @Override
     public boolean isSend() {
         return false;
+    }
+    public Map<String, Object> getContentState() {
+        return contentState;
+    }
+
+    public void setContentState(Map<String, Object> contentState) {
+        this.contentState = contentState;
     }
 }

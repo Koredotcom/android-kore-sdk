@@ -3,7 +3,6 @@ package kore.botssdk.models;
 import android.annotation.SuppressLint;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -31,7 +30,11 @@ public class PayloadInner {
     public void setText(String text) {
         this.text = text;
     }
+    public String getLabel() {
+        return label;
+    }
 
+    private String label;
     private String text;
     private String pie_type;
     private String Auto_adjust_X_axis;
@@ -357,9 +360,14 @@ public class PayloadInner {
     private ArrayList<FeedbackStarModel> starArrays;
     private Object cards;
     private ArrayList<AdvancedListModel> listItems;
-    private ArrayList<FeedbackNumberModel> numbersArrays;
-    public ArrayList<FeedbackNumberModel> getNumbersArrays() {
+    private ArrayList<FeedbackRatingModel> numbersArrays;
+
+    private List<RadioOptionModel> radioOptions;
+    public ArrayList<FeedbackRatingModel> getNumbersArrays() {
         return numbersArrays;
+    }
+    public List<RadioOptionModel> getRadioOptions() {
+        return radioOptions;
     }
     private ArrayList<BotBeneficiaryModel> botBeneficiaryModels;
     public ArrayList<BotBeneficiaryModel> getBotBeneficiaryModels() {
@@ -456,6 +464,7 @@ public class PayloadInner {
     }
     private ArrayList<BotListWidgetModel> listWidgetModels;
     private ArrayList<BotCarouselModel> carouselElements;
+    private ArrayList<BotCarouselStackModel> carouselStackElements;
     private ArrayList<BotCarouselStackedModel> carouselStackedElements;
     private ArrayList<ContactTemplateModel> contactTemplateModels;
     private ArrayList<CardTemplateModel> cardTemplateModels;
@@ -691,6 +700,9 @@ public class PayloadInner {
     public ArrayList<BotCarouselModel> getCarouselElements() {
         return carouselElements;
     }
+    public ArrayList<BotCarouselStackModel> getCarouselStackElements() {
+        return carouselStackElements;
+    }
 
     public ArrayList<BotListModel> getListElements() {
         return listElements;
@@ -763,10 +775,10 @@ public class PayloadInner {
                 elementsAsString = gson.toJson(elements);
                 if(!BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equals(template_type)){
                     if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
-                        if(!StringUtils.isNullOrEmpty(getCarousel_type()) && getCarousel_type().equalsIgnoreCase(BotResponse.CAROUSEL_STACKED))
+                        if(!StringUtils.isNullOrEmpty(carousel_type) && carousel_type.equalsIgnoreCase(BotResponse.CAROUSEL_STACKED))
                         {
-                            Type carouselType = new TypeToken<ArrayList<BotCarouselStackedModel>>() {}.getType();
-                            carouselStackedElements = gson.fromJson(elementsAsString, carouselType);
+                            Type carouselType = new TypeToken<ArrayList<BotCarouselStackModel>>() {}.getType();
+                            carouselStackElements = gson.fromJson(elementsAsString, carouselType);
                         }
                         else
                         {
@@ -886,17 +898,11 @@ public class PayloadInner {
                         }.getType();
                         formFields = gson.fromJson(elementsAsString, listType);
                     }
-                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equals(template_type))
+                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equals(template_type) || BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equalsIgnoreCase(template_type))
                     {
                         Type listType = new TypeToken<ArrayList<WidgetListElementModel>>() {
                         }.getType();
                         widgetlistElements = gson.fromJson(elementsAsString, listType);
-                    }
-                    else if(BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equalsIgnoreCase(template_type)) {
-                        listWidgetModels = new ArrayList<>();
-                        Type listType = new TypeToken<ArrayList<BotListWidgetModel>>() {
-                        }.getType();
-                        listWidgetModels = gson.fromJson(elementsAsString, listType);
                     }
                     else if(BotResponse.TEMPLATE_DROPDOWN.equals(template_type))
                     {
@@ -946,38 +952,6 @@ public class PayloadInner {
             e.printStackTrace();
         }
         // templateValidator();
-    }
-
-    private void templateValidator() throws JsonSyntaxException {
-        if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
-            if (elements != null) {
-                if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(template_type)) {
-                    for (int i = 0; i < carouselElements.size(); i++) {
-                        BotCarouselModel carouselElement = carouselElements.get(i);
-                        if (carouselElement.getTitle() == null || carouselElement.getImage_url() == null) {
-                            carouselElements.remove(carouselElement);
-                            i--;
-                        }
-                    }
-                    if (carouselElements.isEmpty()) {
-                        throw new JsonSyntaxException("Invalid JSON");
-                    }
-                } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(template_type)) {
-                    for (int i = 0; i < listElements.size(); i++) {
-                        BotListModel botListElement = listElements.get(i);
-                        if (botListElement.getTitle() == null) {
-                            listElements.remove(botListElement);
-                            i--;
-                        }
-                    }
-                    if (listElements.isEmpty()) {
-                        throw new JsonSyntaxException("Invalid JSON");
-                    }
-                }
-            } else {
-                throw new JsonSyntaxException("Invalid JSON");
-            }
-        }
     }
 
     public ArrayList<String> getHeaders() {

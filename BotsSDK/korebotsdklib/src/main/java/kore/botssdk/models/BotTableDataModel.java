@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class BotTableDataModel {
@@ -60,8 +62,6 @@ public class BotTableDataModel {
         public void setRows(List<List<String>> rows) {
             this.rows = rows;
         }*/
+    @SerializedName("Values")
     private List<String> values = null;
-
-
-
 }

@@ -59,7 +59,7 @@
 
     </RelativeLayout>
 
-    <kore.botssdk.view.AutoExpandListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/adv_multi_select_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone">
 
-        <kore.botssdk.views.CustomTextViewSemiBold
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/tvCancel"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
             android:textSize="@dimen/text_size_small"
             android:visibility="visible" />
 
-        <kore.botssdk.views.CustomTextViewSemiBold
+        <kore.botssdk.views.CustomTextViewBold
             android:id="@+id/botCustomListViewButton"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
@@ -111,8 +111,5 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_small"
             android:visibility="visible" />
-
     </RelativeLayout>
-
-
 </LinearLayout>

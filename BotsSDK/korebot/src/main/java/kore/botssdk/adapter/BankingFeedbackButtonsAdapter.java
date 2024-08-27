@@ -19,14 +19,11 @@ import kore.botssdk.utils.Utility;
 
 public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingFeedbackButtonsAdapter.ViewHolder>
 {
-    private final Context context;
     private final ArrayList<BotButtonModel> botButtonModels;
-    private float dp1;
-    private final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
+    final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
     private final boolean isEnabled;
 
-    public BankingFeedbackButtonsAdapter(Context context, ArrayList<BotButtonModel> botButtonModels, FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled) {
-        this.context = context;
+    public BankingFeedbackButtonsAdapter(@NonNull ArrayList<BotButtonModel> botButtonModels, @NonNull FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled) {
         this.botButtonModels = botButtonModels;
         this.feedbackExperienceUpdateListner = feedbackExperienceUpdateListner;
         this.isEnabled = isEnabled;
@@ -38,9 +35,7 @@ public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingF
     {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.banking_feedback_button_cell, parent, false);
-        dp1 = Utility.convertDpToPixel(context, 1);
-        ViewHolder viewHolder = new ViewHolder(listItem);
-        return viewHolder;
+        return new ViewHolder(listItem);
     }
 
     @Override
@@ -67,7 +62,7 @@ public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingF
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView tvButton;
 
-        public ViewHolder(View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.tvButton = itemView.findViewById(R.id.tvButton);
         }

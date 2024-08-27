@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/botCustomListRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/table_list_bg"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/template_bubble_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/botCustomListView"
+        android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:id="@+id/botCustomListViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:gravity="end|center_vertical"
+        android:text="@string/more"
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/workBenchListViewButton"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/list_view_template_bg"
+        android:gravity="center"
+        android:text="@string/show_more"
+        android:textColor="@android:color/holo_blue_dark"
+        android:visibility="gone" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

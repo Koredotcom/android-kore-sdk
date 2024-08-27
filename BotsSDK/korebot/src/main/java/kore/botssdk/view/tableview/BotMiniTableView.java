@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -87,12 +88,12 @@ public class BotMiniTableView extends TableView<MiniTableModel> {
         return alignment;
     }
 
-    public void addDataAdapter(String template_type, List<List<Object>> additional, String[] alignment){
+    public void addDataAdapter(String template_type, List<List<String>> additional, String[] alignment){
         if(BotResponse.TEMPLATE_TYPE_MINITABLE.equals(template_type) || BotResponse.TEMPLATE_TYPE_TABLE.equals(template_type)) {
             List<MiniTableModel> lists = new ArrayList<>();
             for(int j=0; j<additional.size();j++) {
                 MiniTableModel model = new MiniTableModel();
-                model.setElements(additional.get(j));
+                model.setElements(Collections.singletonList(additional.get(j)));
                 lists.add(model);
             }
             BotTableAdapter tableAdapter = new BotTableAdapter(context,lists, alignment, null, null);

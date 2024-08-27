@@ -21,6 +21,7 @@ public class SDKConfiguration {
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static final boolean APPLY_FONT_STYLE = true;
     protected static HashMap<String, View> hsh = new HashMap<>();
+    protected static HashMap<String, Class<?>> hshViewHolders = new HashMap<>();
 
     public static boolean isTriggerInitMessage() {
         return TRIGGER_INIT_MESSAGE;
@@ -144,6 +145,7 @@ public class SDKConfiguration {
         public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static final boolean showIcon = true;
+        public static final boolean showIconTop = true;
 
         public static int getIcon() {
             return icon;
@@ -207,6 +209,15 @@ public class SDKConfiguration {
 
     public static HashMap<String, View> getCustomTemplateView() {
         return hsh;
+    }
+
+    public static void setCustomTemplateViewHolder(String templateName, Class<?> viewHolder) {
+        hshViewHolders.put(templateName, viewHolder);
+        Log.e("HashMap Count", hshViewHolders.size() + "");
+    }
+
+    public static Class<?> getCustomTemplateViewHolder(String templateType) {
+        return hshViewHolders.get(templateType);
     }
 
 }
