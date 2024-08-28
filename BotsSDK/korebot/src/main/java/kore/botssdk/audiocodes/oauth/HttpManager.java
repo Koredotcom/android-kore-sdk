@@ -1,5 +1,6 @@
 package kore.botssdk.audiocodes.oauth;
 
+import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -16,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -134,13 +136,18 @@ public class HttpManager {
 
     private static void saveInputStream(InputStream inputStream, String filePath) {
         Log.d(TAG, "saveInputStream");
+
+        OutputStream out = null;
         try {
             File dbFile = new File(filePath);
             if (!dbFile.exists()) {
                 dbFile.mkdirs();
                 dbFile.delete();
             }
-            OutputStream out = new FileOutputStream(new File(filePath));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                out = Files.newOutputStream(new File(filePath).toPath());
+            } else out = new FileOutputStream(filePath);
+
             int read = 0;
             byte[] bytes = new byte[1024];
             while ((read = inputStream.read(bytes)) != -1) {
@@ -148,10 +155,18 @@ public class HttpManager {
             }
             inputStream.close();
             out.flush();
-            out.close();
             Log.d(TAG, "file saved successfully");
         } catch (IOException e) {
             Log.e(TAG, "saveInputStream ERROR", e);
+        }
+        finally {
+            if(out != null) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 

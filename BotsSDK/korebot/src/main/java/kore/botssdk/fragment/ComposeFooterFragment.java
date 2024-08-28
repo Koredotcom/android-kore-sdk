@@ -273,8 +273,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         });
     }
 
-    public void setBotClient(BotClient botClient)
-    {
+    public void setBotClient(BotClient botClient) {
         this.botClient = botClient;
     }
 
@@ -323,8 +322,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                         rlSpeaker.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(footerModel.getCompose_bar().getOutline_color())));
                     }
 
-                    if(!StringUtils.isNullOrEmpty(footerModel.getCompose_bar().getInline_color()))
-                    {
+                    if (!StringUtils.isNullOrEmpty(footerModel.getCompose_bar().getInline_color())) {
                         if (send_small != null) {
                             send_small.setTint(Color.parseColor(footerModel.getCompose_bar().getInline_color()));
                             sendButton.setBackground(send_small);
@@ -476,7 +474,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (s.length() == 0) {
                 llSend.setVisibility(View.GONE);
 
-                if(isAgentConnected && botClient != null)
+                if (isAgentConnected && botClient != null)
                     botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
 
                 if (mainContentLayout.getVisibility() == View.VISIBLE) {
@@ -492,7 +490,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 llSend.setVisibility(View.VISIBLE);
                 rec_audio_img.setVisibility(View.GONE);
 
-                if(isAgentConnected && botClient != null)
+                if (isAgentConnected && botClient != null)
                     botClient.sendReceipts(BundleConstants.TYPING, "");
             }
         }
@@ -774,30 +772,26 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             ArrayList<String> options = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.attachments_strings)));
             adapter = new AttachmentOptionsAdapter(requireActivity(), options);
             listViewActionSheet.setAdapter(adapter);
-            listViewActionSheet.getOptionsListView().setOnItemClickListener((parent, view, position, id) -> launchSelectedMode(position));
+            listViewActionSheet.getOptionsListView().setOnItemClickListener((parent, view, position, id) -> launchSelectedMode(options.get(position)));
         }
     }
 
-    void launchSelectedMode(int position) {
-        switch (position) {
-            case 4:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAPTURE_IMAGE, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
-                break;
-            case 0:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_IMAGE_PICK, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
-                break;
-            case 3:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAPTURE_VIDEO, REQ_VIDEO_CAPTURE, BundleConstants.MEDIA_TYPE_VIDEO);
-                break;
-            case 1:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_VIDEO_PICK, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
-                break;
-            case 2:
-                fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_DOCUMENT_PICK, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
-                break;
-
-
-        }
+    private void launchSelectedMode(String option) {
+        final String capturePhoto = getString(R.string.attachment_capture_photo);
+        final String uploadPhoto = getString(R.string.attachment_upload_photo);
+        final String uploadVideo = getString(R.string.attachment_upload_video);
+        final String uploadDocument = getString(R.string.attachment_upload_document);
+        final String uploadMedia = getString(R.string.attachment_upload_media);
+        if (option.equals(capturePhoto))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAPTURE_IMAGE, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
+        else if (option.equals(uploadPhoto))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_IMAGE_PICK, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
+        else if (option.equals(uploadMedia))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_IMAGE_VIDEO, REQ_VIDEO_CAPTURE, BundleConstants.MEDIA_TYPE_VIDEO);
+        else if (option.equals(uploadVideo))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_VIDEO_PICK, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
+        else if (option.equals(uploadDocument))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_DOCUMENT_PICK, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
         listViewActionSheet.dismiss();
     }
 
@@ -822,15 +816,13 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA, Manifest.permission.MANAGE_EXTERNAL_STORAGE);
             } else {
-                KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
         }
     }
 
     Uri getImageUri() {
         // Store image in Kore folder
-        KaMediaUtils.updateExternalStorageState();
-
         cameraVideoUri1 = null;
         try {
             File actualImageFile = KaMediaUtils.getOutputMediaFile(BundleConstants.MEDIA_TYPE_VIDEO, null);
@@ -1129,7 +1121,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 }
 
                 if (type != null && type.contains("video")) {
-                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+                    KaMediaUtils.setupAppDir(requireContext(), BundleConstants.MEDIA_TYPE_VIDEO);
                     String filePath = KaMediaUtils.getAppDir() + File.separator + name;
                     new SaveVideoTask(filePath, name, selectedImage, requireActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }
@@ -1139,8 +1131,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    public void setIsAgentConnected(boolean isAgentConnected)
-    {
+    public void setIsAgentConnected(boolean isAgentConnected) {
         this.isAgentConnected = isAgentConnected;
     }
 

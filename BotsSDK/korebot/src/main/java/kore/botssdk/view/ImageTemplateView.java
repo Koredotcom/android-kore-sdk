@@ -126,7 +126,6 @@ public class ImageTemplateView extends LinearLayout
         tvTheme2.setVisibility(View.GONE);
         vTheme.setVisibility(View.GONE);
 
-        KaMediaUtils.updateExternalStorageState();
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
         KoreEventCenter.register(this);
@@ -158,7 +157,7 @@ public class ImageTemplateView extends LinearLayout
 
     boolean checkForPermissionAccessAndRequest()
     {
-        return KaPermissionsHelper.hasPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return KaPermissionsHelper.hasPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
     public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
@@ -327,7 +326,7 @@ public class ImageTemplateView extends LinearLayout
                             popupWindow.dismiss();
                             if(checkForPermissionAccessAndRequest())
                             {
-                                KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_AUDIO, "");
+                                KaMediaUtils.setupAppDir(getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
                                 if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
                                     KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getAudioUrl());
                                 else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
@@ -460,7 +459,7 @@ public class ImageTemplateView extends LinearLayout
                             popupWindow.dismiss();
                             if(checkForPermissionAccessAndRequest())
                             {
-                                KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+                                KaMediaUtils.setupAppDir(getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
                                 if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                     KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getVideoUrl());
                                 else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))

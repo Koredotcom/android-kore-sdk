@@ -128,12 +128,17 @@
     <string name="done">Done</string>
     <string name="loading_data">Please wait…</string>
 
+    <string name="attachment_upload_photo">Upload Photo</string>
+    <string name="attachment_upload_video">Upload Video</string>
+    <string name="attachment_upload_media">Upload Media</string>
+    <string name="attachment_upload_document">Upload Document</string>
+    <string name="attachment_capture_photo">Capture photo</string>
+    <string name="attachment_capture_video">Capture Video</string>
+
     <string-array name="attachments_strings">
-       <!-- <item>Take Photo</item>-->
-        <item>Upload Photo</item>
-        <!--<item>Take Video</item>-->
-        <item>Upload Video</item>
-        <item>Attach Document</item>
+        <item>@string/attachment_upload_photo</item>
+        <item>@string/attachment_upload_video</item>
+        <item>@string/attachment_upload_document</item>
     </string-array>
 
     //Audio codes
