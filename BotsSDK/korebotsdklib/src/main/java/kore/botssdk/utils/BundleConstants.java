@@ -46,15 +46,11 @@ public class BundleConstants {
     public static final String IS_RECONNECT = "IS_RECONNECT";
     public static final String PICK_TYPE = "pickType";
     public static final String FILE_CONTEXT = "fileContext";
-    public static final String CHOOSE_TYPE_GALLERY = "choose";
     public static final String ROUNDED = "rounded";
     public static final String RECTANGLE = "rectangle";
     public static final String CIRCLE = "circle";
     public static final String SQUARE = "square";
     public static final String COLOR = "color";
-    public static final String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
-    public static final String CHOOSE_TYPE_FILE = "choose_file";
-    public static final String CHOOSE_TYPE_CAMERA = "camera";
     public static final String FOR_MESSAGE = "message";
     public static final String MEDIA_TYPE_AUDIO = "audio";
     public static final String MEDIA_TYPE_VIDEO = "video";

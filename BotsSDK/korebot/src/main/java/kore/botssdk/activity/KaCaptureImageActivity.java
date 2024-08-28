@@ -527,7 +527,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     void finishOperation(Uri uri, String fileExtn, int resultCode) {
 
         resultIntent = new Intent();
-        resultIntent.putExtra("action", CHOOSE_TYPE_FILE);
+        resultIntent.putExtra("action", CHOOSE_TYPE_DOCUMENT_PICK);
         resultIntent.putExtra("fileName", MEDIA_FILENAME);
         resultIntent.putExtra("filePath", MEDIA_FILE_PATH);
         resultIntent.putExtra("fileUri", uri);
@@ -632,7 +632,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
         //display the returned cropped image
         if (resultIntent == null) resultIntent = new Intent();
-        resultIntent.putExtra("action", CHOOSE_TYPE_GALLERY);
+        resultIntent.putExtra("action", CHOOSE_TYPE_IMAGE_PICK);
         resultIntent.putExtra("fileName", MEDIA_FILENAME);
         resultIntent.putExtra("filePath", MEDIA_FILE_PATH);
         resultIntent.putExtra("filePathThumbnail", thumbnailFilePath);

@@ -46,14 +46,13 @@ import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-public class ImageTemplateView extends LinearLayout
-{
+public class ImageTemplateView extends LinearLayout {
     private final Context mContext;
     private ImageView ivImage;
     private TextView tvFileName, tvAudioVideoTiming;
     private SharedPreferences sharedPreferences;
     private String leftbgColor;
-    private GradientDrawable  leftDrawable;
+    private GradientDrawable leftDrawable;
     float dp1;
     private LinearLayout llAttachment;
     private VideoView vvAttachment, vvFullScreen;
@@ -75,8 +74,7 @@ public class ImageTemplateView extends LinearLayout
     private View vTheme;
     private String fileName;
 
-    public ImageTemplateView(Context context)
-    {
+    public ImageTemplateView(Context context) {
         super(context);
         this.mContext = context;
 //        init();
@@ -94,8 +92,7 @@ public class ImageTemplateView extends LinearLayout
 //        init();
     }
 
-    private void init()
-    {
+    private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.image_template, this, true);
         KaFontUtils.applyCustomFont(getContext(), view);
         llAttachment = view.findViewById(R.id.llAttachment);
@@ -130,10 +127,10 @@ public class ImageTemplateView extends LinearLayout
 
         KoreEventCenter.register(this);
         sharedPreferences = getSharedPreferences();
-        leftbgColor= sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
+        leftbgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
         leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.theme1_left_bubble_bg, getContext().getTheme());
 
-        if(leftDrawable != null) {
+        if (leftDrawable != null) {
             leftDrawable.setColor(Color.parseColor(leftbgColor));
             leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftbgColor));
             llAttachment.setBackground(leftDrawable);
@@ -155,8 +152,7 @@ public class ImageTemplateView extends LinearLayout
 
     }
 
-    boolean checkForPermissionAccessAndRequest()
-    {
+    boolean checkForPermissionAccessAndRequest() {
         return KaPermissionsHelper.hasPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
@@ -164,8 +160,7 @@ public class ImageTemplateView extends LinearLayout
         return invokeGenericWebViewInterface;
     }
 
-    private SharedPreferences getSharedPreferences()
-    {
+    private SharedPreferences getSharedPreferences() {
         sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         return sharedPreferences;
     }
@@ -186,14 +181,11 @@ public class ImageTemplateView extends LinearLayout
     private ComposeFooterInterface composeFooterInterface;
 
     @SuppressLint("ClickableViewAccessibility")
-    public void populateData(final PayloadInner payloadInner, String templateType)
-    {
-        if(payloadInner != null && templateType != null)
-        {
+    public void populateData(final PayloadInner payloadInner, String templateType) {
+        if (payloadInner != null && templateType != null) {
             init();
             this.payloadInner = payloadInner;
-            switch (templateType)
-            {
+            switch (templateType) {
                 case BundleConstants.MEDIA_TYPE_IMAGE:
                     llAudio.setVisibility(GONE);
                     rlVideo.setVisibility(GONE);
@@ -202,19 +194,16 @@ public class ImageTemplateView extends LinearLayout
                     tvVideoTitle.setVisibility(GONE);
                     tvFileName.setVisibility(GONE);
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
-                    {
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getText())) {
                         tvVideoTitle.setVisibility(VISIBLE);
                         tvVideoTitle.setText(payloadInner.getText());
                     }
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                    {
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
                         tvFileName.setVisibility(VISIBLE);
                         fileName = payloadInner.getUrl().substring(payloadInner.getUrl().lastIndexOf("/") + 1);
 
-                        if(!StringUtils.isNullOrEmpty(fileName))
-                        {
+                        if (!StringUtils.isNullOrEmpty(fileName)) {
                             tvFileName.setText(fileName);
                         }
 
@@ -233,42 +222,36 @@ public class ImageTemplateView extends LinearLayout
                     llAudio.setVisibility(VISIBLE);
                     tvVideoTitle.setVisibility(GONE);
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
-                    {
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getText())) {
                         tvVideoTitle.setVisibility(VISIBLE);
                         tvVideoTitle.setText(payloadInner.getText());
                     }
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
-                    {
-                        try
-                        {
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl())) {
+                        try {
                             Uri uri = Uri.parse(payloadInner.getAudioUrl());
                             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             player.setDataSource(getContext(), uri);
                             player.prepareAsync();
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
-                    }
-                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                    {
-                        try
-                        {
+                    } else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
+                        try {
                             Uri uri = Uri.parse(payloadInner.getUrl());
                             player.setAudioStreamType(AudioManager.STREAM_MUSIC);
                             player.setDataSource(getContext(), uri);
                             player.prepareAsync();
-                        } catch(Exception e) {
+                        } catch (Exception e) {
                             e.printStackTrace();
                         }
                     }
 
                     tvFileName.setVisibility(VISIBLE);
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                         tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
-                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                         tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
 
                     player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -282,35 +265,28 @@ public class ImageTemplateView extends LinearLayout
                         @Override
                         public void onCompletion(MediaPlayer mp) {
                             player.seekTo(1);
-                            ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(),R.drawable.ic_paly_black, getContext().getTheme()));
+                            ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_paly_black, getContext().getTheme()));
                             ivAudioPlayPauseIcon.setTag(true);
                         }
                     });
 
                     ivAudioPlayPauseIcon.setTag(true);
-                    ivAudioPlayPauseIcon.setOnClickListener(new OnClickListener()
-                    {
+                    ivAudioPlayPauseIcon.setOnClickListener(new OnClickListener() {
                         @Override
-                        public void onClick(View v)
-                        {
-                            if((boolean)v.getTag())
-                            {
+                        public void onClick(View v) {
+                            if ((boolean) v.getTag()) {
                                 ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_pause_black, getContext().getTheme()));
-                                try
-                                {
+                                try {
                                     player.start();
-                                } catch(Exception e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 v.setTag(false);
-                            }
-                            else
-                            {
+                            } else {
                                 ivAudioPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_paly_black, getContext().getTheme()));
-                                try
-                                {
+                                try {
                                     player.pause();
-                                } catch(Exception e) {
+                                } catch (Exception e) {
                                     e.printStackTrace();
                                 }
                                 v.setTag(true);
@@ -318,25 +294,20 @@ public class ImageTemplateView extends LinearLayout
                         }
                     });
 
-                    tvTheme1.setOnClickListener(new View.OnClickListener()
-                    {
+                    tvTheme1.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v)
-                        {
+                        public void onClick(View v) {
                             popupWindow.dismiss();
-                            if(checkForPermissionAccessAndRequest())
-                            {
+                            if (checkForPermissionAccessAndRequest()) {
                                 KaMediaUtils.setupAppDir(getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
-                                if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                                if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
                                     KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getAudioUrl());
-                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                     KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getUrl());
-                            }
-                            else if(composeFooterInterface != null)
-                            {
-                                if(!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                            } else if (composeFooterInterface != null) {
+                                if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
                                     composeFooterInterface.externalReadWritePermission(payloadInner.getAudioUrl());
-                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                     composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
                             }
                         }
@@ -350,39 +321,38 @@ public class ImageTemplateView extends LinearLayout
                     llAudio.setVisibility(GONE);
                     tvVideoTitle.setVisibility(GONE);
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getText()))
-                    {
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getText())) {
                         tvVideoTitle.setVisibility(VISIBLE);
                         tvVideoTitle.setText(payloadInner.getText());
                     }
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                         vvAttachment.setVideoPath(payloadInner.getVideoUrl());
-                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                         vvAttachment.setVideoPath(payloadInner.getUrl());
 
-                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams)vvAttachment.getLayoutParams();
-                    layoutParams.height=(int)(190 * dp1);
+                    RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) vvAttachment.getLayoutParams();
+                    layoutParams.height = (int) (190 * dp1);
                     vvAttachment.setLayoutParams(layoutParams);
                     ivImage.setVisibility(GONE);
                     rlVideo.setVisibility(VISIBLE);
                     vvAttachment.setVisibility(VISIBLE);
 
-                    vvAttachment.setOnPreparedListener(new MediaPlayer.OnPreparedListener()  {
+                    vvAttachment.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
                         public void onPrepared(MediaPlayer mp) {
                             setVideoProgress(payloadInner);
                         }
                     });
 
-                    if(payloadInner.getVideoCurrentPosition() > 0)
+                    if (payloadInner.getVideoCurrentPosition() > 0)
                         setVideoPosition(payloadInner.getVideoCurrentPosition());
 
                     tvFileName.setVisibility(VISIBLE);
 
-                    if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                         tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
-                    else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                         tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
 
                     vvAttachment.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -402,20 +372,15 @@ public class ImageTemplateView extends LinearLayout
                     });
 
                     ivPlayPauseIcon.setTag(true);
-                    ivPlayPauseIcon.setOnClickListener(new OnClickListener()
-                    {
+                    ivPlayPauseIcon.setOnClickListener(new OnClickListener() {
                         @Override
-                        public void onClick(View v)
-                        {
-                            if((boolean)v.getTag())
-                            {
+                        public void onClick(View v) {
+                            if ((boolean) v.getTag()) {
                                 ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_pause_icon, getContext().getTheme()));
                                 vvAttachment.requestFocus();
                                 vvAttachment.start();
                                 v.setTag(false);
-                            }
-                            else
-                            {
+                            } else {
                                 ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.ic_play_icon, getContext().getTheme()));
                                 vvAttachment.pause();
                                 v.setTag(true);
@@ -427,8 +392,7 @@ public class ImageTemplateView extends LinearLayout
 
                     vvAttachment.setOnTouchListener(new OnTouchListener() {
                         @Override
-                        public boolean onTouch(View v, MotionEvent event)
-                        {
+                        public boolean onTouch(View v, MotionEvent event) {
                             llPlayControls.setVisibility(VISIBLE);
                             hideToolBar();
                             return false;
@@ -440,9 +404,9 @@ public class ImageTemplateView extends LinearLayout
                         public void onClick(View v) {
 
                             Intent intent = new Intent(getContext(), VideoFullScreenActivity.class);
-                            if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                            if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                 intent.putExtra("VideoUrl", payloadInner.getVideoUrl());
-                            else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                            else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                 intent.putExtra("VideoUrl", payloadInner.getUrl());
 
                             intent.putExtra("CurrentPosition", current_pos);
@@ -451,53 +415,44 @@ public class ImageTemplateView extends LinearLayout
                         }
                     });
 
-                    tvTheme1.setOnClickListener(new View.OnClickListener()
-                    {
+                    tvTheme1.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onClick(View v)
-                        {
+                        public void onClick(View v) {
                             popupWindow.dismiss();
-                            if(checkForPermissionAccessAndRequest())
-                            {
+                            if (checkForPermissionAccessAndRequest()) {
                                 KaMediaUtils.setupAppDir(getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
-                                if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                     KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getVideoUrl());
-                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                     KaMediaUtils.saveFileFromUrlToKorePath(getContext(), payloadInner.getUrl());
-                            }
-                            else if(composeFooterInterface != null)
-                            {
-                                if(!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                            } else if (composeFooterInterface != null) {
+                                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                     composeFooterInterface.externalReadWritePermission(payloadInner.getVideoUrl());
-                                else if(!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
                                     composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
                             }
                         }
                     });
-                break;
+                    break;
             }
         }
     }
 
-    private void setVideoPosition(double current_position)
-    {
-        sbVideo.setProgress((int)current_position);
-        vvAttachment.seekTo((int)current_position);
+    private void setVideoPosition(double current_position) {
+        sbVideo.setProgress((int) current_position);
+        vvAttachment.seekTo((int) current_position);
     }
 
-    public void onEvent(VideoTimerEvent event)
-    {
-        if(vvAttachment.getVisibility() == VISIBLE)
-        {
-            sbVideo.setProgress((int)event.getCurrentPos());
-            vvAttachment.seekTo((int)event.getCurrentPos());
+    public void onEvent(VideoTimerEvent event) {
+        if (vvAttachment.getVisibility() == VISIBLE) {
+            sbVideo.setProgress((int) event.getCurrentPos());
+            vvAttachment.seekTo((int) event.getCurrentPos());
             ivAudioPlayPauseIcon.performClick();
         }
     }
 
     // display video progress
-    public void setVideoProgress(PayloadInner payloadInner)
-    {
+    public void setVideoProgress(PayloadInner payloadInner) {
         //get the video duration
         current_pos = vvAttachment.getCurrentPosition();
         total_duration = vvAttachment.getDuration();
@@ -507,15 +462,13 @@ public class ImageTemplateView extends LinearLayout
 
         Runnable runnable = new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     current_pos = vvAttachment.getCurrentPosition();
-                    tvVideoTiming.setText(StringUtils.timeConversion((long) current_pos)+"/"+StringUtils.timeConversion((long) total_duration));
+                    tvVideoTiming.setText(StringUtils.timeConversion((long) current_pos) + "/" + StringUtils.timeConversion((long) total_duration));
                     sbVideo.setProgress((int) current_pos);
                     handler.postDelayed(this, 1000);
-                } catch (IllegalStateException ed){
+                } catch (IllegalStateException ed) {
                     ed.printStackTrace();
                 }
             }
@@ -543,31 +496,27 @@ public class ImageTemplateView extends LinearLayout
     }
 
     @Override
-    protected void onDetachedFromWindow()
-    {
-        if(payloadInner != null)
+    protected void onDetachedFromWindow() {
+        if (payloadInner != null)
             payloadInner.setVideoCurrentPosition(current_pos);
 
         super.onDetachedFromWindow();
     }
 
-    private void hideToolBar()
-    {
+    private void hideToolBar() {
         new Handler().postDelayed(new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 llPlayControls.setVisibility(GONE);
 
-                if(popupWindow != null)
+                if (popupWindow != null)
                     popupWindow.dismiss();
             }
         }, 5000);
     }
 
     // display video progress
-    public void setAudioProgress()
-    {
+    public void setAudioProgress() {
         //get the video duration
         current_audio_pos = player.getCurrentPosition();
         total_audio_duration = player.getDuration();
@@ -577,15 +526,13 @@ public class ImageTemplateView extends LinearLayout
 
         Runnable runnable = new Runnable() {
             @Override
-            public void run()
-            {
-                try
-                {
+            public void run() {
+                try {
                     current_audio_pos = player.getCurrentPosition();
-                    tvAudioVideoTiming.setText(StringUtils.timeConversion((long) current_audio_pos)+"/"+StringUtils.timeConversion((long) total_audio_duration));
+                    tvAudioVideoTiming.setText(StringUtils.timeConversion((long) current_audio_pos) + "/" + StringUtils.timeConversion((long) total_audio_duration));
                     sbAudioVideo.setProgress((int) current_audio_pos);
                     handler.postDelayed(this, 1000);
-                } catch (IllegalStateException ed){
+                } catch (IllegalStateException ed) {
                     ed.printStackTrace();
                 }
             }
