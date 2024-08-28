@@ -2,6 +2,7 @@ package kore.botssdk.fileupload.core;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,9 +13,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntity;
-import org.apache.http.entity.mime.content.StringBody;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -27,6 +25,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.SocketTimeoutException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,6 +55,10 @@ import kore.botssdk.utils.LogUtils;
 
 
 public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListener {
+
+    private static final String BOUNDARY = "*****";
+    private static final String LINE_FEED = "\r\n";
+    private static final String CHARSET = "UTF-8";
     private static final DecimalFormat df2 = new DecimalFormat("###.##");
     public static final String error_msz_key = "error_msz_key";
     public static final String isFileSizeMore_key = "isFileSizeMore";
@@ -368,70 +372,69 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
             httpsURLConnection.setDoOutput(true);
             httpsURLConnection.setDoInput(true);
             httpsURLConnection.setReadTimeout(Constants.CONNECTION_READ_TIMEOUT);
-
-            MultipartEntity reqEntity = new MultipartEntity();
-
-//            if (thumbnailFilePath != null && !thumbnailFilePath.equalsIgnoreCase("") && fileContext.equalsIgnoreCase("knowledge")) {
-//
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                    fis = Files.newInputStream(Paths.get(thumbnailFilePath));
-//                } else
-//                    fis = new FileInputStream(thumbnailFilePath);
-//
-//                if (fis.available() > 0) {
-//                    thumbBaos = new ByteArrayOutputStream();
-//                    reqEntity.addPart("thumbnailUpload", new StringBody("true", ContentType.TEXT_PLAIN));
-//                    int startInd = thumbnailFilePath.lastIndexOf(File.separator) + 1;
-//                    int endInd = thumbnailFilePath.indexOf(".", startInd);
-//                    String thfileName = thumbnailFilePath.substring(startInd, endInd);
-//
-//                    int dataRead = 0;
-//                    byte[] buff = new byte[2 * 1024];
-//                    /*file size is less than BUFFER_SIZE..just send the file*/
-//                    while ((dataRead = fis.read(buff)) != -1) {
-//                        thumbBaos.write(buff, 0, dataRead);
-//                    }
-//
-//                    reqEntity.addPart("thumbnail", new ByteArrayBody(thumbBaos.toByteArray(), ContentType.getByMimeType("image/png"), thfileName));
-//                    reqEntity.addPart("thumbnailExtension", new StringBody("png", ContentType.TEXT_PLAIN));
-//                    LogUtils.d(LOG_TAG, "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     Thumbnail uploaded");
-//
-//                } else {
-//                    reqEntity.addPart("thumbnailUpload", new StringBody("false", ContentType.TEXT_PLAIN));
-//                }
-//            }
-//            else {
-                reqEntity.addPart("thumbnailUpload", new StringBody("false", ContentType.TEXT_PLAIN));
-
-                LogUtils.d(LOG_TAG, "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP   No Thumbnail ");
-//            }
-
-            LogUtils.d(LOG_TAG, "M#####The chunk number is " + dataCount);
-
-            reqEntity.addPart("totalChunks", new StringBody(dataCount + "", ContentType.TEXT_PLAIN));
-            reqEntity.addPart("fileExtension", new StringBody(fileExtn, ContentType.TEXT_PLAIN));
-            reqEntity.addPart("fileToken", new StringBody(fileToken, ContentType.TEXT_PLAIN));
-            if (!StringUtils.isNullOrEmpty(fileName))
-                reqEntity.addPart("filename", new StringBody(fileName, ContentType.TEXT_PLAIN));
-
-
-            if (fileContext != null) {
-                LogUtils.d(LOG_TAG, "Adding fileContext  !!!");
-                reqEntity.addPart("fileContext", new StringBody(fileContext, ContentType.TEXT_PLAIN));
-            } else {
-                LogUtils.d(LOG_TAG, "There is no fileContext !!");
-            }
-            LogUtils.d(LOG_TAG, "***********AccessToken in SendMergeSignal**********" + accessToken);
-
+            httpsURLConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
             httpsURLConnection.setRequestProperty("User-Agent", Constants.getUserAgent());
             httpsURLConnection.setRequestProperty("Cache-Control", "no-cache");
             httpsURLConnection.setRequestProperty("Authorization", accessToken);
             httpsURLConnection.setRequestMethod("PUT");
 
-            httpsURLConnection.setRequestProperty(reqEntity.getContentType().getName(), reqEntity.getContentType().getValue());
+            LogUtils.d(LOG_TAG, "M#####The chunk number is " + dataCount);
+
+            LogUtils.d(LOG_TAG, "***********AccessToken in SendMergeSignal**********" + accessToken);
+
             outputStream = httpsURLConnection.getOutputStream();
             dataOutputStream = new DataOutputStream(outputStream);
-            reqEntity.writeTo(dataOutputStream);
+            addFormField(dataOutputStream, "totalChunks", String.valueOf(dataCount));
+
+            addFormField(dataOutputStream, "totalChunks", String.valueOf(dataCount));
+            addFormField(dataOutputStream, "fileExtension", String.valueOf(fileExtn));
+            addFormField(dataOutputStream, "fileToken", String.valueOf(fileToken));
+            if (!StringUtils.isNullOrEmpty(fileName))
+                addFormField(dataOutputStream, "filename", fileName);
+
+            if (fileContext != null) {
+                LogUtils.d(LOG_TAG, "Adding fileContext  !!!");
+                addFormField(dataOutputStream, "fileContext", fileContext);
+            } else {
+                LogUtils.d(LOG_TAG, "There is no fileContext !!");
+            }
+            if (thumbnailFilePath != null && !thumbnailFilePath.equalsIgnoreCase("") && fileContext.equalsIgnoreCase("knowledge")) {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    fis = Files.newInputStream(Paths.get(thumbnailFilePath));
+                } else
+                    fis = new FileInputStream(thumbnailFilePath);
+
+                if (fis.available() > 0) {
+                    thumbBaos = new ByteArrayOutputStream();
+                    int startInd = thumbnailFilePath.lastIndexOf(File.separator) + 1;
+                    int endInd = thumbnailFilePath.indexOf(".", startInd);
+                    String thfileName = thumbnailFilePath.substring(startInd, endInd);
+
+                    int dataRead = 0;
+                    byte[] buff = new byte[2 * 1024];
+                    /*file size is less than BUFFER_SIZE..just send the file*/
+                    while ((dataRead = fis.read(buff)) != -1) {
+                        thumbBaos.write(buff, 0, dataRead);
+                    }
+                    addFormField(dataOutputStream, "thumbnailUpload", String.valueOf(true));
+                    addFilePart(dataOutputStream, "thumbnail", thumbBaos.toByteArray(), thfileName, "image/png");
+                    addFormField(dataOutputStream, "thumbnailExtension", "png");
+                    addFormField(dataOutputStream, "thumbnailUpload", String.valueOf(true));
+                    addFormField(dataOutputStream, "thumbnailUpload", String.valueOf(true));
+                    LogUtils.d(LOG_TAG, "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP     Thumbnail uploaded");
+
+                } else {
+                    addFormField(dataOutputStream, "thumbnailUpload", "false");
+                }
+            } else {
+                addFormField(dataOutputStream, "thumbnailUpload", "false");
+                LogUtils.d(LOG_TAG, "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP   No Thumbnail ");
+            }
+
+            // End of multipart/form-data
+            dataOutputStream.writeBytes("--" + BOUNDARY + "--" + LINE_FEED);
+            dataOutputStream.flush();
 
             inputStream = httpsURLConnection.getInputStream();
             inputStreamReader = new InputStreamReader(inputStream);
@@ -502,6 +505,9 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
                 sendUploadFailedNotice(true);
             }
 
+            e.printStackTrace();
+            LogUtils.e(LOG_TAG, "Failed to send the merge initiation message " + e);
+        } finally {
             try {
                 if (outputStream != null)
                     outputStream.close();
@@ -531,62 +537,27 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
-
-            e.printStackTrace();
-            LogUtils.e(LOG_TAG, "Failed to send the merge initiation message " + e);
-        } finally {
-            try {
-                if (outputStream != null)
-                    outputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (inputStream != null)
-                    inputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (dataOutputStream != null)
-                    dataOutputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (inputStreamReader != null)
-                    inputStreamReader.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (fis != null)
-                    fis.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (thumbBaos != null)
-                    thumbBaos.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (input != null)
-                    input.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            try {
-                if (httpsURLConnection != null)
-                    httpsURLConnection.disconnect();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            helper.getFileUploadInfoMap().put(fileToken, uploadInfo);
         }
+    }
+
+    private void addFormField(DataOutputStream dataOutputStream, String name, String value) throws IOException {
+        dataOutputStream.writeBytes("--" + BOUNDARY + LINE_FEED);
+        dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" + name + "\"" + LINE_FEED);
+        dataOutputStream.writeBytes("Content-Type: text/plain; charset=" + CHARSET + LINE_FEED);
+        dataOutputStream.writeBytes(LINE_FEED);
+        dataOutputStream.writeBytes(value + LINE_FEED);
+        dataOutputStream.flush();
+    }
+
+    private void addFilePart(DataOutputStream dataOutputStream, String fieldName, byte[] uploadFileBytes, String fileName, String mimeType) throws IOException {
+        dataOutputStream.writeBytes("--" + BOUNDARY + LINE_FEED);
+        dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"" + fieldName + "\"; filename=\"" + fileName + "\"" + LINE_FEED);
+        dataOutputStream.writeBytes("Content-Type: " + mimeType + LINE_FEED);
+        dataOutputStream.writeBytes(LINE_FEED);
+
+        dataOutputStream.write(uploadFileBytes);
+        dataOutputStream.writeBytes(LINE_FEED);
+        dataOutputStream.flush();
     }
 
     private String getFileSizeMegaBytes(File file) {

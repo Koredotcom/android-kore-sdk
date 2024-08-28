@@ -40,6 +40,7 @@ public class TableResponsiveAdapter extends RecyclerView.Adapter<TableResponsive
     public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
         BotTableDataModel model = getItem(i);
         List<String> values = model.getValues();
+        if (values == null) return;
         holder.tvTableSerial.setText(values.get(0));
         holder.tvTableTitle.setText(values.get(1));
 

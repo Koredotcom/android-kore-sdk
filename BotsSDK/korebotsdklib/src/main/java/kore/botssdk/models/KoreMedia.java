@@ -24,11 +24,13 @@ public interface KoreMedia{
 	String MEDIA_TYPE_TEMPLATE = "template";
 	String MEDIA_TYPE_LINK = "link";
 
-	String CHOOSE_TYPE_GALLERY = "choose";
+	String CHOOSE_TYPE_IMAGE_PICK = "choose_image";
+	String CHOOSE_TYPE_VIDEO_PICK = "choose_video";
+	String CHOOSE_TYPE_DOCUMENT_PICK = "choose_file";
+	String CHOOSE_TYPE_CAPTURE_IMAGE = "capture_image";
+
+	String CHOOSE_TYPE_CAPTURE_VIDEO = "capture_video";
 	String CHOOSE_TYPE_IMAGE_VIDEO= "choose_image_video";
-	String CHOOSE_TYPE_VIDEO_GALLERY = "choose_video";
-	String CHOOSE_TYPE_FILE = "choose_file";
-	String CHOOSE_TYPE_CAMERA = "camera";
 	String FOR_MESSAGE = "message";
 	String FOR_PROFILE = "profile";
 	

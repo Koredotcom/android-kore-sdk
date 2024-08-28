@@ -71,6 +71,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
 
     public void clearAll() {
         dataList.clear();
+        notifyDataSetChanged();
     }
 
     @NonNull

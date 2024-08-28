@@ -661,71 +661,31 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             ArrayList<String> options = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.attachments_strings)));
             adapter = new AttachmentOptionsAdapter(requireActivity(), options);
             listViewActionSheet.setAdapter(adapter);
-            listViewActionSheet.getOptionsListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    launchSelectedMode(position);
-                }
-            });
+            listViewActionSheet.getOptionsListView().setOnItemClickListener((parent, view, position, id) -> launchSelectedMode(options.get(position)));
         }
     }
 
-    private void launchSelectedMode(int position) {
-        switch (position) {
-            case 4:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_CAMERA, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
-                break;
-            case 0:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_GALLERY, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
-                break;
-            case 3:
-                launchVideoRecorder();
-                break;
-            case 1:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_VIDEO_GALLERY, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
-                break;
-            case 2:
-                fileBrowsingActivity(BundleConstants.CHOOSE_TYPE_FILE, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
-                break;
-
-
-        }
+    private void launchSelectedMode(String option) {
+        final String capturePhoto = getString(R.string.attachment_capture_photo);
+        final String uploadPhoto = getString(R.string.attachment_upload_photo);
+        final String uploadVideo = getString(R.string.attachment_upload_video);
+        final String uploadDocument = getString(R.string.attachment_upload_document);
+        final String uploadMedia = getString(R.string.attachment_upload_media);
+        if (option.equals(capturePhoto))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_CAPTURE_IMAGE, REQ_CAMERA, BundleConstants.MEDIA_TYPE_IMAGE);
+        else if (option.equals(uploadPhoto))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_IMAGE_PICK, REQ_IMAGE, BundleConstants.MEDIA_TYPE_IMAGE);
+        else if (option.equals(uploadMedia))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_IMAGE_VIDEO, REQ_VIDEO_CAPTURE, BundleConstants.MEDIA_TYPE_VIDEO);
+        else if (option.equals(uploadVideo))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_VIDEO_PICK, REQ_VIDEO, BundleConstants.MEDIA_TYPE_VIDEO);
+        else if (option.equals(uploadDocument))
+            fileBrowsingActivity(KoreMedia.CHOOSE_TYPE_DOCUMENT_PICK, REQ_FILE, BundleConstants.MEDIA_TYPE_DOCUMENT);
         listViewActionSheet.dismiss();
-    }
-
-    private void launchVideoRecorder() {
-        if (KaPermissionsHelper.hasPermission(requireActivity(), Manifest.permission.CAMERA, Manifest.permission.MANAGE_EXTERNAL_STORAGE)) {
-            Intent profilePicEditIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-            profilePicEditIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-            try {
-                Uri photoURI = FileProvider.getUriForFile(requireActivity(),
-                        requireActivity().getPackageName() + ".provider",
-                        Objects.requireNonNull(createVideoFile()));
-                profilePicEditIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            //profilePicEditIntent.putExtra(MediaStore.EXTRA_OUTPUT, getImageUri());
-            profilePicEditIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            profilePicEditIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-            startActivityForResult(profilePicEditIntent, REQ_VIDEO_CAPTURE);
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA,
-                        Manifest.permission.MANAGE_EXTERNAL_STORAGE);
-            } else {
-                KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            }
-        }
     }
 
     private Uri getImageUri() {
         // Store image in Kore folder
-        KaMediaUtils.updateExternalStorageState();
 //        KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, userData.getId());
 
         cameraVideoUri1 = null;
@@ -1049,7 +1009,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 }
 
                 if (type != null && type.contains("video")) {
-                    KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+                    KaMediaUtils.setupAppDir(requireContext(), BundleConstants.MEDIA_TYPE_VIDEO);
                     String filePath = KaMediaUtils.getAppDir() + File.separator + name;
                     new SaveVideoTask(filePath, name, selectedImage, requireActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
                 }

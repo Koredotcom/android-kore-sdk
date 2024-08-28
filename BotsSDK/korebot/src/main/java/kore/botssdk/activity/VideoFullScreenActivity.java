@@ -66,8 +66,7 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         tvTheme2.setVisibility(View.GONE);
         vTheme.setVisibility(View.GONE);
 
-        KaMediaUtils.updateExternalStorageState();
-        KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+        KaMediaUtils.setupAppDir(this, BundleConstants.MEDIA_TYPE_VIDEO);
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
         videoUrl = Objects.requireNonNull(getIntent().getExtras()).getString("VideoUrl");
@@ -211,13 +210,13 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
 
     boolean checkForPermissionAccessAndRequest()
     {
-        if (KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+        if (KaPermissionsHelper.hasPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)) {
             return true;
         }
         else
         {
             KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST,
-                    Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                    Manifest.permission.READ_EXTERNAL_STORAGE);
             return false;
         }
     }
@@ -226,7 +225,7 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST) {
-            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE/*,Manifest.permission.RECORD_AUDIO*/)) {
+            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 KaMediaUtils.saveFileFromUrlToKorePath(VideoFullScreenActivity.this, videoUrl);
             } else {
                 Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
