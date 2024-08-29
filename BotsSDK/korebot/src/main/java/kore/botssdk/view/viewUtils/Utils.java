@@ -6,9 +6,6 @@ import android.widget.TextView;
 
 import kore.botssdk.R;
 
-/**
- * Created by GIGAMOLE on 8/18/16.
- */
 public class Utils {
 
     public static void setupItem(final View view, final LibraryObject libraryObject) {

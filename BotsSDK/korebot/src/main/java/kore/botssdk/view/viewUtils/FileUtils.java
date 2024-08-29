@@ -6,10 +6,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 
-/**
- * Created by Ramachandra Pradeep on 13-Aug-18.
- */
-
 public class FileUtils {
     public static final String EXT_DOTX = "dotx";
     public static final String EXT_DOTM = "dotm";

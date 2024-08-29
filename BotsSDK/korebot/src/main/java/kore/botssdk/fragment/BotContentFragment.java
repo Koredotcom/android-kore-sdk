@@ -80,7 +80,7 @@ import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
-import kore.botssdk.views.LoadingDots;
+import kore.botssdk.view.LoadingDots;
 import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Response;

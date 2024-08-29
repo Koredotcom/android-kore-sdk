@@ -4,9 +4,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by Ramachandra Pradeep on 9/14/2016.
- */
 public final class KoreFileUploadServiceExecutor {
     private final int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
     private ThreadPoolExecutor executor;

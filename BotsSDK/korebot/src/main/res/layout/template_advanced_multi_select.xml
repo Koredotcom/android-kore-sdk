@@ -20,7 +20,7 @@
         android:orientation="vertical"
         android:visibility="gone" />
 
-    <kore.botssdk.views.CustomTextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvViewMore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         android:textColor="@color/right_bubble_unselected"
         android:visibility="gone" />
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvAdvanceDone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

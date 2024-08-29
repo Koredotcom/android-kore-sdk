@@ -1,9 +1,5 @@
 package kore.botssdk.fileupload.configurations;
 
-/**
- * Created by Ramachandra Pradeep on 15-Feb-18.
- */
-
 public class Constants {
     public static final int UPLOAD_ERROR_CODE_404 = 404;
     public static final int UPLOAD_ERROR_CODE_504 = 504;

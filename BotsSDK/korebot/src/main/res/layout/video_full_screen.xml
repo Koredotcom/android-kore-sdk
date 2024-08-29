@@ -36,7 +36,7 @@
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:src="@drawable/ic_pause_icon" />
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvVideoTiming"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

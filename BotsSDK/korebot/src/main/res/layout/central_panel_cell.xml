@@ -6,7 +6,7 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvPageTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <kore.botssdk.views.CustomTextViewBold
+                <kore.botssdk.view.CustomTextViewBold
                     android:id="@+id/tvTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
 
             </LinearLayout>
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -68,7 +68,7 @@
                 android:textColor="@color/txtFontBlack"
                 android:textSize="@dimen/text_size_normal" />
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvFullDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -80,7 +80,7 @@
                 android:textSize="@dimen/text_size_normal"
                 android:visibility="gone" />
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvReadMore"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,7 +95,7 @@
 
     </LinearLayout>
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvPanelLinkTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -113,7 +113,7 @@
         android:layout_marginTop="@dimen/dimen_7dp"
         android:orientation="horizontal">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvPanelLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

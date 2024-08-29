@@ -8,10 +8,6 @@ import kore.botssdk.charts.formatter.IAxisValueFormatter;
 import kore.botssdk.charts.formatter.ValueFormatter;
 import kore.botssdk.charts.utils.ViewPortHandler;
 
-/**
- * Created by Ramachandra Pradeep on 10-May-18.
- */
-
 public class BarChartDataFormatter extends ValueFormatter implements IAxisValueFormatter {
     private static String[] SUFFIX = new String[]{"", "k", "m", "b", "t"};
 //    private static final int MAX_LENGTH = 5;

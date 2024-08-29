@@ -6,10 +6,6 @@ import java.util.Map;
 import kore.botssdk.fileupload.models.ChunkInfo;
 import kore.botssdk.fileupload.models.FileUploadInfo;
 
-/**
- * Created by Ramachandra Pradeep on 02-Apr-18.
- */
-
 public class BotDBManager {
 
     private volatile static BotDBManager botDBManager;

@@ -7,12 +7,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
-
-import androidx.core.content.res.ResourcesCompat;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
@@ -23,44 +20,26 @@ import com.squareup.picasso.Transformation;
 import java.io.File;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.drawables.ProfileDrawable;
 import kore.botssdk.utils.StringConstants;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-/**
- * Created by tapasya on 01/10/15.
+/*
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
+@SuppressWarnings("UnKnownNullness")
 public class CircularProfileView extends RoundedImageView {
-
-    private static final int DEFAULT_BADGE_TEXT_SIZE = 12;
-    public static String DEFAULT_PROFILE_COLOR = StringConstants.DEFAULT_PROFILE_COLOR;
-    public static final int PRESENCE_STATUS_INVALID = -100;
-    private float TAG_RADIUS;
-    private Paint mPaint;
-    private Paint badgeTextPaint;
     private Paint borderPaint;
-
-    private float defaultInitialSize;
-    private boolean statusAtBottom;
     private float width, height;
     int dp1, SDK;
-    private int DEFAULT_HEIGHT, DEFAULT_WIDTH, PADDING;
-    private int PROFILE_DRAWABLE_PADDING;
+    private int DEFAULT_HEIGHT;
+    private int DEFAULT_WIDTH;
     private int CPV_TEXT_SIZE;
     int borderStrokeWidth = 0;
     int borderColor = 0xffffffff;
     boolean hasBorder;
-
-    private Path circlePath;
-
-    private Drawable tagBadgeDrawable;
-    private String initials;
-    private int profileColor;
-    private Context mContext;
-
-    RectF tagBadgeRect = new RectF();
+    String initials;
+    int profileColor;
 
     public CircularProfileView(Context context) {
         super(context);
@@ -80,20 +59,18 @@ public class CircularProfileView extends RoundedImageView {
     private void init(AttributeSet attrs, Context context) {
 
         //Essentials
-        this.mContext = context;
         if (!isInEditMode()) {
             dp1 = (int) DimensionUtil.dp1;
             SDK = android.os.Build.VERSION.SDK_INT;
             DEFAULT_HEIGHT = dp1 * 52;
             DEFAULT_WIDTH = dp1 * 52;
-            PADDING = dp1 * 4;
             borderPaint = new Paint();
         }
 
+        int PROFILE_DRAWABLE_PADDING;
         if (attrs != null) {
             //init attrs
-            TypedArray attr = getContext().obtainStyledAttributes(attrs, R.styleable.CircularProfileView, 0, 0);
-            PADDING = attr.getDimensionPixelSize(R.styleable.CircularProfileView_badge_padding, dp1 * 4);
+            TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.CircularProfileView, 0, 0);
             CPV_TEXT_SIZE = attr.getDimensionPixelSize(R.styleable.CircularProfileView_text_size, dp1 * 17);
             PROFILE_DRAWABLE_PADDING = (int) attr.getDimension(R.styleable.CircularProfileView_profile_drawable_padding, 0);
             hasBorder = attr.getBoolean(R.styleable.CircularProfileView_has_border, false);
@@ -117,12 +94,10 @@ public class CircularProfileView extends RoundedImageView {
         height = ta.getDimensionPixelSize(2, DEFAULT_HEIGHT);
         ta.recycle();
 
-        TAG_RADIUS = 20 * dp1;
-
         setDimens(width, height);
 
         //initialize kore presence background paint
-        mPaint = new Paint();
+        Paint mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setColor(Color.WHITE);
         mPaint.setStyle(Paint.Style.FILL);
@@ -184,25 +159,10 @@ public class CircularProfileView extends RoundedImageView {
         }
     }
 
-    public void clearProfileImage() {
-        setImageBitmap(null);
-    }
-
-    public void populateLayout(int drawableId, boolean b) {
-        populateLayout("", null, ResourcesCompat.getDrawable(getContext().getResources(), drawableId, getContext().getTheme()), -1, -1, b);
-    }
-
     public void populateLayout(String nameInitials, String url, Drawable d, int imageRes,
                                int color, boolean b) {
         populateLayout(nameInitials, null, url, d, imageRes, color, b, -1, -1);
     }
-
-    public void populateLayout(String nameInitials, String url, Drawable d, int imageRes,
-                               int color, boolean b, float width, float height) {
-        populateLayout(nameInitials, null, url, d, imageRes, color, b, width, height);
-    }
-
-    private int color;
 
     public void populateLayout(String nameInitials, String filePath, String imageUrl, Drawable d,
                                int imageResource, int color, boolean applyRoundTransform,
@@ -222,8 +182,6 @@ public class CircularProfileView extends RoundedImageView {
         this.initials = nameInitials;
 
         //Set the imageURL
-        Context context = getContext();
-
         setDefaultBackground(color, ""); // draw initials only if there is no image drawable
 
         if (imageResource != -1) {
@@ -256,7 +214,7 @@ public class CircularProfileView extends RoundedImageView {
     private void createPath() {
         float xCenter = (width - (getPaddingLeft() + getPaddingRight())) / 2f;
         float yCenter = (height - (getPaddingTop() + getPaddingBottom())) / 2f;
-        circlePath = new Path();
+        Path circlePath = new Path();
         circlePath.addCircle(xCenter + getPaddingLeft(), yCenter + getPaddingTop(), width / 2f, Path.Direction.CCW);
     }
 
@@ -279,13 +237,7 @@ public class CircularProfileView extends RoundedImageView {
         canvas.drawCircle(centerX, centerY, radius, borderPaint);
     }
 
-    private void updateWithPic(Drawable drawable) {
-        if (drawable != null) {
-            setImageDrawable(drawable);
-        }
-    }
-
-    private void updateWithPic(Bitmap bitmap) {
+    void updateWithPic(Bitmap bitmap) {
         if (bitmap != null) {
             setImageBitmap(bitmap);
         }

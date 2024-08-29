@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.view.tableview.model.MiniTableModel;
+import kore.botssdk.models.MiniTableModel;
 
 public class TableTemplateAdapter extends RecyclerView.Adapter<TableTemplateAdapter.ViewHolder> {
 

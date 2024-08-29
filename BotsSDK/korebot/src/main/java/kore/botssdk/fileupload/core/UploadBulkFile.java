@@ -159,13 +159,13 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 
 
 	@Override
-	public synchronized void fileTokenRecievedSuccessfully(Hashtable<String, String> hsh) throws IOException {
+	public synchronized void fileTokenReceivedSuccessfully(Hashtable<String, String> hsh) throws IOException {
 		fileToken = hsh.get("fileToken");
 		startUpload();
 	}
 
 	@Override
-	public void fileTokenRecievedWithFailure(String errCode, String reason) {
+	public void fileTokenReceivedWithFailure(String errCode, String reason) {
 		LogUtils.d(LOG_TAG, "file upload failed because of getting file token and the reason is " + reason);
 		sendUploadFailedNotice(false);
 	}

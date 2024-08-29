@@ -9,15 +9,8 @@ import android.net.NetworkInfo;
 
 public class NetworkUtility {
 
-    public final static int HTTP_ERROR_CODE_403 = 403;
-    public final static String HTTP_SCHEME = "http";
-    public final static String FILE_SCHEME = "file:";
-
-    /**
+    /*
      * Method to check Network Connections
-     *
-     * @param context
-     * @return boolean value
      */
 
     public static boolean isNetworkConnectionAvailable(Context context) {

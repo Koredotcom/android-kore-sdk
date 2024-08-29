@@ -1,43 +1,25 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.ListClickListner;
-import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.models.FeedbackNumberModel;
 import kore.botssdk.models.FeedbackRatingModel;
-import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
-import kore.botssdk.views.CustomTextView;
+import kore.botssdk.view.CustomTextView;
 
 @SuppressLint("UnknownNullness")
 public class FeedbackRatingScaleAdapter extends RecyclerView.Adapter<FeedbackRatingScaleAdapter.ViewHolder>{

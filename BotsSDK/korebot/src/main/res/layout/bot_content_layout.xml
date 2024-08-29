@@ -77,7 +77,7 @@
                 cpv:text_size="12dp" />
 
             <!-- Presence Dots -->
-            <kore.botssdk.views.LoadingDots
+            <kore.botssdk.view.LoadingDots
                 android:id="@+id/ldDots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

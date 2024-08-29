@@ -1,9 +1,5 @@
 package kore.botssdk.fileupload.models;
 
-/**
- * Created by Ramachandra Pradeep on 16-Feb-18.
- */
-
 public class UploadError {
 
     private String msg;

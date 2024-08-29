@@ -10,6 +10,8 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.kore.korebot.customtemplates.LinkTemplateHolder;
+
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -33,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SDKConfiguration.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
+        //Inject the custom template like below
+        SDKConfiguration.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
         SDKConfiguration.Server.setQueryParams(getQueryParams());
         SDKConfiguration.Server.setCustomData(getCustomData());
 

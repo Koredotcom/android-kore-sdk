@@ -1,20 +1,12 @@
 package kore.botssdk.application;
 
-import static kore.botssdk.fcm.FCMWrapper.TAG;
-
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-
-import com.google.firebase.FirebaseApp;
 
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
 import kore.botssdk.audiocodes.webrtcclient.db.MySQLiteHelper;
-import kore.botssdk.fcm.FCMWrapper;
-import kore.botssdk.listener.NetworkStateReceiver;
 import kore.botssdk.utils.ClosingService;
 
 /**
@@ -48,10 +40,6 @@ public class BotApplication extends Application {
         super.onCreate();
         appControl = new AppControl(getApplicationContext());
         globalContext = this;
-//        FirebaseApp.initializeApp(getApplicationContext());
-//        FCMWrapper.getInstance().init();
-//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-//        registerReceiver(new NetworkStateReceiver(), filter);
 
         startService(new Intent(getApplicationContext(), ClosingService.class));
     }
@@ -75,7 +63,7 @@ public class BotApplication extends Application {
     }
 
     public static void setCurrentActivity(Activity activity) {
-        Log.d(TAG , "setCurrentActivity: " +activity);
+        Log.d("setCurrentActivity" , "setCurrentActivity: " +activity);
         if(currentActivity!=null && currentActivity != getPreviousActivity() && currentActivity != activity){
             setPriviousActivity(currentActivity);
         }

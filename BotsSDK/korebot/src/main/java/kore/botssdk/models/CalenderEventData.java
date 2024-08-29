@@ -3,10 +3,6 @@ package kore.botssdk.models;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 01-Apr-19.
- */
-
 public class CalenderEventData implements Serializable, Cloneable {
 
     private List<CalEventsTemplateModel.Attendee> attendees = null;

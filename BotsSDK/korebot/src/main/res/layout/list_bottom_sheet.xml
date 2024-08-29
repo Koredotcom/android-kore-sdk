@@ -20,7 +20,7 @@
             android:gravity="center_vertical"
             android:padding="@dimen/dimen_20dp">
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvOptionsTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -95,7 +95,8 @@
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:visibility="visible" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
+            android:id="@+id/tvMenuTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dimen_10dp"

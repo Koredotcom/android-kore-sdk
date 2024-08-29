@@ -45,11 +45,7 @@ import kore.botssdk.R;
 
 /**
  * RippleView custom layout
- *
  * Custom Layout that allows to use Ripple UI pattern above API 21
- *
- * @author Chutaux Robin
- * @version 2015.0512
  */
 public class RippleView extends RelativeLayout {
 

@@ -21,10 +21,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-/**
- * Created by Pradeep Mahato on 28/7/17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class QuickReplyView extends LinearLayout {
 
     RecyclerView recyclerView;

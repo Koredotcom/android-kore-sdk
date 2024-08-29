@@ -12,10 +12,6 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.utils.KaFontUtils;
 
-/**
- * Created by Shiva Krishna on 1/22/2018.
- */
-
 public class AttachmentOptionsAdapter extends BaseAdapter {
     final ArrayList<String> data;
     final Context mContext;

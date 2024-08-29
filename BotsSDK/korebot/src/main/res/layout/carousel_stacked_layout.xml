@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/carousel_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
             android:textColor="@color/kora_grey"
             android:textSize="@dimen/text_size_sub_header" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/carousel_item_subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:textColor="@color/color_8b93a0"
             android:textSize="14sp" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/carousel_bottom_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
             android:textColor="@color/kora_grey"
             android:textSize="14sp" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/carousel_bottom_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,27 +22,27 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotOptionModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.BrandingQuickStartButtonActionModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 @SuppressLint("UnknownNullness")
 public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOptionsCycleAdapter.ViewHolder>{
     final String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
-    List<BotOptionModel> model;
+    ArrayList<BrandingQuickStartButtonActionModel> model;
     ComposeFooterInterface composeFooterInterface;
     BottomSheetDialog bottomSheetDialog;
     Context context;
     SharedPreferences sharedPreferences;
     float dp1;
 
-    public BottomOptionsCycleAdapter(List<BotOptionModel> model) {
+    public BottomOptionsCycleAdapter(ArrayList<BrandingQuickStartButtonActionModel> model) {
         this.model = model;
     }
     @NonNull
@@ -58,7 +57,7 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        BotOptionModel botListModel = model.get(position);
+        BrandingQuickStartButtonActionModel botListModel = model.get(position);
         holder.bottom_option_image.setVisibility(View.GONE);
 
         if(!StringUtils.isNullOrEmpty(botListModel.getIcon()))
@@ -88,12 +87,12 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
                 if(bottomSheetDialog != null)
                     bottomSheetDialog.dismiss();
 
-                sendMessageText(model.get(holder.getBindingAdapterPosition()).getPostback().getTitle(), model.get(holder.getBindingAdapterPosition()).getPostback().getValue());
+                sendMessageText(model.get(holder.getBindingAdapterPosition()).getTitle(), model.get(holder.getBindingAdapterPosition()).getValue());
             }
         });
     }
 
-    public void setBotListModelArrayList(BottomSheetDialog bottomSheetDialog, List<BotOptionModel> botOptionModels) {
+    public void setBotListModelArrayList(BottomSheetDialog bottomSheetDialog, ArrayList<BrandingQuickStartButtonActionModel> botOptionModels) {
         this.model = botOptionModels;
         this.bottomSheetDialog = bottomSheetDialog;
     }

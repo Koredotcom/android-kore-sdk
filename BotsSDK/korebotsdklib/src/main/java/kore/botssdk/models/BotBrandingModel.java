@@ -1,7 +1,5 @@
 package kore.botssdk.models;
 
-import androidx.annotation.NonNull;
-
 import java.io.Serializable;
 
 public class BotBrandingModel implements Serializable {

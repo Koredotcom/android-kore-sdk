@@ -56,23 +56,23 @@ public class FileTokenManager{
                 hsh.put("expiresOn", expireOn);
                 try {
                     if (listener != null && !resp.equalsIgnoreCase(""))
-                        listener.fileTokenRecievedSuccessfully(hsh);
+                        listener.fileTokenReceivedSuccessfully(hsh);
                     else {
                         if (listener != null)
-                            listener.fileTokenRecievedWithFailure(Constants.SERVER_ERROR, "Unable to reach server");
+                            listener.fileTokenReceivedWithFailure(Constants.SERVER_ERROR, "Unable to reach server");
                     }
                 } catch (Exception e) {
                     LogUtils.e("FILE_TOKEN_SERVICE", e.toString());
                 }
             } catch (Exception ex) {
                 if (listener != null)
-                    listener.fileTokenRecievedWithFailure(Constants.SERVER_ERROR, ex.toString());
+                    listener.fileTokenReceivedWithFailure(Constants.SERVER_ERROR, ex.toString());
             }
 
 
         } else {
             if (listener != null)
-                listener.fileTokenRecievedWithFailure(Constants.NETWORK_FAILURE, "No network available.");
+                listener.fileTokenReceivedWithFailure(Constants.NETWORK_FAILURE, "No network available.");
         }
 
     }

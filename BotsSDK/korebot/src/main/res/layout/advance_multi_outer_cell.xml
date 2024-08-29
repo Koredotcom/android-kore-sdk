@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:paddingBottom="2dp">
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvMultiSelectTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:gravity="center"
             android:padding="10dp" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,7 +73,7 @@
         android:layout_height="wrap_content"
         android:visibility="gone">
 
-        <kore.botssdk.views.CustomTextViewSemiBold
+        <kore.botssdk.view.CustomTextViewSemiBold
             android:id="@+id/tvCancel"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
@@ -91,7 +91,7 @@
             android:textSize="@dimen/text_size_small"
             android:visibility="visible" />
 
-        <kore.botssdk.views.CustomTextViewSemiBold
+        <kore.botssdk.view.CustomTextViewSemiBold
             android:id="@+id/botCustomListViewButton"
             android:layout_width="110dp"
             android:layout_height="wrap_content"

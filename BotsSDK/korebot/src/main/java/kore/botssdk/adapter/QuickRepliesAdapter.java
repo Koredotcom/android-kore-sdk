@@ -23,10 +23,6 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.view.viewHolder.QuickReplyViewHolder;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-/**
- * Created by Pradeep Mahato on 28/7/17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
 
     private ArrayList<QuickReplyTemplate> quickReplyTemplateArrayList;

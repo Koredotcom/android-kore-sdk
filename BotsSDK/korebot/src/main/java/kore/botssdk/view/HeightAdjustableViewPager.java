@@ -10,10 +10,6 @@ import android.view.View;
 
 import androidx.viewpager.widget.ViewPager;
 
-/**
- * Created by Shiva Krishna on 2/9/2018.
- */
-
 public class HeightAdjustableViewPager extends ViewPager {
 
     private boolean swipeLocked;

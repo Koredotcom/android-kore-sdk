@@ -1,8 +1,5 @@
 package kore.botssdk.applicationcontrol;
 
-/**
- * Created by Ramachandra Pradeep on 6/24/2016.
- */
 public class ACMModel {
     private ApplicationControl applicationControl;
     private OrgSettings orgSettings;

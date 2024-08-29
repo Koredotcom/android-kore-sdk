@@ -67,7 +67,7 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

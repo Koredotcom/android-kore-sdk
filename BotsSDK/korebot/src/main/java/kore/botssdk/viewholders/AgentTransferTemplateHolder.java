@@ -22,7 +22,6 @@ import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.AgentTransferTemplateView;
 import kore.botssdk.view.viewUtils.CircleTransform;
 
 public class AgentTransferTemplateHolder extends BaseViewHolder {

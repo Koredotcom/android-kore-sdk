@@ -7,7 +7,7 @@
     android:background="@drawable/cancel_action_back"
     android:orientation="vertical">
 
-    <kore.botssdk.views.CustomTextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvButtonLinkTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

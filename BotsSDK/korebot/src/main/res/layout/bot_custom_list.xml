@@ -11,7 +11,7 @@
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:orientation="vertical">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/botListViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -37,7 +37,7 @@
 
     </LinearLayout>
 
-    <kore.botssdk.views.CustomTextViewSemiBold
+    <kore.botssdk.view.CustomTextViewSemiBold
         android:id="@+id/botCustomListViewButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <kore.botssdk.views.CustomTextViewBold
+            <kore.botssdk.view.CustomTextViewBold
                 android:id="@+id/botListViewTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
                 android:textSize="@dimen/text_size_sub_header"
                 android:visibility="gone" />
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
             android:padding="2dp"
             android:scrollbars="none" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/botCustomListViewButton"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_30dp"

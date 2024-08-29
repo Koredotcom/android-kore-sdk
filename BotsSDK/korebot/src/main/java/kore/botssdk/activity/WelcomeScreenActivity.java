@@ -1,11 +1,8 @@
 package kore.botssdk.activity;
 
-import static java.security.AccessController.getContext;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.view.View;
@@ -35,7 +32,6 @@ import java.io.Reader;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.PromotionsAdapter;
-import kore.botssdk.adapter.QuickRepliesAdapter;
 import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinksAdapter;

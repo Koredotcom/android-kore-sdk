@@ -1,9 +1,5 @@
 package kore.botssdk.fileupload.configurations;
 
-/**
- * Created by Ramachandra Pradeep on 15-Feb-18.
- */
-
 public class FileUploadEndPoints {
 
     /**

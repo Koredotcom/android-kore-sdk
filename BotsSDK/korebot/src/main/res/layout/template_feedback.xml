@@ -23,7 +23,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvOptionsTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             android:background="@drawable/ic_close_black_24dp" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tv_feedback_template_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvGlad"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -112,7 +112,7 @@
         android:visibility="gone"
         tools:visibility="visible">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvCommentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -139,7 +139,7 @@
                 android:gravity="top" />
         </RelativeLayout>
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvFeedbackSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

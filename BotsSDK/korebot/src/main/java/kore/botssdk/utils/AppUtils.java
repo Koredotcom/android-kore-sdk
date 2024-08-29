@@ -22,10 +22,6 @@ import java.util.regex.Pattern;
 
 import kore.botssdk.R;
 
-/**
- * Created by Shiva Krishna on 11/17/2017.
- */
-
 public class AppUtils {
 
     public static float convertDpToPixel(Context context, float dp) {

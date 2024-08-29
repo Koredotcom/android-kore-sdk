@@ -20,15 +20,9 @@ import java.util.List;
 import kore.botssdk.R;
 import kore.botssdk.models.CalEventsTemplateModel;
 
-/**
- * Created by Pradeep Mahato on 30-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class Utility {
 
     public static final String userId="";
-
-
 
     public static Typeface getTypeFaceObj(Context context) {
         return ResourcesCompat.getFont(context, R.font.icomoon);
@@ -123,7 +117,7 @@ public class Utility {
     }
 
     public static boolean checkIsSkillKora() {
-        return Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION);
+        return TextUtils.isEmpty(Constants.SKILL_SELECTION);
     }
 
     public static int getDarkerColor (int color, float factor) {

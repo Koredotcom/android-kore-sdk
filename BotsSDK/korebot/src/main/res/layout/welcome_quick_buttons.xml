@@ -30,7 +30,7 @@
             android:contentDescription="@string/app_name"
             android:visibility="gone" />
 
-        <kore.botssdk.views.CustomTextViewSemiBold
+        <kore.botssdk.view.CustomTextViewSemiBold
             android:id="@+id/quick_reply_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

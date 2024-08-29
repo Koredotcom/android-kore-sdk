@@ -2,7 +2,6 @@ package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
-import static kore.botssdk.fcm.FCMWrapper.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
@@ -105,7 +104,6 @@ import kore.botssdk.fileupload.core.KoreWorker;
 import kore.botssdk.fileupload.core.UploadBulkFile;
 import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
-import kore.botssdk.fragment.QuickReplyFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -121,7 +119,6 @@ import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
-import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
@@ -156,6 +153,7 @@ import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
+import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.HeightAdjustableViewPager;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
@@ -168,37 +166,37 @@ import retrofit2.Response;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 @SuppressLint("UnknownNullness")
-public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface, QuickReplyFragment.QuickReplyInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener {
-    private final String LOG_TAG = BotChatActivity.class.getSimpleName();
-    private ProgressBar taskProgressBar;
+public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener {
+    private static final String GROUP_KEY_NOTIFICATIONS = "GROUP_KEY_NOTIFICATIONS";
+    final String LOG_TAG = BotChatActivity.class.getSimpleName();
+    ProgressBar taskProgressBar;
     private final Handler handler = new Handler();
     private String jwt;
     private Handler actionBarTitleUpdateHandler;
-    private BotClient botClient;
-    private BotContentFragment botContentFragment;
-    private ComposeFooterFragment composeFooterFragment;
+    BotClient botClient;
+    BotContentFragment botContentFragment;
+    ComposeFooterFragment composeFooterFragment;
     private TTSSynthesizer ttsSynthesizer;
-    private QuickReplyFragment quickReplyFragment;
-    private final Gson gson = new Gson();
-    private RelativeLayout rlChatWindow;
-    private SharedPreferences sharedPreferences;
+    final Gson gson = new Gson();
+    RelativeLayout rlChatWindow;
+    SharedPreferences sharedPreferences;
     private ImageView ivChaseBackground, ivChaseLogo;
     protected final int compressQualityInt = 100;
-    private final Handler messageHandler = new Handler();
+    final Handler messageHandler = new Handler();
     private String fileUrl;
-    private WebHookResponseDataModel webHookResponseDataModel;
-    private BotMetaModel botMetaModel;
+    WebHookResponseDataModel webHookResponseDataModel;
+    BotMetaModel botMetaModel;
     private Runnable runnable;
     private final int poll_delay = 2000;
     private String lastMsgId = "";
     private Dialog progressBar, welcomeDialog;
     private static String uniqueID = null;
-    private BotBrandingModel botOptionsModel;
-    private BotActiveThemeModel botActiveThemeModel;
+    BotBrandingModel botOptionsModel;
+    BotActiveThemeModel botActiveThemeModel;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    private boolean isAgentTransfer = false;
+    boolean isAgentTransfer = false;
     private ArrayList<String> arrMessageList = new ArrayList<>();
-    private boolean isReconnectionStopped = false;
+    boolean isReconnectionStopped = false;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -239,19 +237,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
-        //Add Suggestion Fragment
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        quickReplyFragment = new QuickReplyFragment();
-        quickReplyFragment.setArguments(getIntent().getExtras());
-        quickReplyFragment.setListener(BotChatActivity.this);
-        fragmentTransaction.add(R.id.quickReplyLayoutFooterContainer, quickReplyFragment).commit();
-
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         composeFooterFragment = new ComposeFooterFragment();
         composeFooterFragment.setArguments(getIntent().getExtras());
         composeFooterFragment.setComposeFooterInterface(this);
-        composeFooterFragment.setBottomOptionData(getDataFromTxt());
         composeFooterFragment.setBotClient(botClient);
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
@@ -605,8 +595,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 sendWebHookMessage(false, message, null);
             }
         }
-
-        toggleQuickRepliesVisiblity();
     }
 
     @Override
@@ -654,16 +642,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void setComposeFooterUpdate(ComposeFooterUpdate composeFooterUpdate) {
     }
 
-
-    @Override
-    public void onQuickReplyItemClicked(String text) {
-        onSendClick(text, false);
-    }
-
     /**
      * payload processing
      */
-
     void processPayload(String payload, BotResponse botLocalResponse) {
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
 
@@ -847,20 +828,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void onStop() {
         BotSocketConnectionManager.getInstance().unSubscribe();
         super.onStop();
-    }
-
-    public BotOptionsModel getDataFromTxt() {
-        BotOptionsModel botOptionsModel = null;
-
-        try {
-            InputStream is = getResources().openRawResource(R.raw.option);
-            Reader reader = new InputStreamReader(is);
-            botOptionsModel = gson.fromJson(reader, BotOptionsModel.class);
-            LogUtils.e("Options Size", String.valueOf(botOptionsModel.getTasks().size()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return botOptionsModel;
     }
 
     public void getBrandingDataFromTxt() {
@@ -1082,10 +1049,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    private void toggleQuickRepliesVisiblity() {
-        quickReplyFragment.toggleQuickReplyContainer(View.GONE);
-    }
-
     @SuppressLint("MissingPermission")
     protected boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -1123,8 +1086,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         } else {
             BotSocketConnectionManager.getInstance().sendMessage(message, payload);
         }
-
-        toggleQuickRepliesVisiblity();
     }
 
     @Override
@@ -1198,14 +1159,14 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.koreAPIUrl), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
                 }
             } else {
-                showToast("Unable to attach!");
+                ToastUtils.showToast(BotChatActivity.this, "Unable to attach!");
             }
         }
 
         @Override
         protected void onCancelled() {
             // update UI on task cancelled
-            showToast("Unable to attach!");
+            ToastUtils.showToast(BotChatActivity.this, "Unable to attach!");
         }
     }
 
@@ -1250,7 +1211,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
                 if (!TextUtils.isEmpty(errorMsg)) {
                     LogUtils.i("File upload error", errorMsg);
-                    showToast(errorMsg);
+                    ToastUtils.showToast(BotChatActivity.this, "Unable to attach!");
                 }
             }
         }

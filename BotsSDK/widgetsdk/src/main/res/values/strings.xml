@@ -531,6 +531,7 @@
     <string name="announcement_notifi_toggle_text">When someone comments on an announcement that you commented on</string>
     <string name="general_notifi_toggle_text">When someone joins Kora</string>
     <string name="menu_dnd">Do Not Disturb</string>
+    <string name="menu">Menu</string>
     <string name="menu_feedback">Feedback</string>
     <string name="minutes_30">30 minutes</string>
     <string name="hour_1">1 hour</string>

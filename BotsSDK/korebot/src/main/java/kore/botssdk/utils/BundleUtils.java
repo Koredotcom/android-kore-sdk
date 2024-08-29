@@ -1,9 +1,5 @@
 package kore.botssdk.utils;
 
-/**
- * Created by Pradeep Mahato on 06-Jun-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class BundleUtils {
 
     public static final String LAYOUT_REGULAR = "regular";

@@ -24,7 +24,7 @@
         android:layout_toEndOf="@+id/check_multi_item"
         android:contentDescription="@string/hello" />
 
-    <kore.botssdk.views.CustomTextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

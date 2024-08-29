@@ -200,17 +200,6 @@ public class SDKConfiguration {
         ROBOTO, RELATIVE
     }
 
-    private static final FONT_TYPES fontType = FONT_TYPES.ROBOTO;
-
-    public static void setCustomTemplateView(String templateName, View templateView) {
-        hsh.put(templateName, templateView);
-        Log.e("HashMap Count", hsh.size() + "");
-    }
-
-    public static HashMap<String, View> getCustomTemplateView() {
-        return hsh;
-    }
-
     public static void setCustomTemplateViewHolder(String templateName, Class<?> viewHolder) {
         hshViewHolders.put(templateName, viewHolder);
         Log.e("HashMap Count", hshViewHolders.size() + "");

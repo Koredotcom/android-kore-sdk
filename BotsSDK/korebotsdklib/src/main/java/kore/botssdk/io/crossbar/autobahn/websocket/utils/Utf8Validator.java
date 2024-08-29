@@ -19,7 +19,7 @@ package kore.botssdk.io.crossbar.autobahn.websocket.utils;
  * facilities for that).
  * <p>
  * Implements the algorithm "Flexible and Economical UTF-8 Decoder" by
- * Bjoern Hoehrmann (http://bjoern.hoehrmann.de/utf-8/decoder/dfa/).
+ * Bjoern Hoehrmann (<a href="http://bjoern.hoehrmann.de/utf-8/decoder/dfa/">...</a>).
  */
 public class Utf8Validator {
 

@@ -3,10 +3,6 @@ package kore.botssdk.events;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.models.BotRequest;
 
-/**
- * Created by Ramachandra Pradeep on 03-Jan-18.
- */
-
 public class SocketDataTransferModel {
     public BaseSocketConnectionManager.EVENT_TYPE getEvent_type() {
         return event_type;

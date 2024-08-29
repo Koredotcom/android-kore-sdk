@@ -14,7 +14,7 @@
         android:layout_marginBottom="@dimen/dimen_10dp"
         android:orientation="vertical">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvColumnName1"
             android:layout_width="wrap_content"
             android:layout_height="50dp"
@@ -22,7 +22,7 @@
             android:textColor="@color/colorSelected"
             android:textSize="@dimen/text_size_small" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvValue1"
             android:layout_width="wrap_content"
             android:layout_height="50dp"

@@ -95,9 +95,9 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotBrandingModel;
-import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingFooterModel;
+import kore.botssdk.models.BrandingQuickStartButtonActionModel;
 import kore.botssdk.models.FreemiumData;
 import kore.botssdk.models.FreemiumType;
 import kore.botssdk.models.KoreComponentModel;
@@ -128,7 +128,6 @@ import kore.botssdk.websocket.SocketWrapper;
  */
 @SuppressLint("UnknownNullness")
 public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate, SpeechDelegate {
-    private static final int REQ_CODE_SPEECH_INPUT = 1;
     private final String LOG_TAG = ComposeFooterFragment.class.getName();
     protected EditText editTextMessage;
     protected TextView sendButton;
@@ -142,15 +141,13 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     SpeechProgressView progress;
     TextView textViewSpeech;
     private static final int REQUEST_RECORD_AUDIO = 13;
-
     public void setDisabled(boolean disabled) {
         isDisabled = disabled;
     }
-
-    private boolean isDisabled, isFirstTime, isTTSEnabled = true;
+    boolean isDisabled, isFirstTime, isTTSEnabled = true;
     private ComposeFooterInterface composeFooterInterface;
-    private TTSUpdate ttsUpdate;
-    private BotOptionsModel botOptionsModel;
+    TTSUpdate ttsUpdate;
+    private ArrayList<BrandingQuickStartButtonActionModel> botOptionsModel;
     protected ReUsableListViewActionSheet listViewActionSheet;
     private AttachmentOptionsAdapter adapter;
     private static final int REQ_IMAGE = 444;
@@ -158,18 +155,18 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private static final int REQ_VIDEO = 445;
     private static final int REQ_VIDEO_CAPTURE = 446;
     private static final int REQ_FILE = 448;
-    private ComposebarAttachmentAdapter composebarAttachmentAdapter;
-    private RecyclerView attachmentRecycler;
+    ComposebarAttachmentAdapter composebarAttachmentAdapter;
+    RecyclerView attachmentRecycler;
     private Attachment attachment;
     private static long totalFileSize;
     private final int compressQualityInt = 100;
     private String jwt;
     private ImageView ivAttachment;
-    private String outLineColor;
-    private BotBrandingModel botBrandingModel;
+    String outLineColor;
+    BotBrandingModel botBrandingModel;
     private int[] colors;
-    private boolean isAgentConnected;
-    private BotClient botClient;
+    boolean isAgentConnected;
+    BotClient botClient;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -331,6 +328,13 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     audioSpeakTts.setImageTintList(ColorStateList.valueOf(Color.parseColor(footerModel.getIcons_color())));
                     editTextMessage.setHintTextColor(Color.parseColor(footerModel.getIcons_color()));
                 }
+
+                if(footerModel.getButtons() != null && footerModel.getButtons().getMenu() != null
+                        && footerModel.getButtons().getMenu().getActions() != null
+                        && footerModel.getButtons().getMenu().getActions().size() > 0)
+                {
+                    botOptionsModel = footerModel.getButtons().getMenu().getActions();
+                }
             }
         }
     }
@@ -367,7 +371,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         audioSpeakTts.setOnClickListener(onTTSEnableSwitchClickListener);
         recAudioImg.setOnClickListener(onVoiceModeActivated);
         newMenuLogo.setOnClickListener(v -> {
-            if (botOptionsModel != null && botOptionsModel.getTasks() != null && botOptionsModel.getTasks().size() > 0) {
+            if (botOptionsModel != null && botOptionsModel.size() > 0) {
                 OptionsActionSheetFragment bottomSheetDialog = new OptionsActionSheetFragment();
                 bottomSheetDialog.setisFromFullView(false);
                 bottomSheetDialog.setSkillName("skillName");
@@ -405,10 +409,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
-    }
-
-    public void setBottomOptionData(BotOptionsModel botOptionsModel) {
-        this.botOptionsModel = botOptionsModel;
     }
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {

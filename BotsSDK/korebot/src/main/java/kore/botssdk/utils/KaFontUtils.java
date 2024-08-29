@@ -1,10 +1,5 @@
 package kore.botssdk.utils;
 
-/**
- * Created by Shiva Krishna on 10/23/2017.
- */
-
-
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;

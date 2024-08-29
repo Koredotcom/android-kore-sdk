@@ -30,10 +30,6 @@ import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.models.KoreMedia;
 
-/**
- * Created by Shiva Krishna on 4/3/2018.
- */
-
 public class KaMediaUtils {
     public static final String MEDIA_APP_FOLDER = "Kore";
     public static final String DOWNLOADED_IMAGE_FOLDER = "Kore Image";

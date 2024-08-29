@@ -26,7 +26,7 @@
             app:layout_constraintBottom_toTopOf="@+id/tvWelcomeHeader"
             app:layout_constraintStart_toStartOf="parent"/>
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvWelcomeHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
             app:layout_constraintStart_toEndOf="@id/tvWelcomeHeader"
             app:layout_constraintTop_toTopOf="@+id/tvWelcomeHeader" />
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvWelcomeTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
             app:layout_constraintStart_toStartOf="@+id/tvWelcomeHeader"
             app:layout_constraintTop_toBottomOf="@+id/tvWelcomeHeader" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvWelcomeDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

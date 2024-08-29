@@ -34,10 +34,6 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
 
-/**
- * Created by Pradeep Mahato on 19/7/17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class CarouselItemViewHelper {
 
     public static class CarouselViewHolder {

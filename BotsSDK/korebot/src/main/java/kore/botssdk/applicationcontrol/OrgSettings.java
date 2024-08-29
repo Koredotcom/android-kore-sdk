@@ -2,9 +2,6 @@ package kore.botssdk.applicationcontrol;
 
 import java.util.HashMap;
 
-/**
- * Created by Ramachandra Pradeep on 7/8/2016.
- */
 public class OrgSettings {
     private int DISABLE_RECEIVE_ATTACHMENT;
 

@@ -14,10 +14,6 @@ import kore.botssdk.R;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.utils.KaFontUtils;
 
-/**
- * Created by Pradeep Mahato on 14/7/17.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class BotCarouselItemButtonAdapter extends BaseAdapter {
 
     ArrayList<BotCaourselButtonModel> botCaourselButtonModels = new ArrayList<>();

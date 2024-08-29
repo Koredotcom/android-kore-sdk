@@ -4,10 +4,6 @@ import java.util.Vector;
 
 import kore.botssdk.fileupload.listeners.FileUploadedListener;
 
-/**
- * @author Ramachandra Pradeep Challa
- * Copyright (c) 2018 Kore.ai Inc. All rights reserved.
- */
 public final class KoreWorker implements Runnable {
     private boolean quit = false;  
     private Vector<Work> queue = null;

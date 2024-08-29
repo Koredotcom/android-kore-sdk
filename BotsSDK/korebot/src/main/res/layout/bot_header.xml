@@ -55,7 +55,7 @@
         android:layout_toEndOf="@+id/llBotAvatar"
         tools:ignore="RelativeOverlap">
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvBotTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +64,7 @@
             android:textSize="@dimen/text_size_sub_header"
             android:textStyle="bold" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvBotDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

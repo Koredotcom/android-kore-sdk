@@ -15,7 +15,7 @@
         android:layout_gravity="center"
         app:SpinKit_Color="@color/design_default_color_primary" />
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/syncDialogPreparingDeviceTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

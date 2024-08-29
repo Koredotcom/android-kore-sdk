@@ -13,7 +13,7 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvToolBarTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

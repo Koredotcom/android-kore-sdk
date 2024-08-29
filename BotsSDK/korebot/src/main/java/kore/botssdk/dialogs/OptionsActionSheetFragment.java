@@ -27,6 +27,8 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.adapter.BottomOptionsCycleAdapter;
 import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
@@ -35,15 +37,13 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotBrandingModel;
-import kore.botssdk.models.BotOptionsModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.utils.StringUtils;
+import kore.botssdk.models.BrandingQuickStartButtonActionModel;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 @SuppressLint("UnknownNullness")
 public class OptionsActionSheetFragment extends BottomSheetDialogFragment
 {
-    final String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
-    BotOptionsModel model;
+    ArrayList<BrandingQuickStartButtonActionModel> model;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     boolean isFromListMenu = false;
@@ -67,15 +67,20 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
 
         View view = inflater.inflate(R.layout.list_bottom_sheet, container, false);
         TextView tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
+        TextView tvMenuTitle = view.findViewById(R.id.tvMenuTitle);
         LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
         LinearLayout llBottomLayout = view.findViewById(R.id.llBottomLayout);
         LinearLayout llOptionsBottom = view.findViewById(R.id.llOptionsBottom);
 
         LinearLayout llTabHeader = view.findViewById(R.id.llTabHeader);
-        llTabHeader.setVisibility(View.GONE);
-        tvOptionsTitle.setVisibility(View.VISIBLE);
         RecyclerView rvViewMore = view.findViewById(R.id.rvMoreData);
         RecyclerView rvQuickData = view.findViewById(R.id.rvQuickData);
+
+        llTabHeader.setVisibility(View.GONE);
+        tvOptionsTitle.setVisibility(View.VISIBLE);
+        rvQuickData.setVisibility(View.GONE);
+        tvMenuTitle.setVisibility(View.GONE);
+
         SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         if(sharedPreferences != null)
@@ -92,7 +97,7 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
 
         if (rvViewMore.getAdapter() == null)
         {
-            bottomOptionsCycleAdapter = new BottomOptionsCycleAdapter(model.getTasks());
+            bottomOptionsCycleAdapter = new BottomOptionsCycleAdapter(model);
             rvViewMore.setAdapter(bottomOptionsCycleAdapter);
             bottomOptionsCycleAdapter.setComposeFooterInterface(composeFooterInterface);
             bottomOptionsCycleAdapter.setContext(requireActivity());
@@ -101,8 +106,8 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
             bottomOptionsCycleAdapter = (BottomOptionsCycleAdapter) rvViewMore.getAdapter();
         }
 
-        bottomOptionsCycleAdapter.setBotListModelArrayList(bottomSheetDialog, model.getTasks());
-        bottomOptionsCycleAdapter.notifyItemRangeChanged(0, (model.getTasks().size() - 1));
+        bottomOptionsCycleAdapter.setBotListModelArrayList(bottomSheetDialog, model);
+        bottomOptionsCycleAdapter.notifyItemRangeChanged(0, (model.size() - 1));
 
         if(botBrandingModel != null && botBrandingModel.getWelcome_screen() != null
                 && botBrandingModel.getWelcome_screen().getStarter_box() != null
@@ -132,13 +137,10 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
             }
         }
 
-        if(model.getHeading() != null)
-        {
-            tvOptionsTitle.setText(model.getHeading());
+        tvOptionsTitle.setText(ContextCompat.getString(requireActivity(), R.string.menu));
 
-            if(sharedPreferences != null)
-                tvOptionsTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, "#000000")));
-        }
+        if(sharedPreferences != null)
+            tvOptionsTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, "#000000")));
 
         llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,8 +179,8 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
                 FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 if(bottomSheet != null) {
                     bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight);
-                    BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                    bottomSheetBehavior.setPeekHeight((int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight));
+                    BottomSheetBehavior<FrameLayout> bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+                    bottomSheetBehavior.setPeekHeight(model.size() * dp1 * 125);
                     bottomSheetBehavior.setDraggable(false);
                 }
             }
@@ -191,11 +193,11 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
     public void setisFromFullView(boolean isFromFullView) {
     }
 
-    public void setData(BotOptionsModel taskTemplateModel) {
+    public void setData(ArrayList<BrandingQuickStartButtonActionModel> taskTemplateModel) {
         model = taskTemplateModel;
     }
 
-    public void setData(BotOptionsModel botOptionsModel, boolean isFromListMenu){
+    public void setData(ArrayList<BrandingQuickStartButtonActionModel> botOptionsModel, boolean isFromListMenu){
         model = botOptionsModel;
         this.isFromListMenu = isFromListMenu;
     }

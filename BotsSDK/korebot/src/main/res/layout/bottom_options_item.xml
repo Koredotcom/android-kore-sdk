@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dimen_5dp"
+    android:background="@drawable/options_bg"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -16,13 +17,13 @@
         android:contentDescription="@string/title"
         android:visibility="gone" />
 
-    <kore.botssdk.views.CustomTextViewSemiBold
+    <kore.botssdk.view.CustomTextViewSemiBold
         android:id="@+id/bottom_option_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_weight="1"
         android:clickable="false"
+        android:gravity="center"
         android:maxLines="1"
         android:text="@string/title"
         android:textColor="@color/neutral"
@@ -35,7 +36,7 @@
         android:contentDescription="@string/title"
         android:scaleType="centerCrop"
         android:src="@drawable/right_arrow_iconn"
-        android:visibility="visible"
+        android:visibility="gone"
         app:tint="@color/bgBlueSignup" />
 
 </LinearLayout>

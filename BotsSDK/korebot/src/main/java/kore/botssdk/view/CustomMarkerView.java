@@ -11,14 +11,12 @@ import kore.botssdk.charts.highlight.Highlight;
 import kore.botssdk.charts.utils.MPPointF;
 import kore.botssdk.charts.utils.Utils;
 
-/**
- * Created by Shiva Krishna on 11/7/2017.
- */
-
+@SuppressWarnings("UnKnownNullness")
 public class CustomMarkerView extends MarkerView {
 
     private final TextView tvContent;
-    public CustomMarkerView (Context context, int layoutResource) {
+
+    public CustomMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         // this markerview only displays a textview
         tvContent = findViewById(R.id.tvContent);
@@ -32,10 +30,10 @@ public class CustomMarkerView extends MarkerView {
 
             CandleEntry ce = (CandleEntry) e;
 
-            tvContent.setText("" + Utils.formatNumber(ce.getHigh(), 0, true));
+            tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {
 
-            tvContent.setText("" + Utils.formatNumber(e.getY(), 0, true));
+            tvContent.setText(Utils.formatNumber(e.getY(), 0, true));
         }
 
         super.refreshContent(e, highlight);
@@ -43,7 +41,7 @@ public class CustomMarkerView extends MarkerView {
 
     @Override
     public MPPointF getOffset() {
-        return new MPPointF(-(getWidth() / 2), -getHeight());
+        return new MPPointF(-((float) getWidth() / 2), -getHeight());
     }
 
 }

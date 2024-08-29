@@ -27,7 +27,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/bot_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
             android:textColor="@color/left_bubble_text_color"
             android:textSize="14dp" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/bot_list_item_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
 
     </LinearLayout>
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/bot_list_item_cost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -20,7 +20,7 @@
         android:paddingRight="@dimen/dimen_10dp"
         android:paddingBottom="@dimen/dimen_10dp">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/botListViewTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:background="#eeeef2" />
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/botCustomListViewButton"
             android:layout_width="match_parent"
             android:layout_height="60dp"

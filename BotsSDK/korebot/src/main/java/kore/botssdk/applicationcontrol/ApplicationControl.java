@@ -1,9 +1,5 @@
 package kore.botssdk.applicationcontrol;
 
-/**
- * Created by Ramachandra Pradeep on 6/24/2016.
- */
-
 public class ApplicationControl {
 
     public byte getENABLE_MOBILE_APP() {

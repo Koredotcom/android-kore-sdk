@@ -26,7 +26,7 @@ import kore.botssdk.adapter.TableTemplateHeaderAdapter;
 import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.view.tableview.model.MiniTableModel;
+import kore.botssdk.models.MiniTableModel;
 
 public class TableTemplateHolder extends BaseViewHolder {
     private final RecyclerView rvTableView;
