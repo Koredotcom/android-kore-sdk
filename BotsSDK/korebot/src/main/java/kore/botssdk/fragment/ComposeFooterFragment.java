@@ -5,7 +5,7 @@ import static androidx.core.content.PermissionChecker.checkSelfPermission;
 import static kore.botssdk.activity.KaCaptureImageActivity.THUMBNAIL_FILE_PATH;
 import static kore.botssdk.utils.BitmapUtils.getBufferSize;
 import static kore.botssdk.utils.BitmapUtils.rotateIfNecessary;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.viewUtils.FileUtils.EXT_JPG;
 import static kore.botssdk.viewUtils.FileUtils.EXT_PNG;
 import static kore.botssdk.viewUtils.FileUtils.EXT_VIDEO;
@@ -441,7 +441,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     private void requestMicrophonePermission() {
-        KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
+        KaPermissionsHelper.requestForPermission(requireActivity(), CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST,
                 Manifest.permission.RECORD_AUDIO);
     }
 
@@ -683,17 +683,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    private int getFileLimit() {
-        attachment = SharedPreferenceUtils.getInstance(requireActivity()).getAttachmentPref("");
-
-        int file_limit = -1;
-        if (attachment != null) {
-            file_limit = attachment.getSize();
-        }
-
-        return file_limit;
-    }
-
     private void processImageResponse(Intent data) {
         String filePath = data.getStringExtra("filePath");
         String fileName;
@@ -766,7 +755,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
      * @param enable
      */
     public void enableOrDisableSendButton(boolean enable) {
-
         if (composebarAttachmentAdapter.getItemCount() > 0 || enable) {
             llSend.setVisibility(View.VISIBLE);
             recAudioImg.setVisibility(View.GONE);

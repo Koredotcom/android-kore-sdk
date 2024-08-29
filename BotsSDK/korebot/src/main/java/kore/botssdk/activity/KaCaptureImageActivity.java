@@ -1,9 +1,9 @@
 package kore.botssdk.activity;
 
 import static android.os.Build.VERSION_CODES.TIRAMISU;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST;
 
 import android.Manifest;
@@ -112,7 +112,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.CAMERA)) {
                 openImageIntent(imagePickType);
             } else {
-                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST, Manifest.permission.CAMERA);
+                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.CAMERA);
             }
         } else if (CHOOSE_TYPE_VIDEO_PICK.equalsIgnoreCase(imagePickType)) {
             if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_VIDEO) :
@@ -120,9 +120,9 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 openImageIntent(imagePickType);
             } else {
                 if (Build.VERSION.SDK_INT >= TIRAMISU) {
-                    KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST, Manifest.permission.READ_MEDIA_VIDEO);
+                    KaPermissionsHelper.requestForPermission(this, CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_MEDIA_VIDEO);
                 } else {
-                    KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST,
+                    KaPermissionsHelper.requestForPermission(this, CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST,
                             Manifest.permission.READ_EXTERNAL_STORAGE);
                 }
             }
@@ -132,9 +132,9 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 openImageIntent(imagePickType);
             } else {
                 if (Build.VERSION.SDK_INT >= TIRAMISU) {
-                    KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST, Manifest.permission.READ_MEDIA_IMAGES);
+                    KaPermissionsHelper.requestForPermission(this, CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_MEDIA_IMAGES);
                 } else {
-                    KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
+                    KaPermissionsHelper.requestForPermission(this, CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
                 }
             }
         } else if (CHOOSE_TYPE_CAPTURE_VIDEO.equalsIgnoreCase(imagePickType)) {
@@ -153,22 +153,22 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
-        if (requestCode == CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST) {
+        if (requestCode == CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.CAMERA)) {
                 openImageIntent(imagePickType);
             }
-        } else if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
+        } else if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_IMAGES) :
+                    KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                openImageIntent(imagePickType);
+            }
+        } else if (requestCode == CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST) {
+            if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_VIDEO) :
                     KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             }
         } else if (requestCode == CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)) {
-                openImageIntent(imagePickType);
-            }
-        } else if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST) {
-            if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_IMAGES) :
-                    KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             }
         }
@@ -1053,7 +1053,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
      * @return Whether the Uri authority is MediaProvider.
      */
     public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
+        return "com.android.providers.media.documents".equals(uri.getAuthority()) || "com.android.providers.media.photopicker".equals(uri.getAuthority());
     }
     //===============================Gallery fetch code ends=====================================//
 }

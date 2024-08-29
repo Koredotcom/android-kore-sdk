@@ -43,10 +43,10 @@ public class BundleConstants {
     public static final String MEDIA_TYPE_VIDEO = "video";
     public static final String MEDIA_TYPE_IMAGE = "image";
     public static final String MEDIA_TYPE_DOCUMENT = "docs";
-    public static final int CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST = 1234;
-    public static final int CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST = 1434;
-    public static final int CAPTURE_IMAGE_CHOOSE_FILES_RECORD_BUNDLED_PREMISSION_REQUEST = 3453;
-    public static final int CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST = 3454;
+    public static final int CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST = 1234;
+    public static final int CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST = 1235;
+    public static final int CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST = 1236;
+    public static final int CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST = 1237;
     public final static String GROUP_KEY_NOTIFICATIONS = "group_key_notifications";
     public static final String MESSAGE_DELIVERED = "message_delivered";
     public static final String MESSAGE_READ = "message_read";

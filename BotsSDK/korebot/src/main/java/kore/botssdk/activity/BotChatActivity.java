@@ -2,7 +2,7 @@ package kore.botssdk.activity;
 
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.GROUP_KEY_NOTIFICATIONS;
 
 import android.Manifest;
@@ -460,7 +460,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     public void externalReadWritePermission(String fileUrl) {
         this.fileUrl = fileUrl;
         if (!KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
+            KaPermissionsHelper.requestForPermission(this, CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
 
@@ -472,7 +472,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     @Override
     public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAPTURE_IMAGE_CHOOSE_FILES_BUNDLED_PREMISSION_REQUEST) {
+        if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
 
                 if (!StringUtils.isNullOrEmpty(fileUrl)) KaMediaUtils.saveFileFromUrlToKorePath(BotChatActivity.this, fileUrl);
@@ -1081,13 +1081,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         thePic = rotateIfNecessary(filePath, thePic);
                         orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
                         fOut.flush();
-                        fOut.close();
                     } catch (Exception e) {
                         LogUtils.e(LOG_TAG, e.toString());
                     } finally {
                         try {
-                            assert fOut != null;
-                            fOut.close();
+                            if (fOut != null)
+                                fOut.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
