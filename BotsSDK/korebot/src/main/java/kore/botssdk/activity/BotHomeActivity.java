@@ -1,6 +1,6 @@
 package kore.botssdk.activity;
 
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -72,7 +72,7 @@ BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.Provi
                 Log.e("Has Permission", "true");
             } else
             {
-                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
+                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST,
                         Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO);
             }
         }
@@ -209,7 +209,7 @@ BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.Provi
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST) {
+        if (requestCode == CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
                 Log.e("Has Permission", "true");
             }

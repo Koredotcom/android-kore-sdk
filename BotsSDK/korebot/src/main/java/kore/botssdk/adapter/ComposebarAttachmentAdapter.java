@@ -43,12 +43,11 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
     public void onBindViewHolder(@NonNull ImageAttachView holder, int position) {
         String fileExtn = dataList.get(position).get("fileExtn");
         if (FileUtils.ImageTypes().contains(fileExtn) || FileUtils.VideoTypes().contains(fileExtn)) {
-            Glide.with(context).load(dataList.get(position).get("localFilePath")).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(holder.attach_view));
-
+            Glide.with(context).load(dataList.get(position).get("localFilePath")).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(holder.attachView));
         } else {
-            holder.attach_view.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(fileExtn) ? fileExtn.toLowerCase() : ""));
+            holder.attachView.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(fileExtn) ? fileExtn.toLowerCase() : ""));
         }
-        holder.close_icon.setOnClickListener(view -> {
+        holder.closeIcon.setOnClickListener(view -> {
             if (dataList.isEmpty()) return;
             dataList.remove(holder.getBindingAdapterPosition());
             notifyItemRangeInserted(0, dataList.size() - 1);
@@ -79,14 +78,13 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
 
 
     static class ImageAttachView extends RecyclerView.ViewHolder {
-        final View close_icon;
-        final ImageView attach_view;
+        final View closeIcon;
+        final ImageView attachView;
 
         public ImageAttachView(@NonNull View itemView) {
             super(itemView);
-            close_icon = itemView.findViewById(R.id.close_icon);
-
-            attach_view = itemView.findViewById(R.id.attach_view);
+            closeIcon = itemView.findViewById(R.id.close_icon);
+            attachView = itemView.findViewById(R.id.attach_view);
         }
     }
 }

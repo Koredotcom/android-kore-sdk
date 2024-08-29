@@ -28,14 +28,11 @@ public interface KoreMedia{
 	String CHOOSE_TYPE_VIDEO_PICK = "choose_video";
 	String CHOOSE_TYPE_DOCUMENT_PICK = "choose_file";
 	String CHOOSE_TYPE_CAPTURE_IMAGE = "capture_image";
-
 	String CHOOSE_TYPE_CAPTURE_VIDEO = "capture_video";
-	String CHOOSE_TYPE_IMAGE_VIDEO= "choose_image_video";
 
 	String FOR_MESSAGE = "message";
 	String FOR_PROFILE = "profile";
-	
-	
+
 	int BUFFER_SIZE_AUDIO = 20*1024;
 	int BUFFER_SIZE_VIDEO = 256 * 1024;
 	int BUFFER_SIZE_IMAGE = 256 * 1024;
