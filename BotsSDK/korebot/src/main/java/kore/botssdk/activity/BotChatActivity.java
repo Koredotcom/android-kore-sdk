@@ -346,23 +346,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
 
         switch (socketConnectionEvents) {
-            case CONNECTING:
-                taskProgressBar.setVisibility(View.VISIBLE);
-                break;
-            case CONNECTED:
+            case CONNECTING -> taskProgressBar.setVisibility(View.VISIBLE);
+            case CONNECTED -> {
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
-
-                break;
-            case DISCONNECTED:
-            case CONNECTED_BUT_DISCONNECTED:
+            }
+            case DISCONNECTED, CONNECTED_BUT_DISCONNECTED -> {
                 taskProgressBar.setVisibility(View.VISIBLE);
                 composeFooterFragment.setDisabled(true);
                 composeFooterFragment.updateUI();
-                break;
-
-            default:
-                taskProgressBar.setVisibility(View.GONE);
+            }
+            default -> taskProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -708,15 +702,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
+                    case DialogInterface.BUTTON_POSITIVE -> {
                         if (sharedPreferences != null) {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putBoolean(BundleConstants.IS_RECONNECT, true);
                             editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
                             editor.apply();
+                            BotSocketConnectionManager.killInstance();
+                            finish();
                         }
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
+                    }
+                    case DialogInterface.BUTTON_NEGATIVE -> {
                         if (sharedPreferences != null) {
                             if (botClient != null && isAgentTransfer)
                                 botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
@@ -725,17 +721,17 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             editor.putBoolean(BundleConstants.IS_RECONNECT, false);
                             editor.putInt(BotResponse.HISTORY_COUNT, 0);
                             editor.apply();
+                            BotSocketConnectionManager.killInstance();
+                            finish();
                         }
-                        break;
+                    }
+                    case DialogInterface.BUTTON_NEUTRAL -> dialog.dismiss();
                 }
-
-                BotSocketConnectionManager.killInstance();
-                finish();
             }
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
-        builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).show();
+        builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
     }
 
     public void setPreferenceObject(Object modal, String key) {

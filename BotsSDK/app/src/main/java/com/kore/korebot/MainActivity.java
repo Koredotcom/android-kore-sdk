@@ -83,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
-//        SDKConfig.setCustomTemplateViewHolder(BotResponse.TEMPLATE_TYPE_PIECHART, NewTemplateHolder.class);
 
         //Flag to show the bot icon beside the bot response
         SDKConfiguration.BubbleColors.showIcon = true;
