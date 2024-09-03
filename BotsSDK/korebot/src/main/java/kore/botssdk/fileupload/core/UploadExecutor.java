@@ -7,7 +7,9 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -59,8 +61,12 @@ public class UploadExecutor implements Runnable {
     @Override
     public void run() {
         String serverResponse = null;
-        BufferedReader input = null;
+        HttpsURLConnection httpsURLConnection = null;
+        BufferedReader bufferedReader = null;
         DataOutputStream dataOutputStream = null;
+        OutputStream outputStream = null;
+        InputStream inputStream = null;
+        InputStreamReader inputStreamReader = null;
         try {
 
             LogUtils.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName);
@@ -77,7 +83,7 @@ public class UploadExecutor implements Runnable {
                     FULL_URL = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_CHUNK_UPLOAD, botId, "ivr", fileToken);
             }
             KoreHttpsUrlConnectionBuilder koreHttpsUrlConnectionBuilder = new KoreHttpsUrlConnectionBuilder(context, FULL_URL);
-            HttpsURLConnection httpsURLConnection = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
+            httpsURLConnection = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
             httpsURLConnection.setConnectTimeout(Constants.CONNECTION_TIMEOUT);
             httpsURLConnection.setRequestMethod("POST");
             httpsURLConnection.setUseCaches(false);
@@ -88,8 +94,8 @@ public class UploadExecutor implements Runnable {
             httpsURLConnection.setRequestProperty("Cache-Control", "no-cache");
             httpsURLConnection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + BOUNDARY);
             httpsURLConnection.setReadTimeout(Constants.CONNECTION_READ_TIMEOUT);
-
-            dataOutputStream = new DataOutputStream(httpsURLConnection.getOutputStream());
+            outputStream = httpsURLConnection.getOutputStream();
+            dataOutputStream = new DataOutputStream(outputStream);
             addFormField(dataOutputStream, "chunkNo", String.valueOf(chunkNo));
 
             // Add fileToken as a string part
@@ -104,14 +110,14 @@ public class UploadExecutor implements Runnable {
 
             //Real upload starting here -->>
             LogUtils.d("upload new", "good so far");
-            input = new BufferedReader(new InputStreamReader(httpsURLConnection.getInputStream()));
+            inputStream = httpsURLConnection.getInputStream();
+            inputStreamReader = new InputStreamReader(inputStream);
+            bufferedReader = new BufferedReader(inputStreamReader);
 
             serverResponse = "";
-            for (int c = input.read(); c != -1; c = input.read()) {
+            for (int c = bufferedReader.read(); c != -1; c = bufferedReader.read()) {
                 serverResponse = serverResponse + (char) c;
             }
-            input.close();
-            httpsURLConnection.disconnect();
             LogUtils.d(LOG_TAG, "Got serverResponse for chunk upload" + serverResponse);
             int statusCode = httpsURLConnection.getResponseCode();
             LogUtils.e(LOG_TAG, "status code for chunks" + chunkNo + "is" + statusCode);
@@ -133,8 +139,6 @@ public class UploadExecutor implements Runnable {
                     mListener.notifyChunkUploadCompleted(chunkNo, fileName);
                 throw new Exception("Response code not 200");
             }
-
-
         } catch (Exception e) {
             LogUtils.e(LOG_TAG, "Exception in uploading chunk " + e);
             e.printStackTrace();
@@ -143,8 +147,16 @@ public class UploadExecutor implements Runnable {
             LogUtils.e(LOG_TAG, "Failed to post message for chunk no:: " + this.chunkNo);
         } finally {
             try {
-                if (input != null)
-                    input.close();
+                if (httpsURLConnection != null)
+                    httpsURLConnection.disconnect();
+                if (inputStream != null)
+                    inputStream.close();
+                if (inputStreamReader != null)
+                    inputStreamReader.close();
+                if (outputStream != null)
+                    outputStream.close();
+                if (bufferedReader != null)
+                    bufferedReader.close();
                 if (dataOutputStream != null)
                     dataOutputStream.close();
             } catch (IOException e) {

@@ -320,7 +320,7 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
     @Override
     public void initiateFileUpload(FileUploadedListener listener) {
         this.listener = listener;
-        new FileTokenManager(host, this, accessToken.replace("bearer", "").trim(), context, userOrTeamId, isAnonymousUser, isWebHook, botId);
+        new FileTokenManager(host, this, accessToken.trim(), context, userOrTeamId, isAnonymousUser, isWebHook, botId);
     }
 
     void setChunkCount(int n) {

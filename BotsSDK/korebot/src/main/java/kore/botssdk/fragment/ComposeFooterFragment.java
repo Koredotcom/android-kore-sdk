@@ -646,7 +646,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     String fileExtn = result.getData().getStringExtra("fileExtn");
                     if (fileExtn != null && fileExtn.equals(EXT_VIDEO) && result.getData().getParcelableExtra("fileUri") != null) {
-                        processVideoResponse(result.getData().getParcelableExtra("fileUri"), false, result.getData());
+                        processVideoResponse(result.getData().getParcelableExtra("fileUri"));
                     } else if (fileExtn != null && (fileExtn.equalsIgnoreCase(EXT_JPG) || fileExtn.equalsIgnoreCase(EXT_PNG))) {
                         processImageResponse(result.getData());
                     } else {
@@ -770,15 +770,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         this.jwt = jwt;
     }
 
-    private void processVideoResponse(Uri selectedImage, boolean isCapturedVideo, Intent intent) {
+    private void processVideoResponse(Uri selectedImage) {
         String realPath;
         String orientation;
         String fileName = null;
-        if (isCapturedVideo)
-            realPath = selectedImage.getPath();
-        else {
-            realPath = KaMediaUtils.getRealPath(requireActivity(), selectedImage);
-        }
+        realPath = KaMediaUtils.getRealPath(requireActivity(), selectedImage);
         if (realPath != null) {
             if (realPath.length() > 0) {
                 int startInd = realPath.lastIndexOf(File.separator) + 1;
