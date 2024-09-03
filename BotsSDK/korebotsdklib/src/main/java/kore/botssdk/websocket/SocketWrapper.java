@@ -8,7 +8,6 @@ import android.os.Handler;
 import android.util.Log;
 
 import java.net.URISyntaxException;
-import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +45,7 @@ public final class SocketWrapper {
     static SocketWrapper pKorePresenceInstance;
     SocketConnectionListener socketConnectionListener = null;
     final IWebSocket mConnection = new WebSocketConnection();
+
     public boolean ismIsReconnectionAttemptNeeded() {
         return mIsReconnectionAttemptNeeded;
     }
@@ -237,10 +237,8 @@ public final class SocketWrapper {
             @Override
             public void onNext(RestResponse.RTMUrl rtmUrl) {
 
-                if(!isReconnect)
-                {
-                    try
-                    {
+                if (!isReconnect) {
+                    try {
                         StringBuilder queryParams = new StringBuilder();
                         for (Map.Entry<String, Object> entry : SDKConfiguration.Server.queryParams.entrySet()) {
                             queryParams.append("&");
@@ -252,8 +250,7 @@ public final class SocketWrapper {
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
-                }
-                else {
+                } else {
                     try {
                         connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), isReconnect);
                     } catch (URISyntaxException e) {
@@ -500,6 +497,15 @@ public final class SocketWrapper {
             }
             LogUtils.e(LOG_TAG, "Connection is not present. Reconnecting...");
             return false;
+        }
+    }
+
+    /**
+     * @param msg : The message object
+     */
+    public void sendAgentMessage(String msg) {
+        if (mConnection.isConnected()) {
+            mConnection.sendMessage(msg);
         }
     }
 

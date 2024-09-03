@@ -766,7 +766,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             if (!taskList.isEmpty()) {
                 ActivityManager.RunningTaskInfo runningTaskInfo = taskList.get(0);
-                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains("kore.botssdk")) {
+                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains("com.kore.korebot")) {
                     if (botClient != null) {
                         botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
