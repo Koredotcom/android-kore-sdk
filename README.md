@@ -126,7 +126,7 @@ SDKConfig.setBrandingUrl(brandingUrl);
 SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken);
 
 //Inject the custom template like below
-SDKConfig.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
+SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
 ```
 4. You can navigate to the bot chat window through Intent as below snippet
 ```
