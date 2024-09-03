@@ -18,7 +18,6 @@ import com.google.gson.Gson;
 import kore.botssdk.R;
 import kore.botssdk.adapter.LiveSearchCyclerAdapter;
 import kore.botssdk.adapter.SearchCentralPanelAdapter;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.PayloadInner;
@@ -61,7 +60,7 @@ public class ResultsTemplateView extends LinearLayout {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(R.layout.results_template_layout, this, true);
+        LayoutInflater.from(getContext()).inflate(R.layout.template_results, this, true);
         tvSeeAllResults = findViewById(R.id.tvSeeAllResults);
         llLiveSearch = findViewById(R.id.llLiveSearch);
         lvLiveSearch = findViewById(R.id.lvLiveSearch);
