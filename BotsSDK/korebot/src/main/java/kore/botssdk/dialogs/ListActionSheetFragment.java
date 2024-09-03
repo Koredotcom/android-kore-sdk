@@ -30,7 +30,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotResponse;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.DimensionUtil;
 
 public class ListActionSheetFragment extends BottomSheetDialogFragment {
 

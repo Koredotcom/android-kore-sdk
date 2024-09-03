@@ -22,30 +22,8 @@
             android:layout_marginBottom="@dimen/dimen_15dp"
             android:text="@string/app_name"
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_20dp"
+            android:textSize="@dimen/text_size_header"
             android:textStyle="bold" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/dimen_15dp"
-            android:background="@mipmap/chase"
-            android:visibility="gone"
-            android:importantForAccessibility="no" />
-
-        <ImageView
-            android:id="@+id/ivThemeSwitcher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="right"
-            android:layout_marginRight="@dimen/dimen_10dp"
-            android:background="@mipmap/ic_more_vert_white_24dp"
-            android:visibility="gone"
-            android:importantForAccessibility="no" />
 
     </RelativeLayout>
 
@@ -77,6 +55,7 @@
                 android:choiceMode="singleChoice"
                 android:divider="@android:color/transparent"
                 android:listSelector="@color/white"
+                android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 android:transcriptMode="normal"
                 android:visibility="visible"
@@ -97,13 +76,12 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/typing_layout_height"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/typing_layout_margin_left"
-            android:layout_marginRight="@dimen/typing_layout_margin_right"
+            android:layout_marginStart="@dimen/typing_layout_margin_left"
+            android:layout_marginEnd="@dimen/typing_layout_margin_right"
             android:orientation="horizontal"
             android:visibility="gone">
 
-
-            <!-- Typer Image -->
+            <!-- Type Image -->
             <kore.botssdk.view.CircularProfileView
                 android:id="@+id/typing_status_item_cpv"
                 android:layout_width="@dimen/typing_layout_cpv_width"
@@ -114,12 +92,12 @@
                 cpv:text_size="12dp" />
 
             <!-- Presence Dots -->
-            <kore.botssdk.views.DotsTextView
+            <kore.botssdk.view.DotsTextView
                 android:id="@+id/typing_status_item_dots"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginBottom="@dimen/dot_view_margin_bottom"
                 android:textColor="@color/left_bubble_text_color"
                 android:textSize="16sp"

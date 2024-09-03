@@ -1,0 +1,187 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/carousel_item_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    card_view:cardCornerRadius="@dimen/carousel_view_cardCornerRadius"
+    card_view:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/carousel_image_detail_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <ImageView
+                android:id="@+id/carousel_item_image"
+                android:layout_width="match_parent"
+                android:layout_height="125dp"
+                android:adjustViewBounds="true"
+                android:src="@mipmap/imageplaceholder_left" />
+
+            <FrameLayout
+                android:id="@+id/offer_price_fl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/carousel_item_image"
+                android:background="@drawable/offer_layout"
+                android:visibility="gone">
+
+                <kore.botssdk.view.CustomTextView
+                    android:id="@+id/carousel_item_offer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:textColor="@color/bubbleFileName"
+                    android:textSize="10sp"
+                    android:textStyle="normal"
+                    android:visibility="visible" />
+
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/saved_price_fl"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/carousel_item_image"
+                android:background="@drawable/save_layout"
+                android:visibility="gone">
+
+                <kore.botssdk.view.CustomTextView
+                    android:id="@+id/carousel_item_saved"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:ellipsize="end"
+                    android:gravity="center_horizontal"
+                    android:paddingLeft="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingRight="2dp"
+                    android:paddingBottom="2dp"
+                    android:textColor="@color/white"
+                    android:textSize="10sp"
+                    android:textStyle="normal"
+                    android:visibility="visible" />
+            </FrameLayout>
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/carousel_item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/carousel_item_image"
+                android:layout_gravity="top"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="2"
+                android:paddingLeft="7dp"
+                android:paddingTop="10dp"
+                android:paddingRight="7dp"
+                android:paddingBottom="5dp"
+                android:tag="regular"
+                android:textColor="@color/color_1a1a1a"
+                android:textSize="15sp"
+                android:textStyle="normal" />
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/carousel_item_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/carousel_item_title"
+                android:layout_gravity="top"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
+                android:maxLines="3"
+                android:paddingLeft="7dp"
+                android:paddingRight="7dp"
+                android:tag="regular"
+                android:textColor="@color/color_8b93a0"
+                android:textSize="14sp"
+                android:textStyle="normal" />
+
+        </RelativeLayout>
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <RelativeLayout
+            android:id="@+id/kora_items"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/hash_tags_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="5dp"
+                android:tag="regular"
+                android:textColor="@color/splash_background_color"
+                android:textSize="14sp" />
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/knowledge_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hash_tags_view"
+                android:layout_alignParentLeft="true"
+                android:ellipsize="end"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:tag="regular"
+                android:textColor="@color/color_a7b0be"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/knowledge_mode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hash_tags_view"
+                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@+id/knowledge_type"
+                android:ellipsize="end"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:tag="regular"
+                android:textColor="@color/color_a7b0be"
+                android:textSize="12sp"
+                android:textStyle="normal" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/knowledge_type"
+                android:background="@color/color_efefef" />
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/carousel_button_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
+            android:layout_marginTop="6dp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

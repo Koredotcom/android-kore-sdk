@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.models.AdvanceListTableModel;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateListAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;

@@ -67,7 +67,7 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvAction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -111,6 +111,7 @@
                 android:id="@+id/rvDefaultButtons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
                 android:layout_marginTop="@dimen/dimen_7dp"
                 android:visibility="gone" />
 

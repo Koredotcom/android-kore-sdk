@@ -202,6 +202,18 @@
              shown by widgets in the action bar. -->
         <attr format="reference" name="popupTheme"/>
     </declare-styleable>
+    <style name="MyTableDialogTheme" parent="Theme.AppCompat.Dialog">
+        <!-- Fill the screen -->
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
 
+        <!-- No backgrounds, titles or window float -->
+        <item name="android:windowBackground">@null</item>
+        <item name="android:windowNoTitle">true</item>
+
+        <!-- Just to prove it's working -->
+        <item name="android:background">@android:color/transparent</item>
+    </style>
 
 </resources>

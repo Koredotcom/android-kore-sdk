@@ -20,7 +20,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.DimensionUtil;
 
 public class BotButtonTemplateAdapter extends BaseAdapter {
     private ArrayList<BotButtonModel> botButtonModels = new ArrayList<>();

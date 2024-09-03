@@ -6,9 +6,6 @@ package kore.botssdk.events;
 
 import android.net.NetworkInfo;
 
-/**
- * Created by Pradeep on 09-Jul-15.
- */
 public class NetworkEvents {
 
     public static class NetworkConnectivityEvent {

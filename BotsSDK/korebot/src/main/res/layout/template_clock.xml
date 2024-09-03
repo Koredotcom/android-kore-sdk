@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/list_view_template_bg"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="10dp"
+        android:paddingEnd="@dimen/dimen_0">
+
+        <kore.botssdk.view.CustomTextView
+            android:id="@+id/hours_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="0"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="12" />
+
+        <kore.botssdk.view.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="0"
+            android:text="@string/colon"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
+
+        <kore.botssdk.view.CustomTextView
+            android:id="@+id/minutes_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="0"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            tools:text="00" />
+
+        <kore.botssdk.view.CustomTextView
+            android:id="@+id/am_pm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            tools:text="AM" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekbar_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="23"
+                android:maxHeight="2dp"
+                android:min="0"
+                android:progress="0"
+                android:progressDrawable="@drawable/clock_seekbar_drawable"
+                android:thumbTint="@color/selector_seekbar_button_color" />
+
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/seekbar_minutes"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:max="59"
+                android:maxHeight="2dp"
+                android:min="0"
+                android:progress="0"
+                android:progressDrawable="@drawable/clock_seekbar_drawable"
+                android:thumbTint="@color/selector_seekbar_button_color" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <kore.botssdk.view.CustomTextViewBold
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:background="@drawable/button_drawable"
+        android:gravity="center"
+        android:text="@string/confirm"
+        android:textColor="@color/white" />
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -32,7 +32,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AdvancedListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.DimensionUtil;
 
 @SuppressLint("UnknownNullness")
 public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {

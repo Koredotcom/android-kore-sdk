@@ -17,12 +17,11 @@ import kore.botssdk.adapter.QuickRepliesAdapter;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.QuickReplyTemplate;
-import kore.botssdk.view.viewUtils.DimensionUtil;
-import kore.botssdk.view.viewUtils.LayoutUtils;
-import kore.botssdk.view.viewUtils.MeasureUtils;
+import kore.botssdk.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.LayoutUtils;
+import kore.botssdk.viewUtils.MeasureUtils;
 
-/**
- * Created by Pradeep Mahato on 28/7/17.
+/*
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class QuickReplyView extends ViewGroup {

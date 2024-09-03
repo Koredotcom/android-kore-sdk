@@ -25,7 +25,7 @@ import kore.botssdk.models.BotListWidgetModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class BotListWidgetTemplateAdapter extends BaseAdapter {
     private ArrayList<BotListWidgetModel> botListModelArrayList = new ArrayList<>();
@@ -90,47 +90,49 @@ public class BotListWidgetTemplateAdapter extends BaseAdapter {
         BotListWidgetModel botListModel = getItem(position);
         holder.botListItemImage.setVisibility(View.GONE);
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
-            holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
-        }
+        if (botListModel != null) {
+            if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
+                holder.botListItemImage.setVisibility(View.VISIBLE);
+                Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+            }
 
-        holder.botListItemTitle.setTag(botListModel);
-        holder.botListItemTitle.setText(botListModel.getTitle());
-        holder.bot_list_item_cost.setText(botListModel.getValue().getText());
+            holder.botListItemTitle.setTag(botListModel);
+            holder.botListItemTitle.setText(botListModel.getTitle());
 
-        if(botListModel.getColor() != null)
-            holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getColor()));
+            if (botListModel.getValue() != null && !StringUtils.isNullOrEmpty(botListModel.getValue().getText()))
+                holder.bot_list_item_cost.setText(botListModel.getValue().getText());
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
-            holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-            holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+            if (botListModel.getColor() != null) holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getColor()));
 
-            if(sharedPreferences != null)
-                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, "#505968")));
-        }
+            if (!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
+                holder.botListItemSubtitle.setVisibility(View.VISIBLE);
+                holder.botListItemSubtitle.setText(botListModel.getSubtitle());
 
-        holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    int position = parentListView.getPositionForView(v);
-                    BotListWidgetModel _botListModel = getItem(position);
-                    if (_botListModel != null && _botListModel.getDefault_action() != null) {
-                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
-                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+                if (sharedPreferences != null)
+                    holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, "#505968")));
+            }
 
-                            if(!StringUtils.isNullOrEmpty(_botListModel.getTitle()) && !StringUtils.isNullOrEmpty(botListModel.getSubtitle()))
-                                composeFooterInterface.onSendClick(_botListModel.getTitle()+"\n"+_botListModel.getSubtitle(),false);
-                            else if(!StringUtils.isNullOrEmpty(_botListModel.getTitle()))
-                                composeFooterInterface.onSendClick(_botListModel.getTitle(),false);
+            holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                        int position = parentListView.getPositionForView(v);
+                        BotListWidgetModel _botListModel = getItem(position);
+                        if (_botListModel != null && _botListModel.getDefault_action() != null) {
+                            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+                                invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
+                            } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
+
+                                if (!StringUtils.isNullOrEmpty(_botListModel.getTitle()) && !StringUtils.isNullOrEmpty(botListModel.getSubtitle()))
+                                    composeFooterInterface.onSendClick(_botListModel.getTitle() + "\n" + _botListModel.getSubtitle(), false);
+                                else if (!StringUtils.isNullOrEmpty(_botListModel.getTitle()))
+                                    composeFooterInterface.onSendClick(_botListModel.getTitle(), false);
+                            }
                         }
                     }
                 }
-            }
-        });
-
+            });
+        }
     }
 
     public void setBotListModelArrayList(@NonNull ArrayList<BotListWidgetModel> botListModelArrayList) {

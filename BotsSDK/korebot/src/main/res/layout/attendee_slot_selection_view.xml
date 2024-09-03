@@ -39,6 +39,7 @@
                 android:layout_below="@+id/meeting_info_bar"
                 android:clipChildren="false"
                 android:clipToPadding="false"
+                android:nestedScrollingEnabled="false"
                 android:orientation="vertical"
                 android:visibility="visible"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />

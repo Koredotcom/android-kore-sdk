@@ -44,19 +44,6 @@ public class RestBuilder {
         return restAPI;
     }
 
-    public static RestAPI getTokenRestAPI(){
-        if(restAPI == null) {
-            restAPI = new Retrofit.Builder()
-                    .baseUrl(Server.TOKEN_SERVER_URL)
-                    .addConverterFactory(new NullOnEmptyConverterFactory())
-                    .addConverterFactory(createConverter())
-                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(getClient())
-                    .build().create(RestAPI.class);
-        }
-        return restAPI;
-    }
-
     public static void setContext(Context context)
     {
         mContext = context;

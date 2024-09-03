@@ -16,7 +16,6 @@ import kore.botssdk.R;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class BotCarouselItemButtonAdapter extends BaseAdapter {
 

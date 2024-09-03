@@ -18,33 +18,28 @@ import kore.botssdk.fileupload.ssl.KoreHttpsUrlConnectionBuilder;
 import kore.botssdk.fileupload.utils.NetworkUtility;
 import kore.botssdk.utils.LogUtils;
 
-
-public class FileTokenManager{
+public class FileTokenManager {
     private final Context _mContext;
+
     public FileTokenManager(String host, FileTokenListener listener, String accessToken,
                             Context context, String userOrTeamId, boolean isAnonymousUser,
                             boolean isWebHook, String botId) {
-
         _mContext = context;
 
         String _Url;
-        if (isAnonymousUser)
-        {
-            if(!isWebHook)
+        if (isAnonymousUser) {
+            if (!isWebHook)
                 _Url = host + String.format(FileUploadEndPoints.ANONYMOUS_FILE_TKN);
             else
                 _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TKN, botId, "ivr");
-        }
-        else
-        {
-            if(!isWebHook)
+        } else {
+            if (!isWebHook)
                 _Url = host + String.format(FileUploadEndPoints.FILE_TKN, userOrTeamId);
             else
                 _Url = host + String.format(FileUploadEndPoints.WEBHOOK_ANONYMOUS_FILE_TKN, botId, "ivr");
         }
 
         if (NetworkUtility.isNetworkConnectionAvailable(_mContext)) {
-
             try {
                 String resp = getFileToken(_Url, accessToken);
                 System.out.println("The Final resp is " + resp);
@@ -68,18 +63,14 @@ public class FileTokenManager{
                 if (listener != null)
                     listener.fileTokenRecievedWithFailure(Constants.SERVER_ERROR, ex.toString());
             }
-
-
         } else {
             if (listener != null)
                 listener.fileTokenRecievedWithFailure(Constants.NETWORK_FAILURE, "No network available.");
         }
-
     }
 
 
-    private  String  getFileToken(String Url, String header) {
-
+    private String getFileToken(String Url, String header) {
         String text = "";
         BufferedReader reader = null;
         HttpsURLConnection conn = null;
@@ -92,7 +83,7 @@ public class FileTokenManager{
 //            koreHttpsUrlConnectionBuilder.pinKoreCertificateToConnection();
             conn = koreHttpsUrlConnectionBuilder.getHttpsURLConnection();
             conn.setDoOutput(true);
-            if (header != null) conn.addRequestProperty("Authorization", "bearer " + header);
+            if (header != null) conn.addRequestProperty("Authorization", header);
             conn.addRequestProperty("User-Agent", Constants.getUserAgent());
             System.out.println(" The userAgent in FileToken Service is " + Constants.getUserAgent());
 
@@ -114,7 +105,7 @@ public class FileTokenManager{
             LogUtils.d("FileTokenService", ex.toString());
         } finally {
             try {
-                if(conn != null)
+                if (conn != null)
                     conn.disconnect();
 
                 if (reader != null)
@@ -129,9 +120,6 @@ public class FileTokenManager{
                 ex.printStackTrace();
             }
         }
-
         return text;
-        
     }
-
 }

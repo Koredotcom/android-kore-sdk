@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <kore.botssdk.views.CustomTextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvDescription"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,7 +31,7 @@
             android:textColor="@color/txtFontBlack"
             android:textSize="@dimen/text_size_small" />
 
-        <kore.botssdk.views.CustomTextViewBold
+        <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvDescriptionTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

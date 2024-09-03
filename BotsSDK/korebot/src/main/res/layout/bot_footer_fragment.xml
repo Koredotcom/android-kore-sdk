@@ -10,7 +10,6 @@
         android:id="@+id/mainContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:alpha="0.0"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:focusable="true"
@@ -34,22 +33,13 @@
             android:background="@color/footerdivider_color"
             android:visibility="gone" />
 
-        <!--<com.kore.koreapp.views.AudioVisualiserView
-            android:id="@+id/bot_bottom_strip"
-            android:layout_width="220dp"
-            android:layout_height="80dp"
-            android:layout_gravity="bottom"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="5dp"
-            android:background="@color/teamPostViewForAlertsStripColor"
-            android:orientation="horizontal"
-            android:visibility="gone"/>-->
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/attachment_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="2dp" />
+            android:layout_marginStart="2dp"
+            android:nestedScrollingEnabled="false"
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/rlFooter"
@@ -103,12 +93,12 @@
 
                     <ImageView
                         android:id="@+id/attachemnt"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
                         android:layout_gravity="center_vertical"
                         android:importantForAccessibility="no"
-                        android:padding="8dp"
-                        android:visibility="visible"
+                        android:padding="3dp"
+                        android:visibility="gone"
                         app:srcCompat="@drawable/attachment_comp" />
 
                     <LinearLayout
@@ -162,13 +152,14 @@
                     android:orientation="horizontal">
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="vertical">
 
-                        <EditText
+                        <kore.botssdk.view.CustomEditTextView
                             android:id="@+id/edtTxtMessage"
-                            android:layout_width="fill_parent"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/dimen_5dp"
                             android:background="@null"
@@ -188,6 +179,15 @@
 
                     </LinearLayout>
 
+                    <ImageView
+                        android:id="@+id/audio_speak_tts"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="@dimen/dimen_12dp"
+                        android:src="@drawable/ic_volume_up_black_24dp"
+                        android:visibility="visible" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -195,10 +195,30 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/dimen_5dp"
                     android:orientation="horizontal">
 
+                    <LinearLayout
+                        android:id="@+id/llSend"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_gravity="center_vertical"
+                        android:background="@drawable/ic_send_bg"
+                        android:gravity="center"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/sendTv"
+                            android:layout_width="@dimen/dimen_20dp"
+                            android:layout_height="@dimen/dimen_20dp"
+                            android:layout_margin="@dimen/dimen_5dp"
+                            android:background="@drawable/ic_send_small" />
+
+                    </LinearLayout>
+
                     <TextView
-                        android:id="@+id/sendTv"
+                        android:id="@+id/sendTv1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
@@ -214,25 +234,13 @@
 
                     <ImageView
                         android:id="@+id/rec_audio_img"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_height="@dimen/dimen_35dp"
                         android:layout_gravity="center_vertical"
-                        android:alpha="0.70"
                         android:importantForAccessibility="no"
-                        android:padding="5dp"
                         android:src="@drawable/ic_mic"
-                        android:visibility="visible" />
+                        android:visibility="gone" />
 
-                    <ImageView
-                        android:id="@+id/audio_speak_tts"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_vertical"
-                        android:alpha="0.70"
-                        android:importantForAccessibility="no"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_volume_up_black_24dp"
-                        android:visibility="visible" />
 
                 </LinearLayout>
 
@@ -269,7 +277,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="1.0"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/text_view_speech"
@@ -328,7 +337,7 @@
                 android:tag="regular"
                 android:text="@string/tap_to_speak"
                 android:textColor="#ffffff"
-                android:textSize="12dp"
+                android:textSize="@dimen/text_size_small"
                 app:drawableTopCompat="@drawable/mic_white" />
         </RelativeLayout>
     </LinearLayout>

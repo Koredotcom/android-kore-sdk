@@ -37,7 +37,7 @@
                 android:src="@drawable/ic_pause_icon"
                 android:importantForAccessibility="no" />
 
-            <kore.botssdk.views.CustomTextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/tvVideoTiming"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

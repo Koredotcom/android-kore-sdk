@@ -102,7 +102,6 @@
     <string name="add_suggestions">Add Suggestions</string>
     <string name="get_started">Get Started</string>
     <string name="see_all_results">See all results</string>
-    <string name="notification_channel_id">3903</string>
     <string name="more">More</string>
     <string name="download">Download</string>
     <string name="nodata">No Data</string>
@@ -177,15 +176,23 @@
     <string name="close">Close</string>
     <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
     <string name="bot_not_connected">Unable to connect to the bot. Please try again later</string>
+    <string name="colon">:</string>
+    <string name="default_click_time">12:00:AM</string>
+    <string name="what_can_be_improved">What can be Improved ?</string>
+    <string name="select_all">Select all</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="attachment_upload_photo">Upload Photo</string>
+    <string name="attachment_upload_video">Upload Video</string>
+    <string name="attachment_upload_document">Upload Document</string>
+    <string name="attachment_capture_photo">Capture Photo</string>
+    <string name="attachment_capture_video">Capture Video</string>
 
     <string-array name="attachments_strings">
-       <!-- <item>Take Photo</item>-->
-        <item>Upload Photo</item>
-        <!--<item>Take Video</item>-->
-        <item>Upload Video</item>
-        <item>Attach Document</item>
+        <item>@string/attachment_capture_photo</item>
+        <item>@string/attachment_capture_video</item>
+        <item>@string/attachment_upload_photo</item>
+        <item>@string/attachment_upload_video</item>
+        <item>@string/attachment_upload_document</item>
     </string-array>
-
-
-
 </resources>

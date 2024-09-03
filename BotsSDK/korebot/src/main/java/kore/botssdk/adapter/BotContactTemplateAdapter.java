@@ -23,7 +23,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.ContactTemplateModel;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.CircleTransform;
+import kore.botssdk.viewUtils.CircleTransform;
 
 public class BotContactTemplateAdapter extends BaseAdapter {
     ArrayList<ContactTemplateModel> botListModelArrayList = new ArrayList<>();

@@ -23,13 +23,11 @@ import com.squareup.picasso.Transformation;
 import java.io.File;
 
 import kore.botssdk.R;
-import kore.botssdk.application.AppControl;
 import kore.botssdk.drawables.ProfileDrawable;
 import kore.botssdk.utils.StringConstants;
-import kore.botssdk.view.viewUtils.DimensionUtil;
+import kore.botssdk.viewUtils.DimensionUtil;
 
-/**
- * Created by tapasya on 01/10/15.
+/*
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class CircularProfileView extends RoundedImageView {

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/dimen_15dp"
+    android:background="@drawable/cancel_action_back"
+    android:orientation="vertical">
+
+    <kore.botssdk.view.CustomTextView
+        android:id="@+id/tvButtonLinkTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/theme1_left_bubble_bg"
+        android:textColor="@color/txtFontBlack"
+        android:textSize="@dimen/text_size_sub_header"
+        tools:text="Title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/botCustomButtonList"
+        android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

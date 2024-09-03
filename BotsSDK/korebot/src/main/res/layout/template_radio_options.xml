@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <kore.botssdk.view.CustomTextViewBold
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:ellipsize="end"
+        android:gravity="center_vertical|start"
+        android:maxLines="1"
+        android:minWidth="300dp"
+        android:minHeight="30dp"
+        android:textColor="@color/kora_grey"
+        android:textSize="@dimen/text_size_sub_header"
+        tools:text="@string/title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:nestedScrollingEnabled="false"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp" />
+
+    <kore.botssdk.view.CustomTextViewBold
+        android:id="@+id/confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:background="@drawable/button_drawable"
+        android:gravity="center"
+        android:text="@string/done"
+        android:textColor="@color/white" />
+</androidx.appcompat.widget.LinearLayoutCompat>

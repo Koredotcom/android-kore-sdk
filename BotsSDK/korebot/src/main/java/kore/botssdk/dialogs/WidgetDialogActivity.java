@@ -78,7 +78,7 @@ public class WidgetDialogActivity extends Dialog {
         sideBar.setBackgroundColor(Color.parseColor(widgetDialogModel.getColor()));
         recycler_actions.setVisibility(View.GONE);
         adapter = new WidgetCancelActionsAdapter((Activity) mContext,
-                WidgetDialogActivity.this, model, isFromFullView, verticalListViewActionHelper);
+                this, model, isFromFullView, verticalListViewActionHelper);
         caculateTime((long) model.getData().getDuration().getStart(), (long) model.getData().getDuration().getEnd());
 
 

@@ -1,6 +1,6 @@
 package kore.botssdk.activity;
 
-import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -22,8 +22,6 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.security.ProviderInstaller;
-
-import java.util.UUID;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -63,7 +61,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
                 Log.e("Has Permission", "true");
             } else
             {
-                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST,
+                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST,
                         Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO);
             }
         }
@@ -199,7 +197,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == CAPTURE_IMAGE_BUNDLED_PREMISSION_REQUEST) {
+        if (requestCode == CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
                 Log.e("Has Permission", "true");
             }

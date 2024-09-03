@@ -1,6 +1,6 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -27,7 +27,7 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapter.ViewHolder>{
     private final ArrayList<BotListModel> model;

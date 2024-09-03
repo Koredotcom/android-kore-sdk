@@ -13,7 +13,7 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.view.viewHolder.FormActionViewHolder;
+import kore.botssdk.viewholders.FormActionViewHolder;
 
 public class FormActionsAdapter extends RecyclerView.Adapter<FormActionViewHolder> {
     ArrayList<FormActionTemplate> formActionTemplateArrayList;

@@ -20,33 +20,31 @@ import java.util.HashMap;
 import kore.botssdk.R;
 import kore.botssdk.listener.AttachmentListner;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.FileUtils;
+import kore.botssdk.viewUtils.FileUtils;
 
 public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<ComposebarAttachmentAdapter.ImageAttachView> {
 
     final Context context;
     final AttachmentListner attachmentListner;
-    public ComposebarAttachmentAdapter(@NonNull Context context, @NonNull AttachmentListner attachmentListner)
-    {
-        this.context=context;
-        this.attachmentListner=attachmentListner;
+
+    public ComposebarAttachmentAdapter(@NonNull Context context, @NonNull AttachmentListner attachmentListner) {
+        this.context = context;
+        this.attachmentListner = attachmentListner;
     }
 
     @NonNull
     @Override
     public ImageAttachView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.attachment_view_composebar,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.attachment_view_composebar, parent, false);
         return new ImageAttachView(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ImageAttachView holder, int position) {
-        String fileExtension=dataList.get(position).get("fileExtn");
-        if(FileUtils.ImageTypes().contains(fileExtension)|| FileUtils.VideoTypes().contains(fileExtension))
-        {
+        String fileExtension = dataList.get(position).get("fileExtn");
+        if (FileUtils.ImageTypes().contains(fileExtension)) {
             Glide.with(context).load(dataList.get(position).get("localFilePath")).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(holder.attach_view));
-
-           }else {
+        } else {
             holder.attach_view.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(fileExtension) ? fileExtension.toLowerCase() : ""));
         }
         holder.close_icon.setOnClickListener(new View.OnClickListener() {
@@ -64,15 +62,16 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
         return dataList.size();
     }
 
-    final ArrayList<HashMap<String, String>> dataList=new ArrayList<>();
+    final ArrayList<HashMap<String, String>> dataList = new ArrayList<>();
+
     public void addAttachment(@NonNull HashMap<String, String> attachmentKey) {
         dataList.add(attachmentKey);
-        notifyItemRangeInserted(0, dataList.size() - 1);
+        notifyDataSetChanged();
     }
 
-    public void clearAll()
-    {
+    public void clearAll() {
         dataList.clear();
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -81,15 +80,15 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
     }
 
 
-    static class ImageAttachView extends RecyclerView.ViewHolder
-    {
+    static class ImageAttachView extends RecyclerView.ViewHolder {
         final View close_icon;
         final ImageView attach_view;
+
         public ImageAttachView(@NonNull View itemView) {
             super(itemView);
-            close_icon=itemView.findViewById(R.id.close_icon);
+            close_icon = itemView.findViewById(R.id.close_icon);
 
-            attach_view=itemView.findViewById(R.id.attach_view);
+            attach_view = itemView.findViewById(R.id.attach_view);
         }
     }
 }

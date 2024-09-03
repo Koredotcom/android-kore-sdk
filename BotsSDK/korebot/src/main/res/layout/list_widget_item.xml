@@ -205,6 +205,7 @@
             android:id="@+id/buttonsList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false"
             android:layout_marginStart="10dp"
             android:layout_marginBottom="10dp" />
     </net.cachapa.expandablelayout.ExpandableLayout>

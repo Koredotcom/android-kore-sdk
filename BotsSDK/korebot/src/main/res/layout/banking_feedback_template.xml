@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:padding="@dimen/dimen_10dp">
 
-    <kore.botssdk.views.CustomTextViewBold
+    <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvFeedbackHeading"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:visibility="visible"
         android:focusable="true" />
 
-    <kore.botssdk.views.CustomTextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvEmpathyMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
             android:layout_marginTop="@dimen/dimen_15dp"
             android:background="@drawable/rounded_compose">
 
-            <kore.botssdk.views.CustomEditTextView
+            <kore.botssdk.view.CustomEditTextView
                 android:id="@+id/edtSuggestions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,6 +76,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvButtonList"
             android:layout_width="match_parent"
+            android:nestedScrollingEnabled="false"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_15dp" />
 

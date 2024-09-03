@@ -2,7 +2,7 @@ package kore.botssdk.adapter;
 
 import static android.view.View.GONE;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -50,7 +50,7 @@ import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.AutoExpandListView;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 @SuppressLint("UnknownNullness")
 public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonClickListner {
@@ -183,7 +183,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getDescription());
 
-            if (botListModel.getDescriptionStyles() != null)
+            if (botListModel.getDescriptionStyles() != null && botListModel.getDescriptionStyles().getColor() != null)
                 holder.botListItemSubtitle.setTextColor(Color.parseColor(botListModel.getDescriptionStyles().getColor()));
         }
 
@@ -409,7 +409,8 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 }
                             }
 
-                            holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
+                            if (headerOptionsModel.getButtonStyles() != null && headerOptionsModel.getButtonStyles().getColor() != null)
+                                holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
                         }
 
                         holder.tvAction.setTypeface(holder.tvAction.getTypeface(), Typeface.BOLD);
@@ -440,7 +441,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground();
                         gradientDrawable.setStroke(0, null);
 
-                        if (headerOptionsModel.getStyles() != null) {
+                        if (headerOptionsModel.getStyles() != null && headerOptionsModel.getStyles().getColor() != null) {
                             holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getStyles().getColor()));
                         }
 
@@ -500,7 +501,8 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 gradientDrawable.setColor(Color.parseColor("#224741fa"));
                             }
 
-                            holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
+                            if (headerOptionsModel.getButtonStyles() != null && headerOptionsModel.getButtonStyles().getColor() != null)
+                                holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
                         }
 
                         holder.tvAction.setTypeface(holder.tvAction.getTypeface(), Typeface.BOLD);
@@ -552,7 +554,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setMovementMethod(null);
                         holder.tvAction.setBackground(null);
 
-                        if (headerOptionsModel.getStyles() != null) {
+                        if (headerOptionsModel.getStyles() != null && headerOptionsModel.getStyles().getColor() != null) {
                             holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getStyles().getColor()));
                         }
 

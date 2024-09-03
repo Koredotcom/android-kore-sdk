@@ -21,7 +21,7 @@ import kore.botssdk.models.BotTableListModel;
 import kore.botssdk.models.BotTableListRowItemsModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.AutoExpandListView;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class BotTableListTemplateAdapter extends BaseAdapter {
     ArrayList<BotTableListModel> botTableListModels = new ArrayList<>();

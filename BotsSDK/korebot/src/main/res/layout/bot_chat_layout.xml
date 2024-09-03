@@ -4,24 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/ivChaseBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:background="@mipmap/background"
-        android:visibility="gone"
-        android:importantForAccessibility="no" />
-
-    <ImageView
-        android:id="@+id/ivChaseLogo"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/ic_launcher"
-        android:visibility="gone"
-        android:importantForAccessibility="no" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,13 +22,6 @@
             android:id="@+id/chatLayoutContentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/chatLayoutFooterContainer" />
-
-        <!-- For the Suggestion -->
-        <FrameLayout
-            android:id="@+id/quickReplyLayoutFooterContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_above="@id/chatLayoutFooterContainer" />
 
         <!-- Progress bar representing loading -->
