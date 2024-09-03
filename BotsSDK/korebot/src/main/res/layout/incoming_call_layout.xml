@@ -16,7 +16,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_avatar_pic" />
+            android:src="@mipmap/ic_avatar_pic" />
 
         <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvAgentName"

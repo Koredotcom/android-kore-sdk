@@ -402,8 +402,6 @@ class WebSocketWriter extends Handler {
 
         if (len > 0) {
             if (mOptions.getMaskClientFrames()) {
-                /// \todo optimize masking
-                /// \todo masking within buffer of output stream
                 for (int i = 0; i < len; ++i) {
                     payload[i + offset] ^= mask[i % 4];
                 }

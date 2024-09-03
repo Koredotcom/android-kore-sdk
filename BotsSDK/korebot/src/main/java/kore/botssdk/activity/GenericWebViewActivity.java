@@ -23,7 +23,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
-import kore.botssdk.BuildConfig;
 import kore.botssdk.R;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -121,11 +120,9 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
                 @Override
                 public boolean onConsoleMessage(ConsoleMessage consoleMessage) {
-                    if (BuildConfig.DEBUG) {
-                        Log.d(LOG_TAG, consoleMessage.message() + " -- From line "
-                                + consoleMessage.lineNumber() + " of "
-                                + consoleMessage.sourceId());
-                    }
+                    Log.d(LOG_TAG, consoleMessage.message() + " -- From line "
+                            + consoleMessage.lineNumber() + " of "
+                            + consoleMessage.sourceId());
 
                     return super.onConsoleMessage(consoleMessage);
                 }

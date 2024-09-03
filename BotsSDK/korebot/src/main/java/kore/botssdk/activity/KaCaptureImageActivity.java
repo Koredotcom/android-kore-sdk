@@ -2,9 +2,9 @@ package kore.botssdk.activity;
 
 import static android.os.Build.VERSION_CODES.TIRAMISU;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -57,13 +57,11 @@ import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.KoreMedia;
-import kore.botssdk.utils.AsyncTaskExecutor;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
-import kore.botssdk.utils.StringUtils;
 
 @SuppressLint("UnknownNullness")
 public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreMedia, ActivityResultCallback<ActivityResult> {
@@ -511,44 +509,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
         setResult(RESULT_OK, resultIntent);
         finish();
-    }
-
-    protected class FetchImageDataAndCrop extends AsyncTaskExecutor<String> {
-        private final Uri selectedImage;
-        private String imageUrl;
-
-        public FetchImageDataAndCrop(Uri selectedImage) {
-            this.selectedImage = selectedImage;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            showProgress("", false);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void doInBackground(String... strings) {
-            imageUrl = getPath(KaCaptureImageActivity.this, selectedImage);
-        }
-
-        @Override
-        protected void onPostExecute() {
-            if (StringUtils.isNullOrEmpty(imageUrl)) {
-                imageUrl = !(imageUrl.contains("file://")) ? "file://" + imageUrl : imageUrl;
-            } else {
-                Toast.makeText(KaCaptureImageActivity.this, "image fetch failed", Toast.LENGTH_LONG).show();
-                finish();
-            }
-
-            dismissProgress();
-        }
-
-        @Override
-        protected void onCancelled() {
-            // update UI on task cancelled
-            showToast("Unable to attach!");
-        }
     }
 
     void finishAndCancelOperation() {

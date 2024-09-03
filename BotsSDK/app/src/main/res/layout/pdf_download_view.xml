@@ -22,7 +22,7 @@
             android:minWidth="60dp"
             android:minHeight="60dp"
             android:scaleType="centerCrop"
-            android:src="@drawable/download"
+            android:src="@mipmap/download"
             android:visibility="visible" />
 
 

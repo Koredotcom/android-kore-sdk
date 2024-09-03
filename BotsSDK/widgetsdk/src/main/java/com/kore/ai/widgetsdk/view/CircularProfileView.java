@@ -98,7 +98,7 @@ public class CircularProfileView extends RoundedImageView {
             PROFILE_DRAWABLE_PADDING = 0;
         }
 
-        setPadding(PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING); //TODO work on refining this later..
+        setPadding(PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING);
 
         int[] attrsArray = new int[]{
                 android.R.attr.id, // 0
@@ -250,7 +250,7 @@ public class CircularProfileView extends RoundedImageView {
         float xCenter = (width - (getPaddingLeft() + getPaddingRight())) / 2f;
         float yCenter = (height - (getPaddingTop() + getPaddingBottom())) / 2f;
         circlePath = new Path();
-        // TODO revisit this
+        //revisit this
         circlePath.addCircle(xCenter + getPaddingLeft(), yCenter + getPaddingTop(), width / 2f, Path.Direction.CCW);
     }
 

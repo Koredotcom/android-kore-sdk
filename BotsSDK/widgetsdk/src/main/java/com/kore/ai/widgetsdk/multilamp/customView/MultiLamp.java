@@ -63,7 +63,6 @@ public class MultiLamp extends RelativeLayout {
         init();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public MultiLamp(Activity activity, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(activity.getApplicationContext(), attrs, defStyleAttr, defStyleRes);
         this.activity = activity;
@@ -90,11 +89,6 @@ public class MultiLamp extends RelativeLayout {
         if (null != this.getParent()) {
             ((ViewGroup) activity.getWindow().getDecorView()).removeView(this);
         }
-        //todo need to work on it
-        //        WindowManager.LayoutParams params5 = new WindowManager.LayoutParams(
-//                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
-//                WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-//                PixelFormat.TRANSLUCENT);
 
         ((ViewGroup) activity.getWindow().getDecorView()).addView(this);
 

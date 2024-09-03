@@ -129,19 +129,6 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
     }
 
 
-    protected void showProgress(String msg, boolean isCancelable) {
-        if (mProgressDialog != null && mProgressDialog.isShowing() || isDestroyed()) {
-//            dismissProgress();
-            return;
-        }
-
-        mProgressDialog = ProgressDialog.show(this, getResources().getString(R.string.app_name), msg);
-        mProgressDialog.setCancelable(isCancelable);
-        mProgressDialog.setContentView(R.layout.ka_progress_indicator);
-    //   ((TextView)mProgressDialog.findViewById(R.id.title)).setText(TextUtils.isEmpty(msg)? "please wait" : msg);
-//        mProgressDialog.show();
-    }
-
     protected void dismissProgress() {
         if (!isDestroyed()) {
             if (mProgressDialog == null || !mProgressDialog.isShowing()) {

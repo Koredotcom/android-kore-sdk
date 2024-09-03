@@ -86,9 +86,9 @@ public class KaPermissionsHelper {
     }
 
     public static void requestForPermission(Fragment fragment, String permission, int requestCode) {
-        //TODO: check for all permissions shouldShowRequestPermissionRationale
+        //check for all permissions shouldShowRequestPermissionRationale
         if (fragment.shouldShowRequestPermissionRationale(permission)) {
-            //TODO: need to show a dialog with a message to the user why should he grant permission
+            //need to show a dialog with a message to the user why should he grant permission
             //call the below method on click OK of the dialog. For now if, else block code remains same
             fragment.requestPermissions(new String[]{permission},
                     requestCode);
@@ -99,9 +99,9 @@ public class KaPermissionsHelper {
     }
 
     public static void requestForPermission(Fragment fragment, String[] permissions, int requestCode) {
-        //TODO: check for all permissions shouldShowRequestPermissionRationale
+        //check for all permissions shouldShowRequestPermissionRationale
         if (fragment.shouldShowRequestPermissionRationale(permissions[0])) {
-            //TODO: need to show a dialog with a message to the user why should he grant permission
+            //need to show a dialog with a message to the user why should he grant permission
             //call the below method on click OK of the dialog. For now if, else block code remains same
             fragment.requestPermissions(permissions,
                     requestCode);

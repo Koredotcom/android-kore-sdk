@@ -73,7 +73,7 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
 
             if (!StringUtils.isNullOrEmpty(liveSearchResultsModel.getPage_image_url()))
                 Glide.with(context).load(liveSearchResultsModel.getPage_image_url())
-                        .error(R.drawable.ic_launcher)
+                        .error(R.mipmap.ic_launcher)
                         .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(holder.ivPagesCell));
         }
 

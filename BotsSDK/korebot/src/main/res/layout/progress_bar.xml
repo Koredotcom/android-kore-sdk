@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:contentDescription="kore_login_icon"
-            app:srcCompat="@mipmap/ic_notification" />
+            app:srcCompat="@drawable/ic_launcher" />
 
 
         <TextView

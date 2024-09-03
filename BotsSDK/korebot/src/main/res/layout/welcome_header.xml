@@ -42,7 +42,7 @@
             android:layout_marginStart="@dimen/dimen_3dp"
             android:layout_marginTop="@dimen/dimen_5dp"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/emoji"
+            android:src="@mipmap/emoji"
             app:layout_constraintStart_toEndOf="@id/tvWelcomeHeader"
             app:layout_constraintTop_toTopOf="@+id/tvWelcomeHeader" />
 

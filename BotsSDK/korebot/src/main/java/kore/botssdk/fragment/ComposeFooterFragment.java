@@ -898,9 +898,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
             Bitmap thumbnail = null;
             String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
-            thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
+            thumbnail = BitmapFactory.decodeResource(getResources(), R.mipmap.videoplaceholder_left);
 
-            Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
+            Bitmap hover = BitmapFactory.decodeResource(getResources(), R.mipmap.btn_video_play_irc);
             thumbnail = overlay(thumbnail, hover);
             orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
             String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
@@ -1002,10 +1002,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 } catch (SecurityException se) {
                     se.printStackTrace();
                 }
-                Bitmap hover = BitmapFactory.decodeResource(getResources(), R.drawable.btn_video_play_irc);
+                Bitmap hover = BitmapFactory.decodeResource(getResources(), R.mipmap.btn_video_play_irc);
                 Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(requireActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
                 if (thumbnail == null) {
-                    thumbnail = BitmapFactory.decodeResource(getResources(), R.drawable.videoplaceholder_left);
+                    thumbnail = BitmapFactory.decodeResource(getResources(), R.mipmap.videoplaceholder_left);
 
                 }
                 thumbnail = overlay(thumbnail, hover);

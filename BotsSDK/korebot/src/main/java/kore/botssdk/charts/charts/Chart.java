@@ -399,37 +399,30 @@ public abstract class Chart<T extends ChartData<? extends IDataSet<? extends Ent
         this.mDragDecelerationFrictionCoef = newValue;
     }
 
-    @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, Easing.EasingFunction easingX, Easing.EasingFunction easingY) {
         this.mAnimator.animateXY(durationMillisX, durationMillisY, easingX, easingY);
     }
 
-    @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY, Easing.EasingFunction easing) {
         this.mAnimator.animateXY(durationMillisX, durationMillisY, easing);
     }
 
-    @RequiresApi(11)
     public void animateX(int durationMillis, Easing.EasingFunction easing) {
         this.mAnimator.animateX(durationMillis, easing);
     }
 
-    @RequiresApi(11)
     public void animateY(int durationMillis, Easing.EasingFunction easing) {
         this.mAnimator.animateY(durationMillis, easing);
     }
 
-    @RequiresApi(11)
     public void animateX(int durationMillis) {
         this.mAnimator.animateX(durationMillis);
     }
 
-    @RequiresApi(11)
     public void animateY(int durationMillis) {
         this.mAnimator.animateY(durationMillis);
     }
 
-    @RequiresApi(11)
     public void animateXY(int durationMillisX, int durationMillisY) {
         this.mAnimator.animateXY(durationMillisX, durationMillisY);
     }

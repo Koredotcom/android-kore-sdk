@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:src="@mipmap/checkbox_off"
+                android:src="@drawable/ic_check_off"
 
                 android:visibility="gone" />
 

@@ -140,35 +140,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         chatListener.onConnectionStateChanged(CONNECTION_STATE.RECONNECTION_STOPPED, false);
     }
 
-    private void makeJwtCallWithConfig(final boolean isRefresh) {
-        try {
-            String jwt = botClient.generateJWT(SDKConfiguration.Client.identity, SDKConfiguration.Client.client_secret, SDKConfiguration.Client.client_id, SDKConfiguration.Server.IS_ANONYMOUS_USER);
-            botName = SDKConfiguration.Client.bot_name;
-            streamId = SDKConfiguration.Client.bot_id;
-            if (!isRefresh) {
-                botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager);
-            } else {
-                KoreEventCenter.post(jwt);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
-            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
-            if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
-        }
-    }
-
-    public void makeJwtCallWithConfig() {
-        String jwt;
-        try {
-            jwt = botClient.generateJWTForAPI(SDKConfiguration.Client.webHook_identity, SDKConfiguration.Client.webHook_client_secret, SDKConfiguration.Client.webHook_client_id, SDKConfiguration.Server.IS_ANONYMOUS_USER);
-            KoreEventCenter.post(jwt);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
-        }
-    }
-
     private void makeStsJwtCallWithConfig(final boolean isRefresh) {
         Call<JWTTokenResponse> getBankingConfigService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(getRequestObject());
         getBankingConfigService.enqueue(new Callback<JWTTokenResponse>() {
@@ -177,8 +148,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 if (response.isSuccessful()) {
                     JWTTokenResponse jwtTokenResponse = response.body();
                     try {
-                        if(jwtTokenResponse != null)
-                        {
+                        if (jwtTokenResponse != null) {
                             String jwt = jwtTokenResponse.getJwt();
                             botName = SDKConfiguration.Client.bot_name;
                             streamId = SDKConfiguration.Client.bot_id;
@@ -408,9 +378,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(false);
         } else {
-            if (!SDKConfiguration.Client.isWebHook) {
-                makeStsJwtCallWithConfig(false);
-            } else makeJwtCallWithConfig();
+            makeStsJwtCallWithConfig(false);
         }
     }
 

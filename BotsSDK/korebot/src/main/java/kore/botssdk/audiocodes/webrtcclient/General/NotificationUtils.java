@@ -213,7 +213,7 @@ public class NotificationUtils {
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_view);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context, CHANNEL_ID_CALL)
-                        .setSmallIcon(R.mipmap.indicator_green)
+                        .setSmallIcon(R.mipmap.ic_launcher)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_CALL)
                         .setFullScreenIntent(fullScreenPendingIntent, true)

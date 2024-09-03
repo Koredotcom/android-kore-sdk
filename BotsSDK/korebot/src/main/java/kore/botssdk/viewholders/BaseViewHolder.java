@@ -109,7 +109,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             boolean isShowIcon = SDKConfiguration.BubbleColors.showIcon && iconUrl != null;
             botIcon.setVisibility(isShowIcon ? View.VISIBLE : View.GONE);
             if (isShowIcon) {
-                Glide.with(context).load(iconUrl).error(R.drawable.ic_launcher).into(new DrawableImageViewTarget(botIcon));
+                Glide.with(context).load(iconUrl).error(R.mipmap.ic_launcher).into(new DrawableImageViewTarget(botIcon));
             }
 
             if(SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.BubbleColors.showIconTop) {

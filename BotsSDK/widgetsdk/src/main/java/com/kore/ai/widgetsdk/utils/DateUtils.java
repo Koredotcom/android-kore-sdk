@@ -358,7 +358,7 @@ public class DateUtils {
                         if (isCurrentYear(sentDate)) {
                             time = dateMonthDay.format(date); // current year.. display in MMM DD format
                         } else {
-                            // TODO: the format should be according to the Locale being set in the Device.
+                            //the format should be according to the Locale being set in the Device.
                             time = dateFormat5.format(date); // older than current year.. display in mm/dd/yy format
                         }
                     }

@@ -289,11 +289,6 @@ class WebSocketReader extends Thread {
             }
 
         } else {
-
-            /// \todo refactor this for streaming processing, incl. fail fast on invalid UTF-8 within frame already
-
-            // within frame
-
             // see if we buffered complete frame
             if (mPosition >= mFrameHeader.mTotalLen) {
 

@@ -125,6 +125,7 @@
     <string name="hi">hi</string>
     <string name="cancel">Cancel</string>
     <string name="select_all">Select All</string>
+    <string name="select">Select</string>
     <string name="done">Done</string>
     <string name="loading_data">Please wait…</string>
 
@@ -297,5 +298,7 @@
     <string name="colon">:</string>
     <string name="what_can_be_improved">What can be Improved ?</string>
     <string name="widget_theme">Widget Theme</string>
+    <string name="menu">Menu</string>
+    <string name="login">Login</string>
 
 </resources>
