@@ -101,7 +101,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
         tvTheme2.setVisibility(GONE);
         vTheme.setVisibility(GONE);
 
-        KaMediaUtils.updateExternalStorageState();
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
         KoreEventCenter.register(this);
@@ -251,7 +250,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                     public void onClick(View v) {
                         popupWindow.dismiss();
                         if (checkForPermissionAccessAndRequest()) {
-                            KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_AUDIO, "");
+                            KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
                             if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
                                 KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
                             else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
@@ -372,7 +371,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                     public void onClick(View v) {
                         popupWindow.dismiss();
                         if (checkForPermissionAccessAndRequest()) {
-                            KaMediaUtils.setupAppDir(BundleConstants.MEDIA_TYPE_VIDEO, "");
+                            KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
                             if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                                 KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
                             else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
@@ -464,7 +463,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
     }
 
     private boolean checkForPermissionAccessAndRequest() {
-        return KaPermissionsHelper.hasPermission(itemView.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return KaPermissionsHelper.hasPermission(itemView.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 
 

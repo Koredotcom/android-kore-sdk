@@ -8,7 +8,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import kore.botssdk.adapter.ChatAdapterNew;
+import kore.botssdk.adapter.ChatAdapter;
 
 public class ChatAdapterItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -25,14 +25,14 @@ public class ChatAdapterItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
         int position = parent.getChildAdapterPosition(view);
-        ChatAdapterNew adapter = (ChatAdapterNew) parent.getAdapter();
+        ChatAdapter adapter = (ChatAdapter) parent.getAdapter();
         if (adapter == null) return;
         if (position < 0 || adapter.getItemCount() <= position) return;
 
         outRect.top = position == 0 ? firstItemMarginTop : commonVerticalMargin;
         outRect.bottom = commonVerticalMargin;
 
-        if (adapter.getItemType(position) == ChatAdapterNew.TEMPLATE_BUBBLE_REQUEST) {
+        if (adapter.getItemType(position) == ChatAdapter.TEMPLATE_BUBBLE_REQUEST) {
             outRect.left = messageMargin;
             outRect.right = requestMsgMarginRight;
         } else {

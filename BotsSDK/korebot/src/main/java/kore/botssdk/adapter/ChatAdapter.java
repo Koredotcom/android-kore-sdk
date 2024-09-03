@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -54,13 +55,14 @@ import kore.botssdk.viewholders.PieChartTemplateHolder;
 import kore.botssdk.viewholders.RadioOptionsTemplateHolder;
 import kore.botssdk.viewholders.RequestTextTemplateHolder;
 import kore.botssdk.viewholders.ResponseTextTemplateHolder;
+import kore.botssdk.viewholders.ResultsTemplateHolder;
 import kore.botssdk.viewholders.TableListTemplateHolder;
 import kore.botssdk.viewholders.TableResponsiveTemplateHolder;
 import kore.botssdk.viewholders.TableTemplateHolder;
 import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 
 @SuppressWarnings("UnKnownNullness")
-public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
+public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
 
     private final HashMap<String, Integer> headersMap = new HashMap<>();
     private boolean isAlpha = false;
@@ -123,10 +125,11 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
     public static final int TEMPLATE_BENEFICIARY = 29;
     public static final int TEMPLATE_MULTI_SELECT = 30;
     public static final int TEMPLATE_ADVANCE_MULTI_SELECT = 31;
+    public static final int TEMPLATE_RESULTS = 32;
 
     private final HashMap<Integer, String> customTemplates = new HashMap<>();
 
-    public ChatAdapterNew() {
+    public ChatAdapter() {
         super();
         baseBotMessageArrayList = new ArrayList<>();
     }
@@ -217,6 +220,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                         return TEMPLATE_BENEFICIARY;
                     case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE:
                         return TEMPLATE_ADVANCE_MULTI_SELECT;
+                    case BotResponse.TEMPLATE_TYPE_RESULTS_LIST:
+                        return TEMPLATE_RESULTS;
                     default:
                         return TEMPLATE_BUBBLE_RESPONSE;
                 }
@@ -255,7 +260,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                     return type;
                 } else {
                     for (Integer key : customTemplates.keySet()) {
-                        if (customTemplates.get(key) != null && customTemplates.get(key).equals(templateType)) {
+                        Object value = customTemplates.get(key);
+                        if (value != null && value.equals(templateType)) {
                             return key;
                         }
                     }
@@ -345,6 +351,8 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
                 return MultiSelectTemplateHolder.getInstance(parent);
             case TEMPLATE_ADVANCE_MULTI_SELECT:
                 return AdvanceMultiSelectTemplateHolder.getInstance(parent);
+            case TEMPLATE_RESULTS:
+                return ResultsTemplateHolder.getInstance(parent);
             default:
                 return ResponseTextTemplateHolder.getInstance(parent);
         }
@@ -434,7 +442,9 @@ public class ChatAdapterNew extends RecyclerView.Adapter<BaseViewHolder> impleme
         headersMap.clear();
         for (i = 0; i < baseBotMessageArrayList.size(); i++) {
             BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
-            if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
+            } else if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
                 headersMap.put(baseBotMessage.getFormattedDate(), i);
             }
         }
