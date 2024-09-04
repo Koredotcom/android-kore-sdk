@@ -44,7 +44,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.R;
-import kore.botssdk.adapter.ChatAdapterNew;
+import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -89,7 +89,7 @@ import retrofit2.Response;
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
     private RelativeLayout rlBody;
     private RecyclerView botsBubblesListView;
-    private ChatAdapterNew botsChatAdapter;
+    private ChatAdapter botsChatAdapter;
     private QuickReplyView quickReplyView;
     private LinearLayout botTypingStatusRl;
     private CircularProfileView botTypingStatusIcon;
@@ -175,7 +175,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     private void setupAdapter() {
-        botsChatAdapter = new ChatAdapterNew();
+        botsChatAdapter = new ChatAdapter();
         botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botsBubblesListView.addItemDecoration(new ChatAdapterItemDecoration());

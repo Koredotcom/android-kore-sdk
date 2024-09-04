@@ -141,9 +141,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     SpeechProgressView progress;
     TextView textViewSpeech;
     private static final int REQUEST_RECORD_AUDIO = 13;
+
     public void setDisabled(boolean disabled) {
         isDisabled = disabled;
     }
+
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
     private ComposeFooterInterface composeFooterInterface;
     TTSUpdate ttsUpdate;
@@ -329,10 +331,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     editTextMessage.setHintTextColor(Color.parseColor(footerModel.getIcons_color()));
                 }
 
-                if(footerModel.getButtons() != null && footerModel.getButtons().getMenu() != null
+                if (footerModel.getButtons() != null && footerModel.getButtons().getMenu() != null
                         && footerModel.getButtons().getMenu().getActions() != null
-                        && footerModel.getButtons().getMenu().getActions().size() > 0)
-                {
+                        && footerModel.getButtons().getMenu().getActions().size() > 0) {
                     botOptionsModel = footerModel.getButtons().getMenu().getActions();
                 }
             }
@@ -373,7 +374,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         newMenuLogo.setOnClickListener(v -> {
             if (botOptionsModel != null && botOptionsModel.size() > 0) {
                 OptionsActionSheetFragment bottomSheetDialog = new OptionsActionSheetFragment();
-                bottomSheetDialog.setisFromFullView(false);
+                bottomSheetDialog.setIsFromFullView(false);
                 bottomSheetDialog.setSkillName("skillName");
                 bottomSheetDialog.setData(botOptionsModel);
                 bottomSheetDialog.setBrandingModel(botBrandingModel);
@@ -769,7 +770,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 String fileExtn = result.getData().getStringExtra("fileExtn");
                 if (fileExtn != null && fileExtn.equals(EXT_VIDEO) && result.getData().getParcelableExtra("fileUri") != null) {
-                    processVideoResponse(result.getData().getParcelableExtra("fileUri"), false, result.getData());
+                    processVideoResponse(result.getData().getParcelableExtra("fileUri"));
                 } else if (fileExtn != null && (fileExtn.equalsIgnoreCase(EXT_JPG) || fileExtn.equalsIgnoreCase(EXT_PNG))) {
                     processImageResponse(result.getData());
                 } else {
@@ -881,14 +882,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         this.jwt = jwt;
     }
 
-    void processVideoResponse(Uri selectedImage, boolean isCapturedVideo, Intent intent) {
-        String realPath;
+    void processVideoResponse(Uri selectedImage) {
         String orientation;
         String fileName = null;
-        if (isCapturedVideo) realPath = selectedImage.getPath();
-        else {
-            realPath = KaMediaUtils.getRealPath(requireActivity(), selectedImage);
-        }
+        String realPath = KaMediaUtils.getRealPath(requireActivity(), selectedImage);
         if (realPath != null) {
             if (realPath.length() > 0) {
                 int startInd = realPath.lastIndexOf(File.separator) + 1;

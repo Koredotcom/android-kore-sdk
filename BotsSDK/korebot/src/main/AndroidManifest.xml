@@ -12,6 +12,7 @@
         android:glEsVersion="0x00020000"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
@@ -34,10 +35,6 @@
         android:maxSdkVersion="32" />
 
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
-    <!--    <application-->
-    <!--        android:supportsRtl="true">-->
-    <!--    </application>-->
 
     <application
         android:name=".application.BotApplication"
@@ -116,11 +113,5 @@
             android:exported="false"
             android:permission="@string/app_name"
             android:stopWithTask="false" />
-
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/notification_channel_id" />
-
     </application>
-
 </manifest>
