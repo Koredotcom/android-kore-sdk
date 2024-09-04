@@ -3,7 +3,7 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/dimen_10dp"
+    android:layout_marginTop="15dp"
     android:orientation="vertical">
 
     <TextView
@@ -11,14 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="@dimen/dimen_12dp"
+        android:background="@drawable/rounded_rectangle_bubble_blue"
         android:ellipsize="end"
         android:gravity="center"
         android:maxLines="1"
         android:minWidth="300dp"
         android:tag="medium"
         android:text="@string/hi"
-        android:textColor="@color/splash_color"
+        android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold" />
 </LinearLayout>

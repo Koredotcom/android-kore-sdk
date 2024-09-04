@@ -56,13 +56,11 @@ public class BankingFeedbackListAdapter extends BaseAdapter {
             holder = new ExperienceItemViewHolder();
             holder.text_view = convertView.findViewById(R.id.text_view);
             holder.check_multi_item = convertView.findViewById(R.id.check_multi_item);
-            holder.vDivider = convertView.findViewById(R.id.vDivider);
             convertView.setTag(holder);
         } else {
             holder = (ExperienceItemViewHolder) convertView.getTag();
         }
 
-        holder.vDivider.setVisibility(View.GONE);
         FeedbackListModel dataObj = (FeedbackListModel) getItem(position);
         holder.text_view.setText(dataObj.getValue());
         holder.check_multi_item.setTag(dataObj);
@@ -101,6 +99,5 @@ public class BankingFeedbackListAdapter extends BaseAdapter {
     static class ExperienceItemViewHolder {
         TextView text_view;
         AppCompatCheckBox check_multi_item;
-        View vDivider;
     }
 }

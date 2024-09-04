@@ -44,8 +44,8 @@ public class PayloadInner {
     private List<String> X_axis;
     private String direction;
     private boolean stacked;
-
     private List<FeedbackRatingModel> numbersArrays;
+    private List<FeedbackThumpsUpDownModel> thumpsUpDownArrays;
 
     private String carousel_type;
     private String layout;
@@ -89,6 +89,10 @@ public class PayloadInner {
 
     public List<FeedbackRatingModel> getNumbersArrays() {
         return numbersArrays;
+    }
+
+    public List<FeedbackThumpsUpDownModel> getThumpsUpDownArrays() {
+        return thumpsUpDownArrays;
     }
 
     public List<RadioOptionModel> getRadioOptions() {
@@ -368,12 +372,12 @@ public class PayloadInner {
         this.action_type = action_type;
     }
 
-    public String getPlaceholder_text() {
-        return placeholder_text;
+    public String getPlaceholder() {
+        return placeholder;
     }
 
-    public void setPlaceholder_text(String placeholder_text) {
-        this.placeholder_text = placeholder_text;
+    public void setPlaceholder(String placeholder) {
+        this.placeholder = placeholder;
     }
 
     public ArrayList<FormActionTemplate> getForm_actions() {
@@ -384,7 +388,7 @@ public class PayloadInner {
         this.form_actions = form_actions;
     }
 
-    private String placeholder_text;
+    private String placeholder;
 
     private List<List<String>> columns = null;
     private ArrayList<BotTableDataModel> tableDataModel = null;
@@ -931,9 +935,33 @@ public class PayloadInner {
                         }.getType();
                         formFields = gson.fromJson(elementsAsString, listType);
                     } else if (BotResponse.TEMPLATE_TYPE_FEEDBACK.equals(template_type)) {
-                        Type listType = new TypeToken<ArrayList<NewFeedbackModel>>() {
-                        }.getType();
-                        formFields = gson.fromJson(elementsAsString, listType);
+                        switch (view) {
+                            case BotResponse.VIEW_NPS:
+                                Type listType1 = new TypeToken<ArrayList<FeedbackRatingModel>>() {
+                                }.getType();
+                                numbersArrays = gson.fromJson(elementsAsString, listType1);
+                                break;
+                            case BotResponse.VIEW_STAR:
+                                Type listType2 = new TypeToken<ArrayList<FeedbackStarModel>>() {
+                                }.getType();
+                                starArrays = gson.fromJson(elementsAsString, listType2);
+                                break;
+                            case BotResponse.VIEW_THUMBS_UP_DOWN:
+                                Type listType3 = new TypeToken<ArrayList<FeedbackThumpsUpDownModel>>() {
+                                }.getType();
+                                thumpsUpDownArrays = gson.fromJson(elementsAsString, listType3);
+                                break;
+                            case BotResponse.VIEW_CSAT:
+                                Type listType4 = new TypeToken<ArrayList<FeedbackSmileyModel>>() {
+                                }.getType();
+                                smileyArrays = gson.fromJson(elementsAsString, listType4);
+                                break;
+                            default:
+                                Type listType5 = new TypeToken<ArrayList<BotFormTemplateModel>>() {
+                                }.getType();
+                                formFields = gson.fromJson(elementsAsString, listType5);
+
+                        }
                     } else if (BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2.equals(template_type) || BotResponse.TEMPLATE_TYPE_LIST_WIDGET.equalsIgnoreCase(template_type)) {
                         Type listType = new TypeToken<ArrayList<WidgetListElementModel>>() {
                         }.getType();
@@ -942,6 +970,10 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<DropDownElementsModel>>() {
                         }.getType();
                         dropDownElementsModels = gson.fromJson(elementsAsString, listType);
+                        DropDownElementsModel model = new DropDownElementsModel();
+                        model.setTitle(placeholder);
+                        model.setValue(placeholder);
+                        dropDownElementsModels.add(0, model);
                     } else if (BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE.equals(template_type)) {
                         Type listType = new TypeToken<ArrayList<AdvancedMultiSelectModel>>() {
                         }.getType();

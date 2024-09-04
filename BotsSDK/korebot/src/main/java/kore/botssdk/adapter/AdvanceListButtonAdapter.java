@@ -47,10 +47,10 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     private final Context mContext;
     private String skillName;
     private final String type;
-    final AdvanceButtonClickListner advanceButtonClickListner;
-    AdvanceOptionsAdapter advanceOptionsAdapter;
-    final ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final AdvanceButtonClickListner advanceButtonClickListner;
+    private AdvanceOptionsAdapter advanceOptionsAdapter;
+    private final ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int count;
 
     public AdvanceListButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String type, AdvanceButtonClickListner advanceButtonClickListner, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -79,7 +79,7 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
         holder.tv.setText(btn.getTitle());
         holder.ivBtnImage.setVisibility(GONE);
 
-        if(!StringUtils.isNullOrEmpty(btn.getIcon())) {
+        if (!StringUtils.isNullOrEmpty(btn.getIcon())) {
             holder.ivBtnImage.setVisibility(View.VISIBLE);
             try {
                 String imageData;
@@ -97,74 +97,55 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
             }
         }
 
-        holder.tv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if(!StringUtils.isNullOrEmpty(btn.getBtnType()))
-                {
-                    if(btn.getBtnType().equalsIgnoreCase("confirm"))
-                    {
-                        if(advanceOptionsAdapter != null)
-                            advanceButtonClickListner.advanceButtonClick(advanceOptionsAdapter.getData());
-                    }
-                    else
-                    {
-                        if(advanceOptionsAdapter != null)
-                            advanceOptionsAdapter.setChecked(-1);
+        holder.tv.setOnClickListener(view -> {
+            if (!StringUtils.isNullOrEmpty(btn.getBtnType())) {
+                if (btn.getBtnType().equalsIgnoreCase("confirm")) {
+                    if (advanceOptionsAdapter != null)
+                        advanceButtonClickListner.advanceButtonClick(advanceOptionsAdapter.getData());
+                } else {
+                    if (advanceOptionsAdapter != null)
+                        advanceOptionsAdapter.setChecked(-1);
+                }
+            } else {
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                    if (BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(btn.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
+                    } else {
+                        String title = btn.getTitle();
+                        String payload = btn.getPayload();
+                        composeFooterInterface.onSendClick(title, payload, false);
                     }
                 }
-                else
-                {
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                        if(BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(btn.getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
-                        }else{
-                            String title = btn.getTitle();
-                            String payload = btn.getPayload();
-                            composeFooterInterface.onSendClick(title, payload,false);
-                        }
-                    }
-                }
-
-                if(advanceButtonClickListner != null)
-                    advanceButtonClickListner.closeWindow();
             }
+
+            if (advanceButtonClickListner != null)
+                advanceButtonClickListner.closeWindow();
         });
 
-        holder.layout_deails.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.layout_deails.setOnClickListener(view -> {
 
-                if(!StringUtils.isNullOrEmpty(btn.getBtnType()))
-                {
-                    if(btn.getBtnType().equalsIgnoreCase("confirm"))
-                    {
-                        if(advanceOptionsAdapter != null)
-                            advanceButtonClickListner.advanceButtonClick(advanceOptionsAdapter.getData());
-                    }
-                    else
-                    {
-                        if(advanceOptionsAdapter != null)
-                            advanceOptionsAdapter.setChecked(-1);
+            if (!StringUtils.isNullOrEmpty(btn.getBtnType())) {
+                if (btn.getBtnType().equalsIgnoreCase("confirm")) {
+                    if (advanceOptionsAdapter != null)
+                        advanceButtonClickListner.advanceButtonClick(advanceOptionsAdapter.getData());
+                } else {
+                    if (advanceOptionsAdapter != null)
+                        advanceOptionsAdapter.setChecked(-1);
+                }
+            } else {
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                    if (BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(btn.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
+                    } else {
+                        String title = btn.getTitle();
+                        String payload = btn.getPayload();
+                        composeFooterInterface.onSendClick(title, payload, false);
                     }
                 }
-                else
-                {
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                        if(BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(btn.getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
-                        }else{
-                            String title = btn.getTitle();
-                            String payload = btn.getPayload();
-                            composeFooterInterface.onSendClick(title, payload,false);
-                        }
-                    }
-                }
-
-                if(advanceButtonClickListner != null)
-                    advanceButtonClickListner.closeWindow();
             }
+
+            if (advanceButtonClickListner != null)
+                advanceButtonClickListner.closeWindow();
         });
     }
 
@@ -174,16 +155,16 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
 
     @Override
     public int getItemCount() {
-        if(count != 0)
+        if (count != 0)
             return count;
 
         return buttons != null ? buttons.size() : 0;
     }
 
-    public void setDisplayLimit(int count)
-    {
+    public void setDisplayLimit(int count) {
         this.count = count;
     }
+
     boolean isFullView;
 
     public void setIsFromFullView(boolean isFullView) {

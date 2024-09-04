@@ -31,6 +31,7 @@ import kore.botssdk.formatters.BarChartDataFormatter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBarChartDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.CustomMarkerView;
 
 public class BarChartTemplateHolder extends BaseViewHolder implements OnChartValueSelectedListener {
@@ -149,6 +150,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
                     for (int j = 0; j < size; j++) {
                         arr[j] = dataList.get(j).getValues().get(k);
                     }
+                    yValues[0] = new ArrayList<>();
                     yValues[0].add(new BarEntry(k + 1, arr, ""));
                 }
             } else {

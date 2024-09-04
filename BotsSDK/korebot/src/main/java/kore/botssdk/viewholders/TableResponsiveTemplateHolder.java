@@ -53,7 +53,6 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         List<BotTableDataModel> rows = payloadInner.getTable_elements_data();
         List<List<String>> columns = payloadInner.getColumns();
 
-        tvShowMore.setVisibility(rows.size() > 3 ? View.VISIBLE : View.GONE);
         tvShowMore.setOnClickListener(view -> showTableViewDialog(view.getContext(), columns, rows));
         rvTableView.setAdapter(new TableResponsiveAdapter(itemView.getContext(), rows, columns));
     }

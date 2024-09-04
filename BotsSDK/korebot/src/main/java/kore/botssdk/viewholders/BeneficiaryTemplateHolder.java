@@ -101,7 +101,7 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
                     @Override
                     public void onClick(View v) {
                         ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                        bottomSheetDialog.setisFromFullView(false);
+                        bottomSheetDialog.setIsFromFullView(false);
                         bottomSheetDialog.setSkillName("skillName", "trigger");
 //                        bottomSheetDialog.setData(botListModelArrayList);
                         bottomSheetDialog.setHeaderVisible(true);

@@ -1,12 +1,9 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.viewUtils.DimensionUtil.dp1;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -59,22 +55,22 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
         if (botListModel == null) return;
         holder.botListItemImage.setVisibility(View.GONE);
 
-        if (sharedPreferences != null) {
-            GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(holder.itemView.getContext().getResources(), R.drawable.rounded_rect_feedback, holder.itemView.getContext().getTheme());
-            if (rightDrawable != null) {
-                rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-                String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-                if (themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1)) {
-                    rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-                    holder.botListItemRoot.setBackground(rightDrawable);
-                } else {
-                    rightDrawable.setStroke((int) (2 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
-                    holder.botListItemRoot.setBackground(rightDrawable);
-                }
-            }
-
+//        if (sharedPreferences != null) {
+//            GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(holder.itemView.getContext().getResources(), R.drawable.rounded_rect_feedback, holder.itemView.getContext().getTheme());
+//            if (rightDrawable != null) {
+//                rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+//                String themeName = sharedPreferences.getString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
+//                if (themeName.equalsIgnoreCase(BotResponse.THEME_NAME_1)) {
+//                    rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
+//                    holder.botListItemRoot.setBackground(rightDrawable);
+//                } else {
+//                    rightDrawable.setStroke((int) (2 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, "#ffffff")));
+//                    holder.botListItemRoot.setBackground(rightDrawable);
+//                }
+//            }
+//
             holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
-        }
+//        }
 
         if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
@@ -86,17 +82,14 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         holder.botListItemCost.setText(botListModel.getValue());
 
-        if (botListModel.getColor() != null)
-            holder.botListItemCost.setTextColor(Color.parseColor(botListModel.getColor()));
+        if (botListModel.getColor() != null) holder.botListItemCost.setTextColor(Color.parseColor(botListModel.getColor()));
 
         holder.botListItemCost.setTypeface(null, Typeface.BOLD);
 
         if (!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());
-
-            if (sharedPreferences != null)
-                holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+            holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
 
         holder.botListItemRoot.setOnClickListener(v -> {

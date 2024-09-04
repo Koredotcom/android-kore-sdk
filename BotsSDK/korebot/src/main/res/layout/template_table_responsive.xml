@@ -12,20 +12,23 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_rect"
+        android:background="@drawable/rounded_rect_no_padding"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTableView"
-            android:nestedScrollingEnabled="false"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
 
         <TextView
             android:id="@+id/tvShowMore"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:gravity="center"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
             android:text="@string/show_more"
             android:textColor="@color/bgBlueSignupOld" />
     </androidx.appcompat.widget.LinearLayoutCompat>

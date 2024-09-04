@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/dimen_5dp"
-    android:background="@drawable/list_view_template_bg"
+    android:background="@drawable/edit_btn_grey_bg"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/dimen_15dp">
@@ -16,10 +16,10 @@
         android:layout_height="40dp"
         android:layout_marginEnd="5dp"
         android:clickable="false"
+        android:importantForAccessibility="no"
         android:minWidth="60dp"
         android:minHeight="60dp"
-        android:scaleType="centerCrop"
-        android:importantForAccessibility="no" />
+        android:scaleType="centerCrop" />
 
     <LinearLayout
         android:layout_width="match_parent"

@@ -60,26 +60,65 @@
         android:id="@+id/thumbs_up_down"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginHorizontal="4dp"
         android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:visibility="gone"
         tools:visibility="visible">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/thumbs_up"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/thumbs_up" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llThumbsUp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="2dp"
+            android:layout_weight="1"
+            android:background="@color/selector_thumbs_up_bg_color"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_5dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/thumbs_down"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:rotationY="180"
-            app:srcCompat="@drawable/thumbs_down" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/thumbs_up"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/thumbs_up" />
+
+            <TextView
+                android:id="@+id/text_thumbs_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_thumbs_up_icon_color"
+                android:textSize="14sp"
+                tools:text="Extremely Likely asdadasddsad" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llThumbsDown"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/selector_thumbs_down_bg_color"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_5dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/thumbs_down"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/thumbs_down" />
+
+            <TextView
+                android:id="@+id/text_thumbs_down"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/selector_thumbs_down_icon_color"
+                android:textSize="14sp"
+                tools:text="Extremely Unlikely aadsadadad" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.AppCompatRatingBar
@@ -164,7 +203,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRatingScale"
             android:layout_width="match_parent"
-            android:nestedScrollingEnabled="false"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:nestedScrollingEnabled="false" />
     </RelativeLayout>
 </androidx.appcompat.widget.LinearLayoutCompat>

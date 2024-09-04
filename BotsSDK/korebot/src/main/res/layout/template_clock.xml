@@ -8,10 +8,14 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/list_view_template_bg"
+        android:elevation="10dp"
+        android:fadingEdgeLength="10dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:paddingVertical="30dp"
         android:paddingStart="10dp"
         android:paddingEnd="@dimen/dimen_0">
 
