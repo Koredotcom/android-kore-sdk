@@ -23,16 +23,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxItemDecoration;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.adapter.FeedbackRatingScaleAdapter;
+import kore.botssdk.adapter.FeedbackThumbsAdapter;
 import kore.botssdk.dialogs.FeedbackActionSheetFragment;
+import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.FeedbackRatingModel;
+import kore.botssdk.models.FeedbackThumbsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
@@ -48,9 +58,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
     private final LinearLayoutCompat emojis;
     private final RelativeLayout rlViewNPS;
     private final RecyclerView rvRatingScale;
-    private final LinearLayoutCompat thumbsUpDown;
-    private final ImageView thumbsUp;
-    private final ImageView thumbsDown;
+    private final RecyclerView thumbs_up_down;
     private PayloadInner payloadInner;
     private String msgId;
 
@@ -67,10 +75,8 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         rbFeedback = itemView.findViewById(R.id.rbFeedback);
         emojis = itemView.findViewById(R.id.emojis);
         rlViewNPS = itemView.findViewById(R.id.rlViewNPS);
-        thumbsUpDown = itemView.findViewById(R.id.thumbs_up_down);
-        thumbsUp = itemView.findViewById(R.id.thumbs_up);
-        thumbsDown = itemView.findViewById(R.id.thumbs_down);
         rvRatingScale = itemView.findViewById(R.id.rvRatingScale);
+        thumbs_up_down = itemView.findViewById(R.id.thumbs_up_down);
 
         icon1 = itemView.findViewById(R.id.icon_1);
         icon2 = itemView.findViewById(R.id.icon_2);
@@ -91,7 +97,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         emojis.setVisibility(viewType.equals(VIEW_CSAT) ? View.VISIBLE : View.GONE);
         rbFeedback.setVisibility(viewType.equals(VIEW_STAR) ? View.VISIBLE : View.GONE);
         rlViewNPS.setVisibility(viewType.equals(VIEW_NPS) ? View.VISIBLE : View.GONE);
-        thumbsUpDown.setVisibility(viewType.equals(VIEW_THUMBS_UP_DOWN) ? View.VISIBLE : View.GONE);
+        thumbs_up_down.setVisibility(viewType.equals(VIEW_THUMBS_UP_DOWN) ? View.VISIBLE : View.GONE);
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
         int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
 
@@ -124,16 +130,20 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
             break;
 
             case VIEW_THUMBS_UP_DOWN: {
-                thumbsUp.setOnClickListener(view -> {
-                    if (!isLastItem()) return;
-                    contentStateListener.onSelect(msgId, 1, BotResponse.SELECTED_FEEDBACK);
-                    composeFooterInterface.onSendClick("1", "1", false);
-                });
-                thumbsDown.setOnClickListener(view -> {
-                    if (!isLastItem()) return;
-                    contentStateListener.onSelect(msgId, 2, BotResponse.SELECTED_FEEDBACK);
-                    composeFooterInterface.onSendClick("2", "2", false);
-                });
+                FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                layoutManager.setFlexDirection(FlexDirection.ROW);
+                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                thumbs_up_down.setLayoutManager(layoutManager);
+                thumbs_up_down.addItemDecoration(new VerticalSpaceItemDecoration(20));
+
+                ArrayList<FeedbackThumbsModel> arrFeedbackThumbsModels = payloadInner.getThumpsUpDownArrays();
+                if(arrFeedbackThumbsModels != null && arrFeedbackThumbsModels.size() > 0)
+                {
+                    FeedbackThumbsAdapter adapter = new FeedbackThumbsAdapter(itemView.getContext(), msgId, arrFeedbackThumbsModels, isLastItem());
+                    adapter.setComposeFooterInterface(composeFooterInterface);
+                    thumbs_up_down.setAdapter(adapter);
+                }
+
                 break;
             }
         }

@@ -300,5 +300,6 @@
     <string name="widget_theme">Widget Theme</string>
     <string name="menu">Menu</string>
     <string name="login">Login</string>
+    <string name="thumbs_up_image">thumbs up image</string>
 
 </resources>

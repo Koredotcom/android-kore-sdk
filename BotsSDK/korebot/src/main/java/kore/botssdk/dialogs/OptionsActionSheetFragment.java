@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -137,7 +138,7 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment
             }
         }
 
-        tvOptionsTitle.setText(ContextCompat.getString(requireActivity(), R.string.menu));
+        tvOptionsTitle.setText(requireActivity().getResources().getString(R.string.menu));
 
         if(sharedPreferences != null)
             tvOptionsTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_TXT_COLOR, "#000000")));

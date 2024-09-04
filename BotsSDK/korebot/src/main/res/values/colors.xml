@@ -66,7 +66,7 @@
     <color name="readReceiptGrey">#c0cfd4</color>
     <color name="readReceiptLightGrey">#EBEBEB</color>
     <color name="readReceiptBorder">#FFFFFF</color>
-    <color name="sendfailed">#EE3340</color>
+    <color name="send_failed">#EE3340</color>
     <color name="bubbleFileName">#474747</color>
     <color name="bubbleFileBackground">#f8f8f8</color>
     <color name="colorUnselected">#F4F4F4</color>

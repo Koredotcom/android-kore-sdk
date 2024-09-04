@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/multiSelectLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -56,7 +56,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_5dp" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/thumbs_up_down"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,23 +64,7 @@
         android:layout_marginTop="5dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:visibility="gone"
-        tools:visibility="visible">
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/thumbs_up"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginEnd="10dp"
-            app:srcCompat="@drawable/thumbs_up" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/thumbs_down"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:rotationY="180"
-            app:srcCompat="@drawable/thumbs_down" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        tools:visibility="gone"/>
 
     <androidx.appcompat.widget.AppCompatRatingBar
         android:id="@+id/rbFeedback"

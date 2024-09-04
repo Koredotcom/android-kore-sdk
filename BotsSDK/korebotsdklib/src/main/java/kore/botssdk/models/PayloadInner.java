@@ -210,6 +210,7 @@ public class PayloadInner {
     private ArrayList<BotFormTemplateModel> formFields;
     private ArrayList<FeedbackSmileyModel> smileyArrays;
     private ArrayList<FeedbackStarModel> starArrays;
+    private ArrayList<FeedbackThumbsModel> thumpsUpDownArrays;
     private Object cards;
     private ArrayList<AdvancedListModel> listItems;
     private ArrayList<FeedbackRatingModel> numbersArrays;
@@ -222,6 +223,10 @@ public class PayloadInner {
 
     public List<RadioOptionModel> getRadioOptions() {
         return radioOptions;
+    }
+
+    public ArrayList<FeedbackThumbsModel> getThumpsUpDownArrays() {
+        return thumpsUpDownArrays;
     }
 
     private ArrayList<BotBeneficiaryModel> botBeneficiaryModels;

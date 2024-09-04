@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:id="@+id/thumbs_feedback_root"
+    android:layout_height="wrap_content"
+    android:background="@drawable/thumbs_rect_feedback"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/ivFeedbackThumbs"
+        android:layout_width="@dimen/dimen_25dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:contentDescription="@string/thumbs_up_image"
+        app:tint="@color/incoming_call_accept"
+        android:src="@drawable/thumbs_up" />
+
+    <kore.botssdk.view.CustomTextViewBold
+        android:id="@+id/tvFeedbackThumbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:text="@string/title"
+        android:textStyle="bold"
+        android:textColor="@color/incoming_call_accept"
+        android:textSize="@dimen/text_size_normal" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
