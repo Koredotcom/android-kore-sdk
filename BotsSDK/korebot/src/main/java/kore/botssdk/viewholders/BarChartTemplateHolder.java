@@ -149,6 +149,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
                     for (int j = 0; j < size; j++) {
                         arr[j] = dataList.get(j).getValues().get(k);
                     }
+                    yValues[0] = new ArrayList<>();
                     yValues[0].add(new BarEntry(k + 1, arr, ""));
                 }
             } else {

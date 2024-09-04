@@ -474,6 +474,14 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        try {
+            long timeMillis = botRequest.getTimeInMillis(botRequest.getCreatedOn(), false);
+            botRequest.setCreatedInMillis(timeMillis);
+            botRequest.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+            botRequest.setTimeStamp(botRequest.prepareTimeStamp(timeMillis));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         persistBotMessage(null, true, botRequest);
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
@@ -495,11 +503,18 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        try {
+            long timeMillis = botRequest.getTimeInMillis(botRequest.getCreatedOn(), false);
+            botRequest.setCreatedInMillis(timeMillis);
+            botRequest.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
+            botRequest.setTimeStamp(botRequest.prepareTimeStamp(timeMillis));
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
         persistBotMessage(null, true, botRequest);
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
         }
-
     }
 
     @Override
