@@ -45,7 +45,7 @@ public class PayloadInner {
     private String direction;
     private boolean stacked;
     private List<FeedbackRatingModel> numbersArrays;
-    private List<FeedbackThumpsUpDownModel> thumpsUpDownArrays;
+    private List<FeedbackThumbsModel> thumpsUpDownArrays;
 
     private String carousel_type;
     private String layout;
@@ -91,7 +91,7 @@ public class PayloadInner {
         return numbersArrays;
     }
 
-    public List<FeedbackThumpsUpDownModel> getThumpsUpDownArrays() {
+    public List<FeedbackThumbsModel> getThumpsUpDownArrays() {
         return thumpsUpDownArrays;
     }
 
@@ -947,7 +947,7 @@ public class PayloadInner {
                                 starArrays = gson.fromJson(elementsAsString, listType2);
                                 break;
                             case BotResponse.VIEW_THUMBS_UP_DOWN:
-                                Type listType3 = new TypeToken<ArrayList<FeedbackThumpsUpDownModel>>() {
+                                Type listType3 = new TypeToken<ArrayList<FeedbackThumbsModel>>() {
                                 }.getType();
                                 thumpsUpDownArrays = gson.fromJson(elementsAsString, listType3);
                                 break;

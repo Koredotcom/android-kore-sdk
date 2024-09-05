@@ -1,6 +1,6 @@
 package kore.botssdk.models;
 
-public class FeedbackThumpsUpDownModel {
+public class FeedbackThumbsModel {
     private int thumpUpId;
     private String value;
     private String reviewText;
