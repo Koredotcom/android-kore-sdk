@@ -24,7 +24,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexboxItemDecoration;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
 
@@ -33,11 +32,9 @@ import java.util.List;
 import java.util.Map;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.adapter.FeedbackRatingScaleAdapter;
 import kore.botssdk.adapter.FeedbackThumbsAdapter;
 import kore.botssdk.dialogs.FeedbackActionSheetFragment;
-import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
 import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
@@ -58,7 +55,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
     private final LinearLayoutCompat emojis;
     private final RelativeLayout rlViewNPS;
     private final RecyclerView rvRatingScale;
-    private final RecyclerView thumbs_up_down;
+    private final RecyclerView thumbsUpDown;
     private PayloadInner payloadInner;
     private String msgId;
 
@@ -75,16 +72,14 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         rbFeedback = itemView.findViewById(R.id.rbFeedback);
         emojis = itemView.findViewById(R.id.emojis);
         rlViewNPS = itemView.findViewById(R.id.rlViewNPS);
+        thumbsUpDown = itemView.findViewById(R.id.thumbs_up_down);
         rvRatingScale = itemView.findViewById(R.id.rvRatingScale);
-        thumbs_up_down = itemView.findViewById(R.id.thumbs_up_down);
 
         icon1 = itemView.findViewById(R.id.icon_1);
         icon2 = itemView.findViewById(R.id.icon_2);
         icon3 = itemView.findViewById(R.id.icon_3);
         icon4 = itemView.findViewById(R.id.icon_4);
         icon5 = itemView.findViewById(R.id.icon_5);
-
-        dp1 = (int) DimensionUtil.dp1;
     }
 
     @Override
@@ -97,18 +92,24 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         emojis.setVisibility(viewType.equals(VIEW_CSAT) ? View.VISIBLE : View.GONE);
         rbFeedback.setVisibility(viewType.equals(VIEW_STAR) ? View.VISIBLE : View.GONE);
         rlViewNPS.setVisibility(viewType.equals(VIEW_NPS) ? View.VISIBLE : View.GONE);
-        thumbs_up_down.setVisibility(viewType.equals(VIEW_THUMBS_UP_DOWN) ? View.VISIBLE : View.GONE);
+        thumbsUpDown.setVisibility(viewType.equals(VIEW_THUMBS_UP_DOWN) && !payloadInner.getThumpsUpDownArrays().isEmpty() ? View.VISIBLE : View.GONE);
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
-        int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
 
         switch (payloadInner.getView()) {
             case VIEW_STAR: {
+                int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
                 rbFeedback.setRating(selectedFeedback);
                 rbFeedback.setIsIndicator(!isLastItem());
+                rbFeedback.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+                    if (!isLastItem()) return;
+                    contentStateListener.onSelect(msgId, (int) rating, BotResponse.SELECTED_FEEDBACK);
+                    composeFooterInterface.onSendClick(((int) rating) + "", (int) rating + "", false);
+                });
             }
             break;
 
             case VIEW_NPS: {
+                int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
                 rvRatingScale.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
                 List<FeedbackRatingModel> array = payloadInner.getNumbersArrays();
                 String msgId = ((BotResponse) baseBotMessage).getMessageId();
@@ -120,6 +121,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
 
             case VIEW_CSAT: {
                 resetAll();
+                int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
                 loadEmojis(selectedFeedback != -1 ? selectedFeedback - 1 : -1);
                 icon1.setOnClickListener(this);
                 icon2.setOnClickListener(this);
@@ -130,20 +132,20 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
             break;
 
             case VIEW_THUMBS_UP_DOWN: {
+                FeedbackThumbsModel selectedItem = contentState != null ? (FeedbackThumbsModel) contentState.get(BotResponse.SELECTED_FEEDBACK) : null;
+                if (payloadInner.getThumpsUpDownArrays().isEmpty()) return;
                 FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
                 layoutManager.setFlexDirection(FlexDirection.ROW);
                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                thumbs_up_down.setLayoutManager(layoutManager);
-                thumbs_up_down.addItemDecoration(new VerticalSpaceItemDecoration(20));
+                thumbsUpDown.setLayoutManager(layoutManager);
+                thumbsUpDown.addItemDecoration(new VerticalSpaceItemDecoration(20));
 
-                ArrayList<FeedbackThumbsModel> arrFeedbackThumbsModels = payloadInner.getThumpsUpDownArrays();
-                if(arrFeedbackThumbsModels != null && arrFeedbackThumbsModels.size() > 0)
-                {
-                    FeedbackThumbsAdapter adapter = new FeedbackThumbsAdapter(itemView.getContext(), msgId, arrFeedbackThumbsModels, isLastItem());
+                List<FeedbackThumbsModel> arrFeedbackThumbsModels = payloadInner.getThumpsUpDownArrays();
+                if (arrFeedbackThumbsModels != null && arrFeedbackThumbsModels.size() > 0) {
+                    FeedbackThumbsAdapter adapter = new FeedbackThumbsAdapter(msgId, arrFeedbackThumbsModels, selectedItem, isLastItem(), contentStateListener);
                     adapter.setComposeFooterInterface(composeFooterInterface);
-                    thumbs_up_down.setAdapter(adapter);
+                    thumbsUpDown.setAdapter(adapter);
                 }
-
                 break;
             }
         }
@@ -157,11 +159,6 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
             bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
         }
-        rbFeedback.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            if (!isLastItem()) return;
-            contentStateListener.onSelect(msgId, (int) rating, BotResponse.SELECTED_FEEDBACK);
-            composeFooterInterface.onSendClick(((int) rating) + "", rating + "", false);
-        });
     }
 
     @Override
@@ -197,7 +194,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         this.payloadInner.setEmojiPosition(position);
         switch (position) {
             case 0:
-                Glide.with(itemView.getContext()).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon1));
+                Glide.with(itemView.getContext()).load(R.drawable.feedback_icon_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon1));
                 break;
             case 1:
                 Glide.with(itemView.getContext()).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon2));
