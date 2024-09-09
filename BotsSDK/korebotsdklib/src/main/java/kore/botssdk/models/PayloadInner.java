@@ -65,9 +65,14 @@ public class PayloadInner {
     private String text_message;
     private String fileName;
     private int limit;
+    private String placeholder;
 
     public int getLimit() {
         return limit;
+    }
+
+    public String getPlaceholder() {
+        return placeholder;
     }
 
     private String carousel_type;
@@ -530,6 +535,10 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<DropDownElementsModel>>() {
                         }.getType();
                         dropDownElementsModels = gson.fromJson(elementsAsString, listType);
+                        DropDownElementsModel model = new DropDownElementsModel();
+                        model.setTitle(placeholder);
+                        model.setValue(placeholder);
+                        dropDownElementsModels.add(0, model);
                     } else if (BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE.equals(template_type)) {
                         Type listType = new TypeToken<ArrayList<AdvancedMultiSelectModel>>() {
                         }.getType();
