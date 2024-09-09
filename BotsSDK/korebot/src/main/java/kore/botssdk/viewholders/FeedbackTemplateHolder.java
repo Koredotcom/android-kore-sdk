@@ -99,7 +99,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
                 rbFeedback.setIsIndicator(!isLastItem());
                 rbFeedback.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
                     if (!isLastItem()) return;
-                    contentStateListener.onSelect(msgId, (int) rating, BotResponse.SELECTED_FEEDBACK);
+                    contentStateListener.onSaveState(msgId, (int) rating, BotResponse.SELECTED_FEEDBACK);
                     composeFooterInterface.onSendClick(((int) rating) + "", (int) rating + "", false);
                 });
             }
@@ -174,7 +174,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         } else if (id == R.id.icon_5) {
             position = 5;
         }
-        contentStateListener.onSelect(msgId, position, BotResponse.SELECTED_FEEDBACK);
+        contentStateListener.onSaveState(msgId, position, BotResponse.SELECTED_FEEDBACK);
         composeFooterInterface.onSendClick(position + "", position + "", false);
         loadEmojis(position - 1);
     }

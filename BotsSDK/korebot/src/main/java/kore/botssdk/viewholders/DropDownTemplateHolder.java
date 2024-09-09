@@ -110,7 +110,7 @@ public class DropDownTemplateHolder extends BaseViewHolder {
                 hideSpinnerDropDown(spinner);
                 if (isLastItem) {
                     spinner.setSelection(position);
-                    contentStateListener.onSelect(msgId, position, BotResponse.SELECTED_ITEM);
+                    contentStateListener.onSaveState(msgId, position, BotResponse.SELECTED_ITEM);
                 }
             });
 

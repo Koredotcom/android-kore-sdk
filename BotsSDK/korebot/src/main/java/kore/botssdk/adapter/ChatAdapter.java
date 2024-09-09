@@ -459,14 +459,14 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     }
 
     @Override
-    public void onSelect(String id, Object value, String key) {
+    public void onSaveState(String messageId, Object value, String key) {
         BotResponse response = null;
         int index = 0;
         int foundIndex = -1;
         for (BaseBotMessage item : baseBotMessageArrayList) {
             if (item instanceof BotResponse) {
                 response = (BotResponse) item;
-                if (response.getMessageId().equals(id)) {
+                if (response.getMessageId().equals(messageId)) {
                     foundIndex = index;
                     Map<String, Object> map = new HashMap<>();
                     map.put(key, value);

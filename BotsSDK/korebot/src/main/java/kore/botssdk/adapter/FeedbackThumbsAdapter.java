@@ -62,9 +62,10 @@ public class FeedbackThumbsAdapter extends RecyclerView.Adapter<FeedbackThumbsAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FeedbackThumbsModel ratingModel = items.get(position);
         holder.tvFeedbackThumbs.setText(String.valueOf(ratingModel.getReviewText()));
-        setTextColor(holder.tvFeedbackThumbs, SELECTED_TEXT_COLORS[position], UNSELECTED_TEXT_COLORS[position]);
-        setImageViewSrc(holder.ivFeedbackThumbs, SRC_IMAGES[position], SELECTED_TEXT_COLORS[position], UNSELECTED_TEXT_COLORS[position]);
-        setBgDrawable(holder.thumbsFeedbackRoot, SELECTED_BG_COLORS[position], UNSELECTED_BG_COLORS[position]);
+        int index = position % SRC_IMAGES.length;
+        setTextColor(holder.tvFeedbackThumbs, SELECTED_TEXT_COLORS[index], UNSELECTED_TEXT_COLORS[index]);
+        setImageViewSrc(holder.ivFeedbackThumbs, SRC_IMAGES[index], SELECTED_TEXT_COLORS[index], UNSELECTED_TEXT_COLORS[index]);
+        setBgDrawable(holder.thumbsFeedbackRoot, SELECTED_BG_COLORS[index], UNSELECTED_BG_COLORS[index]);
         holder.thumbsFeedbackRoot.setSelected(selectedItem != null && selectedItem == ratingModel);
         holder.ivFeedbackThumbs.setSelected(selectedItem != null && selectedItem == ratingModel);
         holder.tvFeedbackThumbs.setSelected(selectedItem != null && selectedItem == ratingModel);
@@ -72,7 +73,7 @@ public class FeedbackThumbsAdapter extends RecyclerView.Adapter<FeedbackThumbsAd
         holder.thumbsFeedbackRoot.setOnClickListener(view -> {
             if (!isEnabled) return;
             if (composeFooterInterface != null) {
-                if (listener != null) listener.onSelect(msgId, ratingModel, BotResponse.SELECTED_FEEDBACK);
+                if (listener != null) listener.onSaveState(msgId, ratingModel, BotResponse.SELECTED_FEEDBACK);
                 composeFooterInterface.onSendClick(ratingModel.getValue(), ratingModel.getValue(), false);
             }
         });

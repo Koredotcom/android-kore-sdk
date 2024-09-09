@@ -55,7 +55,7 @@ public class RadioOptionsItemAdapter extends RecyclerView.Adapter<RadioOptionsIt
                     compoundButton.setChecked(!isChecked);
                     return;
                 }
-                listener.onSelect(msgId, position, BotResponse.SELECTED_ITEM);
+                listener.onSaveState(msgId, position, BotResponse.SELECTED_ITEM);
             }
         });
     }
