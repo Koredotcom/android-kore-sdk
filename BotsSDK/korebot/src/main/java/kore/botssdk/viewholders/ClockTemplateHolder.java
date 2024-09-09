@@ -112,7 +112,7 @@ public class ClockTemplateHolder extends BaseViewHolder {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (!isLastItem()) return;
                 String selTime = hoursText.getText().toString() + ":" + minutesText.getText().toString() + ":" + amPm.getText().toString();
-                contentStateListener.onSelect(msgId, selTime, BotResponse.SELECTED_TIME);
+                contentStateListener.onSaveState(msgId, selTime, BotResponse.SELECTED_TIME);
             }
         });
     }

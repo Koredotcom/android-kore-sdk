@@ -80,7 +80,7 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
                         } else {
                             checkedItems.remove(item);
                         }
-                        if (listener != null) listener.onSelect(msgId, checkedItems, BotResponse.SELECTED_ITEM);
+                        if (listener != null) listener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
                     } else {
                         ((CompoundButton) v).setChecked(!isChecked);
                     }

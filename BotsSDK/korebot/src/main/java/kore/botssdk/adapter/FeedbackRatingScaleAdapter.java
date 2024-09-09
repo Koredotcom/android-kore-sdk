@@ -67,7 +67,7 @@ public class FeedbackRatingScaleAdapter extends RecyclerView.Adapter<FeedbackRat
         }
         holder.tvRating.setOnClickListener(view -> {
             if (!isEnabled) return;
-            if (listener != null) listener.onSelect(msgId, position, BotResponse.SELECTED_FEEDBACK);
+            if (listener != null) listener.onSaveState(msgId, position, BotResponse.SELECTED_FEEDBACK);
             if (composeFooterInterface != null) {
                 composeFooterInterface.onSendClick(ratingModel.getNumberId() + "", ratingModel.getNumberId() + "", false);
             }
