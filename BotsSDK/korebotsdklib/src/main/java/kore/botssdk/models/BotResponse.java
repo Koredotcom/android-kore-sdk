@@ -112,6 +112,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String SELECTED_ITEM = "selected_item";
     public static final String SELECTED_FEEDBACK = "selectedFeedback";
     public static final String SELECTED_TIME = "selected_time";
+    public static final String IS_VIEW_MORE = "is_view_more";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
 
     private String type;

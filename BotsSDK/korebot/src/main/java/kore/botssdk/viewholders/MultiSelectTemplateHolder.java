@@ -67,14 +67,9 @@ public class MultiSelectTemplateHolder extends BaseViewHolder {
         selectAll.setOnCheckedChangeListener((v, isChecked) -> {
             if (v.isPressed()) {
                 if (isLastItem()) {
+                    checkedItems.removeAll(multiSelectElements);
                     if (isChecked) {
-                        for (int i = 0; i < multiSelectElements.size(); i++) {
-                            if (!checkedItems.contains(multiSelectElements.get(i))) {
-                                checkedItems.add(multiSelectElements.get(i));
-                            }
-                        }
-                    } else {
-                        checkedItems.removeAll(multiSelectElements);
+                        checkedItems.addAll(multiSelectElements);
                     }
                     if (contentStateListener != null) contentStateListener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
                 } else {
