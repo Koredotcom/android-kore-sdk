@@ -277,7 +277,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 holder.llButtonMore.setVisibility(GONE);
 
                 holder.rvDefaultButtons.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), !StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), botListModel.getButtonsLayout() != null && !StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
                 if (botListModel.getButtonsLayout() != null &&
                         botListModel.getButtonsLayout().getDisplayLimit() != null) {
                     displayLimit = botListModel.getButtonsLayout().getDisplayLimit().getCount();

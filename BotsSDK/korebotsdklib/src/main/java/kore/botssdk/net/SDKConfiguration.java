@@ -50,19 +50,13 @@ public class SDKConfiguration {
 
     //Server related configurations
     public static class Server {
-        public static void setKoreBotServerUrl(String koreBotServerUrl) {
-            KORE_BOT_SERVER_URL = koreBotServerUrl;
-        }
-
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
         }
 
-        static String KORE_BOT_SERVER_URL = "PLEASE_ENTER_KORE_BOT_SERVER_URL";
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static String SERVER_URL = "PLEASE_ENTER_SERVER_URL";
         public static String Branding_SERVER_URL = "PLEASE_ENTER_BRANDING_SERVER_URL";
-        public static String koreAPIUrl = "PLEASE_ENTER_KORE_API_URL";
         public static HashMap<String, Object> queryParams = new HashMap<>();
 
         public static RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
@@ -108,16 +102,9 @@ public class SDKConfiguration {
         public static String bot_name = "PLEASE_ENTER_BOT_NAME";
         public static String bot_id = "PLEASE_ENTER_BOT_ID";
         public static boolean enable_ack_delivery = false;
-        public static boolean isWebHook = false;
-        public static final String webHook_client_id = "PLEASE_ENTER_WEBHOOK_CLIENT_ID";
-        public static final String webHook_client_secret = "PLEASE_ENTER_WEBHOOK_CLIENT_SECRET";
-        public static final String webHook_identity = "PLEASE_ENTER_WEBHOOK_IDENTITY";
-        public static final String webHook_bot_id = "PLEASE_ENTER_WEBHOOK_BOT_ID";
 
-        //Weebhook
-        // for webhook based communication use following option
-        public static String webhookURL = "Please enter WebHook Url";
-        public static int apiVersion = 2;
+        //Webhook
+        public static boolean isWebHook = false;
     }
 
     public static class BubbleColors {
@@ -224,6 +211,7 @@ public class SDKConfiguration {
     public static HashMap<String, View> getCustomTemplateView() {
         return hsh;
     }
+
     public static void setCustomTemplateViewHolder(String templateName, Class<?> viewHolder) {
         hshViewHolders.put(templateName, viewHolder);
         Log.e("HashMap Count", hshViewHolders.size() + "");

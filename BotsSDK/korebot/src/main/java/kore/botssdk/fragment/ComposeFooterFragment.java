@@ -734,7 +734,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                         KoreMedia.BUFFER_SIZE_IMAGE,
                         new Messenger(messagesMediaUploadAcknowledgeHandler),
                         filePathThumbnail, "AT_" + System.currentTimeMillis(),
-                        requireActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
+                        requireActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
             }
         } else {
             ToastUtils.showToast(requireActivity(), "Unable to attach file!");

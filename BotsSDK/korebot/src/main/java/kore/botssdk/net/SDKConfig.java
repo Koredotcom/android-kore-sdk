@@ -22,9 +22,12 @@ public class SDKConfig {
         SDKConfiguration.JWTServer.setJwt_token(jwtToken);
     }
 
+    public static void isWebHook(boolean isWebHook)
+    {
+        SDKConfiguration.Client.isWebHook = isWebHook;
+    }
     public static void setServerUrl(String url) {
         SDKConfiguration.Server.setServerUrl(url);
-        SDKConfiguration.Server.setKoreBotServerUrl(url);
     }
 
     public static void setBrandingUrl(String url) {

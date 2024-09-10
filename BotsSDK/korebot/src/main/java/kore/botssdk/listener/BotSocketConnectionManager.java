@@ -123,7 +123,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(true);
         } else {
-            makeStsJwtCallWithConfig(true);
+            makeStsJwtCallWithConfig(SDKConfiguration.Client.isWebHook);
         }
     }
 
@@ -171,7 +171,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     private HashMap<String, Object> getRequestObject() {
+
         HashMap<String, Object> hsh = new HashMap<>();
+
         hsh.put("clientId", SDKConfiguration.Client.client_id);
         hsh.put("clientSecret", SDKConfiguration.Client.client_secret);
         hsh.put("identity", SDKConfiguration.Client.identity);
@@ -325,7 +327,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(false);
         } else {
-            makeStsJwtCallWithConfig(false);
+            makeStsJwtCallWithConfig(SDKConfiguration.Client.isWebHook);
         }
     }
 
