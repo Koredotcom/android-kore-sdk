@@ -69,6 +69,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String SELECTED_ITEM = "selected_item";
     public static final String STACKED = "stacked";
     public static final String TABLE_VIEW_RESPONSIVE = "responsive";
+    public static final String IS_VIEW_MORE = "is_view_more";
 
     //widgets
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";

@@ -1,7 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,30 +17,23 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
-import kore.botssdk.listener.MultiSelectAllListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
 import kore.botssdk.models.AdvancedMultiSelectModel;
 import kore.botssdk.utils.KaFontUtils;
 
 @SuppressLint("UnknownNullness")
-public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMultiSelectAdapter.ViewHolder> implements MultiSelectAllListener {
+public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMultiSelectAdapter.ViewHolder> {
     private static final int MULTI_SELECT_ITEM = 0;
     private static final int MULTI_SELECT_BUTTON = 1;
     private ArrayList<AdvancedMultiSelectModel> multiSelectModels = new ArrayList<>();
-    private final Context context;
     private int visibleLimit = 1;
     private ArrayList<AdvanceMultiSelectCollectionModel> checkedItems = new ArrayList<>();
     private AdvanceMultiSelectListener advanceMultiSelectListener;
 
+    private boolean isEnabled;
+
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
-    }
-
-    AdvanceMultiSelectCollectionsAdapter advanceMultiSelectCollectionsAdapter;
-    boolean isEnabled;
-
-    public AdvancedMultiSelectAdapter(Context context) {
-        this.context = context;
     }
 
     @NonNull
@@ -57,46 +49,24 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
         ArrayList<AdvanceMultiSelectCollectionModel> multiSelectCollectionModels = multiSelectModels.get(position).getCollection();
 
         if (multiSelectCollectionModels != null) {
-            holder.advMultiSelectList.setAdapter(advanceMultiSelectCollectionsAdapter = new AdvanceMultiSelectCollectionsAdapter(context, multiSelectCollectionModels));
-            advanceMultiSelectCollectionsAdapter.setEnabled(isEnabled);
-            advanceMultiSelectCollectionsAdapter.setCheckAll(checkedItems);
-            advanceMultiSelectCollectionsAdapter.setCheckBoxAll(holder.checkSelectAll);
-            advanceMultiSelectCollectionsAdapter.setAdvanceMultiListener(advanceMultiSelectListener);
-            advanceMultiSelectCollectionsAdapter.setMultiListener(AdvancedMultiSelectAdapter.this);
+            AdvanceMultiSelectCollectionsAdapter adapter = new AdvanceMultiSelectCollectionsAdapter(multiSelectCollectionModels);
+            adapter.setEnabled(isEnabled);
+            adapter.setCheckedItems(checkedItems);
+            adapter.setAdvanceMultiListener(advanceMultiSelectListener);
+            holder.advMultiSelectList.setAdapter(adapter);
 
             holder.rootLayout.setVisibility(View.GONE);
 
             if (multiSelectCollectionModels.size() > 1) holder.rootLayout.setVisibility(View.VISIBLE);
+            holder.checkSelectAll.setChecked(checkedItems.containsAll(multiSelectCollectionModels));
 
-            if (holder.checkSelectAll.getTag() == null) holder.checkSelectAll.setTag(false);
-
-            holder.checkSelectAll.setOnClickListener(v -> {
-                if (!(boolean) (v.getTag())) {
-                    v.setTag(true);
-                    holder.advMultiSelectList.setAdapter(advanceMultiSelectCollectionsAdapter = new AdvanceMultiSelectCollectionsAdapter(context, multiSelectCollectionModels));
-                    advanceMultiSelectCollectionsAdapter.setEnabled(isEnabled);
-                    advanceMultiSelectCollectionsAdapter.setCheckAll(multiSelectCollectionModels);
-                    advanceMultiSelectCollectionsAdapter.setCheckBoxAll(holder.checkSelectAll);
-                    advanceMultiSelectCollectionsAdapter.setAdvanceMultiListener(advanceMultiSelectListener);
-                    advanceMultiSelectCollectionsAdapter.setMultiListener(AdvancedMultiSelectAdapter.this);
-                    checkedItems.addAll(multiSelectCollectionModels);
-
-                    if (advanceMultiSelectListener != null) {
-                        advanceMultiSelectListener.allItemsSelected(true, multiSelectCollectionModels);
+            holder.checkSelectAll.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+                if (compoundButton.isPressed()) {
+                    if (!isEnabled) {
+                        holder.checkSelectAll.setChecked(!isChecked);
+                        return;
                     }
-                } else {
-                    v.setTag(false);
-                    holder.advMultiSelectList.setAdapter(advanceMultiSelectCollectionsAdapter = new AdvanceMultiSelectCollectionsAdapter(context, multiSelectCollectionModels));
-                    advanceMultiSelectCollectionsAdapter.setEnabled(isEnabled);
-                    advanceMultiSelectCollectionsAdapter.unCheckAll();
-                    advanceMultiSelectCollectionsAdapter.setCheckBoxAll(holder.checkSelectAll);
-                    advanceMultiSelectCollectionsAdapter.setAdvanceMultiListener(advanceMultiSelectListener);
-                    advanceMultiSelectCollectionsAdapter.setMultiListener(AdvancedMultiSelectAdapter.this);
-                    checkedItems = new ArrayList<>();
-
-                    if (advanceMultiSelectListener != null) {
-                        advanceMultiSelectListener.allItemsSelected(false, multiSelectCollectionModels);
-                    }
+                    advanceMultiSelectListener.allItemsSelected(isChecked, multiSelectCollectionModels);
                 }
             });
         }
@@ -121,7 +91,6 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
         }
     }
 
-
     private AdvancedMultiSelectModel getItem(int position) {
         return multiSelectModels != null ? multiSelectModels.get(position) : null;
     }
@@ -137,8 +106,8 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
         this.multiSelectModels = multiSelectModels;
     }
 
-    public void setAdvanceMultiListener(AdvanceMultiSelectListener advanceMultiSelectListener) {
-        this.advanceMultiSelectListener = advanceMultiSelectListener;
+    public void setAdvanceMultiListener(AdvanceMultiSelectListener advanceMultiSelectListner) {
+        this.advanceMultiSelectListener = advanceMultiSelectListner;
     }
 
     public void refresh() {
@@ -146,8 +115,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
         notifyDataSetChanged();
     }
 
-    @Override
-    public void isSelectAll(boolean selectAll, ArrayList<AdvanceMultiSelectCollectionModel> checkedItems) {
+    public void setCheckedItems(ArrayList<AdvanceMultiSelectCollectionModel> checkedItems) {
         this.checkedItems = checkedItems;
     }
 
@@ -155,7 +123,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
         CheckBox checkSelectAll;
         TextView tvMultiSelectTitle;
         RelativeLayout rootLayout;
-        LinearLayout root_layout_btn;
+        LinearLayout rootLayoutBtn;
         RecyclerView advMultiSelectList;
 
         public ViewHolder(@NonNull View itemView, int viewType) {
@@ -167,7 +135,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
                 advMultiSelectList.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
                 rootLayout = itemView.findViewById(R.id.root_layout);
             } else {
-                root_layout_btn = itemView.findViewById(R.id.root_layout);
+                rootLayoutBtn = itemView.findViewById(R.id.root_layout);
             }
 
             KaFontUtils.applyCustomFont(itemView.getContext(), itemView);

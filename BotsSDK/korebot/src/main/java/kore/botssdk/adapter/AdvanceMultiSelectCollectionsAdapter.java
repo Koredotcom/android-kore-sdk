@@ -1,12 +1,12 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,11 +19,9 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
-import kore.botssdk.listener.MultiSelectAllListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.Utility;
 
 @SuppressLint("UnknownNullness")
 public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<AdvanceMultiSelectCollectionsAdapter.ViewHolder> {
@@ -32,26 +30,26 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     private final ArrayList<AdvanceMultiSelectCollectionModel> multiSelectModels;
     private ArrayList<AdvanceMultiSelectCollectionModel> checkedItems = new ArrayList<>();
     private AdvanceMultiSelectListener multiSelectListener;
-    private MultiSelectAllListener multiSelectAllListener;
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
     }
 
-    private CheckBox selectAll;
     private boolean isEnabled;
-    private final int dp1;
 
-    public AdvanceMultiSelectCollectionsAdapter(Context context, ArrayList<AdvanceMultiSelectCollectionModel> multiSelectModels) {
+    public AdvanceMultiSelectCollectionsAdapter(ArrayList<AdvanceMultiSelectCollectionModel> multiSelectModels) {
         this.multiSelectModels = multiSelectModels;
-        this.dp1 = (int) Utility.convertDpToPixel(context, 1);
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutId = viewType == MULTI_SELECT_ITEM ? R.layout.row_advance_multi_select_sub_item : R.layout.multiselect_button;
-        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false), viewType);
+        return new AdvanceMultiSelectCollectionsAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false), viewType);
     }
 
     @Override
@@ -85,7 +83,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     }
 
     private void populateVIew(ViewHolder holder, int position) {
-        final AdvanceMultiSelectCollectionModel item = getItem(position);
+        final AdvanceMultiSelectCollectionModel item = (AdvanceMultiSelectCollectionModel) getItem(position);
         if (item == null) return;
         holder.textView.setTag(item);
         holder.textView.setText(item.getTitle());
@@ -96,14 +94,21 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
             Picasso.get().load(item.getImage_url())
                     .centerInside()
                     .placeholder(R.drawable.transparant_image)
-                    .resize(40 * dp1, 40 * dp1)
+                    .resize((int) (40 * dp1), (int) (40 * dp1))
                     .into(holder.ivAdvMultiSelect);
         }
 
-        holder.checkBox.setChecked(isObjectInSet(item));
-        holder.checkBox.setTag(item);
-        holder.checkBox.setOnClickListener(itemSelectionListener);
+        holder.checkBox.setChecked(checkedItems.contains(item));
 
+        holder.checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+            if (compoundButton.isPressed()) {
+                if (!isEnabled) {
+                    compoundButton.setChecked(!isChecked);
+                    return;
+                }
+                multiSelectListener.itemSelected(item);
+            }
+        });
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);
@@ -111,78 +116,13 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
         }
     }
 
-    public void setCheckAll(ArrayList<AdvanceMultiSelectCollectionModel> checkedItems) {
-        this.checkedItems = new ArrayList<>();
-        this.checkedItems.addAll(checkedItems);
-        this.notifyDataSetChanged();
-    }
-
-    public void setCheckBoxAll(CheckBox selectAll) {
-        this.selectAll = selectAll;
-    }
-
-    public void unCheckAll() {
-        this.checkedItems = new ArrayList<>();
-        this.notifyDataSetChanged();
-    }
-
-    public boolean isObjectInSet(AdvanceMultiSelectCollectionModel currentItem) {
-        for (AdvanceMultiSelectCollectionModel item : checkedItems) {
-            if (currentItem.getTitle().equals(item.getTitle())) {
-                return true;
-            }
-        }
-
-        return false;
+    public void setCheckedItems(ArrayList<AdvanceMultiSelectCollectionModel> checkedItems) {
+        this.checkedItems = checkedItems;
     }
 
     public void setAdvanceMultiListener(AdvanceMultiSelectListener checkAllListener) {
         this.multiSelectListener = checkAllListener;
     }
-
-    public void setMultiListener(MultiSelectAllListener multiSelectAllListener) {
-        this.multiSelectAllListener = multiSelectAllListener;
-    }
-
-    private final View.OnClickListener itemSelectionListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            if (isEnabled) {
-                AdvanceMultiSelectCollectionModel item = (AdvanceMultiSelectCollectionModel) v.getTag();
-                if (((CompoundButton) v).isChecked()) {
-                    checkedItems.add(item);
-                } else {
-                    checkedItems.remove(item);
-                }
-
-                if (checkedItems.size() == multiSelectModels.size()) {
-                    if (multiSelectListener != null)
-                        multiSelectListener.itemSelected(item);
-
-                    if (multiSelectAllListener != null)
-                        multiSelectAllListener.isSelectAll(true, checkedItems);
-
-                    if (selectAll != null) {
-                        selectAll.setChecked(true);
-                        selectAll.setTag(true);
-                    }
-                } else {
-                    if (multiSelectListener != null)
-                        multiSelectListener.itemSelected(item);
-
-                    if (multiSelectAllListener != null)
-                        multiSelectAllListener.isSelectAll(false, checkedItems);
-
-                    if (selectAll != null) {
-                        selectAll.setChecked(false);
-                        selectAll.setTag(false);
-                    }
-                }
-            } else {
-                ((CompoundButton) v).setChecked(false);
-            }
-        }
-    };
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox checkBox;

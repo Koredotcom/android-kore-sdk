@@ -462,7 +462,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                 response = (BotResponse) item;
                 if (response.getMessageId().equals(messageId)) {
                     foundIndex = index;
-                    Map<String, Object> map = new HashMap<>();
+                    Map<String, Object> map = response.getContentState();
+                    if (map == null) map = new HashMap<>();
                     map.put(key, value);
                     response.setContentState(map);
                 }
