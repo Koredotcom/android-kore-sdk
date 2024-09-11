@@ -183,4 +183,3 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         TextView botListItemSubtitle, bot_list_item_cost;
     }
 }
-
