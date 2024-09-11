@@ -39,12 +39,11 @@ android {
     }
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            groupId = 'com.kore.korebot'
-            artifactId = 'korebot'
-            version = '1.1'
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+            }
         }
     }
 }
@@ -62,12 +61,6 @@ dependencies {
 //    implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:v2-10.5.0'
 //    implementation 'com.github.Koredotcom:android-kore-sdk:0.0.1'
 
-    implementation(project(':korebot')) {
-        exclude module: 'support-v4'
-    }
-
-    implementation(project(':korebotsdklib')) {
-        exclude module: 'support-v4'
-    }
-
+    implementation(project(':korebot'))
+    implementation(project(':korebotsdklib'))
 }
