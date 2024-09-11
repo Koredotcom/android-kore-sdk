@@ -69,7 +69,7 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
 //                }
 //            }
 //
-            holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+        holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
 //        }
 
         if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {

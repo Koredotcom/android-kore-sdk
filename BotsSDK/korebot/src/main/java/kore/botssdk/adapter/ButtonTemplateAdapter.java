@@ -27,9 +27,7 @@ import kore.botssdk.utils.BundleConstants;
 public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAdapter.ViewHolder> {
     private ArrayList<BotButtonModel> buttons;
     private String splashColour;
-    private String textColor;
-    //    private String disabledTextColor;
-//    private String disabledColour;
+    String textColor;
     private boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
