@@ -51,7 +51,7 @@ import kore.botssdk.utils.StringUtils;
 public class MediaTemplateHolder extends BaseViewHolder {
     private final ImageView ivImage;
     private final TextView tvDownload;
-    private final TextView tvFileName, tvAudioVideoTiming;
+    private final TextView tvAudioVideoTiming;
     private SharedPreferences sharedPreferences;
     private final VideoView vvAttachment;
     private final ImageView ivPlayPauseIcon;
@@ -77,7 +77,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
         LinearLayout llAttachment = view.findViewById(R.id.llAttachment);
         ivImage = view.findViewById(R.id.ivImage);
         tvDownload = view.findViewById(R.id.download);
-        tvFileName = view.findViewById(R.id.tvFileName);
         vvAttachment = view.findViewById(R.id.vvAttachment);
         ivPlayPauseIcon = view.findViewById(R.id.ivPlayPauseIcon);
         sbVideo = view.findViewById(R.id.sbVideo);
@@ -133,7 +132,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
                 vvAttachment.setVisibility(GONE);
                 ivImage.setVisibility(VISIBLE);
                 tvVideoTitle.setVisibility(GONE);
-                tvFileName.setVisibility(GONE);
 
                 if (!StringUtils.isNullOrEmpty(payloadInner.getText())) {
                     tvVideoTitle.setVisibility(VISIBLE);
@@ -186,13 +184,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
                         e.printStackTrace();
                     }
                 }
-
-                tvFileName.setVisibility(VISIBLE);
-
-                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-                    tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
-                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                    tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
 
                 player.setOnPreparedListener(mp -> setAudioProgress());
 
@@ -268,13 +259,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 if (payloadInner.getVideoCurrentPosition() > 0)
                     setVideoPosition(payloadInner.getVideoCurrentPosition());
-
-                tvFileName.setVisibility(VISIBLE);
-
-                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-                    tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getVideoUrl()));
-                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                    tvFileName.setText(StringUtils.getFileNameFromUrl(payloadInner.getUrl()));
 
                 vvAttachment.setOnCompletionListener(mp -> {
                     vvAttachment.seekTo(1);
