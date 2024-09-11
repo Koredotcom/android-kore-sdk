@@ -47,28 +47,28 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = getConfigValue("clientId");//PLEASE_ENTER_BOT_CLIENT_ID
+        String clientId = "PLEASE_ENTER_BOT_CLIENT_ID";//getConfigValue("clientId")
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = getConfigValue("clientSecret");//PLEASE_ENTER_BOT_CLIENT_SECRET
+        String clientSecret = "PLEASE_ENTER_BOT_CLIENT_SECRET";//getConfigValue("clientSecret")
 
         //Set botId, This value is mandatory
-        String botId = getConfigValue("botId");//PLEASE_ENTER_BOT_ID
+        String botId = "PLEASE_ENTER_BOT_ID";//getConfigValue("botId")
 
         //Set identity, This value is mandatory
-        String identity = getConfigValue("identity");//PLEASE_ENTER_IDENTITY
+        String identity = "PLEASE_ENTER_IDENTITY"; //PLEASE_ENTER_IDENTITY getConfigValue("identity")
 
         //Set botName, This value is mandatory
-        String botName = getConfigValue("botName");//PLEASE_ENTER_BOT_NAME
+        String botName = "PLEASE_ENTER_BOT_NAME";// getConfigValue("botName")
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = getConfigValue("serverUrl");//PLEASE_ENTER_SERVER_URL
+        String serverUrl = "PLEASE_ENTER_SERVER_URL";// getConfigValue("serverUrl")
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = getConfigValue("brandingUrl");//PLEASE_ENTER_BRANDING_SERVER_URL
+        String brandingUrl = "PLEASE_ENTER_BRANDING_SERVER_URL";// getConfigValue("brandingUrl")
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = getConfigValue("jwtServerUrl");//PLEASE_ENTER_JWT_SERVER_URL
+        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";// getConfigValue("jwtServerUrl")
 
         //Set Server url
         SDKConfig.setServerUrl(serverUrl);
