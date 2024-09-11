@@ -77,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
         //Set Jwt Server url
         SDKConfig.setJwtTokenUrl(jwtServerUrl);
 
+        //Set isWebHook
+        SDKConfig.isWebHook(true);
+
         //Initialize the bot with bot config
         //You can pass client id and client secret as empty when you pass jwt token
         SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken);

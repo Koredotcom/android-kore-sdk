@@ -1,5 +1,6 @@
 package kore.botssdk.view.coverflow;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -11,6 +12,8 @@ public class RecyclerCoverFlow extends RecyclerView {
     private float mDownX;
 
     private CoverFlowLayoutManger.Builder mManagerBuilder;
+
+    private boolean isScrollable = true;
 
     public RecyclerCoverFlow(Context context) {
         super(context);
@@ -25,6 +28,10 @@ public class RecyclerCoverFlow extends RecyclerView {
     public RecyclerCoverFlow(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();
+    }
+
+    public void setScrollable(boolean isScrollable) {
+        this.isScrollable = isScrollable;
     }
 
     private void init() {
@@ -113,6 +120,17 @@ public class RecyclerCoverFlow extends RecyclerView {
 
     public void setOnItemSelectedListener(CoverFlowLayoutManger.OnSelected l) {
         getCoverFlowLayout().setOnSelectedListener(l);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        return isScrollable ? super.onTouchEvent(e) : false;
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent e) {
+        return isScrollable ? super.onInterceptTouchEvent(e) : false;
     }
 
     @Override

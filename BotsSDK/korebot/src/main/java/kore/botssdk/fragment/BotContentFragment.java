@@ -499,7 +499,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                 try {
                     ServerBotMsgResponse re = new ServerBotMsgResponse();
 
-                    Call<BotHistory> _resp = WebHookRestBuilder.getRestAPI().getWebHookBotHistory("bearer " + jwt, Client.webHook_bot_id, Client.webHook_bot_id, limit);
+                    Call<BotHistory> _resp = WebHookRestBuilder.getRestAPI().getWebHookBotHistory("bearer " + jwt, Client.bot_id, Client.bot_id, limit);
                     Response<BotHistory> rBody = _resp.execute();
                     BotHistory history = rBody.body();
 

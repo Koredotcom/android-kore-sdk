@@ -10,11 +10,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/check_select_all"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginBottom="10dp"
+        android:button="@drawable/multi_checkbox_drawable"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:minWidth="300dp"
+        android:minHeight="30dp"
+        android:padding="10dp"
+        android:text="@string/select_all"
+        android:textColor="#404051"
+        android:textSize="15sp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/multi_select_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
-        android:background="@drawable/round_rect"
         android:visibility="visible" />
 </androidx.appcompat.widget.LinearLayoutCompat>

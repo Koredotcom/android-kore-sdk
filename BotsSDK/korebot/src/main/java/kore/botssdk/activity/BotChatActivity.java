@@ -766,7 +766,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             if (!taskList.isEmpty()) {
                 ActivityManager.RunningTaskInfo runningTaskInfo = taskList.get(0);
-                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains("kore.botssdk")) {
+                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains("com.kore.korebot")) {
                     if (botClient != null) {
                         botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
@@ -1095,9 +1095,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         protected void onPostExecute() {
             if (extn != null) {
                 if (!SDKConfiguration.Client.isWebHook) {
-                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.koreAPIUrl), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL , orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
                 } else {
-                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.koreAPIUrl), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
+                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
                 }
             } else {
                 showToast("Unable to attach!");
@@ -1182,7 +1182,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void getBrandingDetails() {
-        Call<ResponseBody> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), "published", "1", "en_US", SDKConfiguration.Client.bot_id);
+        Call<ResponseBody> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + (SDKConfiguration.Client.isWebHook ? jwt : SocketWrapper.getInstance(BotChatActivity.this).getAccessToken()), "published", "1", "en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@androidx.annotation.NonNull Call<ResponseBody> call, @androidx.annotation.NonNull Response<ResponseBody> response) {
@@ -1281,7 +1281,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void sendWebHookMessage(boolean new_session, String msg, ArrayList<HashMap<String, String>> attachments) {
-        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.webHook_bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
+        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().sendWebHookMessage(SDKConfiguration.Client.bot_id, "bearer " + jwt, getJsonRequest(new_session, msg, attachments));
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
             public void onResponse(@NonNull Call<WebHookResponseDataModel> call, @NonNull Response<WebHookResponseDataModel> response) {
@@ -1335,11 +1335,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     private void getWebHookMeta() {
-        Call<BotMetaModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getWebHookBotMeta("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id);
+        Call<BotMetaModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getWebHookBotMeta("bearer " + jwt, SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<BotMetaModel>() {
             @Override
             public void onResponse(@NonNull Call<BotMetaModel> call, @NonNull Response<BotMetaModel> response) {
                 if (response.isSuccessful()) {
+                    getBrandingDetails();
+
                     botMetaModel = response.body();
                     if (botMetaModel != null) SDKConfiguration.BubbleColors.setIcon_url(botMetaModel.getIcon());
                     sendWebHookMessage(true, "ON_CONNECT", null);
@@ -1353,7 +1355,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void postPollingData(String pollId) {
-        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.webHook_bot_id, pollId);
+        Call<WebHookResponseDataModel> getBankingConfigService = WebHookRestBuilder.getRestAPI().getPollIdData("bearer " + jwt, SDKConfiguration.Client.bot_id, pollId);
         getBankingConfigService.enqueue(new Callback<WebHookResponseDataModel>() {
             @Override
             public void onResponse(@NonNull Call<WebHookResponseDataModel> call, @NonNull Response<WebHookResponseDataModel> response) {
@@ -1414,7 +1416,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             hsh.put("message", message);
 
             WebHookRequestModel.From from = new WebHookRequestModel.From();
-            from.setId(SDKConfiguration.Client.webHook_identity);
+            from.setId(SDKConfiguration.Client.identity);
             WebHookRequestModel.From.WebHookUserInfo userInfo = new WebHookRequestModel.From.WebHookUserInfo();
             userInfo.setFirstName("");
             userInfo.setLastName("");

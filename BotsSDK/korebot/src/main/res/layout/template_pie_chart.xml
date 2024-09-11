@@ -12,6 +12,5 @@
     <kore.botssdk.charts.charts.PieChart
         android:id="@+id/pieChart"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:background="@color/bgLightBlue" />
+        android:layout_height="300dp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

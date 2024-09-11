@@ -112,7 +112,7 @@ public class PieChartTemplateHolder extends BaseViewHolder {
         pieChart.setMarkerView(mv);
 
         // entry label styling
-        pieChart.setEntryLabelColor(Color.WHITE);
+        pieChart.setEntryLabelColor(Color.BLACK);
         pieChart.setEntryLabelTextSize(12f);
     }
 
@@ -140,7 +140,7 @@ public class PieChartTemplateHolder extends BaseViewHolder {
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(Color.BLACK);
 
         pieChart.setData(data);
         pieChart.highlightValues(null);

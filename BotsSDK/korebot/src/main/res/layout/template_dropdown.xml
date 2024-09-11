@@ -46,5 +46,15 @@
                 android:prompt="@string/app_name"
                 android:textAlignment="textStart" />
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <kore.botssdk.view.CustomTextViewBold
+            android:id="@+id/submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_drawable"
+            android:gravity="center"
+            android:text="@string/submit"
+            android:textColor="@color/white" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </RelativeLayout>

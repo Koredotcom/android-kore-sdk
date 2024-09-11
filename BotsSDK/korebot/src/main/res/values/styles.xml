@@ -84,7 +84,7 @@
 
     <style name="RatingBar" parent="Theme.AppCompat">
         <item name="colorControlNormal">@color/color_a7b0be</item>
-        <item name="colorControlActivated">@color/bgBlueSignupOld</item>
+        <item name="colorControlActivated">#F59E0B</item>
     </style>
 
     <!-- warna header kalender -->

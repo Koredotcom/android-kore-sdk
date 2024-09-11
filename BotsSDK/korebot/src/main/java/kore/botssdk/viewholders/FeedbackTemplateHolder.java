@@ -4,7 +4,6 @@ import static kore.botssdk.models.BotResponse.VIEW_CSAT;
 import static kore.botssdk.models.BotResponse.VIEW_NPS;
 import static kore.botssdk.models.BotResponse.VIEW_STAR;
 import static kore.botssdk.models.BotResponse.VIEW_THUMBS_UP_DOWN;
-import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,19 +22,24 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 
 import java.util.List;
 import java.util.Map;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.FeedbackRatingScaleAdapter;
+import kore.botssdk.adapter.FeedbackThumbsAdapter;
 import kore.botssdk.dialogs.FeedbackActionSheetFragment;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.FeedbackRatingModel;
+import kore.botssdk.models.FeedbackThumbsModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.KaFontUtils;
-import kore.botssdk.viewUtils.DimensionUtil;
 
 public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnClickListener {
     private final TextView tvFeedbackTemplateTitle;
@@ -48,9 +52,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
     private final LinearLayoutCompat emojis;
     private final RelativeLayout rlViewNPS;
     private final RecyclerView rvRatingScale;
-    private final LinearLayoutCompat thumbsUpDown;
-    private final ImageView thumbsUp;
-    private final ImageView thumbsDown;
+    private final RecyclerView thumbsUpDown;
     private PayloadInner payloadInner;
     private String msgId;
 
@@ -68,8 +70,6 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         emojis = itemView.findViewById(R.id.emojis);
         rlViewNPS = itemView.findViewById(R.id.rlViewNPS);
         thumbsUpDown = itemView.findViewById(R.id.thumbs_up_down);
-        thumbsUp = itemView.findViewById(R.id.thumbs_up);
-        thumbsDown = itemView.findViewById(R.id.thumbs_down);
         rvRatingScale = itemView.findViewById(R.id.rvRatingScale);
 
         icon1 = itemView.findViewById(R.id.icon_1);
@@ -77,8 +77,6 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         icon3 = itemView.findViewById(R.id.icon_3);
         icon4 = itemView.findViewById(R.id.icon_4);
         icon5 = itemView.findViewById(R.id.icon_5);
-
-        dp1 = (int) DimensionUtil.dp1;
     }
 
     @Override
@@ -91,18 +89,24 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         emojis.setVisibility(viewType.equals(VIEW_CSAT) ? View.VISIBLE : View.GONE);
         rbFeedback.setVisibility(viewType.equals(VIEW_STAR) ? View.VISIBLE : View.GONE);
         rlViewNPS.setVisibility(viewType.equals(VIEW_NPS) ? View.VISIBLE : View.GONE);
-        thumbsUpDown.setVisibility(viewType.equals(VIEW_THUMBS_UP_DOWN) ? View.VISIBLE : View.GONE);
+        thumbsUpDown.setVisibility(viewType.equals(VIEW_THUMBS_UP_DOWN) && !payloadInner.getThumpsUpDownArrays().isEmpty() ? View.VISIBLE : View.GONE);
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
-        int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
 
         switch (payloadInner.getView()) {
             case VIEW_STAR: {
+                int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
                 rbFeedback.setRating(selectedFeedback);
                 rbFeedback.setIsIndicator(!isLastItem());
+                rbFeedback.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+                    if (!isLastItem()) return;
+                    contentStateListener.onSaveState(msgId, (int) rating, BotResponse.SELECTED_FEEDBACK);
+                    composeFooterInterface.onSendClick(((int) rating) + "", (int) rating + "", false);
+                });
             }
             break;
 
             case VIEW_NPS: {
+                int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
                 rvRatingScale.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
                 List<FeedbackRatingModel> array = payloadInner.getNumbersArrays();
                 String msgId = ((BotResponse) baseBotMessage).getMessageId();
@@ -114,6 +118,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
 
             case VIEW_CSAT: {
                 resetAll();
+                int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
                 loadEmojis(selectedFeedback != -1 ? selectedFeedback - 1 : -1);
                 icon1.setOnClickListener(this);
                 icon2.setOnClickListener(this);
@@ -124,16 +129,20 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
             break;
 
             case VIEW_THUMBS_UP_DOWN: {
-                thumbsUp.setOnClickListener(view -> {
-                    if (!isLastItem()) return;
-                    contentStateListener.onSelect(msgId, 1, BotResponse.SELECTED_FEEDBACK);
-                    composeFooterInterface.onSendClick("1", "1", false);
-                });
-                thumbsDown.setOnClickListener(view -> {
-                    if (!isLastItem()) return;
-                    contentStateListener.onSelect(msgId, 2, BotResponse.SELECTED_FEEDBACK);
-                    composeFooterInterface.onSendClick("2", "2", false);
-                });
+                FeedbackThumbsModel selectedItem = contentState != null ? (FeedbackThumbsModel) contentState.get(BotResponse.SELECTED_FEEDBACK) : null;
+                if (payloadInner.getThumpsUpDownArrays().isEmpty()) return;
+                FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+                layoutManager.setFlexDirection(FlexDirection.ROW);
+                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+                thumbsUpDown.setLayoutManager(layoutManager);
+                thumbsUpDown.addItemDecoration(new VerticalSpaceItemDecoration(20));
+
+                List<FeedbackThumbsModel> arrFeedbackThumbsModels = payloadInner.getThumpsUpDownArrays();
+                if (arrFeedbackThumbsModels != null && arrFeedbackThumbsModels.size() > 0) {
+                    FeedbackThumbsAdapter adapter = new FeedbackThumbsAdapter(msgId, arrFeedbackThumbsModels, selectedItem, isLastItem(), contentStateListener);
+                    adapter.setComposeFooterInterface(composeFooterInterface);
+                    thumbsUpDown.setAdapter(adapter);
+                }
                 break;
             }
         }
@@ -147,11 +156,6 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
             bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
         }
-        rbFeedback.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
-            if (!isLastItem()) return;
-            contentStateListener.onSelect(msgId, (int) rating, BotResponse.SELECTED_FEEDBACK);
-            composeFooterInterface.onSendClick(((int) rating) + "", rating + "", false);
-        });
     }
 
     @Override
@@ -170,7 +174,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         } else if (id == R.id.icon_5) {
             position = 5;
         }
-        contentStateListener.onSelect(msgId, position, BotResponse.SELECTED_FEEDBACK);
+        contentStateListener.onSaveState(msgId, position, BotResponse.SELECTED_FEEDBACK);
         composeFooterInterface.onSendClick(position + "", position + "", false);
         loadEmojis(position - 1);
     }
@@ -187,7 +191,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         this.payloadInner.setEmojiPosition(position);
         switch (position) {
             case 0:
-                Glide.with(itemView.getContext()).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon1));
+                Glide.with(itemView.getContext()).load(R.drawable.feedback_icon_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon1));
                 break;
             case 1:
                 Glide.with(itemView.getContext()).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon2));

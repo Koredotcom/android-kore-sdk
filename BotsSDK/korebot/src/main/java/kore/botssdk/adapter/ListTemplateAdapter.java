@@ -81,12 +81,11 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
         }
         holder.botListItemRoot.setOnClickListener(v -> {
             if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                BotListModel _botListModel = getItem(position);
-                if (_botListModel != null && _botListModel.getDefault_action() != null) {
-                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
-                    } else if (isEnabled && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                        composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(), false);
+                if (botListModel.getDefault_action() != null) {
+                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(botListModel.getDefault_action().getUrl());
+                    } else if (isEnabled && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
+                        composeFooterInterface.onSendClick(botListModel.getDefault_action().getPayload(), false);
                     }
                 }
             }

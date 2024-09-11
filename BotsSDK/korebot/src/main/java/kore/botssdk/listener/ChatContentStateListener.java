@@ -1,5 +1,5 @@
 package kore.botssdk.listener;
 
 public interface ChatContentStateListener {
-    public void onSelect(String id, Object value, String key);
+    void onSaveState(String messageId, Object value, String key);
 }

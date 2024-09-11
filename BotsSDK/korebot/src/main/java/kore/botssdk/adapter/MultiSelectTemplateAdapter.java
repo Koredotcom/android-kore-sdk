@@ -1,8 +1,5 @@
 package kore.botssdk.adapter;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +27,6 @@ import kore.botssdk.utils.KaFontUtils;
 public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelectTemplateAdapter.ViewHolder> {
     private static final int MULTI_SELECT_ITEM = 0;
     private static final int MULTI_SELECT_BUTTON = 1;
-    private final SharedPreferences sharedPreferences;
     private final List<MultiSelectBase> multiSelectModels;
     private final boolean isEnabled;
     private List<MultiSelectBase> checkedItems = new ArrayList<>();
@@ -38,9 +34,8 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
     private ComposeFooterInterface composeFooterInterface;
     private final String msgId;
 
-    public MultiSelectTemplateAdapter(Context context, String msgId, List<MultiSelectBase> multiSelectModels, boolean isEnabled) {
+    public MultiSelectTemplateAdapter(String msgId, List<MultiSelectBase> multiSelectModels, boolean isEnabled) {
         this.msgId = msgId;
-        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         this.multiSelectModels = multiSelectModels;
         this.isEnabled = isEnabled;
     }
@@ -49,19 +44,7 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         int layoutId = viewType == MULTI_SELECT_ITEM ? R.layout.multi_select_item : R.layout.multiselect_button;
-        ViewHolder viewHolder = new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false), viewType);
-        if (sharedPreferences != null && viewHolder.root_layout != null) {
-            viewHolder.root_layout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
-        }
-
-        if (sharedPreferences != null && viewHolder.root_layout_btn != null) {
-            viewHolder.root_layout_btn.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#FFFFFF")));
-        }
-
-        if (sharedPreferences != null && viewHolder.textView != null) {
-            viewHolder.textView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
-        }
-        return viewHolder;
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false), viewType);
     }
 
     @Override
@@ -80,7 +63,7 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
                         } else {
                             checkedItems.remove(item);
                         }
-                        if (listener != null) listener.onSelect(msgId, checkedItems, BotResponse.SELECTED_ITEM);
+                        if (listener != null) listener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
                     } else {
                         ((CompoundButton) v).setChecked(!isChecked);
                     }
@@ -94,12 +77,10 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
                     StringBuilder sb = new StringBuilder();
                     StringBuilder sbValue = new StringBuilder();
                     for (MultiSelectBase item1 : checkedItems) {
-                        if (!sb.toString().isEmpty())
-                            sb.append(",");
+                        if (!sb.toString().isEmpty()) sb.append(" ");
                         sb.append(((BotMultiSelectElementModel) item1).getTitle());
 
-                        if (!sbValue.toString().isEmpty())
-                            sbValue.append(",");
+                        if (!sbValue.toString().isEmpty()) sbValue.append(",");
                         sbValue.append(((BotMultiSelectElementModel) item1).getValue());
                     }
                     composeFooterInterface.onSendClick(sb.toString(), sbValue.toString(), false);
@@ -110,8 +91,7 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
 
     @Override
     public int getItemViewType(int position) {
-        if (getItem(position) instanceof BotMultiSelectElementModel)
-            return MULTI_SELECT_ITEM;
+        if (getItem(position) instanceof BotMultiSelectElementModel) return MULTI_SELECT_ITEM;
         return MULTI_SELECT_BUTTON;
     }
 

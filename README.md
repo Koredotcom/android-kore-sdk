@@ -30,32 +30,32 @@ Kore SDK for Android enables you to talk to Kore bots over a web socket. This re
 
 Client id - Copy this id from Bot Builder SDK Settings ex. cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
  ```
- public static final String demo_client_id = "<client-id>";
+ public static final String client_id = "PLEASE_ENTER_CLIENT_ID";
  ```
 
 Client secret - copy this value from Bot Builder SDK Settings ex. Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
  ```
-public static final String clientSecret = "<client-secret>";
+public static final String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
  ```
 
 User identity - rhis should represent the subject for JWT token that could be an email or phone number in case of known user. In case of anonymous user, this can be a randomly generated unique id.
  ```
-public static final String identity = "<user@example.com>";
+public static final String identity = "PLEASE_ENTER_IDENTITY";
  ```
 
 Bot name - copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. "Demo Bot"
  ```
-public static final String chatBotName = "<bot-name>";
+public static final String bot_name = "PLEASE_ENTER_BOT_NAME";
  ```
 
 Bot Id - copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. st-acecd91f-b009-5f3f-9c15-7249186d827d
  ```
-public static final String botId = "<bot-id>"; 
+public static final String bot_id = "PLEASE_ENTER_BOT_ID"; 
  ```
 
 Server URL - replace it with your server URL, if required
  ```
-public static final String KORE_BOT_SERVER_URL = "https://bots.kore.com/";
+public static final String KORE_BOT_SERVER_URL = "PLEASE_ENTER_KORE_BOT_SERVER_URL";
  ```
 
 Anonymous user - if not anonymous, assign same identity (such as email or phone number) while making a connection
@@ -70,7 +70,7 @@ public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/speech
 
 JWT Server URL - specify the server URL for JWT token generation. This token is used to authorize the SDK client. Refer to documentation on how to setup the JWT server for token generation - e.g. https://jwt-token-server.example.com/
  ```
-public static final String JWT_SERVER_URL = "<jwt-token-server-url>";
+public static final String JWT_SERVER_URL = "PLEASE_ENTER_JWT_SERVER_URL";
 
 ```
 
@@ -96,37 +96,40 @@ implementation 'com.github.DocsInternal-Kore:kore-ui-v2:0.1.5'
 String jwtToken = "";
 
 //Set clientId, If jwtToken is empty this value is mandatory
-String clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
+String clientId = "PLEASE_ENTER_CLIENT_ID";
 
 //Set clientSecret, If jwtToken is empty this value is mandatory
-String clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
+String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
 //Set botId, This value is mandatory
-String botId = "st-b9889c46-218c-58f7-838f-73ae9203488c";
+String botId = "PLEASE_ENTER_BOT_ID";
 
 //Set identity, This value is mandatory
-String identity = "email@kore.com";
+String identity = "PLEASE_ENTER_IDENTITY";
 
 //Set botName, This value is mandatory
-String botName = "Kore.ai Bot";
+String botName = "PLEASE_ENTER_BOT_NAME";
 
 //Set serverUrl, This value is mandatory
-String serverUrl = "https://bots.kore.ai/";
+String serverUrl = "PLEASE_ENTER_SERVER_URL";
 
 //Set brandingUrl, This value is mandatory
-String brandingUrl = "https://bots.kore.ai/";
+String brandingUrl = "PLEASE_ENTER_BRANDING_SERVER_URL";
 
 //Set Server url
 SDKConfig.setServerUrl(serverUrl);
 //Set Branding url
 SDKConfig.setBrandingUrl(brandingUrl);
 
+//Set isWebHook
+SDKConfig.isWebHook(false);
+
 //Initialize the bot with bot config
 //You can pass client id and client secret as empty when you pass jwt token
 SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken);
 
 //Inject the custom template like below
-SDKConfig.setCustomTemplateView("link", new LinkTemplateView(MainActivity.this));
+SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
 ```
 4. You can navigate to the bot chat window through Intent as below snippet
 ```
@@ -155,11 +158,13 @@ implementation 'com.github.DocsInternal-Kore:korebot-sdk-lib:0.0.3'
 ```
 3. You can change the bot config like below
 ```
-SDKConfiguration.Client.bot_id = "st-b9889c46-218c-58f7-838f-73ae9203488c";
+SDKConfiguration.Client.bot_id = "PLEASE_ENTER_BOT_ID";
 SDKConfiguration.Client.bot_name = "Your Bot name";
-SDKConfiguration.Client.client_id = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
-SDKConfiguration.Client.client_secret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
-SDKConfiguration.Client.identity = "example@kore.com";
+SDKConfiguration.Client.client_id = "PLEASE_ENTER_CLIENT_ID";
+SDKConfiguration.Client.client_secret = "PLEASE_ENTER_CLIENT_SECRET";
+SDKConfiguration.Client.identity = "PLEASE_ENTER_IDENTITY";
+
+ public static boolean isWebHook = false;
 ```
 4. You can intialize the Bot like below
    
@@ -297,16 +302,56 @@ botconnector.disconnect();
 #### 1. Enable the webhook channel by following the below link
 	https://developer.kore.ai/docs/bots/channel-enablement/adding-webhook-channel/
 	
-#### 2. Configure the botOptions in SDKConfiguration.java with the values you get in above steps
-	 SDKConfiguration.Client.userIdentity = 'PLEASE_ENTER_USER_EMAIL_ID';// Provide users email id here
-	 SDKConfiguration.Client.webHook_bot_name = "PLEASE_ENTER_BOT_NAME" // bot name is case sensitive
-	 SDKConfiguration.Client.webHook_bot_id = "PLEASE_ENTER_BOT_ID" 
-	 SDKConfiguration.Client.webHook_client_id = "PLEASE_ENTER_CLIENT_ID";
-	 SDKConfiguration.Client.webHook_client_secret = "PLEASE_ENTER_CLIENT_SECRET";
+#### 2. You can initialize the bot by providing the bot config like below. You can pass Jwt Token as empty so that we generate token in the SDK. If token is passed we will use it to establish bot connection.
+```
+//If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
+String jwtToken = "";
 
-#### 3. Change the following lines in SDKConfiguration.java and provide the webhookURL which you get in the above steps
-	public static boolean isWebHook = true; // Default it's false
-	SDKConfiguration.koreAPIUrl = "PLEASE_ENTER_JWTURL_HERE";//URL of the Service to generate JWT (JSON Web Tokens)
-	
+//Set clientId, If jwtToken is empty this value is mandatory
+String clientId = "PLEASE_ENTER_CLIENT_ID";
+
+//Set clientSecret, If jwtToken is empty this value is mandatory
+String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+
+//Set botId, This value is mandatory
+String botId = "PLEASE_ENTER_BOT_ID";
+
+//Set identity, This value is mandatory
+String identity = "PLEASE_ENTER_IDENTITY";
+
+//Set botName, This value is mandatory
+String botName = "PLEASE_ENTER_BOT_NAME";
+
+//Set serverUrl, This value is mandatory
+String serverUrl = "PLEASE_ENTER_SERVER_URL";
+
+//Set brandingUrl, This value is mandatory
+String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
+
+//Set Server url
+SDKConfig.setServerUrl(serverUrl);
+//Set Branding url
+SDKConfig.setBrandingUrl(brandingUrl);
+
+//Set isWebHook
+SDKConfig.isWebHook(true);
+
+//Initialize the bot with bot config
+//You can pass client id and client secret as empty when you pass jwt token
+SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken);
+
+//Inject the custom template like below
+SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
+```
+#### 3. You can navigate to the bot chat window through Intent as below snippet
+```
+Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+Bundle bundle = new Bundle();
+//This should not be null
+bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
+bundle.putString(BundleUtils.BOT_NAME_INITIALS,"B");
+intent.putExtras(bundle);
+startActivity(intent);
+
 License
 Copyright © Kore, Inc. MIT License; see LICENSE for further details.

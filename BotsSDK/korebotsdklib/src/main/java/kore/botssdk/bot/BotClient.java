@@ -244,7 +244,7 @@ public class BotClient {
         String jsonPayload = gson.toJson(botPayLoad);
 
         LogUtils.d("BotClient", "Payload : " + jsonPayload);
-        SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
+        SocketWrapper.getInstance(mContext).sendAgentMessage(jsonPayload);
     }
 
     public void sendFormData(String payLoad, String message) {

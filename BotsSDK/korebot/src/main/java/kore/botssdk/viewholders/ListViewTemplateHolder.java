@@ -69,7 +69,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
                 botCustomListViewButton.setText(Html.fromHtml("<u>" + botButtonModelArrayList.get(0).getTitle() + "</u>"));
                 botCustomListViewButton.setOnClickListener(v -> {
                     ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                    bottomSheetDialog.setisFromFullView(false);
+                    bottomSheetDialog.setIsFromFullView(false);
                     bottomSheetDialog.setSkillName("skillName", "trigger");
                     bottomSheetDialog.setData(botListViewMoreDataModel);
                     bottomSheetDialog.setHeaderVisible(true);

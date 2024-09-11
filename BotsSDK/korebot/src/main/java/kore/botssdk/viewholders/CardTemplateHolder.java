@@ -35,6 +35,9 @@ public class CardTemplateHolder extends BaseViewHolder {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
         ArrayList<CardTemplateModel> arrCards = payloadInner.getCardsModel();
-        rvCards.setAdapter(new CardTemplateAdapter(itemView.getContext(), arrCards));
+        CardTemplateAdapter adapter = new CardTemplateAdapter(itemView.getContext(), arrCards, isLastItem());
+        adapter.setComposeFooterInterface(composeFooterInterface);
+        adapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        rvCards.setAdapter(adapter);
     }
 }

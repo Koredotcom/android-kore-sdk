@@ -132,7 +132,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         AdvancedListModel botListModel = getItem(position);
 
         if (!StringUtils.isNullOrEmpty(botListModel.getIcon())) {
-            holder.botListItemImage.setVisibility(View.VISIBLE);
+            holder.ivDescription.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
             layoutParams.setMargins(0, 0, 10, 0);
@@ -147,7 +147,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 }
             }
 
-            holder.botListItemImage.setLayoutParams(layoutParams);
+            holder.ivDescription.setLayoutParams(layoutParams);
 
             try {
                 String imageData;
@@ -156,12 +156,12 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     imageData = imageData.substring(imageData.indexOf(",") + 1);
                     byte[] decodedString = Base64.decode(imageData.getBytes(), Base64.DEFAULT);
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    holder.botListItemImage.setImageBitmap(decodedByte);
+                    holder.ivDescription.setImageBitmap(decodedByte);
                 } else {
-                    Picasso.get().load(botListModel.getIcon()).transform(roundedCornersTransform).into(holder.botListItemImage);
+                    Picasso.get().load(botListModel.getIcon()).transform(roundedCornersTransform).into(holder.ivDescription);
                 }
             } catch (Exception e) {
-                holder.botListItemImage.setVisibility(GONE);
+                holder.ivDescription.setVisibility(GONE);
             }
         }
 
@@ -277,7 +277,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 holder.llButtonMore.setVisibility(GONE);
 
                 holder.rvDefaultButtons.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), !StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), botListModel.getButtonsLayout() != null && !StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
                 if (botListModel.getButtonsLayout() != null &&
                         botListModel.getButtonsLayout().getDisplayLimit() != null) {
                     displayLimit = botListModel.getButtonsLayout().getDisplayLimit().getCount();
@@ -614,7 +614,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
         holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+//        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
         holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
         holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
         holder.botListItemButton = view.findViewById(R.id.bot_list_item_button);
@@ -663,7 +663,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
     static class ViewHolder {
         RelativeLayout botListItemRoot, rlDropDown, rlTitle, llChildViews;
-        ImageView botListItemImage, ivAction, ivDropDownAction, ivDescription;
+        ImageView /*botListItemImage,*/ ivAction, ivDropDownAction, ivDescription;
         TextView botListItemTitle, tvAction;
         TextView botListItemSubtitle;
         Button botListItemButton;

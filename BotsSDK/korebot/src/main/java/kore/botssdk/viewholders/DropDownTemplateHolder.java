@@ -13,15 +13,21 @@ import androidx.annotation.NonNull;
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.DropDownElementsModel;
 import kore.botssdk.models.PayloadInner;
 
 public class DropDownTemplateHolder extends BaseViewHolder {
     private final TextView tvDropDownTitle;
+    private final TextView tvSubmit;
     private final Spinner spinner;
+    private String placeHolder;
+    private String msgId;
+    private int selectedIndex;
 
     public static DropDownTemplateHolder getInstance(ViewGroup parent) {
         return new DropDownTemplateHolder(createView(R.layout.template_dropdown, parent));
@@ -30,6 +36,7 @@ public class DropDownTemplateHolder extends BaseViewHolder {
     private DropDownTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
         tvDropDownTitle = itemView.findViewById(R.id.tvDropDownTitle);
+        tvSubmit = itemView.findViewById(R.id.submit);
         spinner = itemView.findViewById(R.id.spinner);
     }
 
@@ -37,21 +44,25 @@ public class DropDownTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        msgId = ((BotResponse) baseBotMessage).getMessageId();
         tvDropDownTitle.setText(payloadInner.getLabel());
+        placeHolder = payloadInner.getPlaceholder();
         List<DropDownElementsModel> elements = payloadInner.getDropDownElementsModels();
         SpinnerAdapter dataAdapter = new SpinnerAdapter(itemView.getContext(), elements, spinner, isLastItem());
         spinner.setAdapter(dataAdapter);
         spinner.setPrompt(itemView.getContext().getString(R.string.select));
         spinner.setClickable(isLastItem());
         spinner.setEnabled(isLastItem());
-        int selectedIndex = -1;
-        for (int index = 0; index < elements.size(); index++) {
-            if (elements.get(index).getTitle().equals(elements.get((int) spinner.getSelectedItemPosition()).getTitle())) {
-                selectedIndex = index;
-            }
-        }
-//        elements.mapIndexed { index, item -> if (item[KEY_TITLE] == selectedItem) selectedIndex = index }
+        Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
+        selectedIndex = contentState != null && contentState.containsKey(BotResponse.SELECTED_ITEM) ? (int) contentState.get(BotResponse.SELECTED_ITEM) : -1;
         spinner.setSelection(selectedIndex);
+        tvSubmit.setOnClickListener(view -> {
+            if (!isLastItem()) return;
+            if (selectedIndex != -1 && !elements.get(selectedIndex).getTitle().equals(placeHolder)) {
+                composeFooterInterface.copyMessageToComposer(elements.get(selectedIndex).getTitle(), false);
+            }
+        });
+
     }
 
     public class SpinnerAdapter extends BaseAdapter {
@@ -59,8 +70,6 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         private final List<DropDownElementsModel> elements;
         private final Spinner spinner;
         private final boolean isLastItem;
-
-        private static final String KEY_TITLE = "title";
 
         public SpinnerAdapter(Context context, List<DropDownElementsModel> elements, Spinner spinner, boolean isLastItem) {
             this.inflater = LayoutInflater.from(context);
@@ -98,13 +107,11 @@ public class DropDownTemplateHolder extends BaseViewHolder {
 
             holder.item.setText(elements.get(position).getTitle());
             holder.item.setOnClickListener(v -> {
-                if (isLastItem) {
-                    composeFooterInterface.copyMessageToComposer(elements.get(position).getTitle(), false);
-//                        actionEvent(new BotChatEvent.OnDropDownItemClicked(elements.get(position).get(KEY_TITLE)));
-//                        onDropDownSelection(id, elements.get(position).get(KEY_TITLE), BotResponse.SELECTED_ITEM);
-                }
                 hideSpinnerDropDown(spinner);
-                spinner.setSelection(position);
+                if (isLastItem) {
+                    spinner.setSelection(position);
+                    contentStateListener.onSaveState(msgId, position, BotResponse.SELECTED_ITEM);
+                }
             });
 
             return convertView;

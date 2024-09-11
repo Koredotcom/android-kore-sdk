@@ -26,8 +26,8 @@ import kore.botssdk.utils.BundleConstants;
 
 public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAdapter.ViewHolder> {
     private ArrayList<BotButtonModel> buttons;
-    private String splashColour, textColor, disabledTextColor;
-    private String disabledColour;
+    private String splashColour;
+    String textColor;
     private boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -38,14 +38,14 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
-        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
+//        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
         textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
-        disabledTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
+//        disabledTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
 
         splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
-        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
+//        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
         textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
-        disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
+//        disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
     }
 
     @NonNull
@@ -58,8 +58,8 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotButtonModel buttonTemplate = getItem(position);
         if (buttonTemplate == null) return;
-        ((GradientDrawable) holder.button.getBackground()).setStroke((int) (2 * dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
-        holder.button.setTextColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
+        ((GradientDrawable) holder.button.getBackground()).setStroke((int) (2 * dp1), Color.parseColor(splashColour));
+        holder.button.setTextColor(Color.parseColor(splashColour));
         holder.button.setText(buttonTemplate.getTitle());
 
         holder.button.setOnClickListener(v -> {

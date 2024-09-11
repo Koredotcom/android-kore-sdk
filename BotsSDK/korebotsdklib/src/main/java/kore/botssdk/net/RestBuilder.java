@@ -34,7 +34,7 @@ public class RestBuilder {
     public static RestAPI getRestAPI(){
         if(restAPI == null) {
             restAPI = new Retrofit.Builder()
-                    .baseUrl(Server.KORE_BOT_SERVER_URL)
+                    .baseUrl(Server.SERVER_URL)
                     .addConverterFactory(new NullOnEmptyConverterFactory())
                     .addConverterFactory(createConverter())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

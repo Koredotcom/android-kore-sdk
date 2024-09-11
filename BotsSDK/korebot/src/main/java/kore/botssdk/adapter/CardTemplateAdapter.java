@@ -31,6 +31,8 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceButtonClickListner;
+import kore.botssdk.listener.ComposeFooterInterface;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AdvanceListTableModel;
 import kore.botssdk.models.AdvanceOptionsModel;
 import kore.botssdk.models.CardTemplateButtonModel;
@@ -40,19 +42,21 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewUtils.RoundedCornersTransform;
 
-public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapter.CardViewHolder> implements AdvanceButtonClickListner
-{
+public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapter.CardViewHolder> implements AdvanceButtonClickListner {
     private final ArrayList<CardTemplateModel> arrCardTemplateModels;
     private final Context context;
     private final LayoutInflater layoutInflater;
-    final PopupWindow popupWindow;
+    private final PopupWindow popupWindow;
     private final View popUpView;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final boolean isEnabled;
 
-    public CardTemplateAdapter(@NonNull Context context, @NonNull ArrayList<CardTemplateModel> arrCardTemplateModels)
-    {
+    public CardTemplateAdapter(@NonNull Context context, @NonNull ArrayList<CardTemplateModel> arrCardTemplateModels, boolean isEnabled) {
         this.arrCardTemplateModels = arrCardTemplateModels;
         this.context = context;
         this.layoutInflater = LayoutInflater.from(context);
+        this.isEnabled = isEnabled;
         popUpView = View.inflate(context, R.layout.advancelist_drop_down_popup, null);
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
     }
@@ -75,9 +79,8 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
         holder.rvDescription.setVisibility(GONE);
         holder.vBorder.setVisibility(GONE);
 
-        if(cardTemplateModel != null)
-        {
-            if(cardTemplateModel.getCardHeading() != null) {
+        if (cardTemplateModel != null) {
+            if (cardTemplateModel.getCardHeading() != null) {
                 holder.tvOnlyTitle.setVisibility(View.VISIBLE);
                 holder.tvOnlyTitle.setText(cardTemplateModel.getCardHeading().getTitle());
 
@@ -96,17 +99,13 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
                     holder.bot_list_item_image.setLayoutParams(layoutParams);
 
-                    if(!StringUtils.isNullOrEmpty(cardTemplateModel.getCardHeading().getIconSize()))
-                    {
-                        if(cardTemplateModel.getCardHeading().getIconSize().equalsIgnoreCase("large"))
-                        {
+                    if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardHeading().getIconSize())) {
+                        if (cardTemplateModel.getCardHeading().getIconSize().equalsIgnoreCase("large")) {
                             layoutParams.height = 200;
                             layoutParams.width = 200;
 
                             holder.bot_list_item_image.setLayoutParams(layoutParams);
-                        }
-                        else if(cardTemplateModel.getCardHeading().getIconSize().equalsIgnoreCase("small"))
-                        {
+                        } else if (cardTemplateModel.getCardHeading().getIconSize().equalsIgnoreCase("small")) {
 
                             layoutParams.height = 50;
                             layoutParams.width = 50;
@@ -131,8 +130,7 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                     }
                 }
 
-                if (cardTemplateModel.getCardHeading().getHeaderStyles() != null)
-                {
+                if (cardTemplateModel.getCardHeading().getHeaderStyles() != null) {
                     HeaderStyles headerStyles = cardTemplateModel.getCardHeading().getHeaderStyles();
 
                     holder.tvOnlyTitle.setTextColor(Color.parseColor(headerStyles.getColor()));
@@ -149,24 +147,21 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                     }
 
                     holder.tvOnlyTitle.setBackground(rightDrawable);
-                    if(!StringUtils.isNullOrEmpty(headerStyles.getFont_weight()))
-                    {
-                        if(headerStyles.getFont_weight().equalsIgnoreCase(BundleConstants.BOLD))
+                    if (!StringUtils.isNullOrEmpty(headerStyles.getFont_weight())) {
+                        if (headerStyles.getFont_weight().equalsIgnoreCase(BundleConstants.BOLD))
                             holder.tvOnlyTitle.setTypeface(holder.tvOnlyTitle.getTypeface(), Typeface.BOLD);
                     }
                 }
 
-                if(cardTemplateModel.getCardHeading().getHeaderExtraInfo() != null)
-                {
+                if (cardTemplateModel.getCardHeading().getHeaderExtraInfo() != null) {
                     AdvanceListTableModel.AdvanceTableRowDataModel headerOptions = cardTemplateModel.getCardHeading().getHeaderExtraInfo();
 
-                    if(!StringUtils.isNullOrEmpty(headerOptions.getTitle())) {
+                    if (!StringUtils.isNullOrEmpty(headerOptions.getTitle())) {
                         holder.tvHeaderExtraTitle.setVisibility(View.VISIBLE);
                         holder.tvHeaderExtraTitle.setText(headerOptions.getTitle());
                     }
 
-                    if(!StringUtils.isNullOrEmpty(headerOptions.getIcon()))
-                    {
+                    if (!StringUtils.isNullOrEmpty(headerOptions.getIcon())) {
                         holder.ivHeaderExtra.setVisibility(View.VISIBLE);
 
                         try {
@@ -185,63 +180,51 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         }
                     }
 
-                    if(!StringUtils.isNullOrEmpty(headerOptions.getType()) && headerOptions.getType().equalsIgnoreCase(BundleConstants.DROP_DOWN) && headerOptions.getDropdownOptions() != null && headerOptions.getDropdownOptions().size() > 0)
-                    {
+                    if (!StringUtils.isNullOrEmpty(headerOptions.getType()) && headerOptions.getType().equalsIgnoreCase(BundleConstants.DROP_DOWN) && headerOptions.getDropdownOptions() != null && headerOptions.getDropdownOptions().size() > 0) {
                         RecyclerView recyclerView = popUpView.findViewById(R.id.rvDropDown);
                         ImageView ivDropDownCLose = popUpView.findViewById(R.id.ivDropDownCLose);
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptions.getDropdownOptions(), BundleConstants.FULL_WIDTH, CardTemplateAdapter.this, null, null);
+                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptions.getDropdownOptions(), BundleConstants.FULL_WIDTH, CardTemplateAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
                         recyclerView.setAdapter(advanceListButtonAdapter);
-                        ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                popupWindow.dismiss();
-                            }
-                        });
+                        ivDropDownCLose.setOnClickListener(view -> popupWindow.dismiss());
 
-                        holder.ivHeaderExtra.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                popupWindow.showAsDropDown(holder.tvHeaderExtraTitle, -170, 0);
-                            }
-                        });
+                        holder.ivHeaderExtra.setOnClickListener(view -> popupWindow.showAsDropDown(holder.tvHeaderExtraTitle, -170, 0));
                     }
-                }
-                else
-                {
+                } else {
                     holder.tvHeaderExtraTitle.setVisibility(GONE);
                     holder.ivHeaderExtra.setVisibility(GONE);
                 }
             }
 
-            if(cardTemplateModel.getCardDescription() != null)
-            {
+            if (cardTemplateModel.getCardDescription() != null) {
                 holder.rvDescription.setVisibility(View.VISIBLE);
                 holder.rvDescription.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-                if(!StringUtils.isNullOrEmpty(cardTemplateModel.getCardType()) &&
+                if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardType()) &&
                         cardTemplateModel.getCardType().equalsIgnoreCase("list"))
                     holder.rvDescription.setLayoutManager(new GridLayoutManager(context, 3));
 
                 holder.rvDescription.setAdapter(new CardTemplateListAdapter(context, cardTemplateModel.getCardDescription()));
             }
 
-            if(cardTemplateModel.getButtons() != null && cardTemplateModel.getButtons().size() > 0)
-            {
-                if(cardTemplateModel.getButtons().size() == 1)
-                {
+            if (cardTemplateModel.getButtons() != null && cardTemplateModel.getButtons().size() > 0) {
+                if (cardTemplateModel.getButtons().size() == 1) {
                     CardTemplateButtonModel cardTemplateButtonModel = cardTemplateModel.getButtons().get(0);
 
                     holder.tvCardButton.setVisibility(View.VISIBLE);
                     holder.tvCardButton.setText(cardTemplateButtonModel.getTitle());
+                    holder.tvCardButton.setOnClickListener(view -> {
+                        if (isEnabled && composeFooterInterface != null) {
+                            composeFooterInterface.onSendClick(cardTemplateButtonModel.getTitle(), cardTemplateButtonModel.getPayload(), false);
+                        }
+                    });
 
-                    if(cardTemplateButtonModel.getButtonStyles() != null)
-                    {
+                    if (cardTemplateButtonModel.getButtonStyles() != null) {
                         GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_btn_bg);
                         if (rightDrawable != null) {
 
-                            if(!StringUtils.isNullOrEmpty(cardTemplateButtonModel.getButtonStyles().getBackground_color()))
+                            if (!StringUtils.isNullOrEmpty(cardTemplateButtonModel.getButtonStyles().getBackground_color()))
                                 rightDrawable.setColor(Color.parseColor(cardTemplateButtonModel.getButtonStyles().getBackground_color()));
                             else
                                 rightDrawable.setColor(Color.parseColor("#ffffff"));
@@ -257,29 +240,24 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
 
                         holder.tvCardButton.setBackground(rightDrawable);
                     }
-
                 }
             }
 
-            if(cardTemplateModel.getCardStyles() != null)
-            {
+            if (cardTemplateModel.getCardStyles() != null) {
                 GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_top_bg);
                 if (rightDrawable != null) {
 
                     if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderLeft())) {
                         String[] border = cardTemplateModel.getCardStyles().getBorderLeft().split(" ");
 
-                        if (border.length > 1)
-                        {
+                        if (border.length > 1) {
                             rightDrawable.setColor(Color.parseColor((border[2].replace(";", ""))));
                             rightDrawable.setStroke((int) (1 * dp1), Color.parseColor((border[2].replace(";", ""))));
                         }
-                    }
-                    else if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderRight())) {
+                    } else if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderRight())) {
                         String[] border = cardTemplateModel.getCardStyles().getBorderRight().split(" ");
 
-                        if (border.length > 1)
-                        {
+                        if (border.length > 1) {
                             rightDrawable.setColor(Color.parseColor((border[2].replace(";", ""))));
                             rightDrawable.setStroke((int) (1 * dp1), Color.parseColor((border[2].replace(";", ""))));
                         }
@@ -288,12 +266,10 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         buttonLayoutParams.setMargins(0, 0, 15, 0);
                         holder.llCardView.setLayoutParams(buttonLayoutParams);
 
-                    }
-                    else if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderTop())) {
+                    } else if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderTop())) {
                         String[] border = cardTemplateModel.getCardStyles().getBorderTop().split(" ");
 
-                        if (border.length > 1)
-                        {
+                        if (border.length > 1) {
                             rightDrawable.setColor(Color.parseColor((border[2].replace(";", ""))));
                             rightDrawable.setStroke((int) (1 * dp1), Color.parseColor((border[2].replace(";", ""))));
                         }
@@ -302,12 +278,10 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         buttonLayoutParams.setMargins(0, 15, 0, 0);
                         holder.llCardView.setLayoutParams(buttonLayoutParams);
 
-                    }
-                    else if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderBottom())) {
+                    } else if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderBottom())) {
                         String[] border = cardTemplateModel.getCardStyles().getBorderBottom().split(" ");
 
-                        if (border.length > 1)
-                        {
+                        if (border.length > 1) {
                             rightDrawable.setColor(Color.parseColor((border[2].replace(";", ""))));
                             rightDrawable.setStroke((int) (1 * dp1), Color.parseColor((border[2].replace(";", ""))));
                         }
@@ -316,8 +290,7 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         buttonLayoutParams.setMargins(0, 0, 0, 15);
                         holder.llCardView.setLayoutParams(buttonLayoutParams);
 
-                    }
-                    else
+                    } else
                         rightDrawable.setStroke((int) (1 * dp1), Color.parseColor("#00000000"));
                 }
 
@@ -327,20 +300,17 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                 holder.llCardViewTop.setBackground(rightDrawable);
 
                 GradientDrawable templateBb = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_bg);
-                if (templateBb != null)
-                {
+                if (templateBb != null) {
                     templateBb.setColor(Color.parseColor("#ffffff"));
 
-                    if(!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBackground_color()))
+                    if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBackground_color()))
                         templateBb.setColor(Color.parseColor(cardTemplateModel.getCardStyles().getBackground_color()));
 
                     templateBb.setStroke((int) (1 * dp1), Color.parseColor("#84959B"));
                 }
 
                 holder.llCardView.setBackground(templateBb);
-            }
-            else
-            {
+            } else {
                 GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_top_bg);
                 if (rightDrawable != null) {
                     rightDrawable.setColor(Color.parseColor("#ffffff"));
@@ -354,11 +324,10 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
             }
 
             GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_bg);
-            if(cardTemplateModel.getCardContentStyles() != null)
-            {
+            if (cardTemplateModel.getCardContentStyles() != null) {
                 if (rightDrawable != null) {
 
-                    if(!StringUtils.isNullOrEmpty(cardTemplateModel.getCardContentStyles().getBackground_color()))
+                    if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardContentStyles().getBackground_color()))
                         rightDrawable.setColor(Color.parseColor(cardTemplateModel.getCardContentStyles().getBackground_color()));
                     else
                         rightDrawable.setColor(Color.parseColor("#ffffff"));
@@ -380,8 +349,7 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         viewDrawable.setColor(Color.parseColor((border[2].replace(";", ""))));
                     }
                     holder.vBorder.setBackground(viewDrawable);
-                }
-                else {
+                } else {
                     holder.vBorder.setVisibility(GONE);
                 }
 
@@ -389,16 +357,12 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                 buttonLayoutParams.setMargins(0, 10, 0, 0);
                 holder.llCardView.setLayoutParams(buttonLayoutParams);
                 holder.llCardView.setBackground(rightDrawable);
-            }
-            else
-            {
-                if(rightDrawable != null)
-                {
+            } else {
+                if (rightDrawable != null) {
                     rightDrawable.setColor(Color.parseColor("#ffffff"));
 
-                    if(cardTemplateModel.getCardStyles() != null)
-                    {
-                        if(!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBackground_color()))
+                    if (cardTemplateModel.getCardStyles() != null) {
+                        if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBackground_color()))
                             rightDrawable.setColor(Color.parseColor(cardTemplateModel.getCardStyles().getBackground_color()));
                     }
 
@@ -417,13 +381,20 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
 
     @Override
     public void advanceButtonClick(@NonNull ArrayList<AdvanceOptionsModel> viewType) {
-
     }
 
     @Override
     public void closeWindow() {
-        if(popupWindow != null)
+        if (popupWindow != null)
             popupWindow.dismiss();
+    }
+
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {

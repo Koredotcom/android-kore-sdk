@@ -2,12 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingBottom="10dp">
 
     <LinearLayout
         android:id="@+id/multi_row"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/edit_btn_grey_bg"
         android:orientation="horizontal">
 
         <androidx.appcompat.widget.AppCompatCheckBox
@@ -35,18 +37,9 @@
             android:maxLines="1"
             android:minWidth="300dp"
             android:minHeight="30dp"
-
             android:tag="medium"
             android:text="@string/hello"
             android:textColor="#404051"
             android:textSize="15sp" />
     </LinearLayout>
-
-    <View
-        android:id="@+id/vDivider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/multi_row"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/line_divider_multi_select" />
 </RelativeLayout>
