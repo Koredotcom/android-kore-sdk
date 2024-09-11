@@ -47,8 +47,9 @@ public class RadioOptionsTemplateHolder extends BaseViewHolder {
             Map<String, Object> changedState = ((BotResponse) baseBotMessage).getContentState();
             if (isLastItem() && composeFooterInterface != null && changedState != null) {
                 int selectedPosition = (Integer) changedState.get(BotResponse.SELECTED_ITEM);
-                String value = radioOptions.get(selectedPosition).getPostback().getValue();
-                composeFooterInterface.onSendClick(value, value, false);
+                String message = radioOptions.get(selectedPosition).getPostback().getTitle();
+                String payload = radioOptions.get(selectedPosition).getPostback().getValue();
+                composeFooterInterface.onSendClick(message, payload, false);
             }
         });
 
