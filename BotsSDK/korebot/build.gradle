@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 android {
     compileSdk 34
@@ -26,6 +27,15 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     namespace 'kore.botssdk'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+            }
+        }
+    }
 }
 
 dependencies {
