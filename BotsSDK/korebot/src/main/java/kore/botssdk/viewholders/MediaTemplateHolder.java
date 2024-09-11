@@ -114,8 +114,8 @@ public class MediaTemplateHolder extends BaseViewHolder {
             llAttachment.setBackground(leftDrawable);
         }
 
-        ivVideoMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivVideoMore, -250, -250));
-        ivAudioMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivAudioMore, -250, -250));
+        ivVideoMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivVideoMore, -20, 0));
+        ivAudioMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivAudioMore, -20, 0));
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -291,6 +291,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                 });
 
                 ivFullScreen.setOnClickListener(v -> {
+
                     Intent intent = new Intent(itemView.getContext(), VideoFullScreenActivity.class);
                     if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
                         intent.putExtra("VideoUrl", payloadInner.getVideoUrl());
@@ -299,6 +300,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                     intent.putExtra("CurrentPosition", currentPos);
                     itemView.getContext().startActivity(intent);
+
                 });
 
                 tvTheme1.setOnClickListener(v -> {

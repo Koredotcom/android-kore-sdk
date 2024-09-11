@@ -300,5 +300,7 @@
     <string name="menu">Menu</string>
     <string name="login">Login</string>
     <string name="thumbs_up_image">thumbs up image</string>
+    <string name="shopping_theme">Shopping theme</string>
+    <string name="logo_theme">Logo theme</string>
 
 </resources>

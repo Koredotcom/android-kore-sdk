@@ -74,10 +74,7 @@ import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Reader;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.text.ParseException;
@@ -830,47 +827,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         super.onStop();
     }
 
-    public void getBrandingDataFromTxt() {
-        try {
-            InputStream is = getResources().openRawResource(R.raw.branding_response);
-            Reader reader = new InputStreamReader(is);
-            BotActiveThemeModel botActiveThemeModel = gson.fromJson(reader, BotActiveThemeModel.class);
-            botOptionsModel = botActiveThemeModel.getV3();
-
-            setButtonBranding(botOptionsModel);
-
-            if (composeFooterFragment != null) {
-                composeFooterFragment.setBotBrandingModel(botOptionsModel);
-            }
-
-            if (botContentFragment != null) {
-                botContentFragment.setBotBrandingModel(botOptionsModel);
-            }
-
-            if (botOptionsModel != null && botOptionsModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getChat_bubble().getStyle())) {
-                sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getChat_bubble().getStyle()).apply();
-            }
-
-            if (botOptionsModel != null && botOptionsModel.getBody() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getBody().getBubble_style())) {
-                sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getBody().getBubble_style()).apply();
-            }
-
-            if (botOptionsModel != null && botOptionsModel.getWelcome_screen() != null) {
-                if (botOptionsModel.getWelcome_screen().isShow()) showWelcomeDialog();
-                else {
-                    closeProgressDialogue();
-                    rlChatWindow.setVisibility(VISIBLE);
-                }
-            } else {
-                closeProgressDialogue();
-                rlChatWindow.setVisibility(VISIBLE);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     public void displayMessage(String text, String type, String messageId) {
         if (!lastMsgId.equalsIgnoreCase(messageId)) {
             try {
@@ -1279,20 +1235,12 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
                             if (botOptionsModel.getWelcome_screen() != null && isWelcomeVisible) {
                                 if (botOptionsModel.getWelcome_screen().isShow()) showWelcomeDialog();
-                                else {
-                                    closeProgressDialogue();
-                                    rlChatWindow.setVisibility(VISIBLE);
-                                }
-                            } else {
-                                closeProgressDialogue();
-                                rlChatWindow.setVisibility(VISIBLE);
                             }
                         }
                     }
-                } else {
-                    closeProgressDialogue();
-                    rlChatWindow.setVisibility(VISIBLE);
                 }
+                closeProgressDialogue();
+                rlChatWindow.setVisibility(VISIBLE);
             }
 
             @Override

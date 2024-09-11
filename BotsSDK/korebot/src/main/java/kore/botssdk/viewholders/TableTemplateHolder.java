@@ -25,13 +25,18 @@ import kore.botssdk.adapter.TableTemplateAdapter;
 import kore.botssdk.adapter.TableTemplateHeaderAdapter;
 import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
-import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.MiniTableModel;
+import kore.botssdk.models.PayloadInner;
 
 public class TableTemplateHolder extends BaseViewHolder {
+    private static final int LIMIT = 3;
     private final RecyclerView rvTableView;
     private final RecyclerView rvTableViewHeader;
     private final TextView botTableShowMoreButton;
+
+    public static TableTemplateHolder getInstance(ViewGroup parent) {
+        return new TableTemplateHolder(createView(R.layout.table_template, parent));
+    }
 
     public TableTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
@@ -44,10 +49,6 @@ public class TableTemplateHolder extends BaseViewHolder {
         initBubbleText(layoutBubble, false);
     }
 
-    public static TableTemplateHolder getInstance(ViewGroup parent) {
-        return new TableTemplateHolder(createView(R.layout.table_template, parent));
-    }
-
     @Override
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
@@ -55,7 +56,6 @@ public class TableTemplateHolder extends BaseViewHolder {
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         rvTableViewHeader.setLayoutManager(new GridLayoutManager(itemView.getContext(), payloadInner.getColumns().size()));
         rvTableViewHeader.setAdapter(new TableTemplateHeaderAdapter(itemView.getContext(), payloadInner.getColumns(), isLastItem()));
-
         List<MiniTableModel> lists = new ArrayList<>();
         int size = ((ArrayList<?>) payloadInner.getElements()).size();
         for (int j = 0; j < size; j++) {
@@ -64,13 +64,15 @@ public class TableTemplateHolder extends BaseViewHolder {
             lists.add(model);
         }
 
+        List<MiniTableModel> dataList = lists.size() > LIMIT ? lists.subList(0, LIMIT) : lists;
         rvTableView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-        rvTableView.setAdapter(new TableTemplateAdapter(itemView.getContext(), payloadInner.getColumns(), lists, isLastItem()));
+        rvTableView.setAdapter(new TableTemplateAdapter(itemView.getContext(), payloadInner.getColumns(), dataList, isLastItem()));
 
-        botTableShowMoreButton.setOnClickListener(v -> showTableViewDialog(itemView.getContext()));
+        botTableShowMoreButton.setVisibility(lists.size() > LIMIT ? View.VISIBLE : View.GONE);
+        botTableShowMoreButton.setOnClickListener(v -> showTableViewDialog(itemView.getContext(), payloadInner.getColumns(), lists));
     }
 
-    private void showTableViewDialog(Context context) {
+    private void showTableViewDialog(Context context, List<List<String>> headersList, List<MiniTableModel> dataList) {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.tableview_dialog);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
@@ -81,26 +83,14 @@ public class TableTemplateHolder extends BaseViewHolder {
 
         dialog.getWindow().setAttributes(lp);
 
-        RecyclerView rvTableView = dialog.findViewById(R.id.rvTableView);
+        RecyclerView rvTableData = dialog.findViewById(R.id.rvData);
+        RecyclerView rvHeader = dialog.findViewById(R.id.rvHeader);
         ImageView ivDialogClose = dialog.findViewById(R.id.ivDialogClose);
+        rvHeader.setLayoutManager(new GridLayoutManager(context, headersList.size()));
+        rvTableData.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-        rvTableView.setAdapter(new RecyclerView.Adapter() {
-            @NonNull
-            @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return TableTemplateHolder.getInstance(parent);
-            }
-
-            @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-            }
-
-            @Override
-            public int getItemCount() {
-                return 3;
-            }
-        });
+        rvHeader.setAdapter(new TableTemplateHeaderAdapter(context, headersList, isLastItem()));
+        rvTableData.setAdapter(new TableTemplateAdapter(context, headersList, dataList, isLastItem()));
 
         ivDialogClose.setOnClickListener(v -> dialog.dismiss());
         dialog.show();

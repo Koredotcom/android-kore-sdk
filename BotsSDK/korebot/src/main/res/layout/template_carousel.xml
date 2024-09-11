@@ -11,7 +11,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/carouselViewpager"
-        android:nestedScrollingEnabled="false"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="15dp" />
 </androidx.appcompat.widget.LinearLayoutCompat>

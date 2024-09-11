@@ -42,9 +42,11 @@ public class CarouselTemplateHolder extends BaseViewHolder {
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         Context context = itemView.getContext();
 
-        ArrayList<? extends BotCarouselModel> botCarouselModelArrayList = payloadInner.getCarouselElements();
+        ArrayList<? extends BotCarouselModel> elements = payloadInner.getCarouselElements();
         CarouselTemplateAdapter botCarouselAdapter = new CarouselTemplateAdapter(context);
         viewPager.setAdapter(botCarouselAdapter);
-        botCarouselAdapter.populateData(botCarouselModelArrayList, isLastItem(), payloadInner.getTemplate_type());
+        botCarouselAdapter.setComposeFooterInterface(composeFooterInterface);
+        botCarouselAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        botCarouselAdapter.populateData(elements, isLastItem(), payloadInner.getTemplate_type());
     }
 }
