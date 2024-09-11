@@ -9,43 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <RelativeLayout
+    <kore.botssdk.view.coverflow.RecyclerCoverFlow
+        android:id="@+id/rcfCarousel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <kore.botssdk.view.coverflow.RecyclerCoverFlow
-            android:id="@+id/rcfCarousel"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:layout_margin="@dimen/dimen_10dp"
-            android:clipChildren="false" />
-
-        <ImageView
-            android:id="@+id/previous"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="20dp"
-            android:background="@drawable/background_circle_white"
-            android:elevation="10dp"
-            android:fadingEdgeLength="10dp"
-            android:foregroundGravity="center"
-            android:padding="5dp"
-            android:rotationY="180"
-            android:src="@drawable/ic_right_arrow" />
-
-        <ImageView
-            android:id="@+id/next"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="20dp"
-            android:background="@drawable/background_circle_white"
-            android:elevation="10dp"
-            android:fadingEdgeLength="10dp"
-            android:foregroundGravity="center"
-            android:padding="5dp"
-            android:src="@drawable/ic_right_arrow" />
-    </RelativeLayout>
+        android:layout_height="250dp"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:clipChildren="false" />
 </androidx.appcompat.widget.LinearLayoutCompat>
