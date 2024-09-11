@@ -5,10 +5,8 @@ import static android.Manifest.permission.POST_NOTIFICATIONS;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,11 +18,8 @@ import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.BotChatActivity;
@@ -168,18 +163,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String getConfigValue(String name) {
-        try {
-            InputStream rawResource = getResources().openRawResource(R.raw.config);
-            Properties properties = new Properties();
-            properties.load(rawResource);
-            return properties.getProperty(name);
-        } catch (Resources.NotFoundException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
-        }
-
-        return null;
-    }
+//    public String getConfigValue(String name) {
+//        try {
+//            InputStream rawResource = getResources().openRawResource(R.raw.config);
+//            Properties properties = new Properties();
+//            properties.load(rawResource);
+//            return properties.getProperty(name);
+//        } catch (Resources.NotFoundException e) {
+//            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
+//        } catch (IOException e) {
+//            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
+//        }
+//
+//        return null;
+//    }
 }
