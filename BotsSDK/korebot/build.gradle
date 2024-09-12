@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
 
 android {
     compileSdk 34
@@ -23,19 +22,10 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace 'kore.botssdk'
-}
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-            }
-        }
-    }
 }
 
 dependencies {
@@ -44,7 +34,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-basement:18.4.0'
     implementation 'com.google.android.gms:play-services-base:18.5.0'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -70,6 +59,7 @@ dependencies {
 
     implementation 'org.apache.httpcomponents:httpclient:4.5.14'
     implementation 'org.apache.httpcomponents:httpcore:4.4.16'
+    implementation 'org.apache.httpcomponents:httpmime:4.5.6'
 
     implementation 'com.j256.ormlite:ormlite-android:4.48'
     implementation 'com.j256.ormlite:ormlite-core:4.48'
@@ -78,6 +68,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.16.0'
     implementation 'com.github.emojione:emojione-android:3.1.0'
     implementation 'com.github.cachapa:ExpandableLayout:2.9.2'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
 
 //    implementation 'org.apache.httpcomponents:httpclient:4.5.3'
 //    implementation 'org.apache.httpcomponents:httpcore:4.4.6'

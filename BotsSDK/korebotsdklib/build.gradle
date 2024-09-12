@@ -1,14 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven-publish'
-
-afterEvaluate {
-    publishing {
-        publications {
-            release(MavenPublication) {
-            }
-        }
-    }
-}
 
 android {
     compileSdk 34

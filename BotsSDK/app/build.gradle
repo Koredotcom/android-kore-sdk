@@ -51,6 +51,12 @@ dependencies {
 //    implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:v2-10.5.0'
 //    implementation 'com.github.Koredotcom:android-kore-sdk:0.0.1'
 
-    implementation(project(':korebot'))
-    implementation(project(':korebotsdklib'))
+    implementation(project(':korebot')) {
+        exclude module: 'support-v4'
+    }
+
+    implementation(project(':korebotsdklib')) {
+        exclude module: 'support-v4'
+    }
+
 }
