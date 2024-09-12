@@ -346,17 +346,23 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
 
         switch (socketConnectionEvents) {
-            case CONNECTING -> taskProgressBar.setVisibility(View.VISIBLE);
-            case CONNECTED -> {
+            case CONNECTING:
+                taskProgressBar.setVisibility(View.VISIBLE);
+                break;
+            case CONNECTED: {
                 taskProgressBar.setVisibility(View.GONE);
                 composeFooterFragment.enableSendButton();
             }
-            case DISCONNECTED, CONNECTED_BUT_DISCONNECTED -> {
+            break;
+            case DISCONNECTED:
+            case CONNECTED_BUT_DISCONNECTED: {
                 taskProgressBar.setVisibility(View.VISIBLE);
                 composeFooterFragment.setDisabled(true);
                 composeFooterFragment.updateUI();
             }
-            default -> taskProgressBar.setVisibility(View.GONE);
+            break;
+            default:
+                taskProgressBar.setVisibility(View.GONE);
         }
     }
 
@@ -702,7 +708,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE -> {
+                    case DialogInterface.BUTTON_POSITIVE: {
                         if (sharedPreferences != null) {
                             SharedPreferences.Editor editor = sharedPreferences.edit();
                             editor.putBoolean(BundleConstants.IS_RECONNECT, true);
@@ -712,7 +718,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             finish();
                         }
                     }
-                    case DialogInterface.BUTTON_NEGATIVE -> {
+                    break;
+                    case DialogInterface.BUTTON_NEGATIVE: {
                         if (sharedPreferences != null) {
                             if (botClient != null && isAgentTransfer)
                                 botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
@@ -725,7 +732,10 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             finish();
                         }
                     }
-                    case DialogInterface.BUTTON_NEUTRAL -> dialog.dismiss();
+                    break;
+                    case DialogInterface.BUTTON_NEUTRAL:
+                        dialog.dismiss();
+                        break;
                 }
             }
         };
@@ -1095,7 +1105,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         protected void onPostExecute() {
             if (extn != null) {
                 if (!SDKConfiguration.Client.isWebHook) {
-                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL , orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+                    KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
                 } else {
                     KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
                 }
