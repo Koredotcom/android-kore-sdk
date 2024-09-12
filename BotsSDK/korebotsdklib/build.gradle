@@ -1,4 +1,17 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+afterEvaluate {
+    publishing {
+        publications {
+            myPublication(MavenPublication) {
+                groupId 'kore.botsdk'
+                artifactId 'android-kore-sdk'
+                version '0.3.3'
+            }
+        }
+    }
+}
 
 android {
     compileSdk 34
