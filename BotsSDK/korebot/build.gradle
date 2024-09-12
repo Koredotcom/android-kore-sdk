@@ -3,9 +3,10 @@ apply plugin: 'com.android.library'
 android {
     compileSdk 34
 
-    dataBinding {
-        enabled = true
+    buildFeatures {
+        dataBinding true
     }
+
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34
@@ -22,8 +23,8 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
     }
     namespace 'kore.botssdk'
 }
@@ -34,7 +35,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-basement:18.4.0'
     implementation 'com.google.android.gms:play-services-base:18.5.0'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava3:2.9.0'

@@ -3,10 +3,6 @@ apply plugin: 'com.android.library'
 android {
     compileSdk 34
 
-    dataBinding{
-        enabled = true
-    }
-
     defaultConfig {
         minSdkVersion 23
         targetSdkVersion 34
@@ -25,7 +21,7 @@ android {
     }
 
     dependencies {
-        api 'androidx.appcompat:appcompat:1.6.1'
+        api 'androidx.appcompat:appcompat:1.7.0'
         api 'de.greenrobot:eventbus:2.4.0'
         api 'com.squareup.retrofit2:retrofit:2.9.0'
         api 'com.squareup.okhttp3:logging-interceptor:4.12.0'
