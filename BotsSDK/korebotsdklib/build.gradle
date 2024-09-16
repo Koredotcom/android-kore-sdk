@@ -1,13 +1,16 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
 
 afterEvaluate {
     publishing {
         publications {
-            myPublication(MavenPublication) {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
                 groupId 'kore.botsdk'
-                artifactId 'android-kore-sdk'
-                version '0.3.3'
+                artifactId 'korebotsdklib'
+                version '0.3.4'
             }
         }
     }
