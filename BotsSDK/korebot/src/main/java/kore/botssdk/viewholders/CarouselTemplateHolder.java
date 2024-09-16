@@ -3,7 +3,6 @@ package kore.botssdk.viewholders;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -21,9 +20,6 @@ import kore.botssdk.models.PayloadInner;
 
 public class CarouselTemplateHolder extends BaseViewHolder {
     private final RecyclerView viewPager;
-    private final ImageView ivPrevious;
-    private final ImageView ivNext;
-    private int selectedPosition = 0;
 
     public static CarouselTemplateHolder getInstance(ViewGroup parent) {
         return new CarouselTemplateHolder(createView(R.layout.template_carousel, parent));
@@ -33,8 +29,6 @@ public class CarouselTemplateHolder extends BaseViewHolder {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         initBubbleText(layoutBubble, false);
-        ivPrevious = itemView.findViewById(R.id.previous);
-        ivNext = itemView.findViewById(R.id.next);
         viewPager = itemView.findViewById(R.id.carouselViewpager);
         viewPager.setLayoutManager(new LinearLayoutManager(viewPager.getContext(), LinearLayoutManager.HORIZONTAL, false));
         viewPager.setClipToPadding(false);
@@ -54,23 +48,5 @@ public class CarouselTemplateHolder extends BaseViewHolder {
         botCarouselAdapter.setComposeFooterInterface(composeFooterInterface);
         botCarouselAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         botCarouselAdapter.populateData(elements, isLastItem(), payloadInner.getTemplate_type());
-        ivPrevious.setVisibility(elements.size() > 1 && selectedPosition > 0 ? View.VISIBLE : View.GONE);
-        ivNext.setVisibility(elements.size() > 1 && selectedPosition < elements.size() - 1 ? View.VISIBLE : View.GONE);
-        ivPrevious.setOnClickListener(view -> {
-            if (selectedPosition > 0) {
-                selectedPosition--;
-                viewPager.smoothScrollToPosition(selectedPosition);
-                ivPrevious.setVisibility(selectedPosition > 0 ? View.VISIBLE : View.GONE);
-                ivNext.setVisibility(selectedPosition < elements.size() - 1 ? View.VISIBLE : View.GONE);
-            }
-        });
-        ivNext.setOnClickListener(view -> {
-            if (selectedPosition < elements.size() - 1) {
-                selectedPosition++;
-                viewPager.smoothScrollToPosition(selectedPosition);
-                ivPrevious.setVisibility(selectedPosition > 0 ? View.VISIBLE : View.GONE);
-                ivNext.setVisibility(selectedPosition < elements.size() - 1 ? View.VISIBLE : View.GONE);
-            }
-        });
     }
 }
