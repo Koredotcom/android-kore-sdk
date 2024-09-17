@@ -144,9 +144,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         botsBubblesListView.setItemViewCacheSize(100);
+        botsBubblesListView.setItemAnimator(null);
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
