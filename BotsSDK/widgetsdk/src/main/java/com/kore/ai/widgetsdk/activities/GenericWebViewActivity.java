@@ -2,6 +2,7 @@ package com.kore.ai.widgetsdk.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -23,7 +25,6 @@ import com.kora.ai.widgetsdk.R;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class GenericWebViewActivity extends BotAppCompactActivity {
-
     String actionbarTitle;
     String url;
     WebView webview;
@@ -62,6 +63,28 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Log.d(this.getClass().getSimpleName(), "The URL is " + url);
                 return super.shouldOverrideUrlLoading(view, url);
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url = request.getUrl().toString();
+                if (url.startsWith("http://") || url.startsWith("https://")) {
+                    return false;
+                } else if (url.startsWith("intent://")) {
+                    try {
+                        Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                        if (intent != null) {
+                            startActivity(intent);
+                            finish();
+                            return true;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    return true;
+                }
+                return false;
             }
 
             @Override

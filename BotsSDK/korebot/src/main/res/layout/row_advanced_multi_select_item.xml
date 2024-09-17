@@ -56,7 +56,6 @@
             android:text="@string/select_all"
             android:textColor="@color/kora_grey"
             android:textSize="@dimen/text_size_normal" />
-
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -100,7 +99,6 @@
             android:layout_gravity="end"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
-            android:alpha=".5"
             android:background="@drawable/theme_1_button_bg"
             android:gravity="center"
             android:paddingLeft="@dimen/dimen_20dp"

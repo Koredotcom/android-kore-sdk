@@ -29,7 +29,6 @@ import kore.botssdk.utils.StringUtils;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class GenericWebViewActivity extends BotAppCompactActivity {
-
     String actionbarTitle;
     String url;
     WebView webview;
@@ -94,7 +93,24 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                     LogUtils.e("WebResourceRequest URL", request.getUrl().getHost());
-                    return super.shouldOverrideUrlLoading(view, request);
+                    String url = request.getUrl().toString();
+                    if (url.startsWith("http://") || url.startsWith("https://")) {
+                        return false;
+                    } else if (url.startsWith("intent://")) {
+                        try {
+                            Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                            if (intent != null) {
+                                startActivity(intent);
+                                finish();
+                                return true;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        return true;
+                    }
+                    return false;
                 }
 
                 @Override
