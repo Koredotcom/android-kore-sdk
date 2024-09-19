@@ -195,6 +195,16 @@ public class SDKConfiguration {
         public static String quickBorderColor = "#000000";
     }
 
+    public static class OverrideKoreConfig {
+        public static boolean isEmojiShortcutEnable = true;
+        public static int typing_indicator_timeout = 10000;
+        public static boolean history_enable = true;
+        public static boolean paginated_scroll_enable = true;
+        public static int history_batch_size = 10;
+        public static int paginated_scroll_batch_size = 10;
+        public static String paginated_scroll_loading_label = "Loading old messages";
+    }
+
     public static boolean isTimeStampsRequired() {
         return TIME_STAMPS_REQUIRED;
     }

@@ -244,14 +244,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 isReconnectionStopped = false;
-                getBrandingDetails();
+                getBrandingDetails(isReconnection);
 
-                if (botContentFragment != null && isReconnection) {
-                    if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 19) botContentFragment.loadChatHistory(0, 20);
-                    else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
-                        botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
-                    else botContentFragment.loadReconnectionChatHistory(0, 10);
-                }
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
                     isReconnectionStopped = true;
@@ -1191,7 +1185,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         return "";
     }
 
-    void getBrandingDetails() {
+    void getBrandingDetails(boolean isReconnection) {
         Call<ResponseBody> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(SDKConfiguration.Client.bot_id, "bearer " + (SDKConfiguration.Client.isWebHook ? jwt : SocketWrapper.getInstance(BotChatActivity.this).getAccessToken()), "published", "1", "en_US", SDKConfiguration.Client.bot_id);
         getBankingConfigService.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -1242,6 +1236,26 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                     brandingModel.setUserchatBgColor(brandingNewDos.getBody().getUser_message().getBg_color());
                                     brandingModel.setUserchatTextColor(brandingNewDos.getBody().getUser_message().getColor());
 
+                                    brandingModel.setBotName(SDKConfiguration.Client.bot_name);
+                                    brandingModel.setWidgetBodyColor(brandingNewDos.getBody().getBackground().getColor());
+                                    brandingModel.setWidgetTextColor((brandingNewDos.getHeader().getTitle().getColor()));
+                                    brandingModel.setWidgetHeaderColor(brandingNewDos.getHeader().getBg_color());
+                                    brandingModel.setWidgetFooterColor(brandingNewDos.getFooter().getBg_color());
+                                    brandingModel.setWidgetFooterBorderColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
+                                    brandingModel.setWidgetFooterHintColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
+                                    brandingModel.setWidgetFooterHintText(brandingNewDos.getFooter().getCompose_bar().getPlaceholder());
+                                    brandingModel.setChatBubbleStyle(brandingNewDos.getChat_bubble().getStyle());
+
+                                    if (brandingNewDos.getFooter() != null && brandingNewDos.getFooter().getButtons() != null
+                                            && brandingNewDos.getFooter().getButtons() != null) {
+                                        if (brandingNewDos.getFooter().getButtons().getMicrophone() != null)
+                                            SDKConfiguration.BubbleColors.showASRMicroPhone = brandingNewDos.getFooter().getButtons().getMicrophone().isShow();
+                                        if (brandingNewDos.getFooter().getButtons().getAttachment() != null)
+                                            SDKConfiguration.BubbleColors.showAttachment = brandingNewDos.getFooter().getButtons().getAttachment().isShow();
+                                        if (brandingNewDos.getFooter().getButtons().getSpeaker() != null)
+                                            SDKConfiguration.BubbleColors.showTextToSpeech = brandingNewDos.getFooter().getButtons().getSpeaker().isShow();
+                                    }
+
                                     if (brandingNewDos.getGeneral() != null && brandingNewDos.getGeneral().getColors() != null && brandingNewDos.getGeneral().getColors().isUseColorPaletteOnly()) {
                                         brandingModel.setButtonActiveBgColor(brandingNewDos.getGeneral().getColors().getPrimary());
                                         brandingModel.setButtonActiveTextColor(brandingNewDos.getGeneral().getColors().getPrimary_text());
@@ -1253,17 +1267,27 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                         brandingModel.setBotchatTextColor(brandingNewDos.getGeneral().getColors().getPrimary_text());
                                         brandingModel.setUserchatBgColor(brandingNewDos.getGeneral().getColors().getPrimary());
                                         brandingModel.setUserchatTextColor(brandingNewDos.getGeneral().getColors().getSecondary_text());
+                                        brandingModel.setWidgetHeaderColor(brandingNewDos.getGeneral().getColors().getSecondary());
+                                        brandingModel.setWidgetFooterColor(brandingNewDos.getGeneral().getColors().getSecondary());
+                                        brandingModel.setWidgetTextColor((brandingNewDos.getGeneral().getColors().getPrimary_text()));
                                     }
 
-                                    brandingModel.setBotName(SDKConfiguration.Client.bot_name);
-                                    brandingModel.setWidgetBodyColor(brandingNewDos.getBody().getBackground().getColor());
-                                    brandingModel.setWidgetTextColor((brandingNewDos.getHeader().getTitle().getColor()));
-                                    brandingModel.setWidgetHeaderColor(brandingNewDos.getHeader().getBg_color());
-                                    brandingModel.setWidgetFooterColor(brandingNewDos.getFooter().getBg_color());
-                                    brandingModel.setWidgetFooterBorderColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
-                                    brandingModel.setWidgetFooterHintColor(brandingNewDos.getFooter().getCompose_bar().getOutline_color());
-                                    brandingModel.setWidgetFooterHintText(brandingNewDos.getFooter().getCompose_bar().getPlaceholder());
-                                    brandingModel.setChatBubbleStyle(brandingNewDos.getChat_bubble().getStyle());
+
+                                    if (brandingNewDos.getOverride_kore_config() != null && brandingNewDos.getOverride_kore_config().isEnable()) {
+                                        SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = brandingNewDos.getOverride_kore_config().isEmoji_short_cut();
+                                        SDKConfiguration.OverrideKoreConfig.typing_indicator_timeout = brandingNewDos.getOverride_kore_config().getTyping_indicator_timeout();
+                                        if (brandingNewDos.getOverride_kore_config().getHistory() != null) {
+                                            SDKConfiguration.OverrideKoreConfig.history_enable = brandingNewDos.getOverride_kore_config().getHistory().isEnable();
+                                            if (brandingNewDos.getOverride_kore_config().getHistory().getRecent() != null)
+                                                SDKConfiguration.OverrideKoreConfig.history_batch_size = brandingNewDos.getOverride_kore_config().getHistory().getRecent().getBatch_size();
+                                            if (brandingNewDos.getOverride_kore_config().getHistory().getPaginated_scroll() != null) {
+                                                SDKConfiguration.OverrideKoreConfig.paginated_scroll_enable = brandingNewDos.getOverride_kore_config().getHistory().getPaginated_scroll().isEnable();
+                                                SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size = brandingNewDos.getOverride_kore_config().getHistory().getPaginated_scroll().getBatch_size();
+                                                SDKConfiguration.OverrideKoreConfig.paginated_scroll_loading_label = brandingNewDos.getOverride_kore_config().getHistory().getPaginated_scroll().getLoading_label();
+                                            }
+                                        }
+                                    }
+
                                     onEvent(brandingModel);
 
                                 } catch (Exception ex) {
@@ -1280,6 +1304,16 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     }
                 } else {
                     onEvent(getBrandingDataFromTxt());
+                }
+
+                if (botContentFragment != null && isReconnection) {
+                    if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
+                        botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+                    else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
+                        botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
+                    else botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+                } else if (SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
+                    botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
                 }
             }
 
@@ -1350,7 +1384,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             @Override
             public void onResponse(@NonNull Call<BotMetaModel> call, @NonNull Response<BotMetaModel> response) {
                 if (response.isSuccessful()) {
-                    getBrandingDetails();
+                    getBrandingDetails(false);
 
                     botMetaModel = response.body();
                     if (botMetaModel != null) SDKConfiguration.BubbleColors.setIcon_url(botMetaModel.getIcon());

@@ -47,9 +47,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 
-//    implementation 'com.github.Koredotcom.android-kore-sdk:korebot:v2-10.5.0'
-//    implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:v2-10.5.0'
-//    implementation 'com.github.SudheerJa-Kore:android-kore-sdk:0.3.3'
+//    implementation 'com.github.Koredotcom:android-kore-sdk:0.0.4'
 
     implementation(project(':korebot')) {
         exclude module: 'support-v4'

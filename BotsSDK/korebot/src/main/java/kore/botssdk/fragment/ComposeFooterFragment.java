@@ -55,17 +55,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.PermissionChecker;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import net.gotev.speech.GoogleVoiceTypingDisabledException;
-import net.gotev.speech.Speech;
-import net.gotev.speech.SpeechDelegate;
-import net.gotev.speech.SpeechRecognitionNotAvailable;
-import net.gotev.speech.SpeechUtil;
-import net.gotev.speech.ui.SpeechProgressView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -103,6 +97,12 @@ import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.speech.GoogleVoiceTypingDisabledException;
+import kore.botssdk.speech.Speech;
+import kore.botssdk.speech.SpeechDelegate;
+import kore.botssdk.speech.SpeechRecognitionNotAvailable;
+import kore.botssdk.speech.SpeechUtil;
+import kore.botssdk.speech.ui.SpeechProgressView;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
@@ -128,6 +128,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     private ImageView audioSpeakTts;
     private ImageView keyboardImg;
     private ImageView newMenuLogo;
+    private ImageView ivAttachment;
     private SpeechProgressView progress;
     private TextView textViewSpeech;
     private static final int REQUEST_RECORD_AUDIO = 13;
@@ -198,26 +199,17 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         linearLayoutProgress = view.findViewById(R.id.linearLayoutProgress);
         newMenuLogo = view.findViewById(R.id.newMenuLogo);
         progress = view.findViewById(R.id.progress);
-        ImageView ivAttachment = view.findViewById(R.id.attachemnt);
+        ivAttachment = view.findViewById(R.id.attachemnt);
         rlFooter = view.findViewById(R.id.rlFooter);
         llSend = view.findViewById(R.id.llSend);
 
-        if (SDKConfiguration.BubbleColors.showAttachment) ivAttachment.setVisibility(View.VISIBLE);
-
-        if (SDKConfiguration.BubbleColors.showTextToSpeech) audioSpeakTts.setVisibility(View.VISIBLE);
-
-        if (SDKConfiguration.BubbleColors.showASRMicroPhone) recAudioImg.setVisibility(View.VISIBLE);
-
         attachment_recycler = view.findViewById(R.id.attachment_recycler);
         attachment_recycler.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
-        int[] colors = {
-                requireActivity().getResources().getColor(android.R.color.black),
-                requireActivity().getResources().getColor(android.R.color.darker_gray),
-                requireActivity().getResources().getColor(android.R.color.black),
-                requireActivity().getResources().getColor(android.R.color.holo_orange_dark),
-                requireActivity().getResources().getColor(android.R.color.holo_red_dark)
-        };
+        int[] colors = new int[]{ResourcesCompat.getColor(requireActivity().getResources(), android.R.color.white, requireActivity().getTheme()), ResourcesCompat.getColor(requireActivity().getResources(), android.R.color.white, requireActivity().getTheme()), ResourcesCompat.getColor(requireActivity().getResources(), android.R.color.white, requireActivity().getTheme())};
+        int[] heights = {10, 20, 30, 20, 10};
+        progress.setBarMaxHeightsInDp(heights);
         progress.setColors(colors);
+
 
         textViewSpeech = view.findViewById(R.id.text_view_speech);
         if (composebarAttachmentAdapter == null) {
@@ -272,8 +264,16 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     public void changeThemeBackGround(String widgetFooterColor, String widgetFooterHintColor) {
+        rlFooter.setVisibility(View.VISIBLE);
+
         if (widgetFooterColor != null) rlFooter.setBackgroundColor(Color.parseColor(widgetFooterColor));
         if (widgetFooterHintColor != null) editTextMessage.setHintTextColor(Color.parseColor(widgetFooterHintColor));
+
+        if (SDKConfiguration.BubbleColors.showAttachment) ivAttachment.setVisibility(View.VISIBLE);
+
+        if (SDKConfiguration.BubbleColors.showTextToSpeech) audioSpeakTts.setVisibility(View.VISIBLE);
+
+        if (SDKConfiguration.BubbleColors.showASRMicroPhone) recAudioImg.setVisibility(View.VISIBLE);
     }
 
     void toggleTTSButton() {

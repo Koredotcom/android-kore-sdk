@@ -33,10 +33,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.emojione.tools.Client;
 import com.google.gson.Gson;
 
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +54,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.EmojiUtils;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -114,7 +113,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 Glide.with(context).load(iconUrl).error(R.drawable.ic_launcher).into(new DrawableImageViewTarget(botIcon));
             }
 
-            if(SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.BubbleColors.showIconTop) {
+            if (SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.BubbleColors.showIconTop) {
                 LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
                 params.topMargin = (int) (21 * dp1);
             }
@@ -124,13 +123,13 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public void setMsgTime(String msgTime, boolean isBotRequest) {
         TextView msgTimeView = itemView.findViewById(R.id.msg_time);
         msgTimeView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? View.VISIBLE : View.GONE);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams)msgTimeView.getLayoutParams();
+        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) msgTimeView.getLayoutParams();
 
         if (SDKConfiguration.isTimeStampsRequired()) {
             LinearLayoutCompat contentLayout = itemView.findViewById(R.id.contentLayout);
             if (isBotRequest) {
                 contentLayout.setGravity(Gravity.END);
-                params.rightMargin = (int)(5 * dp1);
+                params.rightMargin = (int) (5 * dp1);
             }
             msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
         }
@@ -270,6 +269,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         bubbleText.setVisibility(View.VISIBLE);
         bubbleText.setText("");
         if (textualContent != null && !textualContent.isEmpty()) {
+            if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable)
+                textualContent = EmojiUtils.replaceEmoticonsWithEmojis(textualContent);
             textualContent = unescapeHtml4(textualContent.trim());
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             textualContent = MarkdownUtil.processMarkDown(textualContent);
@@ -347,61 +348,9 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
             if (isPencilSpanClick && !isLastItem()) {
                 bubbleText.setText(getRemovedEntityEditString(strBuilder.toString()));
-            } else {
-                String REGEX_SMILEY = ":)";
-                String REGEX_THUMBS_UP = ":thumbsup";
-                String REGEX_SAD = ":(";
-                String regex = "";
-                String start = "";
-                String end = "";
-
-                if (strBuilder.toString().contains(REGEX_SMILEY)) {
-                    regex = REGEX_SMILEY;
-                    start = ":";
-                    end = ")";
-                } else if (strBuilder.toString().contains(REGEX_THUMBS_UP)) {
-                    regex = REGEX_SMILEY;
-                    start = ":";
-                    end = "p";
-                } else if (strBuilder.toString().contains(REGEX_SAD)) {
-                    regex = REGEX_SMILEY;
-                    start = ":";
-                    end = "(";
-                }
-                if (!regex.isEmpty()) {
-                    bubbleText.setText(strBuilder);
-
-                    Client client = new Client(context);
-                    client.setAscii(true);              // convert ascii smileys? =)
-                    client.setShortcodes(true);         // convert shortcodes? :joy:
-                    client.setGreedyMatch(true);        // true enables less strict unicode matching
-                    client.setRiskyMatchAscii(true);
-
-                    SpannableStringBuilder finalStrBuilder1 = strBuilder;
-                    String finalStart = start;
-                    String finalEnd = end;
-                    client.shortnameToImage(regex, (int) (20 * dp1), new com.emojione.tools.Callback() {
-                        @Override
-                        public void onFailure(IOException e) {
-                            bubbleText.setText(e.getMessage());
-                        }
-
-                        @Override
-                        public void onSuccess(final SpannableStringBuilder ssb) {
-                            int startIndex = finalStrBuilder1.toString().indexOf(finalStart);
-                            int endIndex = finalStrBuilder1.toString().indexOf(finalEnd, startIndex);
-
-                            if (startIndex != -1 && endIndex != -1) finalStrBuilder1.delete(startIndex, endIndex + 1);
-
-                            finalStrBuilder1.append(ssb);
-                            bubbleText.setText(finalStrBuilder1);
-                        }
-                    });
-                } else {
-                    bubbleText.setText(strBuilder);
-                }
             }
 
+            bubbleText.setText(strBuilder);
             bubbleText.setMovementMethod(LinkMovementMethod.getInstance());
             bubbleText.setVisibility(View.VISIBLE);
         } else {

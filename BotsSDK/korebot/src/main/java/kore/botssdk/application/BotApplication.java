@@ -1,12 +1,6 @@
 package kore.botssdk.application;
 
 import android.app.Application;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-
-import kore.botssdk.listener.NetworkStateReceiver;
-import kore.botssdk.utils.ClosingService;
 
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.

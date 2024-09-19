@@ -5,6 +5,7 @@ public class BrandingFooterButtonsModel {
     private BrandingIconModel emoji;
     private BrandingIconModel microphone;
     private BrandingIconModel attachment;
+    private BrandingIconModel speaker;
 
     public BrandingFooterMenuButtonModel getMenu() {
         return menu;
@@ -12,6 +13,10 @@ public class BrandingFooterButtonsModel {
 
     public BrandingIconModel getAttachment() {
         return attachment;
+    }
+
+    public BrandingIconModel getSpeaker() {
+        return speaker;
     }
 
     public BrandingIconModel getEmoji() {

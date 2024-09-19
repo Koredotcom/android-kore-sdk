@@ -10,6 +10,16 @@ public class BrandingV3Model implements Serializable {
     private BrandingHeaderModel header;
     private BrandingFooterModel footer;
     private BrandingBodyModel body;
+    private BrandingWidgetPanelColorsModel widget_panel;
+    private BrandingOverrideConfigModel override_kore_config;
+
+    public BrandingWidgetPanelColorsModel getWidget_panel() {
+        return widget_panel;
+    }
+
+    public BrandingOverrideConfigModel getOverride_kore_config() {
+        return override_kore_config;
+    }
 
     public BrandingBodyModel getBody() {
         return body;
