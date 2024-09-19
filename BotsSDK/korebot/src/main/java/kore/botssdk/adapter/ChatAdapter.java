@@ -65,7 +65,6 @@ import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
 
     private final HashMap<String, Integer> headersMap = new HashMap<>();
-    private boolean isAlpha = false;
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -401,14 +400,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         return holder;
     }
 
-    public boolean isAlpha() {
-        return isAlpha;
-    }
-
-    public void setAlpha(boolean alpha) {
-        isAlpha = alpha;
-    }
-
     public void addBaseBotMessage(BaseBotMessage baseBotMessage) {
         if (!baseBotMessageArrayList.contains(baseBotMessage)) {
             baseBotMessageArrayList.add(baseBotMessage);
@@ -417,7 +408,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
             headersMap.put(baseBotMessage.getFormattedDate(), baseBotMessageArrayList.size() - 1);
         }
-        isAlpha = false;
         if (baseBotMessageArrayList.size() == 1) {
             notifyItemInserted(0);
         } else {
