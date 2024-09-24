@@ -32,7 +32,7 @@
             android:layout_marginEnd="5dp"
             android:importantForAccessibility="no" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/quick_reply_item_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

@@ -14,7 +14,7 @@
         android:background="@drawable/checkbox_drawable"
         android:contentDescription="@string/app_name" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvBtnText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

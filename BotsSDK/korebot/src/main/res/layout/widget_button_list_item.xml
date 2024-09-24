@@ -23,7 +23,7 @@
             android:contentDescription="@string/app_name"
             android:visibility="gone" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/buttonTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

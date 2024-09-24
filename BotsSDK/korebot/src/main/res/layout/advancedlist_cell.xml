@@ -31,7 +31,7 @@
             android:contentDescription="@string/app_name"
             android:visibility="gone" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/bot_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             android:textColor="@color/left_bubble_text_color"
             android:textSize="@dimen/text_size_normal" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/bot_list_item_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                     android:rotation="90"
                     android:visibility="visible" />
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/buttonTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

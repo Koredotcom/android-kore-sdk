@@ -48,7 +48,7 @@
             android:layout_gravity="bottom"
             android:background="@color/compose_chase_color"
             android:gravity="center_vertical"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <RelativeLayout
                 android:id="@+id/composeFooterRl"
@@ -93,8 +93,8 @@
 
                     <ImageView
                         android:id="@+id/attachemnt"
-                        android:layout_width="@dimen/dimen_35dp"
-                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_width="@dimen/dimen_32dp"
+                        android:layout_height="@dimen/dimen_32dp"
                         android:layout_gravity="center_vertical"
                         android:importantForAccessibility="no"
                         android:padding="3dp"
@@ -147,7 +147,7 @@
                     android:layout_marginBottom="5dp"
                     android:layout_toStartOf="@+id/btnsend1"
                     android:layout_toEndOf="@id/tasksRl"
-                    android:background="@drawable/theme1_compose_bg"
+                    android:background="@drawable/input_compose"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -185,6 +185,7 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center_vertical"
                         android:layout_marginEnd="@dimen/dimen_12dp"
+                        android:contentDescription="@string/speak_out_the_bot_response_text"
                         android:src="@drawable/ic_volume_up_black_24dp"
                         android:visibility="gone" />
 
@@ -208,7 +209,7 @@
                         android:gravity="center"
                         android:visibility="gone">
 
-                        <TextView
+                        <kore.botssdk.view.CustomTextView
                             android:id="@+id/sendTv"
                             android:layout_width="@dimen/dimen_20dp"
                             android:layout_height="@dimen/dimen_20dp"
@@ -217,7 +218,7 @@
 
                     </LinearLayout>
 
-                    <TextView
+                    <kore.botssdk.view.CustomTextView
                         android:id="@+id/sendTv1"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
@@ -234,8 +235,8 @@
 
                     <ImageView
                         android:id="@+id/rec_audio_img"
-                        android:layout_width="@dimen/dimen_35dp"
-                        android:layout_height="@dimen/dimen_35dp"
+                        android:layout_width="@dimen/dimen_30dp"
+                        android:layout_height="@dimen/dimen_30dp"
                         android:layout_gravity="center_vertical"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_mic"
@@ -254,7 +255,7 @@
                 android:descendantFocusability="afterDescendants"
                 android:visibility="gone">
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tv_footerConnectBot"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -277,43 +278,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:alpha="1.0"
-        android:background="@color/colorPrimary"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/text_view_speech"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="marquee"
-            android:gravity="end"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/dimen_3dp"
+            android:background="@drawable/theme1_right_bubble_bg"
             android:padding="5dp"
             android:singleLine="true"
-            android:textColor="@android:color/white"
+            android:textColor="@color/txtFontBlack"
             android:textSize="@dimen/text_size_small"
             android:visibility="gone" />
 
         <RelativeLayout
+            android:id="@+id/rlSpeaker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             android:gravity="center_vertical">
 
-
-            <LinearLayout
-                android:id="@+id/linearLayoutProgress"
+            <RelativeLayout
+                android:id="@+id/rlSpeakerCircle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:orientation="vertical"
-                android:visibility="gone">
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/dimen_3dp"
+                android:background="@drawable/speaker_blue_bg">
 
-                <kore.botssdk.speech.ui.SpeechProgressView
-                    android:id="@+id/progress"
-                    android:layout_width="38dp"
-                    android:layout_height="30dp" />
+                <LinearLayout
+                    android:id="@+id/linearLayoutProgress"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <kore.botssdk.speech.ui.SpeechProgressView
+                        android:id="@+id/progress"
+                        android:layout_width="38dp"
+                        android:layout_height="30dp" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
 
             <ImageView
                 android:id="@+id/keyboard_image"
@@ -325,22 +337,21 @@
                 android:padding="5dp"
                 android:src="@drawable/keyboard_white" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/speaker_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/rlSpeakerCircle"
                 android:layout_centerInParent="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:layout_marginBottom="5dp"
-                android:padding="5dp"
+                android:padding="3dp"
                 android:tag="regular"
                 android:text="@string/tap_to_speak"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/text_size_small"
-                app:drawableTopCompat="@drawable/mic_white" />
+                app:drawableTopCompat="@drawable/mic_white"/>
         </RelativeLayout>
     </LinearLayout>
+
 </LinearLayout>

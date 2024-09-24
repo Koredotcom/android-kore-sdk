@@ -28,7 +28,7 @@
             android:layout_marginRight="5dp"
             android:scaleType="centerCrop" />-->
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/form_action_item_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
             android:ellipsize="end"
             android:padding="5dp"
             android:maxLines="1"
-            android:textSize="14dp"
+            android:textSize="@dimen/text_size_normal"
             android:tag="medium"
             android:layout_gravity="center_vertical" />
     </LinearLayout>

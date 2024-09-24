@@ -1249,11 +1249,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                     if (brandingNewDos.getFooter() != null && brandingNewDos.getFooter().getButtons() != null
                                             && brandingNewDos.getFooter().getButtons() != null) {
                                         if (brandingNewDos.getFooter().getButtons().getMicrophone() != null)
-                                            SDKConfiguration.BubbleColors.showASRMicroPhone = brandingNewDos.getFooter().getButtons().getMicrophone().isShow();
+                                            SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = brandingNewDos.getFooter().getButtons().getMicrophone().isShow();
                                         if (brandingNewDos.getFooter().getButtons().getAttachment() != null)
-                                            SDKConfiguration.BubbleColors.showAttachment = brandingNewDos.getFooter().getButtons().getAttachment().isShow();
+                                            SDKConfiguration.OverrideKoreConfig.showAttachment = brandingNewDos.getFooter().getButtons().getAttachment().isShow();
                                         if (brandingNewDos.getFooter().getButtons().getSpeaker() != null)
-                                            SDKConfiguration.BubbleColors.showTextToSpeech = brandingNewDos.getFooter().getButtons().getSpeaker().isShow();
+                                            SDKConfiguration.OverrideKoreConfig.showTextToSpeech = brandingNewDos.getFooter().getButtons().getSpeaker().isShow();
                                     }
 
                                     if (brandingNewDos.getGeneral() != null && brandingNewDos.getGeneral().getColors() != null && brandingNewDos.getGeneral().getColors().isUseColorPaletteOnly()) {
@@ -1312,7 +1312,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
                         botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
                     else botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
-                } else if (SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
+                } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
                     botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
                 }
             }

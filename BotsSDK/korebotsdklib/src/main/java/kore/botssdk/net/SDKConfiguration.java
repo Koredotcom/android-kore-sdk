@@ -161,10 +161,6 @@ public class SDKConfiguration {
         public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static boolean showIcon = false;
-        public static boolean showIconTop = true;
-        public static boolean showAttachment = true;
-        public static boolean showASRMicroPhone = true;
-        public static boolean showTextToSpeech = true;
 
         public static int getIcon() {
             return icon;
@@ -203,6 +199,11 @@ public class SDKConfiguration {
         public static int history_batch_size = 10;
         public static int paginated_scroll_batch_size = 10;
         public static String paginated_scroll_loading_label = "Loading old messages";
+        public static boolean showIconTop = true;
+        public static boolean showAttachment = true;
+        public static boolean showASRMicroPhone = true;
+        public static boolean showTextToSpeech = true;
+        public static boolean history_initial_call = false;
     }
 
     public static boolean isTimeStampsRequired() {

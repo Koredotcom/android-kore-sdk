@@ -22,7 +22,7 @@
         android:scaleType="centerCrop"
         android:importantForAccessibility="no" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/bot_list_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
         android:textColor="@color/left_bubble_text_color"
          />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/bot_list_item_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvborder"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -48,11 +48,10 @@
 
                 android:layout_marginEnd="5dp"
                 android:layout_toStartOf="@+id/view_out"
-                android:layout_weight="1"
                 android:orientation="vertical"
                 android:paddingBottom="10dp">
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/txtTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -63,7 +62,7 @@
                     android:textColor="#485260"
                     android:textSize="16sp" />
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/txtSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -123,7 +122,7 @@
                     android:paddingEnd="5dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <kore.botssdk.view.CustomTextView
                         android:id="@+id/tv_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -137,7 +136,7 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tv_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -152,7 +151,7 @@
                     android:textSize="14sp"
                     android:visibility="gone" />
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tv_url"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

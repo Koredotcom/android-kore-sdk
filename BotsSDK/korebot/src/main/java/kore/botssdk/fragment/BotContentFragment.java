@@ -143,27 +143,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         tvChaseTitle.setText(Html.fromHtml(Client.bot_name));
         sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         botsBubblesListView.setItemViewCacheSize(100);
-        botsBubblesListView.setItemAnimator(null);
-
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (!Client.isWebHook) {
-                    if (botsChatAdapter != null) loadChatHistory(botsChatAdapter.getItemCount(), limit);
-                    else loadChatHistory(0, limit);
-                } else {
-                    fetching = false;
-
-                    if (swipeRefreshLayout != null) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-
-                }
-            }
-        });
     }
 
     public void setJwtTokenForWebHook(String jwt) {
@@ -179,13 +160,27 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         tvChaseTitle.setTextColor(Color.parseColor(textColor));
 
         if (!StringUtils.isNullOrEmpty(botName)) tvChaseTitle.setText(botName);
+
+        if (SDKConfiguration.OverrideKoreConfig.paginated_scroll_enable) {
+            swipeRefreshLayout.setEnabled(true);
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (botsChatAdapter != null)
+                        loadChatHistory(botsChatAdapter.getItemCount(), SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
+                    else loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
+                }
+            });
+        } else {
+            swipeRefreshLayout.setEnabled(false);
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     private void setupAdapter() {
         botsChatAdapter = new ChatAdapter();
         botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-//        botsChatAdapter.setActivityContext(getActivity());
         botsBubblesListView.addItemDecoration(new ChatAdapterItemDecoration());
         layoutManager = new LinearLayoutManager(requireContext());
         botsBubblesListView.setLayoutManager(layoutManager);
@@ -237,6 +232,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     public void setQuickRepliesIntoFooter(BotResponse botResponse) {
+        quickReplyView.setVisibility(View.VISIBLE);
         ArrayList<QuickReplyTemplate> quickReplyTemplates = getQuickReplies(botResponse);
         quickReplyView.populateQuickReplyView(quickReplyTemplates);
     }
@@ -370,9 +366,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         });
     }
 
-
-    private final int limit = 10;
-
     public void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom) {
         int firstItemPosition = 0;
         if (botsChatAdapter.getItemCount() > 0) {
@@ -492,14 +485,14 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         });
     }
 
-    private Observable<ServerBotMsgResponse> getWebHookHistoryRequest(final int limit) {
+    private Observable<ServerBotMsgResponse> getWebHookHistoryRequest(final int _offset, final int limit) {
         return Observable.create(new ObservableOnSubscribe<ServerBotMsgResponse>() {
             @Override
             public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) {
                 try {
                     ServerBotMsgResponse re = new ServerBotMsgResponse();
 
-                    Call<BotHistory> _resp = WebHookRestBuilder.getRestAPI().getWebHookBotHistory("bearer " + jwt, Client.bot_id, Client.bot_id, limit);
+                    Call<BotHistory> _resp = WebHookRestBuilder.getRestAPI().getWebHookBotHistory("bearer " + jwt, Client.bot_id, Client.bot_id, limit, _offset);
                     Response<BotHistory> rBody = _resp.execute();
                     BotHistory history = rBody.body();
 
@@ -649,11 +642,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         final long minDate;
         final long maxDate;
 
-        RangeValidator(long minDate, long maxDate) {
-            this.minDate = minDate;
-            this.maxDate = maxDate;
-        }
-
         RangeValidator(Parcel parcel) {
             minDate = parcel.readLong();
             maxDate = parcel.readLong();
@@ -691,64 +679,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     }
 
-    private void loadWebHookChatHistory(final int limit) {
-        if (fetching) {
-            if (swipeRefreshLayout != null) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-            return;
-        }
-        fetching = true;
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.setRefreshing(true);
-        }
-
-        getWebHookHistoryRequest(limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
-            @Override
-            public void onSubscribe(Disposable d) {
-
-            }
-
-            @Override
-            public void onNext(ServerBotMsgResponse re) {
-                fetching = false;
-
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                ArrayList<BaseBotMessage> list = null;
-                if (re != null) {
-                    list = re.getBotMessages();
-                    offset = re.getOriginalSize();
-                }
-
-                if (list != null && list.size() > 0) {
-                    addMessagesToBotChatAdapter(list, true);
-                }
-
-                if ((list == null || list.size() < limit) && offset != 0) {
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-
-            @Override
-            public void onComplete() {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
-    }
-
     public void loadChatHistory(final int _offset, final int limit) {
         if (fetching) {
             if (swipeRefreshLayout != null) {
@@ -761,51 +691,102 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        getHistoryRequest(_offset, limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+        if (!Client.isWebHook)
+            getHistoryRequest(_offset, limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-            }
-
-            @Override
-            public void onNext(ServerBotMsgResponse re) {
-                fetching = false;
-
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
                 }
 
-                ArrayList<BaseBotMessage> list = null;
-                if (re != null) {
-                    list = re.getBotMessages();
-                    offset = _offset + re.getOriginalSize();
+                @Override
+                public void onNext(ServerBotMsgResponse re) {
+                    fetching = false;
+
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    ArrayList<BaseBotMessage> list = null;
+                    if (re != null) {
+                        list = re.getBotMessages();
+                        offset = _offset + re.getOriginalSize();
+                    }
+
+                    if (list != null && list.size() > 0) {
+                        addMessagesToBotChatAdapter(list, _offset == 0);
+                    }
+
+                    if (list != null) {
+                        list.size();
+                    }
                 }
 
-                if (list != null && list.size() > 0) {
-                    addMessagesToBotChatAdapter(list, offset == 0);
+                @Override
+                public void onError(Throwable e) {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
 
-                if (list != null) {
-                    list.size();
+                @Override
+                public void onComplete() {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
                 }
-            }
+            });
+        else
+            getWebHookHistoryRequest(_offset, limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-            @Override
-            public void onError(Throwable e) {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
                 }
-            }
 
-            @Override
-            public void onComplete() {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
+                @Override
+                public void onNext(ServerBotMsgResponse re) {
+                    fetching = false;
+
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+
+                    ArrayList<BaseBotMessage> list = null;
+                    if (re != null) {
+                        list = re.getBotMessages();
+                        offset = re.getOriginalSize();
+                    }
+
+                    if (list != null && list.size() > 0) {
+                        addMessagesToBotChatAdapter(list, true);
+                    }
+
+                    if (list != null && list.size() > 0) {
+                        addMessagesToBotChatAdapter(list, _offset == 0);
+                    }
+
+                    if (list != null) {
+                        list.size();
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void onError(Throwable e) {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+
+                @Override
+                public void onComplete() {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            });
     }
 
     public void loadReconnectionChatHistory(final int _offset, final int limit) {
@@ -820,146 +801,125 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        getHistoryRequest(_offset, limit, false).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
-            @Override
-            public void onSubscribe(Disposable d) {
+        if (!Client.isWebHook)
+            getHistoryRequest(_offset, limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
+                @Override
+                public void onSubscribe(Disposable d) {
 
-            }
-
-            @Override
-            public void onNext(ServerBotMsgResponse re) {
-                fetching = false;
-
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
                 }
 
-                ArrayList<BaseBotMessage> list = null;
-                if (re != null) {
-                    list = re.getBotMessages();
-                    offset = _offset + re.getOriginalSize();
-                }
+                @Override
+                public void onNext(ServerBotMsgResponse re) {
+                    fetching = false;
 
-                if (list != null && list.size() > 0) {
-                    int pos = 0;
-                    ArrayList<BaseBotMessage> botResp = new ArrayList<>();
-                    ArrayList<BaseBotMessage> currentList = botsChatAdapter.getBaseBotMessageArrayList();
-                    ArrayList<BaseBotMessage> requiredList = new ArrayList<>();
-
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i) instanceof BotResponse) {
-                            botResp.add(list.get(i));
-                        }
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
-                    for (int i = 0; i < currentList.size(); i++) {
-                        for (int j = 0; j < botResp.size(); j++) {
-                            if (currentList.get(i).getCreatedInMillis() == botResp.get(j).getCreatedInMillis()) {
-                                pos = j;
+                    ArrayList<BaseBotMessage> list = null;
+                    if (re != null) {
+                        list = re.getBotMessages();
+                        offset = _offset + re.getOriginalSize();
+                    }
+
+                    if (list != null && list.size() > 0) {
+                        int pos = 0;
+                        ArrayList<BaseBotMessage> botResp = new ArrayList<>();
+                        ArrayList<BaseBotMessage> currentList = botsChatAdapter.getBaseBotMessageArrayList();
+                        ArrayList<BaseBotMessage> requiredList = new ArrayList<>();
+
+                        for (int i = 0; i < list.size(); i++) {
+                            if (list.get(i) instanceof BotResponse) {
+                                botResp.add(list.get(i));
                             }
                         }
-                    }
 
-                    if (pos != 0 && (pos + 1) < botResp.size()) {
-                        for (int i = pos + 1; i < botResp.size(); i++) {
-                            if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
-                                ((BotResponse) botResp.get(i)).setFromAgent(true);
-                            requiredList.add(botResp.get(i));
-                        }
-                    }
-
-                    botTypingStatusRl.setVisibility(View.GONE);
-                    addMessagesToBotChatAdapter(requiredList, true, false);
-                }
-            }
-
-            @Override
-            public void onError(Throwable e) {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-
-            @Override
-            public void onComplete() {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
-    }
-
-    private Observable<ServerBotMsgResponse> getHistoryRequest(final int _offset, final int limit, boolean setIconUrl) {
-        return Observable.create(new ObservableOnSubscribe<ServerBotMsgResponse>() {
-            @Override
-            public void subscribe(ObservableEmitter<ServerBotMsgResponse> emitter) {
-                try {
-                    ServerBotMsgResponse re = new ServerBotMsgResponse();
-
-                    Call<BotHistory> _resp = RestBuilder.getRestAPI().getBotHistory("bearer " + SocketWrapper.getInstance(getActivity()).getAccessToken(), Client.bot_id, limit, _offset, true);
-                    Response<BotHistory> rBody = _resp.execute();
-                    BotHistory history = rBody.body();
-
-                    if (rBody.isSuccessful() && history != null) {
-
-                        if (!StringUtils.isNullOrEmpty(history.getIcon()) && setIconUrl)
-                            SDKConfiguration.BubbleColors.setIcon_url(history.getIcon());
-
-                        List<BotHistoryMessage> messages = history.getMessages();
-                        ArrayList<BaseBotMessage> msgs;
-                        if (messages != null && messages.size() > 0) {
-                            msgs = new ArrayList<>();
-                            for (int index = 0; index < messages.size(); index++) {
-                                BotHistoryMessage msg = messages.get(index);
-                                if (msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
-                                    List<Component> components = msg.getComponents();
-                                    String data = components.get(0).getData().getText();
-                                    try {
-                                        PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
-                                        BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
-                                        r.setType(msg.getType());
-                                        msgs.add(r);
-                                    } catch (com.google.gson.JsonSyntaxException ex) {
-                                        BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
-                                        r.setType(msg.getType());
-                                        msgs.add(r);
-                                    }
-                                } else {
-                                    try {
-                                        String message = msg.getComponents().get(0).getData().getText();
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-                                        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-                                        botPayLoad.setMessage(botMessage);
-                                        BotInfoModel botInfo = new BotInfoModel(Client.bot_name, Client.bot_id, null);
-                                        botPayLoad.setBotInfo(botInfo);
-                                        Gson gson = new Gson();
-                                        String jsonPayload = gson.toJson(botPayLoad);
-
-                                        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
-                                        String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
-                                        botRequest.setCreatedOn(createdTime);
-                                        msgs.add(botRequest);
-
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
+                        for (int i = 0; i < currentList.size(); i++) {
+                            for (int j = 0; j < botResp.size(); j++) {
+                                if (currentList.get(i).getCreatedInMillis() == botResp.get(j).getCreatedInMillis()) {
+                                    pos = j;
                                 }
                             }
-
-                            re.setBotMessages(msgs);
-                            re.setOriginalSize(messages.size());
                         }
+
+                        if (pos != 0 && (pos + 1) < botResp.size()) {
+                            for (int i = pos + 1; i < botResp.size(); i++) {
+                                if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
+                                    ((BotResponse) botResp.get(i)).setFromAgent(true);
+                                requiredList.add(botResp.get(i));
+                            }
+                        }
+
+                        botTypingStatusRl.setVisibility(View.GONE);
+                        addMessagesToBotChatAdapter(requiredList, true, false);
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+
+                @Override
+                public void onComplete() {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            });
+        else
+            getWebHookHistoryRequest(_offset, limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
+                @Override
+                public void onSubscribe(Disposable d) {
+
+                }
+
+                @Override
+                public void onNext(ServerBotMsgResponse re) {
+                    fetching = false;
+
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
-                    emitter.onNext(re);
-                    emitter.onComplete();
-                } catch (Exception e) {
-                    emitter.onError(e);
+                    ArrayList<BaseBotMessage> list = null;
+                    if (re != null) {
+                        list = re.getBotMessages();
+                        offset = re.getOriginalSize();
+                    }
+
+                    if (list != null && list.size() > 0) {
+                        addMessagesToBotChatAdapter(list, true);
+                    }
+
+                    if (list != null && list.size() > 0) {
+                        addMessagesToBotChatAdapter(list, _offset == 0);
+                    }
+
+                    if (list != null) {
+                        list.size();
+                    }
                 }
-            }
-        });
+
+                @Override
+                public void onError(Throwable e) {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+
+                @Override
+                public void onComplete() {
+                    fetching = false;
+                    if (swipeRefreshLayout != null) {
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+            });
     }
 }

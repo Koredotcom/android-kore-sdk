@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/email_view_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardCornerRadius="4dp"
-    android:id="@+id/email_view_root"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -15,112 +15,112 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
-            android:paddingLeft="10dp">
+            android:paddingStart="10dp"
+            android:paddingTop="10dp">
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/from_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:tag="regular"
                 android:text="@string/label_from"
                 android:textColor="@color/color_8b93a0"
-                android:textSize="@dimen/dimen_14dp" />
+                android:textSize="@dimen/text_size_normal" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/from_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/from_label"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/from_label"
-                android:tag="regular"
-                android:maxLines="2"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/from_label"
                 android:ellipsize="end"
+                android:maxLines="2"
+                android:tag="regular"
                 android:textColor="@color/color_656ce7"
-                android:textSize="@dimen/dimen_14dp" />
+                android:textSize="@dimen/text_size_normal" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/to_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/from_label"
                 android:layout_below="@+id/from_info"
-                android:tag="regular"
+                android:layout_alignEnd="@+id/from_label"
                 android:paddingTop="4dp"
+                android:tag="regular"
                 android:text="@string/label_to"
                 android:textColor="@color/color_8b93a0"
-                android:textSize="@dimen/dimen_14dp" />
+                android:textSize="@dimen/text_size_normal" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/to_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/to_label"
                 android:layout_below="@+id/from_info"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/to_label"
-                android:tag="regular"
-                android:maxLines="2"
+                android:layout_alignBaseline="@+id/to_label"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/to_label"
                 android:ellipsize="end"
+                android:maxLines="2"
                 android:paddingTop="4dp"
+                android:tag="regular"
                 android:textColor="@color/color_1a1a1a"
-                android:textSize="@dimen/dimen_14dp" />
+                android:textSize="@dimen/text_size_normal" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/cc_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/to_label"
                 android:layout_below="@+id/to_info"
-                android:tag="regular"
+                android:layout_alignEnd="@+id/to_label"
                 android:paddingTop="4dp"
+                android:tag="regular"
                 android:text="@string/label_cc"
                 android:textColor="@color/color_8b93a0"
-                android:textSize="@dimen/dimen_14dp" />
+                android:textSize="@dimen/text_size_normal" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/cc_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/cc_label"
                 android:layout_below="@+id/to_info"
-                android:paddingTop="4dp"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/cc_label"
-                android:tag="regular"
-                android:maxLines="2"
+                android:layout_alignBaseline="@+id/cc_label"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@+id/cc_label"
                 android:ellipsize="end"
+                android:maxLines="2"
+                android:paddingTop="4dp"
+                android:tag="regular"
                 android:textColor="@color/color_1a1a1a"
-                android:textSize="@dimen/dimen_14dp" />
+                android:textSize="@dimen/text_size_normal" />
 
         </RelativeLayout>
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="5dp"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:paddingLeft="10dp"
+            android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:tag="bold"
-            android:maxLines="2"
-            android:ellipsize="end"
             android:textColor="@color/color_1a1a1a"
-            android:textSize="@dimen/dimen_14dp" />
+            android:textSize="@dimen/text_size_normal" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="3dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:paddingLeft="10dp"
+            android:paddingTop="3dp"
             android:paddingRight="10dp"
             android:tag="regular"
-            android:maxLines="3"
-            android:ellipsize="end"
             android:textColor="@color/color_8b93a0"
-            android:textSize="@dimen/dimen_14dp" />
+            android:textSize="@dimen/text_size_normal" />
 
 
         <Space
@@ -128,16 +128,15 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/attachment_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_gravity="end"
-            android:paddingTop="3dp"
             android:drawablePadding="5dp"
-            android:paddingEnd="10dp"
             android:paddingStart="@dimen/dimen_10dp"
+            android:paddingTop="3dp"
+            android:paddingEnd="10dp"
             android:tag="regular"
             android:text="@string/_1_attachment"
             android:textColor="@color/color_8b93a0"
@@ -153,18 +152,18 @@
             android:paddingRight="10dp">
 
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/email_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_toStartOf="@+id/mail_date"
                 android:layout_marginTop="5dp"
+                android:layout_toStartOf="@+id/mail_date"
                 android:tag="regular"
                 android:textColor="@color/color_8b93a0"
                 android:textSize="@dimen/text_size_small" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/mail_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -183,11 +182,11 @@
             android:background="#efefef" />
 
         <kore.botssdk.view.AutoExpandListView
+            android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="#efefef"
             android:dividerHeight="1dp"
-            android:id="@+id/list_view"
             android:footerDividersEnabled="false"
             android:headerDividersEnabled="true" />
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/knowledge_view_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp"
-    android:id="@+id/knowledge_view_root"
     app:cardUseCompatPadding="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -17,38 +17,38 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:adjustViewBounds="true"
+            android:importantForAccessibility="no"
             android:scaleType="fitXY"
-            android:src="@mipmap/imageplaceholder_left"
-            android:importantForAccessibility="no" />
+            android:src="@mipmap/imageplaceholder_left" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/knowledge_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="5dp"
+            android:paddingRight="10dp"
             android:text="@string/knowledge_title" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/knowledge_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="2dp"
+            android:paddingRight="10dp"
             android:text="@string/knowledge_description" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/hash_tags_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:maxLines="2"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="5dp"
+            android:paddingRight="10dp"
             android:text="@string/tags" />
 
         <RelativeLayout
@@ -57,34 +57,34 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="7dp">
+            android:paddingTop="7dp"
+            android:paddingRight="10dp">
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/created_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
                 android:maxLines="2" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/knowledge_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
                 android:layout_below="@+id/created_date"
+                android:layout_alignParentStart="true"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="@string/knowledge_description" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/creator_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/knowledge_type"
                 android:layout_alignEnd="@+id/knowledge_type"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="" />
@@ -102,12 +102,12 @@
             android:background="#efefef" />
 
         <ListView
+            android:id="@+id/list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:divider="#efefef"
             android:dividerHeight="1dp"
-            android:id="@+id/list_view"
             android:footerDividersEnabled="false"
-            android:headerDividersEnabled="true"/>
+            android:headerDividersEnabled="true" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

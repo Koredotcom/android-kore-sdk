@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/dimen_12dp">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/button1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,9 +32,9 @@
             android:textStyle="bold"
             android:layout_marginEnd="5dp"
             android:textColor="@color/splash_color"
-            android:textSize="@dimen/dimen_14dp" />
+            android:textSize="@dimen/text_size_normal" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/button2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,6 +42,7 @@
             android:layout_alignParentEnd="true"
             android:fontFamily="@font/latobold"
             android:paddingStart="@dimen/dimen_12dp"
+            android:paddingEnd="@dimen/dimen_5dp"
             android:textStyle="bold"
             android:layout_toEndOf="@+id/button1"
             android:textColor="@color/splash_color"

@@ -25,7 +25,7 @@
         android:visibility="visible"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/view_more"
         android:layout_width="match_parent"
         android:layout_height="44dp"

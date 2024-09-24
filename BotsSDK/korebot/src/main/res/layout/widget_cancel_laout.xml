@@ -7,7 +7,7 @@
     android:layout_marginBottom="10dp"
     android:orientation="vertical">
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tv_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

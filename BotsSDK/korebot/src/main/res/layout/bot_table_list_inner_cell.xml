@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/bot_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,12 +41,10 @@
             android:textColor="@color/left_bubble_text_color"
             />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/bot_list_item_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/bot_list_item_title"
-            android:layout_toRightOf="@id/bot_list_item_image"
             android:clickable="false"
             android:ellipsize="end"
             android:maxLines="1"
@@ -57,11 +55,10 @@
 
     </LinearLayout>
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/bot_list_item_cost"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/bot_list_item_image"
         android:clickable="false"
         android:ellipsize="end"
         android:textStyle="bold"

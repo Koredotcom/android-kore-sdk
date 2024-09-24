@@ -43,7 +43,7 @@
             android:layout_toEndOf="@+id/checkbox"
             android:orientation="horizontal">
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/title_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
         </RelativeLayout>
 
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/date_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -90,11 +90,11 @@
             android:tag="medium"
             android:text="@{DateUtils.getDateWithTime(widgetTask.data.dueDate)}"
             android:textColor="@{widgetTask.isOverDue ? @color/color_red : @color/color_485260}"
-            android:textSize="13dp"
+            android:textSize="@dimen/text_size_small"
             app:drawableStartCompat="@drawable/ic_baseline_watch_later_24px" />
 
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/creator_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -110,10 +110,10 @@
             android:singleLine="true"
             android:tag="medium"
             android:textColor="@color/color_485260"
-            android:textSize="13dp"
+            android:textSize="@dimen/text_size_small"
             app:drawableStartCompat="@drawable/ic_baseline_person_24px" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/assignee_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
