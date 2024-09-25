@@ -93,7 +93,7 @@
 
                     <ImageView
                         android:id="@+id/attachemnt"
-                        android:layout_width="@dimen/dimen_32dp"
+                        android:layout_width="@dimen/dimen_35dp"
                         android:layout_height="@dimen/dimen_32dp"
                         android:layout_gravity="center_vertical"
                         android:importantForAccessibility="no"
@@ -305,9 +305,7 @@
                 android:id="@+id/rlSpeakerCircle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/dimen_3dp"
+                android:layout_centerInParent="true"
                 android:background="@drawable/speaker_blue_bg">
 
                 <LinearLayout
@@ -350,8 +348,10 @@
                 android:text="@string/tap_to_speak"
                 android:textColor="#ffffff"
                 android:textSize="@dimen/text_size_small"
-                app:drawableTopCompat="@drawable/mic_white"/>
+                android:visibility="gone"
+                app:drawableTopCompat="@drawable/mic_white" />
         </RelativeLayout>
+
     </LinearLayout>
 
 </LinearLayout>

@@ -145,6 +145,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         botsBubblesListView.setItemViewCacheSize(100);
+        botsBubblesListView.setItemAnimator(null);
     }
 
     public void setJwtTokenForWebHook(String jwt) {

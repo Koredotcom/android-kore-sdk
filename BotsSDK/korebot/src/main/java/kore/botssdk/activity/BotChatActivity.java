@@ -770,7 +770,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             if (!taskList.isEmpty()) {
                 ActivityManager.RunningTaskInfo runningTaskInfo = taskList.get(0);
-                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains("com.kore.korebot")) {
+                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains(getApplicationContext().getPackageName())) {
                     if (botClient != null) {
                         botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
@@ -1236,7 +1236,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                     brandingModel.setUserchatBgColor(brandingNewDos.getBody().getUser_message().getBg_color());
                                     brandingModel.setUserchatTextColor(brandingNewDos.getBody().getUser_message().getColor());
 
-                                    brandingModel.setBotName(SDKConfiguration.Client.bot_name);
+                                    brandingModel.setBotName(brandingNewDos.getHeader().getTitle().getName());
                                     brandingModel.setWidgetBodyColor(brandingNewDos.getBody().getBackground().getColor());
                                     brandingModel.setWidgetTextColor((brandingNewDos.getHeader().getTitle().getColor()));
                                     brandingModel.setWidgetHeaderColor(brandingNewDos.getHeader().getBg_color());

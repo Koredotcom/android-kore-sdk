@@ -42,7 +42,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <kore.botssdk.view.CustomTextView
+            <kore.botssdk.view.CustomTextViewSemiBold
                 android:id="@+id/msg_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

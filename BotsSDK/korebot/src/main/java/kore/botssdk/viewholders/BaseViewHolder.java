@@ -63,6 +63,7 @@ import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.LinkifyTextView;
 
+@SuppressWarnings("UnKnownNullness")
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     private final Context context;
     private final String REGEX_CHAR = "%%.*?%%";
@@ -73,6 +74,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     protected ComposeFooterInterface composeFooterInterface;
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     protected ChatContentStateListener contentStateListener;
+    SharedPreferences sharedPreferences;
 
     protected static View createView(int layoutId, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -86,6 +88,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public BaseViewHolder(@NonNull View itemView, Context context) {
         super(itemView);
         this.context = context;
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         TextView timeStamp = itemView.findViewById(R.id.time_stamp);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) timeStamp.getLayoutParams();
         if (this instanceof RequestTextTemplateHolder) {
@@ -131,7 +134,9 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 contentLayout.setGravity(Gravity.END);
                 params.rightMargin = (int) (5 * dp1);
             }
+
             msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
+            msgTimeView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
         }
     }
 
@@ -139,6 +144,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         TextView timeStampView = itemView.findViewById(R.id.time_stamp);
         timeStampView.setVisibility(timeStamp != null && !timeStamp.isEmpty() ? View.VISIBLE : View.GONE);
         timeStampView.setText(timeStamp);
+        timeStampView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -218,7 +224,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 params.bottomMargin = ChatAdapterItemDecoration.commonVerticalMargin * 2;
             }
             Typeface regular = KaFontUtils.getCustomTypeface("regular", context);
-
 
             GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_left_bubble_bg, context.getTheme());
 
