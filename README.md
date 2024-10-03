@@ -38,7 +38,7 @@ Client secret - copy this value from Bot Builder SDK Settings ex. Wibn3ULagYyq0J
 public static final String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
  ```
 
-User identity - rhis should represent the subject for JWT token that could be an email or phone number in case of known user. In case of anonymous user, this can be a randomly generated unique id.
+User identity - This should represent the subject for JWT token that could be an email or phone number in case of known user. In case of anonymous user, this can be a randomly generated unique id.
  ```
 public static final String identity = "PLEASE_ENTER_IDENTITY";
  ```
