@@ -1,11 +1,11 @@
-# Kore SDK
-Kore offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
+# Kore.ai SDK
+Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
 
-With just few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.com/docs/bots/kore-web-sdk/
+With just few lines of code, you can embed our Kore.ai chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.com/docs/bots/kore-web-sdk/
 
-# Kore Android SDK for developers
+# Kore.ai Android SDK for developers
 
-Kore SDK for Android enables you to talk to Kore bots over a web socket. This repo also comes with the code for sample application that developers can modify according to their Bot configuration.
+Kore.ai SDK for Android enables you to talk to Kore.ai bots over a web socket. This repo also comes with the code for sample application that developers can modify according to their Bot configuration.
 
 # Setting up
 
@@ -38,7 +38,7 @@ Client secret - copy this value from Bot Builder SDK Settings ex. Wibn3ULagYyq0J
 public static final String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
  ```
 
-User identity - rhis should represent the subject for JWT token that could be an email or phone number in case of known user. In case of anonymous user, this can be a randomly generated unique id.
+User identity - this should represent the subject for JWT token that could be an email or phone number in case of known user. In case of anonymous user, this can be a randomly generated unique id.
  ```
 public static final String identity = "PLEASE_ENTER_IDENTITY";
  ```
@@ -354,4 +354,4 @@ intent.putExtras(bundle);
 startActivity(intent);
 
 License
-Copyright © Kore, Inc. MIT License; see LICENSE for further details.
+Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details.
