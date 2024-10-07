@@ -84,6 +84,7 @@ public class PayloadInner {
     private String fileName;
     private boolean url_present;
     private boolean isSortEnabled;
+    private boolean isSearchEnabled;
 
     private List<RadioOptionModel> radioOptions;
 
@@ -105,6 +106,14 @@ public class PayloadInner {
 
     public void setSortEnabled(boolean sortEnabled) {
         isSortEnabled = sortEnabled;
+    }
+
+    public boolean isSearchEnabled() {
+        return isSearchEnabled;
+    }
+
+    public void setSearchEnabled(boolean searchEnabled) {
+        isSearchEnabled = searchEnabled;
     }
 
     public boolean isUrl_present() {

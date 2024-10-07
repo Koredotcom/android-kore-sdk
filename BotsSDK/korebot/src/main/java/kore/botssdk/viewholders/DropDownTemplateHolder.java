@@ -59,7 +59,7 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         tvSubmit.setOnClickListener(view -> {
             if (!isLastItem()) return;
             if (selectedIndex != -1 && !elements.get(selectedIndex).getTitle().equals(placeHolder)) {
-                composeFooterInterface.copyMessageToComposer(elements.get(selectedIndex).getTitle(), false);
+                composeFooterInterface.onSendClick(elements.get(selectedIndex).getTitle(), false);
             }
         });
 

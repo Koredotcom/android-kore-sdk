@@ -5,6 +5,7 @@ import static android.view.View.VISIBLE;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ public class AdvancedListTemplateHolder extends BaseViewHolder {
     public static AdvancedListTemplateHolder getInstance(ViewGroup parent) {
         return new AdvancedListTemplateHolder(createView(R.layout.template_advanced_list_template, parent));
     }
+
     private AdvancedListTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
     }
@@ -33,7 +35,9 @@ public class AdvancedListTemplateHolder extends BaseViewHolder {
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
         TextView botListViewTitle = itemView.findViewById(R.id.botListViewTitle);
         TextView tvDescription = itemView.findViewById(R.id.tvDescription);
+        ImageView ivSearch = itemView.findViewById(R.id.ivSearch);
 
+        ivSearch.setVisibility(payloadInner.isSearchEnabled() ? VISIBLE : GONE);
         botCustomListViewButton.setVisibility(GONE);
         botListViewTitle.setVisibility(!StringUtils.isNullOrEmpty(payloadInner.getTitle()) ? VISIBLE : GONE);
         botListViewTitle.setText(payloadInner.getTitle());
