@@ -13,9 +13,6 @@ public class BotApplication extends Application {
     public void onCreate() {
         super.onCreate();
         appControl = new AppControl(getApplicationContext());
-//        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-//        registerReceiver(new NetworkStateReceiver(), filter);
-
     }
 
     public static boolean isActivityVisible() {

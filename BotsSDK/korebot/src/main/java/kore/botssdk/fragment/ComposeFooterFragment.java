@@ -26,7 +26,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -79,6 +78,7 @@ import java.util.Objects;
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.KaCaptureImageActivity;
+import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.adapter.AttachmentOptionsAdapter;
 import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.bot.BotClient;
@@ -103,11 +103,13 @@ import kore.botssdk.speech.SpeechDelegate;
 import kore.botssdk.speech.SpeechRecognitionNotAvailable;
 import kore.botssdk.speech.SpeechUtil;
 import kore.botssdk.speech.ui.SpeechProgressView;
+import kore.botssdk.utils.AsyncTasks;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.SharedPreferenceUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.viewUtils.FileUtils;
@@ -276,7 +278,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
         if (SDKConfiguration.OverrideKoreConfig.showTextToSpeech) audioSpeakTts.setVisibility(View.VISIBLE);
 
-        if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(View.VISIBLE);
+        if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone && StringUtils.isNullOrEmpty(editTextMessage.getText().toString())) recAudioImg.setVisibility(View.VISIBLE);
 
         SharedPreferences sharedPreferences = getSharedPreferences();
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
@@ -668,7 +670,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     String filePath = result.getData().getStringExtra("filePath");
                     String fileName = result.getData().getStringExtra("fileName");
                     String filePathThumbnail = result.getData().getStringExtra(THUMBNAIL_FILE_PATH);
-                    ((BotChatActivity) requireActivity()).sendImage(filePath, fileName, filePathThumbnail);
+                    ((NewBotChatActivity) requireActivity()).sendImage(filePath, fileName, filePathThumbnail);
                 }
             });
 
@@ -834,7 +836,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 if (type != null && type.contains("video")) {
                     KaMediaUtils.setupAppDir(requireContext(), BundleConstants.MEDIA_TYPE_VIDEO);
                     String filePath = KaMediaUtils.getAppDir() + File.separator + name;
-                    new SaveVideoTask(filePath, name, selectedImage, requireActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    new SaveVideoTask(filePath, name, selectedImage, requireActivity()).executeAsync();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -842,7 +844,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    private class SaveVideoTask extends AsyncTask<String, String, String> {
+    private class SaveVideoTask extends AsyncTasks<String, String, String> {
 
         private final String filePath;
         private String fileName;
@@ -858,10 +860,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
 
         @Override
-        protected String doInBackground(String... params) {
+        protected void doInBackground(String... params) {
             android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
             if (filePath != null && mContext.get() != null) {
-//                    compressImage(filePath);
                 FileOutputStream fOut = null;
                 BufferedOutputStream out = null;
                 try {
@@ -877,7 +878,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     out.flush();
                 } catch (Exception e) {
                     LogUtils.e(LOG_TAG, e.toString());
-                    return null;
                 } finally {
                     if (fOut != null) {
                         try {
@@ -896,21 +896,20 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     }
                 }
             }
-            return filePath;
         }
 
 
         @Override
-        protected void onPostExecute(String realPath) {
+        protected void onPostExecute() {
 //            filePath = path;
-            if (realPath != null && mContext.get() != null) {
-                if (realPath.length() > 0) {
-                    int startInd = realPath.lastIndexOf(File.separator) + 1;
-                    int endInd = realPath.indexOf(".", startInd);
-                    fileName = realPath.substring(startInd, endInd);
+            if (filePath != null && mContext.get() != null) {
+                if (filePath.length() > 0) {
+                    int startInd = filePath.lastIndexOf(File.separator) + 1;
+                    int endInd = filePath.indexOf(".", startInd);
+                    fileName = filePath.substring(startInd, endInd);
                 }
                 int videoThumbnailIndexId = 0;
-                String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
+                String extn = filePath.substring(filePath.lastIndexOf(".") + 1);
                 try {
                     videoThumbnailIndexId = BitmapUtils.getVideoIdFromFilePath(mContext.get(), fileUri);
                 } catch (SecurityException se) {
@@ -924,8 +923,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 }
                 thumbnail = overlay(thumbnail, hover);
                 String orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-                String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
-                processFileUpload(fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
+                String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, filePath, compressQualityInt);
+                processFileUpload(fileName, filePath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
             }
         }
     }

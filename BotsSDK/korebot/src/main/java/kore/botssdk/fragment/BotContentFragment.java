@@ -338,8 +338,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     public int getAdapterCount() {
-        if (botsChatAdapter != null)
-            return botsChatAdapter.getItemCount();
+        if (botsChatAdapter != null) return botsChatAdapter.getItemCount();
         return 0;
     }
 
@@ -407,6 +406,15 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         }
     }
 
+    @Override
+    public void onChatHistory(ArrayList<BaseBotMessage> list, int offset, boolean scrollToBottom) {
+
+    }
+
+    @Override
+    public void onReconnectionChatHistory(ArrayList<BaseBotMessage> list, int offset, boolean isReconnectionHistory) {
+
+    }
 
     private Observable<ServerBotMsgResponse> getHistoryRequest(final int _offset, final int limit) {
         return Observable.create(new ObservableOnSubscribe<ServerBotMsgResponse>() {
@@ -596,8 +604,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, format, 0));
             CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
 
-            ArrayList<CalendarConstraints.DateValidator> listValidators =
-                    new ArrayList<CalendarConstraints.DateValidator>();
+            ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
             listValidators.add(dateValidatorMin);
             listValidators.add(dateValidatorMax);
 
@@ -609,8 +616,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         } else if (!StringUtils.isNullOrEmpty(startDate)) {
             CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, format, 0));
 
-            ArrayList<CalendarConstraints.DateValidator> listValidators =
-                    new ArrayList<CalendarConstraints.DateValidator>();
+            ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
             listValidators.add(dateValidatorMin);
 
             CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
@@ -621,8 +627,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         } else if (!StringUtils.isNullOrEmpty(date)) {
             CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
 
-            ArrayList<CalendarConstraints.DateValidator> listValidators =
-                    new ArrayList<CalendarConstraints.DateValidator>();
+            ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
             listValidators.add(dateValidatorMax);
 
             CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
@@ -757,10 +762,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     if (re != null) {
                         list = re.getBotMessages();
                         offset = re.getOriginalSize();
-                    }
-
-                    if (list != null && list.size() > 0) {
-                        addMessagesToBotChatAdapter(list, true);
                     }
 
                     if (list != null && list.size() > 0) {
