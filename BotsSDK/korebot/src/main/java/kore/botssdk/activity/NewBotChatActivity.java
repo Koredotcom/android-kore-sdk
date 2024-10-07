@@ -3,6 +3,7 @@ package kore.botssdk.activity;
 import static kore.botssdk.utils.ToastUtils.showToast;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,16 +21,21 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import kore.botssdk.R;
+import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fileupload.core.KoreWorker;
@@ -64,6 +70,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.ClosingService;
 import kore.botssdk.utils.LogUtils;
+import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewmodels.chat.BotChatViewModel;
 import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
@@ -114,6 +121,15 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
         findViews();
         getBundleInfo();
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (NetworkUtility.isNetworkConnectionAvailable(NewBotChatActivity.this)) {
+                    showCloseAlert();
+                }
+            }
+        });
 
         mViewModel.connectToBot(sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
 
@@ -508,9 +524,86 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         super.onDestroy();
     }
 
+    @Override
+    protected void onPause() {
+        BotApplication.activityPaused();
+        super.onPause();
+    }
+
+    void showCloseAlert() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE: {
+                        if (sharedPreferences != null) {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                            editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+                            editor.apply();
+                            BotSocketConnectionManager.killInstance();
+                            finish();
+                        }
+                    }
+                    break;
+                    case DialogInterface.BUTTON_NEGATIVE: {
+                        if (sharedPreferences != null) {
+                            if (botClient != null && isAgentTransfer)
+                                botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                            editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                            editor.apply();
+                            BotSocketConnectionManager.killInstance();
+                            finish();
+                        }
+                    }
+                    break;
+                    case DialogInterface.BUTTON_NEUTRAL:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewBotChatActivity.this);
+        builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
+    }
+
     public void sendImage(String fP, String fN, String fPT) {
         mViewModel.sendImage(fP, fN, fPT, jwt);
     }
 
+    @Override
+    protected void onStop() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+            List<ActivityManager.RunningTaskInfo> taskList = activityManager.getRunningTasks(10);
 
+            if (!taskList.isEmpty()) {
+                ActivityManager.RunningTaskInfo runningTaskInfo = taskList.get(0);
+                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains(getApplicationContext().getPackageName())) {
+                    if (botClient != null) {
+                        botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+                        SharedPreferences.Editor prefsEditor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                        String jsonObject = new Gson().toJson("");
+                        prefsEditor.putString(BotResponse.AGENT_INFO_KEY, jsonObject);
+                        prefsEditor.apply();
+                    }
+                }
+            } else {
+                if (botClient != null) {
+                    botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+                    SharedPreferences.Editor prefsEditor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                    String jsonObject = new Gson().toJson("");
+                    prefsEditor.putString(BotResponse.AGENT_INFO_KEY, jsonObject);
+                    prefsEditor.apply();
+                }
+            }
+        }
+        super.onStop();
+    }
 }
