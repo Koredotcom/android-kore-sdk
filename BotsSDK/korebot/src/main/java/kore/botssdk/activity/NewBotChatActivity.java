@@ -49,13 +49,10 @@ import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.net.BrandingRestBuilder;
@@ -102,6 +99,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
                 botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
             }
 
+            LogUtils.e("onDestroyReceiver", "onDestroyReceiver called");
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(BundleConstants.IS_RECONNECT, false);
             editor.putInt(BotResponse.HISTORY_COUNT, 0);
@@ -438,43 +436,8 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     }
 
     @Override
-    public void launchActivityWithBundle(String type, Bundle payload) {
-
-    }
-
-    @Override
-    public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollUpNeeded) {
-        LogUtils.e("Message", message);
-    }
-
-    @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
         composeFooterFragment.setComposeText(text);
-    }
-
-    @Override
-    public void showMentionNarratorContainer(boolean show, String naText, String context, String handFocus, boolean isEnd, boolean showOverlay, String templateType) {
-
-    }
-
-    @Override
-    public void openFullView(String templateType, String data, CalEventsTemplateModel.Duration duration, int position) {
-
-    }
-
-    @Override
-    public void updateActionbar(boolean selected, String templateType, ArrayList<BotButtonModel> buttonModels) {
-
-    }
-
-    @Override
-    public void lauchMeetingNotesAction(Context context, String mid, String eid) {
-
-    }
-
-    @Override
-    public void showAfterOnboard(boolean isDiscardClicked) {
-
     }
 
     @Override
@@ -483,8 +446,8 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     }
 
     @Override
-    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
-
+    public void sendImage(String fP, String fN, String fPT) {
+        mViewModel.sendImage(fP, fN, fPT);
     }
 
     @Override
@@ -522,6 +485,19 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (botClient != null) botClient.disconnect();
         KoreEventCenter.unregister(this);
         super.onDestroy();
+    }
+
+    @Override
+    protected void onResume() {
+        BotApplication.activityResumed();
+
+        if (!SDKConfiguration.Client.isWebHook) {
+            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
+            updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
+        }
+
+        mViewModel.sendReadReceipts();
+        super.onResume();
     }
 
     @Override
@@ -571,9 +547,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
     }
 
-    public void sendImage(String fP, String fN, String fPT) {
-        mViewModel.sendImage(fP, fN, fPT, jwt);
-    }
 
     @Override
     protected void onStop() {
@@ -583,24 +556,17 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
             if (!taskList.isEmpty()) {
                 ActivityManager.RunningTaskInfo runningTaskInfo = taskList.get(0);
-                if (runningTaskInfo.topActivity != null && !runningTaskInfo.topActivity.getClassName().contains(getApplicationContext().getPackageName())) {
+                if (runningTaskInfo.topActivity != null && (!runningTaskInfo.topActivity.getClassName().contains(getApplicationContext().getPackageName()) && !runningTaskInfo.topActivity.getClassName().contains("kore.botssdk"))) {
                     if (botClient != null) {
                         botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
                         SharedPreferences.Editor prefsEditor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
                         String jsonObject = new Gson().toJson("");
                         prefsEditor.putString(BotResponse.AGENT_INFO_KEY, jsonObject);
+                        prefsEditor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                        prefsEditor.putInt(BotResponse.HISTORY_COUNT, 0);
                         prefsEditor.apply();
                     }
-                }
-            } else {
-                if (botClient != null) {
-                    botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-
-                    SharedPreferences.Editor prefsEditor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-                    String jsonObject = new Gson().toJson("");
-                    prefsEditor.putString(BotResponse.AGENT_INFO_KEY, jsonObject);
-                    prefsEditor.apply();
                 }
             }
         }

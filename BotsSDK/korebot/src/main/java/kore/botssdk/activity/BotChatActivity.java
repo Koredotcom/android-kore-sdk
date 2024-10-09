@@ -92,11 +92,9 @@ import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.BrandingV3Model;
-import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
 import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadHeaderModel;
@@ -431,23 +429,13 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void lauchMeetingNotesAction(Context context, String mid, String eid) {
-
-    }
-
-    @Override
-    public void showAfterOnboard(boolean isdiscard) {
-
-    }
-
-    @Override
     public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
 
     }
 
     @Override
-    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
-
+    public void sendImage(String fP, String fN, String fPT) {
+        new SaveCapturedImageTask(fP, fN, fPT).executeAsync();
     }
 
     @Override
@@ -533,30 +521,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void launchActivityWithBundle(String type, Bundle payload) {
-
-    }
-
-    @Override
-    public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollupNeeded) {
-        LogUtils.e("Message", message);
-    }
-
-    @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
         composeFooterFragment.setComposeText(text);
     }
-
-    @Override
-    public void showMentionNarratorContainer(boolean show, String natxt, String cotext, String res, boolean isEnd, boolean showOverlay, String templateType) {
-
-    }
-
-    @Override
-    public void openFullView(String templateType, String data, CalEventsTemplateModel.Duration duration, int position) {
-
-    }
-
 
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
         this.botContentFragmentUpdate = botContentFragmentUpdate;
@@ -1042,10 +1009,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         if (nw == null) return false;
         NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
         return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
-    }
-
-    public void sendImage(String fP, String fN, String fPT) {
-        new SaveCapturedImageTask(fP, fN, fPT).executeAsync();
     }
 
     protected class SaveCapturedImageTask extends AsyncTaskExecutor<String> {

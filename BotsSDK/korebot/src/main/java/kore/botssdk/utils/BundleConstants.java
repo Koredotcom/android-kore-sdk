@@ -19,7 +19,6 @@ public class BundleConstants {
     public static final String BUTTON_TYPE_WEB_URL = "web_url";
     public static final String BUTTON_TYPE_URL = "url";
     public static final String BUTTON_TYPE_CONFIRM = "Confirm";
-    public static final String BUTTON_TYPE_HELP_RESOLVE = "help_resource";
     public static final String BUTTON_TYPE_USER_INTENT = "USERINTENT";
     public static final String ICON = "icon";
     public static final String BUTTON = "button";

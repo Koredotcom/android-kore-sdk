@@ -5,7 +5,6 @@ import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.GROUP_KEY_NOTIFICATIONS;
 import static kore.botssdk.utils.ToastUtils.showToast;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -20,10 +19,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.text.TextUtils;
 
 import androidx.core.app.NotificationCompat;
 
@@ -48,8 +43,6 @@ import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.events.SocketDataTransferModel;
-import kore.botssdk.fileupload.core.KoreWorker;
-import kore.botssdk.fileupload.core.UploadBulkFile;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -64,8 +57,6 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
-import kore.botssdk.models.KoreComponentModel;
-import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
@@ -172,10 +163,18 @@ public class BotChatViewModel extends BaseViewModel<BotChatViewListener> {
         }
     };
 
+    public void sendReadReceipts()
+    {
+        //Added newly for send receipts
+        if (botClient != null && arrMessageList.size() > 0 && isAgentTransfer) {
+            botClient.sendReceipts(BundleConstants.MESSAGE_READ, arrMessageList.get((arrMessageList.size() - 1)));
+            arrMessageList = new ArrayList<>();
+        }
+    }
+
     /**
      * payload processing
      */
-
     public void processPayload(String payload, BotResponse botLocalResponse) {
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
         try {
@@ -433,23 +432,21 @@ public class BotChatViewModel extends BaseViewModel<BotChatViewListener> {
         webHookRepository.getWebHookMeta(jwt);
     }
 
-    public void sendImage(String filePath, String fileName, String filePathThumbnail, String jwt)
+    public void sendImage(String filePath, String fileName, String filePathThumbnail)
     {
-        new SaveCapturedImageTask(filePath, fileName, filePathThumbnail, jwt).executeAsync();
+        new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).executeAsync();
     }
     protected class SaveCapturedImageTask extends AsyncTaskExecutor<String> {
         private final String filePath;
         private final String fileName;
-        private final String jwt;
         private final String filePathThumbnail;
         private String orientation;
         private String extn = null;
 
-        public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail, String jwt) {
+        public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
             this.filePath = filePath;
             this.fileName = fileName;
             this.filePathThumbnail = filePathThumbnail;
-            this.jwt = jwt;
         }
 
         @Override

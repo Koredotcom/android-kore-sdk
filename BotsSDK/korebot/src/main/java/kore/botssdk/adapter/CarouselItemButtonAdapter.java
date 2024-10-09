@@ -56,10 +56,6 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
                     String buttonPayload = carouselButtonModel.getPayload();
                     String buttonTitle = carouselButtonModel.getTitle();
                     composeFooterInterface.onSendClick(buttonTitle, buttonPayload, false);
-                } else if (BundleConstants.BUTTON_TYPE_HELP_RESOLVE.equalsIgnoreCase(carouselButtonModel.getType())) {
-                    Bundle extras = new Bundle();
-                    extras.putString(BundleConstants.RESOURCE_ID, carouselButtonModel.getId());
-                    composeFooterInterface.launchActivityWithBundle(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL, extras);
                 } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(carouselButtonModel.getType())) {
                     String buttonPayload = carouselButtonModel.getPayload();
                     composeFooterInterface.onSendClick(buttonPayload, buttonPayload, false);

@@ -78,7 +78,6 @@ import java.util.Objects;
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.KaCaptureImageActivity;
-import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.adapter.AttachmentOptionsAdapter;
 import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.bot.BotClient;
@@ -670,7 +669,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     String filePath = result.getData().getStringExtra("filePath");
                     String fileName = result.getData().getStringExtra("fileName");
                     String filePathThumbnail = result.getData().getStringExtra(THUMBNAIL_FILE_PATH);
-                    ((NewBotChatActivity) requireActivity()).sendImage(filePath, fileName, filePathThumbnail);
+                    composeFooterInterface.sendImage(filePath, fileName, filePathThumbnail);
                 }
             });
 

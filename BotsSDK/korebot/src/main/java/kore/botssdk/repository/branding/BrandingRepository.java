@@ -163,6 +163,7 @@ public class BrandingRepository {
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                onEvent(getBrandingDataFromTxt());
             }
         });
 
