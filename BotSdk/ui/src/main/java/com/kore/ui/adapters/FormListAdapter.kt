@@ -35,12 +35,12 @@ class FormListAdapter(
 
         if (form[BotResponseConstants.FORM_FIELD_BUTTON] != null) {
             val fieldButton = form[BotResponseConstants.FORM_FIELD_BUTTON] as Map<*, *>
-            holder.btfieldButton.isVisible = true
-            holder.btfieldButton.text = fieldButton[BotResponseConstants.KEY_TITLE] as String
+            holder.btnFieldButton.isVisible = true
+            holder.btnFieldButton.text = fieldButton[BotResponseConstants.KEY_TITLE] as String
             holder.edtFormInput.isEnabled = isLastItem
             holder.edtFormInput.isFocusable = isLastItem
             holder.edtFormInput.isClickable = isLastItem
-            holder.btfieldButton.setOnClickListener {
+            holder.btnFieldButton.setOnClickListener {
                 if (isLastItem) actionEvent(
                     BotChatEvent.SendMessage(
                         getDotMessage(holder.edtFormInput.text.toString()),
@@ -60,14 +60,8 @@ class FormListAdapter(
     }
 
     class FormHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var btfieldButton: TextView
-        var tvFormFieldTitle: TextView
-        var edtFormInput: EditText
-
-        init {
-            tvFormFieldTitle = view.findViewById(R.id.tvFormFieldTitle)
-            btfieldButton = view.findViewById(R.id.btFieldButton)
-            edtFormInput = view.findViewById(R.id.edtFormInput)
-        }
+        var btnFieldButton: TextView = view.findViewById(R.id.btFieldButton)
+        var tvFormFieldTitle: TextView = view.findViewById(R.id.tvFormFieldTitle)
+        var edtFormInput: EditText = view.findViewById(R.id.edtFormInput)
     }
 }

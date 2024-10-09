@@ -14,6 +14,7 @@ import com.kore.model.BotRequest
 import com.kore.model.BotResponse
 import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.COLOR
 import com.kore.model.constants.BotResponseConstants.COMPONENT_TYPE_AUDIO
 import com.kore.model.constants.BotResponseConstants.DISPLAY_LIMIT
 import com.kore.model.constants.BotResponseConstants.ELEMENTS
@@ -74,10 +75,10 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
     private var actionEvent: (event: UserActionEvent) -> Unit = {}
 
     private fun createTextTemplate(
-        msgId: String, isRequest: Boolean, msg: String?, iconUrl: String?, isLastItem: Boolean, msgTime: String = ""
+        msgId: String, isRequest: Boolean, msg: String?, iconUrl: String?, isLastItem: Boolean, msgTime: String = "", errorTextColor: String = ""
     ): TextTemplateRow {
         val rowType = BotChatRowType.getRowType(if (isRequest) ROW_REQUEST_MSG_PROVIDER else ROW_RESPONSE_MSG_PROVIDER)
-        return TextTemplateRow(rowType, context, msgId, msg, isRequest, iconUrl, isLastItem, actionEvent, msgTime)
+        return TextTemplateRow(rowType, context, msgId, msg, isRequest, iconUrl, isLastItem, actionEvent, msgTime, errorTextColor)
     }
 
     fun setActionEvent(actionEvent: (event: UserActionEvent) -> Unit) {
@@ -151,9 +152,9 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                 rows = rows + createTextTemplate(msgId, false, body.text, iconUrl, isLastItem, msgTime)
                                 continue
                             }
-                            if (body.type.equals(BotResponseConstants.KEY_TEMPLATE)) {
-                                val innerMap = body.payload
-                                if (innerMap != null && innerMap.containsKey(BotResponseConstants.KEY_TEMPLATE_TYPE)) {
+                            val innerMap = body.payload
+                            if (body.type.equals(BotResponseConstants.KEY_TEMPLATE) && innerMap != null) {
+                                if (innerMap.containsKey(BotResponseConstants.KEY_TEMPLATE_TYPE)) {
                                     val textMessage = if (innerMap.contains(KEY_TEXT)) {
                                         innerMap[KEY_TEXT]
                                     } else if (innerMap.containsKey(HEADING)) {
@@ -392,9 +393,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         }
                                     }
                                 } else {
-                                    innerMap?.let {
-                                        rows = rows + createTextTemplate(msgId, false, it[KEY_TEXT].toString(), iconUrl, isLastItem)
-                                    }
+                                    rows = rows + createTextTemplate(msgId, false, innerMap[KEY_TEXT].toString(), iconUrl, isLastItem)
                                 }
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_IMAGE)) {
                                 body.payload?.let {
@@ -406,8 +405,13 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                 } else if (body.payload?.get(BotResponseConstants.VIDEO_URL) != null) {
                                     rows = rows + VideoTemplateRow(baseBotMsg.messageId, iconUrl, body.payload!!, actionEvent)
                                 }
+                            } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_ERROR)) {
+                                if (innerMap != null && innerMap[KEY_TEXT] != null) {
+                                    rows = rows + createTextTemplate(
+                                        baseBotMsg.messageId, false, innerMap[KEY_TEXT].toString(), iconUrl, isLastItem, msgTime, innerMap[COLOR].toString()
+                                    )
+                                }
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_TEXT)) {
-                                val innerMap = body.payload
                                 if (innerMap != null && innerMap[KEY_TEXT] != null) {
                                     rows = rows + createTextTemplate(
                                         baseBotMsg.messageId, false, innerMap[KEY_TEXT].toString(), iconUrl, isLastItem, msgTime

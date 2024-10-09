@@ -75,18 +75,14 @@ class DropDownTemplateRow(
         submit.setOnClickListener {
             if (!isLastItem || selectedPosition <= 0) return@setOnClickListener
             if (elements[selectedPosition - 1][KEY_TITLE]?.equals(placeHolder) == false) {
-                actionEvent(BotChatEvent.OnDropDownItemClicked(elements[selectedPosition - 1][KEY_TITLE]!!))
+                actionEvent(BotChatEvent.SendMessage(elements[selectedPosition - 1][KEY_TITLE]!!))
             }
         }
     }
 
     inner class SpinnerAdapter(context: Context) :
         BaseAdapter() {
-        private var inflater: LayoutInflater
-
-        init {
-            inflater = LayoutInflater.from(context)
-        }
+        private var inflater: LayoutInflater = LayoutInflater.from(context)
 
         override fun getCount(): Int {
             return elements.size + 1

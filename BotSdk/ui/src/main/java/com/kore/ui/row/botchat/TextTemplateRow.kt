@@ -37,7 +37,8 @@ class TextTemplateRow(
     private val iconUrl: String?,
     private val isLastItem: Boolean = false,
     private val actionEvent: (event: UserActionEvent) -> Unit,
-    private val timeStamp: String
+    private val timeStamp: String,
+    private val errorTextColor: String = ""
 ) : SimpleListRow() {
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
@@ -97,14 +98,13 @@ class TextTemplateRow(
             val sharedPrefs = PreferenceRepositoryImpl()
             val bubbleStyle = sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_STYLE, "EDGE")
             message.text = strBuilder
-            val textColor = ColorStateList.valueOf(
-                if (!isBotRequest) Color.parseColor(
+            val textColor = if (!isBotRequest) {
+                errorTextColor.ifEmpty {
                     sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, "#000000")
-                ) else Color.parseColor(
-                    sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")
-                )
-            )
-            message.setTextColor(textColor)
+                }
+            } else
+                sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")
+            message.setTextColor(ColorStateList.valueOf(Color.parseColor(textColor)))
             message.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
                     root.context.resources,

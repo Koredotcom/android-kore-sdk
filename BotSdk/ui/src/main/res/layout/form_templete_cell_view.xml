@@ -43,10 +43,12 @@
         android:layout_below="@+id/edtFormInput"
         android:layout_marginTop="@dimen/dimen_12dp"
         android:layout_marginBottom="@dimen/dimen_12dp"
-        android:background="@drawable/form_button_bg"
+        android:background="@drawable/button_drawable"
         android:gravity="center"
         android:padding="@dimen/dimen_10dp"
         android:text="@string/ok"
+        android:textAllCaps="true"
+        android:textColor="@color/white"
         android:visibility="visible" />
 
 </RelativeLayout>
