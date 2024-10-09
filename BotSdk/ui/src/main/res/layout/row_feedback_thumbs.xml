@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/thumbs_feedback_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="6dp"
+    android:paddingVertical="8dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivFeedbackThumbs"
+        android:layout_width="@dimen/dimen_25dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:src="@drawable/thumbs_up" />
+
+    <com.kore.ui.textview.CustomTextViewBold
+        android:id="@+id/tvFeedbackThumbs"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="bold"
+        tools:text="@string/title" />
+</androidx.appcompat.widget.LinearLayoutCompat>

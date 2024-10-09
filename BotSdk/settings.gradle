@@ -1,0 +1,23 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+rootProject.name = "BotSdk"
+include ':app'
+include ':botclient'
+include ':ui'
+include ':widgets'
+project(':botclient').projectDir = new File(rootDir, 'botclient/')
+project(':ui').projectDir = new File(rootDir, 'ui/')
+project(':widgets').projectDir = new File(rootDir, 'widgets/')

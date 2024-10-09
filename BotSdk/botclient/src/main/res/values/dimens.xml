@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="toast_y_offset_default">64dip</dimen>
+    <integer name="toast_gravity_default">0x00000051</integer>
+</resources>

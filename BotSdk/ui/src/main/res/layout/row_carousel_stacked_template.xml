@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kore.ui.views.RecyclerCoverFlow xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rcfCarousel"
+    android:layout_width="match_parent"
+    android:layout_height="250dp"
+    android:clipChildren="false" />

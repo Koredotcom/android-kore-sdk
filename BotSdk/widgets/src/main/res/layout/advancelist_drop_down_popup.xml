@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rectangle_bg"
+    android:orientation="vertical"
+    android:padding="7dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivDropDownCLose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/cancel_widget" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvDropDown"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</androidx.appcompat.widget.LinearLayoutCompat>

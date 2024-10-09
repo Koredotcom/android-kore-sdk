@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/chat_contact_textview"
+                style="@style/LoginTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/chat_contact" />
+
+            <com.kore.ui.textview.CustomEditText
+                android:id="@+id/chat_contact_edittext"
+                style="@style/LoginEditTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp" />
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/chat_message_textview"
+                style="@style/LoginTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/chat_message" />
+
+            <com.kore.ui.textview.CustomEditText
+                android:id="@+id/chat_message_edittext"
+                style="@style/LoginEditTextStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:background="@color/ac"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical" />
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/chat_last_message_contact_title_textview"
+                style="@style/LoginTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/chat_last_message_contact" />
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/chat_last_message_contact_textview"
+                style="@style/LoginTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textColor="@android:color/holo_red_light" />
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/chat_last_message_title_textview"
+                style="@style/LoginTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/chat_last_message_text" />
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/chat_last_message_textview"
+                style="@style/LoginTextViewStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:textColor="@android:color/holo_red_light" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/chat_send_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_weight="0"
+            android:text="@string/chat_send" />
+    </LinearLayout>
+</layout>

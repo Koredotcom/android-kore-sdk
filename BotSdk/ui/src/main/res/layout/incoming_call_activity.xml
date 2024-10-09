@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/incoming_call_layout_ac_webrtc_video"
+            layout="@layout/ac_webrtc_video"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+        <LinearLayout
+            android:id="@+id/incoming_call_layout_audio_call"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="150dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/incoming_call_textview_call_state"
+                style="@style/IncomingCallTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/incoming_call_textview_call_state" />
+
+            <ImageView
+                android:id="@+id/incoming_call_imageView_contact_image"
+                android:layout_width="220sp"
+                android:layout_height="220sp"
+                app:srcCompat="@mipmap/call_image_default_contact" />
+
+            <TextView
+                android:id="@+id/incoming_call_textview_contact_name"
+                style="@style/IncomingCallTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/name" />
+
+            <TextView
+                android:id="@+id/incoming_call_textview_contact_number"
+                style="@style/IncomingCallTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/number" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/incoming_call_layout_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.kore.ui.audiocodes.webrtcclient.structure.ImageViewWithText
+                android:id="@+id/incoming_call_button_answer_video"
+                style="@style/IncomingCallButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                app:Text="@string/incoming_call_button_answer_video_text" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <com.kore.ui.audiocodes.webrtcclient.structure.ImageViewWithText
+                    android:id="@+id/incoming_call_button_answer"
+                    style="@style/IncomingCallButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:Text="@string/incoming_call_button_answer_text" />
+
+                <com.kore.ui.audiocodes.webrtcclient.structure.ImageViewWithText
+                    android:id="@+id/incoming_call_button_decline"
+                    style="@style/IncomingCallButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    app:Text="@string/incoming_call_button_decline_text" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

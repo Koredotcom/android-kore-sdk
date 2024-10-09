@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:paddingStart="@dimen/dimen_5dp"
+    android:paddingTop="@dimen/dimen_5dp"
+    android:paddingEnd="@dimen/dimen_5dp">
+
+    <ImageView
+        android:id="@+id/ivBotArrowBack"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_margin="@dimen/dimen_5dp"
+        android:background="@drawable/right_arrow_iconn"
+        android:contentDescription="@string/start_conversation"
+        android:rotation="180"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/llBotAvatar"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:background="@drawable/start_icon_bg"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivBotAvatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/smart_bot_icon"
+            android:contentDescription="@string/hello" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/llBotAvatar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginTop="@dimen/dimen_5dp">
+
+        <com.kore.ui.textview.CustomTextViewBold
+            android:id="@+id/tvBotTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="@string/hello"
+            android:textColor="@color/kora_grey"
+            android:textSize="@dimen/text_size_sub_header"
+            android:textStyle="bold" />
+
+        <com.kore.ui.textview.CustomTextViewBold
+            android:id="@+id/tvBotDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvBotTitle"
+            android:layout_centerHorizontal="true"
+            android:text="@string/app_name"
+            android:textColor="@color/kora_grey"
+            android:textSize="@dimen/text_size_normal"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/ivBotHelp"
+        android:layout_width="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:layout_margin="@dimen/dimen_5dp"
+        android:layout_toStartOf="@+id/ivBotSupport"
+        android:background="@drawable/help"
+        android:contentDescription="@string/start_conversation" />
+
+    <ImageView
+        android:id="@+id/ivBotSupport"
+        android:layout_width="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:layout_marginStart="@dimen/dimen_5dp"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:layout_toStartOf="@+id/ivBotClose"
+        android:background="@drawable/support"
+        android:contentDescription="@string/start_conversation" />
+
+    <ImageView
+        android:id="@+id/ivBotClose"
+        android:layout_width="@dimen/dimen_20dp"
+        android:layout_height="@dimen/dimen_20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/dimen_5dp"
+        android:background="@drawable/ic_close"
+        android:contentDescription="@string/start_conversation" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/rlTitle"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:background="@color/color_d8d8d8"
+        android:contentDescription="@string/start_conversation" />
+
+</RelativeLayout>

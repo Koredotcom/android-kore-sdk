@@ -1,0 +1,5 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">Bot SDK</string>
+    <string name="overridden_template">Overridden Template</string>
+    <string name="new_template">New Template</string>
+</resources>

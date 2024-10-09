@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/nav_host_fragment"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+
+        <ScrollView
+            android:id="@+id/svWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/nav_host_fragment"
+            android:layout_above="@+id/llBottomPower"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clStarter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:layout_marginEnd="@dimen/dimen_10dp"
+                    android:layout_marginBottom="@dimen/dimen_10dp"
+                    android:background="@drawable/table_list_bg"
+                    android:padding="@dimen/dimen_10dp"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:id="@+id/llStarterLogo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/start_icon_bg"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/ivStarterLogo"
+                            android:layout_width="@dimen/dimen_16dp"
+                            android:layout_height="@dimen/dimen_16dp"
+                            android:contentDescription="@string/hello"
+                            android:src="@drawable/smart_bot_icon" />
+
+                    </LinearLayout>
+
+                    <com.kore.ui.textview.CustomTextView
+                        android:id="@+id/tvStarterTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:text="@string/start_conversation"
+                        android:textColor="@color/kora_grey"
+                        android:textSize="@dimen/text_size_normal"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/llStarterLogo"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.kore.ui.textview.CustomTextView
+                        android:id="@+id/tvStarterDesc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:text="@string/tap_to_speak"
+                        android:textColor="@color/gray_modern"
+                        android:textSize="@dimen/text_size_small"
+                        android:visibility="gone"
+                        app:layout_constraintStart_toEndOf="@+id/llStarterLogo"
+                        app:layout_constraintTop_toBottomOf="@+id/tvStarterTitle" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvStarterButtons"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        app:layout_constraintStart_toStartOf="@+id/llStarterLogo"
+                        app:layout_constraintTop_toBottomOf="@+id/llStarterLogo" />
+
+                    <LinearLayout
+                        android:id="@+id/llStartConversation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:background="@drawable/welcome_start_conv_bg"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="@+id/rvStarterButtons"
+                        app:layout_constraintTop_toBottomOf="@+id/rvStarterButtons">
+
+                        <com.kore.ui.textview.CustomTextView
+                            android:id="@+id/tvStartConversation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/start_conversation"
+                            android:textColor="@color/white" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/right_arrow_iconn"
+                            android:backgroundTint="@color/white"
+                            android:contentDescription="@string/start_conversation" />
+
+
+                    </LinearLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/clStarter"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/rlLinks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:background="@drawable/table_list_bg"
+                        android:padding="@dimen/dimen_10dp"
+                        android:visibility="gone">
+
+                        <com.kore.ui.textview.CustomTextView
+                            android:id="@+id/tvLinksTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/links"
+                            android:textColor="@color/kora_grey"
+                            android:textSize="@dimen/text_size_header" />
+
+                        <com.kore.ui.views.HeightAdjustableViewPager
+                            android:id="@+id/hvpLinks"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvLinksTitle"
+                            android:layout_marginBottom="@dimen/dimen_10dp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:paddingEnd="@dimen/dimen_20dp"
+                            android:paddingStart="@dimen/dimen_0"
+                            android:visibility="gone" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvLinks"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/tvLinksTitle"
+                            android:layout_marginBottom="@dimen/dimen_10dp" />
+
+                    </RelativeLayout>
+
+                    <com.kore.ui.views.AutoExpandListView
+                        android:id="@+id/lvPromotions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/dimen_10dp"
+                        android:layout_marginTop="@dimen/dimen_10dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
+                        android:layout_marginBottom="@dimen/dimen_10dp"
+                        android:divider="@color/white"
+                        android:dividerHeight="@dimen/dimen_5dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/llBottomPower"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/bgBlueSignup"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_3dp">
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/tvPowered"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/poweredby"
+                android:textColor="@color/greyHead" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:contentDescription="@string/textview"
+                android:src="@drawable/kore_ai_logo" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rlHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/dimen_2dp"
+    android:paddingBottom="@dimen/dimen_5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/llInnerHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/welcome_header_bg"
+        android:paddingStart="@dimen/dimen_15dp"
+        android:paddingTop="@dimen/dimen_15dp"
+        android:paddingEnd="@dimen/dimen_15dp"
+        android:paddingBottom="@dimen/dimen_25dp"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <TextView
+            android:id="@+id/tvWelcomeHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:text="@string/hello"
+            android:textColor="@color/white"
+            android:textSize="@dimen/welcome_header_size"
+            app:layout_constraintBottom_toTopOf="@+id/tvWelcomeTitle"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:layout_width="@dimen/welcome_header_size"
+            android:layout_height="@dimen/welcome_header_size"
+            android:layout_marginStart="@dimen/dimen_3dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/emoji"
+            app:layout_constraintStart_toEndOf="@id/tvWelcomeHeader"
+            app:layout_constraintTop_toTopOf="@+id/tvWelcomeHeader" />
+
+        <TextView
+            android:id="@+id/tvWelcomeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_to_kore_ai_bot_support"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_header"
+            app:layout_constraintStart_toStartOf="@+id/tvWelcomeHeader"
+            app:layout_constraintTop_toBottomOf="@+id/tvWelcomeHeader" />
+
+        <TextView
+            android:id="@+id/tvWelcomeDescription"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_15dp"
+            android:text="@string/our_community_is_ready_to_help_you_to_join_our_best_platform"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_normal"
+            app:layout_constraintStart_toStartOf="@+id/tvWelcomeTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvWelcomeTitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/ivWelcomeLogo"
+        android:layout_width="@dimen/welcome_icon_size"
+        android:layout_height="@dimen/welcome_icon_size"
+        android:layout_below="@+id/llInnerHeader"
+        android:layout_marginStart="@dimen/dimen_15dp"
+        android:layout_marginTop="-20dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/scb_logo"
+        app:layout_constraintStart_toStartOf="@+id/llInnerHeader"
+        app:layout_constraintTop_toBottomOf="@+id/llInnerHeader"
+        app:layout_goneMarginTop="@dimen/dimen_15dp" />
+
+</RelativeLayout>

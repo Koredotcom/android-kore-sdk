@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/quick_reply_item_root"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="0dp"
+    android:paddingTop="10dp"
+    android:paddingEnd="10dp">
+
+    <RelativeLayout
+        android:id="@+id/quick_reply_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/table_list_bg"
+        android:paddingStart="@dimen/dimen_16dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingEnd="@dimen/dimen_16dp"
+        android:paddingBottom="@dimen/dimen_10dp"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/quick_reply_item_image"
+            android:layout_width="@dimen/quick_reply_image_width"
+            android:layout_height="@dimen/quick_reply_image_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="5dp"
+            android:background="@drawable/round_rect_image"
+            android:contentDescription="@string/app_name"
+            android:visibility="gone" />
+
+        <com.kore.ui.textview.CustomTextViewSemiBold
+            android:id="@+id/quick_reply_item_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/quick_reply_item_image"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="@string/hello"
+            android:textColor="@color/neutral"
+            android:textSize="@dimen/text_size_normal" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/imageviewwithtext_imageview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_call_number_bg" />
+
+    <TextView
+        android:id="@+id/imageviewwithtext_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageviewwithtext_imageview"
+        android:layout_alignTop="@+id/imageviewwithtext_imageview"
+        android:layout_alignEnd="@+id/imageviewwithtext_imageview"
+        android:layout_alignBottom="@+id/imageviewwithtext_imageview"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="12sp" />
+
+</RelativeLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/dimen_5dp"
+    android:paddingTop="@dimen/dimen_10dp"
+    android:paddingBottom="@dimen/dimen_10dp">
+
+    <com.kore.ui.textview.CustomTextView
+        android:id="@+id/tvTableColumnName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send" />
+
+    <com.kore.ui.textview.CustomTextView
+        android:id="@+id/tvTableValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTableColumnName"
+        android:text="@string/show_more"
+        android:textColor="@color/txtFontBlack" />
+
+</RelativeLayout>

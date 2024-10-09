@@ -1,0 +1,319 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name">KoreBotSDK</string>
+    <string name="error_config_bot">Please check the bot configuration!</string>
+    <string name="send">"Send"</string>
+    <string name="please_wait">"Please wait…"</string>
+    <string name="speak_now">"Speak now"</string>
+    <string name="no_network">"No network!"</string>
+    <string name="click_hear_to_enter_text">click hear to enter text</string>
+    <string name="tap_to_speak">Tap microphone to speak</string>
+    <string name="listening_tap_end">Listening.. Tap to end</string>
+    <string name="tap_to_send">Tap to send</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="speech_not_available">Speech recognition is not available on this device. Do you want to install Google app to have speech recognition?</string>
+    <string name="enable_google_voice_typing">Please enable Google Voice Typing to use speech recognition!</string>
+    <string name="label_to">To</string>
+    <string name="label_from">From</string>
+    <string name="label_cc">Cc</string>
+    <plurals name="attachment_count">
+        <item quantity="one">1 Attachment </item>
+        <item quantity="other">%d  Attachments</item>
+    </plurals>
+    <string name="default_header">Header %1$d</string>
+    <string name="confirm">Confirm</string>
+    <string name="conversation_end">Conversation ended at</string>
+    <string name="view_more">View more</string>
+    <string name="camera">&#128247;</string>
+    <string name="video">&#127909;</string>
+    <string name="attachment">&#128195;</string>
+    <!-- threads-->
+    <!-- teams-->
+
+    <string name="save">Save</string>
+    <string name="connect">Connect</string>
+    <string name="submit">Submit</string>
+    <string name="show_more">Show More</string>
+    <string name="about">About</string>
+    <string name="add_suggestions">Add Suggestions</string>
+    <string name="get_started">Get Started</string>
+    <string name="see_all_results">See all results</string>
+    <string name="notification_channel_id">3903</string>
+    <string name="more">More</string>
+    <string name="download">Download</string>
+    <string name="no_upcoming_meetings">No Upcoming Meetings</string>
+    <string name="no_files">No Files</string>
+    <string name="you">You</string>
+    <string name="view_less">View less</string>
+    <string name="message">Message…</string>
+    <string name="hello">Hello</string>
+    <string name="welcome_to_kore_ai_bot_support">Welcome to Kore.ai\nBot Support</string>
+    <string name="our_community_is_ready_to_help_you_to_join_our_best_platform">Our community is ready to help you to join our best platform</string>
+    <string name="start_conversation">Start Conversation</string>
+    <string name="links">Links</string>
+    <string name="tab1">Tab1</string>
+    <string name="tab2">Tab2</string>
+    <string name="ask_for_help">Ask for help</string>
+    <string name="hi">hi</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_all">Select All</string>
+    <string name="done">Done</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="type_here">Type here…</string>
+    <string name="title">title</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="button">Button</string>
+    <string name="my_video">My Video</string>
+    <string name="image_template_display">Image template display</string>
+    <string name="image_name">Image Name</string>
+    <string name="_00_00_00_00">00:00/00:00</string>
+    <string name="audio_more_options_for_download">audio more options for download</string>
+    <string name="audio_play_or_pause_icon">audio play or pause icon</string>
+    <string name="see_more">See More</string>
+    <string name="video_thumbnail">video thumbnail</string>
+    <string name="table_view_expand_icon">table view expand icon</string>
+    <string name="table_dialog_cancel">Table dialog cancel</string>
+    <string name="attachment_display">attachment display</string>
+    <string name="cancel_the_attachment">cancel the attachment</string>
+    <string name="file_size_limit_msg">File size should be 2 MB or lower</string>
+
+    <string-array name="attachments_strings">
+        <!-- <item>Take Photo</item>-->
+        <item>Upload Photo</item>
+        <!--<item>Take Video</item>-->
+        <item>Upload Video</item>
+        <item>Attach Document</item>
+    </string-array>
+
+    <!--debug settings-->
+    <string name="enable_debug_mode">0</string>
+    <string name="predefined_config_mode">0</string>
+    <string name="default_dialer_number" />
+
+    <string name="default_redirect_call_user" />
+
+    <string name="sip_account_user_name_default" />
+    <string name="sip_account_password_default" />
+    <string name="sip_account_display_name_default" />
+    <string name="sip_account_domain_default" />
+    <string name="sip_account_proxy_default" />
+    <string name="sip_account_port_default">5080</string>
+    <string name="sip_account_transport_default">UDP</string>
+
+
+    <string name="sip_default_chat_contact" />
+    <string name="sip_default_chat_message">test message</string>
+    <string name="sip_default_second_call" />
+    <string name="sip_default_transfer_call" />
+    <!--default settings HIDDEN,VERBOSE,DEBUG,INFO,WARN,ERROR,NONE -->
+    <string name="log_level_default">DEBUG</string>
+
+    <string name="oauth_enable">0</string>
+    <string name="oauth_url">https://webrtcoauth.audiocodes.com/auth/</string>
+    <string name="oauth_realm">demo</string>
+    <string name="oauth_client_id">WebRTCDemo</string>
+
+    //Audio codes
+    <string name="login_textview_username_text">User Name:</string>
+    <string name="login_textview_password_text">Password:</string>
+    <string name="login_textview_displayname_text">Display Name:</string>
+    <string name="login_textview_domain_text">Domain:</string>
+    <string name="login_textview_sipaddress_text">Sip Address:</string>
+    <string name="login_textview_port_text">Port:</string>
+    <string name="login_textview_transport_text">Transport Type:</string>
+    <string name="login_textview_turnserver_text">Turn Server:</string>
+    <string name="login_textview_stunserver_text">Stun Server:</string>
+    <string name="oauth_error">OAuth failed</string>
+    <string name="login_textview_oauth_error">Your login has expired, please login again</string>
+
+    <string name="login_checkbox_oauth_text">OAuth enable</string>
+    <string name="login_textview_oauth_url_text">OAuth url</string>
+    <string name="login_textview_oauth_realm_text">OAuth realm</string>
+    <string name="login_textview_oauth_clientid_text">OAuth client id</string>
+
+    <string name="login_checkbox_autologin_text">Autologin (false = click to call)</string>
+    <string name="login_checkbox_call_disconnect_text">Disconnect on broken call</string>
+    <string name="login_checkbox_push_text">Use push for incoming calls</string>
+    <string name="login_checkbox_video_hardware_text">Video hardware (H264)</string>
+
+    <string name="login_button_login_text">Login</string>
+    <string name="login_button_start_text">Start</string>
+    <string name="login_button_advanced_text">Advanced</string>
+
+    <string name="login_textview_second_call_text">Second call</string>
+    <string name="login_textview_transfer_call_text">Transfer call</string>
+
+    <!--notification-->
+    <string name="notification_text_prefix">Client is </string>
+    <string name="notification_text_connected">CONNECTED</string>
+    <string name="notification_text_disconnected">DISCONNECTED</string>
+    <string name="notification_text_in_call">In call</string>
+
+    <!--settings screen-->
+    <string name="settings_button_general">General</string>
+    <string name="settings_button_account">Account</string>
+    <string name="settings_button_call_stats">Call stats</string>
+
+    <!--permission denied-->
+    <string name="permission_denied_button_text">Some of the application\'s permissions have been rejected.\nThe application may not function properly until they are all granted.\nPlease either choose to manually change the permission or continue with the current state anyway.</string>
+    <string name="permission_denied_button_continue">Continue</string>
+    <string name="permission_denied_button_edit">Edit</string>
+
+    <!--settings screen-->
+    <string name="general_settings_textview_dtmf_type_text">DTMF type:</string>
+    <string name="general_settings_textview_log_level_type_text">Log level:</string>
+    <string name="general_settings_textview_auto_redirect_text">Auto redirect:</string>
+    <string name="general_settings_textview_redirect_call_text">Redirect call:</string>
+
+    <string name="general_settings_button_save_text">Save</string>
+    <string name="incoming_video_call">Incoming video call…</string>
+    <string name="incoming_audio_call">Incoming audio call…</string>
+
+    <!--account screen-->
+    <string name="account_textview_status_prefix">Status:</string>
+    <string name="account_textview_status_connected">CONNECTED</string>
+    <string name="account_textview_status_disconnected">DISCONNECTED</string>
+
+    <!--call stats screen-->
+    <string name="call_stats_textview_stats_title">Call Statistics</string>
+
+    <string name="call_stats_textview_packets_received_header">Packets received:</string>
+    <string name="call_stats_textview_bytes_received_header">Bytes received:</string>
+    <string name="call_stats_textview_packets_lost_header">Packets Lost:</string>
+    <string name="call_stats_textview_jitter_header">Jitter:</string>
+    <string name="call_stats_textview_fraction_lost_header">Fraction Lost:</string>
+    <string name="call_stats_textview_packets_sent_header">Packets Sent:</string>
+    <string name="call_stats_textview_bytes_sent_header">Bytes Sent:</string>
+
+    <!--incoming call screen-->
+    <string name="incoming_call_textview_call_state">Incoming call</string>
+    <string name="incoming_call_button_decline_text">Reject</string>
+    <string name="incoming_call_button_answer_text">Answer</string>
+    <string name="incoming_call_button_answer_video_text">Answer Video</string>
+    <string name="incoming_call_button_answer_video_notification_text">Video</string>
+
+    <!--call screen-->
+    <string name="call_textview_call_state">Call</string>
+    <string name="call_button_add_call">Add call</string>
+    <string name="call_button_audio_route">Toggle route</string>
+    <string name="call_button_mute">Mute</string>
+    <string name="call_button_switch_camera">camera</string>
+    <string name="call_button_dtmf">DTMF</string>
+    <string name="call_button_hold">Hold</string>
+    <string name="call_button_switch_call">Switch</string>
+    <string name="call_button_end_call">End</string>
+    <string name="session_null_error">Session is null</string>
+    <string name="no_remote_contact">Remote contact is not defined</string>
+
+    <!--Tabs-->
+    <string name="tabs_dialer_title">Dialer</string>
+    <string name="tabs_recents_title">Recents</string>
+    <string name="tabs_contacts_title">Contacts</string>
+    <string name="tabs_chat_title">Chat</string>
+    <string name="tabs_settings_title">Settings</string>
+
+    <!--tab dialer-->
+    <string name="dialer_button_call_text">Call</string>
+    <string name="dialer_button_video_call_text">Video Call</string>
+    <string name="no_registration">The client is currently not registered</string>
+
+    <!--tab recents-->
+    <string name="recent_menu_option_delete_all">Delete All</string>
+
+    <!--tab chat-->
+    <string name="chat_contact">Contact:</string>
+    <string name="chat_message">Message:</string>
+    <string name="chat_last_message_contact">from:</string>
+    <string name="chat_last_message_text">Message:</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_message_sent">Message sent</string>
+
+    <!--tablet info-->
+    <string name="tablet_info_status_name">Online Status:</string>
+    <string name="tablet_info_display_name">Display Name:</string>
+    <string name="tablet_info_user_name">User Name:</string>
+
+    <!--menu-->
+    <string name="menu_option_settings">Settings</string>
+    <string name="menu_option_exit">Exit</string>
+
+    <!--gen string-->
+    <string name="gen_today">Today</string>
+    <string name="gen_hours_short">hrs</string>
+    <string name="gen_minutes_short">mins</string>
+    <string name="gen_seconds_short">secs</string>
+    <string name="_1">1</string>
+    <string name="agent_name">Agent Name</string>
+    <string name="decline">Decline</string>
+    <string name="accept">Accept</string>
+    <string name="testing">Testing</string>
+    <string name="audio_more_options">audio more options</string>
+    <string name="audio_play_pause_icon">audio play pause icon</string>
+    <string name="name">Name</string>
+    <string name="number">number</string>
+    <string name="splash_icon">splash icon</string>
+    <string name="bot_icon">Bot icon</string>
+    <string name="default_click_time">12:00:AM</string>
+
+    <string name="what_can_be_improved">What can be Improved ?</string>
+
+    <string name="attachment_upload_photo">Upload Photo</string>
+    <string name="attachment_upload_video">Upload Video</string>
+    <string name="attachment_upload_document">Upload Document</string>
+    <string name="attachment_capture_photo">Capture Photo</string>
+    <string name="attachment_capture_video">Capture Video</string>
+
+    <string-array name="attachment_options">
+        <item>@string/attachment_capture_photo</item>
+        <item>@string/attachment_capture_video</item>
+        <item>@string/attachment_upload_photo</item>
+        <item>@string/attachment_upload_video</item>
+        <item>@string/attachment_upload_document</item>
+    </string-array>
+    <string name="attachment_size_more_msg">Attachment file size should not be more than 10MB!</string>
+    <string name="poweredby">Powered by</string>
+    <string name="select">Select</string>
+    <string name="icon_view_out">icon view out</string>
+    <string name="arrow_to_expand">arrow to expand</string>
+    <string name="more_dot">... More</string>
+    <string name="ok">Ok</string>
+    <string name="dash">-</string>
+    <string name="_12345678">12345678</string>
+    <string name="textview">TextView</string>
+    <string name="colon">:</string>
+    <string name="erase_all">ERASE ALL</string>
+    <string-array name="file_pick_mimes">
+        <item>text/plain</item>
+        <item>application/json</item>
+        <item>application/pdf</item>
+        <item>application/msword</item>
+        <item>application/vnd.openxmlformats-officedocument.wordprocessingml.document</item>
+        <item>application/vnd.ms-excel</item>
+        <item>application/vnd.ms-excel.sheet.binary.macroenabled.12</item>
+        <item>application/rtf</item>
+        <item>application/vnd.ms-excel.sheet.macroenabled.12</item>
+        <item>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</item>
+        <item>application/vnd.openxmlformats-officedocument.spreadsheetml.template</item>
+        <item>application/vnd.ms-excel.template.macroEnabled.12</item>
+        <item>application/vnd.ms-excel.addin.macroEnabled.12</item>
+        <item>application/vnd.ms-powerpoint</item>
+        <item>application/vnd.oasis.opendocument.text</item>
+        <item>application/vnd.openxmlformats-officedocument.presentationml.presentation</item>
+        <item>audio/*</item>
+    </string-array>
+
+    <string name="shopping_theme">Shopping theme</string>
+    <string name="logo_theme">Logo theme</string>
+    <string name="read_more"><![CDATA[<u> Read More </u>]]></string>
+    <string name="show_less"><![CDATA[<u> Show Less </u>]]></string>
+    <string name="download_started">Downloading file…</string>
+    <string name="download_success">File downloaded Successfully!</string>
+    <string name="download_fail">File download Failed!</string>
+
+    <string name="minimize">Minimize</string>
+    <string name="close">Close</string>
+    <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
+    <string name="agent_bot_close_event">close_agent_chat</string>
+    <string name="bot_close_event">close_button_event</string>
+    <string name="bot_minimize_event">minimize_button_event</string>
+</resources>

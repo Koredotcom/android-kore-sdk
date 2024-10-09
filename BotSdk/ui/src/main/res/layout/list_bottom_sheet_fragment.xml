@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/llOptionsBottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#00000000"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/llBottomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_options_bg"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llCloseBottomSheet"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:padding="@dimen/dimen_20dp">
+
+                <com.kore.ui.textview.CustomTextView
+                    android:id="@+id/tvOptionsTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/title"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_sub_header"
+                    android:textStyle="bold"
+                    android:visibility="invisible" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@mipmap/ic_close_black_24dp"
+                    android:contentDescription="@string/title" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:id="@+id/llTabHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/dimen_12dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dimen_5dp">
+
+                    <com.kore.ui.textview.CustomTextViewBold
+                        android:id="@+id/tvTab1"
+                        android:layout_width="@dimen/carousel_view_button_height_individual"
+                        android:layout_height="30dp"
+                        android:background="@drawable/selector_bottom_sheet_list_tab"
+                        android:gravity="center"
+                        android:text="@string/tab1"
+                        android:textColor="@color/selector_bottom_sheet_list_tab"
+                        android:textSize="@dimen/text_size_normal"/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="@dimen/dimen_5dp">
+
+                    <com.kore.ui.textview.CustomTextViewBold
+                        android:id="@+id/tvTab2"
+                        android:layout_width="@dimen/carousel_view_button_height_individual"
+                        android:layout_height="@dimen/dimen_30dp"
+                        android:background="@drawable/selector_bottom_sheet_list_tab"
+                        android:gravity="center"
+                        android:text="@string/tab2"
+                        android:textColor="@color/selector_bottom_sheet_list_tab" />
+                </androidx.appcompat.widget.LinearLayoutCompat>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.kore.ui.textview.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp"
+                android:text="@string/ask_for_help"
+                android:textColor="@color/gray_modern"
+                android:textSize="@dimen/text_size_small" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvMoreData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginRight="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp"
+                android:visibility="visible" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+    </LinearLayout>
+</layout>
