@@ -316,4 +316,6 @@
     <string name="agent_bot_close_event">close_agent_chat</string>
     <string name="bot_close_event">close_button_event</string>
     <string name="bot_minimize_event">minimize_button_event</string>
+
+    <string name="menu">Menu</string>
 </resources>

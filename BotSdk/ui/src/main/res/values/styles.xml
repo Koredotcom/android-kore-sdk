@@ -4,4 +4,9 @@
         <item name="colorControlNormal">@color/color_a7b0be</item>
         <item name="colorControlActivated">#F59E0B</item>
     </style>
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
 </resources>

@@ -14,8 +14,8 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.kore.common.event.UserActionEvent
+import com.kore.common.extensions.dpToPx
 import com.kore.common.extensions.getParcelableCompat
-import com.kore.common.utils.DimensionUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
@@ -46,7 +46,7 @@ class ChatHeaderOneFragment(private val onActionEvent: (event: UserActionEvent) 
                         .into(binding.ivBotAvatar)
                         .onLoadFailed(ResourcesCompat.getDrawable(resources, R.drawable.ic_launcher_foreground, context?.theme))
                     binding.ivBotAvatar.layoutParams =
-                        LinearLayout.LayoutParams((40 * DimensionUtils.dp1).toInt(), (40 * DimensionUtils.dp1).toInt())
+                        LinearLayout.LayoutParams((40.dpToPx(binding.root.context)), (40.dpToPx(binding.root.context)))
                 } else {
                     binding.llBotAvatar.backgroundTintList = ColorStateList.valueOf(Color.parseColor(bundle.avatarBgColor))
                     when (bundle.icon?.iconUrl) {

@@ -11,8 +11,8 @@ import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.botclient.databinding.BaseRowBinding
+import com.kore.common.extensions.dpToPx
 import com.kore.common.row.listener.ChatContentStateListener
-import com.kore.common.utils.DimensionUtils.Companion.dp1
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
 
@@ -49,8 +49,8 @@ abstract class SimpleListRow {
 
             if (isTimeStampVisible && !isTemplate) {
                 val layoutParams = botIcon.layoutParams as LayoutParams
-                layoutParams.topMargin = (25 * dp1).toInt()
-                layoutParams.marginEnd = (5 * dp1).toInt()
+                layoutParams.topMargin = (25.dpToPx(context))
+                layoutParams.marginEnd = (5.dpToPx(context))
                 botIcon.layoutParams = layoutParams
             }
 

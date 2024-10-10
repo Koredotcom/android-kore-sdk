@@ -19,7 +19,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
-import com.kore.common.utils.DimensionUtils.Companion.dp1
+import com.kore.common.extensions.dpToPx
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
@@ -71,7 +71,7 @@ class ListWidgetAdapter(
         divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.transparant_image_div)!!)
         rvPopBtns.removeItemDecoration(divider)
         rvPopBtns.addItemDecoration(divider)
-        popUpView.minimumWidth = (180 * dp1).toInt()
+        popUpView.minimumWidth = (180.dpToPx(context))
         ivDropDownCLose.setOnClickListener { popupWindow.dismiss() }
 
         if (listTemplateModel[BotResponseConstants.KEY_TITLE] != null) {
@@ -108,7 +108,7 @@ class ListWidgetAdapter(
                 url = url.replace("http://", "https://")
 
                 Glide.with(context).load(url).error(R.drawable.ic_image_photo)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners((10 * dp1).toInt())))
+                    .apply(RequestOptions.bitmapTransform(RoundedCorners((10.dpToPx(context)))))
                     .into<DrawableImageViewTarget>(DrawableImageViewTarget(holder.imageIcon))
             }
         } else holder.imageIcon.isVisible = false

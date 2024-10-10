@@ -12,8 +12,8 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.kore.common.event.UserActionEvent
+import com.kore.common.extensions.dpToPx
 import com.kore.common.extensions.getParcelableCompat
-import com.kore.common.utils.DimensionUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
@@ -45,7 +45,7 @@ class ChatHeaderThreeFragment(private val onActionEvent: (event: UserActionEvent
                         .into(binding.ivBotAvatar)
                         .onLoadFailed(ResourcesCompat.getDrawable(resources, R.drawable.ic_launcher_foreground, context?.theme))
                     binding.ivBotAvatar.layoutParams =
-                        LinearLayout.LayoutParams((40 * DimensionUtils.dp1).toInt(), (40 * DimensionUtils.dp1).toInt())
+                        LinearLayout.LayoutParams(40.dpToPx(binding.root.context), 40.dpToPx(binding.root.context))
                 } else {
                     when (bundle.icon?.iconUrl) {
                         BotResponseConstants.ICON_1 -> binding.ivBotAvatar.setImageDrawable(

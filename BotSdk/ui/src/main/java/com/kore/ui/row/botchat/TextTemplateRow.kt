@@ -16,12 +16,12 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
+import com.kore.common.extensions.dpToPx
 import com.kore.common.extensions.formatEmojis
 import com.kore.common.markdown.MarkdownImageTagHandler
 import com.kore.common.markdown.MarkdownTagHandler
 import com.kore.common.markdown.MarkdownUtil
 import com.kore.common.row.SimpleListRow
-import com.kore.common.utils.DimensionUtils.Companion.dp1
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
@@ -54,6 +54,7 @@ class TextTemplateRow(
     override fun getChangePayload(otherRow: SimpleListRow): Any = true
 
     override fun <Binding : ViewBinding> bind(binding: Binding) {
+        val context = binding.root.context
         showOrHideIcon(binding, binding.root.context, iconUrl, !isBotRequest, false)
         val childBinding = RowTextTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
@@ -88,12 +89,16 @@ class TextTemplateRow(
                 makeLinkClickable(strBuilder, span)
             }
 
+            val dp16 = 16.dpToPx(context).toFloat()
+            val dp8 = 8.dpToPx(context).toFloat()
+            val dp2 = 2.dpToPx(context).toFloat()
+
             //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
-            val roundedRadii = floatArrayOf(16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1)
-            val recRightRadii = floatArrayOf(8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1)
-            val recLeftRadii = floatArrayOf(2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1)
-            val balRightRadii = floatArrayOf(8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1, 8 * dp1, 8 * dp1)
-            val balLeftRadii = floatArrayOf(8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 8 * dp1, 2 * dp1, 2 * dp1)
+            val roundedRadii = floatArrayOf(dp16, dp16, dp16, dp16, dp16, dp16, dp16, dp16)
+            val recRightRadii = floatArrayOf(dp8, dp8, dp2, dp2, dp8, dp8, dp8, dp8)
+            val recLeftRadii = floatArrayOf(dp2, dp2, dp8, dp8, dp8, dp8, dp8, dp8)
+            val balRightRadii = floatArrayOf(dp8, dp8, dp8, dp8, dp2, dp2, dp8, dp8)
+            val balLeftRadii = floatArrayOf(dp8, dp8, dp8, dp8, dp8, dp8, dp2, dp2)
 
             val sharedPrefs = PreferenceRepositoryImpl()
             val bubbleStyle = sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_STYLE, "EDGE")
@@ -130,7 +135,7 @@ class TextTemplateRow(
                     )
                 )
                 gradientDrawable.setStroke(
-                    (1 * dp1).toInt(), Color.parseColor(
+                    (1.dpToPx(context)), Color.parseColor(
                         sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#efeffc")
                     )
                 )
@@ -146,7 +151,7 @@ class TextTemplateRow(
                     )
                 )
                 gradientDrawable.setStroke(
-                    (1 * dp1).toInt(), Color.parseColor(
+                    (1.dpToPx(context)), Color.parseColor(
                         sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
                     )
                 )

@@ -21,8 +21,8 @@ import com.google.android.flexbox.FlexDirection.ROW
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.kore.common.base.BaseDialogFragment
+import com.kore.common.extensions.dpToPx
 import com.kore.common.utils.BundleConstants
-import com.kore.common.utils.DimensionUtils.Companion.dp1
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_CAROUSEL
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_LIST
@@ -102,7 +102,7 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
                 Glide.with(requireActivity()).load(botBrandingModel.header.icon?.iconUrl)
                     .apply(RequestOptions.bitmapTransform(CircleCrop())).into(binding.ivStarterLogo)
                     .onLoadFailed(ResourcesCompat.getDrawable(resources, R.drawable.ic_launcher_foreground, context?.theme))
-                binding.ivStarterLogo.layoutParams = LinearLayout.LayoutParams((40 * dp1).toInt(), (40 * dp1).toInt())
+                binding.ivStarterLogo.layoutParams = LinearLayout.LayoutParams((40.dpToPx(binding.root.context)), (40.dpToPx(binding.root.context)))
             } else {
                 when (botBrandingModel.header.icon?.iconUrl) {
                     BotResponseConstants.ICON_1 -> binding.ivStarterLogo.setImageDrawable(

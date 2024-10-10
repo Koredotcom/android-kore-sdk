@@ -183,8 +183,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                     BundleConstants.LARGE -> addHeaderFragmentToActivity(ChatHeaderThreeFragment(this::onActionEvent), it.header)
                     else -> addHeaderFragmentToActivity(ChatHeaderTwoFragment(this::onActionEvent), it.header)
                 }
-
-                footerFragment.setBotBrandingModel(it)
                 contentFragment.onBrandingDetails()
 
             }, 2000)
@@ -193,6 +191,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             binding.chatWindow.isVisible = true
             addHeaderFragmentToActivity(ChatHeaderOneFragment(this::onActionEvent), null)
         }
+        footerFragment.setBotBrandingModel(header)
     }
 
     override fun onBotEventMessage(botResponse: BotEventResponse) {

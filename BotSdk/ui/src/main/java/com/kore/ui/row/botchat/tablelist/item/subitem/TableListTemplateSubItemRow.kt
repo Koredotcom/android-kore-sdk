@@ -11,8 +11,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
+import com.kore.common.extensions.dpToPx
 import com.kore.common.row.SimpleListRow
-import com.kore.common.utils.DimensionUtils
 import com.kore.event.BotChatEvent
 import com.kore.event.BotChatEvent.SendMessage
 import com.kore.model.constants.BotResponseConstants
@@ -71,7 +71,14 @@ class TableListTemplateSubItemRow(
             imageMap?.get(IMAGE_SRC).let {
 
                 Glide.with(binding.root.context).load(it).error(com.kore.botclient.R.drawable.ic_launcher)
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(((if (imageMap?.get(RADIUS) != null) (imageMap[RADIUS] as Double).toInt() else 10) * DimensionUtils.dp1).toInt())))
+                    .apply(
+                        RequestOptions.bitmapTransform(
+                            RoundedCorners(
+                                ((if (imageMap?.get(RADIUS) != null)
+                                        (imageMap[RADIUS] as Double).toInt() else 10).dpToPx(binding.root.context))
+                            )
+                        )
+                    )
                     .into<DrawableImageViewTarget>(DrawableImageViewTarget(image))
             }
 

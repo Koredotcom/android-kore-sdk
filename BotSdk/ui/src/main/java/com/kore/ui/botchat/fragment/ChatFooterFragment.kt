@@ -42,6 +42,7 @@ import com.kore.common.constants.MediaConstants.Companion.MEDIA_TYPE_DOCUMENT
 import com.kore.common.constants.MediaConstants.Companion.MEDIA_TYPE_IMAGE
 import com.kore.common.constants.MediaConstants.Companion.MEDIA_TYPE_VIDEO
 import com.kore.common.event.UserActionEvent
+import com.kore.common.extensions.dpToPx
 import com.kore.common.helper.RuntimePermissionHelper
 import com.kore.common.helper.SpeechSynthesizerHelper
 import com.kore.common.speech.GoogleVoiceTypingDisabledException
@@ -49,7 +50,6 @@ import com.kore.common.speech.Speech
 import com.kore.common.speech.SpeechDelegate
 import com.kore.common.speech.SpeechRecognitionNotAvailable
 import com.kore.common.speech.SpeechUtil
-import com.kore.common.utils.DimensionUtils
 import com.kore.common.utils.FileUtils
 import com.kore.common.utils.NetworkUtils
 import com.kore.common.utils.ToastUtils
@@ -57,10 +57,12 @@ import com.kore.event.BotChatEvent
 import com.kore.listeners.AttachmentListener
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
+import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
 import com.kore.ui.R
 import com.kore.ui.adapters.ComposeBarAttachmentAdapter
 import com.kore.ui.databinding.BotFooterFragmentBinding
 import com.kore.ui.dialog.ActionSheetDialog
+import com.kore.ui.dialog.OptionsActionSheetFragment
 import com.kore.uploadfile.helper.MediaAttachmentHelper
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_CAMERA
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_FILE
@@ -82,6 +84,8 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
     private var isEnabled = false
     private var isAttachedToWindow = false
     private val bottomPanelFragment by lazy { BottomPanelFragment() }
+    private var botOptionModels: ArrayList<BrandingQuickStartButtonActionModel>? = null
+    private var botBrandingModel: BotBrandingModel? = null
 
     private val appSettingsLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { _: ActivityResult ->
         checkAndRequestPermission()
@@ -105,12 +109,7 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
 
     private val attachmentOptions by lazy { resources.getStringArray(R.array.attachment_options).asList() }
     private val mediaAttachmentHelper by lazy {
-        MediaAttachmentHelper(
-            requireContext(),
-            BotClient.getUserId(),
-            BotClient.getAccessToken(),
-            BotClient.getJwtToken()
-        )
+        MediaAttachmentHelper(requireContext(), BotClient.getUserId(), BotClient.getAccessToken(), BotClient.getJwtToken())
     }
 
     override fun onAttach(context: Context) {
@@ -187,7 +186,6 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
             }
         }
 
-        val dp1 = DimensionUtils(context).convertDpToPixel(context, 1f)
         val rightTextColor: String? = sharedPreferences.getString(BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff")
         val rightBgColor: String? = sharedPreferences.getString(BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
         val rightDrawable = ResourcesCompat.getDrawable(
@@ -196,13 +194,23 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
 
         if (rightDrawable != null) {
             rightDrawable.setColor(Color.parseColor(rightTextColor))
-            rightDrawable.setStroke((1 * dp1).toInt(), Color.parseColor(rightBgColor))
+            rightDrawable.setStroke((1.dpToPx(requireContext())), Color.parseColor(rightBgColor))
         }
 
         binding.textViewSpeech.background = rightDrawable
         binding.textViewSpeech.setTextColor(Color.parseColor(rightBgColor))
 
         Speech.init(requireActivity(), requireActivity().packageName)
+
+        binding.newMenuLogo.setOnClickListener {
+            if (botBrandingModel != null && !botOptionModels.isNullOrEmpty()) {
+                val bottomSheetDialog = OptionsActionSheetFragment()
+                bottomSheetDialog.setData(botOptionModels)
+                bottomSheetDialog.setBrandingModel(botBrandingModel)
+                bottomSheetDialog.setActionEvent(actionEvent)
+                bottomSheetDialog.show(childFragmentManager, "add_tags")
+            }
+        }
     }
 
     private val composeTextWatcher: TextWatcher = object : TextWatcher {
@@ -351,7 +359,11 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
         speechSynthesizerHelper = speechSynthesizerHelper1
     }
 
-    fun setBotBrandingModel(botBrandingModel: BotBrandingModel) {
+    fun setBotBrandingModel(botBrandingModel: BotBrandingModel?) {
+        this.botBrandingModel = botBrandingModel
+        binding.newMenuLogo.isVisible = botBrandingModel?.footer?.buttons?.menu?.show == true
+        if (botBrandingModel == null) return
+        botOptionModels = botBrandingModel.footer.buttons.menu.actions
         if (botBrandingModel.general.colors.useColorPaletteOnly) {
             binding.composeFooterRl.setBackgroundColor(Color.parseColor(botBrandingModel.general.colors.secondary))
         } else {
@@ -535,6 +547,7 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
                 bottomPanelFragment.closePanel()
                 actionEvent(BotChatEvent.SendMessage(event.message, event.payload))
             }
+
             is WidgetActionEvent.UrlClick -> actionEvent(BotChatEvent.UrlClick(event.url, event.header))
             is WidgetActionEvent.OnPanelState -> binding.composeFooterRl.isVisible = !event.isOpen
         }
