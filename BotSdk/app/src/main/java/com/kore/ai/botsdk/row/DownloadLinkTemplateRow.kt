@@ -64,8 +64,8 @@ class DownloadLinkTemplateRow(
                 pbDownload.progress = 75
                 pbDownload.startAnimation(AnimationUtils.loadAnimation(root.context, com.kore.ui.R.anim.rotate_indefinitely))
 //                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-//                actionEvent(BotChatEvent.DownloadLink(botResponse.messageId, payload?.get(URL).toString(), payload?.get(FILE_NAME) as String?))
-                actionEvent(BotChatEvent.DownloadLink(botResponse.messageId, "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", "BigBuckBunnnnnnyyyy.mp4"))
+                actionEvent(BotChatEvent.DownloadLink(botResponse.messageId, payload?.get(URL).toString(), payload?.get(FILE_NAME) as String?))
+//                actionEvent(BotChatEvent.DownloadLink(botResponse.messageId, "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", "BigBuckBunnnnnnyyyy.mp4"))
             }
         }
     }
