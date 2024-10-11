@@ -18,9 +18,9 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -71,11 +71,10 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.viewmodels.BaseViewModel;
 import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
-public class BotChatViewModel extends BaseViewModel<BotChatViewListener> {
+public class BotChatViewModel extends ViewModel {
     private static final String LOG_TAG = "BotChatActivity";
     Context context;
     Gson gson = new Gson();
@@ -91,13 +90,12 @@ public class BotChatViewModel extends BaseViewModel<BotChatViewListener> {
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     protected final int compressQualityInt = 100;
-    final Handler messageHandler = new Handler();
 
-    public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView, BrandingRepository repository, WebHookRepository webHookRepository) {
+    public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
-        this.repository = repository;
+        this.repository = new BrandingRepository(context, chatView);
         this.chatView = chatView;
-        this.webHookRepository = webHookRepository;
+        this.webHookRepository = new WebHookRepository(context, chatView);
         this.botClient = botClient;
     }
 

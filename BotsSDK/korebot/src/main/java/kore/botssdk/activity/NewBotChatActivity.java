@@ -60,8 +60,6 @@ import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.WebHookRestBuilder;
 import kore.botssdk.pushnotification.PushNotificationRegister;
-import kore.botssdk.repository.branding.BrandingRepository;
-import kore.botssdk.repository.webhook.WebHookRepository;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
@@ -114,7 +112,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         setContentView(R.layout.bot_chat_layout);
         botClient = new BotClient(NewBotChatActivity.this);
 
-        BotChatViewModelFactory factory = new BotChatViewModelFactory(NewBotChatActivity.this, botClient, NewBotChatActivity.this, new BrandingRepository(NewBotChatActivity.this, NewBotChatActivity.this), new WebHookRepository(NewBotChatActivity.this, NewBotChatActivity.this));
+        BotChatViewModelFactory factory = new BotChatViewModelFactory(NewBotChatActivity.this, botClient, NewBotChatActivity.this);
         mViewModel = new ViewModelProvider(this, factory).get(BotChatViewModel.class);
 
         findViews();
