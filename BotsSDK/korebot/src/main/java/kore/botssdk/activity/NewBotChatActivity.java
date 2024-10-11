@@ -33,6 +33,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.application.BotApplication;
@@ -550,13 +551,17 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     protected void onStop() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            List<ActivityManager.RunningTaskInfo> taskList = activityManager.getRunningTasks(10);
+            List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();
 
-            if (!taskList.isEmpty()) {
-                ActivityManager.RunningTaskInfo runningTaskInfo = taskList.get(0);
-                if (runningTaskInfo.topActivity != null && (!runningTaskInfo.topActivity.getClassName().contains(getApplicationContext().getPackageName()) && !runningTaskInfo.topActivity.getClassName().contains("kore.botssdk"))) {
+            if(!taskList.isEmpty())
+            {
+                String topClassName = Objects.requireNonNull(taskList.get(0).getTaskInfo().topActivity).toString();
+                if (!topClassName.contains(getApplicationContext().getPackageName())) {
+
                     if (botClient != null) {
                         botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+                        LogUtils.e("onStop", "onStop called");
 
                         SharedPreferences.Editor prefsEditor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
                         String jsonObject = new Gson().toJson("");

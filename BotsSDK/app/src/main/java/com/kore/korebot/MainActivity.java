@@ -27,7 +27,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 
-import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
@@ -79,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setJwtTokenUrl(jwtServerUrl);
 
         //Set isWebHook
-        SDKConfig.isWebHook(true);
+        SDKConfig.isWebHook(false);
 
         //Initialize the bot with bot config
         //You can pass client id and client secret as empty when you pass jwt token
