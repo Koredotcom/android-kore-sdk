@@ -9,8 +9,6 @@ import com.kore.common.SDKConfiguration
 import com.kore.common.model.BotConfigModel
 import com.kore.ui.adapters.BotChatAdapter
 import com.kore.ui.row.botchat.BotChatRowType
-import com.kore.widgets.WidgetSDKConfiguration
-import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
 import java.util.Properties
 
@@ -19,17 +17,6 @@ class BotApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         getBotConfigModel()?.let { SDKConfiguration.initialize(it) }
-        val widgetConfig = WidgetConfigModel(
-            "SDK Demo",
-            "st-7716ac36-2786-5bdf-b2cc-0d50474b6f87",
-            "cs-ff66f2cb-440b-5f37-8a7a-680e109066a8",
-            "GHCir4+c3mKkqpwiTRipaXzPj5ykFUWkKMPAGhc1m3U=",
-            "https://sit-xo.kore.ai/",
-            "123456789078643234567",
-            false,
-            "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts",
-        )
-        WidgetSDKConfiguration.initialize(widgetConfig)
         BotChatRowType.prepareDefaultRowTypes()
 //        BotChatAdapter.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
         BotChatAdapter.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)

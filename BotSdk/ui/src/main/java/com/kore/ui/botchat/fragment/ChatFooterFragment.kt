@@ -69,9 +69,6 @@ import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_FILE
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_IMAGE
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_VIDEO
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_VIDEO_CAPTURE
-import com.kore.widgets.event.BaseActionEvent
-import com.kore.widgets.event.WidgetActionEvent
-import com.kore.widgets.ui.fragments.bottompanel.BottomPanelFragment
 
 class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.MediaAttachmentListener, AttachmentListener {
     lateinit var binding: BotFooterFragmentBinding
@@ -83,7 +80,6 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
     private lateinit var speechSynthesizerHelper: SpeechSynthesizerHelper
     private var isEnabled = false
     private var isAttachedToWindow = false
-    private val bottomPanelFragment by lazy { BottomPanelFragment() }
     private var botOptionModels: ArrayList<BrandingQuickStartButtonActionModel>? = null
     private var botBrandingModel: BotBrandingModel? = null
 
@@ -133,13 +129,6 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
         super.onViewCreated(view, savedInstanceState)
         isAttachedToWindow = true
         enableSendButton(isEnabled)
-        SDKConfiguration.getBotConfigModel()?.let {
-            binding.bottomPanelContainer.isVisible = it.enablePanel
-            if (it.enablePanel) {
-                childFragmentManager.beginTransaction().replace(R.id.bottom_panel_container, bottomPanelFragment).commit()
-                binding.root.post { bottomPanelFragment.setActionEvent(this::widgetActionEvent) }
-            }
-        }
         binding.edtTxtMessage.addTextChangedListener(composeTextWatcher)
         binding.llSend.setOnClickListener {
             if (arrAttachments.isNotEmpty()) {
@@ -538,18 +527,5 @@ class ChatFooterFragment : Fragment(), SpeechDelegate, MediaAttachmentHelper.Med
         binding.attachmentRecycler.isVisible = false
         binding.attachmentRecycler.adapter = null
         enableSendButton(false)
-    }
-
-    private fun widgetActionEvent(event: BaseActionEvent) {
-        when (event) {
-            is WidgetActionEvent.SendMessage -> actionEvent(BotChatEvent.SendMessage(event.message, event.payload))
-            is WidgetActionEvent.SendMessageFromPanel -> {
-                bottomPanelFragment.closePanel()
-                actionEvent(BotChatEvent.SendMessage(event.message, event.payload))
-            }
-
-            is WidgetActionEvent.UrlClick -> actionEvent(BotChatEvent.UrlClick(event.url, event.header))
-            is WidgetActionEvent.OnPanelState -> binding.composeFooterRl.isVisible = !event.isOpen
-        }
     }
 }

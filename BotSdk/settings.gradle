@@ -17,7 +17,5 @@ rootProject.name = "BotSdk"
 include ':app'
 include ':botclient'
 include ':ui'
-include ':widgets'
 project(':botclient').projectDir = new File(rootDir, 'botclient/')
 project(':ui').projectDir = new File(rootDir, 'ui/')
-project(':widgets').projectDir = new File(rootDir, 'widgets/')
