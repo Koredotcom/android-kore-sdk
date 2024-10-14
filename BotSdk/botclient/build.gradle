@@ -7,6 +7,8 @@ plugins {
 }
 group = 'com.github.Koredotcom'
 project.archivesBaseName = 'android-kore-sdk-kotlin-v3'
+version = '11.0.5'
+
 afterEvaluate {
     publishing {
         publications {

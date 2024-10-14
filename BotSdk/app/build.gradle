@@ -59,6 +59,7 @@ dependencies {
     implementation project(path: ':botclient')
     implementation project(path: ':ui')
     implementation project(path: ':widgets')
+//    implementation 'com.github.Koredotcom.android-kore-sdk:11.0.4'
     implementation 'com.google.code.gson:gson:2.10.1'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
