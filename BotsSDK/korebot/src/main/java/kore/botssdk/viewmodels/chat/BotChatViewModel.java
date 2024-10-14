@@ -323,6 +323,46 @@ public class BotChatViewModel extends ViewModel {
         sListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
     }
 
+    public void textToSpeech(BotResponse botResponse, boolean isTTSEnabled) {
+        if (isTTSEnabled && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
+            String botResponseTextualFormat = "";
+            ComponentModel componentModel = botResponse.getMessage().get(0).getComponent();
+            if (componentModel != null) {
+                String compType = componentModel.getType();
+                PayloadOuter payOuter = componentModel.getPayload();
+                if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType) || payOuter.getType() == null) {
+                    botResponseTextualFormat = payOuter.getText();
+                } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
+                    botResponseTextualFormat = payOuter.getPayload().getText();
+                } else if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) || BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())) {
+                    PayloadInner payInner;
+                    if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                        Gson gson = new Gson();
+                        payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                    }
+                    payInner = payOuter.getPayload();
+
+                    if (payInner.getSpeech_hint() != null) {
+                        botResponseTextualFormat = payInner.getSpeech_hint();
+                    } else if (BotResponse.TEMPLATE_TYPE_BUTTON.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botResponseTextualFormat = payInner.getText();
+                    } else if (BotResponse.TEMPLATE_TYPE_QUICK_REPLIES.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botResponseTextualFormat = payInner.getText();
+                    } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botResponseTextualFormat = payInner.getText();
+                    } else if (BotResponse.TEMPLATE_TYPE_CAROUSEL_ADV.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botResponseTextualFormat = payInner.getText();
+                    } else if (BotResponse.TEMPLATE_TYPE_LIST.equalsIgnoreCase(payInner.getTemplate_type())) {
+                        botResponseTextualFormat = payInner.getText();
+                    }
+                }
+            }
+            if (BotSocketConnectionManager.getInstance().isTTSEnabled()) {
+                BotSocketConnectionManager.getInstance().startSpeak(botResponseTextualFormat);
+            }
+        }
+    }
+
     public void postNotification(String title, String pushMessage) {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);

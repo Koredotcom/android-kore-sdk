@@ -68,6 +68,7 @@ import kore.botssdk.utils.ClosingService;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.viewmodels.chat.BotChatViewModel;
 import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
@@ -90,6 +91,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     boolean isAgentTransfer;
     boolean isReconnection;
     final Handler messageHandler = new Handler();
+    TTSSynthesizer ttsSynthesizer;
 
     BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -175,12 +177,20 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
         setComposeFooterUpdate(composeFooterFragment);
 
+        ttsSynthesizer = new TTSSynthesizer(this);
+        setupTextToSpeech();
         KoreEventCenter.register(this);
+    }
+
+    private void setupTextToSpeech() {
+        composeFooterFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
+        botContentFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
     }
 
     @Override
     public void addMessageToAdapter(BotResponse baseBotMessage) {
         botContentFragment.addMessageToBotChatAdapter(baseBotMessage);
+        mViewModel.textToSpeech(baseBotMessage, composeFooterFragment.isTTSEnabled());
         botContentFragment.setQuickRepliesIntoFooter(baseBotMessage);
         botContentFragment.showCalendarIntoFooter(baseBotMessage);
     }
@@ -440,11 +450,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     }
 
     @Override
-    public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
-
-    }
-
-    @Override
     public void sendImage(String fP, String fN, String fPT) {
         mViewModel.sendImage(fP, fN, fPT);
     }
@@ -553,8 +558,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();
 
-            if(!taskList.isEmpty())
-            {
+            if (!taskList.isEmpty()) {
                 String topClassName = Objects.requireNonNull(taskList.get(0).getTaskInfo().topActivity).toString();
                 if (!topClassName.contains(getApplicationContext().getPackageName())) {
 
@@ -575,4 +579,17 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         }
         super.onStop();
     }
+
+
+    @Override
+    public void onStart() {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                BotSocketConnectionManager.getInstance().subscribe();
+            }
+        });
+        super.onStart();
+    }
+
 }

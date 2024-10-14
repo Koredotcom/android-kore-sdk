@@ -67,6 +67,13 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
             bubbleText.setText(strBuilder);
             bubbleText.setMovementMethod(null);
             bubbleText.setVisibility(View.VISIBLE);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    composeFooterInterface.copyMessageToComposer(strBuilder.toString(), true);
+                }
+            });
         } else {
             bubbleText.setText("");
             bubbleText.setVisibility(View.GONE);
