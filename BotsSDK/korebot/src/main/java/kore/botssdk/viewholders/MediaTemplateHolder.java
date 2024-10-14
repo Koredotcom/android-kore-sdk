@@ -114,8 +114,8 @@ public class MediaTemplateHolder extends BaseViewHolder {
             llAttachment.setBackground(leftDrawable);
         }
 
-        ivVideoMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivVideoMore, -250, -250));
-        ivAudioMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivAudioMore, -250, -250));
+        ivVideoMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivVideoMore, -20, 0));
+        ivAudioMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivAudioMore, -20, 0));
     }
 
     @SuppressLint("ClickableViewAccessibility")
