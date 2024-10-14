@@ -1,11 +1,23 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId 'kore.botsdk'
+                artifactId 'korebotsdklib'
+                version '0.3.4'
+            }
+        }
+    }
+}
 
 android {
     compileSdk 34
-
-    dataBinding{
-        enabled = true
-    }
 
     defaultConfig {
         minSdkVersion 23
@@ -25,7 +37,7 @@ android {
     }
 
     dependencies {
-        api 'androidx.appcompat:appcompat:1.6.1'
+        api 'androidx.appcompat:appcompat:1.7.0'
         api 'de.greenrobot:eventbus:2.4.0'
         api 'com.squareup.retrofit2:retrofit:2.9.0'
         api 'com.squareup.okhttp3:logging-interceptor:4.12.0'

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <LinearLayout
@@ -47,8 +47,8 @@
             android:text="@string/download"
             android:textColor="@color/primary"
             android:textSize="16sp"
-            tools:visibility="visible"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <RelativeLayout
             android:id="@+id/rlVideo"
@@ -146,76 +146,53 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:background="@drawable/audio_template_bg"
-            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="@dimen/dimen_15dp"
-            android:visibility="gone">
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <LinearLayout
-                android:layout_width="300dp"
+            <ImageView
+                android:id="@+id/ivAudioPlayPauseIcon"
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_paly_black" />
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/tvAudioVideoTiming"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/sbVideo"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_weight="0"
+                android:text="@string/_00_00_00_00"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="@dimen/text_size_small" />
 
-                <ImageView
-                    android:id="@+id/ivAudioPlayPauseIcon"
-                    android:layout_width="@dimen/dimen_25dp"
-                    android:layout_height="@dimen/dimen_25dp"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_paly_black" />
+            <androidx.appcompat.widget.AppCompatSeekBar
+                android:id="@+id/sbAudioVideo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:maxHeight="@dimen/dimen_3dp"
+                android:minHeight="@dimen/dimen_3dp"
+                android:progressDrawable="@drawable/seekbar_audio_style"
+                android:splitTrack="false"
+                android:thumbTint="@color/txtFontBlack" />
 
-                <kore.botssdk.view.CustomTextView
-                    android:id="@+id/tvAudioVideoTiming"
-                    android:layout_width="70dp"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@+id/sbVideo"
-                    android:layout_marginLeft="@dimen/dimen_5dp"
-                    android:layout_toRightOf="@+id/ivPlayPauseIcon"
-                    android:layout_weight="0"
-                    android:text="@string/_00_00_00_00"
-                    android:textColor="@color/txtFontBlack"
-                    android:textSize="@dimen/text_size_small" />
-
-                <androidx.appcompat.widget.AppCompatSeekBar
-                    android:id="@+id/sbAudioVideo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_weight="1"
-                    android:maxHeight="@dimen/dimen_3dp"
-                    android:minHeight="@dimen/dimen_3dp"
-                    android:progressDrawable="@drawable/seekbar_audio_style"
-                    android:splitTrack="false"
-                    android:thumbTint="@color/txtFontBlack" />
-
-                <ImageView
-                    android:id="@+id/ivAudioMore"
-                    android:layout_width="@dimen/dimen_25dp"
-                    android:layout_height="@dimen/dimen_25dp"
-                    android:layout_weight="0"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ic_more_vert_black_24dp" />
-            </LinearLayout>
+            <ImageView
+                android:id="@+id/ivAudioMore"
+                android:layout_width="@dimen/dimen_20dp"
+                android:layout_height="@dimen/dimen_20dp"
+                android:layout_weight="0"
+                android:importantForAccessibility="no"
+                android:src="@drawable/ic_more_vert_black_24dp" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/color_dfdfeb" />
 
         <WebView
             android:id="@+id/wvAudio"
             android:layout_width="350dp"
             android:layout_height="200dp"
-            android:visibility="gone" />
-
-        <kore.botssdk.view.CustomTextView
-            android:id="@+id/tvFileName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="@dimen/dimen_5dp"
-            android:text="@string/image_name"
             android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>
