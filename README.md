@@ -88,7 +88,7 @@ maven { url 'https://www.jitpack.io' }
 ```
 2. Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.DocsInternal-Kore:kore-ui-v2:0.1.5'
+implementation 'com.github.Koredotcom:android-kore-sdk:0.0.5'
 ```
 3. You can initialize the bot by providing the bot config like below. You can pass Jwt Token as empty so that we generate token in the SDK. If token is passed we will use it to establish bot connection.
 ```
@@ -130,6 +130,15 @@ SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken)
 
 //Inject the custom template like below
 SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
+
+//Flag to show the bot icon beside the bot response
+SDKConfiguration.BubbleColors.showIcon = true;
+
+//Flag to show the bot icon in top position or bottom of the bot response
+SDKConfiguration.OverrideKoreConfig.showIconTop = true;
+
+//Flag to show timestamp of each bot and user messages
+SDKConfiguration.setTimeStampsRequired(true);
 ```
 4. You can navigate to the bot chat window through Intent as below snippet
 ```
@@ -154,12 +163,12 @@ maven { url 'https://www.jitpack.io' }
 ```
 2. Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.DocsInternal-Kore:korebot-sdk-lib:0.0.3'
+implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:0.0.5'
 ```
 3. You can change the bot config like below
 ```
 SDKConfiguration.Client.bot_id = "PLEASE_ENTER_BOT_ID";
-SDKConfiguration.Client.bot_name = "Your Bot name";
+SDKConfiguration.Client.bot_name = "PLEASE_ENTER_BOT_NAME";
 SDKConfiguration.Client.client_id = "PLEASE_ENTER_CLIENT_ID";
 SDKConfiguration.Client.client_secret = "PLEASE_ENTER_CLIENT_SECRET";
 SDKConfiguration.Client.identity = "PLEASE_ENTER_IDENTITY";
