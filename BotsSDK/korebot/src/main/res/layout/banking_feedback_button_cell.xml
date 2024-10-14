@@ -6,11 +6,11 @@
     android:background="@drawable/form_input_bg"
     android:padding="@dimen/dimen_10dp">
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvButton"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
         android:ellipsize="end"
         android:fontFamily="@font/latoregular"
         android:maxWidth="300dp"

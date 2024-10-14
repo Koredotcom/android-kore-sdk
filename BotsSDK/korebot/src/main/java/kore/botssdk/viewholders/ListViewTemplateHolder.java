@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.LogUtils;
 
@@ -52,11 +54,16 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         Context context = itemView.getContext();
         RecyclerView recyclerView = itemView.findViewById(R.id.botCustomListView);
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
+        TextView title = itemView.findViewById(R.id.title);
         ViewGroup botCustomListRoot = itemView.findViewById(R.id.botCustomListRoot);
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(10));
-        if (listElements != null && listElements.size() > 0) {
+        String heading = payloadInner.getHeading();
+        title.setText(heading);
+        title.setVisibility(heading != null && !heading.isEmpty() ? VISIBLE : GONE);
+        title.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
+        if (listElements != null && !listElements.isEmpty()) {
             int size = moreCount != 0 && listElements.size() > moreCount ? moreCount : listElements.size();
             ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(context, listElements, isLastItem(), size);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
@@ -64,8 +71,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
             recyclerView.setAdapter(botListTemplateAdapter);
             if (isLastItem()) botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-
-            if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
+            if (botButtonModelArrayList != null && !botButtonModelArrayList.isEmpty()) {
                 botCustomListViewButton.setText(Html.fromHtml("<u>" + botButtonModelArrayList.get(0).getTitle() + "</u>"));
                 botCustomListViewButton.setOnClickListener(v -> {
                     ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();

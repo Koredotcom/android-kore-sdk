@@ -23,7 +23,7 @@
             android:src="@mipmap/checkbox_off"
             android:importantForAccessibility="no" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/slot_time"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

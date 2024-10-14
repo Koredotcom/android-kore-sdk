@@ -103,7 +103,7 @@ public interface RestAPI {
     Call<WebHookResponseDataModel> sendWebHookMessage(@Path("streamId") String streamId, @Header("Authorization") String token, @Body HashMap<String, Object> body);
 
     @GET("/api/chathistory/{streamId}/ivr?")
-    Call<BotHistory> getWebHookBotHistory(@Header("Authorization") String token, @Path("streamId") String streamId, @Query("botId") String botId, @Query("limit") int limit);
+    Call<BotHistory> getWebHookBotHistory(@Header("Authorization") String token, @Path("streamId") String streamId, @Query("botId") String botId, @Query("limit") int limit, @Query("offset") int offset);
 
     @GET("api/botmeta/{streamId}")
     Call<BotMetaModel> getWebHookBotMeta(@Header("Authorization") String token, @Path("streamId") String streamId);

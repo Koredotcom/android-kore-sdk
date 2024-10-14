@@ -21,7 +21,7 @@
             android:layout_toStartOf="@+id/dump"
             android:orientation="vertical">
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/meeting_header"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/meeting_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -100,7 +100,7 @@
                     android:paddingEnd="5dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <kore.botssdk.view.CustomTextView
                         android:id="@+id/tv_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -115,7 +115,7 @@
                         android:textSize="14sp" />
                 </LinearLayout>
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tv_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
                     android:textSize="14sp"
                     android:visibility="gone" />
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tv_url"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -170,7 +170,7 @@
         android:padding="2dp"
         android:scrollbars="none" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/botCustomListViewButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -180,7 +180,7 @@
         android:textColor="@android:color/holo_blue_dark"
         android:visibility="visible" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/workBenchListViewButton"
         android:layout_width="match_parent"
         android:layout_height="45dp"

@@ -15,35 +15,35 @@
         android:background="@drawable/rectangle_background"
         android:importantForAccessibility="no" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/imageUrl"
-        android:gravity="left"
-        android:textSize="13dp"
-        android:paddingLeft="10dp"
+        android:layout_toEndOf="@id/imageUrl"
+        android:gravity="start"
+        android:textSize="@dimen/text_size_small"
+        android:paddingStart="10dp"
         android:textColor="#222222"
         android:textStyle="bold"
         android:text="@string/stripped_shirt"
         />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/subtitle"
-        android:layout_toRightOf="@id/imageUrl"
+        android:layout_toEndOf="@id/imageUrl"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="left"
-        android:textSize="12dp"
+        android:gravity="start"
+        android:textSize="@dimen/text_size_small"
         android:textColor="#9d9d9d"
-        android:paddingLeft="10dp"
+        android:paddingStart="10dp"
         android:paddingTop="2dp"
         android:layout_below="@id/title"
         android:text="@string/_40_99"
         />
 
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/productDetails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

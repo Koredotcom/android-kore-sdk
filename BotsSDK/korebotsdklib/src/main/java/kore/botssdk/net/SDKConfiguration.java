@@ -99,8 +99,8 @@ public class SDKConfiguration {
         public static String client_id = "PLEASE_ENTER_CLIENT_ID";
         public static String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
         public static String identity = "PLEASE_ENTER_IDENTITY";
-        public static String bot_name = "PLEASE_ENTER_BOT_NAME";
-        public static String bot_id = "PLEASE_ENTER_BOT_ID";
+        public static String bot_name = "Kore.ai Bot";
+        public static String bot_id = "st-fc50f8c4-91a0-5ae7-bff2-283ad3c81700";
         public static boolean enable_ack_delivery = false;
 
         //Webhook
@@ -161,10 +161,6 @@ public class SDKConfiguration {
         public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
         public static boolean showIcon = false;
-        public static boolean showIconTop = true;
-        public static boolean showAttachment = true;
-        public static boolean showASRMicroPhone = true;
-        public static boolean showTextToSpeech = true;
 
         public static int getIcon() {
             return icon;
@@ -193,6 +189,21 @@ public class SDKConfiguration {
         public static String quickReplyColor = "#EEEEF0";
         public static String quickReplyTextColor = "#000000";
         public static String quickBorderColor = "#000000";
+    }
+
+    public static class OverrideKoreConfig {
+        public static boolean isEmojiShortcutEnable = true;
+        public static int typing_indicator_timeout = 10000;
+        public static boolean history_enable = true;
+        public static boolean paginated_scroll_enable = true;
+        public static int history_batch_size = 10;
+        public static int paginated_scroll_batch_size = 10;
+        public static String paginated_scroll_loading_label = "Loading old messages";
+        public static boolean showIconTop = true;
+        public static boolean showAttachment = true;
+        public static boolean showASRMicroPhone = true;
+        public static boolean showTextToSpeech = true;
+        public static boolean history_initial_call = false;
     }
 
     public static boolean isTimeStampsRequired() {

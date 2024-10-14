@@ -10,11 +10,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_10dp"
-        android:layout_marginRight="@dimen/dimen_10dp"
-        android:layout_marginLeft="@dimen/dimen_35dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:layout_marginStart="@dimen/dimen_35dp"
         android:orientation="horizontal" >
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvViewGroup1"
             android:layout_marginTop="@dimen/dimen_7dp"
             android:layout_marginBottom="@dimen/dimen_7dp"
@@ -26,7 +26,7 @@
             android:id="@+id/ivArrowView"
             android:layout_width="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/dimen_10dp"
+            android:layout_marginStart="@dimen/dimen_10dp"
             android:visibility="gone"
             android:layout_height="wrap_content"
             android:background="@mipmap/ic_arrow_table_resp_right"

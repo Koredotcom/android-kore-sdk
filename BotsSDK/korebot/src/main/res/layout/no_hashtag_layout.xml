@@ -5,16 +5,14 @@
 
     android:orientation="vertical">
 
-    <TextView
-
+    <kore.botssdk.view.CustomTextView
+        android:id="@+id/tv_message"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-
         android:gravity="center|start"
-        android:paddingLeft="10dp"
-        android:paddingBottom="10dp"
+        android:paddingStart="10dp"
         android:paddingTop="10dp"
-        android:id="@+id/tv_message"
+        android:paddingBottom="10dp"
         android:text="@string/no_hashtags"
         android:textColor="#84959B"
         android:textSize="15sp" />

@@ -16,7 +16,7 @@
         android:orientation="horizontal"
         android:padding="@dimen/dimen_15dp">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/bot_list_item_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,11 +25,11 @@
             android:textColor="@color/left_bubble_text_color"
             android:textSize="@dimen/text_size_sub_header" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/bot_list_item_desc"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="end"
             android:layout_weight="1"
             android:maxLines="1"
             android:textColor="@color/left_bubble_text_color"

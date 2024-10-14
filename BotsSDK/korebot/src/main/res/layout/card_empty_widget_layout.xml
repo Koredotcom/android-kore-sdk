@@ -19,7 +19,7 @@
         app:srcCompat="@drawable/no_meeting"
         android:importantForAccessibility="no" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tv_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

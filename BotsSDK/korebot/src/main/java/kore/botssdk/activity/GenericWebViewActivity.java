@@ -1,6 +1,7 @@
 package kore.botssdk.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -76,7 +77,24 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
-                    return super.shouldOverrideUrlLoading(view, request);
+                    String url = request.getUrl().toString();
+                    if (url.startsWith("http://") || url.startsWith("https://")) {
+                        return false;
+                    } else if (url.startsWith("intent://")) {
+                        try {
+                            Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
+                            if (intent != null) {
+                                startActivity(intent);
+                                finish();
+                                return true;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        return true;
+                    }
+                    return false;
                 }
 
                 @Override

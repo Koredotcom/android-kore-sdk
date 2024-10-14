@@ -20,12 +20,12 @@
         android:layout_below="@+id/slots_list"
         android:orientation="horizontal">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/button1"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:layout_weight="1"
             android:background="@drawable/meeting_slot_modify_background"
             android:gravity="center"
             android:minHeight="40dp"
@@ -33,16 +33,17 @@
             android:text="@string/modify_slots"
             android:textAllCaps="true"
             android:textColor="@color/splash_color"
-            android:textSize="15dp" />
-        <TextView
+            android:textSize="@dimen/text_size_normal" />
+
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/button2"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="2dp"
+            android:layout_weight="1"
             android:background="@drawable/meeting_slot_modify_background"
             android:gravity="center"
-            android:layout_marginStart="10dp"
             android:minHeight="40dp"
             android:tag="bold"
             android:text="@string/send_slots"

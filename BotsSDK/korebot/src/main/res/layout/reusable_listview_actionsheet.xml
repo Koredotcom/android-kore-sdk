@@ -6,7 +6,7 @@
     android:gravity="bottom"
     android:orientation="vertical">
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/temp_sel_headerLabel"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -47,7 +47,7 @@
                     android:headerDividersEnabled="false" />
             </LinearLayout>
 
-            <TextView
+            <kore.botssdk.view.CustomTextView
                 android:id="@+id/template_empty_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

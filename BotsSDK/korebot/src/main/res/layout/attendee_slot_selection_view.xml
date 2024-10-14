@@ -56,7 +56,7 @@
                 android:id="@+id/actions"
                 android:paddingBottom="@dimen/dimen_14dp">
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/confirm"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
@@ -69,7 +69,7 @@
                     android:textColor="@color/white"
                     android:textSize="15sp" />
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/decline"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"

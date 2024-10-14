@@ -73,12 +73,10 @@ public class FormTemplateHolder extends BaseViewHolder {
 
         if (!StringUtils.isNullOrEmpty(leftTextColor)) {
             tvFormTemplateTitle.setTextColor(Color.parseColor(leftTextColor));
-            btFieldButton.setTextColor(Color.parseColor(leftTextColor));
         }
 
         if (payloadInner.getFieldButton() != null)
-            if (!StringUtils.isNullOrEmpty(payloadInner.getFieldButton().getTitle()))
-                btFieldButton.setText(payloadInner.getFieldButton().getTitle());
+            btFieldButton.setText(payloadInner.getFieldButton().getTitle());
 
         btFieldButton.setOnClickListener(view -> {
             if (composeFooterInterface != null && isLastItem()) {

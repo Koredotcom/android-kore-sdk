@@ -6,7 +6,7 @@
     android:layout_marginTop="15dp"
     android:orientation="vertical">
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/text_view_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"

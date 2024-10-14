@@ -17,9 +17,9 @@
         android:layout_below="@+id/toolbar"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
+        android:importantForAccessibility="no"
         android:scaleType="fitCenter"
-        app:srcCompat="@drawable/reorder_icon"
-        android:importantForAccessibility="no" />
+        app:srcCompat="@drawable/reorder_icon" />
 
     <LinearLayout
         android:id="@+id/r_layout"
@@ -30,14 +30,12 @@
         android:layout_marginTop="16dp"
         android:orientation="horizontal">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:gravity="center"
             android:minHeight="20dp"
-
             android:text="@string/hold_and_drag"
             android:textColor="@color/color_167_169_190"
             android:textSize="14sp" />
@@ -46,14 +44,12 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_marginTop="1dp"
-            app:srcCompat="@drawable/widget_menu"
-            android:importantForAccessibility="no" />
+            android:importantForAccessibility="no"
+            app:srcCompat="@drawable/widget_menu" />
 
-        <TextView
-
+        <kore.botssdk.view.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:gravity="center"
             android:minHeight="20dp"
             android:text="@string/to_reorder_the_widgets"
@@ -65,10 +61,10 @@
         android:id="@+id/recycler_reorder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
         android:layout_below="@+id/r_layout"
         android:layout_marginTop="16dp"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:nestedScrollingEnabled="false">
 
     </androidx.recyclerview.widget.RecyclerView>
 </RelativeLayout>

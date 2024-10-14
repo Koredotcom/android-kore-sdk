@@ -13,14 +13,14 @@
         android:layout_marginBottom="@dimen/dimen_12dp"
         android:orientation="vertical">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvFormFieldTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="12dp"
             android:ellipsize="end"
-            android:gravity="center_vertical|left"
+            android:gravity="center_vertical|start"
             android:maxLines="1"
             android:minWidth="300dp"
             android:minHeight="25dp"

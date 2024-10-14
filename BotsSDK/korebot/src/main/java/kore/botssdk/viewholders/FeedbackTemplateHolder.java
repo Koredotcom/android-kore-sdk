@@ -100,7 +100,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
                 rbFeedback.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
                     if (!isLastItem()) return;
                     contentStateListener.onSaveState(msgId, (int) rating, BotResponse.SELECTED_FEEDBACK);
-                    composeFooterInterface.onSendClick(((int) rating) + "", (int) rating + "", false);
+                    composeFooterInterface.onSendClick(String.valueOf((int) rating), String.valueOf((int) rating), false);
                 });
             }
             break;

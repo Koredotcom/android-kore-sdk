@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bottom_right_rounded_rectangle"
@@ -17,7 +18,8 @@
             android:layout_margin="1dp"
             android:textColor="@color/txtFontBlack"
             android:textSize="@dimen/text_size_sub_header"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <kore.botssdk.view.CustomTextView
             android:id="@+id/tvDescription"
@@ -27,17 +29,18 @@
             android:layout_margin="1dp"
             android:textColor="@color/txtFontBlack"
             android:textSize="@dimen/text_size_normal"
-            android:visibility="gone" />
+            android:visibility="gone"
+            tools:visibility="visible" />
 
         <ImageView
-            android:id="@+id/ivSorting"
-            android:layout_width="@dimen/dimen_25dp"
-            android:layout_height="@dimen/dimen_25dp"
+            android:id="@+id/ivSearch"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_alignParentEnd="true"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/sort_svgrepo_com"
-            android:visibility="gone" />
-
+            android:src="@drawable/ic_search"
+            android:visibility="gone"
+            tools:visibility="visible" />
     </RelativeLayout>
 
     <kore.botssdk.view.AutoExpandListView

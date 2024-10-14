@@ -141,20 +141,22 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 if (response.isSuccessful()) {
                     JWTTokenResponse jwtTokenResponse = response.body();
 
-                    try {
-                        String jwt = jwtTokenResponse.getJwt();
-                        botName = SDKConfiguration.Client.bot_name;
-                        streamId = SDKConfiguration.Client.bot_id;
-                        if (!isRefresh) {
-                            botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager, isReconnect);
-                        } else {
-                            KoreEventCenter.post(jwt);
+                    if (jwtTokenResponse != null) {
+                        try {
+                            String jwt = jwtTokenResponse.getJwt();
+                            botName = SDKConfiguration.Client.bot_name;
+                            streamId = SDKConfiguration.Client.bot_id;
+                            if (!isRefresh) {
+                                botClient.connectAsAnonymousUser(jwt, botName, streamId, botSocketConnectionManager, isReconnect);
+                            } else {
+                                KoreEventCenter.post(jwt);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+                            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                            if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
-                        connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
-                        if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
                     }
                 } else {
                     connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;

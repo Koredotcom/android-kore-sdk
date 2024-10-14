@@ -12,7 +12,7 @@
         android:background="@drawable/theme1_left_bubble_bg"
         android:orientation="vertical">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvDropDownTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
