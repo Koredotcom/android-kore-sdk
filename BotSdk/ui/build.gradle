@@ -6,19 +6,19 @@ plugins {
 }
 group = 'com.github.Koredotcom'
 project.archivesBaseName = 'android-kore-sdk-kotlin-v3'
-//afterEvaluate {
-//    publishing {
-//        publications {
-//            // Creates a Maven publication called "release".
-//            release(MavenPublication) {
-//                from components.release
-//                groupId 'kore.botsdk'
-//                artifactId 'ui'
-//                version '0.3.4'
-//            }
-//        }
-//    }
-//}
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId 'kore.botsdk'
+                artifactId 'ui'
+                version '0.3.4'
+            }
+        }
+    }
+}
 android {
     namespace 'com.kore.ui'
     compileSdk 34
