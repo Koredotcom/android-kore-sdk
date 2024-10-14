@@ -11,6 +11,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
 import com.kore.common.extensions.dpToPx
 import com.kore.common.extensions.getParcelableCompat
@@ -33,7 +34,8 @@ class ChatHeaderTwoFragment(private val onActionEvent: (event: UserActionEvent) 
         val bundle = this.arguments?.getParcelableCompat(EXTRA_BOT_HEADER) as BrandingHeaderModel?
 
         if (bundle != null) {
-            binding.tvBotTitle.text = bundle.title?.name
+            val title = bundle.title?.name
+            binding.tvBotTitle.text = if (!title.isNullOrEmpty()) title else SDKConfiguration.getBotConfigModel()?.botName
             binding.tvBotDesc.text = bundle.subTitle?.name
             binding.root.setBackgroundColor(Color.parseColor(bundle.bgColor))
 
