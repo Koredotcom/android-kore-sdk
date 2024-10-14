@@ -429,11 +429,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
-
-    }
-
-    @Override
     public void sendImage(String fP, String fN, String fPT) {
         new SaveCapturedImageTask(fP, fN, fPT).executeAsync();
     }
