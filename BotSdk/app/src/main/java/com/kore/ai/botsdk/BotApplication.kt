@@ -12,13 +12,18 @@ import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.widgets.WidgetSDKConfiguration
 import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
+import java.util.Locale
 import java.util.Properties
+import java.util.TimeZone
 
 class BotApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
         getBotConfigModel()?.let { SDKConfiguration.initialize(it) }
+        SDKConfiguration.setQueryParams(getQueryParams())
+        SDKConfiguration.setCustomData(getCustomData())
+
         val widgetConfig = WidgetConfigModel(
             "SDK Demo",
             "st-7716ac36-2786-5bdf-b2cc-0d50474b6f87",
@@ -58,5 +63,24 @@ class BotApplication : Application() {
             Log.e(BotApplication::class.java.simpleName, "Failed to open config file.")
         }
         return null
+    }
+
+    private fun getQueryParams(): HashMap<String, Any> {
+        val queryParams = HashMap<String, Any>()
+        queryParams["q1"] = true
+        queryParams["q2"] = 4
+        queryParams["q3"] = "connect"
+        return queryParams
+    }
+
+    private fun getCustomData(): HashMap<String, Any> {
+        val customData: HashMap<String, Any> = HashMap()
+        customData["name"] = "Kore Bot"
+        customData["emailId"] = "emailId"
+        customData["mobile"] = "mobile"
+        customData["accountId"] = "accountId"
+        customData["timeZoneOffset"] = -330
+        customData["UserTimeInGMT"] = TimeZone.getDefault().id + " " + Locale.getDefault().isO3Language
+        return customData
     }
 }

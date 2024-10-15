@@ -83,7 +83,7 @@ class BotClient private constructor() {
 
     private lateinit var context: Context
     private var listener: BotConnectionListener? = null
-    private val botCustomData: HashMap<String, String?> = HashMap()
+    private val botCustomData: HashMap<String, Any?> = HashMap()
     private lateinit var botInfoModel: BotInfoModel
     private lateinit var botInfoMap: HashMap<String, Any>
     private var timer: Timer? = null
@@ -151,6 +151,11 @@ class BotClient private constructor() {
         val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return false
         isReconnectAttemptRequired = true
         botCustomData.clear()
+        SDKConfiguration.getCustomData()?.let {
+            for ((key, value) in it.entries) {
+                botCustomData[key] = value
+            }
+        }
         botCustomData[DATA_USERNAME] = ""
         botCustomData[DATA_IDENTITY] = ""
         botCustomData[DATA_USER_AGENT] = System.getProperty(SYS_PROP_HTTP_AGENT)
@@ -291,8 +296,17 @@ class BotClient private constructor() {
             connectOptions.maxMessagePayloadSize = 256 * 1024
             connectOptions.reconnectInterval = 0
             try {
+                val queryParams = StringBuilder()
+                SDKConfiguration.getQueryParams()?.let {
+                    for ((key, value) in it.entries) {
+                        queryParams.append("&")
+                        queryParams.append(key)
+                        queryParams.append("=")
+                        queryParams.append(value)
+                    }
+                }
                 socketConnection.connect(
-                    rtmUrl + if (isReconnectionAttempt) RECONNECT_PARAM else "",
+                    rtmUrl + if (isReconnectionAttempt) RECONNECT_PARAM else "" + queryParams,
                     object : WebSocketConnectionHandler() {
                         override fun onOpen() {
                             LogUtils.d(LOG_TAG, "Connection Open...")

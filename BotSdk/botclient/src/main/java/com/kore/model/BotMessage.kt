@@ -3,7 +3,7 @@ package com.kore.model
 data class BotMessage(
     var body: String,
     private var attachments: List<Map<String, *>>?,
-    private val customData: HashMap<String, String?>?,
+    private val customData: HashMap<String, Any?>?,
     var params: HashMap<String, Any>? = null
 ) {
     constructor(body: String) : this(body, null, null, null)

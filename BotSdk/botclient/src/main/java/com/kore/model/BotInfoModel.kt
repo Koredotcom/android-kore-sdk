@@ -10,6 +10,6 @@ data class BotInfoModel(
     val botName: String,
     @SerializedName("taskBotId")
     val botId: String,
-    val customData: Map<String, String?>?,
+    val customData: Map<String, Any?>?,
     val channelClient: String = "Android"
 )

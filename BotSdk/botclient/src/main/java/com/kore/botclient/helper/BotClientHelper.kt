@@ -34,7 +34,7 @@ class BotClientHelper {
             message: String,
             payload: String?,
             attachment: List<Map<String, *>>?,
-            botCustomData: HashMap<String, String?>,
+            botCustomData: HashMap<String, Any?>,
             botInfoModel: BotInfoModel,
             onCreatePayload: (payload: String, botRequest: BotRequest) -> Unit
         ) {
@@ -68,7 +68,7 @@ class BotClientHelper {
             payload: String?,
             attachments: List<Map<String, *>>?,
             botConfigModel: BotConfigModel,
-            botCustomData: HashMap<String, String?>,
+            botCustomData: HashMap<String, Any?>,
             onCreatePayload: (HashMap<String, Any?>) -> Unit
         ) {
             val hashMap = HashMap<String, Any?>()
