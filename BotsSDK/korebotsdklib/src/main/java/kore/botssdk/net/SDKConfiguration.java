@@ -12,33 +12,14 @@ import java.util.HashMap;
 @SuppressLint("UnknownNullness")
 public class SDKConfiguration {
 
-    public static final String APP_REQ_COLOR = "#3942f6";
+    public static final String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5
     /**
      * bot init text  and related settings
      */
-    private static boolean TRIGGER_INIT_MESSAGE = false;
-    private static String INIT_MESSAGE = "Welpro";
     private static boolean TIME_STAMPS_REQUIRED = true;
     private static final boolean APPLY_FONT_STYLE = true;
     protected static HashMap<String, View> hsh = new HashMap<>();
     protected static HashMap<String, Class<?>> hshViewHolders = new HashMap<>();
-
-    public static boolean isTriggerInitMessage() {
-        return TRIGGER_INIT_MESSAGE;
-    }
-
-    public static void setTriggerInitMessage(boolean triggerInitMessage) {
-        TRIGGER_INIT_MESSAGE = triggerInitMessage;
-    }
-
-    public static String getInitMessage() {
-        return INIT_MESSAGE;
-    }
-
-    public static void setInitMessage(String initMessage) {
-        INIT_MESSAGE = initMessage;
-    }
-
 
     public static boolean isApplyFontStyle() {
         return APPLY_FONT_STYLE;
@@ -46,7 +27,21 @@ public class SDKConfiguration {
 
     //JWTServer related configurations
     public static class JWTServer {
-        static final String JWT_SERVER_URL = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
+        public static void setJwtServerUrl(String jwtServerUrl) {
+            JWT_SERVER_URL = jwtServerUrl;
+        }
+
+        static String JWT_SERVER_URL = "PLEASE_ENTER_JWT_SERVER_URL";
+
+        static String jwt_token = "PLEASE_ENTER_JWT_TOKEN";
+
+        public static void setJwt_token(String jwt_token) {
+            JWTServer.jwt_token = jwt_token;
+        }
+
+        public static String getJwt_token() {
+            return jwt_token;
+        }
     }
 
     //Server related configurations
@@ -54,43 +49,64 @@ public class SDKConfiguration {
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
         }
-        public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
-        public static final boolean IS_ANONYMOUS_USER = false;
-        public static String SERVER_URL = "https://platform.kore.ai/";
-        public static final String Branding_SERVER_URL = "https://platform.kore.ai/";
-        public static final String koreAPIUrl = "https://bots.kore.ai/";
 
+        public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
+        public static String SERVER_URL = "PLEASE_ENTER_SERVER_URL";
+        public static String Branding_SERVER_URL = "PLEASE_ENTER_BRANDING_SERVER_URL";
         public static HashMap<String, Object> queryParams = new HashMap<>();
 
         public static RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
+
+        public static void setBrandingUrl(String url) {
+            Branding_SERVER_URL = url;
+        }
+
         public static void setQueryParams(HashMap<String, Object> queryParams) {
             Server.queryParams = queryParams;
         }
+
         public static void setCustomData(RestResponse.BotCustomData customData) {
             Server.customData = customData;
         }
     }
 
     public static class Client {
-        public static String client_id = "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6";
-        public static String client_secret = "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=";
-        public static String bot_id = "st-f59fda8f-e42c-5c6a-bc55-3395c109862a";
-        public static String identity = "example@kore.com";
-        public static String bot_name = "Giga";
 
-        public static final String tenant_id = "605da1dbb5f6f00badadb665";
-        public static final boolean enablePanel = false;
-        public static final boolean enable_ack_delivery = false;
-        public static final boolean isWebHook = false;
-        public static final String webHook_client_id = "cs-ab324147-4c82-5eb5-b73e-42cf8d8340f8";//"cs-96c4747a-bb79-58b0-9dca-0dcf6c6148cf";//"cs-dc0f84ac-4751-5293-b254-6a0a382ab08c";//"cs-a269ad0a-45ec-5b41-9950-18571e42a6a4";//"cs-5649368e-68bb-555a-8803-935f223db585";
-        public static final String webHook_client_secret = "kD9HrB5CPeneebDZFXpRmUxamx55NfVsx0t4nVr78v8=";//"qc4c+FOpEo88m27BgECpcS/oC/CKDWa8u70ll0qr4MM=";//"MiFzNLLWTQZddj1HOmdM4iyePhQ+gED4jdUg88Ujh1Y=";//"kmZ7ck9wRxSVV2dNNwi2P3UZI3qacJgu7JL9AmZapS4=";//"AHSubkG09DRdcz9xlzxUXfrxyRx9V0Yhd+6SnXtjYe4=";
-        public static final String webHook_identity = "sudheer.jampana@kore.com";
-        public static final String webHook_bot_id = "st-fd0f5024-2318-56fe-8354-555e1786133e";//"st-2e4c9eaf-070c-5b86-8020-add76f37e3a2";//"st-05303785-9992-526c-a83c-be3252fd478e";//"st-caecd28f-64ed-5224-a612-7a3d3a870aed";//"st-cc32974e-c7a2-52d1-83bf-c3dc2b2a9db3";
+        public static boolean enablePanel = false;
         public static boolean timeStampBottom = false;
+
+        public static void setClient_id(String client_id) {
+            Client.client_id = client_id;
+        }
+
+        public static void setClient_secret(String client_secret) {
+            Client.client_secret = client_secret;
+        }
+
+        public static void setIdentity(String identity) {
+            Client.identity = identity;
+        }
+
+        public static void setBot_name(String bot_name) {
+            Client.bot_name = bot_name;
+        }
+
+        public static void setBot_id(String bot_id) {
+            Client.bot_id = bot_id;
+        }
+
+        public static String client_id = "PLEASE_ENTER_CLIENT_ID";
+        public static String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
+        public static String identity = "PLEASE_ENTER_IDENTITY";
+        public static String bot_name = "Kore.ai Bot";
+        public static String bot_id = "st-fc50f8c4-91a0-5ae7-bff2-283ad3c81700";
+        public static boolean enable_ack_delivery = false;
+
+        //Webhook
+        public static boolean isWebHook = false;
     }
 
     public static class BubbleColors {
-        public static boolean isArabic = false;
         public static String rightBubbleSelected = APP_REQ_COLOR;
 
         public static void setRightBubbleSelected(String rightBubbleSelected) {
@@ -133,7 +149,6 @@ public class SDKConfiguration {
             BubbleColors.leftLinkColor = leftLinkColor;
         }
 
-
         public static String rightBubbleUnSelected = APP_REQ_COLOR;
         public static String leftBubbleSelected = "#D3D3D3";
         public static String leftBubbleUnSelected = "#f8f9f8";
@@ -144,8 +159,7 @@ public class SDKConfiguration {
         public static String rightLinkColor = APP_REQ_COLOR;
         public static String leftLinkColor = APP_REQ_COLOR;
         public static final boolean BubbleUI = false;
-        public static final boolean showIcon = true;
-        public static final boolean showIconTop = true;
+        public static boolean showIcon = false;
 
         public static int getIcon() {
             return icon;
@@ -170,19 +184,25 @@ public class SDKConfiguration {
             return profileColor;
         }
 
-        public static void setProfileColor(String profileColor) {
-            BubbleColors.profileColor = profileColor;
-        }
-
         static String profileColor = APP_REQ_COLOR;
-
-        public static void setQuickReplyColor(String quickReplyColor) {
-            BubbleColors.quickReplyColor = quickReplyColor;
-        }
-
         public static String quickReplyColor = "#EEEEF0";
         public static String quickReplyTextColor = "#000000";
+        public static String quickBorderColor = "#000000";
+    }
 
+    public static class OverrideKoreConfig {
+        public static boolean isEmojiShortcutEnable = true;
+        public static int typing_indicator_timeout = 10000;
+        public static boolean history_enable = true;
+        public static boolean paginated_scroll_enable = true;
+        public static int history_batch_size = 10;
+        public static int paginated_scroll_batch_size = 10;
+        public static String paginated_scroll_loading_label = "Loading old messages";
+        public static boolean showIconTop = true;
+        public static boolean showAttachment = true;
+        public static boolean showASRMicroPhone = true;
+        public static boolean showTextToSpeech = true;
+        public static boolean history_initial_call = false;
     }
 
     public static boolean isTimeStampsRequired() {
@@ -193,11 +213,13 @@ public class SDKConfiguration {
         TIME_STAMPS_REQUIRED = timeStampsRequired;
     }
 
-    /**
-     * don't use relative it is licenced version
-     */
-    public enum FONT_TYPES {
-        ROBOTO, RELATIVE
+    public static void setCustomTemplateView(String templateName, View templateView) {
+        hsh.put(templateName, templateView);
+        Log.e("HashMap Count", hsh.size() + "");
+    }
+
+    public static HashMap<String, View> getCustomTemplateView() {
+        return hsh;
     }
 
     public static void setCustomTemplateViewHolder(String templateName, Class<?> viewHolder) {

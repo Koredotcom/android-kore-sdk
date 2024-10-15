@@ -131,7 +131,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(true);
         } else {
-            makeStsJwtCallWithConfig(false);
+            makeStsJwtCallWithConfig(SDKConfiguration.Client.isWebHook);
         }
     }
 
@@ -257,43 +257,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     }
 
-    private void makeTokenCallForJwt(final boolean isRefresh) {
-
-        if (botCustomData == null) {
-            botCustomData = new RestResponse.BotCustomData();
-        }
-        botCustomData.put("tenantId", SDKConfiguration.Client.tenant_id);
-
-        Call<TokenResponseModel> jwtTokenCall = RestBuilder.getTokenRestAPI().getTokenJWT(botCustomData);
-        RestAPIHelper.enqueueWithRetry(jwtTokenCall, new Callback<TokenResponseModel>() {
-            @Override
-            public void onResponse(Call<TokenResponseModel> call, Response<TokenResponseModel> response) {
-                if (response.isSuccessful()) {
-                    tokenResponseModel = response.body();
-                    botName = tokenResponseModel.getBotInfo().getName();
-                    streamId = tokenResponseModel.getBotInfo().get_id();
-                    SDKConfiguration.Server.setServerUrl(tokenResponseModel.getKoreAPIUrl());
-
-                    if (!isRefresh) {
-                        botClient.connectAsAnonymousUser(tokenResponseModel.getJwt(), botName, streamId, botSocketConnectionManager);
-                    } else {
-                        KoreEventCenter.post(tokenResponseModel.getJwt());
-                    }
-                } else {
-                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TokenResponseModel> call, Throwable t) {
-                LogUtils.d("token refresh", t.getMessage());
-                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
-            }
-        });
-
-
-    }
-
     @Override
     public void onRawTextMessage(byte[] payload) {
     }
@@ -378,7 +341,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (isWithAuth) {
             makeJwtCallWithToken(false);
         } else {
-            makeStsJwtCallWithConfig(false);
+            makeStsJwtCallWithConfig(SDKConfiguration.Client.isWebHook);
         }
     }
 

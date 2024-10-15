@@ -336,6 +336,21 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                         && footerModel.getButtons().getMenu().getActions().size() > 0) {
                     botOptionsModel = footerModel.getButtons().getMenu().getActions();
                 }
+
+                if (footerModel.getButtons() != null && footerModel.getButtons() != null) {
+                    if (footerModel.getButtons().getMicrophone() != null)
+                        SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = footerModel.getButtons().getMicrophone().isShow();
+                    if (footerModel.getButtons().getAttachment() != null)
+                        SDKConfiguration.OverrideKoreConfig.showAttachment = footerModel.getButtons().getAttachment().isShow();
+                    if (footerModel.getButtons().getSpeaker() != null)
+                        SDKConfiguration.OverrideKoreConfig.showTextToSpeech = footerModel.getButtons().getSpeaker().isShow();
+                }
+
+                if (SDKConfiguration.OverrideKoreConfig.showAttachment) ivAttachment.setVisibility(View.VISIBLE);
+
+                if (SDKConfiguration.OverrideKoreConfig.showTextToSpeech) audioSpeakTts.setVisibility(View.VISIBLE);
+
+                if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone && StringUtils.isNullOrEmpty(editTextMessage.getText().toString())) recAudioImg.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -344,7 +359,6 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         Bundle bundle = getArguments();
         if (bundle != null) {
             botBrandingModel = (BotBrandingModel) bundle.getSerializable(BundleUtils.BRANDING);
-
         }
     }
 
@@ -848,7 +862,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (!SDKConfiguration.Client.isWebHook) {
                 KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(requireActivity()).getAccessToken(), SocketWrapper.getInstance(requireActivity()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
             } else {
-                KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(requireActivity()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.webHook_bot_id));
+                KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(requireActivity()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
             }
         } else {
             ToastUtils.showToast(requireActivity(), "Unable to attach file!");

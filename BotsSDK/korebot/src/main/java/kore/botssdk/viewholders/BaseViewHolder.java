@@ -94,7 +94,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         } else {
             params.setMarginStart(ChatAdapterItemDecoration.messageMargin / 2);
         }
-        if (SDKConfiguration.BubbleColors.showIcon && !SDKConfiguration.BubbleColors.showIconTop) {
+        if (SDKConfiguration.BubbleColors.showIcon && !SDKConfiguration.OverrideKoreConfig.showIconTop) {
             ImageView botIcon = itemView.findViewById(R.id.bot_icon);
             params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
             params.gravity = Gravity.BOTTOM;
@@ -114,9 +114,9 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 Glide.with(context).load(iconUrl).error(R.mipmap.ic_launcher).into(new DrawableImageViewTarget(botIcon));
             }
 
-            if(SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.BubbleColors.showIconTop) {
+            if(SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.OverrideKoreConfig.showIconTop) {
                 LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
-                params.topMargin = (int) (21 * dp1);
+                params.topMargin = (int) (17 * dp1);
             }
         }
     }

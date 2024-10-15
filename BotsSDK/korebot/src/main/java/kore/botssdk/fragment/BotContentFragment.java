@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import io.reactivex.Observable;
@@ -558,16 +559,16 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
                 Call<BotHistory> _resp;
                 if (Client.isWebHook) {
-                    _resp = WebHookRestBuilder.getRestAPI().getWebHookBotHistory("bearer " + jwt, Client.webHook_bot_id, Client.webHook_bot_id, limit, _offset);
+                    _resp = WebHookRestBuilder.getRestAPI().getWebHookBotHistory("bearer " + jwt, Client.bot_id, Client.bot_id, limit, _offset);
                 } else {
-                    _resp = RestBuilder.getRestAPI().getBotHistory("bearer " + SocketWrapper.getInstance(getActivity().getApplicationContext()).getAccessToken(), Client.bot_id, limit, _offset, true);
+                    _resp = RestBuilder.getRestAPI().getBotHistory("bearer " + SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken(), Client.bot_id, limit, _offset, true);
                 }
                 Response<BotHistory> rBody = _resp.execute();
                 BotHistory history = rBody.body();
 
                 if (rBody.isSuccessful() && history != null) {
                     List<BotHistoryMessage> messages = history.getMessages();
-                    ArrayList<BaseBotMessage> msgs = null;
+                    ArrayList<BaseBotMessage> msgs;
                     if (messages != null && messages.size() > 0) {
                         msgs = new ArrayList<>();
                         for (int index = 0; index < messages.size(); index++) {
@@ -579,10 +580,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                     PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
                                     BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
                                     r.setType(msg.getType());
+                                    r.setIcon(history.getIcon());
                                     msgs.add(r);
                                 } catch (com.google.gson.JsonSyntaxException ex) {
                                     BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
                                     r.setType(msg.getType());
+                                    r.setIcon(history.getIcon());
                                     msgs.add(r);
                                 }
                             } else {
@@ -597,7 +600,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                     String jsonPayload = gson.toJson(botPayLoad);
 
                                     BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                    long cTime = DateUtils.isoFormatter.parse(msg.getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
+                                    long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
                                     String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                     botRequest.setCreatedOn(createdTime);
                                     msgs.add(botRequest);

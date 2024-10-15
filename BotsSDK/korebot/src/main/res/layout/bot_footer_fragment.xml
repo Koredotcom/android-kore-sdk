@@ -58,7 +58,7 @@
                     android:layout_centerVertical="true"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/widget_menu"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/ivAttachment"
@@ -70,7 +70,7 @@
                     android:layout_toEndOf="@+id/newMenuLogo"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/attachment_comp"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
             </RelativeLayout>
 
@@ -99,7 +99,7 @@
                     android:background="@drawable/input_compose"
                     android:orientation="horizontal">
 
-                    <EditText
+                    <kore.botssdk.view.CustomEditTextView
                         android:id="@+id/edtTxtMessage"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
@@ -125,7 +125,7 @@
                         android:layout_marginEnd="@dimen/dimen_5dp"
                         android:contentDescription="@string/app_name"
                         android:src="@mipmap/ic_volume_up_black_24dp"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         app:tint="#697586" />
 
                 </LinearLayout>
@@ -240,7 +240,7 @@
                     android:layout_gravity="center_vertical"
                     android:contentDescription="@string/app_name"
                     android:src="@drawable/ic_mic"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/keyboard_image"

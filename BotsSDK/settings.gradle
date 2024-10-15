@@ -1,4 +1,3 @@
 include ':korebot', ':korebotsdklib'
 include ':widgetsdk'
-include ':webrtcsdk-release'
 include ':app'

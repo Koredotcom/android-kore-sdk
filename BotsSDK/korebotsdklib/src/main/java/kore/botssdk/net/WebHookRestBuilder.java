@@ -33,7 +33,7 @@ public class WebHookRestBuilder {
     public static RestAPI getRestAPI(){
         if(restAPI == null) {
             restAPI = new Retrofit.Builder()
-                    .baseUrl(SDKConfiguration.Server.koreAPIUrl)
+                    .baseUrl(SDKConfiguration.Server.SERVER_URL)
                     .addConverterFactory(new RestBuilder.NullOnEmptyConverterFactory())
                     .addConverterFactory(createConverter())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

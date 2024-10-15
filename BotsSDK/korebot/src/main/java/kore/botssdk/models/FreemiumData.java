@@ -1,11 +1,13 @@
 package kore.botssdk.models;
 
+@SuppressWarnings("UnKnownNullness")
 public class FreemiumData {
-    public String message,/* rightBtnStr, leftBtnStr,*/timeStr;
+    public String message,/* rightBtnStr, leftBtnStr,*/
+            timeStr;
     public final FreemiumType freemiumType;
     private boolean isAppendingNewText;
 
-    public FreemiumData( FreemiumType freemiumType) {
+    public FreemiumData(FreemiumType freemiumType) {
         this.freemiumType = freemiumType;
     }
 
