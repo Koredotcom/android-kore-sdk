@@ -12,6 +12,7 @@ import retrofit2.http.POST;
 
 public interface BotJWTRestAPI {
     String URL_VERSION = "/1.1";
+
     @Headers({
             "alg:RS256",
             "typ:JWT"

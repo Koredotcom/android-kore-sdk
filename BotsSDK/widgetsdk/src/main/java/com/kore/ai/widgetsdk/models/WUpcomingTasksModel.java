@@ -3,14 +3,7 @@ package com.kore.ai.widgetsdk.models;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 11-Mar-19.
- */
-
 public class WUpcomingTasksModel extends WidgetBaseDataModel {
-
-
-
     private Object params;
 
     public Object getParams() {

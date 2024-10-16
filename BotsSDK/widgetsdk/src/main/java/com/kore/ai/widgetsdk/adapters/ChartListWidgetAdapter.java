@@ -1,14 +1,11 @@
 package com.kore.ai.widgetsdk.adapters;
 
-import static com.kore.ai.widgetsdk.utils.DimensionUtil.dp1;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build.VERSION_CODES;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -18,12 +15,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.RecyclerViewDataAccessor;
@@ -40,17 +36,13 @@ import com.kore.ai.widgetsdk.viewholder.EmptyWidgetViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 01-Apr-19.
- */
-
 public class ChartListWidgetAdapter extends RecyclerView.Adapter implements RecyclerViewDataAccessor {
     private boolean isExpanded = false;
     VerticalListViewActionHelper verticalListViewActionHelper;
 
     ArrayList<Widget.Element> eventList = new ArrayList<>();
     private LayoutInflater inflater = null;
-    private final Context mContext;
+    final Context mContext;
 
     private final int DATA_FOUND = 1;
     private final int EMPTY_CARD = 0;
@@ -82,7 +74,7 @@ public class ChartListWidgetAdapter extends RecyclerView.Adapter implements Recy
         this.loginModel = loginModel;
     }
 
-    private LoginModel loginModel;
+    LoginModel loginModel;
 
     private boolean isLoginNeeded;
 

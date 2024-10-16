@@ -14,7 +14,6 @@ import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +21,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.gson.Gson;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.activities.PanelMainActivity;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
@@ -46,10 +45,6 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-/**
- * Created by Shiva Krishna on 2/26/2018.
- */
 
 public class KaUtility {
 

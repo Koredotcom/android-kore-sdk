@@ -1,8 +1,6 @@
 package com.kore.ai.widgetsdk.models;
 
 public class Weather {
-
-
     String desc;
     String temp;
     String iconId;

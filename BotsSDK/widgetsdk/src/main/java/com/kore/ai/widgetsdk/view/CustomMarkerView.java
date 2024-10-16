@@ -3,7 +3,7 @@ package com.kore.ai.widgetsdk.view;
 import android.content.Context;
 import android.widget.TextView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.charts.components.MarkerView;
 import com.kore.ai.widgetsdk.charts.data.CandleEntry;
 import com.kore.ai.widgetsdk.charts.data.Entry;
@@ -14,6 +14,7 @@ import com.kore.ai.widgetsdk.charts.utils.Utils;
 public class CustomMarkerView extends MarkerView {
 
     private final TextView tvContent;
+
     public CustomMarkerView(Context context, int layoutResource) {
         super(context, layoutResource);
         // this markerview only displays a textview

@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import androidx.core.content.res.ResourcesCompat;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.net.SDKConfiguration;
 
 public class KaFontUtils {

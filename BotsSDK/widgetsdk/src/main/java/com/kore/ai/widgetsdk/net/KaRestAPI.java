@@ -112,7 +112,6 @@ public interface KaRestAPI {
     Call<KnowledgeDetailModel> getKnowledgeFullData(@Header("Authorization") String token, @Path("userId") String userId, @Path("kid") String kid, @Query("type") String type);
 
 
-
     @DELETE("/api" + URL_VERSION + "/ka/users/{userId}/knowledge/{kid}")
     Call<KnowledgeDetailModel> deleteKnowledge(@Header("Authorization") String token, @Path("userId") String userId, @Path("kid") String kid);
 
@@ -130,14 +129,14 @@ public interface KaRestAPI {
     Call<KaRestResponse.RecentKnowledgeResponse> getRecentKnowledge(@Header("Authorization") String token, @Path("userId") String userId, @Query("q") String query, @Query("offSet") int offSet, @Query("offSetTS") long lastMod, @Query("limit") int limit);
 
 
-
     @POST
     Call<KnowledgeDetailModelResponseNew> getRecentKnowledgePanel(@Header("Authorization") String token, @Url String url, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
 
 
     @POST
     Call<TrendingHahTagPanelNewResponse> getTrendingHahTagPanel(@Header("Authorization") String token, @Url String url, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
-//
+
+    //
 //
     @POST
     Call<AnnouncementPanelNewResponse> getRecentAnnoucementPanel(@Header("Authorization") String token, @Url String url, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
@@ -243,7 +242,6 @@ public interface KaRestAPI {
 //
 //    @GET("/api" + URL_VERSION + "/ka/users/{userId}/teams/colors")
 //    Call<ArrayList<ColorModel>> getColors(@Header("Authorization") String token, @Path("userId") String userId);
-
     @GET("/api" + URL_VERSION + "/ka/users/{userId}/teams/checkavailability")
     Call<KaRestResponse.KnowledgeInfo> checkNameAvailability(@Header("Authorization") String token, @Path("userId") String userId, @Query("name") String name, @Query("atMention") String atMention);
 
@@ -431,7 +429,7 @@ public interface KaRestAPI {
     Call<PanelResponseData> getPannelData(@Path("userId") String userId, @Header("Authorization") String token, @Query("tz") String timeZone);
 
     @GET("/widgetsdk/{clientId}/panels?resolveWidgets=true")
-    Call<List<PanelResponseData.Panel>> getWidgetPannelData(@Path("clientId") String clientId, @Header("Authorization") String token,  @Query("from") String identity);
+    Call<List<PanelResponseData.Panel>> getWidgetPannelData(@Path("clientId") String clientId, @Header("Authorization") String token, @Query("from") String identity);
 
 //    @GET("/api" + URL_VERSION + "/ka/users/{userId}/widgets")
 //    Call<MainWidgetDataModel> getBaseWidgetDataWithoutLoc(@Path("userId") String userId, @Header("Authorization") String token, @Query("tz") String timeZone);
@@ -443,7 +441,7 @@ public interface KaRestAPI {
     Call<PanelWidgetsDataModel> getPanelWidgetsData(@Url String url, @Header("Authorization") String token);
 
     @POST
-    Call<WUpcomingTasksModel> getTasksAssignedToYou(@Url String url, @Header("Authorization") String token, @QueryMap(encoded=true) Map<String, Object> param, @Body Object body);
+    Call<WUpcomingTasksModel> getTasksAssignedToYou(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
 
     @GET
     Call<WUpcomingTasksModel> getTasksAssignedByYou(@Url String url, @Header("Authorization") String token);
@@ -453,13 +451,13 @@ public interface KaRestAPI {
 
     @GET
     Call<com.kore.ai.widgetsdk.models.Header> getHeaderDataWithLoc(@Url String url, @Header("Authorization") String token, @Query("lat") double latitude,
-                                      @Query("lon") double longitude);
+                                                                   @Query("lon") double longitude);
 
     @POST
     Call<SummaryViewResponseModel> getSummaryView(@Url String url, @Header("Authorization") String token, @Body Object body);
 
     @POST
-    Call<WUpcomingMeetingModel> getUpcomingMeetingsData(@Url String url, @Header("Authorization") String token, @QueryMap(encoded=true) Map<String, Object> param, @Body Object body);
+    Call<WUpcomingMeetingModel> getUpcomingMeetingsData(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
 //    @POST
 //    Call<WUpcomingMeetingModel> getUpcomingMeetingsData(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
 
@@ -484,7 +482,7 @@ public interface KaRestAPI {
     @POST
     Call<WeatherWidgetModel> getWeatherServiceData(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
 
-//    @POST
+    //    @POST
 //    Call<WUpcomingTasksModel> getTasksAssignedToYou(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
 //
 //    @GET
@@ -495,7 +493,8 @@ public interface KaRestAPI {
 //
     @GET
     Call<WUpcomingTasksModel> getOverDueTasksAssignedByYou(@Url String url, @Header("Authorization") String token);
-//
+
+    //
     @POST
     Call<WUpcomingFilesModel> getFilesCreatedByYou(@Url String url, @Header("Authorization") String token, @QueryMap(encoded = true) Map<String, Object> param, @Body Object body);
 
@@ -529,7 +528,6 @@ public interface KaRestAPI {
 
     @PUT("/api" + URL_VERSION + "/ka/users/{userId}/subdomain")
     Call<CreateEmailActionResponse> createEmailAction(@Header("Authorization") String token, @Path("userId") String userId, @Body CreateEmailActionRequest body);
-
 
 
     @POST("/api" + URL_VERSION + "/ka/users/{userId}/calendar/updateEvent")
@@ -597,12 +595,8 @@ public interface KaRestAPI {
 //                                                      @Path("skillId") String skillId, @Path("action") String action);
 
 
-
-
     @PUT("/api" + URL_VERSION + "/ka/users/{userId}/layout")
     Call<ResponseBody> pinUnPinAction(@Header("Authorization") String token, @Path("userId") String userId, @Body HashMap<String, Object> body);
-
-
 
 
 }

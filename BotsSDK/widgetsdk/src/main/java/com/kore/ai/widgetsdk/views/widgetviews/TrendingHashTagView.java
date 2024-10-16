@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.HashTagWidgetAdapter;
 import com.kore.ai.widgetsdk.cache.PanelDataLRUCache;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
@@ -49,7 +49,7 @@ public class TrendingHashTagView extends ViewGroup {
     private final UpdateRefreshItem listener;
     private View rootView;
     private RecyclerView recycler_hash_tag;
-    public TextView view_more,tv_hashtag_title;
+    public TextView view_more, tv_hashtag_title;
     private HashTagWidgetAdapter hAdapter = null;
     private float dp1;
 
@@ -65,11 +65,12 @@ public class TrendingHashTagView extends ViewGroup {
     private Widget widget;
     private final String name;
     WidgetViewMoreEnum widgetViewMoreEnum;
-    public TrendingHashTagView(Context context, UpdateRefreshItem listener, String name,WidgetViewMoreEnum widgetViewMoreEnum) {
+
+    public TrendingHashTagView(Context context, UpdateRefreshItem listener, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
         this.listener = listener;
         this.name = name;
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
+        this.widgetViewMoreEnum = widgetViewMoreEnum;
         init();
     }
 
@@ -89,11 +90,10 @@ public class TrendingHashTagView extends ViewGroup {
     }
 
 
-
-    private void init(){
+    private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.hashtag_layout, this, true);
         rootView = view.findViewById(R.id.hashtag_root);
-        tv_hashtag_title=view.findViewById(R.id.tv_hashtag_title);
+        tv_hashtag_title = view.findViewById(R.id.tv_hashtag_title);
         tv_hashtag_title.setText(widget.getTitle());
         recycler_hash_tag = view.findViewById(R.id.recycler_hashtag);
         recycler_hash_tag.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -116,15 +116,15 @@ public class TrendingHashTagView extends ViewGroup {
             afterDataLoad((TrendingHahTagPanelNewResponse) PanelDataLRUCache.getInstance().getEntry(name));
             return;
         }*/
-        Map<String,Object> result = getMapObject(widget.getHook().getParams());
+        Map<String, Object> result = getMapObject(widget.getHook().getParams());
         Call<TrendingHahTagPanelNewResponse> hashReq = KaRestBuilder.getKaRestAPI()
-                .getTrendingHahTagPanel(Utils.ah(""), widget.getHook().getApi(),result,widget.getHook().getBody());
+                .getTrendingHahTagPanel(Utils.ah(""), widget.getHook().getApi(), result, widget.getHook().getBody());
         KaRestAPIHelper.enqueueWithRetry(hashReq, new Callback<TrendingHahTagPanelNewResponse>() {
             @Override
             public void onResponse(@NonNull Call<TrendingHahTagPanelNewResponse> call, Response<TrendingHahTagPanelNewResponse> response) {
                 if (response.isSuccessful()) {
                     TrendingHahTagPanelNewResponse resp = response.body();
-                    PanelDataLRUCache.getInstance().putEntry(name,resp);
+                    PanelDataLRUCache.getInstance().putEntry(name, resp);
                     assert resp != null;
                     afterDataLoad(resp);
                 }
@@ -136,18 +136,18 @@ public class TrendingHashTagView extends ViewGroup {
 //                rootView.setVisibility(View.GONE);
 
                 String msg;
-                Drawable drawable=null;
+                Drawable drawable = null;
                 if (!NetworkUtility.isNetworkConnectionAvailable(TrendingHashTagView.this.getContext())) {
                     //No Internet Connect
-                    msg=getResources().getString(R.string.no_internet_connection);
-                    drawable= ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.no_internet, getContext().getTheme());
+                    msg = getResources().getString(R.string.no_internet_connection);
+                    drawable = ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.no_internet, getContext().getTheme());
                 } else {
                     //Oops some thing went wrong
-                    msg=getResources().getString(R.string.oops);
-                    drawable= ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.oops_icon, getContext().getTheme());
+                    msg = getResources().getString(R.string.oops);
+                    drawable = ResourcesCompat.getDrawable(getContext().getResources(), R.drawable.oops_icon, getContext().getTheme());
                 }
                 hAdapter.setHashTagList(null);
-                hAdapter.setMessage(msg,drawable);
+                hAdapter.setMessage(msg, drawable);
                 recycler_hash_tag.setAdapter(hAdapter);
                 view_more.setVisibility(GONE);
                 hAdapter.notifyAll();
@@ -156,18 +156,18 @@ public class TrendingHashTagView extends ViewGroup {
 
     }
 
-    private void afterDataLoad(TrendingHahTagPanelNewResponse models){
+    private void afterDataLoad(TrendingHahTagPanelNewResponse models) {
         ArrayList<TrendingHashTagModel> tags = (ArrayList<TrendingHashTagModel>) models.getElements();
         if (tags != null && tags.size() > 0) {
             rootView.setVisibility(View.VISIBLE);
             hAdapter.setHashTagList(tags);
-            view_more.setVisibility(tags.size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum) ? View.VISIBLE : View.GONE);
+            view_more.setVisibility(tags.size() > 3 && Utility.isViewMoreVisible(widgetViewMoreEnum) ? View.VISIBLE : View.GONE);
             recycler_hash_tag.setAdapter(hAdapter);
-            hAdapter.notifyItemRangeChanged(0 , tags.size() - 1);
+            hAdapter.notifyItemRangeChanged(0, tags.size() - 1);
             view_more.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(listener != null)
+                    if (listener != null)
                         listener.updateItemToRefresh(-1);
                 }
             });
@@ -178,9 +178,11 @@ public class TrendingHashTagView extends ViewGroup {
             hAdapter.notifyAll();
         }
     }
-    public void onEventMainThread(NewHashTagEvent event){
+
+    public void onEventMainThread(NewHashTagEvent event) {
         getHashSuggestions();
     }
+
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         final int count = getChildCount();

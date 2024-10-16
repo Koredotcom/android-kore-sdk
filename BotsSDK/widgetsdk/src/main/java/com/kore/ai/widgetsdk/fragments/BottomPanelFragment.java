@@ -40,7 +40,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.KaWidgetBaseAdapterNew;
 import com.kore.ai.widgetsdk.adapters.PannelAdapter;
 import com.kore.ai.widgetsdk.application.AppControl;
@@ -153,7 +153,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         if (bundle != null) {
             bg_color = bundle.getString(BotResponse.BG_COLOR, "#ffffff");
             recyclerView_panel.setBackgroundColor(Color.parseColor(bg_color));
-            ((GradientDrawable)(persistentPanel.getBackground())).setColor(Color.parseColor(bg_color));
+            ((GradientDrawable) (persistentPanel.getBackground())).setColor(Color.parseColor(bg_color));
         }
 
         return view;
@@ -224,7 +224,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
                 } else {
                     progressBarPanel.setVisibility(View.GONE);
                     if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
-                        emptyPanelView.setText(getString(com.kora.ai.widgetsdk.R.string.oops));
+                        emptyPanelView.setText(getString(R.string.oops));
                         emptyPanelView.setTypeface(KaFontUtils.getCustomTypeface("regular", getActivity()));
                         emptyPanelView.setVisibility(View.VISIBLE);
                     } else {
@@ -237,7 +237,7 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
             public void onFailure(@NonNull Call<List<PanelResponseData.Panel>> call, @NonNull Throwable t) {
                 progressBarPanel.setVisibility(View.GONE);
                 if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
-                    emptyPanelView.setText(getString(com.kora.ai.widgetsdk.R.string.oops));
+                    emptyPanelView.setText(getString(R.string.oops));
                     emptyPanelView.setTypeface(KaFontUtils.getCustomTypeface("regular", getActivity()));
                     emptyPanelView.setVisibility(View.VISIBLE);
                 } else {

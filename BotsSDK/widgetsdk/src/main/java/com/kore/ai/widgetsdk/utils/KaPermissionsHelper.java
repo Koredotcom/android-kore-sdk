@@ -12,31 +12,22 @@ import android.provider.Settings;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
-/**
- * Created by Shiva Krishna on 11/15/2017.
- */
 public class KaPermissionsHelper {
     public static final int GET_ACCOUNT_PERMISSION = 82;
     public static boolean hasPermission(Activity activity,String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(activity, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        for (String s : permission) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(activity, s) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }
 
     public static boolean hasPermission(Context context,String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int permissionLength = permission.length;
-            for (int i=0;i<permissionLength;i++) {
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
-            }
+        for (String s : permission) {
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }

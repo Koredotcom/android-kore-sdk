@@ -19,7 +19,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.events.KaMessengerUpdate;
 import com.kore.ai.widgetsdk.interfaces.PanelInterface;
 import com.kore.ai.widgetsdk.models.PanelBaseModel;

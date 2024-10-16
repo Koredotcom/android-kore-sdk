@@ -7,11 +7,7 @@ import com.kore.ai.widgetsdk.utils.StringUtils;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 08-Mar-19.
- */
-
-public class Widget implements Serializable,Cloneable {
+public class Widget implements Serializable, Cloneable {
 
 
     @Override
@@ -19,6 +15,7 @@ public class Widget implements Serializable,Cloneable {
         Widget widget = (Widget) super.clone();
         return widget;
     }
+
     public LoginModel getLogin() {
         return login;
     }
@@ -168,11 +165,11 @@ public class Widget implements Serializable,Cloneable {
     private String type;
     private String theme;
 
-   // private String api;
+    // private String api;
     private String utterances_header;
 
     public String getTemplateType() {
-        return templateType!=null?templateType:"default";
+        return templateType != null ? templateType : "default";
     }
 
     public void setTemplateType(String templateType) {
@@ -182,7 +179,6 @@ public class Widget implements Serializable,Cloneable {
     @SerializedName("elements")
     @Expose
     private List<Element> elements = null;
-
 
 
     private List<MultiAction> multi_actions = null;
@@ -220,7 +216,7 @@ public class Widget implements Serializable,Cloneable {
     private List<Filter> filters = null;
 
     public String getId() {
-        if(!StringUtils.isNullOrEmpty(id))
+        if (!StringUtils.isNullOrEmpty(id))
             return id;
         else
             return get_id();
@@ -241,6 +237,7 @@ public class Widget implements Serializable,Cloneable {
     public String getRefreshInterval() {
         return refreshInterval;
     }
+
     public List<Action> getActions() {
         return actions;
     }
@@ -284,14 +281,15 @@ public class Widget implements Serializable,Cloneable {
     public void setTheme(String theme) {
         this.theme = theme;
     }
-/*
-    public String getApi() {
-        return api;
-    }
 
-    public void setApi(String api) {
-        this.api = api;
-    }*/
+    /*
+        public String getApi() {
+            return api;
+        }
+
+        public void setApi(String api) {
+            this.api = api;
+        }*/
     @SerializedName("hook")
     @Expose
     private Hook hook;
@@ -303,10 +301,10 @@ public class Widget implements Serializable,Cloneable {
     public void setHook(Hook hook) {
         this.hook = hook;
     }
+
     @SerializedName("templateType")
     @Expose
     private String templateType;
-
 
 
     public List<Filter> getFilters() {
@@ -466,65 +464,7 @@ public class Widget implements Serializable,Cloneable {
 
     }
 
-   /* public class Body implements Serializable{
-
-        @SerializedName("filter")
-        @Expose
-        private Filter filter;
-        @SerializedName("tz")
-        @Expose
-        private Tz tz;
-
-        public Filter getFilter() {
-            return filter;
-        }
-
-        public void setFilter(Filter filter) {
-            this.filter = filter;
-        }
-
-        public Tz getTz() {
-            return tz;
-        }
-
-        public void setTz(Tz tz) {
-            this.tz = tz;
-        }
-
-    }*/
-
-    /*public class Element implements Serializable{
-        @SerializedName("title")
-        @Expose
-        private String title;
-
-        @SerializedName("subTitle")
-        @Expose
-        private String sub_title;
-
-        @SerializedName("icon")
-        @Expose
-        private String icon;
-
-        @SerializedName("filter")
-        @Expose
-        private Button filter;
-
-    }
-
-    public class Button extends MultiAction{
-        private String theme;
-
-        public String getTheme() {
-            return theme;
-        }
-
-        public void setTheme(String theme) {
-            this.theme = theme;
-        }
-    }*/
-
-    public static class Element implements Serializable{
+    public static class Element implements Serializable {
 
         private String paceHolder;
 
@@ -607,7 +547,7 @@ public class Widget implements Serializable,Cloneable {
         private String text;
 
         public String getTheme() {
-            if(theme != null)
+            if (theme != null)
                 return theme;
             else
                 return "#4741fa";
@@ -693,17 +633,17 @@ public class Widget implements Serializable,Cloneable {
         }
 
         public DefaultAction getDefaultAction() {
-            return default_action!= null ? default_action : defaultAction;
+            return default_action != null ? default_action : defaultAction;
         }
 
         public void setDefaultAction(DefaultAction default_action) {
             this.default_action = default_action;
-            this.defaultAction= default_action;
+            this.defaultAction = default_action;
         }
 
     }
 
-    public static class Button implements Serializable{
+    public static class Button implements Serializable {
 
         private String title;
         private String theme;
@@ -740,7 +680,7 @@ public class Widget implements Serializable,Cloneable {
         }
 
         public String getTheme() {
-            if(theme != null)
+            if (theme != null)
                 return theme;
             else
                 return "#4741fa";
@@ -777,7 +717,7 @@ public class Widget implements Serializable,Cloneable {
     }
 
 
-    public static class DefaultAction implements Serializable{
+    public static class DefaultAction implements Serializable {
 
         private String title;
         private String type;

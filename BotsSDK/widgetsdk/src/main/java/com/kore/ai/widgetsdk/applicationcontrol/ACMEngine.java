@@ -1,10 +1,5 @@
 package com.kore.ai.widgetsdk.applicationcontrol;
 
-/**
- * Created by Ramachandra Pradeep Challa
- * Kore.ai
- */
-
 public class ACMEngine {
 
     public static final byte MODE_ONLY_CHAT = 2;//0+2+0

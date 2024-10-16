@@ -20,18 +20,18 @@ public class FormActionTemplate {
         this.form_name = form_name;
     }
 
-    public HashMap<String,Object> getCustomData() {
+    public HashMap<String, Object> getCustomData() {
         return customData;
     }
 
-    public void setCustomData(HashMap<String,Object> customData) {
+    public void setCustomData(HashMap<String, Object> customData) {
         this.customData = customData;
     }
 
 
     private String title;
     private String form_name;
-    private HashMap<String,Object> customData;
+    private HashMap<String, Object> customData;
 
 
 }

@@ -2,9 +2,6 @@ package com.kore.ai.widgetsdk.overscroll;
 
 import android.view.View;
 
-/**
- * @author amit
- */
 public interface IOverScrollDecor {
     View getView();
 

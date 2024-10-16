@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginBottom="@dimen/dimen_3dp"
+                android:layout_marginStart="@dimen/dimen_5dp"
                 app:LoadingDots_auto_play="true"
                 app:LoadingDots_dots_color="@color/bgBlueSignup"
                 app:LoadingDots_dots_count="3"

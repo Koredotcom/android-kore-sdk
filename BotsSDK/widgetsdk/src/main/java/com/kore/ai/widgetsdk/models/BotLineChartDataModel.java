@@ -3,10 +3,6 @@ package com.kore.ai.widgetsdk.models;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Shiva Krishna on 11/6/2017.
- */
-
 public class BotLineChartDataModel {
     private String title;
     private List<Float> values;

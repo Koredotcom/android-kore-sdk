@@ -1,8 +1,5 @@
 package com.kore.ai.widgetsdk.overscroll;
 
-/**
- * @author amit
- */
 public interface IOverScrollState {
 
     /** No over-scroll is in-effect. */

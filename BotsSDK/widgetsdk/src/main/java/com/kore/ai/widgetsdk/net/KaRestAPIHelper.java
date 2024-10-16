@@ -45,9 +45,7 @@ public class KaRestAPIHelper {
     }
 
 
-
-    public static  void actionPinnAndUnPinn(String accessToken, String userId, Widget widget, PanelLevelData panelData, final PinUnPinnCallBack callBack)
-    {
+    public static void actionPinnAndUnPinn(String accessToken, String userId, Widget widget, PanelLevelData panelData, final PinUnPinnCallBack callBack) {
         PinWidget pinWidget = new PinWidget();
         pinWidget.setSkillId(panelData.getSkillId());
         pinWidget.setPanelId(panelData.get_id());
@@ -60,11 +58,11 @@ public class KaRestAPIHelper {
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put(widget.isPinned() ? "unpinWidget" : "pinWidget", pinWidget);
 
-        Call<ResponseBody> call = KaRestBuilder.getKaRestAPI().pinUnPinAction(Utils.ah(accessToken),userId, hashMap);
+        Call<ResponseBody> call = KaRestBuilder.getKaRestAPI().pinUnPinAction(Utils.ah(accessToken), userId, hashMap);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                if(response.isSuccessful())
+                if (response.isSuccessful())
                     callBack.success();
                 else
                     callBack.failure(null);

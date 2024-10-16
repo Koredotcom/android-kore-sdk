@@ -21,7 +21,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 
 @SuppressLint("SetJavaScriptEnabled")
 public class GenericWebViewActivity extends BotAppCompactActivity {

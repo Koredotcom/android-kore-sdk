@@ -18,7 +18,6 @@ import android.view.animation.Interpolator;
 
 import com.kore.ai.widgetsdk.overscroll.adapters.IOverScrollDecoratorAdapter;
 
-
 public abstract class OverScrollBounceEffectDecoratorBase implements IOverScrollDecor, View.OnTouchListener {
 
     public static final String TAG = "OverScrollDecor";

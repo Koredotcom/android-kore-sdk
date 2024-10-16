@@ -10,7 +10,7 @@ import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 
-/**
+/*
  * Copyright (C) 2017 Wasabeef
  *
  * Licensed under the Apache License, Version 2.0 (the "License");

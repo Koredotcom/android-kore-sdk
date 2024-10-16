@@ -12,10 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import androidx.core.content.res.ResourcesCompat;
-
-import com.kora.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.application.AppControl;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.drawables.ProfileDrawable;
 import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.StringConstants;

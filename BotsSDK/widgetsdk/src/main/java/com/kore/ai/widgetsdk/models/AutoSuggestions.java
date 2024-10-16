@@ -1,9 +1,8 @@
 package com.kore.ai.widgetsdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 26-Feb-18.
- */
+import android.annotation.SuppressLint;
 
+@SuppressLint("UnknownNullness")
 public class AutoSuggestions {
     public String getType() {
         return type;

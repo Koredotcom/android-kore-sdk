@@ -7,18 +7,14 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kora.ai.widgetsdk.R;
-
-/**
- * Created by Ramachandra Pradeep on 27-Mar-18.
- */
+import com.kore.ai.widgetsdk.R;
 
 public class BotAppCompactActivity extends AppCompatActivity {
 
     protected final String LOG_TAG = getClass().getSimpleName();
     private ProgressDialog mProgressDialog;
 
-   // SpiceManager spiceManager = new SpiceManager(BotRestService.class);
+    // SpiceManager spiceManager = new SpiceManager(BotRestService.class);
     public void finish() {
        /* if(this.spiceManager.isStarted()) {
             this.spiceManager.shouldStop();
@@ -47,7 +43,7 @@ public class BotAppCompactActivity extends AppCompatActivity {
         mProgressDialog = ProgressDialog.show(this, getResources().getString(R.string.app_name), msg);
         mProgressDialog.setCancelable(isCancelable);
         mProgressDialog.setContentView(R.layout.progress_indicator);
-        ((TextView)mProgressDialog.findViewById(R.id.loadingText)).setText(TextUtils.isEmpty(msg)? "please wait" : msg);
+        ((TextView) mProgressDialog.findViewById(R.id.loadingText)).setText(TextUtils.isEmpty(msg) ? "please wait" : msg);
         mProgressDialog.show();
     }
 

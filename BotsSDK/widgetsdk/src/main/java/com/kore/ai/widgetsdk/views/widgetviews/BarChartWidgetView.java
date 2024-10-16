@@ -4,7 +4,6 @@ import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 import android.content.Context;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +11,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.charts.charts.BarChart;
 import com.kore.ai.widgetsdk.charts.components.AxisBase;
 import com.kore.ai.widgetsdk.charts.components.Legend;
@@ -39,7 +38,6 @@ import com.kore.ai.widgetsdk.models.searchskill.PanelLevelData;
 import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetDataLoader;
 import com.kore.ai.widgetsdk.view.CustomMarkerView;
@@ -68,7 +66,7 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
     private TextView chartHeader;
     private int labelCount = 0;
     private final Context mContext;
-    private TextView pin_view,panel_name_view;
+    private TextView pin_view, panel_name_view;
     private String jwtToken;
 
     public BarChartWidgetView(Context context) {
@@ -77,13 +75,13 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
         init();
     }
 
-    private void init(){
+    private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.barchart_widgetview, this, true);
         rootView = view.findViewById(R.id.chart_root_view);
         chartHeader = view.findViewById(R.id.chart_header);
         progress = view.findViewById(R.id.chart_progress);
         pin_view = view.findViewById(R.id.pin_view);
-        panel_name_view=view.findViewById(R.id.panel_name_view);
+        panel_name_view = view.findViewById(R.id.panel_name_view);
         mChart = view.findViewById(R.id.mChart);
         getUserData();
         labelCount = 0;
@@ -170,26 +168,27 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
 
     PanelLevelData panelData;
     String panelName;
+
     public void setWidget(String panelName, WidgetsModel mWidget, PanelLevelData panelData, String jwtToken) {
         this.mWidget = mWidget;
-        this.panelName=panelName;
-        this.panelData=panelData;
+        this.panelName = panelName;
+        this.panelData = panelData;
         this.jwtToken = jwtToken;
         chartHeader.setText(mWidget.getTitle());
 //        pin_view.setText(mWidget.isPinned() ? mContext.getResources().getString(R.string.icon_31) :mContext.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getName()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(),panelName));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(), panelName));
 
 
         loadData();
     }
 
     private void loadData() {
-        if(mWidget.getCallbackURL()==null) {
+        if (mWidget.getCallbackURL() == null) {
             return;
         }
         progress.setVisibility(View.VISIBLE);
-        Map<String,Object> result = getMapObject(mWidget.getParam());
+        Map<String, Object> result = getMapObject(mWidget.getParam());
         WidgetDataLoader.loadWidgetChartData(mWidget.getCallbackURL(), Utils.ah(jwtToken), result)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -201,12 +200,12 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
                     @Override
                     public void onNext(WidgetsDataModel model) {
 //                        afterDataLoad(model);
-                        if(model!=null && model.getData().get(0).getElements()!=null&&model.getData().get(0).getElements().size()>0){
+                        if (model != null && model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0) {
                             model.getData().get(0).convertElementsToModel();
                             setData(model.getData().get(0).getBarChartElements());
                         }
 
-                        Log.d("IKIDO","Hi");
+                        Log.d("IKIDO", "Hi");
                     }
 
                     @Override
@@ -232,6 +231,7 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
         super.onDetachedFromWindow();
 //        KoreEventCenter.unregister(this);
     }
+
     @Override
     public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
 
@@ -347,7 +347,7 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
             dataSet = new BarDataSet[size];
 
             for (int k = 0; k < size; k++) {
-                dataSet[k] = new BarDataSet(yVals1[k],barChartElements.get(k).getTitle());
+                dataSet[k] = new BarDataSet(yVals1[k], barChartElements.get(k).getTitle());
                 dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
                 barDataSets.add(dataSet[k]);
             }

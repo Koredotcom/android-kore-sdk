@@ -1,6 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 public class KoreMedia{
-	
 	public static final String MEDIA_TYPE_AUDIO = "audio";
 	public static final String MEDIA_TYPE_VIDEO = "video";
 	public static final String MEDIA_TYPE_IMAGE = "image";

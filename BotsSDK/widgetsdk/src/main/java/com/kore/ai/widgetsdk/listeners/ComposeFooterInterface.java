@@ -1,5 +1,6 @@
 package com.kore.ai.widgetsdk.listeners;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -10,6 +11,7 @@ import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
 
 import java.util.ArrayList;
 
+@SuppressLint("UnknownNullness")
 public interface ComposeFooterInterface {
     /**
      * @param message : Title and payload, Both are same

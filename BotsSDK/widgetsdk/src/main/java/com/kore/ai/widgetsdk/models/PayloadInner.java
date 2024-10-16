@@ -9,9 +9,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 12/15/2016.
- */
 public class PayloadInner {
 
     public void setTemplate_type(String template_type) {

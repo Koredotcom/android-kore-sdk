@@ -10,7 +10,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.events.CancelEvent;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
@@ -47,6 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressLint("UnKnownNullness")
 public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelectActionsAdapter.WidgetCancelViewHolder> {
 
     final WidgetActionSheetFragment widgetDialogActivity;
@@ -54,12 +54,10 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     final Object model;
     final Activity mainContext;
     final boolean isFromFullView;
-
-
-    private String skillName;
+    String skillName;
     private final String trigger;
-    private final VerticalListViewActionHelper verticalListViewActionHelper;
-    private boolean isFromListMenu = false;
+    final VerticalListViewActionHelper verticalListViewActionHelper;
+    boolean isFromListMenu;
 
     public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model,
                                       boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper,
@@ -75,21 +73,18 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             this.actionList = ((WCalEventsTemplateModel) model).getActions();
         } else if (model instanceof Widget.Element) {
             this.actionList = ((Widget.Element) model).getActions();
-        } else if (model instanceof WidgetListElementModel) {
-            WidgetListElementModel elementModel = (WidgetListElementModel) model;
+        } else if (model instanceof WidgetListElementModel elementModel) {
             if(isFromListMenu)
                 this.actionList = elementModel.getValue().getMenu();
             else
                 this.actionList = elementModel.getButtons();
         }
-        else if(model instanceof WidgetListModel)
+        else if(model instanceof WidgetListModel listModel)
         {
-            WidgetListModel listModel=(WidgetListModel)model;
             this.actionList=listModel.getHeaderOptions().getMenu();
         }
-        else if(model instanceof BaseChartModel)
+        else if(model instanceof BaseChartModel baseChartModel)
         {
-            BaseChartModel baseChartModel=(BaseChartModel)model;
             this.actionList=baseChartModel.getHeaderOptions().getMenu();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
@@ -244,9 +239,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                     }
                 });
             }
-        } else if (model instanceof WidgetListElementModel) {
-            WidgetListElementModel elementModel2 = (WidgetListElementModel) model;
-            Widget.Button button = null;
+        } else if (model instanceof WidgetListElementModel elementModel2) {
+            Widget.Button button;
             if(isFromListMenu)
                 button = elementModel2.getValue().getMenu().get(position);
             else
@@ -264,9 +258,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 }
             });
         }
-        else if(model instanceof WidgetListModel)
+        else if(model instanceof WidgetListModel wL)
         {
-            WidgetListModel wL=(WidgetListModel)model;
             holder.tv_actions.setText(wL.getHeaderOptions().getMenu().get(position).getTitle());
             Widget.Button finalButton = wL.getHeaderOptions().getMenu().get(position);
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
@@ -278,9 +271,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 }
             });
 
-        }else if(model instanceof BaseChartModel)
+        }else if(model instanceof BaseChartModel ba)
         {
-            BaseChartModel ba=(BaseChartModel)model;
             //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
             holder.tv_actions.setText(ba.getHeaderOptions().getMenu().get(position).getTitle());
             Widget.Button finalButton = ba.getHeaderOptions().getMenu().get(position);
@@ -297,11 +289,9 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
     public static boolean hasPermission(Context context, String... permission) {
         boolean shouldShowRequestPermissionRationale = true;
-        if (Build.VERSION.SDK_INT >= 23) {
-            for (String s : permission)
-                shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                        ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
-        }
+        for (String s : permission)
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
+                    ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
         return shouldShowRequestPermissionRationale;
     }
 
@@ -366,7 +356,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         this.skillName = skillName;
     }
 
-    private void postAction(int position, boolean append_uttrance) {
+    void postAction(int position, boolean append_uttrance) {
         HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
         ArrayList<String> list = new ArrayList<>(1);
         list.add(((WCalEventsTemplateModel) model).getData().getEventId());

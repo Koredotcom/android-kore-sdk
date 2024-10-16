@@ -15,7 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BotCaourselButtonModel;

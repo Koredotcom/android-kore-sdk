@@ -3,7 +3,6 @@ package com.kore.ai.widgetsdk.multilamp.model;
 import android.graphics.Paint;
 import android.view.View;
 
-import com.kore.ai.widgetsdk.multilamp.shapes.LIneOrientation;
 import com.kore.ai.widgetsdk.multilamp.shapes.Shape;
 
 public class Target {
@@ -18,13 +17,6 @@ public class Target {
     private View recy;
     private View view;
     private  WidgetEnum widgetEnum;
-    public LIneOrientation getlIneOrientation() {
-        return lIneOrientation;
-    }
-
-    public void setlIneOrientation(LIneOrientation lIneOrientation) {
-        this.lIneOrientation = lIneOrientation;
-    }
 
     private String message;
 
@@ -74,7 +66,6 @@ public class Target {
 
     private char direction;
     private  int drawableId;
-    LIneOrientation lIneOrientation;
     public Target() {
 
     }
@@ -85,21 +76,6 @@ public class Target {
 
     public void setWidgetEnum(WidgetEnum widgetEnum) {
         this.widgetEnum = widgetEnum;
-    }
-
-    public Target(View view, String message, char direction, Shape shape, int lineCount, int textPlace, Paint.Align align, int appendPosition, int drawableId, LIneOrientation lIneOrientation, WidgetEnum widgetEnum,View recy) {
-        this.view = view;
-        this.message = message;
-        this.shape = shape;
-        this.direction = direction;
-        this.lineCount=lineCount;
-        this.textPlace=textPlace;
-        this.align=align;
-        this.appendPosition=appendPosition;
-        this.drawableId=drawableId;
-        this.lIneOrientation=lIneOrientation;
-        this.widgetEnum=widgetEnum;
-        this.recy=recy;
     }
 
     public int getDrawableId() {

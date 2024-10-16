@@ -9,10 +9,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.InvokeGenericWebViewInterface;
 import com.kore.ai.widgetsdk.models.BotTableListElementsItemsModel;
@@ -27,9 +26,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<BotTableListElementsItemsModel> botTableListRowItemsModels;
-    String LOG_TAG = BotTableListInnerAdapter.class.getSimpleName();
-    final LayoutInflater ownLayoutInflator;
-    ListView parentListView;
+    final LayoutInflater ownLayoutInflation;
     final RoundedCornersTransform roundedCornersTransform;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -37,7 +34,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
 
     protected BotTableListInnerAdapter(Context context, ArrayList<BotTableListElementsItemsModel> botTableListRowItemsModels)
     {
-        this.ownLayoutInflator = LayoutInflater.from(context);
+        this.ownLayoutInflation = LayoutInflater.from(context);
         this.context = context;
         this.botTableListRowItemsModels = botTableListRowItemsModels;
         this.roundedCornersTransform = new RoundedCornersTransform();
@@ -66,7 +63,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
     public View getView(int position, View convertView, ViewGroup parent)
     {
         if (convertView == null) {
-            convertView = ownLayoutInflator.inflate(R.layout.bot_table_list_inner_cell, null);
+            convertView = ownLayoutInflation.inflate(R.layout.bot_table_list_inner_cell, null);
         }
 
         if (convertView.getTag() == null) {
@@ -111,26 +108,8 @@ public class BotTableListInnerAdapter extends BaseAdapter
                 holder.botListItemSubtitle.setText(botListModel.getSubtitle());
             }
         }
-//        else
-//            if(botListModel.getTitle().getUrl() != null)
-//        {
-//            holder.botListItemTitle.setText(botListModel.getTitle().getUrl().getTitle());
-//            holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
-//
-//            if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getUrl().getSubtitle())) {
-//                holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-//                holder.botListItemSubtitle.setText(botListModel.getTitle().getUrl().getSubtitle());
-//            }
-//        }
 
         holder.bot_list_item_cost.setTextColor(context.getResources().getColor(R.color.txtFontBlack));
-
-//        if(!StringUtils.isNullOrEmpty(botListModel.getTitle().getRowColor()))
-//        {
-//            holder.botListItemTitle.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
-//            holder.botListItemSubtitle.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
-//            holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getTitle().getRowColor()));
-//        }
 
         if(botListModel.getValue().getType().equalsIgnoreCase("text"))
         {
@@ -178,7 +157,7 @@ public class BotTableListInnerAdapter extends BaseAdapter
         view.setTag(holder);
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

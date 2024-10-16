@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.listeners.ComposeFooterInterface;
 import com.kore.ai.widgetsdk.listeners.InvokeGenericWebViewInterface;

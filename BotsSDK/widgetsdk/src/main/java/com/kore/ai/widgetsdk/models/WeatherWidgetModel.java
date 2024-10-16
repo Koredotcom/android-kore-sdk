@@ -20,19 +20,19 @@ public class WeatherWidgetModel {
     }
 
     @SerializedName("elements")
-@Expose
-private List<ActionItem> elements = null;
+    @Expose
+    private List<ActionItem> elements = null;
 
-public List<ActionItem> getElements() {
-return elements;
+    public List<ActionItem> getElements() {
+        return elements;
 
 
+    }
 
-}
+    public void setElements(List<ActionItem> elements) {
+        this.elements = elements;
+    }
 
-public void setElements(List<ActionItem> elements) {
-this.elements = elements;
-}
     public class Header {
 
         @SerializedName("title")

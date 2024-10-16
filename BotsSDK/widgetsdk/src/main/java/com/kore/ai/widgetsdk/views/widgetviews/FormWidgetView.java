@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
@@ -36,7 +35,6 @@ import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.BundleConstants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
@@ -54,8 +52,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 @SuppressLint("ViewConstructor")
-public class FormWidgetView extends LinearLayout implements VerticalListViewActionHelper
-{
+public class FormWidgetView extends LinearLayout implements VerticalListViewActionHelper {
     private final Context mContext;
     private final String skillName;
     private View rootView;
@@ -69,7 +66,7 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
     public TextView tvUrl;
     public TextView tvButton;
     public LinearLayout tvButtonParent;
-    private TextView pin_view,panel_name_view,tvFillForm;
+    private TextView pin_view, panel_name_view, tvFillForm;
     private AuthData authData;
     private UserData userData;
     private WidgetsModel mWidget;
@@ -84,8 +81,7 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.form_widgetview, this, true);
         rootView = view.findViewById(R.id.chart_root_view);
         chartHeader = view.findViewById(R.id.chart_header);
@@ -100,7 +96,7 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
         tvUrl = view.findViewById(R.id.tv_url);
         tvButtonParent = view.findViewById(R.id.tv_values_layout);
         pin_view = view.findViewById(R.id.pin_view);
-        panel_name_view=view.findViewById(R.id.panel_name_view);
+        panel_name_view = view.findViewById(R.id.panel_name_view);
         dp1 = (int) Utility.convertDpToPixel(getContext(), 1);
         tvFillForm = view.findViewById(R.id.tvFillForm);
 
@@ -122,15 +118,16 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
     }
 
     PanelLevelData panelData;
+
     public void setWidget(String panelName, WidgetsModel mWidget, PanelLevelData panelData, String jwtToken) {
         this.mWidget = mWidget;
-        this.panelData=panelData;
+        this.panelData = panelData;
 //        this.trigger=mWidget.getTrigger();
-        this.panelName=panelName;
+        this.panelName = panelName;
         chartHeader.setText(mWidget.getTitle());
 //        pin_view.setText(mWidget.isPinned() ? mContext.getResources().getString(R.string.icon_31) :mContext.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getName()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(),panelName));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(), panelName));
         this.jwtToken = jwtToken;
 
         loadData();
@@ -142,7 +139,7 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
             return;
         }
         progress.setVisibility(View.VISIBLE);
-        Map<String,Object> result = getMapObject(mWidget.getParam());
+        Map<String, Object> result = getMapObject(mWidget.getParam());
         WidgetDataLoader.loadWidgetChartData(mWidget.getCallbackURL(), Utils.ah(jwtToken), result)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -160,19 +157,19 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
                             afterDataLoad(model.getData().get(0));
                         }
 
-                        if (model!=null && model.getData().get(0) != null && model.getData().get(0).getTemplateType()!=null&&model.getData().get(0).getTemplateType().equals("loginURL")) {
+                        if (model != null && model.getData().get(0) != null && model.getData().get(0).getTemplateType() != null && model.getData().get(0).getTemplateType().equals("loginURL")) {
                             tvFillForm.setVisibility(GONE);
                             login_View.setVisibility(VISIBLE);
                             login_button.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(mContext instanceof Activity &&model.getData().get(0).getLogin()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
+                                    if (mContext instanceof Activity && model.getData().get(0).getLogin() != null && !StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
                                         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
                                         intent.putExtra("url", model.getData().get(0).getLogin().getUrl());
                                         intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-                                        ((Activity)mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                                    }else{
-                                        Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
+                                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                                    } else {
+                                        Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -192,21 +189,19 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
                 });
     }
 
-    private void afterDataLoad(final BaseChartModel model)
-    {
-        if(model != null)
-        {
+    private void afterDataLoad(final BaseChartModel model) {
+        if (model != null) {
 //            mWebView.loadUrl(model.getFormLink());
             tvFillForm.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(mContext instanceof Activity &&model.getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getFormLink())) {
+                    if (mContext instanceof Activity && model.getFormLink() != null && !StringUtils.isNullOrEmptyWithTrim(model.getFormLink())) {
                         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
                         intent.putExtra("url", model.getFormLink());
-                        intent.putExtra("header",panelName);
-                        ((Activity)mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                    }else{
-                        Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
+                        intent.putExtra("header", panelName);
+                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    } else {
+                        Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
                     }
                 }
             });

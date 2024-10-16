@@ -14,10 +14,6 @@ import com.kore.ai.widgetsdk.network.NetworkEvents;
 
 import de.greenrobot.event.EventBus;
 
-/**
- * Created by Ramachandra Pradeep on 28-Oct-18.
- */
-
 public class KaAppService extends Service {
 
     private boolean isFirstTime = true;

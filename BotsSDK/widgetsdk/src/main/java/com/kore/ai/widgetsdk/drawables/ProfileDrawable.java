@@ -7,16 +7,12 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
 
-/**
- * Created by nicholaspontiff on 7/16/15.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class ProfileDrawable extends BaseDrawable {
 
-    private final int backgroundColor;
-    private final String initials;
-    private final Paint backgroundPaint;
-    private final Paint mTextPaint;
+    final int backgroundColor;
+    final String initials;
+    final Paint backgroundPaint;
+    final Paint mTextPaint;
 
     public ProfileDrawable(int color, String initials, float textSize) {
         this(color, initials, textSize, null);
@@ -36,9 +32,9 @@ public class ProfileDrawable extends BaseDrawable {
         float xCenter = getBounds().centerX();
         float yCenter = getBounds().centerY();
 
-        canvas.drawCircle(xCenter, yCenter, getBounds().width()/2 , backgroundPaint);
+        canvas.drawCircle(xCenter, yCenter, (float) getBounds().width() / 2, backgroundPaint);
 
-        if(initials != null) {
+        if (initials != null) {
             //((mTextPaint.descent() + mTextPaint.ascent()) / 2) is the distance from the baseline to the center.
             float yTextCenter = (yCenter - ((mTextPaint.descent() + mTextPaint.ascent()) / 2));
 
@@ -62,7 +58,6 @@ public class ProfileDrawable extends BaseDrawable {
     public int getOpacity() {
         return PixelFormat.TRANSLUCENT;
     }
-
 
 
 }

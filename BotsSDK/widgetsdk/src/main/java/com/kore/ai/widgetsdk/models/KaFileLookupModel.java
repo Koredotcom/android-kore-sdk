@@ -5,10 +5,6 @@ import com.kore.ai.widgetsdk.utils.DateUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-/**
- * Created by Ramachandra Pradeep on 09-Aug-18.
- */
-
 public class KaFileLookupModel {
     private static final DecimalFormat df2 = new DecimalFormat("###.##");
     private String fileName;

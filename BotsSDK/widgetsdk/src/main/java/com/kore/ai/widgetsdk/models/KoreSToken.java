@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 11-Dec-18.
- */
-
 public class KoreSToken {
     private String sToken;
 

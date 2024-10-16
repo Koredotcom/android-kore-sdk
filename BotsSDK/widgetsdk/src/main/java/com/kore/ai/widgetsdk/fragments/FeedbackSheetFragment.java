@@ -29,7 +29,7 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.FeedBackillustrationActivity;
 import com.kore.ai.widgetsdk.adapters.FeedBackAdapter;
 import com.kore.ai.widgetsdk.events.FinishActivityEvent;

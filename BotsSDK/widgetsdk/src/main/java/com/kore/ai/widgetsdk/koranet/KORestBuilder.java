@@ -1,6 +1,7 @@
 package com.kore.ai.widgetsdk.koranet;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 import java.util.concurrent.TimeUnit;
@@ -11,6 +12,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
+@SuppressLint("UnknownNullness")
 public final class KORestBuilder {
 
     public static final byte BUILDER_TYPE_BOT_REST = 110;
@@ -24,9 +26,6 @@ public final class KORestBuilder {
 
     private static Retrofit getBuilder(byte builderType, String URL) {
         synchronized (KORestBuilder.class) {
-/**
- * Created by Ramachandra Pradeep on 18-Jul-18.
- */
             if (instanceKora == null) {
                 instanceKora = new Retrofit.Builder()
                         .baseUrl(URL)
@@ -38,7 +37,7 @@ public final class KORestBuilder {
         }
     }
 
-    public static void init(Context mContext){
+    public void init(Context mContext){
         KORestBuilder.mContext = mContext;
     }
 

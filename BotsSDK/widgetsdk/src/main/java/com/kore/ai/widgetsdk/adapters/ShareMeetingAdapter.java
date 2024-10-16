@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.KaShareMeetingActivity;
 import com.kore.ai.widgetsdk.models.CalEventsTemplateModel;
 import com.kore.ai.widgetsdk.net.KaRestResponse;

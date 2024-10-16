@@ -6,6 +6,7 @@ import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_id;
 import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.client_secret;
 import static com.kore.ai.widgetsdk.net.SDKConfiguration.Client.identity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -38,7 +39,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.KaWidgetBaseAdapterNew;
 import com.kore.ai.widgetsdk.adapters.PannelAdapter;
 import com.kore.ai.widgetsdk.fragments.FeedbackSheetFragment;
@@ -97,44 +98,39 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PanelMainActivity extends KaAppCompatActivity implements PanelInterface, UpdateRefreshItem,
-        ChildToActivityActions, GestureDetector.OnGestureListener, VerticalListViewActionHelper, ComposeFooterInterface
-{
-    private RecyclerView pannel_recycler;
-    private ProgressBar progressBarPanel;
-    private TextView emptyPanelView;
-    private PannelAdapter pannelAdapter;
-    private final String packageName = "com.kore.koreapp";
+@SuppressWarnings("UnKnownNullness")
+public class PanelMainActivity extends KaAppCompatActivity implements PanelInterface, UpdateRefreshItem, ChildToActivityActions, GestureDetector.OnGestureListener, VerticalListViewActionHelper, ComposeFooterInterface {
+    RecyclerView pannel_recycler;
+    ProgressBar progressBarPanel;
+    TextView emptyPanelView;
+    PannelAdapter pannelAdapter;
+    final String packageName = "com.kore.koreapp";
     final String appName = "Kore";
-    private ViewGroup activityRootView;
-    private TextView closeBtnPanel, editButton;
-    private TextView img_icon, txtTitle;
+    ViewGroup activityRootView;
+    TextView closeBtnPanel, editButton;
+    TextView img_icon, txtTitle;
     ImageView img_skill;
-    private RecyclerView recyclerView_panel;
-    private KaWidgetBaseAdapterNew widgetBaseAdapter;
-    private GestureDetector gestureScanner;
-    private CoordinatorLayout cordinate_layout;
-    private JWTTokenResponse jwtKeyResponse;
-    private String botName, streamId;
-    private SharedPreferenceUtils sharedPreferenceUtils;
+    RecyclerView recyclerView_panel;
+    KaWidgetBaseAdapterNew widgetBaseAdapter;
+    GestureDetector gestureScanner;
+    CoordinatorLayout cordinate_layout;
+    JWTTokenResponse jwtKeyResponse;
+    String botName, streamId;
+    SharedPreferenceUtils sharedPreferenceUtils;
 
     //bottom sheet related
-    private CustomBottomSheetBehavior mBottomSheetBehavior,mBottomSheetBehavior_help;
-//    private CustomBottomSheetBehavior mBottomSheetBehaviorAudio;
-    private LinearLayout perssiatentPanel, persistentSubLayout,view_help;
-//    private LinearLayout audioLayout;
-    private Button panelDrag;
-    /*private GifImageButton panelDrag2;*/
-    private int bootomSheetPrevState = BottomSheetBehavior.STATE_HIDDEN;
+    CustomBottomSheetBehavior mBottomSheetBehavior;
+    LinearLayout persistentPanel;
+    LinearLayout persistentSubLayout;
+    Button panelDrag;
+    int bottomSheetPrevState = BottomSheetBehavior.STATE_HIDDEN;
     final Handler handler = new Handler();
-
     LinearLayout single_item_container;
-    private final boolean shouldShowHome = true;
-    private boolean isAudioPanelLaunched;
-    private String jwtToken;
+    boolean isAudioPanelLaunched;
+    String jwtToken;
 
-    private PanelBaseModel pModels;
-    private boolean keyBoardShowing = false;
+    PanelBaseModel pModels;
+    boolean keyBoardShowing = false;
     final ViewTreeObserver.OnGlobalLayoutListener onGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
         @Override
         public void onGlobalLayout() {
@@ -143,17 +139,10 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             if (heightDiff > 855 && imm.isAcceptingText()) {
                 if (!keyBoardShowing) {
-//                    expandComposerView(false/*,false*/);
                     keyBoardShowing = true;
                     if (mBottomSheetBehavior != null) {
                         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                     }
-//                    if (mBottomSheetBehaviorAudio != null) {
-//                        mBottomSheetBehaviorAudio.setState(BottomSheetBehavior.STATE_HIDDEN);
-//                    }
-//                    mEditor.scrollViewToBottom();
-                } else {
-//                    expandComposerViewOnlyForAudio(false);
                 }
 
             } else {
@@ -161,14 +150,12 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                     keyBoardShowing = false;
                 }
             }
-            //  }
-
         }
     };
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.panel_layout);
 
@@ -178,11 +165,9 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         emptyPanelView = findViewById(R.id.emptyView);
         cordinate_layout = findViewById(R.id.cordinate_layout);
 
-        //   footerContainer = findViewById(R.id.footer_container);
-        perssiatentPanel = findViewById(R.id.persistentPanel);
+        persistentPanel = findViewById(R.id.persistentPanel);
         persistentSubLayout = findViewById(R.id.panel_sub_layout);
         panelDrag = findViewById(R.id.panel_drag);
-//        audioLayout = findViewById(R.id.view_layout_audio);
 
         img_icon = findViewById(R.id.img_icon);
         img_skill = findViewById(R.id.img_skill);
@@ -203,12 +188,10 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         sharedPreferenceUtils = SharedPreferenceUtils.getInstance(PanelMainActivity.this);
 
         getJWToken();
-//        getPanelData("home",false);
-//        getData();
 
         pannel_recycler.setLayoutManager(new LinearLayoutManager(PanelMainActivity.this, LinearLayoutManager.HORIZONTAL, false));
 
-        mBottomSheetBehavior = CustomBottomSheetBehavior.from(perssiatentPanel);
+        mBottomSheetBehavior = CustomBottomSheetBehavior.from(persistentPanel);
 //        mBottomSheetBehaviorAudio = CustomBottomSheetBehavior.from(audioLayout);
 
         closeBtnPanel.setOnClickListener(new View.OnClickListener() {
@@ -219,6 +202,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         });
 
         panelDrag.setOnTouchListener(new View.OnTouchListener() {
+            @SuppressLint("ClickableViewAccessibility")
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 return gestureScanner.onTouchEvent(event);
@@ -232,8 +216,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                 switch (newState) {
                     case BottomSheetBehavior.STATE_DRAGGING:
 
-                        if (newState == BottomSheetBehavior.STATE_DRAGGING
-                                && isAudioPanelLaunched) {
+                        if (isAudioPanelLaunched) {
                             mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
                         }
                         Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_DRAGGING");
@@ -244,26 +227,16 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                         break;
                     case BottomSheetBehavior.STATE_EXPANDED:
                         mBottomSheetBehavior.setLocked(true);
-//                        clickActionBarItems(false);
-                        bootomSheetPrevState = newState;
+                        bottomSheetPrevState = newState;
                         Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_EXPANDED");
 
                         break;
                     case BottomSheetBehavior.STATE_COLLAPSED:
-                       /* if(panelDrag2.getVisibility() == View.VISIBLE){
-                            panelDrag.setVisibility(View.VISIBLE);
-                            panelDrag2.setVisibility(View.GONE);
-                        }*/
                         mBottomSheetBehavior.setLocked(false);
-//                        expandComposerView(true/*,true*/);
-                        bootomSheetPrevState = newState;
+                        bottomSheetPrevState = newState;
                         Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_COLLAPSED");
                         break;
                     case BottomSheetBehavior.STATE_HIDDEN:
-                       /* if(panelDrag2.getVisibility() == View.VISIBLE){
-                            panelDrag.setVisibility(View.VISIBLE);
-                            panelDrag2.setVisibility(View.GONE);
-                        }*/
                         mBottomSheetBehavior.setLocked(false);
                         isAudioPanelLaunched = false;
                         if (widgetBaseAdapter != null) {
@@ -271,17 +244,12 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                             widgetBaseAdapter.notifyDataSetChanged();
                         }
                         widgetBaseAdapter = null;
-                        bootomSheetPrevState = newState;
-//                        expandComposerView(false/*,false*/);
+                        bottomSheetPrevState = newState;
                         Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_HIDDEN");
                         break;
                     case BottomSheetBehavior.STATE_HALF_EXPANDED:
-                        /*if(panelDrag2.getVisibility() == View.VISIBLE){
-                            panelDrag.setVisibility(View.VISIBLE);
-                            panelDrag2.setVisibility(View.GONE);
-                        }*/
                         mBottomSheetBehavior.setLocked(false);
-                        bootomSheetPrevState = newState;
+                        bottomSheetPrevState = newState;
                         Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_HALF_EXPANDED");
                         break;
 
@@ -297,73 +265,30 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                if (slideOffset > 0.0) {
-                }
-                else if (slideOffset < 0) {
+                if (slideOffset < 0) {
                     Log.d("Bottom", "Slide called " + slideOffset);
                 }
 
             }
         });
-
-//        mBottomSheetBehaviorAudio.setBottomSheetCallback(new CustomBottomSheetBehavior.BottomSheetCallback() {
-//            @Override
-//            public void onStateChanged(@NonNull View bottomSheet, int newState) {
-//                switch (newState) {
-//                    case BottomSheetBehavior.STATE_DRAGGING:
-//                        mBottomSheetBehaviorAudio.setState(BottomSheetBehavior.STATE_EXPANDED);
-//                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_DRAGGING");
-//                        break;
-//                    case BottomSheetBehavior.STATE_SETTLING:
-//                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_SETTLING");
-//                        break;
-//                    case BottomSheetBehavior.STATE_EXPANDED:
-//                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_EXPANDED");
-//                        break;
-//                    case BottomSheetBehavior.STATE_COLLAPSED:
-//                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_COLLAPSED");
-//                        break;
-//                    case BottomSheetBehavior.STATE_HIDDEN:
-//                        isAudioPanelLaunched = false;
-//                        Log.i("BottomSheetCallback", "BottomSheetBehavior.STATE_HIDDEN");
-//                        break;
-//                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
-//                        break;
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-//               /* if (slideOffset > 0.0) {
-//                } else if (slideOffset < 0 && !onPanelClicked) {
-//                    Log.d("Bottom","Slide called "+slideOffset);
-//                    dragComposeView(slideOffset);
-//                }*/
-//
-//            }
-//        });
     }
 
     /*
     @PanelName : Launch default Panel based on name
      */
     public void getPanelData(final String panelName, final boolean isFromPresence) {
-        Call<List<PanelResponseData.Panel>> baseWidgetData = KaRestBuilder.getWidgetKaRestAPI().
-                getWidgetPannelData(SDKConfiguration.Client.bot_id, Utils.ah(jwtToken), SDKConfiguration.Client.identity);
-        KaRestAPIHelper.enqueueWithRetry(baseWidgetData, new Callback<List<PanelResponseData.Panel>>() {
+        Call<List<PanelResponseData.Panel>> baseWidgetData = KaRestBuilder.getWidgetKaRestAPI().getWidgetPannelData(SDKConfiguration.Client.bot_id, Utils.ah(jwtToken), SDKConfiguration.Client.identity);
+        KaRestAPIHelper.enqueueWithRetry(baseWidgetData, new Callback<>() {
             @Override
             public void onResponse(Call<List<PanelResponseData.Panel>> call, Response<List<PanelResponseData.Panel>> response) {
-                if (response != null && response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     progressBarPanel.setVisibility(View.GONE);
                     pannel_recycler.setVisibility(View.VISIBLE);
-                    Log.e("Panel Response", response.body()+"");
+                    Log.e("Panel Response", String.valueOf(response.body()));
                     PanelResponseData panelResponseData = new PanelResponseData();
                     panelResponseData.setPanels(response.body());
-                    updatePannelData(panelResponseData, panelName,isFromPresence);
-                }
-                else {
-//                    ((KoraMainActivity) getActivity()).dismissMainLoader();
+                    updatePanelData(panelResponseData, panelName);
+                } else {
                     progressBarPanel.setVisibility(View.GONE);
                     if (pannelAdapter == null || pannelAdapter.getItemCount() <= 0) {
                         emptyPanelView.setText(getString(R.string.oops));
@@ -393,10 +318,10 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
 
         HashMap<String, Object> hsh = new HashMap<>();
         hsh.put("clientId", client_id);
-        hsh.put("clientSecret",client_secret);
+        hsh.put("clientSecret", client_secret);
         hsh.put("identity", identity);
-        hsh.put("aud","https://idproxy.kore.com/authorize");
-        hsh.put("isAnonymous",1);
+        hsh.put("aud", "https://idproxy.kore.com/authorize");
+        hsh.put("isAnonymous", 1);
 
         Call<JWTTokenResponse> getJWTTokenService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(hsh);
         getJWTTokenService.enqueue(new Callback<JWTTokenResponse>() {
@@ -404,16 +329,17 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
             public void onResponse(Call<JWTTokenResponse> call, Response<JWTTokenResponse> response) {
                 if (response.isSuccessful()) {
                     jwtKeyResponse = response.body();
-                    jwtToken = jwtKeyResponse.getJwt();
-                    botName = jwtKeyResponse.getBotName();
-                    streamId = jwtKeyResponse.getStreamId();
+                    if (jwtKeyResponse != null) {
+                        jwtToken = jwtKeyResponse.getJwt();
+                        botName = jwtKeyResponse.getBotName();
+                        streamId = jwtKeyResponse.getStreamId();
 
-                    if(sharedPreferenceUtils != null)
-                    {
-                        sharedPreferenceUtils.putKeyValue("JWToken", jwtToken);
+                        if (sharedPreferenceUtils != null) {
+                            sharedPreferenceUtils.putKeyValue("JWToken", jwtToken);
+                        }
                     }
 
-                    getPanelData("home",false);
+                    getPanelData("home", false);
                 }
             }
 
@@ -425,7 +351,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
     }
 
 
-    private void updatePannelData(PanelResponseData panelResponseData, String panelName, boolean isFromPresence) {
+    void updatePanelData(PanelResponseData panelResponseData, String panelName) {
 
         if (panelResponseData != null && panelResponseData.getPanels() != null && panelResponseData.getPanels().size() > 0) {
             emptyPanelView.setVisibility(View.GONE);
@@ -491,20 +417,15 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
     }
 
 
-
     @Override
-    public void onPanelClicked(PanelBaseModel pModel)
-    {
+    public void onPanelClicked(PanelBaseModel pModel) {
         if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_thread)) {
             try {
-                if (isAppInstalled(getApplicationContext(), packageName))
-                {
+                if (isAppInstalled(getApplicationContext())) {
                     Intent _intent = new Intent(Intent.ACTION_VIEW, Uri.parse("koretest://messages"));
                     _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(_intent);
-                }
-                else
-                {
+                } else {
                     try {
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + packageName)));
 
@@ -513,17 +434,18 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                     }
                 }
             } catch (Exception e) {
-                if (isAppEnabled(getApplicationContext(), packageName)) {
+                if (isAppEnabled(getApplicationContext())) {
                     Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    getApplicationContext().startActivity(intent);
-                } else
-                    Toast.makeText(getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
+                    if (intent != null) {
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        getApplicationContext().startActivity(intent);
+                    }
+                } else Toast.makeText(getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
             }
             return;
         } else if (pModel != null && pModel.getData().get_id().equalsIgnoreCase(com.kore.ai.widgetsdk.utils.StringUtils.kora_team)) {
             try {
-                if (isAppInstalled(getApplicationContext(), packageName)) {
+                if (isAppInstalled(getApplicationContext())) {
                     Intent _intent = new Intent(Intent.ACTION_VIEW, Uri.parse("koretest://teams"/*"http://threads.com/thread"*/));
                     _intent.putExtra("KoreHomeState", "KoreHomeState");
                     _intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -536,36 +458,36 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                     }
                 }
             } catch (Exception e) {
-                if (isAppEnabled(getApplicationContext(), packageName)) {
+                if (isAppEnabled(getApplicationContext())) {
                     Intent intent = getApplicationContext().getPackageManager().getLaunchIntentForPackage(packageName);
-                    intent.putExtra("KoreHomeState", "KoreHomeState");
-                    getApplicationContext().startActivity(intent);
-                } else
-                    Toast.makeText(getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
+                    if (intent != null) {
+                        intent.putExtra("KoreHomeState", "KoreHomeState");
+                        getApplicationContext().startActivity(intent);
+                    }
+                } else Toast.makeText(getApplicationContext(), appName + " app is not enabled.", Toast.LENGTH_SHORT).show();
             }
             return;
         }
 
 
         if (mBottomSheetBehavior != null) {
-            if (keyBoardShowing)
-                AppUtils.showHideVirtualKeyboard(PanelMainActivity.this, null, false);
+            if (keyBoardShowing) AppUtils.showHideVirtualKeyboard(PanelMainActivity.this, null, false);
             pModels = removeSystemHealth(pModel);
 //            audioLayout.setVisibility(View.GONE);
             persistentSubLayout.setVisibility(View.VISIBLE);
-            perssiatentPanel.setVisibility(View.VISIBLE);
+            persistentPanel.setVisibility(View.VISIBLE);
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    updatePanelData(pModel, false);
+                    if (pModel != null) updatePanelData(pModel, false);
                 }
             }, 500);
 
-            perssiatentPanel.post(new Runnable() {
+            persistentPanel.post(new Runnable() {
                 @Override
                 public void run() {
 //                    if(!isFromPresence) {
-                        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+                    mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
 //                    }
                 }
             });
@@ -573,7 +495,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         }
     }
 
-    private void updatePanelData(PanelBaseModel pModels, boolean isFirstLaunch) {
+    void updatePanelData(PanelBaseModel pModels, boolean isFirstLaunch) {
 
         int size = pModels.getData().getWidgets().size();
 
@@ -582,14 +504,6 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
             return;
         }
         LinearLayout img_background = findViewById(R.id.panel_title_icon);
-//        StateListDrawable gradientDrawable = (StateListDrawable) img_background.getBackground();
-//        DrawableContainer.DrawableContainerState drawableContainerState = (DrawableContainer.DrawableContainerState) gradientDrawable.getConstantState();
-//        Drawable[] children = drawableContainerState.getChildren();
-//
-//        GradientDrawable selectedItem = (GradientDrawable) children[1];
-//        if (pModels.getData() != null)
-//            selectedItem.setColor(Color.parseColor(pModels.getData().getTheme()));
-
         img_background.setBackgroundResource(0);
 
         try {
@@ -603,19 +517,17 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                 img_skill.setImageBitmap(decodedByte);
             } else {
                 Picasso.get().load(imageData).into(img_skill);
-//                selectedItem.setColor(getResources().getColor(android.R.color.transparent));
             }
         } catch (Exception e) {
             img_skill.setVisibility(GONE);
         }
 
 
-            if (size > 1) {
+        if (size > 1) {
             List<WidgetsModel> tempModel = sortData(pModels);
             if (tempModel != null && tempModel.size() > 1) {
                 editButton.setVisibility(View.VISIBLE);
-            }
-            else {
+            } else {
                 editButton.setVisibility(View.GONE);
             }
 
@@ -623,7 +535,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
             single_item_container.removeAllViews();
             single_item_container.setVisibility(View.GONE);
             if (widgetBaseAdapter == null)
-                widgetBaseAdapter = new KaWidgetBaseAdapterNew(this, size > 1 ? WidgetViewMoreEnum.COLLAPSE_VIEW : WidgetViewMoreEnum.EXPAND_VIEW, isFirstLaunch, (""));
+                widgetBaseAdapter = new KaWidgetBaseAdapterNew(this, WidgetViewMoreEnum.COLLAPSE_VIEW, isFirstLaunch, (""));
             widgetBaseAdapter.setFirstLaunch(isFirstLaunch);
             recyclerView_panel.setAdapter(widgetBaseAdapter);
             widgetBaseAdapter.setWidget(pModels, jwtToken);
@@ -723,61 +635,45 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                 chartListWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData);
                 view = chartListWidgetView;
                 break;
-//            case WidgetConstants.FILES_TEMPLATE:
-//            case WidgetConstants.TASK_LIST_TEMPLATE:
-//                TaskWidgetView taskWidgetView = new TaskWidgetView(this, WidgetViewMoreEnum.EXPAND_VIEW);
-//                taskWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), 0, getItemViewType(pModels.getData().getWidgets().get(0)), true, panelData);
-//                view = taskWidgetView;
-//                break;
             case WidgetConstants.ARTICLES_TEMPLATE:
                 ArticlesWidgetView articlesWidgetView = new ArticlesWidgetView(this, WidgetViewMoreEnum.EXPAND_VIEW);
-                articlesWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), 0, true, panelData);
+                articlesWidgetView.setWidget(pModels.getData().getName(), pModels.getData().getWidgets().get(0), 0, true, panelData);
                 view = articlesWidgetView;
                 break;
             case WidgetConstants.HASH_TAG_TEMPLATE:
-                TrendingHashTagView hashTagView = new TrendingHashTagView(this, this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-                view = hashTagView;
+                view = new TrendingHashTagView(this, this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
                 break;
-//            case WidgetConstants.ANNOUNCEMENTS_TEMPLATE:
-//                AnnouncementWidgetView annView = new AnnouncementWidgetView(this, this,
-//                        pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-////                annView.setWidget(pModels.getData().getWidgets().get(0), true, panelData);
-//                view = annView;
-//                break;
 
             case WidgetConstants.SKILL_TEMPLATE:
-                SkillWidgetView skillWidgetView = new SkillWidgetView(this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-//                skillWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData);
-                view = skillWidgetView;
+                view = new SkillWidgetView(this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
                 break;
 
             case WidgetConstants.FILES_SINGLE_TEMPLATE:
             case WidgetConstants.TASKS_SINGLE_TEMPLATE:
-                GenericWidgetView gwv = new GenericWidgetView(this, 0, this, null,
-                        pModels.getData().getName(), "180", false, WidgetViewMoreEnum.EXPAND_VIEW);
-                gwv.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), true, panelData);
+                GenericWidgetView gwv = new GenericWidgetView(this, 0, this, null, pModels.getData().getName(), "180", false, WidgetViewMoreEnum.EXPAND_VIEW);
+                gwv.setWidget(pModels.getData().getName(), pModels.getData().getWidgets().get(0), true, panelData);
                 view = gwv;
                 break;
             case WidgetConstants.PIE_CHART_TEMPLATE:
                 PieChartWidgetView pieChartWidgetView = new PieChartWidgetView(this, pModels.getData().getName());
-                pieChartWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
+                pieChartWidgetView.setWidget(pModels.getData().getName(), pModels.getData().getWidgets().get(0), panelData, jwtToken);
                 view = pieChartWidgetView;
                 break;
             case WidgetConstants.BAR_CHART_TEMPLATE:
                 BarChartWidgetView barChartWidgetView = new BarChartWidgetView(this);
-                barChartWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
+                barChartWidgetView.setWidget(pModels.getData().getName(), pModels.getData().getWidgets().get(0), panelData, jwtToken);
                 view = barChartWidgetView;
                 break;
 
             case WidgetConstants.LINE_CHART_TEMPLATE:
                 LineChartWidgetView lineChartWidgetView = new LineChartWidgetView(this);
-                lineChartWidgetView.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
+                lineChartWidgetView.setWidget(pModels.getData().getName(), pModels.getData().getWidgets().get(0), panelData, jwtToken);
                 view = lineChartWidgetView;
                 break;
 
             case WidgetConstants.LIST_WIDGET_TEMPLATE:
                 ListWidgetView listWidgetView = new ListWidgetView(this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
-                listWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData,"Ask MyIT", jwtToken);
+                listWidgetView.setWidget(pModels.getData().getWidgets().get(0), panelData, "Ask MyIT", jwtToken);
                 view = listWidgetView;
                 break;
 
@@ -785,24 +681,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                 DefaultWidgetView dView = new DefaultWidgetView(this, pModels.getData().getName(), WidgetViewMoreEnum.EXPAND_VIEW);
                 dView.setWidget(pModels.getData().getWidgets().get(0), panelData, jwtToken);
                 view = dView;
-
-//                PieChartWidgetView pieChartWidgetView1 = new PieChartWidgetView(this, pModels.getData().getName());
-//                pieChartWidgetView1.setWidget(pModels.getData().getName(),pModels.getData().getWidgets().get(0), panelData, jwtToken);
-//                view = pieChartWidgetView1;
                 break;
-
-//            case WidgetConstants.CLOUD_TEMPLATE:
-//                WelcomeSummaryGreeting welcomeSummaryGreeting = new WelcomeSummaryGreeting(getApplicationContext(), true, "");
-////                welcomeSummaryGreeting.setWidget(pModels.getData().getWidgets().get(0));
-//                welcomeSummaryGreeting.setComposeFooterInterface(this);
-//                break;
-//
-//            case WidgetConstants.HEADLINE_TEMPLATE:
-//                WelcomeSummaryViewWidget welcomesummaryview = new WelcomeSummaryViewWidget(getApplicationContext(), true, "");
-////                welcomesummaryview.setWidget(pModels.getData().getWidgets().get(0));
-//                welcomesummaryview.setComposeFooterInterface(this);
-//                break;
-
         }
 
         return view;
@@ -827,40 +706,34 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
             boolean isHomePanel = model.getData().getName().equalsIgnoreCase("home");
             ArrayList<WidgetsModel> newWidgets = new ArrayList<>();
             for (int index = 0; index < model.getData().getWidgets().size(); index++) {
-                if (model.getData().getWidgets().get(index).getTemplateType() != null &&
-                        model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.SYSTEM_HEALTH_TEMPLATE)) {
-//                    model.getData().getWidgets().remove(index);
+                if (model.getData().getWidgets().get(index).getTemplateType() != null && model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.SYSTEM_HEALTH_TEMPLATE)) {
                     continue;
                 }
-                if (isHomePanel && model.getData().getWidgets().get(index).getTemplateType() != null &&
-                        model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.MEETINGS_TEMPLATE_SERVER)) {
-//                    model.getData().getWidgets().remove(index);
+                if (isHomePanel && model.getData().getWidgets().get(index).getTemplateType() != null && model.getData().getWidgets().get(index).getTemplateType().equalsIgnoreCase(WidgetConstants.MEETINGS_TEMPLATE_SERVER)) {
                     continue;
                 }
-                newWidgets.add( model.getData().getWidgets().get(index));
+                newWidgets.add(model.getData().getWidgets().get(index));
             }
             model.getData().setWidgets(newWidgets);
         }
         return model;
     }
 
-    private static boolean isAppEnabled(Context context, String packageName) {
+    private static boolean isAppEnabled(Context context) {
         boolean appStatus = false;
         try {
-            ApplicationInfo ai = context.getPackageManager().getApplicationInfo(packageName, 0);
-            if (ai != null) {
-                appStatus = ai.enabled;
-            }
+            ApplicationInfo ai = context.getPackageManager().getApplicationInfo("com.kore.koreapp", 0);
+            appStatus = ai.enabled;
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
         return appStatus;
     }
 
-    private static boolean isAppInstalled(Context context, String packageName) {
+    private static boolean isAppInstalled(Context context) {
         PackageManager pm = context.getPackageManager();
         try {
-            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo("com.kore.koreapp", PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException ignored) {
         }
@@ -942,10 +815,10 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         mBottomSheetBehavior.setLocked(false);
         try {
             if (mBottomSheetBehavior != null && mBottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) {
-                mBottomSheetBehavior.onInterceptTouchEvent(cordinate_layout, perssiatentPanel, motionEvent);
+                mBottomSheetBehavior.onInterceptTouchEvent(cordinate_layout, persistentPanel, motionEvent);
             }
         } catch (Exception ex) {
-
+            ex.printStackTrace();
         }
         return false;
     }

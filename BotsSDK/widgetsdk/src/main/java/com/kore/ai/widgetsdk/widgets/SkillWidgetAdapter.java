@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.DissMissBaseSheet;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.listeners.ChildToActivityActions;
@@ -63,7 +63,7 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
                 if (Utility.checkIsSkillKora()) {
                     postAction(holder.getBindingAdapterPosition());
                 } else {
-                    if(!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
+                    if (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
                         DialogCaller.showDialog(context, skillName, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -71,7 +71,7 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
                                 dialog.dismiss();
                             }
                         });
-                    }else{
+                    } else {
                         postAction(holder.getBindingAdapterPosition());
                     }
 
@@ -82,11 +82,11 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
         });
     }
 
-    private void postAction(int position)
-    {
-        ((ChildToActivityActions) context).shootUtterance(""+model.get(position).getUtterance(), model.get(position).getPayload(), null,true);
+    void postAction(int position) {
+        ((ChildToActivityActions) context).shootUtterance(model.get(position).getUtterance(), model.get(position).getPayload(), null, true);
         KoreEventCenter.post(new DissMissBaseSheet());
     }
+
     @Override
     public int getItemCount() {
         return model.size();

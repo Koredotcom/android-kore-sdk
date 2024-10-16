@@ -1,6 +1,10 @@
 package com.kore.ai.widgetsdk.models;
 
+import android.annotation.SuppressLint;
+
 import java.util.ArrayList;
+
+@SuppressLint("UnknownNullness")
 public class BotListModel {
     String title;
     String image_url;

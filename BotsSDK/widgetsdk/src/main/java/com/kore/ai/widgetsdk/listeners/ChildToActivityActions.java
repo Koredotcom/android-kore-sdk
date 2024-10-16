@@ -2,10 +2,6 @@ package com.kore.ai.widgetsdk.listeners;
 
 import com.kore.ai.widgetsdk.models.PayloadInner;
 
-/**
- * Created by Ramachandra Pradeep on 17-Mar-19.
- */
-
 public interface ChildToActivityActions {
     void doTheNeedFul();
     void toggleTypingStatusVisibility(boolean b, String url);

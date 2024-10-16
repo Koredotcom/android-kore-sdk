@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.listeners.UpdateRefreshItem;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;

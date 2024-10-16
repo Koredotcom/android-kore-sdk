@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 21-Mar-19.
- */
-
 public class WidgetButton {
 
     private String template_type;

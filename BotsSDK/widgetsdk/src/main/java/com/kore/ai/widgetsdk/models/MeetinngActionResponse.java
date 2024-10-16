@@ -4,17 +4,16 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class MeetinngActionResponse {
+    @SerializedName("updated")
+    @Expose
+    private Boolean updated;
 
-@SerializedName("updated")
-@Expose
-private Boolean updated;
+    public Boolean getUpdated() {
+        return updated;
+    }
 
-public Boolean getUpdated() {
-return updated;
-}
-
-public void setUpdated(Boolean updated) {
-this.updated = updated;
-}
+    public void setUpdated(Boolean updated) {
+        this.updated = updated;
+    }
 
 }

@@ -552,6 +552,16 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         }
     }
 
+    @Override
+    public void onChatHistory(ArrayList<BaseBotMessage> list, int offset, boolean scrollToBottom) {
+
+    }
+
+    @Override
+    public void onReconnectionChatHistory(ArrayList<BaseBotMessage> list, int offset, boolean isReconnectionHistory) {
+
+    }
+
     private Observable<ServerBotMsgResponse> getHistoryRequest(final int _offset, final int limit) {
         return Observable.create(emitter -> {
             try {

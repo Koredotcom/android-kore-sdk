@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.charts.charts.LineChart;
 import com.kore.ai.widgetsdk.charts.components.Description;
 import com.kore.ai.widgetsdk.charts.components.Legend;
@@ -63,21 +63,22 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
     private final Context mContext;
     private String jwtToken;
 
-    private TextView pin_view,panel_name_view;
+    private TextView pin_view, panel_name_view;
+
     public LineChartWidgetView(Context context) {
         super(context);
         mContext = context;
         init();
     }
 
-    private void init(){
+    private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.linechart_widgetview, this, true);
         rootView = view.findViewById(R.id.chart_root_view);
         chartHeader = view.findViewById(R.id.chart_header);
         progress = view.findViewById(R.id.chart_progress);
         mChart = view.findViewById(R.id.mChart);
         pin_view = view.findViewById(R.id.pin_view);
-        panel_name_view=view.findViewById(R.id.panel_name_view);
+        panel_name_view = view.findViewById(R.id.panel_name_view);
         getUserData();
         mChart.getDescription().setEnabled(false);
         mChart.setTouchEnabled(false);
@@ -114,17 +115,19 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
         authData = UserDataManager.getAuthData();
         userData = UserDataManager.getUserData();
     }
+
     PanelLevelData panelData;
     String panelName;
+
     public void setWidget(String panelName, WidgetsModel mWidget, PanelLevelData panelData, String jwtToken) {
         this.mWidget = mWidget;
-        this.panelName=panelName;
-        this.panelData=panelData;
-        this.jwtToken=jwtToken;
+        this.panelName = panelName;
+        this.panelData = panelData;
+        this.jwtToken = jwtToken;
         chartHeader.setText(mWidget.getTitle());
 //        pin_view.setText(mWidget.isPinned() ? mContext.getResources().getString(R.string.icon_31) :mContext.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getName()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(),panelName));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(), panelName));
 
         loadData();
     }
@@ -135,11 +138,11 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
             afterDataLoad((Widget) PanelDataLRUCache.getInstance().getEntry(name));
             return;
         }*/
-        if(mWidget.getCallbackURL()==null) {
+        if (mWidget.getCallbackURL() == null) {
             return;
         }
         progress.setVisibility(View.VISIBLE);
-        Map<String,Object> result = getMapObject(mWidget.getParam());
+        Map<String, Object> result = getMapObject(mWidget.getParam());
         WidgetDataLoader.loadChartData(mWidget.getCallbackURL(), Utils.ah(jwtToken), result)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -151,11 +154,11 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
                     @Override
                     public void onNext(@NonNull WidgetsDataModel model) {
 //                        afterDataLoad(model);
-                        if(model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0){
+                        if (model.getData() != null && model.getData().size() > 0 && model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0) {
                             model.getData().get(0).convertElementsToModel();
                             setData(model.getData().get(0).getLineChartElements());
                         }
-                        Log.d("IKIDO","Hi");
+                        Log.d("IKIDO", "Hi");
                     }
 
                     @Override
@@ -179,12 +182,12 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
         ArrayList<ILineDataSet> sets = new ArrayList<ILineDataSet>(lineList.size());
         dataSet = new LineDataSet[lineList.size()];
 
-        for(int baseIndex=0; baseIndex < lineList.size(); baseIndex++){
+        for (int baseIndex = 0; baseIndex < lineList.size(); baseIndex++) {
             BotLineChartDataModel model = lineList.get(baseIndex);
 
             ArrayList<Entry> entry = new ArrayList<Entry>();
             for (int index = 0; index < model.getValues().size(); index++) {
-                entry.add(new Entry(index,Math.round(model.getValues().get(index))));
+                entry.add(new Entry(index, Math.round(model.getValues().get(index))));
             }
             dataSet[baseIndex] = new LineDataSet(entry, model.getTitle());
             dataSet[baseIndex].setLineWidth(2.5f);
@@ -244,6 +247,7 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
         super.onDetachedFromWindow();
 //        KoreEventCenter.unregister(this);
     }
+
     @Override
     public void knowledgeItemClicked(Bundle extras, boolean isKnowledge) {
 

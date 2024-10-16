@@ -17,7 +17,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.ShareMeetingAdapter;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.AttendiesBase;

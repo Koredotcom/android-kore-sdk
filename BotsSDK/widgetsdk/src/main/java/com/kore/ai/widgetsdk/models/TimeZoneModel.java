@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 30-Jan-19.
- */
-
 public class TimeZoneModel {
     public String getTimeZoneName() {
         return timezonename;

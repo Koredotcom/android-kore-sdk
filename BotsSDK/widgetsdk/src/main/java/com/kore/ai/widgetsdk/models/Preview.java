@@ -2,10 +2,6 @@ package com.kore.ai.widgetsdk.models;
 
 import java.util.List;
 
-/**
- * Created by Ramachandra Pradeep on 27-Aug-18.
- */
-
 public class Preview {
     private int count;
     private boolean showMore;

@@ -1,6 +1,5 @@
 package com.kore.ai.widgetsdk.fragments;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.adapters.WidgetSelectActionsAdapter;
 import com.kore.ai.widgetsdk.listeners.VerticalListViewActionHelper;
 
@@ -40,6 +39,7 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
     private String skillName;
     private String trigger;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -53,7 +53,7 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
 
         WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter(getActivity(), this,
-                model, isFromFullView,verticalListViewActionHelper,skillName,trigger,isFromListMenu);
+                model, isFromFullView, verticalListViewActionHelper, skillName, trigger, isFromListMenu);
         recycler_actions.setAdapter(adapter);
 
 
@@ -92,12 +92,12 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
         model = taskTemplateModel;
     }
 
-    public void setData(Object taskTemplateModel, boolean isFromListMenu){
+    public void setData(Object taskTemplateModel, boolean isFromListMenu) {
         model = taskTemplateModel;
         this.isFromListMenu = isFromListMenu;
     }
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 }

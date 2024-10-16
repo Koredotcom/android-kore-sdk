@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.Widget;
@@ -33,15 +33,16 @@ public class SkillWidgetView extends ViewGroup {
     private TextView header;
     private RelativeLayout rootView;
     final WidgetViewMoreEnum widgetViewMoreEnum;
-    private TextView pin_view,panel_name_view;
+    private TextView pin_view, panel_name_view;
     final Context context;
     private UserData userData;
     private AuthData authData;
+
     public SkillWidgetView(Context context, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
-        this.context=context;
+        this.context = context;
         this.name = name;
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
+        this.widgetViewMoreEnum = widgetViewMoreEnum;
         init();
     }
 
@@ -50,17 +51,19 @@ public class SkillWidgetView extends ViewGroup {
     }
 
     PanelLevelData panelData;
-    public void setWidget(Widget mWidget,PanelLevelData panelData) {
+
+    public void setWidget(Widget mWidget, PanelLevelData panelData) {
         this.mWidget = mWidget;
-        this.panelData=panelData;
+        this.panelData = panelData;
         loadData();
     }
 
     public void onEvent(NetworkEvents.NetworkConnectivityEvent event) {
-        if(event!=null&&event.isNetworkConnectivity()) {
+        if (event != null && event.isNetworkConnectivity()) {
             loadData();
         }
     }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
@@ -78,6 +81,7 @@ public class SkillWidgetView extends ViewGroup {
         int parentWidthSpec = MeasureSpec.makeMeasureSpec(rootView.getMeasuredWidth(), MeasureSpec.AT_MOST);
         setMeasuredDimension(parentWidthSpec, parentHeightSpec);
     }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -98,11 +102,11 @@ public class SkillWidgetView extends ViewGroup {
         panel_name_view.findViewById(R.id.panel_name_view);
         userData = UserDataManager.getUserData();
         authData = UserDataManager.getAuthData();
-       // KoreEventCenter.register(this);
+        // KoreEventCenter.register(this);
         recycler_root = view.findViewById(R.id.recycler_root);
-        rootView=findViewById(R.id.rootView);
+        rootView = findViewById(R.id.rootView);
         recycler_root.setLayoutManager(new LinearLayoutManager(getContext()));
-        header=view.findViewById(R.id.header);
+        header = view.findViewById(R.id.header);
 
         pin_view.setOnClickListener(new OnClickListener() {
             @Override
@@ -131,13 +135,13 @@ public class SkillWidgetView extends ViewGroup {
 
     }
 
-    private void loadData(){
+    private void loadData() {
         header.setText(mWidget.getTitle());
-        pin_view.setText(mWidget.isPinned() ? context.getResources().getString(R.string.icon_31) :context.getResources().getString(R.string.icon_32));
+        pin_view.setText(mWidget.isPinned() ? context.getResources().getString(R.string.icon_31) : context.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getPname()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getPname(),name));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getPname(), name));
 
-        if(mWidget!=null&&mWidget.getActions()!=null) {
+        if (mWidget != null && mWidget.getActions() != null) {
             SkillWidgetAdapter adapter = new SkillWidgetAdapter(getContext(), mWidget.getActions());
             adapter.setSkillName(name);
             recycler_root.setAdapter(adapter);

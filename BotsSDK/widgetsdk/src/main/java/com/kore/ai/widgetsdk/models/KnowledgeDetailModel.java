@@ -10,13 +10,6 @@ import com.kore.ai.widgetsdk.utils.StringUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-/**
- * Created by Shiva Krishna on 1/30/2018.
- */
-
 public class KnowledgeDetailModel implements Serializable {
     public String getTempHeader() {
         return tempHeader;

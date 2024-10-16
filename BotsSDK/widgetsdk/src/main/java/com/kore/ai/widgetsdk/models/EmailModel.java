@@ -4,10 +4,6 @@ import com.kore.ai.widgetsdk.utils.DateUtils;
 
 import java.util.ArrayList;
 
-/**
- * Created by Shiva Krishna on 2/8/2018.
- */
-
 public class EmailModel{
     ArrayList<BotCaourselButtonModel> buttons;
     ArrayList<KoreComponentModel> components;

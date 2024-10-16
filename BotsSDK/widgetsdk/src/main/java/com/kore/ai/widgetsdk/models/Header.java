@@ -2,9 +2,6 @@ package com.kore.ai.widgetsdk.models;
 
 import java.util.ArrayList;
 
-/**
- * Created by Ramachandra Pradeep on 08-Mar-19.
- */
 
 public class Header {
 

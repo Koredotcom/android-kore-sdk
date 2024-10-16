@@ -1,5 +1,6 @@
 package com.kore.ai.widgetsdk.listeners;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -11,6 +12,7 @@ import com.kore.ai.widgetsdk.models.WelcomeChatSummaryModel;
 
 import java.util.HashMap;
 
+@SuppressLint("UnknownNullness")
 public interface VerticalListViewActionHelper {
     void knowledgeItemClicked(Bundle extras, boolean isKnowledge);
     void driveItemClicked(BotCaourselButtonModel botCaourselButtonModel);

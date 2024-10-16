@@ -4,10 +4,6 @@ import android.content.Context;
 
 import com.kore.ai.widgetsdk.utils.DimensionUtil;
 
-/**
- * Created by Pradeep Mahato on 31-May-16.
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
 public class AppControl {
 
     private final Context context;
@@ -24,8 +20,9 @@ public class AppControl {
     public static AppControl getInstance() {
         return singleton;
     }
+
     public static AppControl getInstance(Context mContext) {
-        if(singleton == null){
+        if (singleton == null) {
             singleton = new AppControl(mContext);
         }
         return singleton;

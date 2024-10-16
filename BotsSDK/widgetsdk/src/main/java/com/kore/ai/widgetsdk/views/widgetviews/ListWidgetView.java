@@ -27,7 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.FullViewActivity;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.ListWidgetAdapter;
@@ -72,9 +72,9 @@ import io.reactivex.schedulers.Schedulers;
 @SuppressLint("ViewConstructor")
 public class ListWidgetView extends LinearLayout implements VerticalListViewActionHelper {
     private float dp1;
-    public ImageView menu_btn,icon_image_load;
+    public ImageView menu_btn, icon_image_load;
     public RecyclerView list_widget_root_recycler;
-    public TextView  widget_header;
+    public TextView widget_header;
     public View view_more;
     public ProgressBar progress;
     private View rootView;
@@ -87,21 +87,23 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
     public TextView tvButton, tvFillForm;
     public LinearLayout tvButtonParent, llFormData;
     private String jwtToken;
-    private TextView pin_view,panel_name_view;
+    private TextView pin_view, panel_name_view;
+
     public WidgetsModel getWidget() {
         return mWidget;
     }
+
     PanelLevelData panelData;
 
     public void setWidget(WidgetsModel mWidget, PanelLevelData panelData, String trigger, String jwtToken) {
         this.mWidget = mWidget;
-        this.panelData=panelData;
+        this.panelData = panelData;
         this.trigger = trigger;
         this.jwtToken = jwtToken;
         widget_header.setText(mWidget.getTitle());
 //        pin_view.setText(mWidget.isPinned() ? context.getResources().getString(R.string.icon_31) :context.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getName()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(),name));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(), name));
         loadData(false);
     }
 
@@ -110,15 +112,17 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
     private String trigger;
     final WidgetViewMoreEnum widgetViewMoreEnum;
     final Context context;
+
     public ListWidgetView(Context context, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
-        this.context=context;
+        this.context = context;
         this.name = name;
 
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
+        this.widgetViewMoreEnum = widgetViewMoreEnum;
         init();
 
     }
+
     private void getUserData() {
         authData = UserDataManager.getAuthData();
         userData = UserDataManager.getUserData();
@@ -129,8 +133,8 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         View view = LayoutInflater.from(getContext()).inflate(R.layout.list_widget_layout, this, true);
         rootView = view.findViewById(R.id.meeting_root_view);
         pin_view = view.findViewById(R.id.pin_view);
-        panel_name_view=view.findViewById(R.id.panel_name_view);
-        icon_image_load=view.findViewById(R.id.icon_image_load);
+        panel_name_view = view.findViewById(R.id.panel_name_view);
+        icon_image_load = view.findViewById(R.id.icon_image_load);
         view_more = view.findViewById(R.id.view_more);
         menu_btn = view.findViewById(R.id.menu_meeting_btn);
         llFormData = view.findViewById(R.id.llFormData);
@@ -177,8 +181,8 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                 String data = new Gson().toJson(listWidgetAdapter.getData());
                 Intent intent = new Intent(getContext(), FullViewActivity.class);
                 intent.putExtra(BundleConstants.TEMPLATE_TYPE, BotResponse.TEMPLATE_TYPE_LIST);
-                intent.putExtra(BundleConstants.TITLE_NAME,mWidget.getTitle());
-                intent.putExtra(BundleConstants.TRIGGER,trigger);
+                intent.putExtra(BundleConstants.TITLE_NAME, mWidget.getTitle());
+                intent.putExtra(BundleConstants.TRIGGER, trigger);
                 intent.putExtra(BundleConstants.FROM_WIDGET, true);
                 intent.putExtra(BundleConstants.DATA, data);
                 getContext().startActivity(intent);
@@ -327,8 +331,8 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
 
     @Override
     public void meetingWidgetViewMoreVisibility(boolean visible) {
-        if(view_more!=null)
-            view_more.setVisibility(visible&& Utility.isViewMoreVisible(widgetViewMoreEnum) ?View.VISIBLE: View.GONE);
+        if (view_more != null)
+            view_more.setVisibility(visible && Utility.isViewMoreVisible(widgetViewMoreEnum) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -347,7 +351,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
     }
 
     public void onEvent(NetworkEvents.NetworkConnectivityEvent event) {
-        if(event!=null&&event.isNetworkConnectivity()) {
+        if (event != null && event.isNetworkConnectivity()) {
             loadData(true);
         }
     }
@@ -358,13 +362,13 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             afterDataLoad((Widget) PanelDataLRUCache.getInstance().getEntry(name));
             return;
         }*/
-        if(mWidget.getCallbackURL()==null) {
+        if (mWidget.getCallbackURL() == null) {
             return;
         }
         progress.setVisibility(View.VISIBLE);
 
-        Map<String,Object> result = getMapObject(mWidget.getParam());
-        WidgetDataLoader.loadListWidgetServiceData(mWidget.getCallbackURL(), Utils.ah(jwtToken),result)
+        Map<String, Object> result = getMapObject(mWidget.getParam());
+        WidgetDataLoader.loadListWidgetServiceData(mWidget.getCallbackURL(), Utils.ah(jwtToken), result)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<WidgetListDataModel>() {
@@ -385,16 +389,16 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                         Drawable drawable;
                         if (!NetworkUtility.isNetworkConnectionAvailable(ListWidgetView.this.getContext())) {
                             //No Internet Connect
-                            msg=getResources().getString(R.string.no_internet_connection);
-                            drawable= ResourcesCompat.getDrawable(context.getResources(), R.drawable.no_internet, context.getTheme());
+                            msg = getResources().getString(R.string.no_internet_connection);
+                            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.no_internet, context.getTheme());
                         } else {
                             //Oops some thing went wrong
-                            msg=getResources().getString(R.string.oops);
-                            drawable= ResourcesCompat.getDrawable(context.getResources(), R.drawable.oops_icon, context.getTheme());
+                            msg = getResources().getString(R.string.oops);
+                            drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.oops_icon, context.getTheme());
                         }
 
                         listWidgetAdapter.setWidgetData(null);
-                        listWidgetAdapter.setMessage(msg,drawable);
+                        listWidgetAdapter.setMessage(msg, drawable);
                         view_more.setVisibility(GONE);
                         list_widget_root_recycler.setAdapter(listWidgetAdapter);
                     }
@@ -406,13 +410,13 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                 });
     }
 
-    public void buttonAction(String utt, boolean appendUtterance){
+    public void buttonAction(String utt, boolean appendUtterance) {
 
-        if(utt == null)return;
-        if(utt.startsWith("tel:") || utt.startsWith("mailto:")){
-            if(utt.startsWith("tel:")){
+        if (utt == null) return;
+        if (utt.startsWith("tel:") || utt.startsWith("mailto:")) {
+            if (utt.startsWith("tel:")) {
                 KaUtility.launchDialer(getContext(), utt);
-            }else if(utt.startsWith("mailto:")){
+            } else if (utt.startsWith("mailto:")) {
                 KaUtility.showEmailIntent((Activity) getContext(), utt.split(":")[1]);
             }
             return;
@@ -421,7 +425,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
-        if(appendUtterance && trigger!= null)
+        if (appendUtterance && trigger != null)
             msg = msg.append(trigger).append(" ");
         msg.append(utt);
         event.setMessage(msg.toString());
@@ -430,17 +434,18 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         KoreEventCenter.post(event);
 
     }
-    public void buttonAction(Widget.Button button, boolean appendUtterance){
+
+    public void buttonAction(Widget.Button button, boolean appendUtterance) {
         String utterance = null;
-        if(button != null){
+        if (button != null) {
             utterance = button.getUtterance();
         }
-        if(utterance == null)return;
-        if(utterance.startsWith("tel:") || utterance.startsWith("mailto:")){
-            if(utterance.startsWith("tel:")){
-                KaUtility.launchDialer(getContext(),utterance);
-            }else if(utterance.startsWith("mailto:")){
-                showEmailIntent((Activity) getContext(),utterance.split(":")[1]);
+        if (utterance == null) return;
+        if (utterance.startsWith("tel:") || utterance.startsWith("mailto:")) {
+            if (utterance.startsWith("tel:")) {
+                KaUtility.launchDialer(getContext(), utterance);
+            } else if (utterance.startsWith("mailto:")) {
+                showEmailIntent((Activity) getContext(), utterance.split(":")[1]);
             }
             return;
         }
@@ -448,7 +453,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
-        if(appendUtterance && trigger!= null)
+        if (appendUtterance && trigger != null)
             msg = msg.append(trigger).append(" ");
         msg.append(utterance);
         event.setMessage(msg.toString());
@@ -456,11 +461,12 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         event.setScrollUpNeeded(true);
         KoreEventCenter.post(event);
     }
-    void afterDataLoad(final WidgetListDataModel model){
+
+    void afterDataLoad(final WidgetListDataModel model) {
 
         widget_header.setText(mWidget.getTitle());
-        if(model.getData().get(0).getHeaderOptions() != null && model.getData().get(0).getHeaderOptions().getType()!=null ) {
-            switch (model.getData().get(0).getHeaderOptions().getType()){
+        if (model.getData().get(0).getHeaderOptions() != null && model.getData().get(0).getHeaderOptions().getType() != null) {
+            switch (model.getData().get(0).getHeaderOptions().getType()) {
                 case "button":
                     icon_image_load.setVisibility(GONE);
                     imgMenu.setVisibility(GONE);
@@ -468,11 +474,11 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                     tvUrl.setVisibility(GONE);
                     tvButtonParent.setVisibility(VISIBLE);
                     String btnTitle = "";
-                    if(model.getData().get(0).getHeaderOptions().getButton() != null && model.getData().get(0).getHeaderOptions().getButton().getTitle() != null)
+                    if (model.getData().get(0).getHeaderOptions().getButton() != null && model.getData().get(0).getHeaderOptions().getButton().getTitle() != null)
                         btnTitle = model.getData().get(0).getHeaderOptions().getButton().getTitle();
                     else
                         btnTitle = model.getData().get(0).getHeaderOptions().getText();
-                    if(!StringUtils.isNullOrEmpty(btnTitle))
+                    if (!StringUtils.isNullOrEmpty(btnTitle))
                         tvButton.setText(btnTitle);
                     else
                         tvButtonParent.setVisibility(GONE);
@@ -497,12 +503,12 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                     imgMenu.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if ( model.getData().get(0).getHeaderOptions()!= null &&  model.getData().get(0).getHeaderOptions().getMenu()!= null && model.getData().get(0).getHeaderOptions().getMenu().size() > 0) {
+                            if (model.getData().get(0).getHeaderOptions() != null && model.getData().get(0).getHeaderOptions().getMenu() != null && model.getData().get(0).getHeaderOptions().getMenu().size() > 0) {
 
                                 WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                                 bottomSheetDialog.setisFromFullView(false);
-                                bottomSheetDialog.setSkillName(name,trigger);
-                                bottomSheetDialog.setData(model,true);
+                                bottomSheetDialog.setSkillName(name, trigger);
+                                bottomSheetDialog.setData(model, true);
 
                                 bottomSheetDialog.setVerticalListViewActionHelper(null);
                                 bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
@@ -525,7 +531,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                     icon_image_load.setVisibility(GONE);
                     imgMenu.setVisibility(GONE);
                     tvText.setVisibility(GONE);
-                    SpannableString content = new SpannableString(model.getData().get(0).getHeaderOptions().getUrl().getTitle()!=null?model.getData().get(0).getHeaderOptions().getUrl().getTitle():model.getData().get(0).getHeaderOptions().getUrl().getLink());
+                    SpannableString content = new SpannableString(model.getData().get(0).getHeaderOptions().getUrl().getTitle() != null ? model.getData().get(0).getHeaderOptions().getUrl().getTitle() : model.getData().get(0).getHeaderOptions().getUrl().getLink());
                     content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
                     tvUrl.setText(content);
                     tvButtonParent.setVisibility(GONE);
@@ -533,7 +539,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
                     tvUrl.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if(model.getData().get(0).getHeaderOptions().getUrl().getLink() != null) {
+                            if (model.getData().get(0).getHeaderOptions().getUrl().getLink() != null) {
                                 Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
                                 intent.putExtra("url", model.getData().get(0).getHeaderOptions().getUrl().getLink());
                                 intent.putExtra("header", getContext().getResources().getString(R.string.app_name));
@@ -545,7 +551,7 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
 
                 case "image":
                     icon_image_load.setVisibility(VISIBLE);
-                    if(model.getData().get(0).getHeaderOptions().getImage()!=null&&model.getData().get(0).getHeaderOptions().getImage().getImage_src()!=null) {
+                    if (model.getData().get(0).getHeaderOptions().getImage() != null && model.getData().get(0).getHeaderOptions().getImage().getImage_src() != null) {
                         Picasso.get().load(model.getData().get(0).getHeaderOptions().getImage().getImage_src()).into(icon_image_load);
                         icon_image_load.setOnClickListener(new OnClickListener() {
                             @Override
@@ -554,10 +560,10 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
 
                                 // buttonAction(model.getHeaderOptions().getButton(), true);
                                 //buttonAction(model.getHeaderOptions().getButton(), false);
-                                buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance()!=null?model.getData().get(0).getHeaderOptions().getImage().getUtterance():model.getData().get(0).getHeaderOptions().getImage().getPayload()!=null?model.getData().get(0).getHeaderOptions().getImage().getPayload():"", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                buttonAction(model.getData().get(0).getHeaderOptions().getImage().getUtterance() != null ? model.getData().get(0).getHeaderOptions().getImage().getUtterance() : model.getData().get(0).getHeaderOptions().getImage().getPayload() != null ? model.getData().get(0).getHeaderOptions().getImage().getPayload() : "", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
                                         (!StringUtils.isNullOrEmpty(name) && !name.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                             }
-                              //       }
+                            //       }
                         });
                     }
                     break;
@@ -568,22 +574,19 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
         }
         if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 0 && !model.getData().get(0).getTemplateType().equals("loginURL")) {
 
-            if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
+            if (model.getData().get(0).getElements() != null && model.getData().get(0).getElements().size() > 3 && Utility.isViewMoreVisible(widgetViewMoreEnum)) {
                 view_more.setVisibility(View.VISIBLE);
             }
 
             listWidgetAdapter.setWidgetData(new ArrayList<>(model.getData().get(0).getElements()));
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
             listWidgetAdapter.setPreviewLength(3);
-        }
-        else if(model.getData().get(0).getTemplateType().equals("loginURL")){
+        } else if (model.getData().get(0).getTemplateType().equals("loginURL")) {
             listWidgetAdapter.setWidgetData(null);
             listWidgetAdapter.setLoginModel(model.getData().get(0).getLoginModel());
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
             listWidgetAdapter.setLoginNeeded(true);
-        }
-        else if(model.getData().get(0).getTemplateType().equals("form"))
-        {
+        } else if (model.getData().get(0).getTemplateType().equals("form")) {
             list_widget_root_recycler.setVisibility(GONE);
             llFormData.setVisibility(VISIBLE);
             tvFillForm.setText(mWidget.getTitle());
@@ -591,19 +594,17 @@ public class ListWidgetView extends LinearLayout implements VerticalListViewActi
             tvFillForm.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(getContext() instanceof Activity &&model.getData().get(0).getFormLink()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
+                    if (getContext() instanceof Activity && model.getData().get(0).getFormLink() != null && !StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getFormLink())) {
                         Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
                         intent.putExtra("url", model.getData().get(0).getFormLink());
-                        intent.putExtra("header",mWidget.getTitle());
-                        ((Activity)getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                    }else{
-                        Toast.makeText(getContext(),"Instance not activity",Toast.LENGTH_LONG).show();
+                        intent.putExtra("header", mWidget.getTitle());
+                        ((Activity) getContext()).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    } else {
+                        Toast.makeText(getContext(), "Instance not activity", Toast.LENGTH_LONG).show();
                     }
                 }
             });
-        }
-        else
-        {
+        } else {
             listWidgetAdapter.setData(null);
             list_widget_root_recycler.setAdapter(listWidgetAdapter);
         }

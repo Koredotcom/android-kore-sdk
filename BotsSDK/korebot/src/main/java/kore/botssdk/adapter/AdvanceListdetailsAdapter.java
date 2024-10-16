@@ -61,8 +61,8 @@ public class AdvanceListdetailsAdapter extends BaseAdapter
             convertView = View.inflate(context, R.layout.listwidget_details_item, null);
             KaFontUtils.applyCustomFont(context, convertView);
             holder = new DetailsViewHolder();
-            holder.tvBtnText = convertView.findViewById(com.kora.ai.widgetsdk.R.id.tvBtnText);
-            holder.ivListBtnIcon = convertView.findViewById(com.kora.ai.widgetsdk.R.id.ivListBtnIcon);
+            holder.tvBtnText = convertView.findViewById(R.id.tvBtnText);
+            holder.ivListBtnIcon = convertView.findViewById(R.id.ivListBtnIcon);
             convertView.setTag(holder);
         } else {
             holder = (DetailsViewHolder) convertView.getTag();

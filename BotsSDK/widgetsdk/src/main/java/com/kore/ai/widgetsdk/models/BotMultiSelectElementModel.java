@@ -1,5 +1,8 @@
 package com.kore.ai.widgetsdk.models;
 
+import android.annotation.SuppressLint;
+
+@SuppressLint("UnknownNullness")
 public class BotMultiSelectElementModel implements MultiSelectBase {
 
     public String getTitle() {

@@ -4,10 +4,6 @@ import com.kore.ai.widgetsdk.utils.StringUtils;
 
 import java.io.Serializable;
 
-/**
- * Created by Shiva Krishna on 2/26/2018.
- */
-
 public class ContactsTeamsHolder implements Serializable {
     private static final long serialVersionUID = 6837271458428376093L;
     String id;

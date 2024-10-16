@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.ChartListWidgetAdapter;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
@@ -57,37 +57,42 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
     private ChartListWidgetAdapter defaultWidgetAdapter = null;
     private AuthData authData;
     private UserData userData;
-    private TextView pin_view,panel_name_view;
+    private TextView pin_view, panel_name_view;
+
     public WidgetsModel getWidget() {
         return mWidget;
     }
 
     public void setWidget(WidgetsModel mWidget, PanelLevelData panelData) {
         this.mWidget = mWidget;
-        this.panelData=panelData;
+        this.panelData = panelData;
         meeting_header.setText(mWidget.getTitle());
         loadData(false);
     }
+
     public void onEvent(NetworkEvents.NetworkConnectivityEvent event) {
-        if(event!=null&&event.isNetworkConnectivity()) {
+        if (event != null && event.isNetworkConnectivity()) {
             loadData(true);
         }
     }
+
     private WidgetsModel mWidget;
     private final String name;
     final Handler handler = new Handler();
     final WidgetViewMoreEnum widgetViewMoreEnum;
     final Context context;
     PanelLevelData panelData;
+
     public ChartListWidgetView(Context context, UpdateRefreshItem mListener, String name, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
         this.name = name;
-        this.context=context;
+        this.context = context;
 
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
+        this.widgetViewMoreEnum = widgetViewMoreEnum;
         init();
 
     }
+
     private void getUserData() {
         authData = UserDataManager.getAuthData();
         userData = UserDataManager.getUserData();
@@ -96,11 +101,11 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
     private void init() {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.chart_widget_layout, this, true);
         rootView = view.findViewById(R.id.meeting_root_view);
-        panel_name_view=view.findViewById(R.id.panel_name_view);
+        panel_name_view = view.findViewById(R.id.panel_name_view);
         pin_view = view.findViewById(R.id.pin_view);
         menu_meeting_btn = view.findViewById(R.id.menu_meeting_btn);
         view_more = view.findViewById(R.id.view_more);
-       // KoreEventCenter.register(this);
+        // KoreEventCenter.register(this);
 
         pin_view.setOnClickListener(new OnClickListener() {
             @Override
@@ -146,7 +151,7 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
             }
         });
         upcoming_meeting_root_recycler = view.findViewById(R.id.upcoming_meeting_root_recycler);
-        upcoming_meeting_root_recycler.setLayoutManager(new GridLayoutManager(getContext(),4));
+        upcoming_meeting_root_recycler.setLayoutManager(new GridLayoutManager(getContext(), 4));
         /*ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(getContext(), R.dimen.min_width_middle);
         upcoming_meeting_root_recycler.addItemDecoration(itemDecoration);*/
 
@@ -162,7 +167,7 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-       KoreEventCenter.register(this);
+        KoreEventCenter.register(this);
     }
 
     @Override
@@ -287,8 +292,8 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
 
     @Override
     public void meetingWidgetViewMoreVisibility(boolean visible) {
-        if(view_more!=null)
-            view_more.setVisibility(visible&& Utility.isViewMoreVisible(widgetViewMoreEnum) ?View.VISIBLE: View.GONE);
+        if (view_more != null)
+            view_more.setVisibility(visible && Utility.isViewMoreVisible(widgetViewMoreEnum) ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -314,12 +319,12 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
         }*/
 //        pin_view.setText(mWidget.isPinned() ? getResources().getString(R.string.icon_31) : getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getName()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(),name));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(), name));
 
         meeting_progress.setVisibility(View.VISIBLE);
 
         Object params = "{\"from\":\"sri.harsha@kore.com\",\"inputs\":{}}";
-        Map<String,Object> result = getMapObject(params);
+        Map<String, Object> result = getMapObject(params);
 //        WidgetDataLoader.loadForDefaultServiceData(mWidget.getCallbackURL(), Utils.ah(authData.getAccessToken()), result)
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())
@@ -366,10 +371,10 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
 //                });
     }
 
-    private void afterDataLoad(Widget model){
+    private void afterDataLoad(Widget model) {
 
         meeting_header.setText(mWidget.getTitle());
-        if(model.getElements() == null || model.getElements().size() == 0){
+        if (model.getElements() == null || model.getElements().size() == 0) {
 //            calendarEventsAdapter.setMessage(model.getPlaceholder(),null);
         }
         //  upcoming_meeting_root_recycler.tv_upcoming_meeting.setText(model.getSummary());
@@ -377,7 +382,7 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
 
         if (model != null && model.getElements() != null && model.getElements().size() > 0) {
 
-            if (model.getElements() != null && model.getElements().size() > 3&& Utility.isViewMoreVisible(widgetViewMoreEnum)) {
+            if (model.getElements() != null && model.getElements().size() > 3 && Utility.isViewMoreVisible(widgetViewMoreEnum)) {
                 view_more.setVisibility(View.VISIBLE);
             }
 
@@ -387,15 +392,13 @@ public class ChartListWidgetView extends ViewGroup implements VerticalListViewAc
 //            calendarEventsAdapter.setPreviewLength(model.getPreview_length());
             upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
             defaultWidgetAdapter.notifyDataSetChanged();
-        }else if(model.getTemplateType().equals("loginURL")){
+        } else if (model.getTemplateType().equals("loginURL")) {
             upcoming_meeting_root_recycler.setLayoutManager(new LinearLayoutManager(getContext()));
             defaultWidgetAdapter.setCalData(null);
             defaultWidgetAdapter.setLoginModel(model.getLogin());
             upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
             defaultWidgetAdapter.setLoginNeeded(true);
-        }
-
-        else {
+        } else {
             defaultWidgetAdapter.setCalData(null);
             upcoming_meeting_root_recycler.setAdapter(defaultWidgetAdapter);
             defaultWidgetAdapter.notifyDataSetChanged();

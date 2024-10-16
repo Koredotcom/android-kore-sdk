@@ -4,7 +4,6 @@ import static com.kore.ai.widgetsdk.utils.AppUtils.getMapObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.cache.PanelDataLRUCache;
 import com.kore.ai.widgetsdk.events.KaEvents;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
@@ -33,7 +32,6 @@ import com.kore.ai.widgetsdk.room.models.AuthData;
 import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.Utility;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetConstants;
@@ -75,18 +73,19 @@ public class GenericWidgetView extends LinearLayout {
     View header_layout;
     boolean fetching;
     private boolean isFirstTime = true;
-    private TextView pin_view,panel_name_view;
+    private TextView pin_view, panel_name_view;
     Context context;
+
     public GenericWidgetView(Context context, int mPage, VerticalListViewActionHelper
             verticalListViewActionHelper, WidgetsModel widget,
                              String name, String refreshTime, boolean isPaginationRequired, WidgetViewMoreEnum widgetViewMoreEnum) {
         super(context);
         this.widget = widget;
         this.name = name;
-        this.context=context;
-        this.widgetViewMoreEnum=widgetViewMoreEnum;
+        this.context = context;
+        this.widgetViewMoreEnum = widgetViewMoreEnum;
         this.refreshTime = refreshTime;
-        this.isPaginationRequired=isPaginationRequired;
+        this.isPaginationRequired = isPaginationRequired;
         init(verticalListViewActionHelper, mPage);
     }
 
@@ -105,7 +104,7 @@ public class GenericWidgetView extends LinearLayout {
     }
 
     private void getUserData() {
-         userData = UserDataManager.getUserData();
+        userData = UserDataManager.getUserData();
         authData = UserDataManager.getAuthData();
     }
 
@@ -115,20 +114,21 @@ public class GenericWidgetView extends LinearLayout {
 
     PanelLevelData panelData;
     String panelName;
-    public void setWidget(String panelName,WidgetsModel widget,boolean isPaginationRequired,PanelLevelData panelData) {
+
+    public void setWidget(String panelName, WidgetsModel widget, boolean isPaginationRequired, PanelLevelData panelData) {
         this.widget = widget;
-        this.panelData=panelData;
-        this.panelName=panelName;
-        this.refreshTime = widget.getAutoRefresh().getInterval()+"";
+        this.panelData = panelData;
+        this.panelName = panelName;
+        this.refreshTime = widget.getAutoRefresh().getInterval() + "";
         header_layout.setVisibility(VISIBLE);
         txtTitle.setVisibility(View.VISIBLE);
 
         txtTitle.setText(widget.getTitle());
-        this.isPaginationRequired=isPaginationRequired;
+        this.isPaginationRequired = isPaginationRequired;
         loadData(false, false);
 //        pin_view.setText(widget.isPinned() ? context.getResources().getString(R.string.icon_31) :context.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(widget.getName()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(widget.getName(),panelName));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(widget.getName(), panelName));
     }
 
     public RecyclerView getRecycler() {
@@ -139,8 +139,8 @@ public class GenericWidgetView extends LinearLayout {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.generic_widget_view, this, true);
         rootView = view.findViewById(R.id.item_view_root);
         pin_view = view.findViewById(R.id.pin_view);
-        panel_name_view=view.findViewById(R.id.panel_name_view);
-        header_layout=view.findViewById(R.id.header_layout);
+        panel_name_view = view.findViewById(R.id.panel_name_view);
+        header_layout = view.findViewById(R.id.header_layout);
         txtTitle = view.findViewById(R.id.widget_header);
         autoExpandListView = view.findViewById(R.id.item_list);
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -222,13 +222,12 @@ public class GenericWidgetView extends LinearLayout {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                int visibleItemCount =mLayoutManager .getChildCount();
+                int visibleItemCount = mLayoutManager.getChildCount();
                 int totalItemCount = mLayoutManager.getItemCount();
                 int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
 
-                if (hasMore&&isPaginationRequired&&!fetching&&(visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                        && firstVisibleItemPosition >= 0)
-                {
+                if (hasMore && isPaginationRequired && !fetching && (visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                        && firstVisibleItemPosition >= 0) {
 
                     loadData(true, true);
                 }
@@ -240,7 +239,7 @@ public class GenericWidgetView extends LinearLayout {
 
     public void startTimer() {
         //set a new Timer
-        if(isFirstTime)return;
+        if (isFirstTime) return;
         timer = new Timer();
 
         //initialize the TimerTask's job
@@ -266,7 +265,7 @@ public class GenericWidgetView extends LinearLayout {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                          loadData(false, true);
+                        loadData(false, true);
                     }
                 });
             }
@@ -355,7 +354,7 @@ public class GenericWidgetView extends LinearLayout {
     }
 
     public void loadData(final boolean isPagination, boolean shouldRefresh) {
-        if (widget == null||fetching) return;
+        if (widget == null || fetching) return;
 
         if (PanelDataLRUCache.getInstance().getEntry(name) != null && !shouldRefresh && !isPagination) {
             afterDataLoad((KnowledgeDetailModelResponseNew) PanelDataLRUCache.getInstance().getEntry(name), false);
@@ -387,7 +386,7 @@ public class GenericWidgetView extends LinearLayout {
         if (authData == null) return;
         linear_progress.setVisibility(View.VISIBLE);
 
-        fetching=true;
+        fetching = true;
         Call<KnowledgeDetailModelResponseNew> knowledgeReq = KaRestBuilder.getKaRestAPI().getRecentKnowledgePanel(Utils.ah(authData.accessToken),
                 api, param, body);
         KaRestAPIHelper.enqueueWithRetry(knowledgeReq, new Callback<KnowledgeDetailModelResponseNew>() {
@@ -401,7 +400,7 @@ public class GenericWidgetView extends LinearLayout {
                             PanelDataLRUCache.getInstance().putEntry(name, responseNew);
                         afterDataLoad(responseNew, isPagination);
                     }
-                    fetching=false;
+                    fetching = false;
                 }
 
             }
@@ -409,7 +408,7 @@ public class GenericWidgetView extends LinearLayout {
             @Override
             public void onFailure(Call<KnowledgeDetailModelResponseNew> call, Throwable t) {
                 linear_progress.setVisibility(View.GONE);
-                fetching=false;
+                fetching = false;
             }
         });
     }

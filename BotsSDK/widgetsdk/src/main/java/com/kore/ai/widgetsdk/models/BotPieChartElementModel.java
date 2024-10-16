@@ -1,9 +1,5 @@
 package com.kore.ai.widgetsdk.models;
 
-/**
- * Created by Ramachandra Pradeep on 29-Oct-17.
- */
-
 public class BotPieChartElementModel {
     public String getTitle() {
         return title;

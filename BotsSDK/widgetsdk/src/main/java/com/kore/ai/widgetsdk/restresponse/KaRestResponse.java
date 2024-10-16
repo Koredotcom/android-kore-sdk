@@ -20,10 +20,11 @@ public class KaRestResponse {
     public class LoginResponse extends User {
         public String status;
     }
-    public class JWTKeyResponse{
+
+    public class JWTKeyResponse {
         private String bearer;
 
-        public String getBearer(){
+        public String getBearer() {
             return bearer;
         }
     }
@@ -104,53 +105,53 @@ public class KaRestResponse {
         }
 
     }
+
     public class KoreStringErrorResponse {
         public StringErrorList errors;
     }
 
     public static class StringErrorList extends ArrayList<KoreStringError> {
     }
+
     public class KoreStringError {
         public String msg;
         public String code;
     }
+
     public class BotAuthorization {
         private Authorization authorization;
         private BotUserInfo userInfo;
 
         /**
-         * @return
-         * The authorization
+         * @return The authorization
          */
         public Authorization getAuthorization() {
             return authorization;
         }
 
         /**
-         * @param authorization
-         * The authorization
+         * @param authorization The authorization
          */
         public void setAuthorization(Authorization authorization) {
             this.authorization = authorization;
         }
 
         /**
-         * @return
-         * The userInfo
+         * @return The userInfo
          */
         public BotUserInfo getUserInfo() {
             return userInfo;
         }
 
         /**
-         * @param userInfo
-         * The userInfo
+         * @param userInfo The userInfo
          */
         public void setUserInfo(BotUserInfo userInfo) {
             this.userInfo = userInfo;
         }
 
     }
+
     public class RTMUrl {
         private String url;
 
@@ -190,10 +191,11 @@ public class KaRestResponse {
         }
     }
 
-    public static class Meta{
+    public static class Meta {
         public final String timezone;
         public final String locale;
-        public Meta(String timezone, String locale){
+
+        public Meta(String timezone, String locale) {
             this.timezone = timezone;
             this.locale = locale;
         }
@@ -205,7 +207,7 @@ public class KaRestResponse {
         private KaRestResponse.BotMessage message;
         private final String resourceid = "/bot.message";
         private BotInfoModel botInfo;
-        private int clientMessageId = (int)System.currentTimeMillis();
+        private int clientMessageId = (int) System.currentTimeMillis();
         private KaRestResponse.Meta meta;
         private int id = clientMessageId;
         private String client = "sdk";
@@ -213,7 +215,8 @@ public class KaRestResponse {
         public void setMessage(KaRestResponse.BotMessage message) {
             this.message = message;
         }
-        public void setBotInfo(BotInfoModel botInfo){
+
+        public void setBotInfo(BotInfoModel botInfo) {
             this.botInfo = botInfo;
         }
 
@@ -248,6 +251,7 @@ public class KaRestResponse {
         public void setClient(String client) {
             this.client = client;
         }
+
         public KaRestResponse.BotMessage getMessage() {
             return message;
         }
@@ -264,19 +268,22 @@ public class KaRestResponse {
     public static class KnowledgeInfo extends HashMap {
 
     }
-    public static class DeleteResource{
+
+    public static class DeleteResource {
         private int commentsCount;
 
         public int getCommentsCount() {
             return commentsCount;
         }
     }
+
     /*public static class RecentKnowledgeResponse extends ArrayList<CreateKnowledgeModel> {
 
     }*/
     public static class AutoSuggestionsResponse extends ArrayList<String> {
 
     }
+
     public static class VoteResponse {
         private ArrayList<KnowledgeDetailModel.VoteModel> votes;
         private int upVoteCount;
@@ -330,7 +337,7 @@ public class KaRestResponse {
         private int followCount;
     }
 
-    public static class CommentResponse{
+    public static class CommentResponse {
         public ArrayList<String> getFollowers() {
             return followers;
         }
@@ -392,7 +399,6 @@ public class KaRestResponse {
         }
 
 
-
         public ArrayList<KnowledgeDetailModel.VoteModel> getVotes() {
             return votes;
         }
@@ -440,7 +446,7 @@ public class KaRestResponse {
         ArrayList<String> followers;
     }
 
-    public static class UserContext{
+    public static class UserContext {
         private Org org;
 
         public Org getOrg() {
@@ -452,7 +458,7 @@ public class KaRestResponse {
         }
     }
 
-    public static class Org{
+    public static class Org {
         private ContactsInfo contacts;
 
         public ContactsInfo getContacts() {
@@ -463,7 +469,8 @@ public class KaRestResponse {
             this.contacts = contacts;
         }
     }
-    public static class ContactsInfo{
+
+    public static class ContactsInfo {
         private long lastModTime;
 
         public long getLastModTime() {
@@ -531,7 +538,8 @@ public class KaRestResponse {
     public static class QuestionsResponse extends ArrayList<QuestionModel> {
 
     }
-    public static class QuestionModel{
+
+    public static class QuestionModel {
         public String getId() {
             return id;
         }
@@ -574,6 +582,7 @@ public class KaRestResponse {
             return filename;
         }
     }
+
     public class KaCheckOnBoardingResponse {
         public boolean isOnboarded() {
             return isOnboarded;
@@ -594,6 +603,7 @@ public class KaRestResponse {
             isTeachInitiated = teachInitiated;
         }
     }
+
     public class KoreError {
         public String msg;
         public int code;
@@ -605,8 +615,10 @@ public class KaRestResponse {
         public int maxAttemptsAllowed;
         public long forDuration = 86400000;
     }
+
     public static class ErrorList extends ArrayList<KoreError> {
     }
+
     public class KoreErrorResponse {
         public ErrorList errors;
 
@@ -627,157 +639,135 @@ public class KaRestResponse {
             return 0;
         }
     }
-    public class MoreInfoForAppControl{
+
+    public class MoreInfoForAppControl {
         private String userId;
         private String firstName;
         private String lastName;
         private String emailId;
 
         /**
-         *
-         * @return
-         * The userId
+         * @return The userId
          */
         public String getUserId() {
             return userId;
         }
 
         /**
-         *
-         * @param userId
-         * The userId
+         * @param userId The userId
          */
         public void setUserId(String userId) {
             this.userId = userId;
         }
 
         /**
-         *
-         * @return
-         * The firstName
+         * @return The firstName
          */
         public String getFirstName() {
             return firstName;
         }
 
         /**
-         *
-         * @param firstName
-         * The firstName
+         * @param firstName The firstName
          */
         public void setFirstName(String firstName) {
             this.firstName = firstName;
         }
 
         /**
-         *
-         * @return
-         * The lastName
+         * @return The lastName
          */
         public String getLastName() {
             return lastName;
         }
 
         /**
-         *
-         * @param lastName
-         * The lastName
+         * @param lastName The lastName
          */
         public void setLastName(String lastName) {
             this.lastName = lastName;
         }
 
         /**
-         *
-         * @return
-         * The emailId
+         * @return The emailId
          */
         public String getEmailId() {
             return emailId;
         }
 
         /**
-         *
-         * @param emailId
-         * The emailId
+         * @param emailId The emailId
          */
         public void setEmailId(String emailId) {
             this.emailId = emailId;
         }
 
     }
-    public class KoreErrorForAppControl{
+
+    public class KoreErrorForAppControl {
         private String msg;
         private String code;
         private List<MoreInfoForAppControl> moreInfo = new ArrayList<MoreInfoForAppControl>();
 
         /**
-         *
-         * @return
-         * The msg
+         * @return The msg
          */
         public String getMsg() {
             return msg;
         }
 
         /**
-         *
-         * @param msg
-         * The msg
+         * @param msg The msg
          */
         public void setMsg(String msg) {
             this.msg = msg;
         }
 
         /**
-         *
-         * @return
-         * The code
+         * @return The code
          */
         public String getCode() {
             return code;
         }
 
         /**
-         *
-         * @param code
-         * The code
+         * @param code The code
          */
         public void setCode(String code) {
             this.code = code;
         }
 
         /**
-         *
-         * @return
-         * The moreInfo
+         * @return The moreInfo
          */
         public List<MoreInfoForAppControl> getMoreInfo() {
             return moreInfo;
         }
 
         /**
-         *
-         * @param moreInfo
-         * The moreInfo
+         * @param moreInfo The moreInfo
          */
         public void setMoreInfo(List<MoreInfoForAppControl> moreInfo) {
             this.moreInfo = moreInfo;
         }
 
     }
-    public static class ErrorListForAppControl extends ArrayList<KoreErrorForAppControl>{
+
+    public static class ErrorListForAppControl extends ArrayList<KoreErrorForAppControl> {
 
     }
-    public class KoreErrorRespForAC{
+
+    public class KoreErrorRespForAC {
         public ErrorListForAppControl errors;
     }
+
     public class KoreErrorCodeString {
         public String msg;
         public String code;
         public String location;
         public MoreInfo moreInfo;
     }
+
     public static class ErrorListString extends ArrayList<KoreErrorCodeString> {
     }
 
@@ -806,15 +796,13 @@ public class KaRestResponse {
     }*/
 
 
-
 //    public static class KoraTeams extends ArrayList<KoraTeam>{}
 
     /*public static class ContactList extends ArrayList<ContactsTeamsHolder> {
     }*/
 
 
-
-    public static class MeetingsList extends ArrayList<MeetingRequestModel>{
+    public static class MeetingsList extends ArrayList<MeetingRequestModel> {
 
     }
 

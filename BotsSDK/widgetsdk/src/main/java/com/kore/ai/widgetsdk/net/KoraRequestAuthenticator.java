@@ -30,9 +30,6 @@ import okhttp3.Response;
 import okhttp3.Route;
 import retrofit2.Call;
 
-//import com.kore.korelib.events.AccessTokenUpdateEvent;
-
-
 public class KoraRequestAuthenticator implements Authenticator {
     private final Context mContext;
     private String newToken;

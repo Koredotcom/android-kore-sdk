@@ -34,7 +34,6 @@ import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class CustomBottomSheetBehavior<V extends View> extends CoordinatorLayout.Behavior<V> {
     public static final int STATE_DRAGGING = 1;
     public static final int STATE_SETTLING = 2;

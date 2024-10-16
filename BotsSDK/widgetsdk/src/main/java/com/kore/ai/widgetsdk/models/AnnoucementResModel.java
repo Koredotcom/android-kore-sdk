@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.List;
 
 public class AnnoucementResModel implements Serializable {
-
     @SerializedName("creator")
     @Expose
     private String creator;
@@ -60,7 +59,6 @@ public class AnnoucementResModel implements Serializable {
     private Long lastMod;
 
 
-
     public Long getNUpVotes() {
         return nUpVotes;
     }
@@ -85,6 +83,7 @@ public class AnnoucementResModel implements Serializable {
     public void setSharedList(List<SharedList> sharedList) {
         this.sharedList = sharedList;
     }
+
     public String getCreator() {
         return creator;
     }
@@ -125,13 +124,13 @@ public class AnnoucementResModel implements Serializable {
         if (getSharedList() != null && getSharedList().size() > 0) {
             if (getSharedList().size() == 1) {
 
-                return  getSharedList().get(0).getName()  ;
+                return getSharedList().get(0).getName();
             } else {
                 int remaining = getSharedList().size() - 1;
-                if(remaining > 1)
-                    return String.format("%1$s and %2$d others",getSharedList().get(0).getName() , remaining);
+                if (remaining > 1)
+                    return String.format("%1$s and %2$d others", getSharedList().get(0).getName(), remaining);
                 else
-                    return String.format("%1$s and %2$d other",getSharedList().get(0).getName() , remaining);
+                    return String.format("%1$s and %2$d other", getSharedList().get(0).getName(), remaining);
 
             }
         }
@@ -140,19 +139,21 @@ public class AnnoucementResModel implements Serializable {
         return users;
 
     }
-   public int getSharedVisiblity()
-    {
-        if (getSharedList() != null && getSharedList().size()>0) {
+
+    public int getSharedVisiblity() {
+        if (getSharedList() != null && getSharedList().size() > 0) {
             return View.VISIBLE;
         }
         return View.GONE;
     }
+
     public int getDescriptionVisiblity() {
-        if (desc != null && !TextUtils.isEmpty(desc.replaceAll("(^\\h*)|(\\h*$)",""))) {
+        if (desc != null && !TextUtils.isEmpty(desc.replaceAll("(^\\h*)|(\\h*$)", ""))) {
             return View.VISIBLE;
         }
         return View.GONE;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -244,6 +245,7 @@ public class AnnoucementResModel implements Serializable {
     public void setSharedOn(Long sharedOn) {
         this.sharedOn = sharedOn;
     }
+
     public static class MyActions implements Serializable {
 
         @SerializedName("follow")
@@ -270,7 +272,8 @@ public class AnnoucementResModel implements Serializable {
         }
 
     }
-    public static class SharedList implements Serializable{
+
+    public static class SharedList implements Serializable {
 
         @SerializedName("lN")
         @Expose
@@ -374,7 +377,6 @@ public class AnnoucementResModel implements Serializable {
         @SerializedName("icon")
         @Expose
         private String icon;
-
 
 
         public String getLN() {

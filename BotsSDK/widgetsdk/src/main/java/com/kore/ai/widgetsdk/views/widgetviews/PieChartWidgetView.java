@@ -8,7 +8,6 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -28,7 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
 import com.kore.ai.widgetsdk.adapters.ButtonListAdapter;
 import com.kore.ai.widgetsdk.charts.animation.Easing;
@@ -72,7 +71,6 @@ import com.kore.ai.widgetsdk.room.models.UserData;
 import com.kore.ai.widgetsdk.utils.BundleConstants;
 import com.kore.ai.widgetsdk.utils.Constants;
 import com.kore.ai.widgetsdk.utils.KaUtility;
-import com.kore.ai.widgetsdk.utils.NetworkUtility;
 import com.kore.ai.widgetsdk.utils.StringUtils;
 import com.kore.ai.widgetsdk.utils.Utils;
 import com.kore.ai.widgetsdk.utils.WidgetConstants;
@@ -116,7 +114,7 @@ public class PieChartWidgetView extends BaseWidgetView {
     public LinearLayout tvButtonParent;
     private Button login_button;
     View login_View;
-    private TextView pin_view,panel_name_view;
+    private TextView pin_view, panel_name_view;
     String panelName;
     private String jwtToken;
     private int labelCount = 0;
@@ -146,7 +144,7 @@ public class PieChartWidgetView extends BaseWidgetView {
         tvUrl = view.findViewById(R.id.tv_url);
         tvButtonParent = view.findViewById(R.id.tv_values_layout);
         pin_view = view.findViewById(R.id.pin_view);
-        panel_name_view=view.findViewById(R.id.panel_name_view);
+        panel_name_view = view.findViewById(R.id.panel_name_view);
 
 //        //BarChart
 //        mBarChart = view.findViewById(R.id.mBarChart);
@@ -187,15 +185,16 @@ public class PieChartWidgetView extends BaseWidgetView {
     }
 
     PanelLevelData panelData;
+
     public void setWidget(String panelName, WidgetsModel mWidget, PanelLevelData panelData, String jwtToken) {
         this.mWidget = mWidget;
-        this.panelData=panelData;
+        this.panelData = panelData;
 //        this.trigger=mWidget.getTrigger();
-        this.panelName=panelName;
+        this.panelName = panelName;
         chartHeader.setText(mWidget.getTitle());
 //        pin_view.setText(mWidget.isPinned() ? mContext.getResources().getString(R.string.icon_31) :mContext.getResources().getString(R.string.icon_32));
         panel_name_view.setText(KaUtility.getPanelFormatedName(mWidget.getName()));
-        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(),panelName));
+        panel_name_view.setVisibility(KaUtility.isTitleAndPanelNameMatch(mWidget.getName(), panelName));
         this.jwtToken = jwtToken;
 
         loadData();
@@ -207,7 +206,7 @@ public class PieChartWidgetView extends BaseWidgetView {
             return;
         }
         progress.setVisibility(View.VISIBLE);
-        Map<String,Object> result = getMapObject(mWidget.getParam());
+        Map<String, Object> result = getMapObject(mWidget.getParam());
         WidgetDataLoader.loadWidgetChartData(mWidget.getCallbackURL(), Utils.ah(jwtToken), result)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -226,19 +225,19 @@ public class PieChartWidgetView extends BaseWidgetView {
                             afterDataLoad(model.getData().get(0));
                         }
 
-                        if (model!=null && model.getData().get(0) != null && model.getData().get(0).getTemplateType()!=null&&model.getData().get(0).getTemplateType().equals("loginURL")) {
+                        if (model != null && model.getData().get(0) != null && model.getData().get(0).getTemplateType() != null && model.getData().get(0).getTemplateType().equals("loginURL")) {
                             mChart.setVisibility(GONE);
                             login_View.setVisibility(VISIBLE);
                             login_button.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    if(mContext instanceof Activity&&model.getData().get(0).getLogin()!=null&&!StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
+                                    if (mContext instanceof Activity && model.getData().get(0).getLogin() != null && !StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
                                         Intent intent = new Intent(mContext, GenericWebViewActivity.class);
                                         intent.putExtra("url", model.getData().get(0).getLogin().getUrl());
                                         intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-                                        ((Activity)mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                                    }else{
-                                        Toast.makeText(mContext,"Instance not activity",Toast.LENGTH_LONG).show();
+                                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                                    } else {
+                                        Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
                                     }
                                 }
                             });
@@ -387,8 +386,7 @@ public class PieChartWidgetView extends BaseWidgetView {
                     tvButtonParent.setVisibility(GONE);
                     tvUrl.setVisibility(VISIBLE);
 
-                    tvUrl.setOnClickListener(new OnClickListener()
-                    {
+                    tvUrl.setOnClickListener(new OnClickListener() {
                         @Override
                         public void onClick(View view) {
 
@@ -431,8 +429,7 @@ public class PieChartWidgetView extends BaseWidgetView {
 
         }
 
-        if(WidgetConstants.PIE_CHART.equals(model.getTemplateType()))
-        {
+        if (WidgetConstants.PIE_CHART.equals(model.getTemplateType())) {
             ArrayList<BotPieChartElementModel> elementModels = model.getPieChartElements();
             if (elementModels != null && !elementModels.isEmpty()) {
                 ArrayList<String> xVal = new ArrayList<>(elementModels.size());
@@ -444,9 +441,7 @@ public class PieChartWidgetView extends BaseWidgetView {
                 chartTitle.setText(model.getTitle());
                 populatePieChart("", model.getPie_type(), xVal, yVal);
             }
-        }
-        else if(WidgetConstants.BAR_CHART.equals(model.getTemplateType()))
-        {
+        } else if (WidgetConstants.BAR_CHART.equals(model.getTemplateType())) {
             ArrayList<BotBarChartDataModel> barChartElements = model.getBarChartElements();
 
             float barWidth = 0.2f;
@@ -473,7 +468,7 @@ public class PieChartWidgetView extends BaseWidgetView {
                 dataSet = new BarDataSet[size];
 
                 for (int k = 0; k < size; k++) {
-                    dataSet[k] = new BarDataSet(yVals1[k],barChartElements.get(k).getTitle());
+                    dataSet[k] = new BarDataSet(yVals1[k], barChartElements.get(k).getTitle());
                     dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
                     barDataSets.add(dataSet[k]);
                 }

@@ -2,7 +2,7 @@ package com.kore.ai.widgetsdk.utils;
 
 import android.content.Context;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 
 import java.text.DateFormatSymbols;
 import java.text.Format;

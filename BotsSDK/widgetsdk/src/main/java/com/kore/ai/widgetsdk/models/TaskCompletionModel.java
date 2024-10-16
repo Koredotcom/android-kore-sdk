@@ -4,7 +4,6 @@ import java.util.List;
 
 public class TaskCompletionModel {
 
-
 private String status;
 /*private Long dueDate;*/
 

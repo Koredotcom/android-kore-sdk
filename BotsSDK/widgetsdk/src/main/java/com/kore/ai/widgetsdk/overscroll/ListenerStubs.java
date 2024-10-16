@@ -1,8 +1,5 @@
 package com.kore.ai.widgetsdk.overscroll;
 
-/**
- * @author amit
- */
 public interface ListenerStubs {
 
     class OverScrollStateListenerStub implements IOverScrollStateListener {

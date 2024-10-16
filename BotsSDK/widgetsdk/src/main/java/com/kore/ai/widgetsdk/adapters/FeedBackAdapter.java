@@ -16,7 +16,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.fragments.FeedbackSheetFragment;
 import com.kore.ai.widgetsdk.interfaces.FeedBackButtonState;
 import com.kore.ai.widgetsdk.models.FeedbackDataResponse;

@@ -4,9 +4,6 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class PinWidget {
-
-
-
     @SerializedName("pname")
     @Expose
     private String panelName;
@@ -50,7 +47,6 @@ public class PinWidget {
     private String skillId;
 
 
-
     public String getPanelId() {
         return panelId;
     }
@@ -58,7 +54,6 @@ public class PinWidget {
     public void setPanelId(String panelId) {
         this.panelId = panelId;
     }
-
 
 
     public String getSkillId() {

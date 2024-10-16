@@ -12,7 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.gson.Gson;
-import com.kora.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.applicationcontrol.ACMEngine;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.net.KaRestResponse;

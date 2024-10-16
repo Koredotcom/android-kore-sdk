@@ -6,7 +6,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,29 +18,24 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.UUID;
 
-import kore.botssdk.activity.BotChatActivity;
+import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
-import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionRequest;
-import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 
+@SuppressWarnings("UnKnownNullness")
 public class MainActivity extends AppCompatActivity {
 
     String TAG = MainActivity.class.getName();
-    static boolean allPermissionsGranted = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Inject the custom template like below
-        SDKConfiguration.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
         SDKConfiguration.Server.setQueryParams(getQueryParams());
         SDKConfiguration.Server.setCustomData(getCustomData());
 
@@ -142,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
      * Launching BotChatActivity where user can interact with bot
      */
     void launchBotChatActivity() {
-        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
