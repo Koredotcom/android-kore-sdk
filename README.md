@@ -44,7 +44,7 @@ To use these libraries we must configure the bot credentials as follows.
         <enablePanel -> true/false>  - > To use the widgets in your application and display then this value should be "true". Otherwise "false". To use this feature then need to use the "widgets" library using "implementation ''" in your gradle file.
     )
 
- SDKConfiguration.initialize(botConfigModel)
+ SDKConfig.initialize(botConfigModel)
 
 ```
 #### Config-2:
@@ -62,7 +62,7 @@ val widgetConfigModel = WidgetConfigModel(
         "<jwt_token_url>", -> Jwt token generation url(If you want to use your own jwt token url).
     )
 
-WidgetSDKConfiguration.initialize(widgetConfigModel)
+SDKConfig.setWidgetConfig(widgetConfigModel)
 
 ```
 
@@ -95,15 +95,15 @@ startActivity(intent);
 
 ### How to integrate BotSdk through gradle implementation to customize
 
-### Step-1. Add below snippet in project/build.gradle
+### Step-1: Add below snippet in project/build.gradle
 ```   
 maven { url 'https://www.jitpack.io' }
 ```
-### Step-2. Add below snippet in app/build.gradle under dependencies
+### Step-2: Add below snippet in app/build.gradle under dependencies
 ```
 implementation 'com.github.Koredotcom.android-kore-sdk:11.0.2'
 ```
-### Step-3. You can change the bot config and widget config like below
+### Step-3: You can change the bot config and widget config like below
 ```
 
 val botConfigModel = BotConfigModel(
@@ -118,7 +118,7 @@ val botConfigModel = BotConfigModel(
         false
     )
 
- SDKConfiguration.initialize(botConfigModel)
+ SDKConfig.initialize(botConfigModel)
 
 ```
 
@@ -133,10 +133,10 @@ val widgetConfigModel = WidgetConfigModel(
             "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts",
     )
 
-WidgetSDKConfiguration.initialize(widgetConfigModel)
+SDKConfig.setWidgetConfig(widgetConfigModel)
 
 ```
-### Step-4. You can initialize and Set the callback listener for BotClient class.
+### Step-4: You can initialize and Set the callback listener for BotClient class.
 
 ```
 private val botClient: BotClient = BotClient.getInstance()
@@ -160,7 +160,7 @@ botClient.setListener(object : BotConnectionListener {
 		}
 ```
 
-### Step-6. Connect to Bot using the following apis.
+### Step-6: Connect to Bot using the following apis.
 
 ```
 botClient.connectToBot(isFirstTime: Boolean) -> This api is to connect bot using default jwt token generation mechanism.
@@ -172,7 +172,7 @@ botClient.connectToBot(isFirstTime: Boolean, headers: HashMap<String, Any>, body
 botClient.connecToBot(isFirstTime: Boolean, jwtToken: String) -> This api is to connect bot using its own Jwt token which is created separately.
 ```
 
-### Step-7. Send a message to Bot.
+### Step-7: Send a message to Bot.
 
 ```
 botClient.sendMessage(msg: String, payload: String?)
@@ -192,24 +192,17 @@ msg -> Message to display in the chat ui.
 attachments -> List of attachment file names which are uploaded to server.
 ```
 
-### Step-8. Disconnect the bot:
+### Step-8: Disconnect the bot:
 Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view based on requirement.
 ```
 botClient.disconnectBot()
 ```
 
-### Step-9. Create user own custom templates:
+### Step-9: Create user own custom templates and chat window UI:
 Kore is providing predefined templates. You can use these templates as is or you can override existing templates and/or can add new templates. 
 Please refer the sample app for creating your own templates(new templates or override existingtemplates)
-
-Make sure to add overridden templates and new templates to BotChatRowType class **before creating the BotChatAdapter object**
-
-```
-BotChatRowType.prepareDefaultRowTypes() This should trigger before calling following statement
-
-val chatAdapter = BotChatAdapter(requireActivity(),BotChatRowType.getAllRowTypes())
-
-```
+You can customize the Chat window UI by creating custom Fragments by extending our base fragment classes respectively.
+Please refer the sample app for customizing chat window UI.
 
 ### Step-10:
 Please create the RowType class as follows and add rows to the recycler view.
