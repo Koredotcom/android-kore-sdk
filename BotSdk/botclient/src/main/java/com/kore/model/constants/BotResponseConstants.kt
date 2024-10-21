@@ -160,6 +160,7 @@ object BotResponseConstants {
     const val IS_COLLAPSED = "isCollapsed"
     const val VIDEO_CURRENT_POSITION = "videoCurrentPosition"
     const val DOMAIN = "domain"
+    const val ADDRESSES = "addresses"
     const val FIRST_NAME = "firstName"
     const val IS_VIDEO_CALL = "videoCall"
     const val SIP_USER = "sipUser"
@@ -249,6 +250,9 @@ object BotResponseConstants {
     const val SNIPPET_TITLE = "snippet_title"
     const val SNIPPET_CONTENT = "snippet_content"
     const val SOURCE = "source"
+    const val HEADER_SIZE_COMPACT = "compact"
+    const val HEADER_SIZE_LARGE = "large"
+    const val HEADER_SIZE_MEDIUM = "medium"
     const val FAQ = "faq"
     var DATE_FORMAT = "dd/MM/yyyy"
     var TIME_FORMAT = 24

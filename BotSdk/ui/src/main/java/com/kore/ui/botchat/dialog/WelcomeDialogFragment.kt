@@ -22,7 +22,6 @@ import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.kore.common.base.BaseDialogFragment
 import com.kore.common.extensions.dpToPx
-import com.kore.common.utils.BundleConstants
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_CAROUSEL
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_LIST
@@ -34,6 +33,7 @@ import com.kore.ui.adapters.WelcomePromotionsAdapter
 import com.kore.ui.adapters.WelcomeStarterButtonsAdapter
 import com.kore.ui.adapters.WelcomeStaticLinksAdapter
 import com.kore.ui.adapters.WelcomeStaticLinksListAdapter
+import com.kore.ui.botchat.BotChatActivity
 import com.kore.ui.databinding.WelcomeScreenBinding
 
 class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
@@ -73,8 +73,8 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
             }
 
             when (botBrandingModel.welcomeScreen.layout) {
-                BundleConstants.LARGE -> applyFragment(2, botBrandingModel.welcomeScreen)
-                BundleConstants.MEDIUM -> applyFragment(3, botBrandingModel.welcomeScreen)
+                BotResponseConstants.HEADER_SIZE_LARGE -> applyFragment(2, botBrandingModel.welcomeScreen)
+                BotResponseConstants.HEADER_SIZE_MEDIUM -> applyFragment(3, botBrandingModel.welcomeScreen)
                 else -> applyFragment(1, botBrandingModel.welcomeScreen)
             }
         }

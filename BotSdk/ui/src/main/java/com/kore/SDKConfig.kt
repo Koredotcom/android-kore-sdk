@@ -1,0 +1,64 @@
+package com.kore
+
+import com.kore.common.SDKConfiguration
+import com.kore.common.model.BotConfigModel
+import com.kore.common.row.SimpleListViewHolderProvider
+import com.kore.ui.botchat.fragment.BaseContentFragment
+import com.kore.ui.botchat.fragment.BaseFooterFragment
+import com.kore.ui.botchat.fragment.BaseHeaderFragment
+import com.kore.ui.row.botchat.BotChatRowType
+import com.kore.widgets.WidgetSDKConfiguration
+import com.kore.widgets.model.WidgetConfigModel
+import kotlin.reflect.KClass
+
+object SDKConfig {
+    private val customHeaders: HashMap<String, BaseHeaderFragment> = HashMap()
+    private val customTemplates: HashMap<String, Pair<Any, KClass<*>>> = HashMap()
+    private var customContentFragment: BaseContentFragment? = null
+    private var customFooterFragment: BaseFooterFragment? = null
+
+    fun initialize(botConfigModel: BotConfigModel) {
+        SDKConfiguration.initialize(botConfigModel)
+    }
+
+    fun setWidgetConfig(widgetConfig: WidgetConfigModel) {
+        WidgetSDKConfiguration.initialize(widgetConfig)
+    }
+
+    fun setLoginToken(token: String) {
+        SDKConfiguration.setLoginToken(token)
+    }
+
+    fun setQueryParams(queryParams: HashMap<String, Any>) {
+        SDKConfiguration.setQueryParams(queryParams)
+    }
+
+    fun setCustomData(customData: HashMap<String, Any>) {
+        SDKConfiguration.setCustomData(customData)
+    }
+
+    fun addCustomTemplate(providerName: String, templateType: String, provider: SimpleListViewHolderProvider<*>, templateRow: KClass<*>) {
+        val rowType = BotChatRowType.createRowType(providerName, provider)
+        customTemplates[templateType] = Pair(rowType, templateRow)
+    }
+
+    fun getCustomTemplates(): HashMap<String, Pair<Any, KClass<*>>> = customTemplates
+
+    fun addCustomHeaderFragment(headerSize: String, fragment: BaseHeaderFragment) {
+        customHeaders[headerSize] = fragment
+    }
+
+    fun getCustomHeaderFragment(size: String): BaseHeaderFragment? = customHeaders[size]
+
+    fun addCustomContentFragment(contentFragment: BaseContentFragment) {
+        customContentFragment = contentFragment
+    }
+
+    fun getCustomContentFragment(): BaseContentFragment? = customContentFragment
+
+    fun addCustomFooterFragment(fragment: BaseFooterFragment) {
+        customFooterFragment = fragment
+    }
+
+    fun getCustomFooterFragment(): BaseFooterFragment? = customFooterFragment
+}

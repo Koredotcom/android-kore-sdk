@@ -1,4 +1,4 @@
-package com.kore.ui.botchat.fragment
+package com.kore.ai.botsdk.fragments
 
 import android.Manifest
 import android.animation.Animator
@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
+import com.kore.ai.botsdk.databinding.CustomFooterFragmentBinding
 import com.kore.botclient.BotClient
 import com.kore.common.SDKConfiguration
 import com.kore.common.constants.MediaConstants.Companion.CHOOSE_TYPE_CAPTURE_IMAGE
@@ -57,7 +58,7 @@ import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
 import com.kore.ui.R
 import com.kore.ui.adapters.ComposeBarAttachmentAdapter
-import com.kore.ui.databinding.BotFooterFragmentBinding
+import com.kore.ui.botchat.fragment.BaseFooterFragment
 import com.kore.ui.dialog.ActionSheetDialog
 import com.kore.ui.dialog.OptionsActionSheetFragment
 import com.kore.uploadfile.helper.MediaAttachmentHelper
@@ -70,8 +71,8 @@ import com.kore.widgets.event.BaseActionEvent
 import com.kore.widgets.event.WidgetActionEvent
 import com.kore.widgets.ui.fragments.bottompanel.BottomPanelFragment
 
-class ChatFooterFragment : BaseFooterFragment() {
-    lateinit var binding: BotFooterFragmentBinding
+class CustomFooterFragment : BaseFooterFragment() {
+    lateinit var binding: CustomFooterFragmentBinding
     private var actionEvent: (event: UserActionEvent) -> Unit = {}
     private lateinit var selectMediaLauncher: ActivityResultLauncher<Intent>
     private var attachmentsActionSheet: ActionSheetDialog? = null
@@ -122,13 +123,13 @@ class ChatFooterFragment : BaseFooterFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = BotFooterFragmentBinding.inflate(layoutInflater)
+        binding = CustomFooterFragmentBinding.inflate(layoutInflater)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        this.speechSynthesizerHelper = SpeechSynthesizerHelper(requireContext())
+        speechSynthesizerHelper = SpeechSynthesizerHelper(requireContext())
         isAttachedToWindow = true
         enableSendButton(isEnabled)
         SDKConfiguration.getBotConfigModel()?.let {
@@ -215,12 +216,8 @@ class ChatFooterFragment : BaseFooterFragment() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (s.isEmpty()) {
-//                binding.sendTv.isVisible = false
-//                binding.recAudioImg.isVisible = binding.mainContent.isVisible
                 enableSendButton(false)
             } else if (!binding.sendTv.isVisible || s.isNotEmpty() && !binding.llSend.isVisible) {
-//                binding.sendTv.isVisible = true
-//                binding.recAudioImg.isVisible = false
                 if ((SDKConfiguration.getBotConfigModel()?.isWebHook == true && NetworkUtils.isNetworkAvailable(requireContext())) || BotClient.isConnected()) {
                     enableSendButton(true)
                 }
@@ -345,12 +342,16 @@ class ChatFooterFragment : BaseFooterFragment() {
     private fun onRecordAudioPermissionGranted() {
         try {
             Speech.getInstance()?.stopTextToSpeech()
-            Speech.getInstance()?.startListening(binding.progress, this@ChatFooterFragment)
+            Speech.getInstance()?.startListening(binding.progress, this@CustomFooterFragment)
         } catch (exc: SpeechRecognitionNotAvailable) {
             showSpeechNotSupportedDialog()
         } catch (exc: GoogleVoiceTypingDisabledException) {
             showEnableGoogleVoiceTyping()
         }
+    }
+
+    fun setSpeechSynthesizer(speechSynthesizerHelper1: SpeechSynthesizerHelper) {
+        speechSynthesizerHelper = speechSynthesizerHelper1
     }
 
     override fun setBrandingDetails(botBrandingModel: BotBrandingModel?) {

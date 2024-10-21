@@ -1,4 +1,4 @@
-package com.kore.ui.botchat.fragment
+package com.kore.ai.botsdk.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,24 +13,24 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.google.gson.internal.LinkedTreeMap
+import com.kore.ai.botsdk.databinding.CustomBotContentLayoutBinding
 import com.kore.common.base.BaseView
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.NetworkUtils
 import com.kore.event.BotChatEvent
 import com.kore.extensions.verticalSmoothScrollTo
-import com.kore.listeners.QuickRepliesClickListener
 import com.kore.model.BaseBotMessage
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 import com.kore.ui.adapters.BotChatAdapter
 import com.kore.ui.adapters.QuickRepliesTemplateAdapter
 import com.kore.ui.botchat.BotChatView
-import com.kore.ui.databinding.BotContentLayoutBinding
+import com.kore.ui.botchat.fragment.BaseContentFragment
 import com.kore.ui.row.botchat.BotChatItemDecoration
 import com.kore.ui.row.botchat.BotChatRowType
 
-class ChatContentFragment : BaseContentFragment() {
-    private lateinit var binding: BotContentLayoutBinding
+class CustomContentFragment : BaseContentFragment() {
+    private lateinit var binding: CustomBotContentLayoutBinding
     private lateinit var chatAdapter: BotChatAdapter
     private var view: BotChatView? = null
     private lateinit var actionEvent: (event: BotChatEvent) -> Unit
@@ -41,7 +41,7 @@ class ChatContentFragment : BaseContentFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = BotContentLayoutBinding.inflate(layoutInflater)
+        binding = CustomBotContentLayoutBinding.inflate(layoutInflater)
         return binding.root
     }
 

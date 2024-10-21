@@ -2,11 +2,11 @@ package com.kore.ui.adapters
 
 import android.content.Context
 import com.google.gson.Gson
+import com.kore.SDKConfig
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.event.UserActionEvent
 import com.kore.common.row.SimpleListAdapter
 import com.kore.common.row.SimpleListRow
-import com.kore.common.row.SimpleListViewHolderProvider
 import com.kore.common.row.listener.ChatContentStateListener
 import com.kore.common.utils.LogUtils
 import com.kore.model.BaseBotMessage
@@ -57,21 +57,10 @@ import com.kore.ui.row.botchat.listview.ListViewTemplateRow
 import com.kore.ui.row.botchat.multiselect.MultiSelectTemplateRow
 import com.kore.ui.row.botchat.radiooptions.RadioOptionsTemplateRow
 import com.kore.ui.row.botchat.tablelist.TableListTemplateRow
-import kotlin.reflect.KClass
 
 class BotChatAdapter(private val context: Context, types: List<SimpleListRow.SimpleListRowType>) : SimpleListAdapter(types),
     ChatContentStateListener {
-
-    companion object {
-        private val customTemplates: HashMap<String, Pair<BotChatRowType, KClass<*>>> = HashMap()
-        fun addCustomTemplate(providerName: String, templateType: String, provider: SimpleListViewHolderProvider<*>, templateRow: KClass<*>) {
-            val rowType = BotChatRowType.createRowType(providerName, provider)
-            customTemplates[templateType] = Pair(rowType, templateRow)
-        }
-    }
-
     private var messages: List<BaseBotMessage> = emptyList()
-
     private var actionEvent: (event: UserActionEvent) -> Unit = {}
 
     private fun createTextTemplate(
@@ -388,8 +377,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         }
 
                                         else -> {
-                                            if (templateType != null)
-                                                rows = rows + createTextTemplate(msgId, false, templateType.toString(), iconUrl, isLastItem, msgTime)
+                                            rows = rows + createTextTemplate(msgId, false, (templateType ?: body.type).toString(), iconUrl, isLastItem, msgTime)
                                         }
                                     }
                                 } else {
@@ -417,6 +405,8 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         baseBotMsg.messageId, false, innerMap[KEY_TEXT].toString(), iconUrl, isLastItem, msgTime
                                     )
                                 }
+                            } else {
+                                rows = rows + createTextTemplate(msgId, false, body.type, iconUrl, isLastItem, msgTime)
                             }
                         }
                     }
@@ -428,6 +418,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
     private fun createCustomTemplate(customTemplateType: String?, botResponse: BotResponse, isLastItem: Boolean, rows: List<SimpleListRow>)
             : List<SimpleListRow> {
+        val customTemplates = SDKConfig.getCustomTemplates()
         if (!customTemplateType.isNullOrEmpty() && customTemplates.isEmpty() && !customTemplates.containsKey(customTemplateType)) return rows
         val pair = customTemplates[customTemplateType] ?: return rows
         val rowType = pair.first

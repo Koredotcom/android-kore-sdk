@@ -51,7 +51,9 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
 
         private val dynamicRowTypes = mutableMapOf<String, RowType>()
 
+        @JvmStatic
         fun createRowType(name: String, provider: SimpleListViewHolderProvider<*>): BotChatRowType {
+            if (providers.isEmpty()) prepareRowTypes()
             val existingRowType = dynamicRowTypes[name]
             providers[name] = provider
             val newRowType = RowType(name, existingRowType?.ordinal ?: dynamicRowTypes.size, provider)
@@ -60,15 +62,11 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
         }
 
         fun getAllRowTypes(): List<BotChatRowType> {
+            if (dynamicRowTypes.isEmpty()) prepareRowTypes()
             return dynamicRowTypes.values.toList()
         }
 
-        fun prepareDefaultRowTypes() {
-            clear()
-            if (dynamicRowTypes.isEmpty()) prepareRowTypes()
-        }
-
-        private fun clear() {
+        fun clearAllRows() {
             providers.clear()
             dynamicRowTypes.clear()
         }

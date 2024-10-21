@@ -9,45 +9,48 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
 import com.kore.common.extensions.dpToPx
-import com.kore.common.extensions.getParcelableCompat
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
 import com.kore.ui.R
-import com.kore.ui.botchat.BotChatActivity.Companion.EXTRA_BOT_HEADER
 import com.kore.ui.databinding.BotHeader2Binding
 
-class ChatHeaderTwoFragment(private val onActionEvent: (event: UserActionEvent) -> Unit) : Fragment() {
+class ChatHeaderTwoFragment : BaseHeaderFragment() {
+    private lateinit var binding: BotHeader2Binding
+    private var onActionEvent: (event: UserActionEvent) -> Unit = {}
+    private var brandingModel: BrandingHeaderModel? = null
 
-    lateinit var binding: BotHeader2Binding
+    override fun setActionEvent(onActionEvent: (event: UserActionEvent) -> Unit) {
+        this.onActionEvent = onActionEvent
+    }
+
+    override fun setBrandingDetails(brandingModel: BrandingHeaderModel?) {
+        this.brandingModel = brandingModel
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-
         binding = BotHeader2Binding.inflate(layoutInflater)
 
-        val bundle = this.arguments?.getParcelableCompat(EXTRA_BOT_HEADER) as BrandingHeaderModel?
-
-        if (bundle != null) {
-            val title = bundle.title?.name
+        brandingModel?.let { model ->
+            val title = model.title?.name
             binding.tvBotTitle.text = if (!title.isNullOrEmpty()) title else SDKConfiguration.getBotConfigModel()?.botName
-            binding.tvBotDesc.text = bundle.subTitle?.name
-            binding.root.setBackgroundColor(Color.parseColor(bundle.bgColor))
+            binding.tvBotDesc.text = model.subTitle?.name
+            binding.root.setBackgroundColor(Color.parseColor(model.bgColor))
 
-            if (bundle.icon != null) {
-                if (bundle.icon?.type == (BotResponseConstants.CUSTOM)) {
+            if (model.icon != null) {
+                if (model.icon?.type == (BotResponseConstants.CUSTOM)) {
                     binding.llBotAvatar.setBackgroundResource(0)
-                    Glide.with(requireActivity()).load(bundle.icon?.iconUrl).into(binding.ivBotAvatar)
+                    Glide.with(requireActivity()).load(model.icon?.iconUrl).into(binding.ivBotAvatar)
                         .onLoadFailed(ResourcesCompat.getDrawable(resources, R.drawable.ic_launcher_foreground, context?.theme))
                     binding.ivBotAvatar.layoutParams =
                         LinearLayout.LayoutParams(40.dpToPx(binding.root.context), 40.dpToPx(binding.root.context))
                 } else {
-                    when (bundle.icon?.iconUrl) {
+                    when (model.icon?.iconUrl) {
                         BotResponseConstants.ICON_1 -> binding.ivBotAvatar.setImageDrawable(
                             ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_1, context?.theme)
                         )
@@ -67,8 +70,8 @@ class ChatHeaderTwoFragment(private val onActionEvent: (event: UserActionEvent) 
                 }
             }
 
-            bundle.buttons?.let { buttons ->
-                val bgColorTint = ColorStateList.valueOf(Color.parseColor(bundle.iconsColor))
+            model.buttons?.let { buttons ->
+                val bgColorTint = ColorStateList.valueOf(Color.parseColor(model.iconsColor))
                 binding.ivBotArrowBack.backgroundTintList = bgColorTint
                 binding.ivBotHelp.isVisible = buttons.help?.show == true
                 binding.ivBotSupport.isVisible = buttons.liveAgent?.show == true

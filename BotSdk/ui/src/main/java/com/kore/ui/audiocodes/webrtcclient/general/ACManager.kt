@@ -314,10 +314,6 @@ class ACManager private constructor() : AudioCodesEventListener {
             val acCallStatistics = session.stats
             Prefs.setCallState(context, acCallStatistics)
             LogUtils.d(TAG, "ACCallStatistics: $acCallStatistics")
-
-            //CallBackHandler.callStateChanged(CallState.NULL);
-            //session.getCallState()
-            //BotApplication.getDataBase().addEntry(new CallEntry("Avi", 1512997724646L, CallEntry.CallType.NOT_ANSWERED));
         }
 
         private fun saveCallHistory(session: AudioCodesSession) {

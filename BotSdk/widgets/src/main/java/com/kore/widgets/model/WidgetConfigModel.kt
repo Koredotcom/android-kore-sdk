@@ -7,6 +7,5 @@ data class WidgetConfigModel(
     val clientSecret: String,
     val botUrl: String,
     val identity: String,
-    val isJwtWithUrl: Boolean,
     val jwtServerUrl: String,
 )

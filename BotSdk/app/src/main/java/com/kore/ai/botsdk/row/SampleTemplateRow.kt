@@ -14,7 +14,7 @@ class SampleTemplateRow(
     private val isEnabled: Boolean,
     private val actionEvent: (actionEvent: UserActionEvent) -> Unit
 ) : SimpleListRow() {
-    private lateinit var id: String
+    private val id: String = botResponse.messageId
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is SampleTemplateRow) return false
         return otherRow.id == id

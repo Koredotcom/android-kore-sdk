@@ -20,10 +20,12 @@ import androidx.fragment.app.Fragment
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
+import com.kore.SDKConfig
 import com.kore.botclient.ConnectionState
 import com.kore.common.base.BaseActivity
 import com.kore.common.event.UserActionEvent
-import com.kore.common.utils.BundleConstants
+import com.kore.ui.botchat.fragment.BaseContentFragment
+import com.kore.ui.botchat.fragment.BaseHeaderFragment
 import com.kore.common.utils.BundleConstants.EXTRA_RESULT
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
@@ -32,6 +34,8 @@ import com.kore.model.BotResponse
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.END_DATE
 import com.kore.model.constants.BotResponseConstants.FORMAT
+import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
+import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
 import com.kore.model.constants.BotResponseConstants.START_DATE
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
@@ -42,6 +46,7 @@ import com.kore.ui.audiocodes.webrtcclient.general.ACManager
 import com.kore.ui.audiocodes.webrtcclient.general.Prefs
 import com.kore.ui.audiocodes.webrtcclient.structure.SipAccount
 import com.kore.ui.botchat.dialog.WelcomeDialogFragment
+import com.kore.ui.botchat.fragment.BaseFooterFragment
 import com.kore.ui.botchat.fragment.ChatContentFragment
 import com.kore.ui.botchat.fragment.ChatFooterFragment
 import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
@@ -53,18 +58,15 @@ import org.webrtc.NetworkMonitor.isOnline
 import java.util.Calendar
 
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
-    companion object {
-        const val EXTRA_BOT_HEADER = "bot_header"
-    }
-
-    private var contentFragment = ChatContentFragment()
-    private var footerFragment = ChatFooterFragment()
+    private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
+    private var footerFragment: BaseFooterFragment = SDKConfig.getCustomFooterFragment() ?: ChatFooterFragment()
     private val botChatViewModel: BotChatViewModel by viewModels()
     private val gson: Gson = Gson()
     private val launchTime = System.currentTimeMillis()
     private val networkCallback = NetworkCallbackImpl()
     private var isAgentTransfer: Boolean = false
     private val acManager: ACManager = ACManager.getInstance()
+    private var alertDialog: Dialog? = null
 
     private val connectivityManager by lazy {
         getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -104,9 +106,12 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         val tr = fm.beginTransaction()
 
         val bundle = Bundle()
-        bundle.putParcelable(EXTRA_BOT_HEADER, brandingHeaderModel)
 
         fragment.arguments = bundle
+        if (fragment is BaseHeaderFragment) {
+            fragment.setActionEvent(this::onActionEvent)
+            fragment.setBrandingDetails(brandingHeaderModel)
+        }
         tr.add(R.id.header_container, fragment)
         tr.commitAllowingStateLoss()
     }
@@ -132,7 +137,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         binding.root.postDelayed(
             {
                 contentFragment.setActionEvent(this::onActionEvent)
-                footerFragment.setOnActionEvent(this::onActionEvent)
+                footerFragment.setActionEvent(this::onActionEvent)
             }, 1000
         )
     }
@@ -178,10 +183,12 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                     this.show(supportFragmentManager, "My Dialog")
                 }
 
+                val customHeaderFragment = SDKConfig.getCustomHeaderFragment(it.header.size.toString())
+
                 when (it.header.size) {
-                    BundleConstants.COMPACT -> addHeaderFragmentToActivity(ChatHeaderOneFragment(this::onActionEvent), it.header)
-                    BundleConstants.LARGE -> addHeaderFragmentToActivity(ChatHeaderThreeFragment(this::onActionEvent), it.header)
-                    else -> addHeaderFragmentToActivity(ChatHeaderTwoFragment(this::onActionEvent), it.header)
+                    HEADER_SIZE_COMPACT -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderOneFragment(), it.header)
+                    HEADER_SIZE_LARGE -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderThreeFragment(), it.header)
+                    else -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderTwoFragment(), it.header)
                 }
                 contentFragment.onBrandingDetails()
 
@@ -189,27 +196,34 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         } ?: run {
             binding.clProgress.isVisible = false
             binding.chatWindow.isVisible = true
-            addHeaderFragmentToActivity(ChatHeaderOneFragment(this::onActionEvent), null)
+            val customHeaderFragment = SDKConfig.getCustomHeaderFragment(HEADER_SIZE_COMPACT)
+            addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderOneFragment(), null)
         }
-        footerFragment.setBotBrandingModel(header)
+        footerFragment.setBrandingDetails(header)
     }
 
     override fun onBotEventMessage(botResponse: BotEventResponse) {
-        val body = botResponse.message
-        if (body != null && body[BotResponseConstants.SIP_USER] != null) {
+        val body = botResponse.message ?: return
+        if (body[BotResponseConstants.SIP_USER] != null) {
             if (body.isNotEmpty()) {
+                val proxy = (body[BotResponseConstants.ADDRESSES] as List<String>)[0].split(":")[1].replace("//", "")
                 val sipAccount = SipAccount(this)
                 sipAccount.username = botChatViewModel.getUserId()
                 sipAccount.displayName = botChatViewModel.getUserId()
                 sipAccount.domain = body[BotResponseConstants.DOMAIN] as String
-                sipAccount.proxy = body[BotResponseConstants.DOMAIN] as String
-                sipAccount.port = 5080
+                sipAccount.proxy = proxy
+                sipAccount.port = 5060
                 sipAccount.transport = Transport.UDP
 
                 Prefs.setSipAccount(this, sipAccount)
                 Prefs.setIsAutoRedirect(this, true)
 
                 showAlertDialog(body)
+            }
+        } else {
+            when (body[BotResponseConstants.TYPE].toString()) {
+                "cancel_agent_webrtc",
+                "terminate_agent_webrtc" -> if (alertDialog?.isShowing == true) alertDialog?.dismiss()
             }
         }
     }
@@ -223,10 +237,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     private fun showAlertDialog(eventModel: HashMap<String, Any>) {
-        val alertDialog = Dialog(this@BotChatActivity)
+        alertDialog = Dialog(this@BotChatActivity)
         val dialogBinding: IncomingCallLayoutBinding = DataBindingUtil.inflate(layoutInflater, R.layout.incoming_call_layout, null, false)
-        alertDialog.setContentView(dialogBinding.root)
-        alertDialog.setCancelable(false)
+        alertDialog?.setContentView(dialogBinding.root)
+        alertDialog?.setCancelable(false)
         dialogBinding.tvAgentName.text = eventModel[BotResponseConstants.FIRST_NAME] as String
         dialogBinding.tvTypeOfCall.text = getString(R.string.incoming_audio_call)
         if (eventModel[BotResponseConstants.IS_VIDEO_CALL] as Boolean) {
@@ -235,15 +249,17 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         dialogBinding.tvCallAccept.setOnClickListener {
             eventModel[BotResponseConstants.TYPE] = "call_agent_webrtc_accepted"
             botChatViewModel.sendMessage("", gson.toJson(eventModel).toString())
+//            botChatViewModel.sendBotEvent("call_agent_webrtc_accepted")
             openNextScreen(eventModel[BotResponseConstants.SIP_USER] as String, eventModel[BotResponseConstants.IS_VIDEO_CALL] as Boolean)
-            alertDialog.dismiss()
+            alertDialog?.dismiss()
         }
         dialogBinding.tvCallReject.setOnClickListener {
             eventModel[BotResponseConstants.TYPE] = "call_agent_webrtc_rejected"
             botChatViewModel.sendMessage("", gson.toJson(eventModel).toString())
-            alertDialog.dismiss()
+//            botChatViewModel.sendBotEvent("call_agent_webrtc_rejected")
+            alertDialog?.dismiss()
         }
-        alertDialog.show()
+        alertDialog?.show()
     }
 
     private fun openNextScreen(sipUser: String, isVideoCall: Boolean) {
