@@ -42,6 +42,8 @@ import kore.botssdk.audiocodes.webrtcclient.Login.LogoutManager;
 import kore.botssdk.audiocodes.webrtcclient.db.NativeDBManager;
 import kore.botssdk.audiocodes.webrtcclient.db.NativeDBObject;
 import kore.botssdk.audiocodes.webrtcclient.services.CallForegroundService;
+import kore.botssdk.models.EventModel;
+import kore.botssdk.utils.BundleConstants;
 
 @SuppressWarnings("UnknownNullness")
 public class CallActivity extends BaseAppCompatActivity implements AudioCodesSessionEventListener {
@@ -101,6 +103,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         setContentView(R.layout.call_activity);
         handler = new Handler();
         CallBackHandler.registerLginStateChange(loginStateChanged);
+        BotApplication.setCurrentActivity(this);
 
         ac = WebRTCAudioManager.getInstance();
         ac.setAudioRoute(WebRTCAudioManager.AudioRoute.SPEAKER_PHONE);
@@ -269,10 +272,10 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 isAudioMuted = session.isAudioMuted();
                 Log.d(TAG, "isAudioMuted after: " + isAudioMuted);
                 muteAudioButton.setSelected(isAudioMuted);
-                ((ImageView)v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
+                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
 
-                if(isAudioMuted)
-                    ((ImageView)v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
+                if (isAudioMuted)
+                    ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
             }
         });
 
@@ -291,10 +294,10 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 isAudioMuted = session.isAudioMuted();
                 Log.d(TAG, "isAudioMuted after: " + isAudioMuted);
                 muteVideoButton.setSelected(isAudioMuted);
-                ((ImageView)v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
+                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
 
-                if(isAudioMuted)
-                    ((ImageView)v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
+                if (isAudioMuted)
+                    ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
             }
         });
 
@@ -425,10 +428,10 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 dtmfEnabled = !dtmfEnabled;
                 updateCallGui();
 
-                ((ImageView)v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_dial_pad_off, getTheme()));
+                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_dial_pad_off, getTheme()));
 
-                if(dtmfEnabled)
-                    ((ImageView)v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_dial_pad_on, getTheme()));
+                if (dtmfEnabled)
+                    ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_dial_pad_on, getTheme()));
             }
         });
         session.addSessionEventListener(this);
@@ -445,10 +448,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     }
 
     private void initDtmf() {
-        int[] keypadButtonClickListID = {R.id.call_button_keypad_1, R.id.call_button_keypad_2, R.id.call_button_keypad_3,
-                R.id.call_button_keypad_4, R.id.call_button_keypad_5, R.id.call_button_keypad_6,
-                R.id.call_button_keypad_7, R.id.call_button_keypad_8, R.id.call_button_keypad_9,
-                R.id.call_button_keypad_hash, R.id.call_button_keypad_0, R.id.call_button_keypad_asterisk};
+        int[] keypadButtonClickListID = {R.id.call_button_keypad_1, R.id.call_button_keypad_2, R.id.call_button_keypad_3, R.id.call_button_keypad_4, R.id.call_button_keypad_5, R.id.call_button_keypad_6, R.id.call_button_keypad_7, R.id.call_button_keypad_8, R.id.call_button_keypad_9, R.id.call_button_keypad_hash, R.id.call_button_keypad_0, R.id.call_button_keypad_asterisk};
 
         View.OnClickListener dialpadClickListener = new View.OnClickListener() {
 
@@ -865,14 +865,18 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "Checking for termination: " + audioCodesSession.getSessionID());
-                Toast.makeText(CallActivity.this, "Call terminated: " + audioCodesSession.getTermination(), Toast.LENGTH_SHORT).show();
                 AppUtils.stopRingingMP();
                 sessionList.remove((Integer) audioCodesSession.getSessionID());
-                Log.d(TAG, "sessionList.size() " + sessionList.size());
                 AudioCodesSession currentSession = session;
                 if (sessionList.size() == 0) {
+
                     WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(null);
+                    if (AppUtils.getBotClient() != null && AppUtils.getEventModel() != null) {
+                        EventModel eventModel = AppUtils.getEventModel();
+                        eventModel.getMessage().setType(BundleConstants.CALL_AGENT_WEBRTC_TERMINATED);
+                        AppUtils.getBotClient().sendMessage(eventModel.getMessage());
+                    }
+
                     finish();
                 } else {
                     switchCallButton.setEnabled(false);
@@ -888,18 +892,20 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                         session = AudioCodesUA.getInstance().getSession(0);
                     }
                     if (audioCodesSession.getTermination() != CallTermination.TERMINATED_TRANSFER) {
-                        if (currentSession.getSessionID() == audioCodesSession.getSessionID()
-                                && currentSession.getTransferState() == CallTransferState.NONE) {
+                        if (currentSession.getSessionID() == audioCodesSession.getSessionID() && currentSession.getTransferState() == CallTransferState.NONE) {
                             session.hold(false);
-
                         }
+                    }
+
+                    if (AppUtils.getBotClient() != null && AppUtils.getEventModel() != null) {
+                        EventModel eventModel = AppUtils.getEventModel();
+                        eventModel.getMessage().setType(BundleConstants.CANCEL_AGENT_WEBRTC);
+                        AppUtils.getBotClient().sendMessage(eventModel.getMessage());
                     }
                     updateUI();
                 }
             }
         });
-
-
     }
 
     class MyWebRTcAudioRouteListener implements WebRTCAudioRouteListener {

@@ -58,7 +58,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.audiocodes.mv.webrtcsdk.audio.WebRTCAudioManager;
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
+import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -91,7 +93,9 @@ import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
 import kore.botssdk.application.BotApplication;
+import kore.botssdk.audiocodes.webrtcclient.Activities.CallActivity;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
+import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 import kore.botssdk.audiocodes.webrtcclient.Structure.SipAccount;
 import kore.botssdk.bot.BotClient;
@@ -192,6 +196,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     boolean isAgentTransfer = false;
     private ArrayList<String> arrMessageList = new ArrayList<>();
     boolean isReconnectionStopped = false;
+    Dialog alertDialog;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -361,6 +366,9 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                         editor.apply();
                     }
                     break;
+                case DialogInterface.BUTTON_NEUTRAL:
+                    dialog.dismiss();
+                    break;
             }
 
             BotSocketConnectionManager.killInstance();
@@ -368,7 +376,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(NewBotChatActivity.this);
-        builder.setMessage(R.string.app_name).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).show();
+        builder.setMessage(R.string.app_name).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
     }
 
     @Override
@@ -757,48 +765,68 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 botContentFragment.showCalendarIntoFooter(botResponse);
             }, BundleConstants.TYPING_STATUS_TIME);
         } catch (Exception e) {
-            e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
+                LogUtils.d(LOG_TAG, payload);
+
                 try {
                     if (botContentFragment != null) {
                         EventModel eventModel = gson.fromJson(payload, EventModel.class);
                         if (eventModel != null && eventModel.getMessage() != null) {
-                            if (!StringUtils.isNullOrEmpty(eventModel.getMessage().getSipURI())) {
+                            if (!StringUtils.isNullOrEmpty(eventModel.getMessage().getSipURI())
+                                    && eventModel.getMessage().getType().equalsIgnoreCase(BundleConstants.CALL_AGENT_WEBRTC)) {
                                 EventMessageModel eventMessageModel = eventModel.getMessage();
-                                SipAccount sipAccount = new SipAccount();
-                                sipAccount.setUsername(botClient.getUserId());
-                                sipAccount.setDisplayName(botClient.getUserId());
-                                sipAccount.setDomain(eventMessageModel.getDomain());
-                                sipAccount.setProxy(eventMessageModel.getDomain());
-                                sipAccount.setPort(5080);
-                                sipAccount.setTransport(Transport.UDP);
+                                if (eventMessageModel != null) {
+                                    SipAccount sipAccount = new SipAccount();
+                                    sipAccount.setUsername(botClient.getUserId());
+                                    sipAccount.setDisplayName(botClient.getUserId());
+                                    sipAccount.setDomain(eventMessageModel.getDomain());
+                                    sipAccount.setProxy(getProxyUrl(eventMessageModel.getAddresses().get(0)));
+                                    sipAccount.setPort(5060);
+                                    sipAccount.setTransport(Transport.UDP);
 
-                                Prefs.setSipAccount(sipAccount);
-                                Prefs.setAutoRedirect(true);
+                                    Prefs.setSipAccount(sipAccount);
+                                    Prefs.setAutoRedirect(true);
 
-                                showAlertDialog(eventModel);
+                                    showAlertDialog(eventModel);
+                                }
+                            } else if (eventModel.getMessage().getType().equalsIgnoreCase(BundleConstants.TERMINATE_AGENT_WEBRTC)) {
+                                if (alertDialog != null && alertDialog.isShowing())
+                                    alertDialog.dismiss();
+
+                                if (ACManager.getInstance().getActiveSession() != null) {
+                                    int sessionIndex = ACManager.getInstance().getActiveSession().getSessionID();
+                                    if (AudioCodesUA.getInstance().getSession(sessionIndex) != null) {
+                                        AudioCodesUA.getInstance().getSession(sessionIndex).terminate();
+                                        WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(null);
+
+                                        if(BotApplication.getCurrentActivity() instanceof CallActivity)
+                                        {
+                                            BotApplication.getCurrentActivity().finish();
+                                        }
+                                    }
+                                }
+                            }
+                        } else {
+                            BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
+                            if (botRequest != null && botRequest.getMessage() != null && botRequest.getMessage().getBody() != null) {
+                                botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+                                botContentFragment.updateContentListOnSend(botRequest);
                             } else {
-                                BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
-                                if (botRequest != null && botRequest.getMessage() != null && botRequest.getMessage().getBody() != null) {
-                                    botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-                                    botContentFragment.updateContentListOnSend(botRequest);
-                                } else {
-                                    final AgentInfoModel botResponse = gson.fromJson(payload, AgentInfoModel.class);
+                                final AgentInfoModel botResponse = gson.fromJson(payload, AgentInfoModel.class);
 
-                                    if (botResponse == null || botResponse.getMessage() == null || StringUtils.isNullOrEmpty(botResponse.getMessage().getType())) {
-                                        return;
-                                    }
+                                if (botResponse == null || botResponse.getMessage() == null || StringUtils.isNullOrEmpty(botResponse.getMessage().getType())) {
+                                    return;
+                                }
 
-                                    if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
-                                        setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
-                                    } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
-                                        setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
-                                    }
+                                if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
+                                    setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
+                                } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
+                                    setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
+                                }
 
-                                    if (botResponse.getCustomEvent().equalsIgnoreCase(BotResponse.EVENT)) {
-                                        if (botResponse.getMessage() != null && !StringUtils.isNullOrEmpty(botResponse.getMessage().getType()) && botResponse.getMessage().getType().equalsIgnoreCase(BundleConstants.TYPING))
-                                            botContentFragment.showTypingStatus();
-                                    }
+                                if (botResponse.getCustomEvent().equalsIgnoreCase(BotResponse.EVENT)) {
+                                    if (botResponse.getMessage() != null && !StringUtils.isNullOrEmpty(botResponse.getMessage().getType()) && botResponse.getMessage().getType().equalsIgnoreCase(BundleConstants.TYPING))
+                                        botContentFragment.showTypingStatus();
                                 }
                             }
                         }
@@ -837,6 +865,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     public void displayMessage(String text, String type, String messageId) {
 
+    }
+
+    public String getProxyUrl(String proxy) {
+        String[] strProxy = proxy.split("//");
+        if (strProxy.length > 0) {
+            String[] proxy1 = strProxy[1].split(":");
+            if (proxy1.length > 0)
+                return proxy1[0];
+        }
+        return "";
     }
 
     public void setPreferenceObject(Object modal, String key) {
@@ -1761,7 +1799,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     void showAlertDialog(EventModel eventModel) {
-        Dialog alertDialog = new Dialog(NewBotChatActivity.this);
+        alertDialog = new Dialog(NewBotChatActivity.this);
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.incoming_call_layout, null);
         alertDialog.setContentView(dialogView);
@@ -1781,6 +1819,9 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             if (eventModel.getMessage() != null) {
                 eventModel.getMessage().setType("call_agent_webrtc_accepted");
                 botClient.sendMessage(gson.toJsonTree(eventModel.getMessage()));
+
+                AppUtils.setEventModel(eventModel);
+                AppUtils.setBotClient(botClient);
 
                 openNextScreen(eventModel.getMessage().getSipUser(), eventModel.getMessage().isVideoCall());
                 alertDialog.dismiss();

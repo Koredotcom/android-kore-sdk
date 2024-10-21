@@ -19,8 +19,10 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
+import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
@@ -30,6 +32,7 @@ import kore.botssdk.utils.BundleUtils;
 public class MainActivity extends AppCompatActivity {
 
     String TAG = MainActivity.class.getName();
+    static boolean allPermissionsGranted = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,8 +98,32 @@ public class MainActivity extends AppCompatActivity {
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
 
+        appPermissionCheck();
     }
 
+    private void appPermissionCheck() {
+
+        Log.d(TAG, "Check requestAllPermissions");
+        boolean isPermissionRequestActive = true;
+        PermissionRequest permissionRequest = new PermissionRequest() {
+            @Override
+            public void granted() {
+                Log.d(TAG, " PermissionRequest: granted");
+            }
+
+            @Override
+            public void revoked() {
+                //Can close app if not all permission is approved
+                Log.d(TAG, " PermissionRequest: revoked");
+            }
+
+            @Override
+            public void allResults(boolean allGranted) {
+                allPermissionsGranted = allGranted;
+            }
+        };
+        PermissionManager.getInstance().requestAllPermissions(MainActivity.this, permissionRequest);
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

@@ -26,7 +26,7 @@ import kore.botssdk.websocket.SocketWrapper;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
-/**
+/*
  * Gateway for clients to interact with Bots.
  */
 @SuppressWarnings("UnKnownNullness")
@@ -65,7 +65,6 @@ public class BotClient {
 
     public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
                                               String url, String botUserId, String auth) {
-//        String uuid = UUID.randomUUID().toString();//"e56dd516-5491-45b2-9ff7-ffcb7d8f2461";
         botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
         SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken, botInfoModel, socketConnectionListener, url, botUserId, auth);
     }
@@ -122,7 +121,7 @@ public class BotClient {
         return SocketWrapper.getInstance(mContext).isConnected();
     }
 
-    /**
+    /*
      * Method to send messages over socket.
      * It uses FIFO pattern to first send if any pending requests are present
      * following current request later onward.
@@ -184,7 +183,7 @@ public class BotClient {
         }
     }
 
-    /**
+    /*
      * Method to send messages over socket.
      * It uses FIFO pattern to first send if any pending requests are present
      * following current request later onward.

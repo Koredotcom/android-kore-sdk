@@ -37,6 +37,7 @@ import kore.botssdk.audiocodes.webrtcclient.Callbacks.CallBackHandler;
 import kore.botssdk.audiocodes.webrtcclient.Structure.CallEntry;
 import kore.botssdk.audiocodes.webrtcclient.Structure.SipAccount;
 
+@SuppressWarnings("UnKnownNullness")
 public class ACManager implements AudioCodesEventListener {
 
     private static final String TAG = "ACManager";
@@ -102,7 +103,7 @@ public class ACManager implements AudioCodesEventListener {
         String password = sipAccount.getPassword();
         String displayName =  sipAccount.getDisplayName();
 
-        Log.d(TAG,"sipAccount: "+sipAccount.toString());
+        Log.d(TAG,"sipAccount: "+ sipAccount);
 
         //   AudioCodesUA.getInstance().setContactRewrite(true);
 
@@ -319,7 +320,7 @@ public class ACManager implements AudioCodesEventListener {
                 }
                 @Override
                 public void incomingNotify(NotifyEvent notifyEvent, String s) {
-                    android.util.Log.d(TAG, "incomingNotify: "+notifyEvent);
+                   Log.d(TAG, "incomingNotify: "+notifyEvent);
 
                     switch (notifyEvent) {
                         case TALK:
@@ -379,13 +380,11 @@ public class ACManager implements AudioCodesEventListener {
             AppUtils.restorePrevVolumeSettings();
 
             //save call to recents
-            saveCallHistory(session);
+//            saveCallHistory(session);
             //save statistics
-            if (session!=null) {
-                ACCallStatistics acCallStatistics = session.getStats();
-                Prefs.setCallStats(acCallStatistics);
-                Log.d(TAG, "ACCallStatistics: " + acCallStatistics);
-            }
+            ACCallStatistics acCallStatistics = session.getStats();
+            Prefs.setCallStats(acCallStatistics);
+            Log.d(TAG, "ACCallStatistics: " + acCallStatistics);
 
             //CallBackHandler.callStateChanged(CallState.NULL);
             //session.getCallState()

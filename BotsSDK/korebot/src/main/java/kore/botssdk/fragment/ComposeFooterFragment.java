@@ -363,9 +363,11 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     }
 
     public void updateUI() {
-        llSend.setEnabled(!isDisabled && !isFirstTime);
-        llSend.setAlpha(llSend.isEnabled() ? 1.0f : 0.5f);
-        llSpeechSend.setAlpha(llSend.isEnabled() ? 1.0f : 0.5f);
+        if (llSend != null) {
+            llSend.setEnabled(!isDisabled && !isFirstTime);
+            llSend.setAlpha(llSend.isEnabled() ? 1.0f : 0.5f);
+            llSpeechSend.setAlpha(llSend.isEnabled() ? 1.0f : 0.5f);
+        }
     }
 
     void setListener() {

@@ -69,5 +69,10 @@ public class BundleConstants {
     public static final String STOP_TYPING = "stop_typing";
     public static final String TYPING = "typing";
     public static final String DESTROY_EVENT = "destroy-event";
+
     public static final String CENTER = "center";
+    public static final String CANCEL_AGENT_WEBRTC = "cancel_agent_webrtc";
+    public static final String CALL_AGENT_WEBRTC = "call_agent_webrtc";
+    public static final String TERMINATE_AGENT_WEBRTC = "terminate_agent_webrtc";
+    public static final String CALL_AGENT_WEBRTC_TERMINATED = "call_agent_webrtc_terminated";
 }

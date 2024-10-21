@@ -18,13 +18,15 @@ import java.io.InputStream;
 
 import kore.botssdk.R;
 import kore.botssdk.application.BotApplication;
+import kore.botssdk.bot.BotClient;
+import kore.botssdk.models.EventModel;
 
 public class AppUtils {
-
     private static final String TAG="AppUtils";
-
     private static MediaPlayer mediaPlayer = null;
     private static boolean isPlayingAudioFile;
+    static EventModel eventModelOuter;
+    static BotClient botClientOuter;
 
     public static boolean getStringBoolean(int stringId){
         try {
@@ -245,4 +247,19 @@ public class AppUtils {
         return orientation;
     }
 
+    public static void setBotClient(BotClient botClient) {
+        botClientOuter = botClient;
+    }
+
+    public static void setEventModel(EventModel eventModel) {
+        eventModelOuter = eventModel;
+    }
+
+    public static BotClient getBotClient() {
+        return botClientOuter;
+    }
+
+    public static EventModel getEventModel() {
+        return eventModelOuter;
+    }
 }

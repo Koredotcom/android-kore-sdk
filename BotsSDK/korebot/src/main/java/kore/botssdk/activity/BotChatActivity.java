@@ -722,8 +722,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 botContentFragment.showCalendarIntoFooter(botResponse);
             }, BundleConstants.TYPING_STATUS_TIME);
         } catch (Exception e) {
-            e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
+                LogUtils.d(LOG_TAG, payload);
                 try {
                     if (botContentFragment != null) {
                         EventModel eventModel = gson.fromJson(payload, EventModel.class);
@@ -734,8 +734,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                 sipAccount.setUsername(botClient.getUserId());
                                 sipAccount.setDisplayName(botClient.getUserId());
                                 sipAccount.setDomain(eventMessageModel.getDomain());
-                                sipAccount.setProxy(eventMessageModel.getDomain());
-                                sipAccount.setPort(5080);
+                                sipAccount.setProxy("sbc1-korevg-np.kore.ai");
+                                sipAccount.setPort(5060);
                                 sipAccount.setTransport(Transport.UDP);
 
                                 Prefs.setSipAccount(sipAccount);

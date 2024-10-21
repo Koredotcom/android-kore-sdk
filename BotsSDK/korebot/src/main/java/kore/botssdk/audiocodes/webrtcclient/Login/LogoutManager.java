@@ -13,7 +13,7 @@ public class LogoutManager {
 
 
     private static int LOGOUT_TIMEOUT_INTERVAL = 1;
-    private static Thread closeAppThread;
+    static Thread closeAppThread;
 
     public static void closeApplication()
     {
