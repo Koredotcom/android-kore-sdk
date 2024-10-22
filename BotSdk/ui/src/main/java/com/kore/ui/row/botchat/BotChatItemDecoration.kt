@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.kore.common.extensions.dpToPx
+import com.kore.extensions.dpToPx
 
 open class BotChatItemDecoration(context: Context) : RecyclerView.ItemDecoration() {
     private val firstItemMarginTop = 12.dpToPx(context)

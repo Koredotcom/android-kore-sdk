@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.FORM_FIELDS
 import com.kore.ui.adapters.FormListAdapter

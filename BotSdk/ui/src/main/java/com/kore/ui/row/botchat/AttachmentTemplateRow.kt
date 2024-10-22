@@ -6,8 +6,8 @@ import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
-import com.kore.common.utils.FontUtils
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.FontUtils
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants

@@ -5,7 +5,7 @@ import android.net.Uri
 import android.text.format.DateUtils
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.R
 import com.kore.ui.audiocodes.webrtcclient.db.NativeDBManager
 import com.kore.ui.audiocodes.webrtcclient.fragments.contactlist.ContactListItemRowType

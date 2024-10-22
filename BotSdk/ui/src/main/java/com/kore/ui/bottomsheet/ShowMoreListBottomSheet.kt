@@ -14,9 +14,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
-import com.kore.common.row.SimpleListAdapter
-import com.kore.common.row.SimpleListRow
+import com.kore.extensions.dpToPx
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.R
 import com.kore.ui.databinding.ListBottomSheetFragmentBinding
 import com.kore.ui.row.botchat.listview.ListViewTemplateItemRowType

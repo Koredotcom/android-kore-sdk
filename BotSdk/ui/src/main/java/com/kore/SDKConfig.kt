@@ -2,10 +2,10 @@ package com.kore
 
 import com.kore.common.SDKConfiguration
 import com.kore.common.model.BotConfigModel
-import com.kore.common.row.SimpleListViewHolderProvider
-import com.kore.ui.botchat.fragment.BaseContentFragment
-import com.kore.ui.botchat.fragment.BaseFooterFragment
-import com.kore.ui.botchat.fragment.BaseHeaderFragment
+import com.kore.ui.row.SimpleListViewHolderProvider
+import com.kore.ui.base.BaseContentFragment
+import com.kore.ui.base.BaseFooterFragment
+import com.kore.ui.base.BaseHeaderFragment
 import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.widgets.WidgetSDKConfiguration
 import com.kore.widgets.model.WidgetConfigModel

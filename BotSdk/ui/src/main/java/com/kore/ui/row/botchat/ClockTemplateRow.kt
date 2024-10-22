@@ -5,7 +5,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.databinding.RowClockTemplateBinding

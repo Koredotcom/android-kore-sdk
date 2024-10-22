@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.adapters.CarouselTemplateAdapter
 import com.kore.ui.databinding.RowCarouselTemplateBinding
 

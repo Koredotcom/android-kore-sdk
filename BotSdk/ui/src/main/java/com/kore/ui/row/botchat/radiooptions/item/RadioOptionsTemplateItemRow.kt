@@ -2,7 +2,7 @@ package com.kore.ui.row.botchat.radiooptions.item
 
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.VALUE

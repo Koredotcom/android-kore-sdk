@@ -5,9 +5,9 @@ import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListAdapter
-import com.kore.common.row.SimpleListRow
-import com.kore.common.row.listener.ChatContentStateListener
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.row.listener.ChatContentStateListener
 import com.kore.common.utils.LogUtils
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotRequest

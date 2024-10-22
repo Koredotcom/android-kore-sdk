@@ -7,7 +7,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.adapters.BotButtonsTemplateAdapter
 import com.kore.ui.databinding.RowButtonTemplateBinding

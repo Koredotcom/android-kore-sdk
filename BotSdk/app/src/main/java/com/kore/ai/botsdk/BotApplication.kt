@@ -4,16 +4,7 @@ import android.app.Application
 import android.content.res.Resources.NotFoundException
 import android.util.Log
 import com.kore.SDKConfig
-import com.kore.ai.botsdk.fragments.CustomContentFragment
-import com.kore.ai.botsdk.fragments.CustomFooterFragment
-import com.kore.ai.botsdk.fragments.CustomHeaderFragment
-import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
-import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
-import com.kore.ai.botsdk.row.SampleTemplateProvider
-import com.kore.ai.botsdk.row.SampleTemplateRow
 import com.kore.common.model.BotConfigModel
-import com.kore.model.constants.BotResponseConstants
-import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
 import java.util.Locale

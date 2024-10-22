@@ -11,8 +11,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
-import com.kore.common.row.SimpleListRow
+import com.kore.extensions.dpToPx
+import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
 import com.kore.event.BotChatEvent.SendMessage
 import com.kore.model.constants.BotResponseConstants

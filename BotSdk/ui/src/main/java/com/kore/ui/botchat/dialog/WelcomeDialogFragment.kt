@@ -20,8 +20,8 @@ import com.google.android.flexbox.FlexDirection.COLUMN
 import com.google.android.flexbox.FlexDirection.ROW
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import com.kore.common.base.BaseDialogFragment
-import com.kore.common.extensions.dpToPx
+import com.kore.ui.base.BaseDialogFragment
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_CAROUSEL
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_LIST
@@ -33,7 +33,6 @@ import com.kore.ui.adapters.WelcomePromotionsAdapter
 import com.kore.ui.adapters.WelcomeStarterButtonsAdapter
 import com.kore.ui.adapters.WelcomeStaticLinksAdapter
 import com.kore.ui.adapters.WelcomeStaticLinksListAdapter
-import com.kore.ui.botchat.BotChatActivity
 import com.kore.ui.databinding.WelcomeScreenBinding
 
 class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :

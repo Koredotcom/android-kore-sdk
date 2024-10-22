@@ -5,11 +5,10 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.adapters.TableTemplateAdapter
 import com.kore.ui.adapters.TableTemplateHeaderAdapter
-import com.kore.ui.databinding.RowTextTemplateBinding
 import com.kore.ui.databinding.TableTemplateBinding
 
 class TableTemplateRow(

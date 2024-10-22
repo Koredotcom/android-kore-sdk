@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kore.common.row.SimpleListAdapter
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.ToastUtils
 import com.kore.ui.R

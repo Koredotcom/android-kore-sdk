@@ -12,7 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_LOCAL_FILE_PATH
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_MEDIA_TYPE
-import com.kore.common.utils.FileUtils
+import com.kore.ui.utils.FileUtils
 import com.kore.listeners.AttachmentListener
 import com.kore.ui.R
 

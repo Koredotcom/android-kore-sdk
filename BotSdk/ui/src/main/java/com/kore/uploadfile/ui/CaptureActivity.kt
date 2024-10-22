@@ -18,7 +18,7 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
-import com.kore.common.base.BaseActivity
+import com.kore.ui.base.BaseActivity
 import com.kore.common.constants.MediaConstants
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_ACTION
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_DOCUMENT_MIME
@@ -30,10 +30,10 @@ import com.kore.common.constants.MediaConstants.Companion.EXTRA_FILE_URI
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_MEDIA_TYPE
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_PICK_TYPE
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_THUMBNAIL_FILE_PATH
-import com.kore.common.helper.RuntimePermissionHelper
-import com.kore.common.helper.RuntimePermissionHelper.Companion.hasPermissions
+import com.kore.helper.RuntimePermissionHelper
+import com.kore.helper.RuntimePermissionHelper.Companion.hasPermissions
 import com.kore.common.utils.LogUtils
-import com.kore.common.utils.MediaUtils.Companion.setupAppDir
+import com.kore.ui.utils.MediaUtils.Companion.setupAppDir
 import com.kore.ui.R
 import com.kore.ui.databinding.ActivityCaptureMediaBinding
 import java.io.IOException

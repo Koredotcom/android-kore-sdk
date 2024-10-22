@@ -13,7 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
-import com.kore.common.markdown.MarkdownUtil
+import com.kore.markdown.MarkdownUtil
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants.ANSWER
 import com.kore.model.constants.BotResponseConstants.FAQ

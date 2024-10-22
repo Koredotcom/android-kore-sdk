@@ -20,8 +20,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
-import com.kore.common.utils.BitmapUtils
+import com.kore.extensions.dpToPx
+import com.kore.ui.utils.BitmapUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.IS_COLLAPSED

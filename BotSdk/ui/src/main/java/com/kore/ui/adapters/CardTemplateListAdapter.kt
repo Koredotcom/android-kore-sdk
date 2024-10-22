@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.kore.common.utils.BitmapUtils
+import com.kore.ui.utils.BitmapUtils
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 

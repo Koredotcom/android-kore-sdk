@@ -19,7 +19,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
+import com.kore.extensions.dpToPx
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R

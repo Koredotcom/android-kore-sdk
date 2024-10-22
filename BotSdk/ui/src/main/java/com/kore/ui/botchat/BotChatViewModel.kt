@@ -18,9 +18,9 @@ import com.kore.botclient.ConnectionState
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
 import com.kore.common.SDKConfiguration
-import com.kore.common.base.BaseViewModel
-import com.kore.common.extensions.stringToDate
-import com.kore.common.helper.SpeechSynthesizerHelper
+import com.kore.ui.base.BaseViewModel
+import com.kore.extensions.stringToDate
+import com.kore.helper.SpeechSynthesizerHelper
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
 import com.kore.common.utils.ToastUtils

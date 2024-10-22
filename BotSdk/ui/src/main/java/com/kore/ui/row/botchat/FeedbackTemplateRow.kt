@@ -12,10 +12,8 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
-import com.kore.common.utils.LogUtils
+import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
-import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.model.constants.BotResponseConstants.NUMBERS_ARRAYS
 import com.kore.model.constants.BotResponseConstants.SELECTED_FEEDBACK

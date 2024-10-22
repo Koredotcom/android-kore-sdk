@@ -1,13 +1,10 @@
 package com.kore.ui.row.botchat
 
-import android.graphics.Rect
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.adapters.CardTemplateAdapter
 import com.kore.ui.databinding.CardTemplateViewBinding

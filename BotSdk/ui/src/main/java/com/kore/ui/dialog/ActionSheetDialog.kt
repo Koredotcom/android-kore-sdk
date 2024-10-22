@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.kore.common.row.SimpleListAdapter
-import com.kore.common.utils.FontUtils.applyCustomFont
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.utils.FontUtils.applyCustomFont
 import com.kore.ui.R
 import com.kore.ui.row.actionsheet.ActionSheetRow
 import com.kore.ui.row.actionsheet.ActionSheetRowType

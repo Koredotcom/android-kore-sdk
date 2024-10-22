@@ -2,7 +2,7 @@ package com.kore.ui.row.botchat.form
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.kore.common.row.SimpleListViewHolderProvider
+import com.kore.ui.row.SimpleListViewHolderProvider
 import com.kore.ui.databinding.FormTempleteViewBinding
 
 class FormTemplateProvider : SimpleListViewHolderProvider<FormTempleteViewBinding>() {

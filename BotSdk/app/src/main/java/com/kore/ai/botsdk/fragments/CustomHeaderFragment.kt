@@ -14,12 +14,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.kore.ai.botsdk.databinding.CustomHeaderBinding
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
+import com.kore.extensions.dpToPx
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.ui.R
-import com.kore.ui.botchat.fragment.BaseHeaderFragment
+import com.kore.ui.base.BaseHeaderFragment
 
 class CustomHeaderFragment : BaseHeaderFragment() {
     private lateinit var binding: CustomHeaderBinding
@@ -72,7 +72,7 @@ class CustomHeaderFragment : BaseHeaderFragment() {
                 }
             }
 
-            model.buttons?.let { buttons ->
+            model.buttons?.let {
                 val bgColorTint = ColorStateList.valueOf(Color.parseColor(model.iconsColor))
                 binding.ivBotArrowBack.backgroundTintList = bgColorTint
             }

@@ -14,7 +14,6 @@ import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -23,9 +22,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.constants.MediaConstants
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
-import com.kore.common.utils.BundleConstants
-import com.kore.common.utils.MediaUtils
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.MediaUtils
 import com.kore.common.utils.StringUtils
 import com.kore.event.BotChatEvent
 import com.kore.extensions.setRoundedCorner

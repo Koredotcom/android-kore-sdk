@@ -22,11 +22,11 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.botclient.ConnectionState
-import com.kore.common.base.BaseActivity
+import com.kore.ui.base.BaseActivity
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.botchat.fragment.BaseContentFragment
-import com.kore.ui.botchat.fragment.BaseHeaderFragment
-import com.kore.common.utils.BundleConstants.EXTRA_RESULT
+import com.kore.ui.base.BaseContentFragment
+import com.kore.ui.base.BaseHeaderFragment
+import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
@@ -46,7 +46,7 @@ import com.kore.ui.audiocodes.webrtcclient.general.ACManager
 import com.kore.ui.audiocodes.webrtcclient.general.Prefs
 import com.kore.ui.audiocodes.webrtcclient.structure.SipAccount
 import com.kore.ui.botchat.dialog.WelcomeDialogFragment
-import com.kore.ui.botchat.fragment.BaseFooterFragment
+import com.kore.ui.base.BaseFooterFragment
 import com.kore.ui.botchat.fragment.ChatContentFragment
 import com.kore.ui.botchat.fragment.ChatFooterFragment
 import com.kore.ui.botchat.fragment.ChatHeaderOneFragment

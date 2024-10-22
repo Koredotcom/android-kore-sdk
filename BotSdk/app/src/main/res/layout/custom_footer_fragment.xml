@@ -151,7 +151,7 @@
                     android:orientation="vertical"
                     android:visibility="gone">
 
-                    <com.kore.common.speech.ui.SpeechProgressView
+                    <com.kore.speech.ui.SpeechProgressView
                         android:id="@+id/progress"
                         android:layout_width="38dp"
                         android:layout_height="@dimen/dimen_30dp" />

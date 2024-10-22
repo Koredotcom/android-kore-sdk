@@ -5,7 +5,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants.CENTER_PANEL
 import com.kore.model.constants.BotResponseConstants.DATA
 import com.kore.model.constants.BotResponseConstants.GRAPH_ANSWER

@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.core.text.HtmlCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
-import com.kore.common.markdown.MarkdownUtil
+import com.kore.markdown.MarkdownUtil
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants.SNIPPET_CONTENT
 import com.kore.model.constants.BotResponseConstants.SNIPPET_TITLE

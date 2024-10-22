@@ -2,7 +2,7 @@ package com.kore.ui.row.botchat
 
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.databinding.RowTimeStampTemplateBinding
 
 class TimeStampTemplateRow(private val id: String, private val formattedTime: String) : SimpleListRow() {

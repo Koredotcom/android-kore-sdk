@@ -14,7 +14,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.google.gson.internal.LinkedTreeMap
 import com.kore.ai.botsdk.databinding.CustomBotContentLayoutBinding
-import com.kore.common.base.BaseView
+import com.kore.ui.base.BaseView
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.NetworkUtils
 import com.kore.event.BotChatEvent
@@ -25,7 +25,7 @@ import com.kore.ui.R
 import com.kore.ui.adapters.BotChatAdapter
 import com.kore.ui.adapters.QuickRepliesTemplateAdapter
 import com.kore.ui.botchat.BotChatView
-import com.kore.ui.botchat.fragment.BaseContentFragment
+import com.kore.ui.base.BaseContentFragment
 import com.kore.ui.row.botchat.BotChatItemDecoration
 import com.kore.ui.row.botchat.BotChatRowType
 

@@ -23,7 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel

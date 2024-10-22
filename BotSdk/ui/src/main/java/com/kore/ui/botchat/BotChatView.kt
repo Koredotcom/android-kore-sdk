@@ -1,7 +1,7 @@
 package com.kore.ui.botchat
 
 import com.kore.botclient.ConnectionState
-import com.kore.common.base.BaseView
+import com.kore.ui.base.BaseView
 import com.kore.common.event.UserActionEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse

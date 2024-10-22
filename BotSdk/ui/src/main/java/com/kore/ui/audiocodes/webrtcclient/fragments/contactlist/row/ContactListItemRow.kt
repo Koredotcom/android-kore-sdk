@@ -3,7 +3,7 @@ package com.kore.ui.audiocodes.webrtcclient.fragments.contactlist.row
 import android.net.Uri
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.common.utils.LogUtils
 import com.kore.ui.R
 import com.kore.ui.audiocodes.webrtcclient.fragments.contactlist.ContactListItemRowType

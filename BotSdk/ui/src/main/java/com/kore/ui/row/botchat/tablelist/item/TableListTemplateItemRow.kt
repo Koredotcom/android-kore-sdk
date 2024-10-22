@@ -5,8 +5,8 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListAdapter
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants.ROW_ITEMS
 import com.kore.model.constants.BotResponseConstants.SECTION_HEADER
 import com.kore.model.constants.BotResponseConstants.SECTION_HEADER_DESC

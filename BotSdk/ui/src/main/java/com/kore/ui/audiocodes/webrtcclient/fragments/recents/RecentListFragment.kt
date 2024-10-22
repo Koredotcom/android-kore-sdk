@@ -8,8 +8,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.kore.common.row.SimpleListAdapter
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.common.utils.LogUtils
 import com.kore.ui.R
 import com.kore.ui.audiocodes.webrtcclient.activities.BaseAppCompatActivity

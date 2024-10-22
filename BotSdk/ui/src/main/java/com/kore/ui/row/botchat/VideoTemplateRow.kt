@@ -19,9 +19,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.kore.common.constants.MediaConstants
 import com.kore.common.event.UserActionEvent
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListRow
 import com.kore.common.utils.LogUtils
-import com.kore.common.utils.MediaUtils
+import com.kore.ui.utils.MediaUtils
 import com.kore.common.utils.StringUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants

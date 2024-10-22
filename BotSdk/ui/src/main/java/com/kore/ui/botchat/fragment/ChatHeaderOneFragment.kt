@@ -14,12 +14,13 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
+import com.kore.extensions.dpToPx
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
 import com.kore.ui.R
+import com.kore.ui.base.BaseHeaderFragment
 import com.kore.ui.databinding.BotHeaderBinding
 
 class ChatHeaderOneFragment : BaseHeaderFragment() {

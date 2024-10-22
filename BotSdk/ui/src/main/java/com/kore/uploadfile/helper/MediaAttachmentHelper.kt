@@ -33,9 +33,9 @@ import com.kore.common.constants.MediaConstants.Companion.EXTRA_LOCAL_FILE_PATH
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_MEDIA_TYPE
 import com.kore.common.constants.MediaConstants.Companion.FOR_MESSAGE
 import com.kore.common.constants.MediaConstants.Companion.MEDIA_TYPE_VIDEO
-import com.kore.common.utils.BitmapUtils
+import com.kore.ui.utils.BitmapUtils
 import com.kore.common.utils.LogUtils
-import com.kore.common.utils.MediaUtils
+import com.kore.ui.utils.MediaUtils
 import com.kore.common.utils.ToastUtils.Companion.showToast
 import com.kore.ui.R
 import com.kore.uploadfile.ui.CaptureActivity

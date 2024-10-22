@@ -11,7 +11,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
-import com.kore.common.extensions.dpToPx
+import com.kore.extensions.dpToPx
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants

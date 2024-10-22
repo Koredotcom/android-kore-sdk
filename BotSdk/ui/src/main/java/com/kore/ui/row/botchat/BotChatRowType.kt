@@ -1,7 +1,7 @@
 package com.kore.ui.row.botchat
 
-import com.kore.common.row.SimpleListRow
-import com.kore.common.row.SimpleListViewHolderProvider
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.row.SimpleListViewHolderProvider
 import com.kore.ui.row.botchat.advancemultiselect.AdvanceMultiSelectTemplateProvider
 import com.kore.ui.row.botchat.form.FormTemplateProvider
 import com.kore.ui.row.botchat.listview.ListViewTemplateProvider

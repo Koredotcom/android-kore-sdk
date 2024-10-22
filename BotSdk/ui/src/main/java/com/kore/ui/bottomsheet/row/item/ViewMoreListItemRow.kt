@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
-import com.kore.common.extensions.dpToPx
-import com.kore.common.row.SimpleListRow
+import com.kore.extensions.dpToPx
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants.BUTTON_ACTIVE_BG_COLOR
 import com.kore.model.constants.BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR
 import com.kore.model.constants.BotResponseConstants.COLOR

@@ -1,6 +1,6 @@
 package com.kore.uploadfile.ui
 
-import com.kore.common.base.BaseView
+import com.kore.ui.base.BaseView
 
 interface CaptureView : BaseView {
     fun init()

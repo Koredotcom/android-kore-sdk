@@ -3,8 +3,8 @@ package com.kore.ui.row.botchat.advancemultiselect.category
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
-import com.kore.common.row.SimpleListAdapter
-import com.kore.common.row.SimpleListRow
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants.SELECTED_ITEM
 import com.kore.ui.databinding.RowAdvancedMultiSelectCategoryBinding
 import com.kore.ui.row.botchat.advancemultiselect.AdvancedMultiSelectCategoryRowType
