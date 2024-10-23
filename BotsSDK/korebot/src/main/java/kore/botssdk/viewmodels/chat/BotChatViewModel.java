@@ -22,6 +22,9 @@ import android.os.Bundle;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.ViewModel;
 
+import com.audiocodes.mv.webrtcsdk.audio.WebRTCAudioManager;
+import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
+import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -38,6 +41,10 @@ import java.util.UUID;
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.application.BotApplication;
+import kore.botssdk.audiocodes.webrtcclient.Activities.CallActivity;
+import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
+import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
+import kore.botssdk.audiocodes.webrtcclient.Structure.SipAccount;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.listener.BaseSocketConnectionManager;
@@ -53,6 +60,8 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
+import kore.botssdk.models.EventMessageModel;
+import kore.botssdk.models.EventModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
@@ -95,8 +104,8 @@ public class BotChatViewModel extends ViewModel {
         this.botClient = botClient;
     }
 
-    public void getBrandingDetails(String botId, String botToken) {
-        repository.getBrandingDetails(botId, botToken);
+    public void getBrandingDetails(String botId, String botToken, boolean isReconnection) {
+        repository.getBrandingDetails(botId, botToken, isReconnection);
     }
 
     public void connectToBot(boolean isReconnect) {
@@ -118,7 +127,7 @@ public class BotChatViewModel extends ViewModel {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
-                getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken());
+                getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), isReconnection);
 
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
@@ -143,8 +152,7 @@ public class BotChatViewModel extends ViewModel {
         }
     };
 
-    public void sendReadReceipts()
-    {
+    public void sendReadReceipts() {
         //Added newly for send receipts
         if (botClient != null && arrMessageList.size() > 0 && isAgentTransfer) {
             botClient.sendReceipts(BundleConstants.MESSAGE_READ, arrMessageList.get((arrMessageList.size() - 1)));
@@ -157,13 +165,17 @@ public class BotChatViewModel extends ViewModel {
      */
     public void processPayload(String payload, BotResponse botLocalResponse) {
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
+
+        if (payload.contains("Form_Submitted")) {
+            Intent intent = new Intent("finish_activity");
+            context.sendBroadcast(intent);
+        }
+
         try {
             final BotResponse botResponse = botLocalResponse != null ? botLocalResponse : gson.fromJson(payload, BotResponse.class);
             if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 return;
             }
-            if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
-
             try {
                 long timeMillis = botResponse.getTimeInMillis(botResponse.getCreatedOn(), true);
                 botResponse.setCreatedInMillis(timeMillis);
@@ -173,13 +185,14 @@ public class BotChatViewModel extends ViewModel {
                 throw new RuntimeException(e);
             }
 
+            if (!StringUtils.isNullOrEmpty(botResponse.getIcon()) && StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
+                SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
+
             if (botClient != null && enable_ack_delivery)
                 botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
 
             LogUtils.d(LOG_TAG, payload);
             isAgentTransfer = botResponse.isFromAgent();
-
-            if (!StringUtils.isNullOrEmpty(botResponse.getIcon())) SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
 
             chatView.setIsAgentConnected(isAgentTransfer);
 
@@ -201,15 +214,21 @@ public class BotChatViewModel extends ViewModel {
                         if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
                             Gson gson = new Gson();
                             payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                        } else if (payOuter.getText() != null && payOuter.getText().contains("*")) {
+                            Gson gson = new Gson();
+                            payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                         }
                     }
                 }
             }
+
             final PayloadInner payloadInner = payOuter == null ? null : payOuter.getPayload();
             if (payloadInner != null && payloadInner.getTemplate_type() != null && "start_timer".equalsIgnoreCase(payloadInner.getTemplate_type())) {
                 BotSocketConnectionManager.getInstance().startDelayMsgTimer();
             }
+
             chatView.showTypingStatus();
+
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
             }
@@ -218,57 +237,106 @@ public class BotChatViewModel extends ViewModel {
                 postNotification("Kore Message", "Received new message.");
             }
 
+            if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
             chatView.addMessageToAdapter(botResponse);
         } catch (Exception e) {
-            e.printStackTrace();
             if (e instanceof JsonSyntaxException) {
+                LogUtils.d(LOG_TAG, payload);
                 try {
-                    //This is the case Bot returning user sent message from another channel
-                    BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
-                    if (botRequest != null && botRequest.getMessage() != null && botRequest.getMessage().getBody() != null) {
-                        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-                        chatView.updateContentListOnSend(botRequest);
-                    } else {
-                        final AgentInfoModel botResponse = gson.fromJson(payload, AgentInfoModel.class);
+                    EventModel eventModel = gson.fromJson(payload, EventModel.class);
+                    if (eventModel != null && eventModel.getMessage() != null) {
+                        if (!StringUtils.isNullOrEmpty(eventModel.getMessage().getSipURI()) && eventModel.getMessage().getType().equalsIgnoreCase(BundleConstants.CALL_AGENT_WEBRTC)) {
+                            EventMessageModel eventMessageModel = eventModel.getMessage();
+                            if (eventMessageModel != null) {
+                                SipAccount sipAccount = new SipAccount();
+                                sipAccount.setUsername(botClient.getUserId());
+                                sipAccount.setDisplayName(botClient.getUserId());
+                                sipAccount.setDomain(eventMessageModel.getDomain());
+                                sipAccount.setProxy(getProxyUrl(eventMessageModel.getAddresses().get(0)));
+                                sipAccount.setPort(5060);
+                                sipAccount.setTransport(Transport.UDP);
 
-                        if (botResponse == null || botResponse.getMessage() == null || StringUtils.isNullOrEmpty(botResponse.getMessage().getType())) {
-                            return;
-                        }
+                                Prefs.setSipAccount(sipAccount);
+                                Prefs.setAutoRedirect(true);
 
-                        if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
-                            setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
-                        } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
-                            setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
-                        }
+                                chatView.showAlertDialog(eventModel);
+                            }
+                        } else if (eventModel.getMessage().getType().equalsIgnoreCase(BundleConstants.TERMINATE_AGENT_WEBRTC)) {
 
-                        if (botResponse.getCustomEvent().equalsIgnoreCase(BotResponse.EVENT)) {
-                            if (botResponse.getMessage() != null && !StringUtils.isNullOrEmpty(botResponse.getMessage().getType()) && botResponse.getMessage().getType().equalsIgnoreCase(BundleConstants.TYPING))
-                                chatView.showTypingStatus();
-                        }
-                    }
-                } catch (Exception e1) {
-                    try {
-                        final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
-                        if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
-                            return;
-                        }
-                        LogUtils.d(LOG_TAG, payload);
+                            chatView.hideAlertDialog();
 
-                        if (!StringUtils.isNullOrEmpty(botResponse.getIcon()))
-                            SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
+                            if (ACManager.getInstance().getActiveSession() != null) {
+                                int sessionIndex = ACManager.getInstance().getActiveSession().getSessionID();
+                                if (AudioCodesUA.getInstance().getSession(sessionIndex) != null) {
+                                    AudioCodesUA.getInstance().getSession(sessionIndex).terminate();
+                                    WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(null);
 
-                        if (!botResponse.getMessage().isEmpty()) {
-                            ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
-                            if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload())) {
-                                displayMessage(compModel.getPayload(), BotResponse.COMPONENT_TYPE_TEXT, botResponse.getMessageId());
+                                    if (BotApplication.getCurrentActivity() instanceof CallActivity) {
+                                        BotApplication.getCurrentActivity().finish();
+                                    }
+                                }
                             }
                         }
-                    } catch (Exception e2) {
-                        e2.printStackTrace();
+                    } else {
+                        BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
+                        if (botRequest != null && botRequest.getMessage() != null && botRequest.getMessage().getBody() != null) {
+                            botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+                            chatView.updateContentListOnSend(botRequest);
+                        } else {
+                            final AgentInfoModel botResponse = gson.fromJson(payload, AgentInfoModel.class);
+
+                            if (botResponse == null || botResponse.getMessage() == null || StringUtils.isNullOrEmpty(botResponse.getMessage().getType())) {
+                                return;
+                            }
+
+                            if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
+                                setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
+                            } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
+                                setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
+                            }
+
+                            if (botResponse.getCustomEvent().equalsIgnoreCase(BotResponse.EVENT)) {
+                                if (botResponse.getMessage() != null && !StringUtils.isNullOrEmpty(botResponse.getMessage().getType()) && botResponse.getMessage().getType().equalsIgnoreCase(BundleConstants.TYPING))
+                                    chatView.showTypingStatus();
+                            }
+                        }
+                    }
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    try {
+                        //This is the case Bot returning user sent message from another channel
+                        BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
+                        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+                        chatView.updateContentListOnSend(botRequest);
+                    } catch (Exception e1) {
+                        try {
+                            final BotResponsePayLoadText botResponse = gson.fromJson(payload, BotResponsePayLoadText.class);
+                            if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+                                return;
+                            }
+                            LogUtils.d(LOG_TAG, payload);
+                            if (!botResponse.getMessage().isEmpty()) {
+                                ComponentModelPayloadText compModel = botResponse.getMessage().get(0).getComponent();
+                                if (compModel != null && !StringUtils.isNullOrEmpty(compModel.getPayload())) {
+                                    displayMessage(compModel.getPayload(), BotResponse.COMPONENT_TYPE_TEXT, botResponse.getMessageId(), botResponse.getIcon());
+                                }
+                            }
+                        } catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
                     }
                 }
             }
         }
+    }
+
+    public String getProxyUrl(String proxy) {
+        String[] strProxy = proxy.split("//");
+        if (strProxy.length > 0) {
+            String[] proxy1 = strProxy[1].split(":");
+            if (proxy1.length > 0) return proxy1[0];
+        }
+        return "";
     }
 
     public String getUniqueDeviceId(Context context) {
@@ -285,8 +353,7 @@ public class BotChatViewModel extends ViewModel {
         return uniqueID;
     }
 
-    public String getUniqueID()
-    {
+    public String getUniqueID() {
         return uniqueID;
     }
 
@@ -379,7 +446,7 @@ public class BotChatViewModel extends ViewModel {
         mNotificationManager.notify("YUIYUYIU", 237891, notification);
     }
 
-    public void displayMessage(String text, String type, String messageId) {
+    public void displayMessage(String text, String type, String messageId, String icon) {
         if (!lastMsgId.equalsIgnoreCase(messageId)) {
             try {
                 PayloadOuter payloadOuter = gson.fromJson(text, PayloadOuter.class);
@@ -401,6 +468,7 @@ public class BotChatViewModel extends ViewModel {
                 botResponse.setType(componentModel.getType());
                 botResponse.setMessage(arrBotResponseMessages);
                 botResponse.setMessageId(messageId);
+                botResponse.setIcon(icon);
 
                 if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon())) botResponse.setIcon(botMetaModel.getIcon());
 
@@ -425,7 +493,7 @@ public class BotChatViewModel extends ViewModel {
                 botResponse.setType("text");
                 botResponse.setMessage(arrBotResponseMessages);
                 botResponse.setMessageId(messageId);
-                botResponse.setIcon(SDKConfiguration.BubbleColors.getIcon_url());
+                botResponse.setIcon(icon);
 
                 if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon())) botResponse.setIcon(botMetaModel.getIcon());
 
@@ -442,20 +510,18 @@ public class BotChatViewModel extends ViewModel {
         prefsEditor.apply();
     }
 
-    public void sendWebHookMessage(String jwt, boolean b, String message, ArrayList<HashMap<String, String>> attachments)
-    {
-        webHookRepository.sendWebHookMessage(jwt, b,message, attachments);
+    public void sendWebHookMessage(String jwt, boolean b, String message, ArrayList<HashMap<String, String>> attachments) {
+        webHookRepository.sendWebHookMessage(jwt, b, message, attachments);
     }
 
-    public void getWebHookMeta(String jwt)
-    {
+    public void getWebHookMeta(String jwt) {
         webHookRepository.getWebHookMeta(jwt);
     }
 
-    public void sendImage(String filePath, String fileName, String filePathThumbnail)
-    {
+    public void sendImage(String filePath, String fileName, String filePathThumbnail) {
         new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).executeAsync();
     }
+
     protected class SaveCapturedImageTask extends AsyncTaskExecutor<String> {
         private final String filePath;
         private final String fileName;
@@ -493,8 +559,7 @@ public class BotChatViewModel extends ViewModel {
                         LogUtils.e(LOG_TAG, e.toString());
                     } finally {
                         try {
-                            if (fOut != null)
-                                fOut.close();
+                            if (fOut != null) fOut.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -515,7 +580,7 @@ public class BotChatViewModel extends ViewModel {
         @Override
         protected void onCancelled() {
             // update UI on task cancelled
-            showToast(context,"Unable to attach!");
+            showToast(context, "Unable to attach!");
         }
     }
 

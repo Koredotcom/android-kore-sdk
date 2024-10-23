@@ -71,12 +71,12 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     View dtmfButton;
     boolean dtmfEnabled = false;
     boolean guiInitialized;
-
+    int count = 0;
     WebRTCAudioManager ac;
     WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
-
+    Handler timerHandler = new Handler();
     ArrayList<Integer> sessionList = new ArrayList<>();
-
+    Runnable runnable;
     MyAudioCodesSessionEventListener myAudioCodesSessionEventListener = new MyAudioCodesSessionEventListener();
 
     private int lastSessionIndex;
@@ -164,12 +164,12 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
 
     void initGUI() {
 
-        callStateTextView = (TextView) findViewById(R.id.call_textview_call_state);
-        transferStateNumberTextView = (TextView) findViewById(R.id.call_textview_call_transfer_state_number);
+        callStateTextView = findViewById(R.id.call_textview_call_state);
+        transferStateNumberTextView = findViewById(R.id.call_textview_call_transfer_state_number);
 
-        contactNameTextView = (TextView) findViewById(R.id.call_textview_contact_name);
-        contactPhoneNumberTextView = (TextView) findViewById(R.id.call_textview_contact_number);
-        contactImageView = (ImageView) findViewById(R.id.call_imageView_contact_image);
+        contactNameTextView = findViewById(R.id.call_textview_contact_name);
+        contactPhoneNumberTextView = findViewById(R.id.call_textview_contact_number);
+        contactImageView = findViewById(R.id.call_imageView_contact_image);
 
         endCallButton = findViewById(R.id.call_button_end_call);
         dtmfButton = findViewById(R.id.call_button_dtmf);
@@ -439,6 +439,27 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         initDtmf();
         updateVideoButton();
         guiInitialized = true;
+
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                count++;
+                if (count < 59) {
+                    String time = (count <= 9) ? "00:" + "0" + count : "00:"+ count;
+                    contactNameTextView.setText(time);
+                } else if (count > 59) {
+                    String time = (count/60) + ":" + (count - (60 * (count/60)));
+                    if((count/60) <= 9)
+                    {
+                        time = ("0"+(count/60)) + ":" + (((count - (60 * (count/60))) <= 9) ? "0"+(count - (60 * (count/60))) : (count - (60 * (count/60))));
+                    }
+
+                    contactNameTextView.setText(time);
+                }
+
+                timerHandler.postDelayed(this, 1000);
+            }
+        };
     }
 
     void setHold(boolean hold) {
@@ -508,7 +529,14 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
 
                 RemoteContact remote = session.getRemoteNumber();
                 if (remote != null) {
-                    callStateTextView.setText(getString(R.string.call_textview_call_state) + " " + session.getCallState());
+                    String callState = getString(R.string.call_textview_call_state) + " " + session.getCallState();
+                    callStateTextView.setText(callState);
+
+                    if (session.getCallState().toString().equalsIgnoreCase(BundleConstants.CONNECTED)) {
+                        if (count == 0)
+                            timerHandler.postDelayed(runnable, 1000);
+                    }
+
                     //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
                     List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(NativeDBManager.QueryType.BY_PHONE_AND_SIP, remote.getUserName());//  .getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
                     String displayName = remote.getDisplayName();
@@ -529,9 +557,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                         displayName = nativeDBObject.getDisplayName();
                     }
 
-                    contactNameTextView.setText(displayName);
                     contactPhoneNumberTextView.setText(userName);
-
                     session.addSessionEventListener(myAudioCodesSessionEventListener);
                 } else {
                     finish();
@@ -615,6 +641,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         super.onDestroy();
         //CallBackHandler.unregisterCallStateChanged(callStateChanged);
         CallBackHandler.unregisterLoginStateChange(loginStateChanged);
+        timerHandler.removeCallbacks(runnable);
     }
 
     @Override
@@ -876,6 +903,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                         eventModel.getMessage().setType(BundleConstants.CALL_AGENT_WEBRTC_TERMINATED);
                         AppUtils.getBotClient().sendMessage(eventModel.getMessage());
                     }
+                   AudioCodesUA.getInstance().logout();
 
                     finish();
                 } else {
@@ -884,7 +912,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                         Log.d(TAG, "session1: id " + session1);
                     }
                     try {
-                        session = AudioCodesUA.getInstance().getSession((Integer) sessionList.get(0));
+                        session = AudioCodesUA.getInstance().getSession(sessionList.get(0));
                     } catch (Exception e) {
                         Log.d(TAG, "oops: " + e.getMessage());
                     }

@@ -25,28 +25,12 @@ public interface ComposeFooterInterface {
 
     void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance);
 
-    void onFormActionButtonClicked(FormActionTemplate fTemplate);
-
-    void launchActivityWithBundle(String type, Bundle payload);
-
     void sendWithSomeDelay(String message, String payload, long time, boolean isScrollUpNeeded);
 
     void copyMessageToComposer(String text, boolean isForOnboard);
 
-    void showMentionNarratorContainer(boolean show, String natxt, String cotext, String handFocus, boolean isEnd, boolean showOverlay, String templateType);
-
-    void openFullView(String templateType, String data, CalEventsTemplateModel.Duration duration, int position);
-
-    void updateActionbar(boolean selected, String templateType, ArrayList<BotButtonModel> buttonModels);
-
-    void lauchMeetingNotesAction(Context context, String mid, String eid);
-
-    void showAfterOnboard(boolean isDiscardClicked);
-
-    void onPanelClicked(Object pModel, boolean isFirstLaunch);
-
-    void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id);
-
     void externalReadWritePermission(String fileUrl);
+
     void onDeepLinkClicked(String url);
+    void sendImage(String fP, String fN, String fPT);
 }

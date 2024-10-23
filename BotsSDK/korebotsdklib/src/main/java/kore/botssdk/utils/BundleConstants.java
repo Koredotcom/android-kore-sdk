@@ -75,4 +75,5 @@ public class BundleConstants {
     public static final String CALL_AGENT_WEBRTC = "call_agent_webrtc";
     public static final String TERMINATE_AGENT_WEBRTC = "terminate_agent_webrtc";
     public static final String CALL_AGENT_WEBRTC_TERMINATED = "call_agent_webrtc_terminated";
+    public static final String CONNECTED = "CONNECTED";
 }

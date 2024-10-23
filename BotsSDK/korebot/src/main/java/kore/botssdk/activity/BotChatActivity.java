@@ -109,11 +109,9 @@ import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.listener.TTSUpdate;
-import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.AgentInfoModel;
 import kore.botssdk.models.BotActiveThemeModel;
 import kore.botssdk.models.BotBrandingModel;
-import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotRequest;
@@ -121,13 +119,10 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.BrandingWelcomeModel;
-import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
 import kore.botssdk.models.EventMessageModel;
 import kore.botssdk.models.EventModel;
-import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.models.KnowledgeCollectionModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadHeaderModel;
@@ -163,7 +158,7 @@ import retrofit2.Response;
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 @SuppressLint("UnknownNullness")
-public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface, ThemeChangeListener {
+public class BotChatActivity extends BotAppCompactActivity implements ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
     private static final String GROUP_KEY_NOTIFICATIONS = "GROUP_KEY_NOTIFICATIONS";
     final String LOG_TAG = BotChatActivity.class.getSimpleName();
     ProgressBar taskProgressBar;
@@ -177,7 +172,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     final Gson gson = new Gson();
     RelativeLayout rlChatWindow;
     SharedPreferences sharedPreferences;
-    private ImageView ivChaseBackground, ivChaseLogo;
     protected final int compressQualityInt = 100;
     final Handler messageHandler = new Handler();
     private String fileUrl;
@@ -230,7 +224,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         botContentFragment.setArguments(getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
-        botContentFragment.setThemeChangeInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
         setBotContentFragmentUpdate(botContentFragment);
 
@@ -400,8 +393,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     private void findViews() {
         rlChatWindow = findViewById(R.id.rlChatWindow);
         taskProgressBar = findViewById(R.id.taskProgressBar);
-        ivChaseBackground = findViewById(R.id.ivChaseBackground);
-        ivChaseLogo = findViewById(R.id.ivChaseLogo);
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         showProgressDialogue();
     }
@@ -497,29 +488,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         }
     }
 
-    public void onEvent(BotResponse botResponse) {
-        processPayload("", botResponse);
-    }
-
-    public void updateActionbar(boolean isSelected, String type, ArrayList<BotButtonModel> buttonModels) {
-    }
-
-    @Override
-    public void lauchMeetingNotesAction(Context context, String mid, String eid) {
-    }
-
-    @Override
-    public void showAfterOnboard(boolean isDiscard) {
-    }
-
-    @Override
-    public void onPanelClicked(Object pModel, boolean isFirstLaunch) {
-    }
-
-    @Override
-    public void knowledgeCollectionItemClick(KnowledgeCollectionModel.DataElements elements, String id) {
-    }
-
     @Override
     public void externalReadWritePermission(String fileUrl) {
         this.fileUrl = fileUrl;
@@ -606,14 +574,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     @Override
-    public void onFormActionButtonClicked(FormActionTemplate fTemplate) {
-    }
-
-    @Override
-    public void launchActivityWithBundle(String type, Bundle payload) {
-    }
-
-    @Override
     public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollupNeeded) {
         if (message.equalsIgnoreCase(BundleUtils.OPEN_WELCOME)) {
             if (welcomeDialog != null) welcomeDialog.show();
@@ -623,14 +583,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
         composeFooterFragment.setComposeText(text);
-    }
-
-    @Override
-    public void showMentionNarratorContainer(boolean show, String natxt, String cotext, String res, boolean isEnd, boolean showOverlay, String templateType) {
-    }
-
-    @Override
-    public void openFullView(String templateType, String data, CalEventsTemplateModel.Duration duration, int position) {
     }
 
     public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
@@ -1021,8 +973,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             composerView.setVisibility(VISIBLE);
             BottomPanelFragment composerFragment = new BottomPanelFragment();
             Bundle bundle = getIntent().getExtras();
-            if (bundle != null)
-                bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
+            if (bundle != null) bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
 
             composerFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
@@ -1041,17 +992,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             BotSocketConnectionManager.getInstance().sendPayload(message, payload);
         } else {
             BotSocketConnectionManager.getInstance().sendMessage(message, payload);
-        }
-    }
-
-    @Override
-    public void onThemeChangeClicked(String message) {
-        if (message.equalsIgnoreCase(BotResponse.THEME_NAME_1)) {
-            ivChaseLogo.setVisibility(View.VISIBLE);
-            ivChaseBackground.setVisibility(View.GONE);
-        } else {
-            ivChaseBackground.setVisibility(VISIBLE);
-            ivChaseLogo.setVisibility(View.GONE);
         }
     }
 
@@ -1096,8 +1036,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         LogUtils.e(LOG_TAG, e.toString());
                     } finally {
                         try {
-                            if (fOut != null)
-                                fOut.close();
+                            if (fOut != null) fOut.close();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

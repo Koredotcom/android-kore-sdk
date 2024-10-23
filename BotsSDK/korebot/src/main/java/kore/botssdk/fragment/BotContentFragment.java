@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -52,7 +51,6 @@ import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
-import kore.botssdk.listener.ThemeChangeListener;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotHistory;
@@ -79,9 +77,9 @@ import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
+import kore.botssdk.view.LoadingDots;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
-import kore.botssdk.view.LoadingDots;
 import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -96,7 +94,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private CircularProfileView botTypingStatusIcon;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private ThemeChangeListener themeChangeListener;
     private String mChannelIconURL;
     private String mBotNameInitials;
     private int mBotIconId;
@@ -105,7 +102,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private SwipeRefreshLayout swipeRefreshLayout;
     private int offset = 0;
     private SharedPreferences sharedPreferences;
-    private PopupWindow popupWindow;
     private String jwt;
     private RelativeLayout llBotHeader;
 
@@ -114,15 +110,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = View.inflate(requireActivity(), R.layout.bot_content_layout, null);
-        // create the popup window
-        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
-        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
-        boolean focusable = true;
-        View popUpView = View.inflate(requireActivity(), R.layout.theme_change_layout, null);
-        popupWindow = new PopupWindow(popUpView, width, height, focusable);
         getBundleInfo();
         findViews(view);
-        findThemeViews(popUpView);
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
 
@@ -149,29 +138,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         });
     }
 
-    public void findThemeViews(View view) {
-        TextView tvTheme1 = view.findViewById(R.id.tvTheme1);
-        TextView tvTheme2 = view.findViewById(R.id.tvTheme2);
-
-        tvTheme1.setOnClickListener(v -> {
-            popupWindow.dismiss();
-            SharedPreferences.Editor editor = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-            editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_1);
-            editor.apply();
-
-            themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_1);
-        });
-
-        tvTheme2.setOnClickListener(v -> {
-            popupWindow.dismiss();
-            SharedPreferences.Editor editor = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-            editor.putString(BotResponse.APPLY_THEME_NAME, BotResponse.THEME_NAME_2);
-            editor.apply();
-
-            themeChangeListener.onThemeChangeClicked(BotResponse.THEME_NAME_2);
-        });
-    }
-
     public void setJwtTokenForWebHook(String jwt) {
         if (!StringUtils.isNullOrEmpty(jwt)) this.jwt = jwt;
     }
@@ -195,10 +161,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-    }
-
-    public void setThemeChangeInterface(ThemeChangeListener themeChangeListener) {
-        this.themeChangeListener = themeChangeListener;
     }
 
     private void getBundleInfo() {

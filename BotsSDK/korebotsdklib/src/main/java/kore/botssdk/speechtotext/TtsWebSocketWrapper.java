@@ -154,7 +154,7 @@ public final class TtsWebSocketWrapper {
      * @return
      */
     public boolean sendMessage(String msg,String bearer) {
-        if (mConnection != null && mConnection.isConnected()) {
+        if (mConnection.isConnected()) {
             HashMap<String,String> body = new HashMap<>();
             body.put("message",msg);
             body.put("user",SDKConfiguration.Client.bot_name);

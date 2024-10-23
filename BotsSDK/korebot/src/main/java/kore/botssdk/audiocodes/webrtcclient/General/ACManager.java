@@ -17,6 +17,7 @@ import com.audiocodes.mv.webrtcsdk.session.NotifyEvent;
 import com.audiocodes.mv.webrtcsdk.session.RemoteContact;
 import com.audiocodes.mv.webrtcsdk.session.TerminationInfo;
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
+import com.audiocodes.mv.webrtcsdk.sip.pjsip.ACPjSipManager;
 import com.audiocodes.mv.webrtcsdk.useragent.ACConfiguration;
 import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesEventListener;
 import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
@@ -240,6 +241,7 @@ public class ACManager implements AudioCodesEventListener {
             RemoteContact contact= new RemoteContact();
             contact.setUserName(callNumber);
             contact.setDisplayName(callNumber);
+            ACPjSipManager.getSipManager().setSessionExpiresTimeout(6000);
             AudioCodesSession session = AudioCodesUA.getInstance().call(contact,videoCall, null );
             Intent callIntent = new Intent(BotApplication.getGlobalContext(), CallActivity.class);
 

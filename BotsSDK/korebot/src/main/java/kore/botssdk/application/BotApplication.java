@@ -3,11 +3,9 @@ package kore.botssdk.application;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
 import kore.botssdk.audiocodes.webrtcclient.db.MySQLiteHelper;
-import kore.botssdk.utils.ClosingService;
 
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
@@ -40,8 +38,6 @@ public class BotApplication extends Application {
         super.onCreate();
         appControl = new AppControl(getApplicationContext());
         globalContext = this;
-
-        startService(new Intent(getApplicationContext(), ClosingService.class));
     }
 
     public static boolean isActivityVisible() {

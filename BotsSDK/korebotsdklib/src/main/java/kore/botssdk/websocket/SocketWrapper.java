@@ -628,6 +628,15 @@ public final class SocketWrapper {
         }
     }
 
+    /**
+     * @param msg : The message object
+     */
+    public void sendAgentMessage(String msg) {
+        if (mConnection.isConnected()) {
+            mConnection.sendMessage(msg);
+        }
+    }
+
     /*
      * Method to Reconnection attempt based on incremental delay
      *
