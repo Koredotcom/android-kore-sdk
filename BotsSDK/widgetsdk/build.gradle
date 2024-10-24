@@ -1,7 +1,22 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId 'kore.botsdk'
+                artifactId 'korebot'
+                version '11.0.2'
+            }
+        }
+    }
+}
 
 android {
-    useLibrary 'org.apache.http.legacy'
     compileSdk 34
 
     defaultConfig {

@@ -1,16 +1,32 @@
 apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'kotlin-android'
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                from components.release
+                groupId 'kore.botsdk'
+                artifactId 'korebot'
+                version '11.0.2'
+            }
+        }
+    }
+}
 
 android {
     compileSdk 34
 
-    dataBinding{
+    dataBinding {
         enabled = true
     }
 
     buildFeatures {
         buildConfig = true
     }
-    
+
     defaultConfig {
         minSdkVersion 24
         targetSdkVersion 34
@@ -48,17 +64,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'de.greenrobot:eventbus:2.4.0'
 
-    implementation(project(':korebotsdklib')){
+    implementation(project(':korebotsdklib')) {
         exclude module: 'support-v4'
     }
-    implementation(project(':widgetsdk')){
+    implementation(project(':widgetsdk')) {
         exclude module: 'support-v4'
         exclude group: 'org.apache.commons'
     }
-
-//    implementation(project(':webrtcsdk-release')){
-//        exclude module: 'support-v4'
-//    }
 
     implementation 'com.github.DocsInternal-Kore:WebRtcSdk:0.0.2'
     implementation 'com.google.android.material:material:1.12.0'
