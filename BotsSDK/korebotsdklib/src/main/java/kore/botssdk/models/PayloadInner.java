@@ -22,7 +22,7 @@ public class PayloadInner {
         this.template_type = template_type;
     }
 
-    private String template_type;
+    String template_type;
 
     public void setText(String text) {
         this.text = text;
@@ -32,40 +32,49 @@ public class PayloadInner {
         return label;
     }
 
-    private String label;
-    private String text;
-    private String pie_type;
-    private List<String> X_axis;
-    private String direction;
-    private boolean stacked;
-    private String layout;
-    private Skill skill;
-    private String heading;
-    private String title;
-    private String format;
-    private String seeMoreTitle;
-    private int moreCount = 0;
-    private String subtitle;
-    private String image_url;
-    private boolean is_end;
-    private int emojiPosition = -1;
-    private String view;
-    private String messageTodisplay;
-    private boolean sliderView;
-    private boolean showViewMore;
-    private String description;
-    private Object headerOptions;
-    private BotFormFieldButtonModel fieldButton;
-    private String url;
-    private String videoUrl;
-    private String audioUrl;
-    private double videoCurrentPosition;
-    private ArrayList<FeedbackExperienceContentModel> experienceContent;
-    private ArrayList<FeedbackListModel> feedbackList;
-    private String text_message;
-    private String fileName;
-    private int limit;
-    private String placeholder;
+    String label;
+    String text;
+    String pie_type;
+    List<String> X_axis;
+    String direction;
+    boolean stacked;
+    String layout;
+    String heading;
+    String title;
+    String format;
+    String seeMoreTitle;
+    int moreCount = 0;
+    String subtitle;
+    String image_url;
+    boolean is_end;
+    int emojiPosition = -1;
+    String view;
+    String messageToDisplay;
+    boolean sliderView;
+    String description;
+    Object headerOptions;
+    BotFormFieldButtonModel fieldButton;
+    String url;
+    String videoUrl;
+    String audioUrl;
+    double videoCurrentPosition;
+    ArrayList<FeedbackExperienceContentModel> experienceContent;
+    ArrayList<FeedbackListModel> feedbackList;
+    String text_message;
+    String fileName;
+    int limit;
+    String placeholder;
+    String endDate;
+    String startDate;
+    String carousel_type;
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
 
     public int getLimit() {
         return limit;
@@ -74,8 +83,6 @@ public class PayloadInner {
     public String getPlaceholder() {
         return placeholder;
     }
-
-    private String carousel_type;
 
     public String getCarousel_type() {
         return carousel_type;
@@ -105,7 +112,7 @@ public class PayloadInner {
         this.is_end = is_end;
     }
 
-    private static final Gson gson = new Gson();
+    static final Gson gson = new Gson();
 
     public String getLayout() {
         return layout;
@@ -183,10 +190,6 @@ public class PayloadInner {
         return audioUrl;
     }
 
-    public void setFormat(String endDate) {
-        this.format = format;
-    }
-
     public String getFormat() {
         return format;
     }
@@ -203,24 +206,18 @@ public class PayloadInner {
         return pie_type;
     }
 
-    private String placeholder_text;
+    List<List<String>> columns = null;
+    ArrayList<BotTableDataModel> tableDataModel = null;
 
-    private List<List<String>> columns = null;
-    private ArrayList<BotTableDataModel> tableDataModel = null;
-
-    private ArrayList<BotButtonModel> buttons;
-    private ArrayList<QuickReplyTemplate> quick_replies;
-    private ArrayList<FormActionTemplate> form_actions;
-    private ArrayList<NarratorTextModel> narratorTextModel;
-    private ArrayList<BotFormTemplateModel> formFields;
-    private ArrayList<FeedbackSmileyModel> smileyArrays;
-    private ArrayList<FeedbackStarModel> starArrays;
-    private ArrayList<FeedbackThumbsModel> thumpsUpDownArrays;
-    private Object cards;
-    private ArrayList<AdvancedListModel> listItems;
-    private ArrayList<FeedbackRatingModel> numbersArrays;
-
-    private List<RadioOptionModel> radioOptions;
+    ArrayList<BotButtonModel> buttons;
+    ArrayList<QuickReplyTemplate> quick_replies;
+    ArrayList<NarratorTextModel> narratorTextModel;
+    ArrayList<BotFormTemplateModel> formFields;
+    ArrayList<FeedbackThumbsModel> thumpsUpDownArrays;
+    Object cards;
+    ArrayList<AdvancedListModel> listItems;
+    ArrayList<FeedbackRatingModel> numbersArrays;
+    List<RadioOptionModel> radioOptions;
 
     public ArrayList<FeedbackRatingModel> getNumbersArrays() {
         return numbersArrays;
@@ -234,19 +231,19 @@ public class PayloadInner {
         return thumpsUpDownArrays;
     }
 
-    private ArrayList<BotBeneficiaryModel> botBeneficiaryModels;
+    ArrayList<BotBeneficiaryModel> botBeneficiaryModels;
 
     public ArrayList<BotBeneficiaryModel> getBotBeneficiaryModels() {
         return botBeneficiaryModels;
     }
 
-    private SearchGraphAnswerModel graph_answer;
+    SearchGraphAnswerModel graph_answer;
 
     public SearchGraphAnswerModel getGraph_answer() {
         return graph_answer;
     }
 
-    private HashMap<String, AllSearchResultsDataModel> results;
+    HashMap<String, AllSearchResultsDataModel> results;
 
     public HashMap<String, AllSearchResultsDataModel> getResults() {
         return results;
@@ -256,8 +253,8 @@ public class PayloadInner {
         this.results = results;
     }
 
-    private boolean dialogCancel;
-    private int listItemDisplayCount;
+    boolean dialogCancel;
+    int listItemDisplayCount;
 
     public int getListItemDisplayCount() {
         return listItemDisplayCount;
@@ -275,29 +272,28 @@ public class PayloadInner {
         return formFields;
     }
 
-    private ArrayList<BotMultiSelectElementModel> multiSelectModels;
+    ArrayList<BotMultiSelectElementModel> multiSelectModels;
 
     public void setNarratorTextModel(ArrayList<NarratorTextModel> narratorTextModel) {
         this.narratorTextModel = narratorTextModel;
     }
 
-    private ArrayList<BotListWidgetModel> listWidgetModels;
-    private ArrayList<BotCarouselModel> carouselElements;
-    private ArrayList<BotCarouselStackModel> carouselStackElements;
-    private ArrayList<ContactTemplateModel> contactTemplateModels;
-    private ArrayList<CardTemplateModel> cardTemplateModels;
-    private ArrayList<BotListModel> listElements;
-    private ArrayList<BotLineChartDataModel> lineChartDataModels;
-    private ArrayList<BotTableListModel> tableListElements;
-    private ArrayList<WidgetListElementModel> widgetlistElements;
-    private ArrayList<DropDownElementsModel> dropDownElementsModels;
-    private ArrayList<AdvancedMultiSelectModel> advancedMultiSelectModels;
+    ArrayList<BotCarouselModel> carouselElements;
+    ArrayList<BotCarouselStackModel> carouselStackElements;
+    ArrayList<ContactTemplateModel> contactTemplateModels;
+    ArrayList<CardTemplateModel> cardTemplateModels;
+    ArrayList<BotListModel> listElements;
+    ArrayList<BotLineChartDataModel> lineChartDataModels;
+    ArrayList<BotTableListModel> tableListElements;
+    ArrayList<WidgetListElementModel> widgetlistElements;
+    ArrayList<DropDownElementsModel> dropDownElementsModels;
+    ArrayList<AdvancedMultiSelectModel> advancedMultiSelectModels;
 
     public ArrayList<AdvancedMultiSelectModel> getAdvancedMultiSelectModels() {
         return advancedMultiSelectModels;
     }
 
-    public ArrayList<WidgetListElementModel> getWidgetlistElements() {
+    public ArrayList<WidgetListElementModel> getWidgetListElements() {
         return widgetlistElements;
     }
 
@@ -305,10 +301,10 @@ public class PayloadInner {
         return dropDownElementsModels;
     }
 
-    private ArrayList<String> headers;
-    private ArrayList<BotBarChartDataModel> barChartDataModels;
-    private ArrayList<QuickReplyTemplate> pickerTemplateModels;
-    private ArrayList<PdfDownloadModel> pdfDownloadModels;
+    ArrayList<String> headers;
+    ArrayList<BotBarChartDataModel> barChartDataModels;
+    ArrayList<QuickReplyTemplate> pickerTemplateModels;
+    ArrayList<PdfDownloadModel> pdfDownloadModels;
 
     public void setView(String view) {
         this.view = view;
@@ -318,8 +314,8 @@ public class PayloadInner {
         return view;
     }
 
-    public String getMessageTodisplay() {
-        return messageTodisplay;
+    public String getMessageToDisplay() {
+        return messageToDisplay;
     }
 
     public ArrayList<BotMiniTableModel> getMiniTableDataModels() {
@@ -330,7 +326,7 @@ public class PayloadInner {
         return cards;
     }
 
-    private ArrayList<BotMiniTableModel> miniTableDataModels;
+    ArrayList<BotMiniTableModel> miniTableDataModels;
 
     public ArrayList<BotBarChartDataModel> getBarChartDataModels() {
         return barChartDataModels;
@@ -360,9 +356,9 @@ public class PayloadInner {
         this.data = data;
     }
 
-    private ArrayList<BotPieChartElementModel> pieChartElements;
+    ArrayList<BotPieChartElementModel> pieChartElements;
 
-    private BotTableDataModel data;
+    BotTableDataModel data;
 
     public Object getElements() {
         return elements;
@@ -372,11 +368,11 @@ public class PayloadInner {
         this.elements = elements;
     }
 
-    private String table_design;
-    private Object elements = null;
-    private BotListViewMoreDataModel moreData;
+    String table_design;
+    Object elements = null;
+    BotListViewMoreDataModel moreData;
 
-    private String speech_hint;
+    String speech_hint;
 
     public String getTemplate_type() {
         return template_type;
@@ -456,7 +452,6 @@ public class PayloadInner {
 
         try {
             if (elements != null) {
-                //    private Object columns = null;
                 String elementsAsString = gson.toJson(elements);
                 if (!BotResponse.TEMPLATE_TYPE_UNIVERSAL_SEARCH.equals(template_type)) {
                     if (BotResponse.TEMPLATE_TYPE_CAROUSEL.equalsIgnoreCase(template_type) || BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(template_type)) {
@@ -621,10 +616,10 @@ public class PayloadInner {
             this.icon = icon;
         }
 
-        private String name;
-        private String color;
-        private String icon;
-        private String trigger;
+        String name;
+        String color;
+        String icon;
+        String trigger;
 
         public String getId() {
             return id;
@@ -634,7 +629,7 @@ public class PayloadInner {
             this.id = id;
         }
 
-        private String id;
+        String id;
 
         public String getTrigger() {
             return trigger;

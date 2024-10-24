@@ -42,7 +42,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
     @Override
     public void onBindViewHolder(@NonNull ImageAttachView holder, int position) {
         String fileExtn = dataList.get(position).get("fileExtn");
-        if (FileUtils.ImageTypes().contains(fileExtn) || FileUtils.VideoTypes().contains(fileExtn)) {
+        if (FileUtils.ImageTypes().contains(fileExtn)) {
             Glide.with(context).load(dataList.get(position).get("localFilePath")).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(holder.attachView));
         } else {
             holder.attachView.setImageResource(FileUtils.getDrawableByExt(!StringUtils.isNullOrEmptyWithTrim(fileExtn) ? fileExtn.toLowerCase() : ""));
@@ -64,7 +64,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
 
     public void addAttachment(HashMap<String, String> attachmentKey) {
         dataList.add(attachmentKey);
-        notifyItemRangeInserted(0, dataList.size() - 1);
+        notifyDataSetChanged();
     }
 
     public void clearAll() {

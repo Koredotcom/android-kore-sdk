@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -28,21 +29,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
 import java.util.TimeZone;
 
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
@@ -53,57 +45,47 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBrandingModel;
-import kore.botssdk.models.BotHistory;
-import kore.botssdk.models.BotHistoryMessage;
-import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingBodyModel;
 import kore.botssdk.models.BrandingHeaderModel;
-import kore.botssdk.models.Component;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
-import kore.botssdk.net.RestBuilder;
-import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.net.SDKConfiguration.Client;
-import kore.botssdk.net.WebHookRestBuilder;
-import kore.botssdk.retroresponse.ServerBotMsgResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.Utils;
 import kore.botssdk.view.CircularProfileView;
-import kore.botssdk.view.LoadingDots;
 import kore.botssdk.view.QuickReplyView;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
+import kore.botssdk.viewmodels.content.BotContentViewModel;
+import kore.botssdk.viewmodels.content.BotContentViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
-import retrofit2.Call;
-import retrofit2.Response;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotContentFragment extends Fragment implements BotContentFragmentUpdate {
-    private RelativeLayout rlBody;
-    private RecyclerView botsBubblesListView;
-    private ChatAdapter botsChatAdapter;
-    private QuickReplyView quickReplyView;
-    private LinearLayout botTypingStatusRl;
-    private CircularProfileView botTypingStatusIcon;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private String mChannelIconURL;
-    private String mBotNameInitials;
-    private int mBotIconId;
-    private boolean fetching = false;
-    private final Gson gson = new Gson();
-    private SwipeRefreshLayout swipeRefreshLayout;
-    private int offset = 0;
-    private SharedPreferences sharedPreferences;
-    private String jwt;
-    private RelativeLayout llBotHeader;
+    RelativeLayout rlBody;
+    RecyclerView botsBubblesListView;
+    ChatAdapter botsChatAdapter;
+    QuickReplyView quickReplyView;
+    LinearLayout botTypingStatusRl;
+    CircularProfileView botTypingStatusIcon;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    String mChannelIconURL;
+    String mBotNameInitials;
+    int mBotIconId;
+    boolean fetching = false;
+    SwipeRefreshLayout swipeRefreshLayout;
+    int offset = 0;
+    SharedPreferences sharedPreferences;
+    String jwt;
+    RelativeLayout llBotHeader;
+    BotContentViewModel mContentViewModel;
+    TTSUpdate ttsUpdate;
 
     @Nullable
     @Override
@@ -114,6 +96,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         findViews(view);
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
+
+        BotContentViewModelFactory factory = new BotContentViewModelFactory(requireActivity(), BotContentFragment.this);
+        mContentViewModel = new ViewModelProvider(this, factory).get(BotContentViewModel.class);
 
         return view;
     }
@@ -153,6 +138,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     }
 
     public void setTtsUpdate(TTSUpdate ttsUpdate) {
+        this.ttsUpdate = ttsUpdate;
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -166,7 +152,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     private void getBundleInfo() {
         Bundle bundle = getArguments();
         if (bundle != null) {
-            boolean shallShowProfilePic = bundle.getBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
             mChannelIconURL = bundle.getString(BundleUtils.CHANNEL_ICON_URL);
             mBotNameInitials = bundle.getString(BundleUtils.BOT_NAME_INITIALS, "B");
             mBotIconId = bundle.getInt(BundleUtils.BOT_ICON_ID, -1);
@@ -349,16 +334,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         }
     }
 
-    public void showTypingStatus(BotResponse botResponse) {
-        if (botTypingStatusRl != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            botTypingStatusRl.setVisibility(View.VISIBLE);
-            if (StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(botResponse.getIcon())) {
-                mChannelIconURL = botResponse.getIcon();
-                botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, -1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
-            }
-        }
-    }
-
     public void showTypingStatus() {
         botTypingStatusRl.setVisibility(View.VISIBLE);
     }
@@ -379,13 +354,10 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type())) {
                         Calendar cal = Calendar.getInstance();
                         cal.setTimeInMillis(MaterialDatePicker.todayInUtcMilliseconds());
-                        int strYear = cal.get(Calendar.YEAR);
-                        int strMonth = cal.get(Calendar.MONTH);
-                        int strDay = cal.get(Calendar.DAY_OF_MONTH);
-
                         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
+                        builder.setCalendarConstraints(mContentViewModel.minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
                         try {
@@ -412,6 +384,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
                         builder.setTitleText(payInner.getTitle());
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
+                        builder.setCalendarConstraints(mContentViewModel.minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
 
                         try {
@@ -477,7 +450,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = view.findViewById(R.id.botTypingStatus);
         botTypingStatusIcon = view.findViewById(R.id.typing_status_item_cpv);
-        LoadingDots ldDots = view.findViewById(R.id.ldDots);
         botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
     }
 
@@ -516,84 +488,28 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     @Override
     public void onChatHistory(ArrayList<BaseBotMessage> list, int offset, boolean scrollToBottom) {
+        fetching = false;
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
 
+        if (list != null) {
+            this.offset = offset;
+            addMessagesToBotChatAdapter(list, scrollToBottom);
+        }
     }
 
     @Override
     public void onReconnectionChatHistory(ArrayList<BaseBotMessage> list, int offset, boolean isReconnectionHistory) {
+        fetching = false;
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
 
-    }
-
-    private Observable<ServerBotMsgResponse> getHistoryRequest(final int _offset, final int limit) {
-        return Observable.create(emitter -> {
-            try {
-                ServerBotMsgResponse re = new ServerBotMsgResponse();
-
-                Call<BotHistory> _resp;
-                if (Client.isWebHook) {
-                    _resp = WebHookRestBuilder.getRestAPI().getWebHookBotHistory("bearer " + jwt, Client.bot_id, Client.bot_id, limit, _offset);
-                } else {
-                    _resp = RestBuilder.getRestAPI().getBotHistory("bearer " + SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken(), Client.bot_id, limit, _offset, true);
-                }
-                Response<BotHistory> rBody = _resp.execute();
-                BotHistory history = rBody.body();
-
-                if (rBody.isSuccessful() && history != null) {
-                    List<BotHistoryMessage> messages = history.getMessages();
-                    ArrayList<BaseBotMessage> msgs;
-                    if (messages != null && messages.size() > 0) {
-                        msgs = new ArrayList<>();
-                        for (int index = 0; index < messages.size(); index++) {
-                            BotHistoryMessage msg = messages.get(index);
-                            if (msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
-                                List<Component> components = msg.getComponents();
-                                String data = components.get(0).getData().getText().replaceAll("&quot;", "\"");
-                                try {
-                                    PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
-                                    BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
-                                    r.setType(msg.getType());
-                                    r.setIcon(history.getIcon());
-                                    msgs.add(r);
-                                } catch (com.google.gson.JsonSyntaxException ex) {
-                                    BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
-                                    r.setType(msg.getType());
-                                    r.setIcon(history.getIcon());
-                                    msgs.add(r);
-                                }
-                            } else {
-                                try {
-                                    String message = msg.getComponents().get(0).getData().getText();
-                                    RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-                                    RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-                                    botPayLoad.setMessage(botMessage);
-                                    BotInfoModel botInfo = new BotInfoModel(Client.bot_name, Client.bot_id, null);
-                                    botPayLoad.setBotInfo(botInfo);
-                                    Gson gson = new Gson();
-                                    String jsonPayload = gson.toJson(botPayLoad);
-
-                                    BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                    long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
-                                    String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
-                                    botRequest.setCreatedOn(createdTime);
-                                    msgs.add(botRequest);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        re.setBotMessages(msgs);
-                        re.setOriginalSize(messages.size());
-                    }
-                }
-
-                emitter.onNext(re);
-                emitter.onComplete();
-            } catch (Exception e) {
-                emitter.onError(e);
-            }
-        });
+        if (list != null) {
+            this.offset = offset;
+            addMessagesToBotChatAdapter(list, true, isReconnectionHistory);
+        }
     }
 
     private void initSettings() {
@@ -630,52 +546,13 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        getHistoryRequest(_offset, limit).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-            }
-
-            @Override
-            public void onNext(@NonNull ServerBotMsgResponse re) {
-                fetching = false;
-
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                ArrayList<BaseBotMessage> list = null;
-                list = re.getBotMessages();
-                offset = _offset + re.getOriginalSize();
-
-                if (list != null && list.size() > 0) {
-                    addMessagesToBotChatAdapter(list, offset == 0);
-                }
-
-                if ((list == null || list.size() < limit) && offset != 0) {
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-
-            @Override
-            public void onComplete() {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
+        if (!SDKConfiguration.Client.isWebHook)
+            mContentViewModel.loadChatHistory(_offset, limit, SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken());
+        else mContentViewModel.loadChatHistory(_offset, limit, jwt);
     }
 
     public int getAdapterCount() {
-        if (botsChatAdapter != null)
-            return botsChatAdapter.getItemCount();
+        if (botsChatAdapter != null) return botsChatAdapter.getItemCount();
         return 0;
     }
 
@@ -691,140 +568,9 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        getHistoryRequest(_offset, limit, false).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<ServerBotMsgResponse>() {
-            @Override
-            public void onSubscribe(@NonNull Disposable d) {
-            }
-
-            @Override
-            public void onNext(@NonNull ServerBotMsgResponse re) {
-                fetching = false;
-
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-
-                ArrayList<BaseBotMessage> list = null;
-                list = re.getBotMessages();
-                offset = _offset + re.getOriginalSize();
-
-                if (list != null && list.size() > 0) {
-                    int pos = 0;
-                    ArrayList<BaseBotMessage> botResp = new ArrayList<>();
-                    ArrayList<BaseBotMessage> currentList = botsChatAdapter.getBaseBotMessageArrayList();
-                    ArrayList<BaseBotMessage> requiredList = new ArrayList<>();
-
-                    for (int i = 0; i < list.size(); i++) {
-                        if (list.get(i) instanceof BotResponse) {
-                            botResp.add(list.get(i));
-                        }
-                    }
-
-                    for (int i = 0; i < currentList.size(); i++) {
-                        for (int j = 0; j < botResp.size(); j++) {
-                            if (currentList.get(i).getCreatedInMillis() == botResp.get(j).getCreatedInMillis()) {
-                                pos = j;
-                            }
-                        }
-                    }
-
-                    if (pos != 0 && (pos + 1) < botResp.size()) {
-                        for (int i = pos + 1; i < botResp.size(); i++) {
-                            if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
-                                ((BotResponse) botResp.get(i)).setFromAgent(true);
-                            requiredList.add(botResp.get(i));
-                        }
-                    }
-
-                    botTypingStatusRl.setVisibility(View.GONE);
-                    addMessagesToBotChatAdapter(requiredList, true, false);
-                }
-            }
-
-            @Override
-            public void onError(@NonNull Throwable e) {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-
-            @Override
-            public void onComplete() {
-                fetching = false;
-                if (swipeRefreshLayout != null) {
-                    swipeRefreshLayout.setRefreshing(false);
-                }
-            }
-        });
+        if (!SDKConfiguration.Client.isWebHook)
+            mContentViewModel.loadReconnectionChatHistory(_offset, limit, SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken(), botsChatAdapter.getBaseBotMessageArrayList());
+        else mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
     }
 
-    private Observable<ServerBotMsgResponse> getHistoryRequest(final int _offset, final int limit, boolean setIconUrl) {
-        return Observable.create(emitter -> {
-            try {
-                ServerBotMsgResponse re = new ServerBotMsgResponse();
-
-                Call<BotHistory> _resp = RestBuilder.getRestAPI().getBotHistory("bearer " + SocketWrapper.getInstance(requireActivity()).getAccessToken(), Client.bot_id, limit, _offset, true);
-                Response<BotHistory> rBody = _resp.execute();
-                BotHistory history = rBody.body();
-
-                if (rBody.isSuccessful() && history != null) {
-
-                    if (!StringUtils.isNullOrEmpty(history.getIcon()) && setIconUrl)
-                        SDKConfiguration.BubbleColors.setIcon_url(history.getIcon());
-
-                    List<BotHistoryMessage> messages = history.getMessages();
-                    ArrayList<BaseBotMessage> msgs;
-                    if (messages != null && messages.size() > 0) {
-                        msgs = new ArrayList<>();
-                        for (int index = 0; index < messages.size(); index++) {
-                            BotHistoryMessage msg = messages.get(index);
-                            if (msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
-                                List<Component> components = msg.getComponents();
-                                String data = components.get(0).getData().getText();
-                                try {
-                                    PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
-                                    BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
-                                    r.setType(msg.getType());
-                                    msgs.add(r);
-                                } catch (com.google.gson.JsonSyntaxException ex) {
-                                    BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), Client.bot_name, msg.getCreatedOn(), msg.getId());
-                                    r.setType(msg.getType());
-                                    msgs.add(r);
-                                }
-                            } else {
-                                try {
-                                    String message = msg.getComponents().get(0).getData().getText();
-                                    RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-                                    RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-                                    botPayLoad.setMessage(botMessage);
-                                    BotInfoModel botInfo = new BotInfoModel(Client.bot_name, Client.bot_id, null);
-                                    botPayLoad.setBotInfo(botInfo);
-                                    Gson gson = new Gson();
-                                    String jsonPayload = gson.toJson(botPayLoad);
-
-                                    BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                    long cTime = DateUtils.isoFormatter.parse(((BotHistoryMessage) msg).getCreatedOn()).getTime() + TimeZone.getDefault().getRawOffset();
-                                    String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
-                                    botRequest.setCreatedOn(createdTime);
-                                    msgs.add(botRequest);
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-
-                        re.setBotMessages(msgs);
-                        re.setOriginalSize(messages.size());
-                    }
-                }
-
-                emitter.onNext(re);
-                emitter.onComplete();
-            } catch (Exception e) {
-                emitter.onError(e);
-            }
-        });
-    }
 }

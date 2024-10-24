@@ -239,7 +239,7 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
 
         if(position == 5) {
             tvGlad.setVisibility(View.VISIBLE);
-            tvGlad.setText(payloadInner.getMessageTodisplay());
+            tvGlad.setText(payloadInner.getMessageToDisplay());
             rlCommentBox.setVisibility(View.GONE);
             tvCommentTitle.setVisibility(View.GONE);
             bottomSheetBehavior.setPeekHeight(300 * dp1);

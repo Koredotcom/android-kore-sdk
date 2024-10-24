@@ -657,7 +657,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             if (payloadInner != null && payloadInner.getTemplate_type() != null && "start_timer".equalsIgnoreCase(payloadInner.getTemplate_type())) {
                 BotSocketConnectionManager.getInstance().startDelayMsgTimer();
             }
-            botContentFragment.showTypingStatus(botResponse);
+            botContentFragment.showTypingStatus();
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
             }

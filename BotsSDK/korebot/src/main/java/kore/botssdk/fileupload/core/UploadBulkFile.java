@@ -79,8 +79,8 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 	//	private int chunkCount = 0;
 	private final String thumbnailFilePath;
 	private final String messageId;
-	//	private boolean isTeam;
-	private final Context context;
+	//	boolean isTeam;
+	final Context context;
 	private FileUploadedListener listener;
 	private final String componentType;
 	private int noOfMergeAttempts;
@@ -94,7 +94,7 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 
 
 	final ExecutorService executor = KoreFileUploadServiceExecutor.getInstance().getExecutor();
-	private ProgressDialog pDialog;
+	ProgressDialog pDialog;
 	private final boolean isAnonymousUser;
 	private final boolean isWebHook;
 	private final String botId;
@@ -324,14 +324,12 @@ public class UploadBulkFile implements Work, FileTokenListener, ChunkUploadListe
 	}
 
 	void setChunkCount(int n) {
-		if (uploadInfo != null) {
-			uploadInfo.setTotalChunks(n);
-			try {
+		uploadInfo.setTotalChunks(n);
+		try {
 //				fileDao.update(uploadInfo);
-				helper.getFileUploadInfoMap().put(fileToken, uploadInfo);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			helper.getFileUploadInfoMap().put(fileToken, uploadInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -27,6 +27,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.VectorDrawable;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -63,6 +64,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -110,6 +112,7 @@ import kore.botssdk.speech.SpeechDelegate;
 import kore.botssdk.speech.SpeechRecognitionNotAvailable;
 import kore.botssdk.speech.SpeechUtil;
 import kore.botssdk.speech.ui.SpeechProgressView;
+import kore.botssdk.utils.AsyncTasks;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
@@ -121,6 +124,10 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.utils.Utility;
 import kore.botssdk.view.viewUtils.FileUtils;
+import kore.botssdk.viewmodels.content.BotContentViewModel;
+import kore.botssdk.viewmodels.content.BotContentViewModelFactory;
+import kore.botssdk.viewmodels.footer.BotFooterViewModel;
+import kore.botssdk.viewmodels.footer.BotFooterViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
 
 /**
@@ -128,7 +135,7 @@ import kore.botssdk.websocket.SocketWrapper;
  */
 @SuppressLint("UnknownNullness")
 public class ComposeFooterFragment extends Fragment implements ComposeFooterUpdate, SpeechDelegate {
-    private final String LOG_TAG = ComposeFooterFragment.class.getName();
+    final String LOG_TAG = ComposeFooterFragment.class.getName();
     protected EditText editTextMessage;
     protected TextView sendButton;
     protected TextView speakerText;
@@ -140,35 +147,35 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
     protected ImageView newMenuLogo;
     SpeechProgressView progress;
     TextView textViewSpeech;
-    private static final int REQUEST_RECORD_AUDIO = 13;
+    static final int REQUEST_RECORD_AUDIO = 13;
 
     public void setDisabled(boolean disabled) {
         isDisabled = disabled;
     }
 
     boolean isDisabled, isFirstTime, isTTSEnabled = true;
-    private ComposeFooterInterface composeFooterInterface;
+    ComposeFooterInterface composeFooterInterface;
     TTSUpdate ttsUpdate;
-    private ArrayList<BrandingQuickStartButtonActionModel> botOptionsModel;
+    ArrayList<BrandingQuickStartButtonActionModel> botOptionsModel;
     protected ReUsableListViewActionSheet listViewActionSheet;
-    private AttachmentOptionsAdapter adapter;
-    private static final int REQ_IMAGE = 444;
-    private static final int REQ_CAMERA = 443;
-    private static final int REQ_VIDEO = 445;
-    private static final int REQ_VIDEO_CAPTURE = 446;
-    private static final int REQ_FILE = 448;
+    AttachmentOptionsAdapter adapter;
+    static final int REQ_IMAGE = 444;
+    static final int REQ_CAMERA = 443;
+    static final int REQ_VIDEO = 445;
+    static final int REQ_VIDEO_CAPTURE = 446;
+    static final int REQ_FILE = 448;
     ComposebarAttachmentAdapter composebarAttachmentAdapter;
     RecyclerView attachmentRecycler;
-    private Attachment attachment;
-    private static long totalFileSize;
-    private final int compressQualityInt = 100;
-    private String jwt;
-    private ImageView ivAttachment;
+    Attachment attachment;
+    final int compressQualityInt = 100;
+    String jwt;
+    ImageView ivAttachment;
     String outLineColor;
     BotBrandingModel botBrandingModel;
-    private int[] colors;
+    int[] colors;
     boolean isAgentConnected;
     BotClient botClient;
+    BotFooterViewModel mFooterViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -188,6 +195,10 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         setListenerExplicitly();
         toggleTTSButton();
         getBundleInfo();
+
+        BotFooterViewModelFactory factory = new BotFooterViewModelFactory(requireActivity(), ComposeFooterFragment.this);
+        mFooterViewModel = new ViewModelProvider(this, factory).get(BotFooterViewModel.class);
+
         return view;
     }
 
@@ -228,17 +239,17 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         progress.setBarMaxHeightsInDp(heights);
 
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
-        String rightbgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
+        String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
         GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.theme1_right_bubble_bg, requireActivity().getTheme());
 
         if (rightDrawable != null) {
             rightDrawable.setColor(Color.parseColor(rightTextColor));
-            rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightbgColor));
+            rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightBgColor));
         }
 
         textViewSpeech = view.findViewById(R.id.text_view_speech);
         textViewSpeech.setBackground(rightDrawable);
-        textViewSpeech.setTextColor(Color.parseColor(rightbgColor));
+        textViewSpeech.setTextColor(Color.parseColor(rightBgColor));
 
         if (composebarAttachmentAdapter == null) {
             composebarAttachmentAdapter = new ComposebarAttachmentAdapter(getActivity(), () -> {
@@ -350,7 +361,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
 
                 if (SDKConfiguration.OverrideKoreConfig.showTextToSpeech) audioSpeakTts.setVisibility(View.VISIBLE);
 
-                if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone && StringUtils.isNullOrEmpty(editTextMessage.getText().toString())) recAudioImg.setVisibility(View.VISIBLE);
+                if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone && StringUtils.isNullOrEmpty(editTextMessage.getText().toString()))
+                    recAudioImg.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -775,7 +787,7 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                 String filePath = result.getData().getStringExtra("filePath");
                 String fileName = result.getData().getStringExtra("fileName");
                 String filePathThumbnail = result.getData().getStringExtra(THUMBNAIL_FILE_PATH);
-                ((BotChatActivity) requireActivity()).sendImage(filePath, fileName, filePathThumbnail);
+                composeFooterInterface.sendImage(filePath, fileName, filePathThumbnail);
             }
         }
     });
@@ -786,9 +798,9 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
             if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                 String fileExtn = result.getData().getStringExtra("fileExtn");
                 if (fileExtn != null && fileExtn.equals(EXT_VIDEO) && result.getData().getParcelableExtra("fileUri") != null) {
-                    processVideoResponse(result.getData().getParcelableExtra("fileUri"));
+                    mFooterViewModel.processVideoResponse(SDKConfiguration.Client.isWebHook ? jwt : SocketWrapper.getInstance(requireActivity()).getAccessToken(), result.getData().getParcelableExtra("fileUri"));
                 } else if (fileExtn != null && (fileExtn.equalsIgnoreCase(EXT_JPG) || fileExtn.equalsIgnoreCase(EXT_PNG))) {
-                    processImageResponse(result.getData());
+                    mFooterViewModel.processImageResponse(SDKConfiguration.Client.isWebHook ? jwt : SocketWrapper.getInstance(requireActivity()).getAccessToken(), result.getData());
                 } else {
                     String filePath = result.getData().getStringExtra("filePath");
                     if (filePath == null) {
@@ -798,79 +810,14 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
                     String fileName = result.getData().getStringExtra("fileName");
                     String extn = filePath.substring(filePath.lastIndexOf(".") + 1);
                     String mediaType = BitmapUtils.obtainMediaTypeOfExtn(extn);
-                    processFileUpload(fileName, filePath, extn, mediaType, null, null);
+                    mFooterViewModel.processFileUpload(SDKConfiguration.Client.isWebHook ? jwt : SocketWrapper.getInstance(requireActivity()).getAccessToken(), fileName, filePath, extn, mediaType, null, null);
                 }
             }
         }
     });
 
-    void processFileUpload(String fileName, String filePath, String extn, String mediaType, String thumbnailFilePath, String orientation) {
 
-        if (!SDKConfiguration.Client.isWebHook) {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(requireActivity()).getAccessToken(), SocketWrapper.getInstance(requireActivity()).getBotUserId(), "workflows", extn, getBufferSize(mediaType), new Messenger(messagesMediaUploadAcknowledgeHandler), thumbnailFilePath, "AT_" + System.currentTimeMillis(), requireActivity(), mediaType, SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-        } else {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(requireActivity()).getBotUserId(), "workflows", extn, getBufferSize(mediaType), new Messenger(messagesMediaUploadAcknowledgeHandler), thumbnailFilePath, "AT_" + System.currentTimeMillis(), requireActivity(), mediaType, SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-        }
-    }
-
-    int getFileLimit() {
-        attachment = SharedPreferenceUtils.getInstance(requireActivity()).getAttachmentPref("");
-
-        int file_limit = -1;
-        if (attachment != null) {
-            file_limit = attachment.getSize();
-        }
-
-        return file_limit;
-    }
-
-    void processImageResponse(Intent data) {
-        String filePath = data.getStringExtra("filePath");
-        String fileName;
-        String filePathThumbnail;
-        String orientation = null;
-        if (filePath != null) {
-            fileName = data.getStringExtra("fileName");
-            filePathThumbnail = data.getStringExtra(THUMBNAIL_FILE_PATH);
-            String extn = filePath.substring(filePath.lastIndexOf(".") + 1);
-            Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
-            OutputStream fOut = null;
-            if (thePic != null) {
-                try {
-                    // compress the image
-                    File _file = new File(filePath);
-
-                    LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        fOut = Files.newOutputStream(_file.toPath());
-                    } else fOut = new FileOutputStream(_file);
-
-                    thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
-                    thePic = rotateIfNecessary(filePath, thePic);
-                    orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-                    fOut.flush();
-                } catch (Exception e) {
-                    LogUtils.e(LOG_TAG, e.toString());
-                } finally {
-                    try {
-                        assert fOut != null;
-                        fOut.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            if (!SDKConfiguration.Client.isWebHook) {
-                KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(requireActivity()).getAccessToken(), SocketWrapper.getInstance(requireActivity()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-            } else {
-                KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(requireActivity()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireActivity(), BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-            }
-        } else {
-            ToastUtils.showToast(requireActivity(), "Unable to attach file!");
-        }
-    }
-
+    @Override
     public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
         attachmentRecycler.setVisibility(View.VISIBLE);
         composebarAttachmentAdapter.addAttachment(attachmentKey);
@@ -879,9 +826,8 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         }
     }
 
-    /**
+    /*
      * this method update the ui of send button based on enable/disable
-     *
      * @param enable
      */
     public void enableOrDisableSendButton(boolean enable) {
@@ -898,219 +844,12 @@ public class ComposeFooterFragment extends Fragment implements ComposeFooterUpda
         this.jwt = jwt;
     }
 
-    void processVideoResponse(Uri selectedImage) {
-        String orientation;
-        String fileName = null;
-        String realPath = KaMediaUtils.getRealPath(requireActivity(), selectedImage);
-        if (realPath != null) {
-            if (realPath.length() > 0) {
-                int startInd = realPath.lastIndexOf(File.separator) + 1;
-                int endInd = realPath.indexOf(".", startInd);
-                fileName = realPath.substring(startInd, endInd);
-            }
-
-            Bitmap thumbnail = null;
-            String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
-            thumbnail = BitmapFactory.decodeResource(getResources(), R.mipmap.videoplaceholder_left);
-
-            Bitmap hover = BitmapFactory.decodeResource(getResources(), R.mipmap.btn_video_play_irc);
-            thumbnail = overlay(thumbnail, hover);
-            orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-            String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
-            processFileUpload(fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
-        } else {
-            try {
-                DocumentFile pickFile = DocumentFile.fromSingleUri(requireActivity(), selectedImage);
-                String name = null;
-                String type = null;
-
-                if (pickFile != null) {
-                    name = pickFile.getName();
-                    type = pickFile.getType();
-                }
-
-                if (type != null && type.contains("video")) {
-                    KaMediaUtils.setupAppDir(requireContext(), BundleConstants.MEDIA_TYPE_VIDEO);
-                    String filePath = KaMediaUtils.getAppDir() + File.separator + name;
-                    new SaveVideoTask(filePath, name, selectedImage, requireActivity()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public void setIsAgentConnected(boolean isAgentConnected) {
         this.isAgentConnected = isAgentConnected;
     }
 
-    class SaveVideoTask extends AsyncTask<String, String, String> {
-
-        final String filePath;
-        String fileName;
-        final Uri fileUri;
-        final WeakReference<Context> mContext;
-
-        SaveVideoTask(String filePath, String fileName, Uri fileUri, Context mContext) {
-            this.filePath = filePath;
-            this.fileName = fileName;
-            this.fileUri = fileUri;
-            this.mContext = new WeakReference<>(mContext);
-        }
-
-
-        @Override
-        protected String doInBackground(String... params) {
-            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
-            if (filePath != null && mContext.get() != null) {
-                FileOutputStream fOut = null;
-                BufferedOutputStream out = null;
-                try {
-
-                    fOut = new FileOutputStream(filePath);
-                    out = new BufferedOutputStream(fOut);
-                    InputStream in = mContext.get().getContentResolver().openInputStream(fileUri);
-                    byte[] buffer = new byte[8192];
-                    int len = 0;
-                    while ((len = in != null ? in.read(buffer) : 0) >= 0) {
-                        out.write(buffer, 0, len);
-                    }
-                    out.flush();
-                } catch (Exception e) {
-                    LogUtils.e(LOG_TAG, e.toString());
-                    return null;
-                } finally {
-                    if (fOut != null) {
-                        try {
-                            fOut.getFD().sync();
-                            fOut.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    try {
-                        if (out != null) out.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            return filePath;
-        }
-
-
-        @Override
-        protected void onPostExecute(String realPath) {
-            if (realPath != null && mContext.get() != null) {
-                if (realPath.length() > 0) {
-                    int startInd = realPath.lastIndexOf(File.separator) + 1;
-                    int endInd = realPath.indexOf(".", startInd);
-                    fileName = realPath.substring(startInd, endInd);
-                }
-                int videoThumbnailIndexId = 0;
-                String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
-                try {
-                    videoThumbnailIndexId = BitmapUtils.getVideoIdFromFilePath(mContext.get(), fileUri);
-                } catch (SecurityException se) {
-                    se.printStackTrace();
-                }
-                Bitmap hover = BitmapFactory.decodeResource(getResources(), R.mipmap.btn_video_play_irc);
-                Bitmap thumbnail = MediaStore.Video.Thumbnails.getThumbnail(requireActivity().getContentResolver(), videoThumbnailIndexId, MediaStore.Video.Thumbnails.MINI_KIND, null);
-                if (thumbnail == null) {
-                    thumbnail = BitmapFactory.decodeResource(getResources(), R.mipmap.videoplaceholder_left);
-
-                }
-                thumbnail = overlay(thumbnail, hover);
-                String orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-                String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
-                processFileUpload(fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
-            }
-        }
-    }
-
-    Bitmap overlay(Bitmap bitmap1, Bitmap bitmap2) {
-        int bitmap1Width = bitmap1.getWidth();
-        int bitmap1Height = bitmap1.getHeight();
-        int bitmap2Width = bitmap2.getWidth();
-        int bitmap2Height = bitmap2.getHeight();
-
-        float marginLeft = (float) (bitmap1Width * 0.5 - bitmap2Width * 0.5);
-        float marginTop = (float) (bitmap1Height * 0.5 - bitmap2Height * 0.5);
-
-        Bitmap overlayBitmap = Bitmap.createBitmap(bitmap1Width, bitmap1Height, bitmap1.getConfig());
-        Canvas canvas = new Canvas(overlayBitmap);
-        canvas.drawBitmap(bitmap1, new Matrix(), null);
-        canvas.drawBitmap(bitmap2, marginLeft, marginTop, null);
-        return overlayBitmap;
-    }
-
-    @SuppressLint("HandlerLeak")
-    final Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public synchronized void handleMessage(Message msg) {
-            Bundle reply = msg.getData();
-
-            if (reply.getBoolean(UploadBulkFile.isFileSizeMore_key, false)) {
-                showFreemiumDialog();
-                return;
-            }
-
-            if (reply.getBoolean("success", true)) {
-                long fileSizeBytes = reply.getLong(UploadBulkFile.fileSizeBytes_key);
-                totalFileSize = totalFileSize + fileSizeBytes;
-                String mediaFilePath = reply.getString("filePath");
-                String MEDIA_TYPE = reply.getString("fileExtn");
-                String mediaFileId = reply.getString("fileId");
-                String mediaFileName = reply.getString("fileName");
-                String componentType = reply.getString("componentType");
-                String thumbnailURL = reply.getString("thumbnailURL");
-                HashMap<String, Object> COMPONENT_DATA = reply.getSerializable("componentData") != null ? ((HashMap<String, Object>) reply.getSerializable("componentData")) : null;
-                String fileSize = reply.getString("fileSize");
-                KoreComponentModel koreMedia = new KoreComponentModel();
-                koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
-
-                HashMap<String, Object> cmpData = new HashMap<>(1);
-                cmpData.put("fileName", mediaFileName);
-                koreMedia.setComponentData(cmpData);
-
-                if (componentType != null) koreMedia.setMediaFileName(getComponentId(componentType));
-
-                koreMedia.setMediaFilePath(mediaFilePath);
-                koreMedia.setFileSize(fileSize);
-
-                koreMedia.setMediafileId(mediaFileId);
-                koreMedia.setMediaThumbnail(thumbnailURL);
-
-                HashMap<String, String> attachmentKey = new HashMap<>();
-                String keyExtension = FileUtils.VideoTypes().contains(MEDIA_TYPE) ? "." + MEDIA_TYPE : "";
-                attachmentKey.put("fileName", mediaFileName + keyExtension);
-                attachmentKey.put("fileType", componentType);
-                attachmentKey.put("fileId", mediaFileId);
-                attachmentKey.put("localFilePath", mediaFilePath);
-                attachmentKey.put("fileExtn", MEDIA_TYPE);
-                attachmentKey.put("thumbnailURL", thumbnailURL);
-                ((BotChatActivity) requireActivity()).mediaAttachment(attachmentKey);
-            } else {
-                String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
-                if (!TextUtils.isEmpty(errorMsg)) {
-                    ToastUtils.showToast(requireActivity(), errorMsg);
-                }
-            }
-        }
-    };
-
-    String getComponentId(String componentType) {
-        if (componentType.equalsIgnoreCase(BundleConstants.MEDIA_TYPE_IMAGE)) {
-            return "image_" + System.currentTimeMillis();
-        } else if (componentType.equalsIgnoreCase(BundleConstants.MEDIA_TYPE_VIDEO)) {
-            return "video_" + System.currentTimeMillis();
-        } else {
-            return "doc_" + System.currentTimeMillis();
-        }
-    }
-
-    void showFreemiumDialog() {
+    @Override
+    public void showFreemiumDialog() {
         if (attachment == null) {
             attachment = SharedPreferenceUtils.getInstance(requireActivity()).getAttachmentPref("");
         }

@@ -14,8 +14,8 @@ public class BotContentViewModelFactory implements ViewModelProvider.Factory {
     Context context;
     BotContentFragmentUpdate chatView;
 
-    public BotContentViewModelFactory(Context context, BotContentFragmentUpdate chatView, HistoryRepository historyRepository) {
-        this.repository = historyRepository;
+    public BotContentViewModelFactory(Context context, BotContentFragmentUpdate chatView) {
+        this.repository = new HistoryRepository(context, chatView);
         this.context = context;
         this.chatView = chatView;
     }

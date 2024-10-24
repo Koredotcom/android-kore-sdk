@@ -90,9 +90,9 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
             bottomSheetDialog.setSkillName("skillName", "trigger");
 
             if (!StringUtils.isNullOrEmpty(payloadInner.getTitle()))
-                bottomSheetDialog.setData(payloadInner.getTitle(), payloadInner.getWidgetlistElements());
+                bottomSheetDialog.setData(payloadInner.getTitle(), payloadInner.getWidgetListElements());
             else
-                bottomSheetDialog.setData(payloadInner.getWidgetlistElements(), true);
+                bottomSheetDialog.setData(payloadInner.getWidgetListElements(), true);
 
             bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
             bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -210,12 +210,12 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
             }
         }
         listWidgetAdapter.setIsEnabled(isLastItem());
-        if (payloadInner.getWidgetlistElements() != null && payloadInner.getWidgetlistElements().size() > 0 && !payloadInner.getTemplate_type().equals("loginURL")) {
-            if (payloadInner.getWidgetlistElements() != null && payloadInner.getWidgetlistElements().size() > 3) {
+        if (payloadInner.getWidgetListElements() != null && payloadInner.getWidgetListElements().size() > 0 && !payloadInner.getTemplate_type().equals("loginURL")) {
+            if (payloadInner.getWidgetListElements() != null && payloadInner.getWidgetListElements().size() > 3) {
                 botCustomListViewButton.setVisibility(View.VISIBLE);
             }
 
-            listWidgetAdapter.setWidgetData(payloadInner.getWidgetlistElements());
+            listWidgetAdapter.setWidgetData(payloadInner.getWidgetListElements());
             listWidgetAdapter.setComposeFooterInterface(composeFooterInterface);
             listWidgetAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             listWidgetAdapter.setPreviewLength(3);
