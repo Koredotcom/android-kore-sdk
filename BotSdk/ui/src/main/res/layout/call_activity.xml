@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -91,7 +91,6 @@
                 android:background="@drawable/call_button_circle_background_xml"
                 android:visibility="gone"
                 app:srcCompat="@mipmap/call_button_icon_addcall" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -144,6 +143,14 @@
                     android:visibility="gone" />
 
                 <com.kore.ui.textview.CustomTextView
+                    android:id="@+id/call_textview_duration"
+                    style="@style/CallTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    tools:text="00:00:00" />
+
+                <com.kore.ui.textview.CustomTextView
                     android:id="@+id/call_textview_contact_number"
                     style="@style/CallTextView"
                     android:layout_width="wrap_content"
@@ -151,7 +158,6 @@
                     android:layout_marginTop="5dp"
                     android:text="@string/number"
                     android:visibility="gone" />
-
             </LinearLayout>
 
             <LinearLayout
@@ -192,7 +198,6 @@
                         android:visibility="gone"
                         app:srcCompat="@mipmap/call_button_icon_hold" />
 
-
                     <ImageView
                         android:id="@+id/call_button_dtmf"
                         android:layout_width="wrap_content"
@@ -225,21 +230,20 @@
                         android:padding="10dp"
                         android:text="@string/call_button_switch_camera"
                         android:visibility="gone"
-                        app:srcCompat="@mipmap/call_button_icon_switch_video" />
+                        app:srcCompat="@mipmap/call_button_icon_switch_video"
+                        tools:ignore="ContentDescription" />
 
                     <ImageView
                         android:id="@+id/call_button_switch_call"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:background="@drawable/call_button_background_xml"
                         android:text="@string/call_button_switch_call"
                         android:visibility="gone"
-                        app:srcCompat="@mipmap/call_button_icon_switch_call" />
-
+                        app:srcCompat="@mipmap/call_button_icon_switch_call"
+                        tools:ignore="ContentDescription" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
 
         <RelativeLayout

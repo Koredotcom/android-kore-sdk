@@ -21,12 +21,9 @@ import com.audiocodes.mv.webrtcsdk.sip.enums.Transport
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
 import com.kore.SDKConfig
+import com.kore.botclient.BotClient
 import com.kore.botclient.ConnectionState
-import com.kore.ui.base.BaseActivity
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.base.BaseContentFragment
-import com.kore.ui.base.BaseHeaderFragment
-import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
@@ -37,16 +34,23 @@ import com.kore.model.constants.BotResponseConstants.FORMAT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
 import com.kore.model.constants.BotResponseConstants.START_DATE
-import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.ui.BR
 import com.kore.ui.R
+import com.kore.ui.audiocodes.webrtcclient.activities.CallActivity
+import com.kore.ui.audiocodes.webrtcclient.activities.CallActivity.Companion.CALL_AGENT_WEBRTC_ACCEPTED
+import com.kore.ui.audiocodes.webrtcclient.activities.CallActivity.Companion.CALL_AGENT_WEBRTC_REJECTED
+import com.kore.ui.audiocodes.webrtcclient.activities.CallActivity.Companion.CANCEL_AGENT_WEBRTC
+import com.kore.ui.audiocodes.webrtcclient.activities.CallActivity.Companion.TERMINATE_AGENT_WEBRTC
 import com.kore.ui.audiocodes.webrtcclient.general.ACManager
 import com.kore.ui.audiocodes.webrtcclient.general.Prefs
 import com.kore.ui.audiocodes.webrtcclient.structure.SipAccount
-import com.kore.ui.botchat.dialog.WelcomeDialogFragment
+import com.kore.ui.base.BaseActivity
+import com.kore.ui.base.BaseContentFragment
 import com.kore.ui.base.BaseFooterFragment
+import com.kore.ui.base.BaseHeaderFragment
+import com.kore.ui.botchat.dialog.WelcomeDialogFragment
 import com.kore.ui.botchat.fragment.ChatContentFragment
 import com.kore.ui.botchat.fragment.ChatFooterFragment
 import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
@@ -54,8 +58,10 @@ import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
+import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import org.webrtc.NetworkMonitor.isOnline
 import java.util.Calendar
+
 
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
     private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
@@ -222,14 +228,19 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             }
         } else {
             when (body[BotResponseConstants.TYPE].toString()) {
-                "cancel_agent_webrtc",
-                "terminate_agent_webrtc" -> if (alertDialog?.isShowing == true) alertDialog?.dismiss()
+                CANCEL_AGENT_WEBRTC,
+                TERMINATE_AGENT_WEBRTC -> {
+                    ACManager.getInstance().terminate()
+                    if (alertDialog?.isShowing == true) alertDialog?.dismiss()
+                    val intent = Intent(CallActivity.ACTION_CALL_TERMINATED)
+                    sendBroadcast(intent)
+                }
             }
         }
     }
 
-    override fun onFileDownloadProgress(progress: Int, msgId: String) {
-        contentFragment.onFileDownloadProgress(progress, msgId)
+    override fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int) {
+        contentFragment.onFileDownloadProgress(msgId, progress, downloadedBytes)
     }
 
     override fun onSwipeRefresh() {
@@ -247,16 +258,15 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             dialogBinding.tvTypeOfCall.text = getString(R.string.incoming_video_call)
         }
         dialogBinding.tvCallAccept.setOnClickListener {
-            eventModel[BotResponseConstants.TYPE] = "call_agent_webrtc_accepted"
+            eventModel[BotResponseConstants.TYPE] = CALL_AGENT_WEBRTC_ACCEPTED
             botChatViewModel.sendMessage("", gson.toJson(eventModel).toString())
-//            botChatViewModel.sendBotEvent("call_agent_webrtc_accepted")
+            BotClient.setCallEventMessage(eventModel)
             openNextScreen(eventModel[BotResponseConstants.SIP_USER] as String, eventModel[BotResponseConstants.IS_VIDEO_CALL] as Boolean)
             alertDialog?.dismiss()
         }
         dialogBinding.tvCallReject.setOnClickListener {
-            eventModel[BotResponseConstants.TYPE] = "call_agent_webrtc_rejected"
+            eventModel[BotResponseConstants.TYPE] = CALL_AGENT_WEBRTC_REJECTED
             botChatViewModel.sendMessage("", gson.toJson(eventModel).toString())
-//            botChatViewModel.sendBotEvent("call_agent_webrtc_rejected")
             alertDialog?.dismiss()
         }
         alertDialog?.show()
@@ -336,16 +346,15 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun onChatHistory(list: List<BaseBotMessage>) {
-        contentFragment.addMessagesToAdapter(list, !botChatViewModel.isMinimized())
+        contentFragment.addMessagesToAdapter(list, !SDKConfig.isMinimized())
     }
 
     fun showCloseAlert() {
         val dialogClickListener = DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
             val intent = Intent()
             val result = java.util.HashMap<String, String>()
-            val sharedPreferences = getSharedPreferences(THEME_NAME, MODE_PRIVATE)
             when (which) {
-                DialogInterface.BUTTON_POSITIVE -> if (sharedPreferences != null) {
+                DialogInterface.BUTTON_POSITIVE -> {
                     val event = R.string.bot_minimize_event
                     botChatViewModel.sendCloseOrMinimizeEvent(event)
                     result["event_code"] = "BotMinimized"
@@ -353,7 +362,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                     intent.putExtra(EXTRA_RESULT, Gson().toJson(result))
                 }
 
-                DialogInterface.BUTTON_NEGATIVE -> if (sharedPreferences != null) {
+                DialogInterface.BUTTON_NEGATIVE -> {
                     val event = if (isAgentTransfer) R.string.agent_bot_close_event else R.string.bot_close_event
                     botChatViewModel.sendCloseOrMinimizeEvent(event)
                     result["event_code"] = "BotClosed"

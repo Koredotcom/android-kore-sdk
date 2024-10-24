@@ -22,8 +22,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.constants.MediaConstants
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListRow
-import com.kore.ui.utils.MediaUtils
 import com.kore.common.utils.StringUtils
 import com.kore.event.BotChatEvent
 import com.kore.extensions.setRoundedCorner
@@ -33,6 +31,8 @@ import com.kore.model.constants.BotResponseConstants.COMPONENT_TYPE_IMAGE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.ui.R
 import com.kore.ui.databinding.ImageTemplateViewBinding
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.MediaUtils
 
 class ImageTemplateRow(
     private val id: String,
@@ -71,7 +71,12 @@ class ImageTemplateRow(
                         .error(R.drawable.ic_image_photo)
                         .into<DrawableImageViewTarget>(DrawableImageViewTarget(ivImage))
                     download.setRoundedCorner(8f)
-                    download.setOnClickListener { actionEvent(BotChatEvent.UrlClick(payload[BotResponseConstants.URL].toString())) }
+                    download.setOnClickListener {
+                        val imageUrl = payload[BotResponseConstants.URL]
+                        imageUrl?.let {
+                            if (imageUrl.toString().isNotEmpty()) actionEvent(BotChatEvent.UrlClick(imageUrl.toString()))
+                        }
+                    }
                 }
 
                 COMPONENT_TYPE_AUDIO -> {
@@ -169,7 +174,9 @@ class ImageTemplateRow(
         tvTheme1.setOnClickListener {
             popupWindow.dismiss()
             MediaUtils.setupAppDir(context, MediaConstants.MEDIA_TYPE_AUDIO)
-            if (!url.isNullOrEmpty()) MediaUtils.saveFileFromUrlToKorePath(context, url)
+            if (!url.isNullOrEmpty()) {
+                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
+            }
         }
 
         popupWindow.showAsDropDown(anchorView, -40, 0)

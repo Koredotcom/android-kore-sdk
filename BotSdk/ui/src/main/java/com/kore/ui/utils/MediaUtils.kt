@@ -1,113 +1,30 @@
 package com.kore.ui.utils
 
-import android.annotation.SuppressLint
 import android.content.ContentUris
 import android.content.Context
 import android.database.Cursor
 import android.net.Uri
-import android.os.AsyncTask
-import android.os.Build
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import android.text.TextUtils
 import com.kore.common.constants.MediaConstants
 import com.kore.common.utils.LogUtils
-import com.kore.ui.utils.BitmapUtils.obtainMediaTypeOfExtn
-import com.kore.common.utils.StringUtils.Companion.getFileNameFromUrl
-import com.kore.common.utils.ToastUtils.Companion.showToast
 import com.kore.exception.NoExternalStorageException
 import com.kore.exception.NoWriteAccessException
+import com.kore.ui.utils.BitmapUtils.obtainMediaTypeOfExtn
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
 import java.io.OutputStream
-import java.net.URL
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 class MediaUtils {
-    /**
-     * Background Async Task to download file
-     */
-    @SuppressLint("StaticFieldLeak")
-    internal class DownloadFileFromURL(private val context: Context) : AsyncTask<String?, String?, String?>() {
-        /**
-         * Before starting background thread
-         * Show Progress Bar Dialog
-         */
-        override fun onPreExecute() {
-            super.onPreExecute()
-            //            showDialog(progress_bar_type);
-            showToast(context, "Downloading...")
-        }
-
-        /**
-         * Downloading file in background thread
-         */
-        override fun doInBackground(vararg f_url: String?): String? {
-            var count: Int
-            try {
-                val url = URL(f_url[0])
-                val connection = url.openConnection()
-                connection.connect()
-                // getting file length
-                val lengthOfFile = connection.contentLength
-
-                // input stream to read file - with 8k buffer
-                val input: InputStream = BufferedInputStream(url.openStream(), 8192)
-
-                // Output stream to write file
-                val output: OutputStream
-                val fileName = getFileNameFromUrl(url.toString())
-                output = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    Files.newOutputStream(Paths.get(getAppDir() + File.separator + fileName))
-                } else {
-                    FileOutputStream(getAppDir() + File.separator + fileName)
-                }
-                val data = ByteArray(1024)
-                var total: Long = 0
-                while (input.read(data).also { count = it } != -1) {
-                    total += count.toLong()
-                    // publishing the progress....
-                    // After this onProgressUpdate will be called
-                    publishProgress("" + (total * 100 / lengthOfFile).toInt())
-
-                    // writing data to file
-                    output.write(data, 0, count)
-                }
-
-                // flushing output
-                output.flush()
-
-                // closing streams
-                output.close()
-                input.close()
-            } catch (e: Exception) {
-                LogUtils.e("Error: ", e.message!!)
-            }
-            return null
-        }
-
-        override fun onProgressUpdate(vararg values: String?) {
-        }
-
-        /**
-         * After completing background task
-         * Dismiss the progress dialog
-         */
-        override fun onPostExecute(file_url: String?) {
-            // dismiss the dialog after the file was downloaded
-            showToast(context, "Downloading completed")
-        }
-    }
 
     companion object {
         private const val MEDIA_APP_FOLDER = "Kore"
@@ -202,10 +119,6 @@ class MediaUtils {
                 e.printStackTrace()
             }
             return null
-        }
-
-        fun saveFileFromUrlToKorePath(context: Context, sourceFilePath: String?) {
-            DownloadFileFromURL(context).execute(sourceFilePath)
         }
 
         fun saveFileToKorePath(sourceFilePath: String?, destinationFilePath: String?) {

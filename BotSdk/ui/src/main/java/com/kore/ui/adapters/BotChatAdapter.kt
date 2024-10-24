@@ -79,8 +79,8 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
         return createRows(messages)
     }
 
-    fun onDownloadProgress(progress: Int, msgId: String) {
-        onSaveState(msgId, progress, PROGRESS)
+    fun onDownloadProgress(msgId: String, progress: Int, downloadBytes: Int) {
+        onSaveState(msgId, if (progress == 0 && downloadBytes > 0) downloadBytes else progress, PROGRESS)
     }
 
     fun getAdapterLastItem(): BaseBotMessage? {

@@ -7,7 +7,7 @@ import java.io.IOException
 
 class ProgressResponseBody(
     private val responseBody: ResponseBody,
-    private val onProgressUpdate: (progress: Int) -> Unit
+    private val onProgressUpdate: (progress: Int, downloadedByte: Int) -> Unit
 ) : ResponseBody() {
 
     private var bufferedSource: BufferedSource? = null
@@ -43,8 +43,10 @@ class ProgressResponseBody(
                     val progress = ((totalBytesRead * 100) / contentLength).toInt()
                     if (progress != lastProgress && progress < 100) {
                         lastProgress = progress
-                        onProgressUpdate(progress)  // Update progress
+                        onProgressUpdate(progress, totalBytesRead.toInt())  // Update progress
                     }
+                } else {
+                    onProgressUpdate(0, totalBytesRead.toInt())
                 }
                 return bytesRead
             }

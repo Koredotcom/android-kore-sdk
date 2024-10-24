@@ -2,10 +2,10 @@ package com.kore
 
 import com.kore.common.SDKConfiguration
 import com.kore.common.model.BotConfigModel
-import com.kore.ui.row.SimpleListViewHolderProvider
 import com.kore.ui.base.BaseContentFragment
 import com.kore.ui.base.BaseFooterFragment
 import com.kore.ui.base.BaseHeaderFragment
+import com.kore.ui.row.SimpleListViewHolderProvider
 import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.widgets.WidgetSDKConfiguration
 import com.kore.widgets.model.WidgetConfigModel
@@ -16,6 +16,7 @@ object SDKConfig {
     private val customTemplates: HashMap<String, Pair<Any, KClass<*>>> = HashMap()
     private var customContentFragment: BaseContentFragment? = null
     private var customFooterFragment: BaseFooterFragment? = null
+    private var isMinimized: Boolean = false
 
     fun initialize(botConfigModel: BotConfigModel) {
         SDKConfiguration.initialize(botConfigModel)
@@ -61,4 +62,10 @@ object SDKConfig {
     }
 
     fun getCustomFooterFragment(): BaseFooterFragment? = customFooterFragment
+
+    fun setIsMinimized(isMinimized: Boolean) {
+        this.isMinimized = isMinimized
+    }
+
+    fun isMinimized(): Boolean = isMinimized
 }

@@ -65,6 +65,7 @@ class BotClient private constructor() {
         private var connectionState = ConnectionState.DISCONNECTED
         private val socketConnection: IWebSocket = WebSocketConnection()
         private var instance: BotClient? = null
+        private var callEventMessage: HashMap<String, Any>? = null
 
         fun getJwtToken(): String = userJwtToken.ifEmpty { jwtToken }
 
@@ -79,6 +80,11 @@ class BotClient private constructor() {
             return instance!!
         }
 
+        fun setCallEventMessage(callEventMessage: HashMap<String, Any>) {
+            this.callEventMessage = callEventMessage
+        }
+
+        fun getCallEventMessage(): HashMap<String, Any>? = callEventMessage
     }
 
     private lateinit var context: Context
@@ -305,8 +311,10 @@ class BotClient private constructor() {
                         queryParams.append(value)
                     }
                 }
+                val socketUrl = rtmUrl + if (isReconnectionAttempt) RECONNECT_PARAM else "" + queryParams
+                LogUtils.d(LOG_TAG, "socketUrl $socketUrl")
                 socketConnection.connect(
-                    rtmUrl + if (isReconnectionAttempt) RECONNECT_PARAM else "" + queryParams,
+                    socketUrl,
                     object : WebSocketConnectionHandler() {
                         override fun onOpen() {
                             LogUtils.d(LOG_TAG, "Connection Open...")

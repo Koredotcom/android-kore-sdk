@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.widget.Toast
+import com.audiocodes.mv.webrtcsdk.audio.WebRTCAudioManager
 import com.audiocodes.mv.webrtcsdk.im.InstanceMessageStatus
 import com.audiocodes.mv.webrtcsdk.log.LogLevel
 import com.audiocodes.mv.webrtcsdk.session.AudioCodesSession
@@ -347,7 +348,7 @@ class ACManager private constructor() : AudioCodesEventListener {
         }
 
         override fun cameraSwitched(frontCamera: Boolean) {
-            LogUtils.d(TAG, "cameraSwitched isfrontCamera: $frontCamera")
+            LogUtils.d(TAG, "cameraSwitched isFrontCamera: $frontCamera")
         }
 
         override fun mediaFailed(session: AudioCodesSession) {
@@ -358,9 +359,8 @@ class ACManager private constructor() : AudioCodesEventListener {
         override fun reinviteWithVideoCallback(audioCodesSession: AudioCodesSession) {
             LogUtils.d(
                 TAG,
-                "reinviteWithVideoCallback name: " + audioCodesSession.remoteNumber.displayName + " userName: " + audioCodesSession.remoteNumber.userName
+                "reInviteWithVideoCallback name: " + audioCodesSession.remoteNumber.displayName + " userName: " + audioCodesSession.remoteNumber.userName
             )
-            //audioCodesSession.answer(null, true);
         }
     }
 
@@ -371,5 +371,16 @@ class ACManager private constructor() : AudioCodesEventListener {
         remoteContact.displayName = user
         val messageID = AudioCodesUA.getInstance().sendInstantMessage(remoteContact, message)
         LogUtils.d(TAG, "message ID $messageID")
+    }
+
+    fun terminate() {
+        activeSession?.let {
+            WebRTCAudioManager.getInstance().stopCall()
+            WebRTCAudioManager.getInstance().webRTcAudioRouteListener = null
+            AudioCodesUA.getInstance().getSession(it.sessionID)?.terminate()
+            it.removeSessionEventListener(audioCodesSessionEventListener)
+            AudioCodesUA.getInstance().removeSession(it)
+            AudioCodesUA.getInstance().setListener(null)
+        }
     }
 }

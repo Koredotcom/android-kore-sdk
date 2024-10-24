@@ -8,7 +8,7 @@ import com.kore.model.BaseBotMessage
 abstract class BaseContentFragment : Fragment(), QuickRepliesClickListener {
     abstract fun setView(view: BaseView)
 
-    abstract fun onFileDownloadProgress(progress: Int, msgId: String)
+    abstract fun onFileDownloadProgress(msgId: String, progress: Int, downloadBytes: Int)
 
     abstract fun setActionEvent(actionEvent: (event: UserActionEvent) -> Unit)
 

@@ -4,6 +4,8 @@ import android.app.Application
 import android.content.res.Resources.NotFoundException
 import android.util.Log
 import com.kore.SDKConfig
+import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
+import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
 import com.kore.common.model.BotConfigModel
 import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
@@ -20,7 +22,7 @@ class BotApplication : Application() {
 //        SDKConfig.setQueryParams(getQueryParams())
 //        SDKConfig.setCustomData(getCustomData())
 
-//        SDKConfig.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
+        SDKConfig.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
 //        SDKConfig.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
 //        SDKConfig.addCustomHeaderFragment(BotResponseConstants.HEADER_SIZE_COMPACT, CustomHeaderFragment())
 //        SDKConfig.addCustomContentFragment(CustomContentFragment())

@@ -11,6 +11,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.gson.Gson
+import com.kore.SDKConfig
+import com.kore.SDKConfig.isMinimized
 import com.kore.botclient.BotClient
 import com.kore.botclient.BotConnectionListener
 import com.kore.botclient.BotRequestState
@@ -18,13 +20,9 @@ import com.kore.botclient.ConnectionState
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
 import com.kore.common.SDKConfiguration
-import com.kore.ui.base.BaseViewModel
-import com.kore.extensions.stringToDate
-import com.kore.helper.SpeechSynthesizerHelper
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
 import com.kore.common.utils.ToastUtils
-import com.kore.constants.SharedPrefConstants
 import com.kore.data.repository.branding.BrandingRepository
 import com.kore.data.repository.branding.BrandingRepositoryImpl
 import com.kore.data.repository.chathistory.ChatHistoryRepository
@@ -33,6 +31,8 @@ import com.kore.data.repository.dynamicurl.DynamicUrlRepository
 import com.kore.data.repository.dynamicurl.DynamicUrlRepositoryImpl
 import com.kore.data.repository.preference.PreferenceRepository
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.extensions.stringToDate
+import com.kore.helper.SpeechSynthesizerHelper
 import com.kore.model.BotEventResponse
 import com.kore.model.BotRequest
 import com.kore.model.BotResponse
@@ -47,6 +47,7 @@ import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.R
+import com.kore.ui.base.BaseViewModel
 import com.kore.validator.RangeValidator
 import kotlinx.coroutines.launch
 import java.io.File
@@ -204,7 +205,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
             viewModelScope.launch {
                 var prevProgress = -1
-                dynamicUrlRepository.downloadFile(url, file) { progress ->
+                dynamicUrlRepository.downloadFile(url, file) { progress, downloadedBytes ->
                     handler.post {
                         when (progress) {
                             -1 -> ToastUtils.showToast(context, context.getString(R.string.download_fail))
@@ -212,13 +213,13 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                         }
                         if (prevProgress != progress && (progress <= 1 || progress % 5 == 0)) {
                             prevProgress = progress
-                            getView()?.onFileDownloadProgress(progress, msgId)
+                            getView()?.onFileDownloadProgress(msgId, progress, downloadedBytes)
                         }
                     }
                 }
             }
         } else {
-            getView()?.onFileDownloadProgress(-1, msgId)
+            getView()?.onFileDownloadProgress(msgId, -1, 0)
             ToastUtils.showToast(context, context.getString(R.string.no_network), Toast.LENGTH_LONG)
         }
     }
@@ -227,11 +228,8 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         val botName = SDKConfiguration.getBotConfigModel()?.botName ?: return
         val botId = SDKConfiguration.getBotConfigModel()?.botId ?: return
         botClient.sendCloseOrMinimizeEvent(context.getString(eventId), botName, botId)
-        val isReconnect = eventId == R.string.bot_minimize_event
-        preferenceRepository.putBooleanValue(context, THEME_NAME, SharedPrefConstants.IS_MINIMIZED, isReconnect)
+        SDKConfig.setIsMinimized(eventId == R.string.bot_minimize_event)
     }
-
-    fun isMinimized(): Boolean = preferenceRepository.getBooleanValue(context, THEME_NAME, SharedPrefConstants.IS_MINIMIZED)
 
     fun getUserId(): String = botClient.getUserId()
 
@@ -333,13 +331,13 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     getView()?.onChatHistory(response.data.first)
                     historyOffset += response.data.first.size
                     moreHistory = response.data.second
-                    preferenceRepository.putBooleanValue(context, THEME_NAME, SharedPrefConstants.IS_MINIMIZED, false)
+                    SDKConfig.setIsMinimized(false)
                 }
 
                 else -> {
                     getView()?.onChatHistory(emptyList())
                     LogUtils.e(LOG_TAG, "RtmUrlResponse error: $response")
-                    preferenceRepository.putBooleanValue(context, THEME_NAME, SharedPrefConstants.IS_MINIMIZED, false)
+                    SDKConfig.setIsMinimized(false)
                 }
             }
         }

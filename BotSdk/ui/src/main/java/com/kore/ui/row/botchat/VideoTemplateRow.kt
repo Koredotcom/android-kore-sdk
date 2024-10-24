@@ -64,8 +64,8 @@ class VideoTemplateRow(
             var totalDuration: Int
             tvVideoTitle.isVisible = payload[BotResponseConstants.KEY_TEXT] != null
             payload[BotResponseConstants.KEY_TEXT]?.let { tvVideoTitle.text = it.toString() }
-            val url = payload[VIDEO_URL] ?: payload[URL]
-            url?.let {
+            val videoUrl = payload[VIDEO_URL] ?: payload[URL]
+            videoUrl?.let {
 //                "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
                 Glide.with(binding.root.context)
                     .load(it.toString())
@@ -111,7 +111,7 @@ class VideoTemplateRow(
 
             ivFullScreen.setOnClickListener {
                 payload.putIfAbsent(VIDEO_CURRENT_POSITION, currentPosition)
-                url?.let { actionEvent(BotChatEvent.UrlClick(it.toString())) }
+                videoUrl?.let { actionEvent(BotChatEvent.UrlClick(it.toString())) }
                 if (ivPlayPauseIcon.isSelected) ivPlayPauseIcon.performClick()
             }
 
@@ -157,7 +157,11 @@ class VideoTemplateRow(
                 handler.postDelayed(runnable, 1000)
             }
 
-            url?.let { ivVideoMore.setOnClickListener { showMenuPopup(root.context, ivVideoMore, it.toString()) } }
+            ivVideoMore.setOnClickListener {
+                videoUrl?.let { url ->
+                    if (url.toString().isNotEmpty()) showMenuPopup(root.context, ivVideoMore, url.toString())
+                }
+            }
         }
     }
 
@@ -173,7 +177,9 @@ class VideoTemplateRow(
         tvTheme1.setOnClickListener {
             popupWindow.dismiss()
             MediaUtils.setupAppDir(context, MediaConstants.MEDIA_TYPE_VIDEO)
-            if (!url.isNullOrEmpty()) MediaUtils.saveFileFromUrlToKorePath(context, url)
+            if (!url.isNullOrEmpty()) {
+                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
+            }
         }
         popupWindow.showAsDropDown(anchorView, -40, 0)
     }

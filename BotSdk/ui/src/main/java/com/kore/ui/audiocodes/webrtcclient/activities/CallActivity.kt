@@ -1,8 +1,15 @@
 package com.kore.ui.audiocodes.webrtcclient.activities
 
+import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.ImageView
@@ -24,7 +31,10 @@ import com.audiocodes.mv.webrtcsdk.session.TerminationInfo
 import com.audiocodes.mv.webrtcsdk.useragent.ACConfiguration
 import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA
 import com.audiocodes.mv.webrtcsdk.useragent.WebRTCException
+import com.google.gson.Gson
+import com.kore.botclient.BotClient
 import com.kore.common.utils.LogUtils
+import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.ui.R
 import com.kore.ui.audiocodes.webrtcclient.callbacks.CallBackHandler
 import com.kore.ui.audiocodes.webrtcclient.callbacks.CallBackHandler.LoginStateChanged
@@ -48,15 +58,26 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
     private var sessionList = ArrayList<Int>()
     private var myAudioCodesSessionEventListener = MyAudioCodesSessionEventListener()
     private var lastSessionIndex = 0
+    private lateinit var callActivity: CallActivity
+    private val timerHandler = Handler(Looper.getMainLooper())
+    private lateinit var timerRunnable: Runnable
+    private var callDuration = 0
     private var loginStateChanged = LoginStateChanged {
         handler.post {
             binding.callButtonEndCall.isEnabled = false
             binding.callButtonHold.isEnabled = false
         }
     }
+    private val callTerminateReceiver = object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, intent: Intent?) {
+            if (intent?.action == ACTION_CALL_TERMINATED) finish()
+        }
+    }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        callActivity = this
         binding = DataBindingUtil.inflate(layoutInflater, R.layout.call_activity, null, false)
         setContentView(binding.root)
         CallBackHandler.registerLginStateChange(loginStateChanged)
@@ -88,6 +109,19 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
         lastSessionIndex = sessionIndex
         updateUI()
         CallForegroundService.startService(this)
+        val intentFilter = IntentFilter(ACTION_CALL_TERMINATED)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(callTerminateReceiver, intentFilter, RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(callTerminateReceiver, intentFilter)
+        }
+        timerRunnable = Runnable {
+            session?.let {
+                callDuration += 1
+                binding.callTextviewDuration.text = convertSecondsToTime(callDuration)
+                timerHandler.postDelayed(timerRunnable, 1000)
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -127,7 +161,13 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
             //session.
             LogUtils.d(TAG, "session getCallState: " + session?.callState)
             LogUtils.d(TAG, "session getTermination: " + session?.termination)
-            session?.terminate()
+//            session?.terminate()
+            val message = BotClient.getCallEventMessage()
+            message?.let {
+                it[TYPE] = CALL_AGENT_WEBRTC_TERMINATED
+                BotClient.getInstance().sendMessage("", Gson().toJson(it))
+            }
+            ACManager.getInstance().terminate()
             handleCallTermination(session)
         }
         binding.callButtonEndVideoCall.setOnClickListener {
@@ -277,20 +317,6 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
     }
 
     private fun initDtmf() {
-        val keypadButtonClickListID = intArrayOf(
-            R.id.call_button_keypad_1,
-            R.id.call_button_keypad_2,
-            R.id.call_button_keypad_3,
-            R.id.call_button_keypad_4,
-            R.id.call_button_keypad_5,
-            R.id.call_button_keypad_6,
-            R.id.call_button_keypad_7,
-            R.id.call_button_keypad_8,
-            R.id.call_button_keypad_9,
-            R.id.call_button_keypad_hash,
-            R.id.call_button_keypad_0,
-            R.id.call_button_keypad_asterisk
-        )
         binding.callButtonKeypad1.setOnClickListener { session?.sendDTMF(DTMF.ONE) }
         binding.callButtonKeypad2.setOnClickListener { session?.sendDTMF(DTMF.TWO) }
         binding.callButtonKeypad3.setOnClickListener { session?.sendDTMF(DTMF.THREE) }
@@ -406,6 +432,7 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
 
     override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(callTerminateReceiver)
         //CallBackHandler.unregisterCallStateChanged(callStateChanged);
         CallBackHandler.unregisterLoginStateChange(loginStateChanged)
     }
@@ -418,13 +445,15 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
         LogUtils.d(TAG, "terminationInfo3: " + terminationInfo.reason)
         LogUtils.d(TAG, "terminationInfo4: " + terminationInfo.reasonHeader)
         LogUtils.d(TAG, "terminationInfo5: " + terminationInfo.sipMessage)
-
         // handleCallTermination(session,terminationInfo);
     }
 
     override fun callProgress(session: AudioCodesSession) {
         LogUtils.d(TAG, "callProgress CallState: " + session.callState)
         if (session.callState == CallState.CONNECTED || session.callState == CallState.HOLD) {
+            if (session.callState == CallState.CONNECTED && callDuration == 0) {
+                timerHandler.post(timerRunnable)
+            }
             handler.post {
                 binding.callButtonEndCall.isEnabled = true
                 binding.callButtonHold.isEnabled = true
@@ -437,8 +466,13 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
     }
 
     override fun cameraSwitched(frontCamera: Boolean) {}
+
     override fun reinviteWithVideoCallback(audioCodesSession: AudioCodesSession) {}
-    override fun incomingNotify(notifyEvent: NotifyEvent, dtmfValue: String) {}
+
+    override fun incomingNotify(notifyEvent: NotifyEvent, dtmfValue: String) {
+        LogUtils.e("Called", "Duration ${session?.duration()}")
+    }
+
     fun onNotifyEvent(notifyEvent: NotifyEvent, dtmfValue: String?) {
         LogUtils.d(TAG, "onNotifyEvent: $notifyEvent")
         when (notifyEvent) {
@@ -636,8 +670,26 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
         }
     }
 
+    fun convertSecondsToTime(seconds: Int): String {
+        val hours = seconds / 3600
+        val minutes = (seconds % 3600) / 60
+        val secs = seconds % 60
+        return String.format("%02d:%02d:%02d", hours, minutes, secs)
+    }
+
+    override fun finish() {
+        super.finish()
+        timerHandler.removeCallbacks(timerRunnable)
+    }
+
     companion object {
         private const val TAG = "CallActivity"
         const val SESSION_ID = "sessionID"
+        const val ACTION_CALL_TERMINATED = "com.kore.botsdk.ACTION_CALL_TERMINATED"
+        const val CALL_AGENT_WEBRTC_TERMINATED = "call_agent_webrtc_terminated"
+        const val CANCEL_AGENT_WEBRTC = "cancel_agent_webrtc"
+        const val TERMINATE_AGENT_WEBRTC = "terminate_agent_webrtc"
+        const val CALL_AGENT_WEBRTC_ACCEPTED = "call_agent_webrtc_accepted"
+        const val CALL_AGENT_WEBRTC_REJECTED = "call_agent_webrtc_rejected"
     }
 }

@@ -63,8 +63,8 @@ class CustomContentFragment : BaseContentFragment() {
         this.view = view as BotChatView
     }
 
-    override fun onFileDownloadProgress(progress: Int, msgId: String) {
-        chatAdapter.onDownloadProgress(progress, msgId)
+    override fun onFileDownloadProgress(msgId: String, progress: Int, downloadBytes: Int) {
+        chatAdapter.onDownloadProgress(msgId, progress, downloadBytes)
     }
 
     override fun setActionEvent(actionEvent: (event: UserActionEvent) -> Unit) {

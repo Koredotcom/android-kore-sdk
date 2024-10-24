@@ -21,5 +21,5 @@ interface BotChatView : BaseView {
     fun hideQuickReplies()
     fun onChatHistory(list: List<BaseBotMessage>)
     fun onSwipeRefresh()
-    fun onFileDownloadProgress(progress: Int, msgId: String)
+    fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int)
 }

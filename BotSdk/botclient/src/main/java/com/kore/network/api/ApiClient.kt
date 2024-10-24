@@ -63,7 +63,7 @@ class ApiClient private constructor() {
             .create(serviceClass)
     }
 
-    fun <S> createService(serviceClass: Class<S>, onProgressUpdate: (Int) -> Unit): S {
+    fun <S> createService(serviceClass: Class<S>, onProgressUpdate: (Int, Int) -> Unit): S {
         okBuilder.addInterceptor(ProgressInterceptor(onProgressUpdate))
         return adapterBuilder
             .client(okBuilder.build())

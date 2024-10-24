@@ -13,7 +13,7 @@ import java.io.InputStream
 
 class DynamicUrlRepositoryImpl : DynamicUrlRepository {
 
-    override suspend fun downloadFile(url: String, destinationFile: File, onProgress: (progress: Int) -> Unit) {
+    override suspend fun downloadFile(url: String, destinationFile: File, onProgress: (progress: Int, downloadedByte: Int) -> Unit) {
         val dynamicUrlApi = ApiClient.getInstance().createService(DynamicUrlApi::class.java, onProgress)
         try {
             if (url.contains("base64,")) {
@@ -26,12 +26,12 @@ class DynamicUrlRepositoryImpl : DynamicUrlRepository {
             println("File downloaded successfully to ${destinationFile.absolutePath}")
         } catch (e: Exception) {
             e.printStackTrace()
-            onProgress(-1)
+            onProgress(-1, 0)
             println("File Download failed: ${e.message}")
         }
     }
 
-    private suspend fun saveToDisk(body: ResponseBody, destinationFile: File, onProgress: (Int) -> Unit) {
+    private suspend fun saveToDisk(body: ResponseBody, destinationFile: File, onProgress: (Int, Int) -> Unit) {
         withContext(Dispatchers.IO) {
             var inputStream: InputStream? = null
             var outputStream: FileOutputStream? = null
@@ -42,17 +42,19 @@ class DynamicUrlRepositoryImpl : DynamicUrlRepository {
             val buffer = ByteArray(1024)
             var bytesRead = 0
             var downloadedBytes: Long = 0
-            var totalProgress = -1
-
+            var prevProgress = -1
             while (isActive && inputStream.read(buffer).also { bytesRead = it } != -1) {
                 outputStream.write(buffer, 0, bytesRead)
                 downloadedBytes += bytesRead
                 val progress = ((downloadedBytes * 100) / totalBytes).toInt()
-                if (totalProgress != progress) {
-                    totalProgress = progress
-                    if (progress == 100) onProgress(progress)
+                if (prevProgress != progress) {
+                    prevProgress = progress
+                    if (progress == 100) onProgress(progress, downloadedBytes.toInt())
+                } else if (prevProgress < -1) {
+                    onProgress(0, downloadedBytes.toInt())
                 }
             }
+            if (prevProgress < -1 && downloadedBytes > 0) onProgress(100, downloadedBytes.toInt())
 
             outputStream.flush()
             println("Download completed. File saved at: ${destinationFile.absolutePath}")
@@ -61,16 +63,16 @@ class DynamicUrlRepositoryImpl : DynamicUrlRepository {
         }
     }
 
-    private fun writeBase64ToDisk(base64Data: String, fileLocation: File, onProgress: (Int) -> Unit) {
+    private fun writeBase64ToDisk(base64Data: String, fileLocation: File, onProgress: (Int, Int) -> Unit) {
         var fileData = base64Data
         var os: FileOutputStream? = null
         fileData = fileData.substring(fileData.indexOf(",") + 1)
-        onProgress(50)
+        onProgress(50, 50)
         val pdfAsBytes = Base64.decode(fileData, 0)
         os = FileOutputStream(fileLocation, false)
         os.write(pdfAsBytes)
         os.flush()
         os.close()
-        onProgress(100)
+        onProgress(100, 100)
     }
 }
