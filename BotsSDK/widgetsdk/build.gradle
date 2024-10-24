@@ -9,7 +9,7 @@ afterEvaluate {
             release(MavenPublication) {
                 from components.release
                 groupId 'kore.botsdk'
-                artifactId 'korebot'
+                artifactId 'widgetsdk'
                 version '11.0.2'
             }
         }
