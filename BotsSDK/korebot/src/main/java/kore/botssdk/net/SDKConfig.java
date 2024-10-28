@@ -5,6 +5,8 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 public class SDKConfig {
+    private static boolean isMinimized = false;
+
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
     }
@@ -22,10 +24,10 @@ public class SDKConfig {
         SDKConfiguration.JWTServer.setJwt_token(jwtToken);
     }
 
-    public static void isWebHook(boolean isWebHook)
-    {
+    public static void isWebHook(boolean isWebHook) {
         SDKConfiguration.Client.isWebHook = isWebHook;
     }
+
     public static void setServerUrl(String url) {
         SDKConfiguration.Server.setServerUrl(url);
     }
@@ -36,6 +38,14 @@ public class SDKConfig {
 
     public static void setJwtTokenUrl(String url) {
         SDKConfiguration.JWTServer.setJwtServerUrl(url);
+    }
+
+    public static void setIsMinimized(boolean isMinimize) {
+        isMinimized = isMinimize;
+    }
+
+    public static boolean isMinimized() {
+        return isMinimized;
     }
 
 }

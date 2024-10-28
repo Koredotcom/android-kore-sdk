@@ -2,6 +2,7 @@ package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
+import static kore.botssdk.net.SDKConfig.isMinimized;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
@@ -89,10 +90,8 @@ import kore.botssdk.fragment.BotContentFragment;
 import kore.botssdk.fragment.ComposeFooterFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
-import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotBrandingModel;
@@ -104,6 +103,7 @@ import kore.botssdk.models.EventModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.AsyncTaskExecutor;
 import kore.botssdk.utils.BitmapUtils;
@@ -126,27 +126,25 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class NewBotChatActivity extends BotAppCompactActivity implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
-    final String LOG_TAG = NewBotChatActivity.class.getSimpleName();
-    ProgressBar taskProgressBar;
-    String jwt;
+    private final String LOG_TAG = NewBotChatActivity.class.getSimpleName();
+    private ProgressBar taskProgressBar;
+    private String jwt;
     private Handler actionBarTitleUpdateHandler;
-    BotClient botClient;
-    BotContentFragment botContentFragment;
-    ComposeFooterFragment composeFooterFragment;
+    private BotClient botClient;
+    private BotContentFragment botContentFragment;
+    private ComposeFooterFragment composeFooterFragment;
     private TTSSynthesizer ttsSynthesizer;
-    final Gson gson = new Gson();
-    RelativeLayout rlChatWindow;
-    SharedPreferences sharedPreferences;
+    private final Gson gson = new Gson();
+    private RelativeLayout rlChatWindow;
+    private SharedPreferences sharedPreferences;
     protected final int compressQualityInt = 100;
-    final Handler messageHandler = new Handler();
+    private final Handler messageHandler = new Handler();
     private String fileUrl;
     private Dialog progressBar, welcomeDialog;
-    boolean isAgentTransfer = false;
-    ArrayList<String> arrMessageList = new ArrayList<>();
-    Dialog alertDialog;
-    BotChatViewModel mViewModel;
-    ComposeFooterUpdate composeFooterUpdate;
-    BotContentFragmentUpdate botContentFragmentUpdate;
+    private final boolean isAgentTransfer = false;
+    private ArrayList<String> arrMessageList = new ArrayList<>();
+    private Dialog alertDialog;
+    private BotChatViewModel mViewModel;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -156,7 +154,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             }
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+            SDKConfig.setIsMinimized(false);
             editor.putInt(BotResponse.HISTORY_COUNT, 0);
             editor.apply();
         }
@@ -181,7 +179,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
         }
 
-        mViewModel.connectToBot(sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
+        mViewModel.connectToBot(isMinimized());
         startService(new Intent(getApplicationContext(), ClosingService.class));
     }
 
@@ -191,7 +189,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 case DialogInterface.BUTTON_POSITIVE:
                     if (sharedPreferences != null) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                        SDKConfig.setIsMinimized(true);
                         editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
                         editor.apply();
                     }
@@ -202,7 +200,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                        SDKConfig.setIsMinimized(false);
                         editor.putInt(BotResponse.HISTORY_COUNT, 0);
                         editor.apply();
                     }
@@ -257,7 +255,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
-        setBotContentFragmentUpdate(botContentFragment);
 
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -266,7 +263,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         composeFooterFragment.setComposeFooterInterface(this);
         composeFooterFragment.setBotClient(botClient);
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
-        setComposeFooterUpdate(composeFooterFragment);
 
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
@@ -323,7 +319,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             if (composeFooterFragment != null) composeFooterFragment.setJwtToken(jwt);
             mViewModel.getWebHookMeta(jwt);
         } else if (botClient != null && !botClient.isConnected()) {
-            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), null, sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
+            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), null, isMinimized());
         }
     }
 
@@ -348,7 +344,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             }
 
             if (brandingModel.getBody() != null && brandingModel.getBody().getUser_message() != null) {
-
                 editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingModel.getBody().getUser_message().getBg_color());
                 editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingModel.getBody().getUser_message().getColor());
             }
@@ -390,7 +385,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-
                 if (!StringUtils.isNullOrEmpty(fileUrl)) KaMediaUtils.saveFileFromUrlToKorePath(NewBotChatActivity.this, fileUrl);
             } else {
                 Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
@@ -425,7 +419,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         }
     }
 
-
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
         closeWelcomeDialog();
@@ -440,7 +433,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
-        if (attachments != null && attachments.size() > 0) {
+        if (attachments != null && !attachments.isEmpty()) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
                 addSentMessageToChat(message);
@@ -450,7 +443,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     @Override
-    public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollupNeeded) {
+    public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollUpNeeded) {
         if (message.equalsIgnoreCase(BundleUtils.OPEN_WELCOME)) {
             if (welcomeDialog != null) welcomeDialog.show();
         }
@@ -459,14 +452,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
         composeFooterFragment.setComposeText(text);
-    }
-
-    public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
-        this.botContentFragmentUpdate = botContentFragmentUpdate;
-    }
-
-    public void setComposeFooterUpdate(ComposeFooterUpdate composeFooterUpdate) {
-        this.composeFooterUpdate = composeFooterUpdate;
     }
 
     @Override
@@ -577,6 +562,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void handleUserActions(String action, HashMap<String, Object> payload) {
+    }
+
+    @Override
+    public void loadChatHistory(int _offset, int limit) {
+        botContentFragment.loadChatHistory(_offset, limit);
+    }
+
+    @Override
+    public void loadReconnectionChatHistory(int _offset, int limit) {
+        botContentFragment.loadReconnectionChatHistory(_offset, limit);
     }
 
     @Override

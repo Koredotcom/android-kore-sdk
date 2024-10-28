@@ -2,6 +2,7 @@ package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
+import static kore.botssdk.net.SDKConfig.isMinimized;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
@@ -132,6 +133,7 @@ import kore.botssdk.models.WebHookRequestModel;
 import kore.botssdk.models.WebHookResponseDataModel;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.WebHookRestBuilder;
 import kore.botssdk.pushnotification.PushNotificationRegister;
@@ -197,7 +199,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             }
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+            SDKConfig.setIsMinimized(false);
             editor.putInt(BotResponse.HISTORY_COUNT, 0);
             editor.apply();
         }
@@ -245,7 +247,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
             BotSocketConnectionManager.getInstance().setChatListener(sListener);
         }
 
-        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), SDKConfiguration.Server.customData, sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
+        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), SDKConfiguration.Server.customData, isMinimized());
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -340,7 +342,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 case DialogInterface.BUTTON_POSITIVE:
                     if (sharedPreferences != null) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                        SDKConfig.setIsMinimized(true);
                         editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
                         editor.apply();
                     }
@@ -351,7 +353,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                        SDKConfig.setIsMinimized(false);
                         editor.putInt(BotResponse.HISTORY_COUNT, 0);
                         editor.apply();
                     }
@@ -438,7 +440,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             getWebHookMeta();
         } else if (botClient != null && !botClient.isConnected()) {
-            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), null, sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
+            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), null, isMinimized());
         }
     }
 

@@ -65,6 +65,7 @@ import kore.botssdk.models.EventModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.pushnotification.PushNotificationRegister;
 import kore.botssdk.repository.branding.BrandingRepository;
@@ -75,6 +76,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.LogUtils;
+import kore.botssdk.utils.SharedPreferenceUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.websocket.SocketWrapper;
 
@@ -95,6 +97,7 @@ public class BotChatViewModel extends ViewModel {
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     protected final int compressQualityInt = 100;
+    private final SharedPreferences sharedPreferences;
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -102,6 +105,7 @@ public class BotChatViewModel extends ViewModel {
         this.chatView = chatView;
         this.webHookRepository = new WebHookRepository(context, chatView);
         this.botClient = botClient;
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
     public void getBrandingDetails(String botId, String botToken, boolean isReconnection) {
@@ -128,6 +132,15 @@ public class BotChatViewModel extends ViewModel {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
                 getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), isReconnection);
+                if (isReconnection) {
+                    if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 19) {
+                        chatView.loadChatHistory(0, 20);
+                    } else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0) {
+                        chatView.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
+                    } else {
+                        chatView.loadReconnectionChatHistory(0, 10);
+                    }
+                }
 
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
