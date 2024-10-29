@@ -10,7 +10,7 @@ data class BotResponse(
     @SerializedName("message")
     var message: ArrayList<BotResponseMessage>,
     @SerializedName("timestamp")
-    override val timeStamp: Long = 0,
+    override val timeMillis: Long = 0,
     @SerializedName("from")
     override val from: String? = null,
     override val isSend: Boolean = false,

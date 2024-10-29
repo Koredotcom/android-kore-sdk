@@ -46,6 +46,7 @@ import com.kore.ui.audiocodes.webrtcclient.general.Prefs
 import com.kore.ui.audiocodes.webrtcclient.login.LogoutManager
 import com.kore.ui.audiocodes.webrtcclient.services.CallForegroundService
 import com.kore.ui.databinding.CallActivityBinding
+import java.util.Locale
 
 class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
     private val acManager: ACManager = ACManager.getInstance()
@@ -452,7 +453,7 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
         LogUtils.d(TAG, "callProgress CallState: " + session.callState)
         if (session.callState == CallState.CONNECTED || session.callState == CallState.HOLD) {
             if (session.callState == CallState.CONNECTED && callDuration == 0) {
-                timerHandler.post(timerRunnable)
+                timerHandler.postDelayed(timerRunnable, 1000)
             }
             handler.post {
                 binding.callButtonEndCall.isEnabled = true
@@ -670,11 +671,11 @@ class CallActivity : BaseAppCompatActivity(), AudioCodesSessionEventListener {
         }
     }
 
-    fun convertSecondsToTime(seconds: Int): String {
+    private fun convertSecondsToTime(seconds: Int): String {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60
         val secs = seconds % 60
-        return String.format("%02d:%02d:%02d", hours, minutes, secs)
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs)
     }
 
     override fun finish() {

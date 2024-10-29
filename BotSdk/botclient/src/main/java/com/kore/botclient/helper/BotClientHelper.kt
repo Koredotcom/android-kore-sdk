@@ -54,7 +54,7 @@ class BotClientHelper {
                 message = BotMessage(message),
                 messageId = calendar.timeInMillis.toString(),
                 resourceId = botPayLoad.resourceId,
-                timeStamp = calendar.timeInMillis,
+                timeMillis = calendar.timeInMillis,
                 createdOn = isoFormatter.format(calendar.time),
                 messageDate = formattedSentDateV6(calendar.timeInMillis),
                 formattedTime = getFormattedTime(calendar.timeInMillis, botInfoModel.botName, false)
@@ -96,18 +96,18 @@ class BotClientHelper {
         fun processBotResponse(response: BotResponse): BotResponse {
             val botInfo = response.botInfo
             val timeStamp = isoFormatter.parse(response.createdOn)?.time ?: 0L
-            val botResponse = if (response.timeStamp == 0L) {
+            val botResponse = if (response.timeMillis == 0L) {
                 response.copy(
                     createdOn = response.createdOn,
-                    timeStamp = timeStamp,
+                    timeMillis = timeStamp,
                     messageDate = formattedSentDateV6(timeStamp),
                     formattedTime = getFormattedTime(timeStamp, if (botInfo != null) botInfo[CHAT_BOT].toString() else "")
                 )
             } else {
                 response.copy(
                     createdOn = response.createdOn,
-                    messageDate = formattedSentDateV6(response.timeStamp),
-                    formattedTime = getFormattedTime(response.timeStamp, if (botInfo != null) botInfo[CHAT_BOT].toString() else "")
+                    messageDate = formattedSentDateV6(response.timeMillis),
+                    formattedTime = getFormattedTime(response.timeMillis, if (botInfo != null) botInfo[CHAT_BOT].toString() else "")
                 )
             }
             botResponse.botInfo = response.botInfo

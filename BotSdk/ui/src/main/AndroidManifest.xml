@@ -110,5 +110,11 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/image_path" />
         </provider>
+        <service
+            android:name="com.kore.services.ClosingService"
+            android:enabled="true"
+            android:exported="false"
+            android:permission="TODO"
+            android:stopWithTask="false" />
     </application>
 </manifest>

@@ -1,12 +1,17 @@
 package com.kore.ui.botchat
 
+import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,9 +26,11 @@ import com.audiocodes.mv.webrtcsdk.sip.enums.Transport
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
 import com.kore.SDKConfig
+import com.kore.SDKConfig.isMinimized
 import com.kore.botclient.BotClient
 import com.kore.botclient.ConnectionState
 import com.kore.common.event.UserActionEvent
+import com.kore.common.utils.LogUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
@@ -36,6 +43,7 @@ import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
 import com.kore.model.constants.BotResponseConstants.START_DATE
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
+import com.kore.services.ClosingService
 import com.kore.ui.BR
 import com.kore.ui.R
 import com.kore.ui.audiocodes.webrtcclient.activities.CallActivity
@@ -58,6 +66,7 @@ import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
+import com.kore.ui.utils.BundleConstants
 import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import org.webrtc.NetworkMonitor.isOnline
 import java.util.Calendar
@@ -66,7 +75,7 @@ import java.util.Calendar
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
     private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
     private var footerFragment: BaseFooterFragment = SDKConfig.getCustomFooterFragment() ?: ChatFooterFragment()
-    private val botChatViewModel: BotChatViewModel by viewModels()
+    internal val botChatViewModel: BotChatViewModel by viewModels()
     private val gson: Gson = Gson()
     private val launchTime = System.currentTimeMillis()
     private val networkCallback = NetworkCallbackImpl()
@@ -84,6 +93,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun getViewModel(): BotChatViewModel = botChatViewModel
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         contentFragment.setView(this)
@@ -98,6 +108,12 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 }
             }
         })
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(onDestroyReceiver, IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(onDestroyReceiver, IntentFilter(BundleConstants.DESTROY_EVENT))
+        }
+        startService(Intent(this.applicationContext, ClosingService::class.java))
     }
 
     private fun addFragmentsToContainer(id: Int, fragment: Fragment) {
@@ -244,7 +260,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun onSwipeRefresh() {
-        botChatViewModel.fetchChatHistory()
+        botChatViewModel.fetchChatHistory(false)
     }
 
     private fun showAlertDialog(eventModel: HashMap<String, Any>) {
@@ -346,7 +362,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun onChatHistory(list: List<BaseBotMessage>) {
-        contentFragment.addMessagesToAdapter(list, !SDKConfig.isMinimized())
+        contentFragment.addMessagesToAdapter(list, !isMinimized())
     }
 
     fun showCloseAlert() {
@@ -357,6 +373,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 DialogInterface.BUTTON_POSITIVE -> {
                     val event = R.string.bot_minimize_event
                     botChatViewModel.sendCloseOrMinimizeEvent(event)
+                    botChatViewModel.onMinimize(contentFragment.getAdapterCount())
                     result["event_code"] = "BotMinimized"
                     result["event_message"] = "Bot Minimized by the user"
                     intent.putExtra(EXTRA_RESULT, Gson().toJson(result))
@@ -365,6 +382,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 DialogInterface.BUTTON_NEGATIVE -> {
                     val event = if (isAgentTransfer) R.string.agent_bot_close_event else R.string.bot_close_event
                     botChatViewModel.sendCloseOrMinimizeEvent(event)
+                    botChatViewModel.onMinimize(0)
                     result["event_code"] = "BotClosed"
                     result["event_message"] = "Bot closed by the user"
                     intent.putExtra(EXTRA_RESULT, Gson().toJson(result))
@@ -396,6 +414,13 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
         override fun onLost(network: Network) {
             if (botChatViewModel.isWebhook()) binding.root.post { footerFragment.enableSendButton(false) }
+        }
+    }
+
+    private var onDestroyReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            LogUtils.e("onDestroyReceiver", "onDestroyReceiver called")
+            botChatViewModel.onTerminate(isAgentTransfer)
         }
     }
 }

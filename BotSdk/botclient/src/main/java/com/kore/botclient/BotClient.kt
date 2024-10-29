@@ -51,7 +51,6 @@ class BotClient private constructor() {
         private const val RECONNECT_PARAM = "&isReconnect=true"
 
         private const val RECONNECT_ATTEMPT_LIMIT = 16
-        private const val POLL_DELAY = 2000L
         private const val POLL_DELAY_REPEAT = 5000L
 
         private const val BOT_TOKEN = "botToken"

@@ -75,7 +75,8 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
     }
 
     fun addAndCreateRows(baseBotMessage: List<BaseBotMessage>, isHistory: Boolean = false): List<SimpleListRow> {
-        messages = if (isHistory) baseBotMessage + messages else messages + baseBotMessage
+        messages = messages + baseBotMessage
+        if (isHistory) messages = messages.distinctBy { it.messageId }.sortedBy { it.timeMillis }
         return createRows(messages)
     }
 

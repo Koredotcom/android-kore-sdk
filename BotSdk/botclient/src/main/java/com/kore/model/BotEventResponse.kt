@@ -8,7 +8,7 @@ data class BotEventResponse(
     override val isSend: Boolean = false,
     override val createdOn: String = "",
     override val formattedTime: String = "",
-    override val timeStamp: Long = 0,
+    override val timeMillis: Long = 0,
     override val messageId: String = "",
     override val messageDate: String = ""
 ) : BaseBotMessage {

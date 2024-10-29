@@ -5,4 +5,5 @@ package com.kore.ui.utils
  */
 object BundleConstants {
     const val EXTRA_RESULT = "result"
+    const val DESTROY_EVENT = "destroy-event"
 }

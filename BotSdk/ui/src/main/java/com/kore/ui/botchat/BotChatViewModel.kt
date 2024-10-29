@@ -19,10 +19,11 @@ import com.kore.botclient.BotRequestState
 import com.kore.botclient.ConnectionState
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
-import com.kore.common.SDKConfiguration
+import com.kore.common.SDKConfiguration.getBotConfigModel
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
 import com.kore.common.utils.ToastUtils
+import com.kore.constants.SharedPrefConstants.HISTORY_COUNT
 import com.kore.data.repository.branding.BrandingRepository
 import com.kore.data.repository.branding.BrandingRepositoryImpl
 import com.kore.data.repository.chathistory.ChatHistoryRepository
@@ -147,7 +148,14 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 when (state) {
                     ConnectionState.CONNECTED -> {
                         isFirstTime = false
-                        viewModelScope.launch { getBrandingDetails(token) }
+                        viewModelScope.launch {
+                            getBrandingDetails(token)
+                            if (isReconnection) {
+                                historyOffset = 0
+                                moreHistory = true
+                                fetchChatHistory(true)
+                            }
+                        }
                     }
 
                     else -> {}
@@ -225,8 +233,8 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     fun sendCloseOrMinimizeEvent(eventId: Int) {
-        val botName = SDKConfiguration.getBotConfigModel()?.botName ?: return
-        val botId = SDKConfiguration.getBotConfigModel()?.botId ?: return
+        val botName = getBotConfigModel()?.botName ?: return
+        val botId = getBotConfigModel()?.botId ?: return
         botClient.sendCloseOrMinimizeEvent(context.getString(eventId), botName, botId)
         SDKConfig.setIsMinimized(eventId == R.string.bot_minimize_event)
     }
@@ -242,14 +250,14 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     fun onNetworkAvailable() {
-        if (SDKConfiguration.getBotConfigModel()?.isWebHook == true ||
+        if (getBotConfigModel()?.isWebHook == true ||
             (botClient.getConnectionState() != ConnectionState.CONNECTED && !botClient.isConnecting())
         ) {
             botClient.connectToBot(context, isFirstTime)
         }
     }
 
-    fun isWebhook(): Boolean = SDKConfiguration.getBotConfigModel()?.isWebHook == true
+    fun isWebhook(): Boolean = getBotConfigModel()?.isWebHook == true
 
     fun textToSpeech(botResponse: BotResponse) {
         if (speechSynthesizerHelper.isTTSEnabled()) {
@@ -275,7 +283,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     internal suspend fun getBrandingDetails(token: String) {
-        val botConfigModel = SDKConfiguration.getBotConfigModel()
+        val botConfigModel = getBotConfigModel()
 
         if (NetworkUtils.isNetworkAvailable(context)) {
             if (botConfigModel == null) {
@@ -293,19 +301,16 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     LogUtils.e(LOG_TAG, "BrandingDetails Response error: $response")
                 }
             }
-            if (isMinimized()) {
-                fetchChatHistory()
-            }
         }
     }
 
-    fun fetchChatHistory() {
+    fun fetchChatHistory(isReconnect: Boolean) {
         if (!moreHistory) {
             getView()?.onChatHistory(emptyList())
             return
         }
         viewModelScope.launch {
-            val botConfigModel = SDKConfiguration.getBotConfigModel()
+            val botConfigModel = getBotConfigModel()
 
             if (!NetworkUtils.isNetworkAvailable(context)) {
                 getView()?.onChatHistory(emptyList())
@@ -317,6 +322,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
                 return@launch
             }
+            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
             when (val response =
                 chatHistoryRepository.getChatHistory(
                     context,
@@ -324,14 +330,18 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     botConfigModel.botId,
                     botConfigModel.botName,
                     historyOffset,
-                    10,
+                    if (historyCount > 10 || historyCount == 0) 10 else historyCount,
                     botConfigModel.isWebHook
                 )) {
                 is Result.Success -> {
-                    getView()?.onChatHistory(response.data.first)
+                    var historyMessages = response.data.first
+                    if (isReconnect && !isMinimized()) historyMessages = historyMessages.filterIsInstance<BotResponse>()
+                    getView()?.onChatHistory(historyMessages)
                     historyOffset += response.data.first.size
                     moreHistory = response.data.second
                     SDKConfig.setIsMinimized(false)
+                    if (historyCount > 0)
+                        preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
                 }
 
                 else -> {
@@ -459,5 +469,16 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 preferenceRepository.putBooleanValue(context, THEME_NAME, BotResponseConstants.IS_TIME_STAMP_REQUIRED, timeStamp.show)
             }
         }
+    }
+
+    fun onTerminate(isAgentTransfer: Boolean) {
+        if (isAgentTransfer && BotClient.isConnected()) {
+            botClient.sendCloseOrMinimizeEvent("", getBotConfigModel()?.botName!!, getBotConfigModel()?.botId!!)
+        }
+        preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
+    }
+
+    fun onMinimize(historyCount: Int) {
+        preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, historyCount)
     }
 }

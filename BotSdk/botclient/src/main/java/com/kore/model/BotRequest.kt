@@ -5,7 +5,7 @@ data class BotRequest(
     private val botInfo: BotInfoModel?,
     private val id: Long,
     override val messageId: String = "",
-    override val timeStamp: Long = 0,
+    override val timeMillis: Long = 0,
     override val isSend: Boolean = true,
     override val from: String? = null,
     override val createdOn: String = "",

@@ -99,12 +99,12 @@ class ChatHistoryRepositoryImpl : ChatHistoryRepository {
         val gson = Gson()
         val jsonPayload = gson.toJson(botPayLoad)
         val timeStamp = (isoFormatter.parse(createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset
-        val formattedTime = getFormattedTime(timeStamp, botName, true)
+        val formattedTime = getFormattedTime(timeStamp, botName, false)
         return gson.fromJson(jsonPayload, BotRequest::class.java)
             .copy(
                 messageId = msgId,
                 formattedTime = formattedTime,
-                timeStamp = timeStamp,
+                timeMillis = timeStamp,
                 messageDate = formattedSentDateV6(timeStamp),
                 createdOn = createdOn
             )
