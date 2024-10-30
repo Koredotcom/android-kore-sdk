@@ -455,7 +455,8 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
 
     private void scrollToBottom() {
         final int count = botsChatAdapter.getItemCount();
-        botsBubblesListView.post(() -> botsBubblesListView.smoothScrollToPosition(count - 1));
+        if (count > 0)
+            botsBubblesListView.post(() -> botsBubblesListView.smoothScrollToPosition(count - 1));
     }
 
     private final int limit = 10;

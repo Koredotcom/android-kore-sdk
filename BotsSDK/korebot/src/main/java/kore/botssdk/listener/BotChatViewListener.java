@@ -38,4 +38,6 @@ public interface BotChatViewListener extends BaseView {
     void showAlertDialog(EventModel eventModel);
 
     void hideAlertDialog();
+    void loadReconnectionChatHistory(final int _offset, final int limit);
+    void loadChatHistory(final int _offset, final int limit);
 }

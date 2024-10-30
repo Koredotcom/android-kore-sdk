@@ -95,6 +95,7 @@ public class BotChatViewModel extends ViewModel {
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     protected final int compressQualityInt = 100;
+    private final SharedPreferences sharedPreferences;
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -103,6 +104,7 @@ public class BotChatViewModel extends ViewModel {
         this.webHookRepository = new WebHookRepository(context, chatView);
         this.botClient = botClient;
         ACManager.getInstance().startLogout();
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
     public void getBrandingDetails(String botId, String botToken, boolean isReconnection) {
@@ -129,6 +131,15 @@ public class BotChatViewModel extends ViewModel {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
                 getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), isReconnection);
+                if (isReconnection) {
+                    if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 19) {
+                        chatView.loadChatHistory(0, 20);
+                    } else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0) {
+                        chatView.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
+                    } else {
+                        chatView.loadReconnectionChatHistory(0, 10);
+                    }
+                }
 
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
