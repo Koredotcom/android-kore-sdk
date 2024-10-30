@@ -102,6 +102,7 @@ public class BotChatViewModel extends ViewModel {
         this.chatView = chatView;
         this.webHookRepository = new WebHookRepository(context, chatView);
         this.botClient = botClient;
+        ACManager.getInstance().startLogout();
     }
 
     public void getBrandingDetails(String botId, String botToken, boolean isReconnection) {
@@ -255,6 +256,7 @@ public class BotChatViewModel extends ViewModel {
                                 sipAccount.setProxy(getProxyUrl(eventMessageModel.getAddresses().get(0)));
                                 sipAccount.setPort(5060);
                                 sipAccount.setTransport(Transport.UDP);
+                                sipAccount.setIceServers(eventMessageModel.getIceServer());
 
                                 Prefs.setSipAccount(sipAccount);
                                 Prefs.setAutoRedirect(true);

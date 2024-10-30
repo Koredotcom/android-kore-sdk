@@ -903,8 +903,6 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                         eventModel.getMessage().setType(BundleConstants.CALL_AGENT_WEBRTC_TERMINATED);
                         AppUtils.getBotClient().sendMessage(eventModel.getMessage());
                     }
-                   AudioCodesUA.getInstance().logout();
-
                     finish();
                 } else {
                     switchCallButton.setEnabled(false);

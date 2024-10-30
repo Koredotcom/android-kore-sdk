@@ -2,6 +2,10 @@ package kore.botssdk.audiocodes.webrtcclient.Structure;
 
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
 
+import org.webrtc.PeerConnection;
+
+import java.util.ArrayList;
+
 import kore.botssdk.R;
 import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.BasePrefs;
@@ -15,6 +19,8 @@ public class SipAccount {
     private String username;
     private String password;
     private String displayName;
+
+    private ArrayList<PeerConnection.IceServer> iceServers;
 
     public SipAccount() {
         proxy = BasePrefs.getString("SipAccountProxy");
@@ -82,6 +88,14 @@ public class SipAccount {
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
+    }
+
+    public void setIceServers(ArrayList<PeerConnection.IceServer> iceServers) {
+        this.iceServers = iceServers;
+    }
+
+    public ArrayList<PeerConnection.IceServer> getIceServers() {
+        return iceServers;
     }
 
     @Override

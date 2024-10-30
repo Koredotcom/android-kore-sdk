@@ -1116,7 +1116,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             @Override
             public void run() {
                 if (!ACManager.getInstance().isRegisterState()) {
-                    ACManager.getInstance().startLogin(false, false);
+                    ACManager.getInstance().startLogin(false, true);
                 }
 
                 if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin()) {

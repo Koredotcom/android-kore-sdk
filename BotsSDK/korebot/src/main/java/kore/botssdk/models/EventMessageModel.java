@@ -1,10 +1,11 @@
 package kore.botssdk.models;
 
+import org.webrtc.PeerConnection;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventMessageModel
-{
+public class EventMessageModel {
     private String type;
     private String conversationId;
     private String sipURI;
@@ -13,6 +14,7 @@ public class EventMessageModel
     private ArrayList<String> addresses;
     private String domain;
     private List<EventIceServersModel> iceServers;
+    ArrayList<PeerConnection.IceServer> iceServer = new ArrayList<>();
     private boolean restoreCall;
     private boolean screenShare;
     private String firstName;
@@ -25,8 +27,7 @@ public class EventMessageModel
     private String timestamp;
     private String productName;
 
-    public boolean isVideoCall()
-    {
+    public boolean isVideoCall() {
         return videoCall;
     }
 
@@ -96,6 +97,14 @@ public class EventMessageModel
 
     public String getSipUser() {
         return sipUser;
+    }
+
+    public ArrayList<PeerConnection.IceServer> getIceServer() {
+        for (EventIceServersModel eventIceServersModel : iceServers) {
+            PeerConnection.IceServer iceServer1 = new PeerConnection.IceServer(eventIceServersModel.getUrl(), eventIceServersModel.getUsername() != null ? eventIceServersModel.getUsername() : "", eventIceServersModel.getCredential() != null ? eventIceServersModel.getCredential() : "", PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK, getDomain());
+            iceServer.add(iceServer1);
+        }
+        return iceServer;
     }
 }
 
