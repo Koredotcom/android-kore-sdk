@@ -92,10 +92,10 @@ public class BotChatViewModel extends ViewModel {
     String lastMsgId = "";
     boolean isAgentTransfer = false;
     ArrayList<String> arrMessageList = new ArrayList<>();
-    private static String uniqueID = null;
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    protected final int compressQualityInt = 100;
-    private final SharedPreferences sharedPreferences;
+    static String uniqueID = null;
+    static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
+    final int compressQualityInt = 100;
+    final SharedPreferences sharedPreferences;
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -364,25 +364,6 @@ public class BotChatViewModel extends ViewModel {
             }
         }
         return uniqueID;
-    }
-
-    public String getUniqueID() {
-        return uniqueID;
-    }
-
-    public void addSentMessageToChat(String message) {
-        //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        botPayLoad.setMessage(botMessage);
-        BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
-        botPayLoad.setBotInfo(botInfo);
-        Gson gson = new Gson();
-        String jsonPayload = gson.toJson(botPayLoad);
-
-        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        sListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
     }
 
     public void textToSpeech(BotResponse botResponse, boolean isTTSEnabled) {
