@@ -57,6 +57,7 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
+import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
@@ -121,7 +122,6 @@ public class BotChatViewModel extends ViewModel {
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().setChatListener(sListener);
         }
-
         BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(context, SDKConfiguration.Server.customData, isReconnect);
     }
 
@@ -161,10 +161,9 @@ public class BotChatViewModel extends ViewModel {
         }
     };
 
-    public void sendReadReceipts()
-    {
+    public void sendReadReceipts() {
         //Added newly for send receipts
-        if (botClient != null && arrMessageList.size() > 0 && isAgentTransfer) {
+        if (botClient != null && !arrMessageList.isEmpty() && isAgentTransfer) {
             botClient.sendReceipts(BundleConstants.MESSAGE_READ, arrMessageList.get((arrMessageList.size() - 1)));
             arrMessageList = new ArrayList<>();
         }
@@ -303,8 +302,7 @@ public class BotChatViewModel extends ViewModel {
         return uniqueID;
     }
 
-    public String getUniqueID()
-    {
+    public String getUniqueID() {
         return uniqueID;
     }
 
@@ -460,81 +458,12 @@ public class BotChatViewModel extends ViewModel {
         prefsEditor.apply();
     }
 
-    public void sendWebHookMessage(String jwt, boolean b, String message, ArrayList<HashMap<String, String>> attachments)
-    {
-        webHookRepository.sendWebHookMessage(jwt, b,message, attachments);
+    public void sendWebHookMessage(String jwt, boolean b, String message, ArrayList<HashMap<String, String>> attachments) {
+        webHookRepository.sendWebHookMessage(jwt, b, message, attachments);
     }
 
-    public void getWebHookMeta(String jwt)
-    {
+    public void getWebHookMeta(String jwt) {
         webHookRepository.getWebHookMeta(jwt);
-    }
-
-    public void sendImage(String filePath, String fileName, String filePathThumbnail)
-    {
-        new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).executeAsync();
-    }
-    protected class SaveCapturedImageTask extends AsyncTaskExecutor<String> {
-        private final String filePath;
-        private final String fileName;
-        private final String filePathThumbnail;
-        private String orientation;
-        private String extn = null;
-
-        public SaveCapturedImageTask(String filePath, String fileName, String filePathThumbnail) {
-            this.filePath = filePath;
-            this.fileName = fileName;
-            this.filePathThumbnail = filePathThumbnail;
-        }
-
-        @Override
-        protected void doInBackground(String... strings) {
-            OutputStream fOut = null;
-            if (filePath != null) {
-                extn = filePath.substring(filePath.lastIndexOf(".") + 1);
-                Bitmap thePic = BitmapUtils.decodeBitmapFromFile(filePath, 800, 600, false);
-                if (thePic != null) {
-                    try {
-                        // compress the image
-                        File _file = new File(filePath);
-
-                        LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            fOut = Files.newOutputStream(_file.toPath());
-                        } else fOut = new FileOutputStream(_file);
-
-                        thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
-                        thePic = rotateIfNecessary(filePath, thePic);
-                        orientation = thePic.getWidth() > thePic.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-                        fOut.flush();
-                    } catch (Exception e) {
-                        LogUtils.e(LOG_TAG, e.toString());
-                    } finally {
-                        try {
-                            if (fOut != null)
-                                fOut.close();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute() {
-            if (extn != null) {
-                chatView.uploadBulkFile(fileName, filePath, extn, filePathThumbnail, orientation);
-            } else {
-                showToast(context, "Unable to attach!");
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            // update UI on task cancelled
-            showToast(context,"Unable to attach!");
-        }
     }
 
 }

@@ -25,6 +25,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
@@ -43,14 +44,6 @@ public class KaMediaUtils {
     public static final String DOWNLOAD_ARCHIVE_FOLDER = "Kore Archieve";
     private static final String LOG_TAG = "MediaUtil";
     static File mediaStorageDir = null;
-
-    public static class KaEnvironment {
-        public static File getExternalStorageDirectory() {
-            File f;
-            f = Environment.getExternalStorageDirectory();
-            return f;
-        }
-    }
 
     public static void setupAppDir(Context context, String type) {
         try {
@@ -83,7 +76,7 @@ public class KaMediaUtils {
         // Create a media file name
         if (fileName != null && fileName.indexOf(".") > 0)
             fileName = fileName.substring(0, fileName.lastIndexOf("."));
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS").format(new Date()),
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmssSSS", Locale.getDefault()).format(new Date()),
                 appDirPath = getAppDir();
         File mediaFile = null;
         int attemptCount = 0;
@@ -223,7 +216,7 @@ public class KaMediaUtils {
                 final String type = split[0];
 
                 if ("primary".equalsIgnoreCase(type)) {
-                    return KaEnvironment.getExternalStorageDirectory() + "/" + split[1];
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
             } else if (isDownloadsDocument(uri)) {
 

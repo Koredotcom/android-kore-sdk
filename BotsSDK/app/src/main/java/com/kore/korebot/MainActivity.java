@@ -5,10 +5,8 @@ import static android.Manifest.permission.POST_NOTIFICATIONS;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,14 +18,10 @@ import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 
-import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
@@ -43,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
 
         SDKConfiguration.Server.setQueryParams(getQueryParams());
         SDKConfiguration.Server.setCustomData(getCustomData());
+//        SDKConfig.addCustomContentFragment(new CustomContentFragment());
+//        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
         //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
         String jwtToken = "";

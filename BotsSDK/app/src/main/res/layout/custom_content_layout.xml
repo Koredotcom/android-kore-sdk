@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rvChatContent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:id="@+id/header_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <kore.botssdk.view.CustomTextViewBold
+            android:id="@+id/tvChaseTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/dimen_15dp"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginEnd="@dimen/dimen_15dp"
+            android:layout_marginBottom="@dimen/dimen_15dp"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_header"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/custom_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/header_layout"
+        android:gravity="center"
+        android:paddingVertical="10dp"
+        android:text="Custom Content Layout"
+        android:textSize="16sp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/custom_text">
+
+        <include
+            layout="@layout/kora_timestamps_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_layout"
+            android:visibility="gone" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeContainerChat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/quick_reply_view"
+            android:layout_marginBottom="7dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chatContentListView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_marginBottom="2dp"
+                android:choiceMode="singleChoice"
+                android:divider="@android:color/transparent"
+                android:listSelector="@color/white"
+                android:nestedScrollingEnabled="false"
+                android:orientation="vertical"
+                android:transcriptMode="normal"
+                android:visibility="visible"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <kore.botssdk.view.QuickReplyView
+            android:id="@+id/quick_reply_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="3dp"
+            android:visibility="gone" />
+
+
+        <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"
+            xmlns:dots="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/botTypingStatus"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/typing_layout_height"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="@dimen/typing_layout_margin_left"
+            android:layout_marginEnd="@dimen/typing_layout_margin_right"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <!-- Type Image -->
+            <kore.botssdk.view.CircularProfileView
+                android:id="@+id/typing_status_item_cpv"
+                android:layout_width="@dimen/typing_layout_cpv_width"
+                android:layout_height="@dimen/typing_layout_cpv_height"
+                android:layout_gravity="center_vertical"
+                android:adjustViewBounds="true"
+                cpv:font_style="roboto_regular"
+                cpv:text_size="12dp" />
+
+            <!-- Presence Dots -->
+            <kore.botssdk.view.DotsTextView
+                android:id="@+id/typing_status_item_dots"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="@dimen/dot_view_margin_bottom"
+                android:textColor="@color/left_bubble_text_color"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                dots:autoplay="true"
+                dots:period="1000" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
