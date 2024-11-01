@@ -10,6 +10,7 @@ import kore.botssdk.fragment.footer.BaseFooterFragment;
 public class SDKConfig {
     private static BaseContentFragment customContentFragment = null;
     private static BaseFooterFragment customFooterFragment = null;
+    private static boolean isShowHeader = true;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
@@ -56,4 +57,11 @@ public class SDKConfig {
 
     public static BaseFooterFragment getCustomFooterFragment() {return customFooterFragment;}
 
+    public static boolean isShowHeader() {
+        return isShowHeader;
+    }
+
+    public static void setIsShowHeader(boolean isShowHeader) {
+        SDKConfig.isShowHeader = isShowHeader;
+    }
 }

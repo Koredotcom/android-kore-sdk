@@ -30,6 +30,7 @@ import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.repository.history.HistoryRepository;
 import kore.botssdk.utils.BundleUtils;
@@ -93,6 +94,7 @@ public class NewBotContentFragment extends BaseContentFragment {
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         botsBubblesListView.setItemViewCacheSize(100);
         botsBubblesListView.setItemAnimator(null);
+        botHeaderLayout.setVisibility(SDKConfig.isShowHeader() ? View.VISIBLE : View.GONE);
     }
 
     @Override

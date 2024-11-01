@@ -64,6 +64,7 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.SDKConfiguration.Client;
 import kore.botssdk.net.WebHookRestBuilder;
@@ -140,7 +141,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
         botHeaderLayout = view.findViewById(R.id.header_layout);
         headerView.setVisibility(View.GONE);
-        tvChaseTitle.setText(Html.fromHtml(Client.bot_name));
+        if (SDKConfig.isShowHeader()) tvChaseTitle.setText(Html.fromHtml(Client.bot_name));
         sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
@@ -157,10 +158,12 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
             rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
         }
 
-        botHeaderLayout.setBackgroundColor(Color.parseColor(textBgColor));
-        tvChaseTitle.setTextColor(Color.parseColor(textColor));
+        if (SDKConfig.isShowHeader()) {
+            botHeaderLayout.setBackgroundColor(Color.parseColor(textBgColor));
+            tvChaseTitle.setTextColor(Color.parseColor(textColor));
+        }
 
-        if (!StringUtils.isNullOrEmpty(botName)) tvChaseTitle.setText(botName);
+        if (!StringUtils.isNullOrEmpty(botName) && SDKConfig.isShowHeader()) tvChaseTitle.setText(botName);
 
         if (SDKConfiguration.OverrideKoreConfig.paginated_scroll_enable) {
             swipeRefreshLayout.setEnabled(true);

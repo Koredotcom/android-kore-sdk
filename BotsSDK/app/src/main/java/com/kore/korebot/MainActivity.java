@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         SDKConfiguration.Server.setQueryParams(getQueryParams());
         SDKConfiguration.Server.setCustomData(getCustomData());
+//        SDKConfig.setIsShowHeader(false);
 //        SDKConfig.addCustomContentFragment(new CustomContentFragment());
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
@@ -100,6 +101,13 @@ public class MainActivity extends AppCompatActivity {
                 launchBotChatActivity();
             }
         });
+
+//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//        BotChatFragment fragment = new BotChatFragment();
+//        fragment.setListener(() -> {
+//        });
+//        transaction.add(com.kore.korebot.R.id.container, fragment).commit();
+
 
 //        askNotificationPermission();
     }
