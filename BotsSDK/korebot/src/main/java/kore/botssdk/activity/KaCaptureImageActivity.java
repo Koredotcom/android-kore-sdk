@@ -2,9 +2,9 @@ package kore.botssdk.activity;
 
 import static android.os.Build.VERSION_CODES.TIRAMISU;
 import static kore.botssdk.utils.BundleConstants.CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST;
-import static kore.botssdk.utils.BundleConstants.CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -904,7 +904,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 final String type = split[0];
 
                 if ("primary".equalsIgnoreCase(type)) {
-                    return KaMediaUtils.KaEnvironment.getExternalStorageDirectory() + "/" + split[1];
+                    return Environment.getExternalStorageDirectory() + "/" + split[1];
                 }
             }
             // DownloadsProvider

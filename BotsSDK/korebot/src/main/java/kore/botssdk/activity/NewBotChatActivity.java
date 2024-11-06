@@ -1,7 +1,5 @@
 package kore.botssdk.activity;
 
-import static kore.botssdk.utils.ToastUtils.showToast;
-
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -13,12 +11,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Messenger;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
@@ -39,61 +32,47 @@ import kore.botssdk.R;
 import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.fileupload.core.KoreWorker;
-import kore.botssdk.fileupload.core.UploadBulkFile;
-import kore.botssdk.fragment.ComposeFooterFragment;
-import kore.botssdk.fragment.NewBotContentFragment;
+import kore.botssdk.fragment.content.BaseContentFragment;
+import kore.botssdk.fragment.content.NewBotContentFragment;
+import kore.botssdk.fragment.footer.BaseFooterFragment;
+import kore.botssdk.fragment.footer.ComposeFooterFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
-import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
-import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.models.KoreComponentModel;
-import kore.botssdk.models.KoreMedia;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.WebHookRestBuilder;
 import kore.botssdk.pushnotification.PushNotificationRegister;
-import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.ClosingService;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.viewmodels.chat.BotChatViewModel;
 import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
-import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class NewBotChatActivity extends AppCompatActivity implements BotChatViewListener, ComposeFooterInterface, InvokeGenericWebViewInterface {
-    FrameLayout chatLayoutFooterContainer;
-    FrameLayout chatLayoutContentContainer;
-    FrameLayout chatLayoutPanelContainer;
-    ProgressBar taskProgressBar;
-    FragmentTransaction fragmentTransaction;
-    String chatBot, taskBotId, jwt;
-    BotClient botClient;
-    NewBotContentFragment botContentFragment;
-    ComposeFooterFragment composeFooterFragment;
-    BotContentFragmentUpdate botContentFragmentUpdate;
-    ComposeFooterUpdate composeFooterUpdate;
-    SharedPreferences sharedPreferences;
-    BotChatViewModel mViewModel;
-    boolean isAgentTransfer;
-    boolean isReconnection;
-    final Handler messageHandler = new Handler();
-    TTSSynthesizer ttsSynthesizer;
+    private ProgressBar taskProgressBar;
+    private String jwt;
+    private BotClient botClient;
+    private BaseContentFragment botContentFragment;
+    private BaseFooterFragment baseFooterFragment;
+    private SharedPreferences sharedPreferences;
+    private BotChatViewModel mViewModel;
+    private boolean isAgentTransfer;
+    private boolean isReconnection;
 
-    BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (isAgentTransfer && botClient != null) {
@@ -144,53 +123,46 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (bundle != null) {
             jwt = bundle.getString(BundleUtils.JWT_TKN, "");
         }
-        chatBot = SDKConfiguration.Client.bot_name;
-        taskBotId = SDKConfiguration.Client.bot_id;
     }
 
     private void findViews() {
-        chatLayoutFooterContainer = findViewById(R.id.chatLayoutFooterContainer);
-        chatLayoutContentContainer = findViewById(R.id.chatLayoutContentContainer);
-        chatLayoutPanelContainer = findViewById(R.id.chatLayoutPanelContainer);
         taskProgressBar = findViewById(R.id.taskProgressBar);
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         RestBuilder.setContext(NewBotChatActivity.this);
         WebHookRestBuilder.setContext(NewBotChatActivity.this);
         BrandingRestBuilder.setContext(NewBotChatActivity.this);
 
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
-        botContentFragment = new NewBotContentFragment();
+        BaseContentFragment customContentFragment = SDKConfig.getCustomContentFragment();
+        botContentFragment = customContentFragment != null ? customContentFragment : new NewBotContentFragment();
         botContentFragment.setArguments(getIntent().getExtras());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
-        setBotContentFragmentUpdate(botContentFragment);
 
         //Add Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        composeFooterFragment = new ComposeFooterFragment();
-        composeFooterFragment.setArguments(getIntent().getExtras());
-        composeFooterFragment.setComposeFooterInterface(this);
-        composeFooterFragment.setBottomOptionData(mViewModel.getDataFromTxt());
-        composeFooterFragment.setBotClient(botClient);
-        fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
-        setComposeFooterUpdate(composeFooterFragment);
+        BaseFooterFragment customFooterFragment = SDKConfig.getCustomFooterFragment();
+        baseFooterFragment = customFooterFragment != null ? customFooterFragment : new ComposeFooterFragment();
+        baseFooterFragment.setArguments(getIntent().getExtras());
+        baseFooterFragment.setComposeFooterInterface(this);
+        baseFooterFragment.setBottomOptionData(mViewModel.getDataFromTxt());
+        baseFooterFragment.setBotClient(botClient);
+        fragmentTransaction.add(R.id.chatLayoutFooterContainer, baseFooterFragment).commit();
 
-        ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
         KoreEventCenter.register(this);
     }
 
     private void setupTextToSpeech() {
-        composeFooterFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
-        botContentFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
+        baseFooterFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
     }
 
     @Override
     public void addMessageToAdapter(BotResponse baseBotMessage) {
         botContentFragment.addMessageToBotChatAdapter(baseBotMessage);
-        mViewModel.textToSpeech(baseBotMessage, composeFooterFragment.isTTSEnabled());
+        mViewModel.textToSpeech(baseBotMessage, baseFooterFragment.isTTSEnabled());
         botContentFragment.setQuickRepliesIntoFooter(baseBotMessage);
         botContentFragment.showCalendarIntoFooter(baseBotMessage);
     }
@@ -200,27 +172,18 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
             this.isReconnection = isReconnection;
             taskProgressBar.setVisibility(View.GONE);
-            composeFooterFragment.enableSendButton();
+            baseFooterFragment.enableSendButton();
         }
-    }
-
-    public void setBotContentFragmentUpdate(BotContentFragmentUpdate botContentFragmentUpdate) {
-        this.botContentFragmentUpdate = botContentFragmentUpdate;
-    }
-
-    public void setComposeFooterUpdate(ComposeFooterUpdate composeFooterUpdate) {
-        this.composeFooterUpdate = composeFooterUpdate;
     }
 
     @Override
     public void onBrandingDetails(BrandingModel brandingModel) {
-
         if (brandingModel != null) {
             if (botContentFragment != null)
                 botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetTextColor(), brandingModel.getBotName());
 
-            if (composeFooterFragment != null)
-                composeFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
+            if (baseFooterFragment != null)
+                baseFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
         }
 
         if (botContentFragment != null && isReconnection) {
@@ -247,12 +210,12 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     @Override
     public void setIsAgentConnected(boolean isAgentConnected) {
         isAgentTransfer = isAgentConnected;
-        composeFooterFragment.setIsAgentConnected(isAgentConnected);
+        baseFooterFragment.setIsAgentConnected(isAgentConnected);
     }
 
     @Override
     public void enableSendButton() {
-        composeFooterFragment.enableSendButton();
+        baseFooterFragment.enableSendButton();
     }
 
     @Override
@@ -273,14 +236,14 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
                 break;
             case CONNECTED: {
                 taskProgressBar.setVisibility(View.GONE);
-                composeFooterFragment.enableSendButton();
+                baseFooterFragment.enableSendButton();
             }
             break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED: {
                 taskProgressBar.setVisibility(View.VISIBLE);
-                composeFooterFragment.setDisabled(true);
-                composeFooterFragment.updateUI();
+                baseFooterFragment.setDisabled(true);
+                baseFooterFragment.updateUI();
             }
             break;
             default:
@@ -290,13 +253,10 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void showReconnectionStopped() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                if (which == DialogInterface.BUTTON_POSITIVE) {
-                    BotSocketConnectionManager.killInstance();
-                    finish();
-                }
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            if (which == DialogInterface.BUTTON_POSITIVE) {
+                BotSocketConnectionManager.killInstance();
+                finish();
             }
         };
 
@@ -311,78 +271,11 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
-        composeFooterFragment.addAttachmentToAdapter(attachmentKey);
+        baseFooterFragment.addAttachmentToAdapter(attachmentKey);
     }
 
     @Override
     public void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation) {
-        if (!SDKConfiguration.Client.isWebHook) {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(NewBotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(NewBotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), NewBotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-        } else {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(NewBotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), NewBotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), SDKConfiguration.Server.SERVER_URL, orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
-        }
-    }
-
-    @SuppressLint("HandlerLeak")
-    final Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public synchronized void handleMessage(Message msg) {
-            Bundle reply = msg.getData();
-            LogUtils.e("shri", reply + "------------------------------");
-            if (reply.getBoolean("success", true)) {
-                String mediaFilePath = reply.getString("filePath");
-                String MEDIA_TYPE = reply.getString("fileExtn");
-                String mediaFileId = reply.getString("fileId");
-                String mediaFileName = reply.getString("fileName");
-                String componentType = reply.getString("componentType");
-                String thumbnailURL = reply.getString("thumbnailURL");
-                String fileSize = reply.getString("fileSize");
-                KoreComponentModel koreMedia = new KoreComponentModel();
-                koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
-                HashMap<String, Object> cmpData = new HashMap<>(1);
-                cmpData.put("fileName", mediaFileName);
-
-                koreMedia.setComponentData(cmpData);
-                koreMedia.setMediaFileName(getComponentId(componentType));
-                koreMedia.setMediaFilePath(mediaFilePath);
-                koreMedia.setFileSize(fileSize);
-
-                koreMedia.setMediafileId(mediaFileId);
-                koreMedia.setMediaThumbnail(thumbnailURL);
-
-                messageHandler.postDelayed(new Runnable() {
-                    public void run() {
-                        HashMap<String, String> attachmentKey = new HashMap<>();
-                        attachmentKey.put("fileName", mediaFileName + "." + MEDIA_TYPE);
-                        attachmentKey.put("fileType", componentType);
-                        attachmentKey.put("fileId", mediaFileId);
-                        attachmentKey.put("localFilePath", mediaFilePath);
-                        attachmentKey.put("fileExtn", MEDIA_TYPE);
-                        attachmentKey.put("thumbnailURL", thumbnailURL);
-                        addAttachmentToAdapter(attachmentKey);
-                    }
-                }, 400);
-            } else {
-                String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
-                if (!TextUtils.isEmpty(errorMsg)) {
-                    LogUtils.i("File upload error", errorMsg);
-                    showToast(NewBotChatActivity.this, errorMsg);
-                }
-            }
-        }
-    };
-
-    String getComponentId(String componentType) {
-        if (componentType != null) {
-            if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_IMAGE)) {
-                return "image_" + System.currentTimeMillis();
-            } else if (componentType.equalsIgnoreCase(KoreMedia.MEDIA_TYPE_VIDEO)) {
-                return "video_" + System.currentTimeMillis();
-            } else {
-                return "doc_" + System.currentTimeMillis();
-            }
-        }
-        return "";
     }
 
     @Override
@@ -432,36 +325,30 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         this.jwt = jwt;
         if (SDKConfiguration.Client.isWebHook) {
             if (botContentFragment != null) botContentFragment.setJwtTokenForWebHook(jwt);
-
-            if (composeFooterFragment != null) composeFooterFragment.setJwtToken(jwt);
-
+            if (baseFooterFragment != null) baseFooterFragment.setJwtToken(jwt);
             mViewModel.getWebHookMeta(jwt);
         }
     }
 
     @Override
     public void onFormActionButtonClicked(FormActionTemplate fTemplate) {
-
     }
 
     @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
-        composeFooterFragment.setComposeText(text);
+        baseFooterFragment.setComposeText(text);
     }
 
     @Override
     public void sendImage(String fP, String fN, String fPT) {
-        mViewModel.sendImage(fP, fN, fPT);
     }
 
     @Override
     public void externalReadWritePermission(String fileUrl) {
-
     }
 
     @Override
     public void onDeepLinkClicked(String url) {
-
     }
 
     @Override
@@ -583,12 +470,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void onStart() {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                BotSocketConnectionManager.getInstance().subscribe();
-            }
-        });
+        new Handler().post(() -> BotSocketConnectionManager.getInstance().subscribe());
         super.onStart();
     }
 

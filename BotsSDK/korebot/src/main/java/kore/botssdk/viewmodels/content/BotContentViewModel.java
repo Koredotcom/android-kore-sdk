@@ -27,10 +27,10 @@ import kore.botssdk.viewmodels.BaseViewModel;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate> {
-    Context context;
-    BotContentFragmentUpdate chatView;
-    HistoryRepository repository;
-    int offset = 0;
+    private Context context;
+    private final BotContentFragmentUpdate chatView;
+    private final HistoryRepository repository;
+    private int offset = 0;
 
     public BotContentViewModel(Context context, BotContentFragmentUpdate chatView, HistoryRepository repository) {
         this.context = context.getApplicationContext();
@@ -39,184 +39,98 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
     }
 
     public void loadChatHistory(final int _offset, final int limit, String jwt) {
+        Observer<ServerBotMsgResponse> observer = new Observer<>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+            }
+
+            @Override
+            public void onNext(@NonNull ServerBotMsgResponse re) {
+                ArrayList<BaseBotMessage> list = null;
+                list = re.getBotMessages();
+                offset = (!SDKConfiguration.Client.isWebHook ? _offset : 0) + re.getOriginalSize();
+
+                if (list != null && !list.isEmpty()) {
+                    chatView.onChatHistory(list, offset, _offset == 0);
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                chatView.onChatHistory(null, 0, false);
+            }
+
+            @Override
+            public void onComplete() {
+                chatView.onChatHistory(null, 0, false);
+            }
+        };
         if (!SDKConfiguration.Client.isWebHook)
-            repository.getHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
-                }
-
-                @Override
-                public void onNext(@NonNull ServerBotMsgResponse re) {
-                    ArrayList<BaseBotMessage> list;
-                    list = re.getBotMessages();
-                    offset = _offset + re.getOriginalSize();
-
-                    if (list != null && list.size() > 0) {
-                        chatView.onChatHistory(list, offset, _offset == 0);
-                    }
-
-                    if (list != null) {
-                        list.size();
-                    }
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    chatView.onChatHistory(null, 0, false);
-                }
-
-                @Override
-                public void onComplete() {
-                    chatView.onChatHistory(null, 0, false);
-                }
-            });
+            repository.getHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
         else
-            repository.getWebHookHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
-
-                }
-
-                @Override
-                public void onNext(@NonNull ServerBotMsgResponse re) {
-                    ArrayList<BaseBotMessage> list = null;
-                    list = re.getBotMessages();
-                    offset = re.getOriginalSize();
-
-                    if (list != null && list.size() > 0) {
-                        chatView.onChatHistory(list, offset, _offset == 0);
-                    }
-
-                    if (list != null) {
-                        list.size();
-                    }
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    chatView.onChatHistory(null, 0, false);
-                }
-
-                @Override
-                public void onComplete() {
-                    chatView.onChatHistory(null, 0, false);
-                }
-            });
+            repository.getWebHookHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
     }
 
     public void loadReconnectionChatHistory(final int _offset, final int limit, String jwt, ArrayList<BaseBotMessage> baseBotMessageList) {
+        Observer<ServerBotMsgResponse> observer = new Observer<>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+            }
+
+            @Override
+            public void onNext(@NonNull ServerBotMsgResponse re) {
+                ArrayList<BaseBotMessage> list;
+                list = re.getBotMessages();
+                offset = _offset + re.getOriginalSize();
+
+                if (list != null && !list.isEmpty()) {
+                    int pos = 0;
+                    ArrayList<BaseBotMessage> botResp = new ArrayList<>();
+                    ArrayList<BaseBotMessage> requiredList = new ArrayList<>();
+
+                    for (int i = 0; i < list.size(); i++) {
+                        if (list.get(i) instanceof BotResponse) {
+                            botResp.add(list.get(i));
+                        }
+                    }
+
+                    for (int i = 0; i < baseBotMessageList.size(); i++) {
+                        for (int j = 0; j < botResp.size(); j++) {
+                            if (baseBotMessageList.get(i).getCreatedInMillis() == botResp.get(j).getCreatedInMillis()) {
+                                pos = j;
+                            }
+                        }
+                    }
+
+                    if (pos != 0 && (pos + 1) < botResp.size()) {
+                        for (int i = pos + 1; i < botResp.size(); i++) {
+                            if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
+                                ((BotResponse) botResp.get(i)).setFromAgent(true);
+                            requiredList.add(botResp.get(i));
+                        }
+                    }
+
+                    chatView.onReconnectionChatHistory(requiredList, offset, false);
+                }
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                chatView.onChatHistory(null, 0, false);
+            }
+
+            @Override
+            public void onComplete() {
+                chatView.onChatHistory(null, 0, false);
+            }
+        };
         if (!SDKConfiguration.Client.isWebHook)
-            repository.getHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
-                }
-
-                @Override
-                public void onNext(@NonNull ServerBotMsgResponse re) {
-                    ArrayList<BaseBotMessage> list;
-                    list = re.getBotMessages();
-                    offset = _offset + re.getOriginalSize();
-
-                    if (list != null && list.size() > 0) {
-                        int pos = 0;
-                        ArrayList<BaseBotMessage> botResp = new ArrayList<>();
-                        ArrayList<BaseBotMessage> requiredList = new ArrayList<>();
-
-                        for (int i = 0; i < list.size(); i++) {
-                            if (list.get(i) instanceof BotResponse) {
-                                botResp.add(list.get(i));
-                            }
-                        }
-
-                        for (int i = 0; i < baseBotMessageList.size(); i++) {
-                            for (int j = 0; j < botResp.size(); j++) {
-                                if (baseBotMessageList.get(i).getCreatedInMillis() == botResp.get(j).getCreatedInMillis()) {
-                                    pos = j;
-                                }
-                            }
-                        }
-
-                        if (pos != 0 && (pos + 1) < botResp.size()) {
-                            for (int i = pos + 1; i < botResp.size(); i++) {
-                                if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
-                                    ((BotResponse) botResp.get(i)).setFromAgent(true);
-                                requiredList.add(botResp.get(i));
-                            }
-                        }
-
-                        chatView.onReconnectionChatHistory(requiredList, offset, false);
-                    }
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    chatView.onChatHistory(null, 0, false);
-                }
-
-                @Override
-                public void onComplete() {
-                    chatView.onChatHistory(null, 0, false);
-                }
-            });
+            repository.getHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
         else
-            repository.getWebHookHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
-
-                }
-
-                @Override
-                public void onNext(@NonNull ServerBotMsgResponse re) {
-
-                    ArrayList<BaseBotMessage> list;
-                    list = re.getBotMessages();
-                    offset = _offset + re.getOriginalSize();
-
-                    if (list != null && list.size() > 0) {
-                        int pos = 0;
-                        ArrayList<BaseBotMessage> botResp = new ArrayList<>();
-                        ArrayList<BaseBotMessage> requiredList = new ArrayList<>();
-
-                        for (int i = 0; i < list.size(); i++) {
-                            if (list.get(i) instanceof BotResponse) {
-                                botResp.add(list.get(i));
-                            }
-                        }
-
-                        for (int i = 0; i < baseBotMessageList.size(); i++) {
-                            for (int j = 0; j < botResp.size(); j++) {
-                                if (baseBotMessageList.get(i).getCreatedInMillis() == botResp.get(j).getCreatedInMillis()) {
-                                    pos = j;
-                                }
-                            }
-                        }
-
-                        if (pos != 0 && (pos + 1) < botResp.size()) {
-                            for (int i = pos + 1; i < botResp.size(); i++) {
-                                if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
-                                    ((BotResponse) botResp.get(i)).setFromAgent(true);
-                                requiredList.add(botResp.get(i));
-                            }
-                        }
-
-                        chatView.onReconnectionChatHistory(requiredList, offset, false);
-                    }
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    chatView.onChatHistory(null, 0, false);
-                }
-
-                @Override
-                public void onComplete() {
-                    chatView.onChatHistory(null, 0, false);
-                }
-            });
+            repository.getWebHookHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
     }
 
     public CalendarConstraints.Builder minRange(String startDate, String date, String format) {
-
         if (StringUtils.isNullOrEmpty(date) && StringUtils.isNullOrEmpty(startDate)) {
             CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
             constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
