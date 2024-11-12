@@ -7,7 +7,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
@@ -114,6 +113,11 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             registerReceiver(onDestroyReceiver, IntentFilter(BundleConstants.DESTROY_EVENT))
         }
         startService(Intent(this.applicationContext, ClosingService::class.java))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        botChatViewModel.onTerminate(isAgentTransfer)
     }
 
     private fun addFragmentsToContainer(id: Int, fragment: Fragment) {

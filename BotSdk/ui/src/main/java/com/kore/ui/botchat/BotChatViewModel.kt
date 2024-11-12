@@ -473,7 +473,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     fun onTerminate(isAgentTransfer: Boolean) {
         if (isAgentTransfer && BotClient.isConnected()) {
-            botClient.sendCloseOrMinimizeEvent("", getBotConfigModel()?.botName!!, getBotConfigModel()?.botId!!)
+            sendCloseOrMinimizeEvent(R.string.agent_bot_close_event)
         }
         preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
     }
