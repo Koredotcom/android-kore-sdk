@@ -1,7 +1,7 @@
 ## Kore SDK
 Kore offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
 
-With just a few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.com/docs/bots/kore-web-sdk/
+With just a few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language.
 
 ## Kore Android SDK for developers
 
@@ -25,7 +25,7 @@ create new or use existing SDK app to obtain client id and client secret Obtain 
 Kore is providing botclient library to communicate with the bot and ui to display content and widgets.
 "BotClient" with "ui" and "widgets" -> Which can be used to communicate with the bot and can utilize the predefined templates, activities, fragments and widgets.
 
-Create your own app and add the dependency(**implementation 'com.github.Koredotcom.android-kore-sdk:11.0.2'**) for botclient and create following classes in your app module.
+Create your own app and add the dependency(**implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'**) for botclient and create following classes in your app module.
 
 Following are the steps needed to follow to integrate the libraries.
 To use these libraries we must configure the bot credentials as follows.
@@ -79,7 +79,7 @@ SDKConfig.setWidgetConfig(widgetConfigModel)
 ```
 **2**. Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.Koredotcom.android-kore-sdk:11.0.2'
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'
 ```
 **3**. You can initialize the bot by providing the bot config like mentioned in **Config-1** and **Config-2**
 
@@ -101,7 +101,7 @@ maven { url 'https://www.jitpack.io' }
 ```
 ### Step-2: Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.Koredotcom.android-kore-sdk:11.0.2'
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'
 ```
 ### Step-3: You can change the bot config and widget config like below
 ```
