@@ -1,7 +1,7 @@
 ## Kore SDK
 Kore offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
 
-With just a few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.com/docs/bots/kore-web-sdk/
+With just a few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language.
 
 ## Kore Android SDK for developers
 
@@ -22,10 +22,10 @@ create new or use existing SDK app to obtain client id and client secret Obtain 
 ## Instructions
 
 # Configuration changes
-Kore is providing botclient library to communicate with the bot and ui to display content and widgets.
-"BotClient" with "ui" and "widgets" -> Which can be used to communicate with the bot and can utilize the predefined templates, activities, fragments and widgets.
+Kore is providing botclient library to communicate with the bot and ui to display content.
+"BotClient" with "ui" -> Which can be used to communicate with the bot and can utilize the predefined templates, activities, fragments.
 
-Create your own app and add the dependency(**implementation 'com.github.Koredotcom.android-kore-sdk:11.0.2'**) for botclient and create following classes in your app module.
+Create your own app and add the dependency(**implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'**) for botclient and create following classes in your app module.
 
 Following are the steps needed to follow to integrate the libraries.
 To use these libraries we must configure the bot credentials as follows.
@@ -47,22 +47,6 @@ To use these libraries we must configure the bot credentials as follows.
  SDKConfig.initialize(botConfigModel)
 
 ```
-#### Config-2:
-
-To use the widgets library, you need to make the following configuration.
-
-```
-val widgetConfigModel = WidgetConfigModel(
-        "<botname>",
-        "<bot_id>",
-        "<bot_client_id>",
-        "<bot_client_secret>",
-        "<bot_base_url>",
-        "<identity>",  -> Identity should be **unique for each device**. Don't use "UUID.randomUUID().toString()". It's better to use your device id. If we use the same identity for multiple devices then we will face the session contamination issue.
-        "<jwt_token_url>", -> Jwt token generation url(If you want to use your own jwt token url).
-    )
-
-SDKConfig.setWidgetConfig(widgetConfigModel)
 
 ```
 
@@ -79,9 +63,9 @@ SDKConfig.setWidgetConfig(widgetConfigModel)
 ```
 **2**. Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.Koredotcom.android-kore-sdk:11.0.2'
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'
 ```
-**3**. You can initialize the bot by providing the bot config like mentioned in **Config-1** and **Config-2**
+**3**. You can initialize the bot by providing the bot config like mentioned in **Config-1**
 
 **4**. You can navigate to the bot chat window through Intent as below snippet
 ```
@@ -101,7 +85,7 @@ maven { url 'https://www.jitpack.io' }
 ```
 ### Step-2: Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.Koredotcom.android-kore-sdk:11.0.2'
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'
 ```
 ### Step-3: You can change the bot config and widget config like below
 ```
@@ -122,20 +106,6 @@ val botConfigModel = BotConfigModel(
 
 ```
 
-```
-val widgetConfigModel = WidgetConfigModel(
-        "SDK Demo",
-            "st-7716ac36-2786-5bdf-b2cc-0d50474b6f87",
-            "cs-ff66f2cb-440b-5f37-8a7a-680e109066a8",
-            "GHCir4+c3mKkqpwiTRipaXzPj5ykFUWkKMPAGhc1m3U=",
-            "https://sit-xo.kore.ai/",
-            "123456789078643234567",
-            "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts",
-    )
-
-SDKConfig.setWidgetConfig(widgetConfigModel)
-
-```
 ### Step-4: You can initialize and Set the callback listener for BotClient class.
 
 ```
@@ -249,20 +219,7 @@ private fun createRows(messages: List<BaseBotMessage>): List<SimpleListRow>{
 ----
 1. Enable the webhook channel by setting **isWebhook = true** in **Config-1** in bot configuration.
 	
-2. Follow Config-1, Config-2 and Step-1 to Step-10.
-
-### How to integrate widget panel
-
-Enable the panel by setting **enablePanel = true** in **Config-1** in bot configuration.
-
-Add BottomPanelFragment to your view and call the following functions.
-```
-bottomPanelFragment.setActionEvent(this::widgetActionEvent)
-widgetActionEvent -> is an inline function to pass to the fragment to get the user action events.
-```
-```
-bottomPanelFragment.closePanel() to close the bottom sheet panel.
-```
+2. Follow Config-1 and Step-1 to Step-10.
 
 ### License
 Copyright © Kore, Inc. MIT License; see LICENSE for further details.
