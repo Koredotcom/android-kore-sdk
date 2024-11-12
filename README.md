@@ -41,7 +41,7 @@ To use these libraries we must configure the bot credentials as follows.
         "<identity>",  -> Identity should be **unique for each device**. Don't use "UUID.randomUUID().toString()". It's better to use your device id. If we use the same identity for multiple devices then we will face the session contamination issue.
         <isWebHook -> true/false>, -> if You want to use webhook then put "true" otherwise "false".
         "<jwt_token_url>", -> Jwt token generation url(If you want to use your own jwt token url).
-        <enablePanel -> true/false>  - > To use the widgets in your application and display then this value should be "true". Otherwise "false". To use this feature then need to use the "widgets" library using "implementation ''" in your gradle file.
+        false
     )
 
  SDKConfig.initialize(botConfigModel)
