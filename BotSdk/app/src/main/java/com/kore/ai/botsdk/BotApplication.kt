@@ -7,7 +7,6 @@ import com.kore.SDKConfig
 import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
 import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
 import com.kore.common.model.BotConfigModel
-import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
 import java.util.Locale
 import java.util.Properties
@@ -18,7 +17,6 @@ class BotApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         getBotConfigModel()?.let { SDKConfig.initialize(it) }
-        getWidgetBotConfigModel()?.let { SDKConfig.setWidgetConfig(it) }
 //        SDKConfig.setQueryParams(getQueryParams())
 //        SDKConfig.setCustomData(getCustomData())
 
@@ -45,28 +43,6 @@ class BotApplication : Application() {
                 jwtServerUrl = properties.getProperty("jwtServerUrl"),
                 enablePanel = true,
                 jwtToken = properties.getProperty("jwtToken")
-            )
-        } catch (e: NotFoundException) {
-            Log.e(BotApplication::class.java.simpleName, "Unable to find the config file: " + e.message)
-        } catch (e: IOException) {
-            Log.e(BotApplication::class.java.simpleName, "Failed to open config file.")
-        }
-        return null
-    }
-
-    private fun getWidgetBotConfigModel(): WidgetConfigModel? {
-        try {
-            val rawResource = resources.openRawResource(R.raw.config)
-            val properties = Properties()
-            properties.load(rawResource)
-            return WidgetConfigModel(
-                botName = properties.getProperty("widgetBotName"),
-                botId = properties.getProperty("widgetBotId"),
-                clientId = properties.getProperty("widgetClientId"),
-                clientSecret = properties.getProperty("widgetClientSecret"),
-                botUrl = properties.getProperty("widgetBotUrl"),
-                identity = properties.getProperty("widgetIdentity"),
-                jwtServerUrl = properties.getProperty("widgetJwtServerUrl"),
             )
         } catch (e: NotFoundException) {
             Log.e(BotApplication::class.java.simpleName, "Unable to find the config file: " + e.message)

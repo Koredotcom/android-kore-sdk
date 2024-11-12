@@ -7,8 +7,6 @@ import com.kore.ui.base.BaseFooterFragment
 import com.kore.ui.base.BaseHeaderFragment
 import com.kore.ui.row.SimpleListViewHolderProvider
 import com.kore.ui.row.botchat.BotChatRowType
-import com.kore.widgets.WidgetSDKConfiguration
-import com.kore.widgets.model.WidgetConfigModel
 import kotlin.reflect.KClass
 
 object SDKConfig {
@@ -20,10 +18,6 @@ object SDKConfig {
 
     fun initialize(botConfigModel: BotConfigModel) {
         SDKConfiguration.initialize(botConfigModel)
-    }
-
-    fun setWidgetConfig(widgetConfig: WidgetConfigModel) {
-        WidgetSDKConfiguration.initialize(widgetConfig)
     }
 
     fun setLoginToken(token: String) {

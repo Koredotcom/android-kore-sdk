@@ -248,12 +248,4 @@
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
-
-    <FrameLayout
-        android:id="@+id/bottom_panel_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/readReceiptGrey"
-        android:minHeight="50dp"
-        android:visibility="gone" />
 </LinearLayout>

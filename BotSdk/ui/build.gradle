@@ -70,7 +70,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect"
 
     implementation project(path: ':botclient')
-    implementation project(path: ':widgets')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
