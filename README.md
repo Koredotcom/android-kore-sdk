@@ -25,7 +25,7 @@ create new or use existing SDK app to obtain client id and client secret Obtain 
 Kore is providing botclient library to communicate with the bot and ui to display content.
 "BotClient" with "ui" -> Which can be used to communicate with the bot and can utilize the predefined templates, activities, fragments.
 
-Create your own app and add the dependency(**implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'**) for botclient and create following classes in your app module.
+Create your own app and add the dependency(**implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_ui_v3_11.0.2'**) for botclient and create following classes in your app module.
 
 Following are the steps needed to follow to integrate the libraries.
 To use these libraries we must configure the bot credentials as follows.
@@ -63,7 +63,7 @@ To use these libraries we must configure the bot credentials as follows.
 ```
 **2**. Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_ui_v3_11.0.2'
 ```
 **3**. You can initialize the bot by providing the bot config like mentioned in **Config-1**
 
@@ -85,7 +85,7 @@ maven { url 'https://www.jitpack.io' }
 ```
 ### Step-2: Add below snippet in app/build.gradle under dependencies
 ```
-implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_ui_v3_11.0.2'
 ```
 ### Step-3: You can change the bot config and widget config like below
 ```
