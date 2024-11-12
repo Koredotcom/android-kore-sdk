@@ -3,9 +3,7 @@ package com.kore.ai.botsdk
 import android.app.Application
 import android.content.res.Resources.NotFoundException
 import android.util.Log
-import com.kore.SDKConfig
-import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
-import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
+import com.kore.common.SDKConfiguration
 import com.kore.common.model.BotConfigModel
 import java.io.IOException
 import java.util.Locale
@@ -16,15 +14,9 @@ class BotApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        getBotConfigModel()?.let { SDKConfig.initialize(it) }
-//        SDKConfig.setQueryParams(getQueryParams())
-//        SDKConfig.setCustomData(getCustomData())
-
-        SDKConfig.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
-//        SDKConfig.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
-//        SDKConfig.addCustomHeaderFragment(BotResponseConstants.HEADER_SIZE_COMPACT, CustomHeaderFragment())
-//        SDKConfig.addCustomContentFragment(CustomContentFragment())
-//        SDKConfig.addCustomFooterFragment(CustomFooterFragment())
+        getBotConfigModel()?.let { SDKConfiguration.initialize(it) }
+//        SDKConfiguration.setQueryParams(getQueryParams())
+//        SDKConfiguration.setCustomData(getCustomData())
     }
 
     private fun getBotConfigModel(): BotConfigModel? {

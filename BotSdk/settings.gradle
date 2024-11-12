@@ -16,6 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "BotSdk"
 include ':app'
 include ':botclient'
-include ':ui'
 project(':botclient').projectDir = new File(rootDir, 'botclient/')
-project(':ui').projectDir = new File(rootDir, 'ui/')
