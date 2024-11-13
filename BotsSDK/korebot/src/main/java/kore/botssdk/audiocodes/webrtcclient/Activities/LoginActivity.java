@@ -16,7 +16,6 @@ import com.audiocodes.mv.webrtcsdk.log.Log;
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.oauth.OAuthManager;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
@@ -47,8 +46,7 @@ public class LoginActivity extends BaseAppCompatActivity {
             outhFailedTV.setVisibility(View.GONE);
         }
 
-        SipAccount sipAccount = new SipAccount();
-
+        SipAccount sipAccount = new SipAccount(this);
 
         EditText userNameEditText = (EditText) findViewById(R.id.login_editText_username);
         //userNameEditText.setText(sipAccount.getUsername());
@@ -72,12 +70,12 @@ public class LoginActivity extends BaseAppCompatActivity {
         disconnectCall.setChecked(true);
 
         CheckBox usePush = (CheckBox) findViewById(R.id.push_checkBox);
-        usePush.setChecked(Prefs.usePush());
+        usePush.setChecked(Prefs.usePush(this));
 
         usePush.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.setUsePush(isChecked);
+                Prefs.setUsePush(LoginActivity.this, isChecked);
             }
         });
 
@@ -96,12 +94,12 @@ public class LoginActivity extends BaseAppCompatActivity {
         });
 
         CheckBox useVideoHardware = (CheckBox) findViewById(R.id.video_hardware_checkbox);
-        useVideoHardware.setChecked(Prefs.isVideoHardware());
+        useVideoHardware.setChecked(Prefs.isVideoHardware(this));
 
         useVideoHardware.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                Prefs.setVideoHardware(isChecked);
+                Prefs.setVideoHardware(LoginActivity.this, isChecked);
             }
         });
 
@@ -117,7 +115,7 @@ public class LoginActivity extends BaseAppCompatActivity {
             layout.setVisibility(View.VISIBLE);
         }
 
-        boolean debugMode = AppUtils.getStringBoolean(R.string.enable_debug_mode);
+        boolean debugMode = AppUtils.getStringBoolean(this, R.string.enable_debug_mode);
         if (debugMode) {
             userNameEditText.setText(sipAccount.getUsername());
             passwordEditText.setText(sipAccount.getPassword());
@@ -136,7 +134,7 @@ public class LoginActivity extends BaseAppCompatActivity {
             portEditText.setText(String.valueOf(sipAccount.getPort()));
 
             //advancedInfoLayout.setVisibility( View.VISIBLE );
-            oauthCB.setChecked(AppUtils.getStringBoolean(R.string.oauth_enable));
+            oauthCB.setChecked(AppUtils.getStringBoolean(this, R.string.oauth_enable));
             oauthUrlEditText.setText(getString(R.string.oauth_url));
             oauthRealmEditText.setText(getString(R.string.oauth_realm));
             oauthClientIdEditText.setText(getString(R.string.oauth_client_id));
@@ -162,7 +160,7 @@ public class LoginActivity extends BaseAppCompatActivity {
                         sipAccount.setDisplayName(displayNameEditText.getText().toString().trim());
                         sipAccount.setDomain(domainEditText.getText().toString().trim());
                         sipAccount.setProxy(sipAddressEditText.getText().toString().trim());
-                        sipAccount.setTransport(AppUtils.getTransport(transportSpinner.getSelectedItem().toString().trim()));
+                        sipAccount.setTransport(AppUtils.getTransport(LoginActivity.this, transportSpinner.getSelectedItem().toString().trim()));
 
                         int portNumber;
                         try {
@@ -176,18 +174,18 @@ public class LoginActivity extends BaseAppCompatActivity {
                         //sipAccount.setUsername(stunserverEditText.getText().toString().trim());
                     }
 
-                    Prefs.setSipAccount(sipAccount);
+                    Prefs.setSipAccount(LoginActivity.this, sipAccount);
                     if (oAuthEnable) {
                         OAuthManager.getInstance().setURL(oauthUrlEditText.getText().toString());
                         OAuthManager.getInstance().setRealm(oauthRealmEditText.getText().toString());
                         OAuthManager.getInstance().setClientId(oauthClientIdEditText.getText().toString());
-                        OAuthManager.getInstance().authorize(userName, password, new OAuthManager.LoginCallback() {
+                        OAuthManager.getInstance().authorize(LoginActivity.this, userName, password, new OAuthManager.LoginCallback() {
                             @Override
                             public void onAuthorize(boolean success) {
                                 if (success) {
                                     openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
                                 } else {
-                                    Toast.makeText(BotApplication.getGlobalContext(), getString(R.string.oauth_error), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, getString(R.string.oauth_error), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -195,14 +193,14 @@ public class LoginActivity extends BaseAppCompatActivity {
                         openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
                     }
                 }
-                Prefs.setSipAccount(sipAccount);
+                Prefs.setSipAccount(LoginActivity.this, sipAccount);
                 if (!oAuthEnable) {
                     openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
                 }
             }
         });
 
-        boolean predefinedConfigMode = AppUtils.getStringBoolean(R.string.predefined_config_mode);
+        boolean predefinedConfigMode = AppUtils.getStringBoolean(this, R.string.predefined_config_mode);
         if (predefinedConfigMode) {
             userNameEditText.setEnabled(false);
             passwordEditText.setEnabled(false);
@@ -228,9 +226,9 @@ public class LoginActivity extends BaseAppCompatActivity {
     }
 
     private void openNextScreen(boolean autologin, boolean disconnectCall) {
-        Prefs.setFirstLogin(false);
+        Prefs.setFirstLogin(this, false);
         //start login and open app main screen
-        ACManager.getInstance().startLogin(autologin, disconnectCall);
+        ACManager.getInstance().startLogin(this, autologin, disconnectCall);
         startNextActivity(MainActivity.class);
     }
 

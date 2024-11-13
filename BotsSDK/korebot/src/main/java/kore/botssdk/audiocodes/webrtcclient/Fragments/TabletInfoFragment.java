@@ -1,5 +1,6 @@
 package kore.botssdk.audiocodes.webrtcclient.Fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +24,7 @@ public class TabletInfoFragment extends BaseFragment implements FragmentLifecycl
 
     private CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
         @Override
-        public void loginStateChange(boolean state) {
+        public void loginStateChange(Context context, boolean state) {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -33,7 +34,6 @@ public class TabletInfoFragment extends BaseFragment implements FragmentLifecycl
         }
 
     };
-
 
 
     @Override
@@ -46,13 +46,12 @@ public class TabletInfoFragment extends BaseFragment implements FragmentLifecycl
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.main_fragment_tablet_info, container, false);
-        CallBackHandler.registerLginStateChange(loginStateChanged);
+        CallBackHandler.registerLoginStateChange(loginStateChanged);
         initGui(rootView);
         return rootView;
     }
 
-    private void initGui(View rootView)
-    {
+    private void initGui(View rootView) {
         stateValue = (TextView) rootView.findViewById(R.id.tablet_info_state_value_textview);
         displayNameValue = (TextView) rootView.findViewById(R.id.tablet_info_display_name_value_textview);
         userNameValue = (TextView) rootView.findViewById(R.id.tablet_info_user_name_value_textview);
@@ -60,10 +59,10 @@ public class TabletInfoFragment extends BaseFragment implements FragmentLifecycl
         updateDate();
     }
 
-    private void updateDate(){
+    private void updateDate() {
         String statusStr = (ACManager.getInstance().isRegisterState() ? getString(R.string.account_textview_status_connected) : getString(R.string.account_textview_status_disconnected));
         stateValue.setText(statusStr);
-        SipAccount sipAccount = Prefs.getSipAccount();
+        SipAccount sipAccount = Prefs.getSipAccount(requireContext());
         displayNameValue.setText(sipAccount.getDisplayName());
         userNameValue.setText(sipAccount.getUsername());
     }

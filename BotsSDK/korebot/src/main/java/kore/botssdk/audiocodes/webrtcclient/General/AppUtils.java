@@ -17,36 +17,34 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.models.EventModel;
 
 public class AppUtils {
-    private static final String TAG="AppUtils";
+    private static final String TAG = "AppUtils";
     private static MediaPlayer mediaPlayer = null;
     private static boolean isPlayingAudioFile;
     static EventModel eventModelOuter;
     static BotClient botClientOuter;
 
-    public static boolean getStringBoolean(int stringId){
+    public static boolean getStringBoolean(Context context, int stringId) {
         try {
-            String value = BotApplication.getGlobalContext().getString(stringId);
+            String value = context.getString(stringId);
             if ("1".equals(value)) {
                 return true;
             }
         } catch (Exception e) {
-            Log.w(TAG, "oops-7: "+e);
+            Log.w(TAG, "oops-7: " + e);
         }
         return false;
     }
 
-    public static Transport getTransport(String name)
-    {
+    public static Transport getTransport(Context context, String name) {
         Transport transport;
         try {
             transport = Transport.valueOf(name);
         } catch (Exception e) {
-            transport= Transport.valueOf(BotApplication.getGlobalContext().getString(R.string.sip_account_transport_default));//  Transport.TCP;
+            transport = Transport.valueOf(context.getString(R.string.sip_account_transport_default));//  Transport.TCP;
         }
         return transport;
     }
@@ -100,21 +98,20 @@ public class AppUtils {
     }
 
 
-    public static void startRingingMP(String fullPath, boolean isLooping, boolean useSpeaker,
+    public static void startRingingMP(Context context, String fullPath, boolean isLooping, boolean useSpeaker,
                                       MediaPlayer.OnCompletionListener onCompletionListener) {
-        Context context = BotApplication.getGlobalContext();
         Log.i(TAG, "Start ringing (3) using media player...");
         int stramType = AudioManager.STREAM_VOICE_CALL;
-        int newVolume = Prefs.getCallVolume();
-        if (useSpeaker){
+        int newVolume = Prefs.getCallVolume(context);
+        if (useSpeaker) {
             stramType = AudioManager.STREAM_RING;
-            newVolume = Prefs.getRingVolume();
+            newVolume = Prefs.getRingVolume(context);
         }
         try {
             AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             //newVolume = audioManager.getStreamMaxVolume(stramType);
-            newVolume = Prefs.getCallVolume();
-            if (useSpeaker){
+            newVolume = Prefs.getCallVolume(context);
+            if (useSpeaker) {
                 newVolume = audioManager.getStreamVolume(stramType);
             }
             audioManager.setStreamVolume(stramType, newVolume, AudioManager.FLAG_SHOW_UI);
@@ -124,7 +121,7 @@ public class AppUtils {
             mediaPlayer.reset();
             mediaPlayer.setAudioStreamType(stramType);
 
-            if(!fullPath.startsWith("/")){
+            if (!fullPath.startsWith("/")) {
                 fullPath = context.getFileStreamPath(fullPath).getAbsolutePath();
             }
             FileInputStream fis = new FileInputStream(fullPath);
@@ -134,8 +131,7 @@ public class AppUtils {
             Log.d(TAG, "Starting to play ringtone using media player");
             mediaPlayer.start();
             isPlayingAudioFile = true;
-            if(onCompletionListener==null)
-            {
+            if (onCompletionListener == null) {
                 onCompletionListener = new MediaPlayer.OnCompletionListener() {
                     @Override
                     public void onCompletion(MediaPlayer mediaPlayer) {
@@ -144,24 +140,23 @@ public class AppUtils {
                 };
             }
             mediaPlayer.setOnCompletionListener(onCompletionListener);
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             Log.e(TAG, "media player error " + e);
-            if(mediaPlayer != null){
+            if (mediaPlayer != null) {
                 mediaPlayer.release();
             }
             mediaPlayer = null;
         }
     }
 
-    public static synchronized void stopRingingMP() {
+    public static synchronized void stopRingingMP(Context context) {
         try {
             if (mediaPlayer != null) {
                 if (mediaPlayer.isPlaying()) {
                     Log.d("Ring", "Stopping media player");
                     mediaPlayer.stop();
                     isPlayingAudioFile = false;
-                    setSpeaker(false);
+                    setSpeaker(context, false);
                 }
 
                 Log.d("Ring", "Releasing media player");
@@ -171,20 +166,17 @@ public class AppUtils {
         } catch (IllegalStateException var1) {
             var1.printStackTrace();
         }
-
     }
 
-    public static void setSpeaker(boolean useSpeaker) {
+    public static void setSpeaker(Context context, boolean useSpeaker) {
         try {
-
             int stramType = AudioManager.STREAM_VOICE_CALL;
-            int newVolume = Prefs.getCallVolume();
-            if (useSpeaker){
+            int newVolume = Prefs.getCallVolume(context);
+            if (useSpeaker) {
                 stramType = AudioManager.STREAM_RING;
-                newVolume = Prefs.getRingVolume();
+                newVolume = Prefs.getRingVolume(context);
             }
-            Context context = BotApplication.getGlobalContext();
-            AudioManager audioManager = (AudioManager)context.getSystemService(Context.AUDIO_SERVICE);
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
             //int maxVolume = audioManager.getStreamMaxVolume(stramType);
             //audioManager.setStreamVolume(stramType, newVolume, 0);
             audioManager.setSpeakerphoneOn(useSpeaker);
@@ -195,51 +187,49 @@ public class AppUtils {
     }
 
 
-    public static void saveVolumeSettings(boolean prevVol) {
+    public static void saveVolumeSettings(Context context, boolean prevVol) {
 
         if (prevVol) {
             //save old volume
-            AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
-            Prefs.setPrevCallVolume(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
-            Prefs.setPrevRingVolume(audioManager.getStreamVolume(AudioManager.STREAM_RING));
-        }
-        else  {
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            Prefs.setPrevCallVolume(context, audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
+            Prefs.setPrevRingVolume(context, audioManager.getStreamVolume(AudioManager.STREAM_RING));
+        } else {
             //save call volume
-            AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
-            Prefs.setCallVolume(audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
-            Prefs.setRingVolume(audioManager.getStreamVolume(AudioManager.STREAM_RING));
+            AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+            Prefs.setCallVolume(context, audioManager.getStreamVolume(AudioManager.STREAM_VOICE_CALL));
+            Prefs.setRingVolume(context, audioManager.getStreamVolume(AudioManager.STREAM_RING));
         }
 
     }
 
 
-    public static void setLastCallVolumeSettings(){
-        AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
-       // audioManager.setStreamVolume(AudioManager.STREAM_RING, Prefs.getRingVolume(), 0);
-        audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Prefs.getCallVolume(), 0);
+    public static void setLastCallVolumeSettings(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        // audioManager.setStreamVolume(AudioManager.STREAM_RING, Prefs.getRingVolume(), 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Prefs.getCallVolume(context), 0);
     }
 
-    public static void restorePrevVolumeSettings(){
-        AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
-       // audioManager.setStreamVolume(AudioManager.STREAM_RING, Prefs.getPrevRingVolume(), 0);
-        audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Prefs.getPrevCallVolume(), 0);
+    public static void restorePrevVolumeSettings(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        // audioManager.setStreamVolume(AudioManager.STREAM_RING, Prefs.getPrevRingVolume(), 0);
+        audioManager.setStreamVolume(AudioManager.STREAM_VOICE_CALL, Prefs.getPrevCallVolume(context), 0);
     }
 
     public static boolean isPlayingAudioFile() {
         return isPlayingAudioFile;
     }
 
-    public static int checkOrientation(Activity activity)
-    {
+    public static int checkOrientation(Activity activity) {
         boolean isTablet = activity.getResources().getBoolean(R.bool.isTablet);
-        Log.d(TAG, "isTablet: "+isTablet );
+        Log.d(TAG, "isTablet: " + isTablet);
         int orientation = activity.getResources().getConfiguration().orientation;
         if (isTablet) {
             Log.d(TAG, "set orientation: SENSOR");
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
             orientation = activity.getResources().getConfiguration().orientation;
-            Log.d(TAG, "get new orientation: "+orientation);
-        } else if(orientation != Configuration.ORIENTATION_PORTRAIT) {
+            Log.d(TAG, "get new orientation: " + orientation);
+        } else if (orientation != Configuration.ORIENTATION_PORTRAIT) {
             Log.d(TAG, "set orientation: PORTRAIT");
             activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return 1;

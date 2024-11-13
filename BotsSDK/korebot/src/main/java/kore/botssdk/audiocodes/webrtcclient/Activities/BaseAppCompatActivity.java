@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
 import kore.botssdk.net.SDKConfiguration;
@@ -33,7 +32,6 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         AppUtils.checkOrientation(this);
         super.onCreate(savedInstanceState);
-        BotApplication.setCurrentActivity(this);
         handler = new Handler();
 //        NotificationUtils.createAppNotification();
     }
@@ -122,20 +120,17 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void onDestroy() {
 //        NotificationUtils.createAppNotification();
         super.onDestroy();
-        BotApplication.setCurrentActivity(null);
     }
 
     @Override
     protected void onPause() {
 //        NotificationUtils.createAppNotification();
         super.onPause();
-        BotApplication.setCurrentActivity(null);
     }
 
     @Override
     protected void onResume() {
 //        NotificationUtils.createAppNotification();
         super.onResume();
-        BotApplication.setCurrentActivity(this);
     }
 }

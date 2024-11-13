@@ -1,6 +1,8 @@
 package kore.botssdk.audiocodes.webrtcclient.Login;
 
 
+import android.content.Context;
+
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 
@@ -11,8 +13,7 @@ public class LoginManager {
     private static boolean isAppOpen = false;
 
 
-    public enum AppLoginState
-    {
+    public enum AppLoginState {
         CLOSED,
         CRUSHED,
         LOGOUT,
@@ -22,21 +23,17 @@ public class LoginManager {
     /**
      * @return the state the app is in CLOSED,CRUSHED,LOGOUT,ACTIVE
      */
-    public static AppLoginState getAppState()
-    {
+    public static AppLoginState getAppState(Context context) {
         // Prefs.isAppOpen() = is app open prefs
         // isAppOpen = is app open static value
         AppLoginState appLoginState = AppLoginState.ACTIVE;
-        if (!Prefs.isAppOpen() && !isAppOpen)
-        {
+        if (!Prefs.isAppOpen(context) && !isAppOpen) {
             appLoginState = AppLoginState.CLOSED;
         }
-        if (Prefs.isAppOpen() && !isAppOpen)
-        {
+        if (Prefs.isAppOpen(context) && !isAppOpen) {
             appLoginState = AppLoginState.CRUSHED;
         }
-        if (!Prefs.isAppOpen() && isAppOpen)
-        {
+        if (!Prefs.isAppOpen(context) && isAppOpen) {
             appLoginState = AppLoginState.LOGOUT;
         }
         Log.d(TAG, "App state: " + appLoginState);
@@ -47,29 +44,26 @@ public class LoginManager {
     /**
      * set the app state (CLOSED,CRUSHED,LOGOUT,ACTIVE)
      */
-    public static void setAppState(AppLoginState appLoginState)
-    {
+    public static void setAppState(Context context, AppLoginState appLoginState) {
         // Prefs.isAppOpen() = is app open prefs
         // isAppOpen = is app open static value
-        switch (appLoginState)
-        {
+        switch (appLoginState) {
             case ACTIVE:
                 isAppOpen = true;
-                Prefs.setAppOpen(true);
+                Prefs.setAppOpen(context, true);
                 break;
             case CLOSED:
                 isAppOpen = false;
-                Prefs.setAppOpen(false);
+                Prefs.setAppOpen(context, false);
                 break;
             case CRUSHED:
                 isAppOpen = false;
-                Prefs.setAppOpen(true);
+                Prefs.setAppOpen(context, true);
                 break;
             case LOGOUT:
                 isAppOpen = true;
-                Prefs.setAppOpen(false);
+                Prefs.setAppOpen(context, false);
                 break;
         }
     }
-
 }

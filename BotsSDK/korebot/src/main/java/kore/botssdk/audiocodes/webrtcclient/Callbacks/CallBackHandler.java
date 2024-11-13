@@ -1,6 +1,7 @@
 package kore.botssdk.audiocodes.webrtcclient.Callbacks;
 
 
+import android.content.Context;
 
 import com.audiocodes.mv.webrtcsdk.im.InstanceMessageStatus;
 import com.audiocodes.mv.webrtcsdk.session.CallState;
@@ -9,21 +10,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CallBackHandler {
-    private static List<LoginStateChanged> loginStateChangeCallBacks = new ArrayList<>();
-    private static List<CallStateChanged> callStateChangeCallBacks = new ArrayList<>();
-    private static List<ChatCallback> chatCallBacks = new ArrayList<>();
-    private static List<TabChangeCallback> tabChangeCallbacks = new ArrayList<>();
+    private static final List<LoginStateChanged> loginStateChangeCallBacks = new ArrayList<>();
+    private static final List<CallStateChanged> callStateChangeCallBacks = new ArrayList<>();
+    private static final List<ChatCallback> chatCallBacks = new ArrayList<>();
+    private static final List<TabChangeCallback> tabChangeCallbacks = new ArrayList<>();
 
     //LoginStateChanged
     public interface LoginStateChanged {
-        public void loginStateChange(boolean state);
+        public void loginStateChange(Context context, boolean state);
     }
 
-    public static void loginStateChange(boolean state) {
-        if (loginStateChangeCallBacks != null) {
-            for (int i = 0; i < loginStateChangeCallBacks.size(); ++i) {
-                loginStateChangeCallBacks.get(i).loginStateChange(state);
-            }
+    public static void loginStateChange(Context context, boolean state) {
+        for (int i = 0; i < loginStateChangeCallBacks.size(); ++i) {
+            loginStateChangeCallBacks.get(i).loginStateChange(context, state);
         }
     }
 
@@ -31,7 +30,7 @@ public class CallBackHandler {
         loginStateChangeCallBacks.remove(cb);
     }
 
-    public static void registerLginStateChange(LoginStateChanged cb) {
+    public static void registerLoginStateChange(LoginStateChanged cb) {
         loginStateChangeCallBacks.add(cb);
     }
 
@@ -41,10 +40,8 @@ public class CallBackHandler {
     }
 
     public static void callStateChanged(CallState callState) {
-        if (callStateChangeCallBacks != null) {
-            for (int i = 0; i < callStateChangeCallBacks.size(); ++i) {
-                callStateChangeCallBacks.get(i).callStateChanged(callState);
-            }
+        for (int i = 0; i < callStateChangeCallBacks.size(); ++i) {
+            callStateChangeCallBacks.get(i).callStateChanged(callState);
         }
     }
 
@@ -60,22 +57,19 @@ public class CallBackHandler {
     //ChatCallback
     public interface ChatCallback {
         void onNewMessage(String user, String message);
+
         void onMessageStatus(InstanceMessageStatus instanceMessageStatus, long ID);
     }
 
     public static void onNewMessage(String user, String message) {
-        if (chatCallBacks != null) {
-            for (int i = 0; i < chatCallBacks.size(); ++i) {
-                chatCallBacks.get(i).onNewMessage(user, message);
-            }
+        for (int i = 0; i < chatCallBacks.size(); ++i) {
+            chatCallBacks.get(i).onNewMessage(user, message);
         }
     }
 
     public static void onMessageStatus(InstanceMessageStatus instanceMessageStatus, long ID) {
-        if (chatCallBacks != null) {
-            for (int i = 0; i < chatCallBacks.size(); ++i) {
-                chatCallBacks.get(i).onMessageStatus(instanceMessageStatus, ID);
-            }
+        for (int i = 0; i < chatCallBacks.size(); ++i) {
+            chatCallBacks.get(i).onMessageStatus(instanceMessageStatus, ID);
         }
     }
 
@@ -94,10 +88,8 @@ public class CallBackHandler {
     }
 
     public static void onTabChange(int tabIndex) {
-        if (tabChangeCallbacks != null) {
-            for (int i = 0; i < tabChangeCallbacks.size(); ++i) {
-                tabChangeCallbacks.get(i).onTabChange(tabIndex);
-            }
+        for (int i = 0; i < tabChangeCallbacks.size(); ++i) {
+            tabChangeCallbacks.get(i).onTabChange(tabIndex);
         }
     }
 

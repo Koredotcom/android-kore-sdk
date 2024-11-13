@@ -7,7 +7,6 @@ import com.audiocodes.mv.webrtcsdk.session.ACCallStatistics;
 import com.audiocodes.mv.webrtcsdk.session.DTMFOptions;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.Structure.SipAccount;
 
 
@@ -15,230 +14,216 @@ public class Prefs extends BasePrefs {
 
     private static final String TAG = "Prefs";
 
-    public static void setFirstLogin(boolean firstLogin)
-    {
-        Log.d(TAG, "setFirstLogin: "+firstLogin);
-        putBoolean("FIRST_LOGIN",firstLogin);
+    public static void setFirstLogin(Context context, boolean firstLogin) {
+        Log.d(TAG, "setFirstLogin: " + firstLogin);
+        putBoolean(context, "FIRST_LOGIN", firstLogin);
     }
 
-    public static boolean isFirstLogin()
-    {
-        Log.d(TAG, "get isFirstLogin: "+getBoolean("FIRST_LOGIN",true));
-        return getBoolean("FIRST_LOGIN",true);
+    public static boolean isFirstLogin(Context context) {
+        Log.d(TAG, "get isFirstLogin: " + getBoolean(context, "FIRST_LOGIN", true));
+        return getBoolean(context, "FIRST_LOGIN", true);
     }
 
-    public static boolean isAppOpen() {
-        return	getBoolean("APP_OPEN");
+    public static boolean isAppOpen(Context context) {
+        return getBoolean(context, "APP_OPEN");
     }
 
-    public static void setAppOpen(boolean state) {
-        putBoolean("APP_OPEN", state);
+    public static void setAppOpen(Context context, boolean state) {
+        putBoolean(context, "APP_OPEN", state);
     }
 
-    public static void setSipAccount(SipAccount sipAccount)
-    {
-        putString("SipAccountDisplayName",sipAccount.getDisplayName());
-        putString("SipAccountUsername",sipAccount.getUsername());
-        putString("SipAccountPassword",sipAccount.getPassword());
-        putString("SipAccountDomain",sipAccount.getDomain());
-        putString("SipAccountProxy",sipAccount.getProxy());
-        putInt("SipAccountPort",sipAccount.getPort());
-        putString("SipAccountTransport",sipAccount.getTransport().toString());
+    public static void setSipAccount(Context context, SipAccount sipAccount) {
+        putString(context, "SipAccountDisplayName", sipAccount.getDisplayName());
+        putString(context, "SipAccountUsername", sipAccount.getUsername());
+        putString(context, "SipAccountPassword", sipAccount.getPassword());
+        putString(context, "SipAccountDomain", sipAccount.getDomain());
+        putString(context, "SipAccountProxy", sipAccount.getProxy());
+        putInt(context, "SipAccountPort", sipAccount.getPort());
+        putString(context, "SipAccountTransport", sipAccount.getTransport().toString());
     }
 
-    public static SipAccount getSipAccount()
-    {
-        SipAccount sipAccount = new SipAccount();
+    public static SipAccount getSipAccount(Context context) {
+        SipAccount sipAccount = new SipAccount(context);
 
-        sipAccount.setDisplayName(getString("SipAccountDisplayName"));
-        sipAccount.setUsername(getString("SipAccountUsername"));
-        sipAccount.setPassword(getString("SipAccountPassword"));
-        sipAccount.setDomain(getString("SipAccountDomain"));
-        sipAccount.setProxy(getString("SipAccountProxy"));
-        sipAccount.setPort(getInt("SipAccountPort"));
+        sipAccount.setDisplayName(getString(context, "SipAccountDisplayName"));
+        sipAccount.setUsername(getString(context, "SipAccountUsername"));
+        sipAccount.setPassword(getString(context, "SipAccountPassword"));
+        sipAccount.setDomain(getString(context, "SipAccountDomain"));
+        sipAccount.setProxy(getString(context, "SipAccountProxy"));
+        sipAccount.setPort(getInt(context, "SipAccountPort"));
         //String tempTransport = getString("SipAccountTransport");
         //sipAccount.setTransport(Transport.valueOf(tempTransport));
-        sipAccount.setTransport(AppUtils.getTransport(getString("SipAccountTransport")));
+        sipAccount.setTransport(AppUtils.getTransport(context, getString(context, "SipAccountTransport")));
 
         return sipAccount;
     }
 
-    public static void setCallStats(ACCallStatistics acCallStatistics)
-    {
-        putClass("ACCallStats", acCallStatistics);
+    public static void setCallStats(Context context, ACCallStatistics acCallStatistics) {
+        putClass(context, "ACCallStats", acCallStatistics);
     }
 
-    public static ACCallStatistics getCallStats()
-    {
-        ACCallStatistics acCallStatistics = (ACCallStatistics)getClass("ACCallStats", ACCallStatistics.class);
+    public static ACCallStatistics getCallStats(Context context) {
+        ACCallStatistics acCallStatistics = (ACCallStatistics) getClass(context, "ACCallStats", ACCallStatistics.class);
 
         return acCallStatistics;
     }
 
-    public static void setDTMFType(DTMFOptions.DTMFMethod dtmfType)
-    {
-        putClass("DTMFMethod", dtmfType);
+    public static void setDTMFType(Context context, DTMFOptions.DTMFMethod dtmfType) {
+        putClass(context, "DTMFMethod", dtmfType);
     }
 
-    public static DTMFOptions.DTMFMethod getDTMFType()
-    {
+    public static DTMFOptions.DTMFMethod getDTMFType(Context context) {
         //the default value is DTMFOptions.DTMFMethod.WEBRTC
-        DTMFOptions.DTMFMethod dtmfMethod = (DTMFOptions.DTMFMethod)getClass("DTMFMethod", DTMFOptions.DTMFMethod.class, DTMFOptions.DTMFMethod.WEBRTC);
+        DTMFOptions.DTMFMethod dtmfMethod = (DTMFOptions.DTMFMethod) getClass(context, "DTMFMethod", DTMFOptions.DTMFMethod.class, DTMFOptions.DTMFMethod.WEBRTC);
 
         return dtmfMethod;
     }
 
-    public static void setLogLevel(Log.LogLevel logLevel)
-    {
-        putClass("LogLevel", logLevel);
+    public static void setLogLevel(Context context, Log.LogLevel logLevel) {
+        putClass(context, "LogLevel", logLevel);
     }
 
-    public static Log.LogLevel getLogLevel()
-    {
+    public static Log.LogLevel getLogLevel(Context context) {
         //the default value is in configuration file
-        String defaultLogLevel = BotApplication.getGlobalContext().getString(R.string.log_level_default);
-        Log.LogLevel logLevel = (Log.LogLevel)getClass("LogLevel", Log.LogLevel.class, Log.LogLevel.valueOf(defaultLogLevel));
+        String defaultLogLevel = context.getString(R.string.log_level_default);
+        Log.LogLevel logLevel = (Log.LogLevel) getClass(context, "LogLevel", Log.LogLevel.class, Log.LogLevel.valueOf(defaultLogLevel));
 
         return logLevel;
     }
 
-    public static boolean isAutoRedirect() {
-        return	getBoolean("AutoRedirect");
+    public static boolean isAutoRedirect(Context context) {
+        return getBoolean(context, "AutoRedirect");
     }
 
-    public static void setAutoRedirect(boolean state) {
-        putBoolean("AutoRedirect", state);
+    public static void setAutoRedirect(Context context, boolean state) {
+        putBoolean(context, "AutoRedirect", state);
     }
 
-    public static boolean isRedirectCall() {
-        return	getBoolean("RedirectCall");
+    public static boolean isRedirectCall(Context context) {
+        return getBoolean(context, "RedirectCall");
     }
 
-    public static void setRedirectCall(boolean state) {
-        putBoolean("RedirectCall", state);
+    public static void setRedirectCall(Context context, boolean state) {
+        putBoolean(context, "RedirectCall", state);
     }
 
-    public static String getRedirectCallUser() {
-        return	getString("RedirectCallUser", BotApplication.getGlobalContext().getString(R.string.default_redirect_call_user));
+    public static String getRedirectCallUser(Context context) {
+        return getString(context, "RedirectCallUser", context.getString(R.string.default_redirect_call_user));
     }
 
-    public static void setRedirectCallUser(String redirectCallUser) {
-        putString("RedirectCallUser", redirectCallUser);
-    }
-    public static boolean isVideoHardware() {
-        return	getBoolean("VideoHardware");
+    public static void setRedirectCallUser(Context context, String redirectCallUser) {
+        putString(context, "RedirectCallUser", redirectCallUser);
     }
 
-    public static void setVideoHardware(boolean state) {
-        putBoolean("VideoHardware", state);
+    public static boolean isVideoHardware(Context context) {
+        return getBoolean(context, "VideoHardware");
+    }
+
+    public static void setVideoHardware(Context context, boolean state) {
+        putBoolean(context, "VideoHardware", state);
     }
 
 
-    public static boolean getAutoLogin() {
-        return	getBoolean("AutoLogin",false);
+    public static boolean getAutoLogin(Context context) {
+        return getBoolean(context, "AutoLogin", false);
     }
 
-    public static void setAutoLogin(boolean enable) {
-        putBoolean("AutoLogin", enable);
+    public static void setAutoLogin(Context context, boolean enable) {
+        putBoolean(context, "AutoLogin", enable);
     }
 
-    public static boolean getDisconnectBrokenConnection() {
-        return	getBoolean("DisconnectBrokenConnection",true);
+    public static boolean getDisconnectBrokenConnection(Context context) {
+        return getBoolean(context, "DisconnectBrokenConnection", true);
     }
 
-    public static void setDisconnectBrokenConnection(boolean enable) {
-        putBoolean("DisconnectBrokenConnection", enable);
+    public static void setDisconnectBrokenConnection(Context context, boolean enable) {
+        putBoolean(context, "DisconnectBrokenConnection", enable);
     }
 
-    public static String getSecondCall() {
-        return	getString("SecondCall", BotApplication.getGlobalContext().getString(R.string.sip_default_second_call));
+    public static String getSecondCall(Context context) {
+        return getString(context, "SecondCall", context.getString(R.string.sip_default_second_call));
     }
 
-    public static void setSecondCall(String call) {
-        putString("SecondCall", call);
+    public static void setSecondCall(Context context, String call) {
+        putString(context, "SecondCall", call);
     }
 
-    public static String getTransferCall() {
-        return	getString("TransferCall", BotApplication.getGlobalContext().getString(R.string.sip_default_transfer_call));
+    public static String getTransferCall(Context context) {
+        return getString(context, "TransferCall", context.getString(R.string.sip_default_transfer_call));
     }
 
-    public static void setTransferCall(String call) {
-        putString("TransferCall", call);
+    public static void setTransferCall(Context context, String call) {
+        putString(context, "TransferCall", call);
     }
 
-    public static boolean usePush() {
-        return	getBoolean("USE_PUSH");
+    public static boolean usePush(Context context) {
+        return getBoolean(context, "USE_PUSH");
     }
 
-    public static void setUsePush(boolean usePush) {
-        putBoolean("USE_PUSH", usePush);
+    public static void setUsePush(Context context, boolean usePush) {
+        putBoolean(context, "USE_PUSH", usePush);
     }
 
     //volume control
-    public static int getRingVolume()
-    {
-        AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
+    public static int getRingVolume(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
         //default value should be max
-        int res = getInt("RING_VOLUME", maxVolume);
-        Log.d(TAG,"get RING_VOLUME: "+res);
+        int res = getInt(context, "RING_VOLUME", maxVolume);
+        Log.d(TAG, "get RING_VOLUME: " + res);
         return res;
     }
-    public static void setRingVolume(int vol)
-    {
-        Log.d(TAG,"set RING_VOLUME: "+vol);
-        putInt("RING_VOLUME", vol);
+
+    public static void setRingVolume(Context context, int vol) {
+        Log.d(TAG, "set RING_VOLUME: " + vol);
+        putInt(context, "RING_VOLUME", vol);
     }
 
-    public static int getCallVolume()
-    {
-        AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
+    public static int getCallVolume(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL);
         //default value should be max
-        int res = getInt("CALL_VOLUME", maxVolume);
-        Log.d(TAG,"get CALL_VOLUME: "+res);
+        int res = getInt(context, "CALL_VOLUME", maxVolume);
+        Log.d(TAG, "get CALL_VOLUME: " + res);
         return res;
     }
-    public static void setCallVolume(int vol)
-    {
-        Log.d(TAG,"set CALL_VOLUME: "+vol);
-        putInt("CALL_VOLUME", vol);
+
+    public static void setCallVolume(Context context, int vol) {
+        Log.d(TAG, "set CALL_VOLUME: " + vol);
+        putInt(context, "CALL_VOLUME", vol);
     }
 
-    public static int getPrevRingVolume()
-    {
-        AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
+    public static int getPrevRingVolume(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_RING);
         //default value should be max
-        int res = getInt("PREV_RING_VOLUME", maxVolume);
-        Log.d(TAG,"get PREV_RING_VOLUME: "+res);
+        int res = getInt(context, "PREV_RING_VOLUME", maxVolume);
+        Log.d(TAG, "get PREV_RING_VOLUME: " + res);
         return res;
     }
-    public static void setPrevRingVolume(int vol)
-    {
-        Log.d(TAG,"set PREV_RING_VOLUME: "+vol);
-        putInt("PREV_RING_VOLUME", vol);
+
+    public static void setPrevRingVolume(Context context, int vol) {
+        Log.d(TAG, "set PREV_RING_VOLUME: " + vol);
+        putInt(context, "PREV_RING_VOLUME", vol);
     }
 
-    public static int getPrevCallVolume()
-    {
-
-        AudioManager audioManager = (AudioManager) BotApplication.getGlobalContext().getSystemService(Context.AUDIO_SERVICE);
+    public static int getPrevCallVolume(Context context) {
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_VOICE_CALL);
         //default value should be max
-        int res = getInt("PREV_CALL_VOLUME", maxVolume);
-        Log.d(TAG,"get PREV_CALL_VOLUME: "+res);
+        int res = getInt(context, "PREV_CALL_VOLUME", maxVolume);
+        Log.d(TAG, "get PREV_CALL_VOLUME: " + res);
         return res;
     }
-    public static void setPrevCallVolume(int vol)
-    {
-        Log.d(TAG,"set PREV_CALL_VOLUME: "+vol);
-        putInt("PREV_CALL_VOLUME", vol);
+
+    public static void setPrevCallVolume(Context context, int vol) {
+        Log.d(TAG, "set PREV_CALL_VOLUME: " + vol);
+        putInt(context, "PREV_CALL_VOLUME", vol);
     }
 
 //    public static int getRingtoneVolume()
 //    {
-//        AudioManager audioManager = (AudioManager)BotApplication.getGlobalContext().getSystemService("audio");
+//        AudioManager audioManager = (AudioManager)context.getSystemService("audio");
 //        int maxVolume = audioManager.getStreamMaxVolume(0);
 //        //default value should be max
 //        getInt("RINGTONE_VOLUME", maxVolume);

@@ -118,7 +118,7 @@ public class ContactListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                boolean contactPermission = PermissionManager.getInstance().checkPermission(PermissionManagerType.CONTACTS);
+                boolean contactPermission = PermissionManager.getInstance().checkPermission(context, PermissionManagerType.CONTACTS);
                 if (contactPermission && onCreateItemClickListener != null) {
                     onCreateItemClickListener.onItemClick(null, view, position, 0);
                 } else {

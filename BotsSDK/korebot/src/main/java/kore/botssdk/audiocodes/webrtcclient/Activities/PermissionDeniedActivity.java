@@ -30,7 +30,7 @@ public class PermissionDeniedActivity extends BaseAppCompatActivity {
         continueButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                boolean isFirstLogin = Prefs.isFirstLogin();
+                boolean isFirstLogin = Prefs.isFirstLogin(PermissionDeniedActivity.this);
                 if (isFirstLogin)
                 {
                     startNextActivity(LoginActivity.class);
@@ -38,7 +38,7 @@ public class PermissionDeniedActivity extends BaseAppCompatActivity {
                 }
                 else {
                     //start login and open app main screen
-                    ACManager.getInstance().startLogin();
+                    ACManager.getInstance().startLogin(PermissionDeniedActivity.this);
                     startNextActivity(MainActivity.class);
                     finish();
                 }
@@ -48,7 +48,7 @@ public class PermissionDeniedActivity extends BaseAppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PermissionManager.askForSystemAlertWindowPermission();
+                PermissionManager.askForSystemAlertWindowPermission(PermissionDeniedActivity.this);
                 finish();
             }
         });

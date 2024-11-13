@@ -1,7 +1,9 @@
 package kore.botssdk.audiocodes.webrtcclient.Permissions;
 
 
+import android.content.Context;
+
 public interface IPermissionManager
 {
-    public boolean checkPermission(PermissionManagerType permissionType);
+    public boolean checkPermission(Context context, PermissionManagerType permissionType);
 }

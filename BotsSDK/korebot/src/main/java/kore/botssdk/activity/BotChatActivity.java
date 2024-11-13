@@ -91,7 +91,6 @@ import kore.botssdk.adapter.PromotionsAdapter;
 import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 import kore.botssdk.audiocodes.webrtcclient.Structure.SipAccount;
@@ -523,7 +522,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onPause() {
-        BotApplication.activityPaused();
         ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
@@ -631,11 +629,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             if (botClient != null && isAgentTransfer) {
                 botClient.sendReceipts(BundleConstants.MESSAGE_DELIVERED, botResponse.getMessageId());
-                if (BotApplication.isActivityVisible()) {
-                    botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.getMessageId());
-                } else {
-                    arrMessageList.add(botResponse.getMessageId());
-                }
+                botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.getMessageId());
             }
 
             PayloadOuter payOuter = null;
@@ -664,9 +658,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 payloadInner.convertElementToAppropriate();
             }
 
-            if (!BotApplication.isActivityVisible()) {
-                postNotification("Kore Message", "Received new message.");
-            }
+            postNotification("Kore Message", "Received new message.");
 
             handler.postDelayed(() -> {
                 if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
@@ -684,7 +676,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                         if (eventModel != null && eventModel.getMessage() != null) {
                             if (!StringUtils.isNullOrEmpty(eventModel.getMessage().getSipURI())) {
                                 EventMessageModel eventMessageModel = eventModel.getMessage();
-                                SipAccount sipAccount = new SipAccount();
+                                SipAccount sipAccount = new SipAccount(this);
                                 sipAccount.setUsername(botClient.getUserId());
                                 sipAccount.setDisplayName(botClient.getUserId());
                                 sipAccount.setDomain(eventMessageModel.getDomain());
@@ -692,8 +684,8 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                                 sipAccount.setPort(5060);
                                 sipAccount.setTransport(Transport.UDP);
 
-                                Prefs.setSipAccount(sipAccount);
-                                Prefs.setAutoRedirect(true);
+                                Prefs.setSipAccount(this, sipAccount);
+                                Prefs.setAutoRedirect(this, true);
 
                                 showAlertDialog(eventModel);
                             } else {
@@ -876,7 +868,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onResume() {
-        BotApplication.activityResumed();
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
             updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
@@ -1694,16 +1685,16 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
     }
 
     void openNextScreen(String sipUser, boolean isVideoCall) {
-        Prefs.setFirstLogin(false);
+        Prefs.setFirstLogin(this, false);
         //start login and open app main screen
         new Thread(new Runnable() {
             @Override
             public void run() {
                 if (!ACManager.getInstance().isRegisterState()) {
-                    ACManager.getInstance().startLogin(false, false);
+                    ACManager.getInstance().startLogin(BotChatActivity.this, false, false);
                 }
 
-                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin()) {
+                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(BotChatActivity.this)) {
                     Toast.makeText(BotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show();
                 } else {
                     ACManager.getInstance().callNumber(sipUser, isVideoCall);

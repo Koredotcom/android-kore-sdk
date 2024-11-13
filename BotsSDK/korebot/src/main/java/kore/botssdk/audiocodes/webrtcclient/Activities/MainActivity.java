@@ -1,5 +1,6 @@
 package kore.botssdk.audiocodes.webrtcclient.Activities;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -9,7 +10,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.Adapters.ViewPagerAdapter;
 import kore.botssdk.audiocodes.webrtcclient.Callbacks.CallBackHandler;
 import kore.botssdk.audiocodes.webrtcclient.Fragments.ChatFragment;
@@ -34,13 +34,13 @@ public class MainActivity extends BaseAppCompatActivity {
 
     CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
         @Override
-        public void loginStateChange(boolean state) {
+        public void loginStateChange(Context context, boolean state) {
             if (handler != null) {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(BotApplication.getGlobalContext(), "login state: "+state, Toast.LENGTH_SHORT).show();
-                        Log.d(TAG,"login state: "+state);
+                        Toast.makeText(MainActivity.this, "login state: " + state, Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "login state: " + state);
                     }
                 });
             }
@@ -54,7 +54,7 @@ public class MainActivity extends BaseAppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                      //  adapter.setPrimaryItem(tabIndex);
+                        //  adapter.setPrimaryItem(tabIndex);
                         viewPager.setCurrentItem(tabIndex, true);
                     }
                 });
@@ -79,43 +79,38 @@ public class MainActivity extends BaseAppCompatActivity {
     }
 
     //
-    private void initRotationMode(int displaymode)
-    {
-        Log.d(TAG, "get orientation: "+displaymode);
+    private void initRotationMode(int displaymode) {
+        Log.d(TAG, "get orientation: " + displaymode);
         if (displaymode == 1) { // its portrait mode
             setContentView(R.layout.main_activity);
-            LoginManager.setAppState(LoginManager.AppLoginState.ACTIVE);
-            BotApplication.initDataBase();
+            LoginManager.setAppState(this, LoginManager.AppLoginState.ACTIVE);
             initTabs();
         } else {// its landscape
             setContentView(R.layout.main_fragments);
-            LoginManager.setAppState(LoginManager.AppLoginState.ACTIVE);
-            BotApplication.initDataBase();
+            LoginManager.setAppState(this, LoginManager.AppLoginState.ACTIVE);
             initFragments();
         }
 
 
         //initRotationMode();
-        CallBackHandler.registerLginStateChange(loginStateChanged);
+        CallBackHandler.registerLoginStateChange(loginStateChanged);
     }
 
-    private void initFragments()
-    {
+    private void initFragments() {
 
         initTabs();
     }
 
-    private void initTabs()
-    {
-       // public static void unregisterTabChangeCallback(CallBackHandler.TabChangeCallback
-      //  tabChangeCallback) {
+    private void initTabs() {
+        // public static void unregisterTabChangeCallback(CallBackHandler.TabChangeCallback
+        //  tabChangeCallback) {
         CallBackHandler.registerTabChangeCallback(tabChangeCallback);
 
-        viewPager = (ViewPager)findViewById(R.id.main_activity_pager);
+        viewPager = (ViewPager) findViewById(R.id.main_activity_pager);
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new DialerFragment(), getString(R.string.tabs_dialer_title));
         adapter.addFragment(new RecentListFragment(), getString(R.string.tabs_recents_title));
-        boolean contactPermission = PermissionManager.getInstance().checkPermission(PermissionManagerType.CONTACTS);
+        boolean contactPermission = PermissionManager.getInstance().checkPermission(this, PermissionManagerType.CONTACTS);
         if (contactPermission) {
             adapter.addFragment(new ContactListFragment(), getString(R.string.tabs_contacts_title));
         }
@@ -151,9 +146,10 @@ public class MainActivity extends BaseAppCompatActivity {
             }
         });
 
-        TabLayout tabLayout = (TabLayout)findViewById(R.id.tabs);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
     }
+
     @Override
     protected void onDestroy() {
         CallBackHandler.unregisterLoginStateChange(loginStateChanged);

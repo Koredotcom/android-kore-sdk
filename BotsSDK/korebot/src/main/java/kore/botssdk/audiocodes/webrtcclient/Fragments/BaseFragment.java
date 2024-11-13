@@ -54,7 +54,7 @@ public class BaseFragment extends Fragment {
                 //finish();
                 return true;
             case EXIT_MENU:
-                LogoutManager.closeApplication();
+                LogoutManager.closeApplication(requireContext());
                 return true;
         }
         return super.onOptionsItemSelected(item);

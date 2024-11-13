@@ -1,8 +1,13 @@
 package kore.botssdk.audiocodes.webrtcclient.Activities;
 
+import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -32,7 +37,6 @@ import java.util.List;
 import java.util.Locale;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.Callbacks.CallBackHandler;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
@@ -48,43 +52,36 @@ import kore.botssdk.utils.BundleConstants;
 
 @SuppressWarnings("UnknownNullness")
 public class CallActivity extends BaseAppCompatActivity implements AudioCodesSessionEventListener {
+    public static String ACTION_CALL_TERMINATED = "com.kore.botsdk.ACTION_CALL_TERMINATED";
     private static final String TAG = "CallActivity";
     public static final String SESSION_ID = "sessionID";
-    TextView callStateTextView;
-    TextView transferStateNumberTextView;
-    TextView contactNameTextView;
-    TextView contactPhoneNumberTextView;
-    ImageView contactImageView;
-    AudioCodesSession session;
-    View endCallButton;
-    View holdButton;
-    View switchCameraButton;
-    View muteAudioButton;
-    View switchCallButton;
-    View addCallButton;
-    View transferCallButton;
-    View audioRouteButton;
-    View videoRouteButton;
-    View muteVideoButton;
-    View videoHoldButton;
-    View endVideoCallButton;
+    private TextView callStateTextView;
+    private TextView transferStateNumberTextView;
+    private TextView contactNameTextView;
+    private TextView contactPhoneNumberTextView;
+    private ImageView contactImageView;
+    private AudioCodesSession session;
+    private View endCallButton;
+    private View holdButton;
+    private View muteAudioButton;
+    private View switchCallButton;
+    private View audioRouteButton;
+    private View muteVideoButton;
     private View addVideoButton;
-    View dtmfButton;
-    boolean dtmfEnabled = false;
-    boolean guiInitialized;
-    int count = 0;
-    WebRTCAudioManager ac;
-    WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
-    Handler timerHandler = new Handler();
-    ArrayList<Integer> sessionList = new ArrayList<>();
-    Runnable runnable;
-    MyAudioCodesSessionEventListener myAudioCodesSessionEventListener = new MyAudioCodesSessionEventListener();
-
+    private boolean dtmfEnabled = false;
+    private boolean guiInitialized;
+    private int count = 0;
+    private WebRTCAudioManager ac;
+    private WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
+    private final Handler timerHandler = new Handler();
+    private final ArrayList<Integer> sessionList = new ArrayList<>();
+    private Runnable runnable;
+    private final MyAudioCodesSessionEventListener myAudioCodesSessionEventListener = new MyAudioCodesSessionEventListener();
     private int lastSessionIndex;
 
-    CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
+    private final CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
         @Override
-        public void loginStateChange(boolean state) {
+        public void loginStateChange(Context context, boolean state) {
             if (handler != null) {
                 handler.post(new Runnable() {
                     @Override
@@ -97,14 +94,21 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         }
     };
 
+    private final BroadcastReceiver callTerminateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            finish();
+        }
+    };
+
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate");
         setContentView(R.layout.call_activity);
         handler = new Handler();
-        CallBackHandler.registerLginStateChange(loginStateChanged);
-        BotApplication.setCurrentActivity(this);
+        CallBackHandler.registerLoginStateChange(loginStateChanged);
 
         ac = WebRTCAudioManager.getInstance();
         ac.setAudioRoute(WebRTCAudioManager.AudioRoute.SPEAKER_PHONE);
@@ -118,7 +122,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 sessionIndex = ACManager.getInstance().getActiveSession().getSessionID();
             } else {
                 //close application
-                LogoutManager.closeApplication();
+                LogoutManager.closeApplication(this);
                 return;
             }
         }
@@ -131,13 +135,19 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         session = AudioCodesUA.getInstance().getSession(sessionIndex);
         if (session == null) {
             Log.d(TAG, "Session is null!!!");
-            Toast.makeText(BotApplication.getGlobalContext(), getString(R.string.session_null_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.session_null_error), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         lastSessionIndex = sessionIndex;
         updateUI();
-        CallForegroundService.startService();
+        CallForegroundService.startService(this);
+        IntentFilter filter = new IntentFilter(ACTION_CALL_TERMINATED);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(callTerminateReceiver, filter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(callTerminateReceiver, filter);
+        }
     }
 
     @Override
@@ -318,17 +328,15 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                         return;
                     }
                 }
-
             }
         });
-
 
         addCallButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String call = Prefs.getSecondCall();
+                String call = Prefs.getSecondCall(CallActivity.this);
                 if (call == null || call.equals("")) {
-                    Toast.makeText(BotApplication.getGlobalContext(), getString(R.string.no_remote_contact), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CallActivity.this, getString(R.string.no_remote_contact), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 try {
@@ -365,9 +373,9 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                         }
                     }
                 } else {
-                    String call = Prefs.getTransferCall();
-                    if (call == null || call.equals("")) {
-                        Toast.makeText(BotApplication.getGlobalContext(), getString(R.string.no_remote_contact), Toast.LENGTH_SHORT).show();
+                    String call = Prefs.getTransferCall(CallActivity.this);
+                    if (call == null || call.isEmpty()) {
+                        Toast.makeText(CallActivity.this, getString(R.string.no_remote_contact), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     RemoteContact transferContact = new RemoteContact();
@@ -428,10 +436,9 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 dtmfEnabled = !dtmfEnabled;
                 updateCallGui();
 
-                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_dial_pad_off, getTheme()));
+                int drawable = dtmfEnabled ? R.drawable.ic_dial_pad_on : R.drawable.ic_dial_pad_off;
 
-                if (dtmfEnabled)
-                    ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_dial_pad_on, getTheme()));
+                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), drawable, getTheme()));
             }
         });
         session.addSessionEventListener(this);
@@ -497,7 +504,6 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 } else if (id == R.id.call_button_keypad_asterisk) {
                     session.sendDTMF(DTMF.STAR);
                 }
-
             }
         };
 
@@ -517,7 +523,6 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                     initGUI();
                     WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(new MyWebRTcAudioRouteListener());
                     updateCallGui();
-
                 }
 
                 RemoteContact remote = session.getRemoteNumber();
@@ -531,17 +536,16 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                     }
 
                     //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
-                    List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(NativeDBManager.QueryType.BY_PHONE_AND_SIP, remote.getUserName());//  .getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
+                    List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(CallActivity.this, NativeDBManager.QueryType.BY_PHONE_AND_SIP, remote.getUserName());//  .getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
                     String displayName = remote.getDisplayName();
                     String userName = remote.getUserName();
                     // Log.d(TAG, "check user name: "+userName+" displayName:"+displayName);
-                    if (nativeDBObjectList != null && nativeDBObjectList.size() > 0) {
+                    if (nativeDBObjectList != null && !nativeDBObjectList.isEmpty()) {
                         // Log.d(TAG, "check user nativeDBObjectList: " +nativeDBObjectList.size());
                         NativeDBObject nativeDBObject = nativeDBObjectList.get(0);
                         if (nativeDBObject.getPhotoURI() != null) {
-                            Bitmap photoBitmap = ImageUtils.getContactBitmapFromURI(BotApplication.getGlobalContext(), Uri.parse(nativeDBObject.getPhotoURI()));
+                            Bitmap photoBitmap = ImageUtils.getContactBitmapFromURI(CallActivity.this, Uri.parse(nativeDBObject.getPhotoURI()));
                             if (photoBitmap != null) {
-
                                 Bitmap roundPhotoBitmap = ImageUtils.getCroppedRoundBitmap(photoBitmap, contactImageView.getDrawable().getIntrinsicHeight());
                                 //Bitmap photoBitmap = BitmapFactory.decodeByteArray(photo, 0, photo.length);
                                 contactImageView.setImageBitmap(roundPhotoBitmap);
@@ -558,7 +562,6 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 }
             }
         });
-
     }
 
     void updateVideoButton() {
@@ -579,7 +582,6 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         View topButtonsLayout = findViewById(R.id.call_layout_top_buttons);
         View llVideo = findViewById(R.id.llVideoButtons);
         View buttonsLayout = findViewById(R.id.call_layout_buttons);
-
 
         if (dtmfEnabled) {
             Log.d(TAG, "updateCallGui: DTMF");
@@ -615,7 +617,6 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
             buttonsLayout.setVisibility(View.VISIBLE);
             dtmfCallLayout.setVisibility(View.GONE);
             topButtonsLayout.setVisibility(View.VISIBLE);
-
         }
         updateVideoButton();
     }
@@ -626,12 +627,12 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         if (session != null && session.getTermination() != null) {
             handleCallTermination(session, null);
         }
-
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unregisterReceiver(callTerminateReceiver);
         //CallBackHandler.unregisterCallStateChanged(callStateChanged);
         CallBackHandler.unregisterLoginStateChange(loginStateChanged);
         timerHandler.removeCallbacks(runnable);
@@ -669,15 +670,12 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         Log.d(TAG, "media failed1");
     }
 
-
     @Override
     public void cameraSwitched(boolean frontCamera) {
-
     }
 
     @Override
     public void reinviteWithVideoCallback(AudioCodesSession audioCodesSession) {
-
     }
 
     @Override
@@ -745,7 +743,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
             res = new DTMF[dtmfValueArr.length - 1];
             int charIndex = 0;
             for (String signalValueArrChar : dtmfValueArr) {
-                if (signalValueArrChar == null || signalValueArrChar.equals("")) {
+                if (signalValueArrChar == null || signalValueArrChar.isEmpty()) {
                     continue;
                 }
                 switch (signalValueArrChar) {
@@ -795,7 +793,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     public class MyAudioCodesSessionEventListener implements AudioCodesSessionEventListener {
         @Override
         public void callTerminated(final AudioCodesSession call, TerminationInfo info) {
-            CallForegroundService.stopService();
+            CallForegroundService.stopService(CallActivity.this);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -803,7 +801,6 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                     handleCallTermination(call, info);
                 }
             });
-
         }
 
         @Override
@@ -816,10 +813,10 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 public void run() {
                     if (call.getCallState() == CallState.RINGING) {
                         Log.d(TAG, "do local ring!");
-                        AppUtils.startRingingMP("ringback.wav", true, false, null);
+                        AppUtils.startRingingMP(CallActivity.this, "ringback.wav", true, false, null);
                     }
                     if (call.getCallState() == CallState.CONNECTED) {
-                        AppUtils.stopRingingMP();
+                        AppUtils.stopRingingMP(CallActivity.this);
                     }
                     if (call.getSessionID() == session.getSessionID()) {
                         callStateTextView.setText(getString(R.string.call_textview_call_state) + " " + call.getCallState());
@@ -885,11 +882,10 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         handler.post(new Runnable() {
             @Override
             public void run() {
-                AppUtils.stopRingingMP();
+                AppUtils.stopRingingMP(CallActivity.this);
                 sessionList.remove((Integer) audioCodesSession.getSessionID());
                 AudioCodesSession currentSession = session;
-                if (sessionList.size() == 0) {
-
+                if (sessionList.isEmpty()) {
                     WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(null);
                     if (AppUtils.getBotClient() != null && AppUtils.getEventModel() != null) {
                         EventModel eventModel = AppUtils.getEventModel();
@@ -949,11 +945,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 }
 
                 ((ImageView) audioRouteButton).setImageResource(audioRouteInt);
-
             }
         }
-
     }
-
-
 }

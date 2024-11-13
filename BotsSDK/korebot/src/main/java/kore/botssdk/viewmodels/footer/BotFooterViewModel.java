@@ -220,7 +220,6 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
     }
 
     private class SaveVideoTask extends AsyncTasks<String, String, String> {
-
         private final String filePath;
         private String fileName;
         private final Uri fileUri;
@@ -234,7 +233,6 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
             this.mContext = new WeakReference<>(mContext);
             this.jwt = jwt;
         }
-
 
         @Override
         protected void doInBackground(String... params) {
@@ -282,12 +280,11 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
             }
         }
 
-
         @Override
         protected void onPostExecute() {
 //            filePath = path;
             if (filePath != null && mContext.get() != null) {
-                if (filePath.length() > 0) {
+                if (!filePath.isEmpty()) {
                     int startInd = filePath.lastIndexOf(File.separator) + 1;
                     int endInd = filePath.indexOf(".", startInd);
                     fileName = filePath.substring(startInd, endInd);

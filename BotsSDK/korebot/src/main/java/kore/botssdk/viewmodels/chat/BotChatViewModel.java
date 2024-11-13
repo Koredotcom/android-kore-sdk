@@ -40,7 +40,6 @@ import java.util.UUID;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.Activities.CallActivity;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
@@ -52,7 +51,6 @@ import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.models.AgentInfoModel;
-import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -64,7 +62,6 @@ import kore.botssdk.models.EventMessageModel;
 import kore.botssdk.models.EventModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
-import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.pushnotification.PushNotificationRegister;
 import kore.botssdk.repository.branding.BrandingRepository;
@@ -96,6 +93,7 @@ public class BotChatViewModel extends ViewModel {
     static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     final int compressQualityInt = 100;
     final SharedPreferences sharedPreferences;
+    private boolean isActivityResumed = false;
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -105,6 +103,10 @@ public class BotChatViewModel extends ViewModel {
         this.botClient = botClient;
         ACManager.getInstance().startLogout();
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+    }
+
+    public void setIsActivityResumed(boolean isResumed) {
+        isActivityResumed = isResumed;
     }
 
     public void getBrandingDetails(String botId, String botToken, boolean isReconnection) {
@@ -210,7 +212,7 @@ public class BotChatViewModel extends ViewModel {
 
             if (botClient != null && isAgentTransfer) {
                 botClient.sendReceipts(BundleConstants.MESSAGE_DELIVERED, botResponse.getMessageId());
-                if (BotApplication.isActivityVisible()) {
+                if (isActivityResumed) {
                     botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.getMessageId());
                 } else {
                     arrMessageList.add(botResponse.getMessageId());
@@ -245,7 +247,7 @@ public class BotChatViewModel extends ViewModel {
                 payloadInner.convertElementToAppropriate();
             }
 
-            if (!BotApplication.isActivityVisible()) {
+            if (!isActivityResumed) {
                 postNotification("Kore Message", "Received new message.");
             }
 
@@ -260,7 +262,7 @@ public class BotChatViewModel extends ViewModel {
                         if (!StringUtils.isNullOrEmpty(eventModel.getMessage().getSipURI()) && eventModel.getMessage().getType().equalsIgnoreCase(BundleConstants.CALL_AGENT_WEBRTC)) {
                             EventMessageModel eventMessageModel = eventModel.getMessage();
                             if (eventMessageModel != null) {
-                                SipAccount sipAccount = new SipAccount();
+                                SipAccount sipAccount = new SipAccount(context);
                                 sipAccount.setUsername(botClient.getUserId());
                                 sipAccount.setDisplayName(botClient.getUserId());
                                 sipAccount.setDomain(eventMessageModel.getDomain());
@@ -269,8 +271,8 @@ public class BotChatViewModel extends ViewModel {
                                 sipAccount.setTransport(Transport.UDP);
                                 sipAccount.setIceServers(eventMessageModel.getIceServer());
 
-                                Prefs.setSipAccount(sipAccount);
-                                Prefs.setAutoRedirect(true);
+                                Prefs.setSipAccount(context, sipAccount);
+                                Prefs.setAutoRedirect(context, true);
 
                                 chatView.showAlertDialog(eventModel);
                             }
@@ -283,10 +285,8 @@ public class BotChatViewModel extends ViewModel {
                                 if (AudioCodesUA.getInstance().getSession(sessionIndex) != null) {
                                     AudioCodesUA.getInstance().getSession(sessionIndex).terminate();
                                     WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(null);
-
-                                    if (BotApplication.getCurrentActivity() instanceof CallActivity) {
-                                        BotApplication.getCurrentActivity().finish();
-                                    }
+                                    Intent intent = new Intent(CallActivity.ACTION_CALL_TERMINATED);
+                                    context.sendBroadcast(intent);
                                 }
                             }
                         }

@@ -23,7 +23,6 @@ import com.audiocodes.mv.webrtcsdk.useragent.WebRTCException;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.ImageUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
@@ -51,7 +50,7 @@ public class IncomingCallActivity extends BaseAppCompatActivity implements Audio
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        NotificationUtils.removeCallNotification();
+        NotificationUtils.removeCallNotification(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.incoming_call_activity);
 
@@ -64,7 +63,7 @@ public class IncomingCallActivity extends BaseAppCompatActivity implements Audio
                 sessionIndex = ACManager.getInstance().getActiveSession().getSessionID();
             } else {
                 //close application
-                LogoutManager.closeApplication();
+                LogoutManager.closeApplication(this);
                 return;
             }
         }
@@ -126,7 +125,7 @@ public class IncomingCallActivity extends BaseAppCompatActivity implements Audio
 
 
         //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
-        List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(NativeDBManager.QueryType.BY_PHONE_AND_SIP, session.getRemoteNumber().getUserName());//  .getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
+        List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(IncomingCallActivity.this, NativeDBManager.QueryType.BY_PHONE_AND_SIP, session.getRemoteNumber().getUserName());//  .getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
 
         String displayName=session.getRemoteNumber().getDisplayName();
         String userName=session.getRemoteNumber().getUserName();
@@ -246,7 +245,7 @@ public class IncomingCallActivity extends BaseAppCompatActivity implements Audio
     {
         Log.d(TAG, "playRingtone");
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        ringtone = RingtoneManager.getRingtone(BotApplication.getGlobalContext(), uri);
+        ringtone = RingtoneManager.getRingtone(this, uri);
         ringtone.play();
     }
 

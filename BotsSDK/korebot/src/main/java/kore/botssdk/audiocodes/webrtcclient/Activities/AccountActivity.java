@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.oauth.OAuthManager;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
@@ -41,7 +40,7 @@ public class AccountActivity extends BaseAppCompatActivity {
     }
 
     private void initGui() {
-        SipAccount sipAccount = Prefs.getSipAccount();
+        SipAccount sipAccount = Prefs.getSipAccount(this);
 
 
         EditText userNameEditText = (EditText) findViewById(R.id.account_editText_username);
@@ -61,8 +60,8 @@ public class AccountActivity extends BaseAppCompatActivity {
 
         secondCall = (EditText) findViewById(R.id.account_editText_second_call);
         transferCall = (EditText) findViewById(R.id.account_editText_transfer_call);
-        secondCall.setText(Prefs.getSecondCall());
-        transferCall.setText(Prefs.getTransferCall());
+        secondCall.setText(Prefs.getSecondCall(this));
+        transferCall.setText(Prefs.getTransferCall(this));
 
         TextView statusTextView = (TextView) findViewById(R.id.account_textview_status);
         String statusStr = getString(R.string.account_textview_status_prefix) + " " +
@@ -111,7 +110,7 @@ public class AccountActivity extends BaseAppCompatActivity {
         }
 
         CheckBox autologin = (CheckBox) findViewById(R.id.autologin_checkBox);
-        autologin.setChecked(Prefs.getAutoLogin());
+        autologin.setChecked(Prefs.getAutoLogin(this));
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +130,7 @@ public class AccountActivity extends BaseAppCompatActivity {
                         sipAccount.setDisplayName(displayNameEditText.getText().toString().trim());
                         sipAccount.setDomain(domainEditText.getText().toString().trim());
                         sipAccount.setProxy(sipAddressEditText.getText().toString().trim());
-                        sipAccount.setTransport(AppUtils.getTransport(transportSpinner.getSelectedItem().toString().trim()));
+                        sipAccount.setTransport(AppUtils.getTransport(AccountActivity.this, transportSpinner.getSelectedItem().toString().trim()));
 
                         int portNumber;
                         try {
@@ -146,7 +145,7 @@ public class AccountActivity extends BaseAppCompatActivity {
                 }
 
                 Log.d(TAG, "start logout");
-                Prefs.setSipAccount(sipAccount);
+                Prefs.setSipAccount(AccountActivity.this, sipAccount);
                 handleOauth(oauthUrlEditText, oauthRealmEditText, oauthClientIdEditText,
                             userName, password, autologin.isChecked());
             }
@@ -155,19 +154,19 @@ public class AccountActivity extends BaseAppCompatActivity {
 
     private void handleOauth(EditText oauthUrlEditText, EditText oauthRealmEditText, EditText oauthClientIdEditText, String userName, String password,
                              boolean autologin){
-        boolean disconnectCall = Prefs.getDisconnectBrokenConnection();
+        boolean disconnectCall = Prefs.getDisconnectBrokenConnection(this);
         if(oAuthEnable){
             OAuthManager.getInstance().setURL(oauthUrlEditText.getText().toString());
             OAuthManager.getInstance().setRealm(oauthRealmEditText.getText().toString());
             OAuthManager.getInstance().setClientId(oauthClientIdEditText.getText().toString());
-            OAuthManager.getInstance().authorize(userName, password, new OAuthManager.LoginCallback() {
+            OAuthManager.getInstance().authorize(this, userName, password, new OAuthManager.LoginCallback() {
                 @Override
                 public void onAuthorize(boolean success) {
                     if(success){
                         openNextScreen(autologin, disconnectCall);
                     }
                     else{
-                        Toast.makeText(BotApplication.getGlobalContext(),getString(R.string.oauth_error), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AccountActivity.this,getString(R.string.oauth_error), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -185,11 +184,11 @@ public class AccountActivity extends BaseAppCompatActivity {
     }
 
     private void openNextScreen(boolean autologin, boolean disconnectCall) {
-        Prefs.setSecondCall(secondCall.getText().toString());
-        Prefs.setTransferCall(transferCall.getText().toString());
-        Prefs.setFirstLogin(false);
+        Prefs.setSecondCall(this, secondCall.getText().toString());
+        Prefs.setTransferCall(this, transferCall.getText().toString());
+        Prefs.setFirstLogin(this, false);
         //start login and open app main screen
-        ACManager.getInstance().startLogin(autologin, disconnectCall);
+        ACManager.getInstance().startLogin(this, autologin, disconnectCall);
         startNextActivity(MainActivity.class);
         finish();
     }

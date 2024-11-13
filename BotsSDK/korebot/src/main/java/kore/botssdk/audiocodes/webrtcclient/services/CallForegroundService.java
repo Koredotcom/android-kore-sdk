@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
 import kore.botssdk.audiocodes.webrtcclient.General.NotificationUtils;
 
@@ -31,7 +30,7 @@ public class CallForegroundService extends Service {
             String action = intent.getAction();
             if (START_FOREGROUND.equals(action)) {
                 Log.d(TAG, "Received Start Foreground Intent ");
-                Notification notification = NotificationUtils.addServiceNotification();
+                Notification notification = NotificationUtils.addServiceNotification(this);
                 startForeground(NotificationUtils.NOTIFICATION_SERVICE_ID, notification);
 
             } else if (STOP_FOREGROUND.equals(action)) {
@@ -55,21 +54,18 @@ public class CallForegroundService extends Service {
         return null;
     }
 
-    public static void startService(){
+    public static void startService(Context context) {
         Log.d(TAG, "startService foreground ");
-        Context context = BotApplication.getGlobalContext();
         Intent startIntent = new Intent(context, CallForegroundService.class);
         startIntent.setAction(CallForegroundService.START_FOREGROUND);
         context.startService(startIntent);
     }
 
-    public static void stopService(){
+    public static void stopService(Context context) {
         Log.d(TAG, "stopService foreground ");
-        Context context = BotApplication.getGlobalContext();
         Intent stopIntent = new Intent(context, CallForegroundService.class);
         stopIntent.setAction(CallForegroundService.STOP_FOREGROUND);
         context.stopService(stopIntent);
-        NotificationUtils.removeServiceNotification();
+        NotificationUtils.removeServiceNotification(context);
     }
-
 }

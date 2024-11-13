@@ -57,7 +57,7 @@ public class ContactListFragment extends BaseFragment implements FragmentLifecyc
 
         contactListView = (ListView) rootView.findViewById(R.id.contact_list_listview_contacts);
         //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactList(true);
-        List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList();
+        List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(requireContext());
 
         Collections.sort(nativeDBObjectList);
         if (nativeDBObjectList != null)

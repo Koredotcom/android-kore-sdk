@@ -23,16 +23,13 @@ import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesEventListener;
 import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
 import com.audiocodes.mv.webrtcsdk.useragent.WebRTCException;
 
-import org.webrtc.PeerConnection;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import kore.botssdk.application.BotApplication;
+import kore.botssdk.activity.BotAppCompactActivity;
 import kore.botssdk.audiocodes.webrtcclient.Activities.CallActivity;
 import kore.botssdk.audiocodes.webrtcclient.Activities.IncomingCallActivity;
 import kore.botssdk.audiocodes.webrtcclient.Callbacks.CallBackHandler;
@@ -46,6 +43,7 @@ public class ACManager implements AudioCodesEventListener {
 
     private static ACManager instance;
     private boolean registerState;
+    private Context context;
 
     public static synchronized ACManager getInstance() {
         if (instance == null) {
@@ -54,11 +52,12 @@ public class ACManager implements AudioCodesEventListener {
         return instance;
     }
 
-    public void startLogin() {
-        startLogin(Prefs.getAutoLogin(), Prefs.getDisconnectBrokenConnection());
+    public void startLogin(Context context) {
+        startLogin(context, Prefs.getAutoLogin(context), Prefs.getDisconnectBrokenConnection(context));
     }
 
-    public void startLogin(boolean autologin, boolean disconnectCall) {
+    public void startLogin(Context context, boolean autologin, boolean disconnectCall) {
+        this.context = context;
         Log.d(TAG, "startLogin");
         boolean loginit = false;
         AudioCodesUA.getInstance().disconnectOnBrokenConnection(disconnectCall);
@@ -68,17 +67,17 @@ public class ACManager implements AudioCodesEventListener {
         } catch (Exception e) {
             Log.d(TAG, "can't set log level");
         }
-        initWebRTC(Prefs.getSipAccount());
-        Prefs.setAutoLogin(autologin);
-        Prefs.setDisconnectBrokenConnection(disconnectCall);
+        initWebRTC(context, Prefs.getSipAccount(context));
+        Prefs.setAutoLogin(context, autologin);
+        Prefs.setDisconnectBrokenConnection(context, disconnectCall);
         try {
-            AudioCodesUA.getInstance().login(BotApplication.getGlobalContext().getApplicationContext(), autologin);
+            AudioCodesUA.getInstance().login(context.getApplicationContext(), autologin);
             if (!loginit) {
                 initACUA();
             }
         } catch (Exception e) {
             Log.d(TAG, "Error in login: " + e);
-            Toast.makeText(BotApplication.getGlobalContext(), "Error in login", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error in login", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -96,7 +95,7 @@ public class ACManager implements AudioCodesEventListener {
         }
     }
 
-    public void initWebRTC(SipAccount sipAccount) {
+    public void initWebRTC(Context context, SipAccount sipAccount) {
         String proxy = sipAccount.getProxy();
         int port = sipAccount.getPort();
         String domain = sipAccount.getDomain();
@@ -119,7 +118,7 @@ public class ACManager implements AudioCodesEventListener {
         boolean useCustomPemFile = false;
         if (useCustomPemFile) {
             // make sure context is not null at this point
-            AudioCodesUA.getInstance().setCaCertFilePath(copyPemfile(BotApplication.getGlobalContext()));
+            AudioCodesUA.getInstance().setCaCertFilePath(copyPemfile(context));
         }
 
         AudioCodesUA.getInstance().setAccount(username, password, displayName);
@@ -132,23 +131,23 @@ public class ACManager implements AudioCodesEventListener {
 
     public void updateWebRTCConfig() {
         //set dtmf settings
-        DTMFOptions.DTMFMethod dtmfMethod = Prefs.getDTMFType();
+        DTMFOptions.DTMFMethod dtmfMethod = Prefs.getDTMFType(context);
         DTMFOptions dtmfOptions = new DTMFOptions();
         dtmfOptions.dtmfMethod = dtmfMethod;
         Log.d(TAG, "use dtmfMethod: " + dtmfMethod);
         ACConfiguration.getConfiguration().setDtmfOptions(dtmfOptions);
 
-        Log.d(TAG, "use isAutoRedirect: " + Prefs.isAutoRedirect());
-        ACConfiguration.getConfiguration().setAutomaticCallOnRedirect(Prefs.isAutoRedirect());
-        AudioCodesUA.getInstance().setVideoCodecHardwareAceleration(Prefs.isVideoHardware());
+        Log.d(TAG, "use isAutoRedirect: " + Prefs.isAutoRedirect(context));
+        ACConfiguration.getConfiguration().setAutomaticCallOnRedirect(Prefs.isAutoRedirect(context));
+        AudioCodesUA.getInstance().setVideoCodecHardwareAceleration(Prefs.isVideoHardware(context));
         RemoteContact remoteContact = new RemoteContact();
         remoteContact.setScheme(null);
-        remoteContact.setDisplayName(Prefs.getRedirectCallUser());
-        remoteContact.setUserName(Prefs.getRedirectCallUser());
-        remoteContact.setDomain(Prefs.getSipAccount().getDomain());
+        remoteContact.setDisplayName(Prefs.getRedirectCallUser(context));
+        remoteContact.setUserName(Prefs.getRedirectCallUser(context));
+        remoteContact.setDomain(Prefs.getSipAccount(context).getDomain());
 
-        Log.d(TAG, "use isRedirectCall: " + Prefs.isRedirectCall() + " with RedirectCallUser: " + Prefs.getRedirectCallUser());
-        ACConfiguration.getConfiguration().setRedirect(Prefs.isRedirectCall(), remoteContact);
+        Log.d(TAG, "use isRedirectCall: " + Prefs.isRedirectCall(context) + " with RedirectCallUser: " + Prefs.getRedirectCallUser(context));
+        ACConfiguration.getConfiguration().setRedirect(Prefs.isRedirectCall(context), remoteContact);
     }
 
     private String copyPemfile(Context context) {
@@ -180,10 +179,10 @@ public class ACManager implements AudioCodesEventListener {
     public void loginStateChanged(boolean isLogin, int code, String cause) {
         Log.e(TAG, "loginStateChanged isLogin: " + isLogin + " cause: " + cause);
         Log.e(TAG, "loginStateChanged currentState: " + isLogin + " prevState: " + registerState);
-        if (registerState != isLogin || !Prefs.getAutoLogin()) {
+        if (registerState != isLogin || !Prefs.getAutoLogin(context)) {
             registerState = isLogin;
-            CallBackHandler.loginStateChange(registerState);
-            NotificationUtils.createAppNotification();
+            CallBackHandler.loginStateChange(context, registerState);
+            NotificationUtils.createAppNotification(context);
 
         }
     }
@@ -228,28 +227,27 @@ public class ACManager implements AudioCodesEventListener {
 
     public void callNumber(String callNumber, boolean videoCall) {
         try {
-            AppUtils.saveVolumeSettings(true);
-            AppUtils.setLastCallVolumeSettings();
-            AppUtils.setSpeaker(true);
+            AppUtils.saveVolumeSettings(context, true);
+            AppUtils.setLastCallVolumeSettings(context);
+            AppUtils.setSpeaker(context, true);
             Log.d(TAG, "start callNumber: " + callNumber + " isVideoCall: " + videoCall);
             RemoteContact contact = new RemoteContact();
             contact.setUserName(callNumber);
             contact.setDisplayName(callNumber);
             ACPjSipManager.getSipManager().setSessionExpiresTimeout(6000);
             AudioCodesSession session = AudioCodesUA.getInstance().call(contact, videoCall, null);
-            Intent callIntent = new Intent(BotApplication.getGlobalContext(), CallActivity.class);
+            Intent callIntent = new Intent(context, CallActivity.class);
 
             session.addSessionEventListener(audioCodesSessionEventListener);
 
             Log.d(TAG, "callNumber startActivity");
             callIntent.putExtra(CallActivity.SESSION_ID, session.getSessionID());
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            BotApplication.getGlobalContext().startActivity(callIntent);
+            context.startActivity(callIntent);
         } catch (WebRTCException e) {
             Log.d(TAG, "oops: " + e.getMessage());
         }
     }
-
 
     @Override
     public void incomingCall(AudioCodesSession call, InfoAlert infoAlert) {
@@ -261,8 +259,8 @@ public class ACManager implements AudioCodesEventListener {
             curCallConnected = getActiveSession().getCallState() == CallState.CONNECTED;
             Log.d(TAG, "current is connected: " + curCallConnected);
 
-            AppUtils.saveVolumeSettings(true);
-            AppUtils.setLastCallVolumeSettings();
+            AppUtils.saveVolumeSettings(context, true);
+            AppUtils.setLastCallVolumeSettings(context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -278,10 +276,10 @@ public class ACManager implements AudioCodesEventListener {
             } else {
 
                 //answer call immediately, without showing incoming call GUI
-                Intent callIntent = new Intent(BotApplication.getGlobalContext(), CallActivity.class);
+                Intent callIntent = new Intent(context, CallActivity.class);
 
                 callIntent.putExtra(CallActivity.SESSION_ID, call.getSessionID());
-                BotApplication.getGlobalContext().startActivity(callIntent);
+                context.startActivity(callIntent);
 
                 call.answer(null, false);
                 return;
@@ -291,12 +289,12 @@ public class ACManager implements AudioCodesEventListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !curCallConnected) {
 
             boolean video = AudioCodesUA.getInstance().getSession(call.getSessionID()).hasVideo();
-            NotificationUtils.createCallNotification(call.getRemoteNumber().getDisplayName(), call.getSessionID(), video);
+            NotificationUtils.createCallNotification(context, call.getRemoteNumber().getDisplayName(), call.getSessionID(), video);
             AudioCodesSession session = AudioCodesUA.getInstance().getSession(call.getSessionID());
             session.addSessionEventListener(new AudioCodesSessionEventListener() {
                 @Override
                 public void callTerminated(AudioCodesSession audioCodesSession, TerminationInfo info) {
-                    NotificationUtils.removeCallNotification();
+                    NotificationUtils.removeCallNotification(context);
                 }
 
                 @Override
@@ -324,13 +322,13 @@ public class ACManager implements AudioCodesEventListener {
                         case TALK:
                             android.util.Log.d(TAG, "Notify answer call");
 
-                            NotificationUtils.removeCallNotification();
-                            Intent incomingCallIntent = new Intent(BotApplication.getGlobalContext(), IncomingCallActivity.class);
+                            NotificationUtils.removeCallNotification(context);
+                            Intent incomingCallIntent = new Intent(context, IncomingCallActivity.class);
                             incomingCallIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             incomingCallIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             incomingCallIntent.putExtra(IncomingCallActivity.SESSION_ID, call.getSessionID());
                             incomingCallIntent.putExtra(IncomingCallActivity.INTENT_ANSWER_TAG, 1);
-                            BotApplication.getGlobalContext().startActivity(incomingCallIntent);
+                            context.startActivity(incomingCallIntent);
                             session.removeSessionEventListener(this);
                             break;
                         case HOLD:
@@ -340,11 +338,11 @@ public class ACManager implements AudioCodesEventListener {
                 }
             });
         } else {
-            Intent incomingCallIntent = new Intent(BotApplication.getGlobalContext(), IncomingCallActivity.class);
+            Intent incomingCallIntent = new Intent(context, IncomingCallActivity.class);
             incomingCallIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             incomingCallIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             incomingCallIntent.putExtra(IncomingCallActivity.SESSION_ID, call.getSessionID());
-            BotApplication.getGlobalContext().startActivity(incomingCallIntent);
+            context.startActivity(incomingCallIntent);
         }
     }
 
@@ -372,20 +370,16 @@ public class ACManager implements AudioCodesEventListener {
             Log.d(TAG, "callTerminated name: " + session.getRemoteNumber().getDisplayName() + " userName: " + session.getRemoteNumber().getUserName());
 
             //Save current level volume
-            AppUtils.saveVolumeSettings(true);
+            AppUtils.saveVolumeSettings(context, true);
             //restore previous volume settings
-            AppUtils.restorePrevVolumeSettings();
+            AppUtils.restorePrevVolumeSettings(context);
 
             //save call to recents
 //            saveCallHistory(session);
             //save statistics
             ACCallStatistics acCallStatistics = session.getStats();
-            Prefs.setCallStats(acCallStatistics);
+            Prefs.setCallStats(context, acCallStatistics);
             Log.d(TAG, "ACCallStatistics: " + acCallStatistics);
-
-            //CallBackHandler.callStateChanged(CallState.NULL);
-            //session.getCallState()
-            //BotApplication.getDataBase().addEntry(new CallEntry("Avi", 1512997724646L, CallEntry.CallType.NOT_ANSWERED));
         }
 
         private void saveCallHistory(AudioCodesSession session) {
@@ -415,7 +409,8 @@ public class ACManager implements AudioCodesEventListener {
             callEntry.setCallType(callType);
 
             callEntry.setDuration(callDuration);
-            BotApplication.getDataBase().addEntry(callEntry);
+            if (context instanceof BotAppCompactActivity)
+                ((BotAppCompactActivity) context).getDataBase().addEntry(callEntry);
         }
 
         @Override

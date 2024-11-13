@@ -1,5 +1,7 @@
 package kore.botssdk.audiocodes.webrtcclient.Structure;
 
+import android.content.Context;
+
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
 
 import org.webrtc.PeerConnection;
@@ -7,7 +9,6 @@ import org.webrtc.PeerConnection;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.BasePrefs;
 
 public class SipAccount {
@@ -22,15 +23,15 @@ public class SipAccount {
 
     private ArrayList<PeerConnection.IceServer> iceServers;
 
-    public SipAccount() {
-        proxy = BasePrefs.getString("SipAccountProxy");
-        domain = BasePrefs.getString("SipAccountDomain");
-        username = BasePrefs.getString("SipAccountUsername");
-        password = BotApplication.getGlobalContext().getString(R.string.sip_account_password_default);
-        displayName = BasePrefs.getString("SipAccountDisplayName");
-        String portStr = BotApplication.getGlobalContext().getString(R.string.sip_account_port_default);
+    public SipAccount(Context context) {
+        proxy = BasePrefs.getString(context, "SipAccountProxy");
+        domain = BasePrefs.getString(context, "SipAccountDomain");
+        username = BasePrefs.getString(context, "SipAccountUsername");
+        password = context.getString(R.string.sip_account_password_default);
+        displayName = BasePrefs.getString(context, "SipAccountDisplayName");
+        String portStr = context.getString(R.string.sip_account_port_default);
         port = Integer.parseInt(portStr);
-        String transportStr =  BotApplication.getGlobalContext().getString(R.string.sip_account_transport_default);
+        String transportStr = context.getString(R.string.sip_account_transport_default);
         transport = Transport.valueOf(transportStr);
     }
 

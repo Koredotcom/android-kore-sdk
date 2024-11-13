@@ -75,7 +75,7 @@ public class TabletButtonsFragment extends BaseFragment implements FragmentLifec
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogoutManager.closeApplication();
+                LogoutManager.closeApplication(requireContext());
             }
         });
 

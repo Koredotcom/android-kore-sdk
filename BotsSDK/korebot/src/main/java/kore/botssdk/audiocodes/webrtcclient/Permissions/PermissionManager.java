@@ -2,6 +2,7 @@ package kore.botssdk.audiocodes.webrtcclient.Permissions;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -15,11 +16,8 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 
-import kore.botssdk.application.BotApplication;
 
-
-public class PermissionManager implements IPermissionManager
-{
+public class PermissionManager implements IPermissionManager {
     private static final String TAG = "PermissionManager";
 
     private List<PermissionRequest> currentPermissionRequestList;
@@ -29,18 +27,14 @@ public class PermissionManager implements IPermissionManager
     public static final int REQUEST_CODE_ASK_PERMISSIONS = 3123;
 
 
-
-    public static PermissionManager getInstance()
-    {
-        if (instance == null)
-        {
+    public static PermissionManager getInstance() {
+        if (instance == null) {
             instance = new PermissionManager();
         }
         return instance;
     }
 
-    public static boolean isPermissionManagerMethodImplemented()
-    {
+    public static boolean isPermissionManagerMethodImplemented() {
         return Build.VERSION.SDK_INT >= 23;
     }
 
@@ -49,12 +43,11 @@ public class PermissionManager implements IPermissionManager
      * @return true -  if the permission is granted
      */
     @Override
-    public boolean checkPermission(PermissionManagerType permissionType)
-    {
-        BotApplication.getGlobalContext().checkCallingOrSelfPermission(permissionType.getTypeName());
-        int permissionCheck = ContextCompat.checkSelfPermission(BotApplication.getGlobalContext(), permissionType.getTypeName());
+    public boolean checkPermission(Context context, PermissionManagerType permissionType) {
+        context.checkCallingOrSelfPermission(permissionType.getTypeName());
+        int permissionCheck = ContextCompat.checkSelfPermission(context, permissionType.getTypeName());
         boolean permissionCheckState = permissionCheck == PackageManager.PERMISSION_GRANTED;
-        Log.d(TAG, "checkPermission  permissionType: "+permissionType+" state: "+(permissionCheckState?"granted":"revoked"));
+        Log.d(TAG, "checkPermission  permissionType: " + permissionType + " state: " + (permissionCheckState ? "granted" : "revoked"));
         return permissionCheckState;
     }
 
@@ -63,8 +56,7 @@ public class PermissionManager implements IPermissionManager
      * @param permissionType    - contain the permission need
      * @param permissionRequest - contain and implementation of the execution method we need to trigger after the result
      */
-    public void requestPermission(Activity activity, PermissionManagerType permissionType, PermissionRequest permissionRequest)
-    {
+    public void requestPermission(Activity activity, PermissionManagerType permissionType, PermissionRequest permissionRequest) {
         List<PermissionManagerType> permissionTypeList = new ArrayList<PermissionManagerType>();
         permissionTypeList.add(permissionType);
         List<PermissionRequest> permissionRequestList = new ArrayList<PermissionRequest>();
@@ -77,40 +69,34 @@ public class PermissionManager implements IPermissionManager
      * @param permissionTypeList    - a list contating PermissionManagerType for each permison we need
      * @param permissionRequestList - a list of PermissionRequest for each execution method we need
      */
-    public void requestPermission(Activity activity, List<PermissionManagerType> permissionTypeList, List<PermissionRequest> permissionRequestList)
-    {
-        if (permissionTypeList.size() != permissionRequestList.size())
-        {
+    public void requestPermission(Activity activity, List<PermissionManagerType> permissionTypeList, List<PermissionRequest> permissionRequestList) {
+        if (permissionTypeList.size() != permissionRequestList.size()) {
             Log.e(TAG, "the permissionType list and the grantableRequest list must be the same size");
             return;
         }
 
         //if the os is under 23 don't try to request any permission
-        if (!isPermissionManagerMethodImplemented())
-        {
-            for (int i = 0; i < permissionTypeList.size(); i++)
-            {
+        if (!isPermissionManagerMethodImplemented()) {
+            for (int i = 0; i < permissionTypeList.size(); i++) {
                 PermissionManagerType permissionManagerType = permissionTypeList.get(i);
                 PermissionRequest permissionRequest = permissionRequestList.get(i);
 
                 // Pre-Marshmallow
                 Log.d(TAG, "Pre-Marshmallow device we cant check permissions, automatically grant: " + permissionManagerType.toString());
-               // boolean isLastPermission = i == (permissionTypeList.size()-1);
+                // boolean isLastPermission = i == (permissionTypeList.size()-1);
                 permissionRequest.granted();
                 permissionRequest.allResults(true);
             }
             return;
         }
 
-        for (int i = 0; i < permissionTypeList.size(); i++)
-        {
+        for (int i = 0; i < permissionTypeList.size(); i++) {
             PermissionManagerType permissionManagerType = permissionTypeList.get(i);
             PermissionRequest permissionRequest = permissionRequestList.get(i);
 
-            boolean isLastPermission = i == (permissionTypeList.size()-1);
-            int permissionCheck = ContextCompat.checkSelfPermission(BotApplication.getGlobalContext(), permissionManagerType.getTypeName());
-            if (permissionCheck == PackageManager.PERMISSION_GRANTED)
-            {
+            boolean isLastPermission = i == (permissionTypeList.size() - 1);
+            int permissionCheck = ContextCompat.checkSelfPermission(activity, permissionManagerType.getTypeName());
+            if (permissionCheck == PackageManager.PERMISSION_GRANTED) {
 
                 permissionRequest.granted();
                 //remove the current request because it already granted
@@ -119,8 +105,7 @@ public class PermissionManager implements IPermissionManager
                 i--;
                 continue;
             }
-            if (activity == null)
-            {
+            if (activity == null) {
                 //call_activity the cancel action if we can't trigger the request from an Activity
                 permissionRequest.revoked();
             }
@@ -128,11 +113,9 @@ public class PermissionManager implements IPermissionManager
 
         String[] permissionArray = new String[permissionTypeList.size()];
         currentPermissionRequestList = permissionRequestList;
-        for (int i = 0; i < permissionTypeList.size(); i++)
-        {
+        for (int i = 0; i < permissionTypeList.size(); i++) {
             PermissionManagerType permissionManagerType = permissionTypeList.get(i);
             permissionArray[i] = permissionManagerType.getTypeName();
-
         }
 
         // List<String> permissionTypeList = new ArrayList<String>();
@@ -142,21 +125,16 @@ public class PermissionManager implements IPermissionManager
         activity.requestPermissions(permissionArray, REQUEST_CODE_ASK_PERMISSIONS);
     }
 
-    public void requestAllPermissions(Activity activity, PermissionRequest permissionRequest)
-    {
-
-
+    public void requestAllPermissions(Activity activity, PermissionRequest permissionRequest) {
         List<PermissionManagerType> permissionTypeList = new ArrayList<PermissionManagerType>();
-        for (PermissionManagerType permissionManagerType: PermissionManagerType.values())
-        {
-           if (!checkPermission(permissionManagerType)) {
-               permissionTypeList.add(permissionManagerType);
-           }
+        for (PermissionManagerType permissionManagerType : PermissionManagerType.values()) {
+            if (!checkPermission(activity, permissionManagerType)) {
+                permissionTypeList.add(permissionManagerType);
+            }
         }
 
         List<PermissionRequest> permissionRequestList = new ArrayList<PermissionRequest>();
-        PermissionRequest fakePermissionRequest = new PermissionRequest()
-        {
+        PermissionRequest fakePermissionRequest = new PermissionRequest() {
             @Override
             public void granted() {
             }
@@ -170,18 +148,14 @@ public class PermissionManager implements IPermissionManager
             }
         };
 
-
-        for (PermissionManagerType permissionManagerType : permissionTypeList)
-        {
+        for (PermissionManagerType permissionManagerType : permissionTypeList) {
             permissionRequestList.add(fakePermissionRequest);
         }
-        if (permissionRequestList.size() > 0)
-        {
+        if (!permissionRequestList.isEmpty()) {
             permissionRequestList.remove(0);
         }
 
-        if (permissionTypeList.size()<=0)
-        {
+        if (permissionTypeList.size() <= 0) {
             //return if there is no need for permission request
             permissionRequest.granted();
             permissionRequest.allResults(true);
@@ -192,16 +166,14 @@ public class PermissionManager implements IPermissionManager
         requestPermission(activity, permissionTypeList, permissionRequestList);
     }
 
-    public List<PermissionRequest> getPermissionRequestList()
-    {
+    public List<PermissionRequest> getPermissionRequestList() {
         return currentPermissionRequestList;
     }
 
-    public static boolean hasPermissionInManifest(String permission)
-    {
+    public static boolean hasPermissionInManifest(Context context, String permission) {
         try {
-            PackageInfo info = BotApplication.getGlobalContext().getPackageManager().getPackageInfo
-                    (BotApplication.getGlobalContext().getPackageName(), PackageManager.GET_PERMISSIONS);
+            PackageInfo info = context.getPackageManager().getPackageInfo
+                    (context.getPackageName(), PackageManager.GET_PERMISSIONS);
             if (info.requestedPermissions != null) {
                 for (String p : info.requestedPermissions) {
                     if (p.equals(permission)) {
@@ -215,10 +187,10 @@ public class PermissionManager implements IPermissionManager
         return false;
     }
 
-    public static void askForSystemAlertWindowPermission() {//}), int requestCode) {
+    public static void askForSystemAlertWindowPermission(Context context) {//}), int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                Uri.parse("package:" + BotApplication.getGlobalContext().getPackageName()));
+                Uri.parse("package:" + context.getPackageName()));
         ///activity.startActivityForResult(intent, requestCode);
-        BotApplication.getGlobalContext().startActivity(intent);
+        context.startActivity(intent);
     }
 }

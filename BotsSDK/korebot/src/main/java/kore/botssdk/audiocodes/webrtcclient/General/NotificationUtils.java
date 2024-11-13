@@ -21,7 +21,6 @@ import com.audiocodes.mv.webrtcsdk.session.CallState;
 import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.Activities.CallActivity;
 import kore.botssdk.audiocodes.webrtcclient.Activities.IncomingCallActivity;
 import kore.botssdk.audiocodes.webrtcclient.Activities.SplashActivity;
@@ -40,8 +39,7 @@ public class NotificationUtils {
 
     private static NotificationManager notificationManager;
 
-    public static void createAppNotification() {
-        Context context = BotApplication.getGlobalContext();
+    public static void createAppNotification(Context context) {
         String title = context.getString(R.string.app_name);
         String text = context.getString(R.string.notification_text_prefix);
         int image;
@@ -62,12 +60,11 @@ public class NotificationUtils {
         }
         Log.d(TAG, "use activity: " + cls);
 
-        NotificationUtils.createNotification(title, text, image, cls);
+        NotificationUtils.createNotification(context, title, text, image, cls);
     }
 
-    public static void createNotification(String title, String text, int image, Class<?> cls) {
-        getNotificationManager();
-        Context context = BotApplication.getGlobalContext();
+    public static void createNotification(Context context, String title, String text, int image, Class<?> cls) {
+        getNotificationManager(context);
         NotificationCompat.Builder notificationCompat = (NotificationCompat.Builder) new NotificationCompat.Builder(context, CHANNEL_ID);
         notificationCompat.setContentTitle(title);
         notificationCompat.setContentText(text);
@@ -82,12 +79,10 @@ public class NotificationUtils {
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
         notificationCompat.setContentIntent(pendingIntent);
         Notification notifcation = notificationCompat.build();
-        getNotificationManager().notify(NOTIFICATION_ID, notifcation);
+        getNotificationManager(context).notify(NOTIFICATION_ID, notifcation);
     }
 
-    public static Notification addServiceNotification() {
-        Context context = BotApplication.getGlobalContext();
-
+    public static Notification addServiceNotification(Context context) {
         NotificationCompat.Builder notificationCompat = (NotificationCompat.Builder) new NotificationCompat.Builder(context, CHANNEL_ID);
         notificationCompat.setAutoCancel(true);
 
@@ -102,22 +97,21 @@ public class NotificationUtils {
         notificationCompat.setContentText(context.getString(R.string.notification_text_in_call));
 
         Notification notifcation = notificationCompat.build();
-        getNotificationManager().notify(NOTIFICATION_SERVICE_ID, notifcation);
+        getNotificationManager(context).notify(NOTIFICATION_SERVICE_ID, notifcation);
         return notifcation;
     }
 
-    public static void removeServiceNotification() {
-        getNotificationManager().cancel(NOTIFICATION_SERVICE_ID);
+    public static void removeServiceNotification(Context context) {
+        getNotificationManager(context).cancel(NOTIFICATION_SERVICE_ID);
     }
 
-    public static void removeAllNotifications() {
-        getNotificationManager().cancel(NOTIFICATION_ID);
-        removeServiceNotification();
+    public static void removeAllNotifications(Context context) {
+        getNotificationManager(context).cancel(NOTIFICATION_ID);
+        removeServiceNotification(context);
     }
 
-    private static NotificationManager getNotificationManager() {
+    private static NotificationManager getNotificationManager(Context context) {
         if (notificationManager == null) {
-            Context context = BotApplication.getGlobalContext();
             String name = context.getString(R.string.app_name);
             CHANNEL_ID = name + "_id";
             CHANNEL_NAME = name + "_name";
@@ -143,22 +137,22 @@ public class NotificationUtils {
         return notificationManager;
     }
 
-    public static void removeCallNotification() {
+    public static void removeCallNotification(Context context) {
         Log.d(TAG, "removeCallNotification");
-        getNotificationManager().cancel(NOTIFICATION_CALL_ID);
+        getNotificationManager(context).cancel(NOTIFICATION_CALL_ID);
     }
 
-    public static void createCallNotification(String callerId, int sessionId, boolean video) {
+    public static void createCallNotification(Context context, String callerId, int sessionId, boolean video) {
         Log.d(TAG, "pushCallNotification " + sessionId);
         Class<?> c = IncomingCallActivity.class;
-        Intent intent = getNotificationIntent(c, sessionId, 5);
+        Intent intent = getNotificationIntent(context, c, sessionId, 5);
         Intent videoIntent = null;
         if (video) {
-            videoIntent = getNotificationIntent(c, sessionId, 2);
+            videoIntent = getNotificationIntent(context, c, sessionId, 2);
         }
-        pushCallNotificationBase(callerId, intent,
-                getNotificationIntent(c, sessionId, 1),
-                getNotificationIntent(c, sessionId, 0),
+        pushCallNotificationBase(context, callerId, intent,
+                getNotificationIntent(context, c, sessionId, 1),
+                getNotificationIntent(context, c, sessionId, 0),
                 videoIntent);
 
 
@@ -185,19 +179,20 @@ public class NotificationUtils {
 
     }
 
-    private static Intent getNotificationIntent(Class<?> activity, int sessionId, int extra) {
-        Intent intent = new Intent(BotApplication.getGlobalContext(), activity);
+    private static Intent getNotificationIntent(Context context, Class<?> activity, int sessionId, int extra) {
+        Intent intent = new Intent(context, activity);
         intent.putExtra(IncomingCallActivity.INTENT_ANSWER_TAG, extra);
         intent.putExtra(IncomingCallActivity.SESSION_ID, sessionId);
         return intent;
     }
 
-    private static void pushCallNotificationBase(String callerId,
-                                                 Intent fullScreenIntent,
-                                                 Intent answerIntent,
-                                                 Intent declineIntent,
-                                                 Intent videoIntent) {
-        Context context = BotApplication.getGlobalContext();
+    private static void pushCallNotificationBase(
+            Context context,
+            String callerId,
+            Intent fullScreenIntent,
+            Intent answerIntent,
+            Intent declineIntent,
+            Intent videoIntent) {
         PendingIntent fullScreenPendingIntent = PendingIntent.getActivity(context, 0,
                 fullScreenIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pendingAnswerIntent = PendingIntent.getActivity(context, 1,
@@ -209,7 +204,7 @@ public class NotificationUtils {
             pendingVideoIntent = PendingIntent.getActivity(context, 3,
                     videoIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         }
-        getNotificationManager();
+        getNotificationManager(context);
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.notification_view);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(context, CHANNEL_ID_CALL)
@@ -245,6 +240,6 @@ public class NotificationUtils {
         }
         ;
         Notification incomingCallNotification = notificationBuilder.build();
-        getNotificationManager().notify(NOTIFICATION_CALL_ID, incomingCallNotification);
+        getNotificationManager(context).notify(NOTIFICATION_CALL_ID, incomingCallNotification);
     }
 }

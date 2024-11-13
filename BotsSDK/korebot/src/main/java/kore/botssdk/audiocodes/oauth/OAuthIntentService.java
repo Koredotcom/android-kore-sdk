@@ -18,13 +18,12 @@ public class OAuthIntentService extends JobIntentService {
     public void onHandleWork(Intent intent) {
         String id = intent.getData().toString();
         Log.d(OAuthManager.TAG, "onHandleWork: " + id);
-        if(id.equals(OAuthReceiver.Type.ACCESS_TOKEN.toString())){
+        if (id.equals(OAuthReceiver.Type.ACCESS_TOKEN.toString())) {
             Log.d(OAuthManager.TAG, "onHandleWork authorize");
-           // OAuthManager.getInstance().setAccessTokenAlarm();
-        }
-        else if(id.equals(OAuthReceiver.Type.REFRESH_TOKEN.toString())){
+            // OAuthManager.getInstance().setAccessTokenAlarm();
+        } else if (id.equals(OAuthReceiver.Type.REFRESH_TOKEN.toString())) {
             Log.d(OAuthManager.TAG, "onHandleWork refresh");
-            OAuthManager.getInstance().refreshToke();
+            OAuthManager.getInstance().refreshToke(this);
         }
     }
 }

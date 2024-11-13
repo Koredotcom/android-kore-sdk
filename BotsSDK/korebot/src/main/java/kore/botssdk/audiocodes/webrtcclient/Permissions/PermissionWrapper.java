@@ -1,6 +1,8 @@
 package kore.botssdk.audiocodes.webrtcclient.Permissions;
 
 
+import android.content.Context;
+
 public class PermissionWrapper
 {
     private static String TAG = "PermissionWrapper";
@@ -32,13 +34,13 @@ public class PermissionWrapper
         this.iPermissionManager = iPermissionManager;
     }
 
-    public boolean checkPermission(PermissionManagerType permissionType)
+    public boolean checkPermission(Context context, PermissionManagerType permissionType)
     {
         if(iPermissionManager == null)
         {
             //we don't have implemntetion for iPermissionManager return true
             return true;
         }
-        return iPermissionManager.checkPermission(permissionType);
+        return iPermissionManager.checkPermission(context, permissionType);
     }
 }

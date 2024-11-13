@@ -119,7 +119,7 @@ public class RecentListAdapter extends ArrayAdapter<CallEntry> {
         holder.duration.setText(buildCallDuration(callEntry.getDuration()));
 
         //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactListByPhoneNumber(callEntry.getContactNumber());
-        List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(BY_PHONE_AND_SIP, callEntry.getContactNumber());
+        List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(parent.getContext(), BY_PHONE_AND_SIP, callEntry.getContactNumber());
 
 
         if(nativeDBObjectList!=null && nativeDBObjectList.size()>0)
@@ -164,7 +164,7 @@ public class RecentListAdapter extends ArrayAdapter<CallEntry> {
             @Override
             public void onClick(View view) {
                 ((ViewGroup)view.getParent()).setSelected(true);
-                boolean contactPermission = PermissionManager.getInstance().checkPermission(PermissionManagerType.CONTACTS);
+                boolean contactPermission = PermissionManager.getInstance().checkPermission(context, PermissionManagerType.CONTACTS);
                 if (contactPermission && onCreateItemClickListener != null) {
                     onCreateItemClickListener.onItemClick(null, view, position, 0);
                 } else {

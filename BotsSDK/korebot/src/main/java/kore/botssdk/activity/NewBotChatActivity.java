@@ -1,7 +1,6 @@
 package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
-import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
 import static kore.botssdk.net.SDKConfig.isMinimized;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
@@ -16,7 +15,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
@@ -63,10 +61,6 @@ import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -77,7 +71,6 @@ import kore.botssdk.adapter.PromotionsAdapter;
 import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
@@ -105,7 +98,6 @@ import kore.botssdk.models.KoreMedia;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.AsyncTaskExecutor;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
@@ -126,25 +118,23 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class NewBotChatActivity extends BotAppCompactActivity implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
-    final String LOG_TAG = NewBotChatActivity.class.getSimpleName();
-    ProgressBar taskProgressBar;
-    String jwt;
-    Handler actionBarTitleUpdateHandler;
-    BotClient botClient;
-    BotContentFragment botContentFragment;
-    ComposeFooterFragment composeFooterFragment;
-    TTSSynthesizer ttsSynthesizer;
-    final Gson gson = new Gson();
-    RelativeLayout rlChatWindow;
-    SharedPreferences sharedPreferences;
-    protected final int compressQualityInt = 100;
-    final Handler messageHandler = new Handler();
-    String fileUrl;
-    Dialog progressBar, welcomeDialog;
-    boolean isAgentTransfer = false;
-    ArrayList<String> arrMessageList = new ArrayList<>();
-    Dialog alertDialog;
-    BotChatViewModel mViewModel;
+    private final String LOG_TAG = NewBotChatActivity.class.getSimpleName();
+    private ProgressBar taskProgressBar;
+    private String jwt;
+    private Handler actionBarTitleUpdateHandler;
+    private BotClient botClient;
+    private BotContentFragment botContentFragment;
+    private ComposeFooterFragment composeFooterFragment;
+    private TTSSynthesizer ttsSynthesizer;
+    private final Gson gson = new Gson();
+    private RelativeLayout rlChatWindow;
+    private SharedPreferences sharedPreferences;
+    private final Handler messageHandler = new Handler();
+    private String fileUrl;
+    private Dialog progressBar, welcomeDialog;
+    private boolean isAgentTransfer = false;
+    private Dialog alertDialog;
+    private BotChatViewModel mViewModel;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -228,8 +218,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         if (welcomeDialog != null) {
             welcomeDialog.hide();
         }
-
-        botClient.disconnect();
+        if (botClient != null) botClient.disconnect();
         KoreEventCenter.unregister(this);
         super.onDestroy();
     }
@@ -280,7 +269,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE socketConnectionEvents) {
-
         switch (socketConnectionEvents) {
             case CONNECTING:
                 taskProgressBar.setVisibility(View.VISIBLE);
@@ -399,7 +387,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     protected void onPause() {
-        BotApplication.activityPaused();
+        mViewModel.setIsActivityResumed(false);
         ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
@@ -590,7 +578,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     protected void onResume() {
-        BotApplication.activityResumed();
+        mViewModel.setIsActivityResumed(true);
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
             updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
@@ -958,7 +946,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
             if (welcomeModel.getStatic_links() != null) {
                 if (welcomeModel.getStarter_box().isShow()) {
-                    if (welcomeModel.getStatic_links().getLinks() != null && welcomeModel.getStatic_links().getLinks().size() > 0) {
+                    if (welcomeModel.getStatic_links().getLinks() != null && !welcomeModel.getStatic_links().getLinks().isEmpty()) {
                         rlLinks.setVisibility(View.VISIBLE);
 
                         if (!StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
@@ -1038,16 +1026,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     void openNextScreen(String sipUser, boolean isVideoCall) {
-        Prefs.setFirstLogin(false);
+        Prefs.setFirstLogin(this, false);
         //start login and open app main screen
         new Thread(new Runnable() {
             @Override
             public void run() {
                 if (!ACManager.getInstance().isRegisterState()) {
-                    ACManager.getInstance().startLogin(false, true);
+                    ACManager.getInstance().startLogin(NewBotChatActivity.this, false, true);
                 }
 
-                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin()) {
+                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(NewBotChatActivity.this)) {
                     Toast.makeText(NewBotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show();
                 } else {
                     ACManager.getInstance().callNumber(sipUser, isVideoCall);
@@ -1070,12 +1058,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void getBrandingDetails() {
-
     }
 
     @Override
     public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
-
     }
 
     @Override

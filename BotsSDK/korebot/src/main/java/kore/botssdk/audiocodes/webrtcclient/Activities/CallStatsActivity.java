@@ -30,7 +30,7 @@ public class CallStatsActivity extends BaseAppCompatActivity {
         TextView packetsSentTextView =(TextView) findViewById(R.id.call_stats_textview_packets_sent_text);
         TextView bytesSentTextView =(TextView) findViewById(R.id.call_stats_textview_bytes_sent_text);
 
-        ACCallStatistics acCallStatistics = Prefs.getCallStats();
+        ACCallStatistics acCallStatistics = Prefs.getCallStats(this);
         Log.d(TAG, "ACCallStatistics: " + acCallStatistics);
         try {
             ACCallStatistics.RTPInboundStatistics rtpInboundStatistics = acCallStatistics.rtpInboundStats;

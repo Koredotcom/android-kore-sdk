@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
 
 public class OAuthReceiver extends BroadcastReceiver {
@@ -23,12 +22,12 @@ public class OAuthReceiver extends BroadcastReceiver {
         OAuthIntentService.enqueueWork(context, intent);
     }
 
-    protected static void setRefreshTokenAlarm(long interval){
-        setAlarm(BotApplication.getGlobalContext(), interval, Type.REFRESH_TOKEN);
+    protected static void setRefreshTokenAlarm(Context context, long interval){
+        setAlarm(context, interval, Type.REFRESH_TOKEN);
     }
 
-    protected static void setAccessTokenAlarm(long interval){
-        setAlarm(BotApplication.getGlobalContext(), interval, Type.ACCESS_TOKEN);
+    protected static void setAccessTokenAlarm(Context context, long interval){
+        setAlarm(context, interval, Type.ACCESS_TOKEN);
     }
 
     private static void setAlarm(Context context, long interval, Type type) {

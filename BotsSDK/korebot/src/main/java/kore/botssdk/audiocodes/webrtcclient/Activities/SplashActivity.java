@@ -11,7 +11,7 @@ import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.BotHomeActivity;
-import kore.botssdk.application.BotApplication;
+import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.audiocodes.oauth.OAuthManager;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
@@ -45,13 +45,13 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     private void appStateCheck()
     {
-        NotificationUtils.removeAllNotifications();
-        if (LoginManager.getAppState() == LoginManager.AppLoginState.CRUSHED) {
+        NotificationUtils.removeAllNotifications(this);
+        if (LoginManager.getAppState(this) == LoginManager.AppLoginState.CRUSHED) {
             //silent login
 
 
         }
-        else if (LoginManager.getAppState() == LoginManager.AppLoginState.ACTIVE) {
+        else if (LoginManager.getAppState(this) == LoginManager.AppLoginState.ACTIVE) {
             //skip splash screen
             startApp();
         }
@@ -100,7 +100,7 @@ public class SplashActivity extends BaseAppCompatActivity {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-        if (LoginManager.getAppState() == LoginManager.AppLoginState.CLOSED) {
+        if (LoginManager.getAppState(this) == LoginManager.AppLoginState.CLOSED) {
             //for full login
             new DelayStartApp().execute();
         } else {
@@ -111,16 +111,16 @@ public class SplashActivity extends BaseAppCompatActivity {
 
     private void startApp()
     {
-        OAuthManager.getInstance().initialize(BotApplication.getGlobalContext(), new OAuthManager.EventsCallback() {
+        OAuthManager.getInstance().initialize(this, new OAuthManager.EventsCallback() {
             @Override
             public void onRelogin() {
                 android.util.Log.d(TAG, "relogin!");
-                Prefs.setFirstLogin(true);
-                BotApplication.getCurrentActivity().finish();
-                Intent intent = new Intent(BotApplication.getGlobalContext(), BotChatActivity.class);
+                Prefs.setFirstLogin(SplashActivity.this, true);
+                finish();
+                Intent intent = new Intent(SplashActivity.this, NewBotChatActivity.class);
                 intent.putExtra(LoginActivity.OAUTH_FAILED, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                BotApplication.getGlobalContext().startActivity(intent);
+                SplashActivity.this.startActivity(intent);
             }
 
             @Override
@@ -132,11 +132,11 @@ public class SplashActivity extends BaseAppCompatActivity {
         Log.d(TAG, "startApp");
         //firstLogin
         //Prefs.setFirstLogin(true);
-        boolean isFirstLogin = Prefs.isFirstLogin();
+        boolean isFirstLogin = Prefs.isFirstLogin(this);
         Log.d(TAG, "isFirstLogin: "+isFirstLogin);
 
 
-        Prefs.setUsePush(true);
+        Prefs.setUsePush(this, true);
         //check if all permission are granted
         if (allPermissionsGranted)
         {
@@ -147,7 +147,7 @@ public class SplashActivity extends BaseAppCompatActivity {
                 return;
             }
             //start login and open app main screen
-            ACManager.getInstance().startLogin();
+            ACManager.getInstance().startLogin(this);
             startNextActivity(BotHomeActivity.class);
             finish();
         }

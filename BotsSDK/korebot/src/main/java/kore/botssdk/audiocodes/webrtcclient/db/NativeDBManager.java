@@ -3,6 +3,7 @@ package kore.botssdk.audiocodes.webrtcclient.db;
 
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.provider.ContactsContract.CommonDataKinds.SipAddress;
@@ -14,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManagerType;
 
@@ -30,13 +30,13 @@ public class NativeDBManager {
         BY_PHONE_AND_SIP;
     }
 
-    public static List<NativeDBObject> getContactList() {
-        return getContactList(QueryType.ALL, null);
+    public static List<NativeDBObject> getContactList(Context context) {
+        return getContactList(context, QueryType.ALL, null);
     }
 
-    public static List<NativeDBObject>  getContactList(QueryType searchType, String value) {
+    public static List<NativeDBObject>  getContactList(Context context, QueryType searchType, String value) {
 
-        boolean contactPermission = PermissionManager.getInstance().checkPermission(PermissionManagerType.CONTACTS);
+        boolean contactPermission = PermissionManager.getInstance().checkPermission(context, PermissionManagerType.CONTACTS);
         if (!contactPermission) {
             return null;
         }
@@ -68,7 +68,7 @@ public class NativeDBManager {
 
         }
 
-        ContentResolver cr = BotApplication.getGlobalContext().getContentResolver();
+        ContentResolver cr = context.getContentResolver();
         Cursor cur = cr.query(Data.CONTENT_URI, projection, selection, null, null);
 
         while (cur != null && cur.moveToNext()) {

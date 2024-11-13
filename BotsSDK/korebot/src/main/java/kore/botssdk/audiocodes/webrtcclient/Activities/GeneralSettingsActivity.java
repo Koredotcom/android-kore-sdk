@@ -1,5 +1,6 @@
 package kore.botssdk.audiocodes.webrtcclient.Activities;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -26,10 +27,10 @@ public class GeneralSettingsActivity extends BaseAppCompatActivity {
         //this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.general_settings_activity);
 
-        initGui();
+        initGui(this);
     }
 
-    private void initGui() {
+    private void initGui(Context context) {
 
         Spinner dtmfTypeSpinner = (Spinner) findViewById(R.id.general_settings_spinner_dtmf_type);
         Spinner logLevelSpinner = (Spinner) findViewById(R.id.general_settings_spinner_log_level_type);
@@ -45,7 +46,7 @@ public class GeneralSettingsActivity extends BaseAppCompatActivity {
         logLevelSpinner.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Log.LogLevel.values()));
 
         try {
-            DTMFOptions.DTMFMethod dtmfMethod = Prefs.getDTMFType();
+            DTMFOptions.DTMFMethod dtmfMethod = Prefs.getDTMFType(this);
             String currentDTMFType = dtmfMethod.toString();
             Log.d(TAG,"dtmfMethod: "+dtmfMethod+" currentDTMFType: "+currentDTMFType);
 
@@ -55,7 +56,7 @@ public class GeneralSettingsActivity extends BaseAppCompatActivity {
                 }
             }
 
-            Log.LogLevel logLevel = Prefs.getLogLevel();
+            Log.LogLevel logLevel = Prefs.getLogLevel(this);
             String currentLogLevel = logLevel.toString();
             Log.d(TAG,"logLevel: "+logLevel+" currentLogLevel: "+currentLogLevel);
 
@@ -68,26 +69,26 @@ public class GeneralSettingsActivity extends BaseAppCompatActivity {
             Log.e(TAG,"error: "+e);
         }
 
-        autoRedirectCheckBox.setChecked(Prefs.isAutoRedirect());
-        redirectCallCheckBox.setChecked(Prefs.isRedirectCall());
-        redirectCallEditText.setText(Prefs.getRedirectCallUser());
+        autoRedirectCheckBox.setChecked(Prefs.isAutoRedirect(context));
+        redirectCallCheckBox.setChecked(Prefs.isRedirectCall(context));
+        redirectCallEditText.setText(Prefs.getRedirectCallUser(this));
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
                     DTMFOptions.DTMFMethod saveDTMFMethod = DTMFOptions.DTMFMethod.values()[dtmfTypeSpinner.getSelectedItemPosition()];
-                    Prefs.setDTMFType(saveDTMFMethod);
+                    Prefs.setDTMFType(context, saveDTMFMethod);
                     Log.d(TAG,"saveDTMFMethod: "+saveDTMFMethod);
 
                     Log.LogLevel saveLogLevel = Log.LogLevel.values()[logLevelSpinner.getSelectedItemPosition()];
-                    Prefs.setLogLevel(saveLogLevel);
+                    Prefs.setLogLevel(context, saveLogLevel);
                     Log.setLogLevel(saveLogLevel);
                     Log.d(TAG,"saveLogLevel: "+saveLogLevel);
 
-                    Prefs.setAutoRedirect(autoRedirectCheckBox.isChecked());
-                    Prefs.setRedirectCall(redirectCallCheckBox.isChecked());
-                    Prefs.setRedirectCallUser(redirectCallEditText.getText().toString());
+                    Prefs.setAutoRedirect(context, autoRedirectCheckBox.isChecked());
+                    Prefs.setRedirectCall(context, redirectCallCheckBox.isChecked());
+                    Prefs.setRedirectCallUser(context, redirectCallEditText.getText().toString());
 
                     ACManager.getInstance().updateWebRTCConfig();
 
