@@ -387,7 +387,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     protected void onPause() {
-        mViewModel.setIsActivityResumed(false);
         ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
@@ -566,6 +565,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void onStop() {
+        mViewModel.setIsActivityResumed(false);
         BotSocketConnectionManager.getInstance().unSubscribe();
         super.onStop();
     }
