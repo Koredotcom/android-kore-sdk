@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Objects;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fragment.content.BaseContentFragment;
@@ -380,7 +379,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     protected void onResume() {
-        BotApplication.activityResumed();
+        mViewModel.setIsActivityResumed(true);
 
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
@@ -393,7 +392,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     protected void onPause() {
-        BotApplication.activityPaused();
         super.onPause();
     }
 
@@ -438,9 +436,9 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
     }
 
-
     @Override
     protected void onStop() {
+        mViewModel.setIsActivityResumed(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();
