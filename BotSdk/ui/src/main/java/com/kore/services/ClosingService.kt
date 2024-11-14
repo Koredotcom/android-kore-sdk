@@ -26,7 +26,7 @@ class ClosingService : Service() {
             editor.apply()
         }
 
-        LogUtils.e("onTaskRemoved", "onTaskRemoved called")
+        LogUtils.i("onTaskRemoved", "onTaskRemoved called")
         // Destroy the service
         stopSelf()
         super.onTaskRemoved(rootIntent)

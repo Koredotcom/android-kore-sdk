@@ -19,13 +19,20 @@ class BotApplication : Application() {
         super.onCreate()
         getBotConfigModel()?.let { SDKConfig.initialize(it) }
         getWidgetBotConfigModel()?.let { SDKConfig.setWidgetConfig(it) }
+        // Adding user owned Query params
 //        SDKConfig.setQueryParams(getQueryParams())
+        // Adding user owned custom data
 //        SDKConfig.setCustomData(getCustomData())
 
+        // New template adding here
         SDKConfig.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
+        // Replacing existing template(Button template) with user owned template
 //        SDKConfig.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
+        // Adding user custom Header fragment
 //        SDKConfig.addCustomHeaderFragment(BotResponseConstants.HEADER_SIZE_COMPACT, CustomHeaderFragment())
+        // Adding user custom Content fragment
 //        SDKConfig.addCustomContentFragment(CustomContentFragment())
+        // Adding user custom Footer fragment
 //        SDKConfig.addCustomFooterFragment(CustomFooterFragment())
     }
 

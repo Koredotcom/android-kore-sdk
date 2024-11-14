@@ -9,6 +9,7 @@ import com.google.gson.reflect.TypeToken
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
 import com.kore.common.SDKConfiguration
+import com.kore.common.model.BotConfigModel
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
 import com.kore.common.utils.ToastUtils
@@ -525,6 +526,27 @@ class BotClient private constructor() {
         val gson = Gson()
         val jsonPayload = gson.toJson(botPayLoad)
         LogUtils.d("BotClient", "Payload : $jsonPayload")
+        socketConnection.sendMessage(jsonPayload)
+    }
+
+    /**
+     * Method to send messages over socket.
+     * It uses FIFO pattern to first send if any pending requests are present
+     * following current request later onward.
+     * pass 'msg' as NULL on reconnection of the socket to empty the pool
+     * by sending messages from the pool.
+     */
+    fun sendReceipts(eventName: String?, msgId: String?) {
+        val botMessage = BotMessage("", null, botCustomData)
+        botCustomData["botToken"] = getAccessToken()
+        val configModel:BotConfigModel = SDKConfiguration.getBotConfigModel()?:return
+
+        botInfoModel = BotInfoModel(configModel.botName, configModel.botId, botCustomData)
+        val meta = Meta(TimeZone.getDefault().id, Locale.getDefault().isO3Language)
+        val botPayLoad = BotPayLoad(botMessage, meta = meta, event = eventName, botInfo = botInfoModel)
+
+        val jsonPayload = Gson().toJson(botPayLoad)
+        LogUtils.d("BotClient", "Payload recipient : $jsonPayload")
         socketConnection.sendMessage(jsonPayload)
     }
 }
