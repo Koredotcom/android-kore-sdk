@@ -15,7 +15,9 @@ class BotApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         getBotConfigModel()?.let { SDKConfiguration.initialize(it) }
+        // Adding user owned Query params
 //        SDKConfiguration.setQueryParams(getQueryParams())
+        // Adding user owned custom data
 //        SDKConfiguration.setCustomData(getCustomData())
     }
 
