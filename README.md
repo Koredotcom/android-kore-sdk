@@ -48,8 +48,6 @@ To use these libraries we must configure the bot credentials as follows.
 
 ```
 
-```
-
 # Running the Demo app
 *	Create a new application.
 *	Add library dependency in your gradle file as follows.
@@ -130,7 +128,7 @@ botClient.setListener(object : BotConnectionListener {
 		}
 ```
 
-### Step-6: Connect to Bot using the following apis.
+### Step-5: Connect to Bot using the following apis.
 
 ```
 botClient.connectToBot(isFirstTime: Boolean) -> This api is to connect bot using default jwt token generation mechanism.
@@ -142,7 +140,7 @@ botClient.connectToBot(isFirstTime: Boolean, headers: HashMap<String, Any>, body
 botClient.connecToBot(isFirstTime: Boolean, jwtToken: String) -> This api is to connect bot using its own Jwt token which is created separately.
 ```
 
-### Step-7: Send a message to Bot.
+### Step-6 Send a message to Bot.
 
 ```
 botClient.sendMessage(msg: String, payload: String?)
@@ -162,19 +160,19 @@ msg -> Message to display in the chat ui.
 attachments -> List of attachment file names which are uploaded to server.
 ```
 
-### Step-8: Disconnect the bot:
+### Step-7: Disconnect the bot:
 Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view based on requirement.
 ```
 botClient.disconnectBot()
 ```
 
-### Step-9: Create user own custom templates and chat window UI:
+### Step-8: Create user own custom templates and chat window UI:
 Kore is providing predefined templates. You can use these templates as is or you can override existing templates and/or can add new templates. 
 Please refer the sample app for creating your own templates(new templates or override existingtemplates)
 You can customize the Chat window UI by creating custom Fragments by extending our base fragment classes respectively.
 Please refer the sample app for customizing chat window UI.
 
-### Step-10:
+### Step-9:
 Please create the RowType class as follows and add rows to the recycler view.
 
 **1**. If you want to use the existing BotChatAdapter then the following is the code snippet.
@@ -219,7 +217,7 @@ private fun createRows(messages: List<BaseBotMessage>): List<SimpleListRow>{
 ----
 1. Enable the webhook channel by setting **isWebhook = true** in **Config-1** in bot configuration.
 	
-2. Follow Config-1 and Step-1 to Step-10.
+2. Follow Config-1 and Step-1 to Step-9.
 
 ### License
 Copyright © Kore, Inc. MIT License; see LICENSE for further details.
