@@ -249,7 +249,7 @@ private fun createRows(messages: List<BaseBotMessage>): List<SimpleListRow>{
 ----
 1. Enable the webhook channel by setting **isWebhook = true** in **Config-1** in bot configuration.
 	
-2. Follow Config-1, Config-2 and Step-1 to Step-10.
+2. Follow Config-1, Config-2 and Step-1 to Step-9.
 
 ### How to integrate widget panel
 
