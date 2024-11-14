@@ -33,7 +33,6 @@ import com.kore.common.utils.LogUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
-import com.kore.model.BotResponse
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.END_DATE
 import com.kore.model.constants.BotResponseConstants.FORMAT
@@ -78,7 +77,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     private val gson: Gson = Gson()
     private val launchTime = System.currentTimeMillis()
     private val networkCallback = NetworkCallbackImpl()
-    private var isAgentTransfer: Boolean = false
     private val acManager: ACManager = ACManager.getInstance()
     private var alertDialog: Dialog? = null
 
@@ -115,9 +113,20 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         startService(Intent(this.applicationContext, ClosingService::class.java))
     }
 
+    override fun onPause() {
+        super.onPause()
+        botChatViewModel.setIsActivityResumed(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        botChatViewModel.setIsActivityResumed(true)
+        botChatViewModel.sendReadReceipts()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-        botChatViewModel.onTerminate(isAgentTransfer)
+        botChatViewModel.onTerminate()
     }
 
     private fun addFragmentsToContainer(id: Int, fragment: Fragment) {
@@ -169,9 +178,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun addMessageToAdapter(baseBotMessage: BaseBotMessage) {
-        if (baseBotMessage is BotResponse) {
-            isAgentTransfer = baseBotMessage.fromAgent
-        }
         contentFragment.addMessagesToAdapter(listOf(baseBotMessage), false)
     }
 
@@ -384,7 +390,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 }
 
                 DialogInterface.BUTTON_NEGATIVE -> {
-                    val event = if (isAgentTransfer) R.string.agent_bot_close_event else R.string.bot_close_event
+                    val event = if (botChatViewModel.isAgentTransfer()) R.string.agent_bot_close_event else R.string.bot_close_event
                     botChatViewModel.sendCloseOrMinimizeEvent(event)
                     botChatViewModel.onMinimize(0)
                     result["event_code"] = "BotClosed"
@@ -423,8 +429,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     private var onDestroyReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            LogUtils.e("onDestroyReceiver", "onDestroyReceiver called")
-            botChatViewModel.onTerminate(isAgentTransfer)
+            LogUtils.i("BotChatActivity", "onDestroyReceiver called")
+            botChatViewModel.onTerminate()
         }
     }
 }

@@ -49,6 +49,7 @@ import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.R
 import com.kore.ui.base.BaseViewModel
+import com.kore.ui.utils.BundleConstants
 import com.kore.validator.RangeValidator
 import kotlinx.coroutines.launch
 import java.io.File
@@ -63,7 +64,15 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         private val LOG_TAG = BotChatViewModel::class.java.simpleName
     }
 
+    private var isFirstTime = true
+    private var historyOffset = 0
+    private var moreHistory = true
+    private lateinit var token: String
+    private var isAgentTransfer = false
+    private var isActivityResumed = false
     private lateinit var context: Context
+    private var arrMessageList = ArrayList<String>()
+    private val handler = Handler(Looper.getMainLooper())
     private val botClient: BotClient = BotClient.getInstance()
     private val chatHistoryRepository: ChatHistoryRepository = ChatHistoryRepositoryImpl()
     private val brandingRepository: BrandingRepository = BrandingRepositoryImpl()
@@ -92,12 +101,6 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 //        }
 //    }
 
-    private lateinit var token: String
-    private var isFirstTime = true
-    private var historyOffset = 0
-    private var moreHistory = true
-    private val handler = Handler(Looper.getMainLooper())
-
     init {
         botClient.setListener(object : BotConnectionListener {
             override fun onBotResponse(response: String?) {
@@ -105,6 +108,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     if (it.contains(BotResponseConstants.KEY_BOT_RESPONSE)) {
                         val botResponse = BotClientHelper.processBotResponse(Gson().fromJson(it, BotResponse::class.java))
                         if (botResponse.message.isEmpty()) return
+                        isAgentTransfer = botResponse.fromAgent
                         getView()?.showTypingIndicator(botResponse.icon)
                         getView()?.addMessageToAdapter(botResponse)
                         historyOffset += 1
@@ -135,6 +139,14 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                             }
                         }
 
+                        if (isAgentTransfer && BotClient.isConnected()) {
+                            botClient.sendReceipts(BundleConstants.MESSAGE_DELIVERED, botResponse.messageId)
+                            if (isActivityResumed) {
+                                botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.messageId)
+                            } else {
+                                arrMessageList.add(botResponse.messageId)
+                            }
+                        }
                         textToSpeech(botResponse)
                     } else if (it.contains(BotResponseConstants.KEY_EVENTS)) {
                         val botResponse = Gson().fromJson(it, BotEventResponse::class.java)
@@ -173,6 +185,8 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
             }
         })
     }
+
+    fun isAgentTransfer(): Boolean = isAgentTransfer
 
     fun init(context: Context) {
         this.context = context
@@ -471,7 +485,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         }
     }
 
-    fun onTerminate(isAgentTransfer: Boolean) {
+    fun onTerminate() {
         if (isAgentTransfer && BotClient.isConnected()) {
             sendCloseOrMinimizeEvent(R.string.agent_bot_close_event)
         }
@@ -480,5 +494,17 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     fun onMinimize(historyCount: Int) {
         preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, historyCount)
+    }
+
+    fun sendReadReceipts() {
+        //Added newly for send receipts
+        if (BotClient.isConnected() && arrMessageList.isNotEmpty() && isAgentTransfer) {
+            arrMessageList.map { botClient.sendReceipts(BundleConstants.MESSAGE_READ, it) }
+            arrMessageList.clear()
+        }
+    }
+
+    fun setIsActivityResumed(isResumed: Boolean) {
+        isActivityResumed = isResumed
     }
 }

@@ -17,14 +17,20 @@ class BotApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         getBotConfigModel()?.let { SDKConfig.initialize(it) }
-//        SDKConfig.setQueryParams(getQueryParams())
-//        SDKConfig.setCustomData(getCustomData())
-
+//          // Adding user owned Query params
+////        SDKConfig.setQueryParams(getQueryParams())
+//        // Adding user owned custom data
+////        SDKConfig.setCustomData(getCustomData())
+//
+//        // New template adding here
         SDKConfig.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
-//        SDKConfig.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
-//        SDKConfig.addCustomHeaderFragment(BotResponseConstants.HEADER_SIZE_COMPACT, CustomHeaderFragment())
-//        SDKConfig.addCustomContentFragment(CustomContentFragment())
-//        SDKConfig.addCustomFooterFragment(CustomFooterFragment())
+//        // Replacing existing template(Button template) with user owned template
+////        SDKConfig.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
+//        // Adding user custom Header fragment
+////        SDKConfig.addCustomHeaderFragment(BotResponseConstants.HEADER_SIZE_COMPACT, CustomHeaderFragment())
+//        // Adding user custom Content fragment
+////        SDKConfig.addCustomContentFragment(CustomContentFragment())
+//        // Adding user custom Footer fragment
     }
 
     private fun getBotConfigModel(): BotConfigModel? {
