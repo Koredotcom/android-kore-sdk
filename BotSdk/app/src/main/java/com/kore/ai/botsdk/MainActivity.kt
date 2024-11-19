@@ -1,22 +1,35 @@
 package com.kore.ai.botsdk
 
-import android.app.Application
+import android.content.Intent
 import android.content.res.Resources.NotFoundException
+import android.os.Bundle
 import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import com.kore.SDKConfig
+import com.kore.ai.botsdk.databinding.ActivityMainBinding
 import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
 import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
 import com.kore.common.model.BotConfigModel
+import com.kore.ui.botchat.BotChatActivity
 import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
 import java.util.Locale
 import java.util.Properties
 import java.util.TimeZone
 
-class BotApplication : Application() {
+class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
 
-    override fun onCreate() {
-        super.onCreate()
+    companion object {
+        private val LOG_TAG = MainActivity::class.java.simpleName
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_main, null, false)
+        setContentView(binding.root)
+
         getBotConfigModel()?.let { SDKConfig.initialize(it) }
         getWidgetBotConfigModel()?.let { SDKConfig.setWidgetConfig(it) }
         // Adding user owned Query params
@@ -34,6 +47,11 @@ class BotApplication : Application() {
 //        SDKConfig.addCustomContentFragment(CustomContentFragment())
         // Adding user custom Footer fragment
 //        SDKConfig.addCustomFooterFragment(CustomFooterFragment())
+
+        binding.launchBotBtn.setOnClickListener {
+            val intent = Intent(this, BotChatActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun getBotConfigModel(): BotConfigModel? {
@@ -54,9 +72,9 @@ class BotApplication : Application() {
                 jwtToken = properties.getProperty("jwtToken")
             )
         } catch (e: NotFoundException) {
-            Log.e(BotApplication::class.java.simpleName, "Unable to find the config file: " + e.message)
+            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
         } catch (e: IOException) {
-            Log.e(BotApplication::class.java.simpleName, "Failed to open config file.")
+            Log.e(LOG_TAG, "Failed to open config file.")
         }
         return null
     }
@@ -76,9 +94,9 @@ class BotApplication : Application() {
                 jwtServerUrl = properties.getProperty("widgetJwtServerUrl"),
             )
         } catch (e: NotFoundException) {
-            Log.e(BotApplication::class.java.simpleName, "Unable to find the config file: " + e.message)
+            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
         } catch (e: IOException) {
-            Log.e(BotApplication::class.java.simpleName, "Failed to open config file.")
+            Log.e(LOG_TAG, "Failed to open config file.")
         }
         return null
     }

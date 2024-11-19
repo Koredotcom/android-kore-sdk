@@ -518,6 +518,7 @@ class BotClient private constructor() {
     }
 
     fun sendCloseOrMinimizeEvent(event: String, botName: String, botId: String) {
+        if (!isConnected()) return
         botCustomData[BOT_TOKEN] = getAccessToken()
         val botMessage = BotMessage("", null, botCustomData)
         botInfoModel = BotInfoModel(botName, botId, botCustomData)
@@ -539,7 +540,7 @@ class BotClient private constructor() {
     fun sendReceipts(eventName: String?, msgId: String?) {
         val botMessage = BotMessage("", null, botCustomData)
         botCustomData["botToken"] = getAccessToken()
-        val configModel:BotConfigModel = SDKConfiguration.getBotConfigModel()?:return
+        val configModel: BotConfigModel = SDKConfiguration.getBotConfigModel() ?: return
 
         botInfoModel = BotInfoModel(configModel.botName, configModel.botId, botCustomData)
         val meta = Meta(TimeZone.getDefault().id, Locale.getDefault().isO3Language)

@@ -78,7 +78,7 @@ class ChatContentFragment : BaseContentFragment() {
 
     override fun showTypingIndicator(icon: String?, enable: Boolean) {
         binding.botTypingStatus.isVisible = enable
-        if (!icon.isNullOrEmpty()) {
+        if (!icon.isNullOrEmpty() && isResumed) {
             Glide.with(requireActivity()).load(icon)
                 .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .error(R.drawable.ic_image_photo)
