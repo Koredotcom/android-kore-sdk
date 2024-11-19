@@ -255,7 +255,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 BotSocketConnectionManager.killInstance();
-                fragmentListener.onReconnectionAttemptExceed();
+                if (fragmentListener != null) fragmentListener.onReconnectionAttemptExceed();
             }
         };
 

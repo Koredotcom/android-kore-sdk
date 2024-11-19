@@ -108,6 +108,8 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                                 ((BotResponse) botResp.get(i)).setFromAgent(true);
                             requiredList.add(botResp.get(i));
                         }
+                    } else {
+                        requiredList.addAll(list);
                     }
 
                     chatView.onReconnectionChatHistory(requiredList, offset, false);
