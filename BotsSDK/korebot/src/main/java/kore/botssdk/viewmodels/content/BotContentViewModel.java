@@ -117,7 +117,7 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                     list = re.getBotMessages();
                     offset = _offset + re.getOriginalSize();
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         int pos = 0;
                         ArrayList<BaseBotMessage> botResp = new ArrayList<>();
                         ArrayList<BaseBotMessage> requiredList = new ArrayList<>();
@@ -142,6 +142,8 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                                     ((BotResponse) botResp.get(i)).setFromAgent(true);
                                 requiredList.add(botResp.get(i));
                             }
+                        } else {
+                            requiredList.addAll(list);
                         }
 
                         chatView.onReconnectionChatHistory(requiredList, offset, false);

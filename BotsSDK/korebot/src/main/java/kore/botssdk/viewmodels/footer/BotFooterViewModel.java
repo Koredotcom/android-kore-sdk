@@ -38,7 +38,7 @@ import java.util.HashMap;
 import kore.botssdk.R;
 import kore.botssdk.fileupload.core.KoreWorker;
 import kore.botssdk.fileupload.core.UploadBulkFile;
-import kore.botssdk.fragment.ComposeFooterFragment;
+import kore.botssdk.fragment.footer.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
@@ -55,11 +55,12 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
-    WeakReference<Context> context;
-    ComposeFooterUpdate chatView;
-    final int compressQualityInt = 100;
-    final String LOG_TAG = ComposeFooterFragment.class.getName();
-    static long totalFileSize;
+    private final WeakReference<Context> context;
+    private final ComposeFooterUpdate chatView;
+    private final int compressQualityInt = 100;
+    private final String LOG_TAG = ComposeFooterFragment.class.getName();
+    private static long totalFileSize;
+    protected String jwt;
 
     public BotFooterViewModel(Context context, ComposeFooterUpdate chatView) {
         this.context = new WeakReference<>(context);
@@ -75,7 +76,7 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
         String fileName = null;
         String realPath = KaMediaUtils.getRealPath(context.get(), selectedImage);
         if (realPath != null) {
-            if (realPath.length() > 0) {
+            if (!realPath.isEmpty()) {
                 int startInd = realPath.lastIndexOf(File.separator) + 1;
                 int endInd = realPath.indexOf(".", startInd);
                 fileName = realPath.substring(startInd, endInd);
@@ -89,7 +90,7 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
             thumbnail = overlay(thumbnail, hover);
             orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
             String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
-            processFileUpload(jwt , fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
+            processFileUpload(jwt, fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
         } else {
             try {
                 DocumentFile pickFile = DocumentFile.fromSingleUri(context.get(), selectedImage);
@@ -318,5 +319,9 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
         canvas.drawBitmap(bitmap1, new Matrix(), null);
         canvas.drawBitmap(bitmap2, marginLeft, marginTop, null);
         return overlayBitmap;
+    }
+
+    public void setJwtToken(String jwt) {
+        this.jwt = jwt;
     }
 }

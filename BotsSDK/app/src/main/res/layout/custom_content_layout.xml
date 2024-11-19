@@ -26,19 +26,32 @@
             android:layout_above="@+id/quick_reply_view"
             android:layout_marginBottom="7dp">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/chatContentListView"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:layout_marginBottom="2dp"
-                android:choiceMode="singleChoice"
-                android:divider="@android:color/transparent"
-                android:listSelector="@color/white"
-                android:nestedScrollingEnabled="false"
-                android:orientation="vertical"
-                android:visibility="visible"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingVertical="10dp"
+                    android:text="Custom content fragment" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/chatContentListView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginBottom="2dp"
+                    android:choiceMode="singleChoice"
+                    android:divider="@android:color/transparent"
+                    android:listSelector="@color/white"
+                    android:nestedScrollingEnabled="false"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+            </LinearLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <kore.botssdk.view.QuickReplyView
@@ -47,7 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="3dp" />
-
 
         <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"
             android:id="@+id/botTypingStatus"
@@ -58,7 +70,6 @@
             android:layout_marginEnd="@dimen/typing_layout_margin_right"
             android:orientation="horizontal"
             android:visibility="gone">
-
 
             <!-- Typer Image -->
             <kore.botssdk.view.CircularProfileView
@@ -76,8 +87,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginBottom="@dimen/dimen_3dp"
                 android:layout_marginStart="@dimen/dimen_5dp"
+                android:layout_marginBottom="@dimen/dimen_3dp"
                 app:LoadingDots_auto_play="true"
                 app:LoadingDots_dots_color="@color/bgBlueSignup"
                 app:LoadingDots_dots_count="3"
@@ -89,5 +100,4 @@
                 app:LoadingDots_loop_start_delay="100" />
         </LinearLayout>
     </RelativeLayout>
-
 </RelativeLayout>

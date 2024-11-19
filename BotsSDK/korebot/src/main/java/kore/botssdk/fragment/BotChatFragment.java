@@ -1,4 +1,4 @@
-package kore.botssdk.activity;
+package kore.botssdk.fragment;
 
 import static android.view.View.VISIBLE;
 import static kore.botssdk.models.BotResponse.HEADER_SIZE_COMPACT;
@@ -44,7 +44,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -73,6 +73,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import kore.botssdk.R;
+import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.PromotionsAdapter;
 import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
@@ -130,8 +131,8 @@ import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
-public class NewBotChatActivity extends BotAppCompactActivity implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
-    private final String LOG_TAG = NewBotChatActivity.class.getSimpleName();
+public class BotChatFragment extends Fragment implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
+    private final String LOG_TAG = BotChatFragment.class.getSimpleName();
     private ProgressBar taskProgressBar;
     private String jwt;
     private Handler actionBarTitleUpdateHandler;
@@ -141,6 +142,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private TTSSynthesizer ttsSynthesizer;
     private final Gson gson = new Gson();
     private RelativeLayout rlChatWindow;
+    private FrameLayout composerView;
     private SharedPreferences sharedPreferences;
     private final Handler messageHandler = new Handler();
     private String fileUrl;
@@ -148,6 +150,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private boolean isAgentTransfer = false;
     private Dialog alertDialog;
     private BotChatViewModel viewModel;
+    private BotChatFragmentListener fragmentListener;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -163,67 +166,32 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         }
     };
 
-    @SuppressLint("UnspecifiedRegisterReceiverFlag")
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.bot_chat_layout);
-        botClient = new BotClient(this);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.bot_chat_layout, null);
+        botClient = new BotClient(requireContext());
 
-        BotChatViewModelFactory factory = new BotChatViewModelFactory(NewBotChatActivity.this, botClient, NewBotChatActivity.this);
+        BotChatViewModelFactory factory = new BotChatViewModelFactory(requireContext(), botClient, BotChatFragment.this);
         viewModel = new ViewModelProvider(this, factory).get(BotChatViewModel.class);
 
-        findViews();
+        findViews(view);
         getBundleInfo();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED);
+            requireContext().registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), Context.RECEIVER_NOT_EXPORTED);
         } else {
-            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
+            requireContext().registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
         }
 
         viewModel.connectToBot(isMinimized());
-        startService(new Intent(getApplicationContext(), ClosingService.class));
-    }
+        requireContext().startService(new Intent(requireContext(), ClosingService.class));
 
-    void showCloseAlert() {
-        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    if (sharedPreferences != null) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        SDKConfig.setIsMinimized(true);
-                        editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
-                        editor.apply();
-                        BotSocketConnectionManager.killInstance();
-                        finish();
-                    }
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    if (sharedPreferences != null) {
-                        if (botClient != null)
-                            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        SDKConfig.setIsMinimized(false);
-                        editor.putInt(BotResponse.HISTORY_COUNT, 0);
-                        editor.apply();
-                        BotSocketConnectionManager.killInstance();
-                        finish();
-                    }
-                    break;
-                case DialogInterface.BUTTON_NEUTRAL:
-                    dialog.dismiss();
-                    break;
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewBotChatActivity.this);
-        builder.setMessage(R.string.app_name).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
+        return view;
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         if (isAgentTransfer && botClient != null)
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
@@ -238,14 +206,12 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     private void getBundleInfo() {
-        Bundle bundle = getIntent().getExtras();
-        if (bundle != null) {
-            jwt = bundle.getString(BundleUtils.JWT_TKN, "");
-        }
+        Bundle bundle = getArguments();
+        if (bundle != null) jwt = bundle.getString(BundleUtils.JWT_TKN, "");
     }
 
     private void addHeaderFragmentToActivity(Fragment fragment, BrandingHeaderModel brandingHeaderModel) {
-        FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getChildFragmentManager();
         FragmentTransaction tr = fm.beginTransaction();
 
         if (fragment instanceof BaseHeaderFragment) {
@@ -257,45 +223,37 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         tr.commitAllowingStateLoss();
     }
 
-    private void findViews() {
-        rlChatWindow = findViewById(R.id.rlChatWindow);
-        taskProgressBar = findViewById(R.id.taskProgressBar);
-        sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+    private void findViews(View view) {
+        composerView = view.findViewById(R.id.chatLayoutPanelContainer);
+        rlChatWindow = view.findViewById(R.id.rlChatWindow);
+        taskProgressBar = view.findViewById(R.id.taskProgressBar);
+        sharedPreferences = requireContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         showProgressDialogue();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
 
         //Add Bot Content Fragment
         botContentFragment = getCustomContentFragment();
         if (botContentFragment == null)
             botContentFragment = new BotContentFragment();
-        botContentFragment.setArguments(getIntent().getExtras());
+        botContentFragment.setArguments(getArguments());
         botContentFragment.setComposeFooterInterface(this);
         botContentFragment.setInvokeGenericWebViewInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
 
         //Add Bot Compose Footer Fragment
-        fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction = getChildFragmentManager().beginTransaction();
         composeFooterFragment = getCustomFooterFragment();
         if (composeFooterFragment == null)
             composeFooterFragment = new ComposeFooterFragment();
-        composeFooterFragment.setArguments(getIntent().getExtras());
+        composeFooterFragment.setArguments(getArguments());
         composeFooterFragment.setComposeFooterInterface(this);
         composeFooterFragment.setBotClient(botClient);
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, composeFooterFragment).commit();
 
-        ttsSynthesizer = new TTSSynthesizer(this);
+        ttsSynthesizer = new TTSSynthesizer(requireContext());
         setupTextToSpeech();
         KoreEventCenter.register(this);
         attachFragments();
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (isOnline()) {
-                    showCloseAlert();
-                }
-            }
-        });
     }
 
     @Override
@@ -337,7 +295,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             if (composeFooterFragment != null) composeFooterFragment.setJwtToken(jwt);
             viewModel.getWebHookMeta(jwt);
         } else if (botClient != null && !botClient.isConnected()) {
-            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(getApplicationContext(), null, isMinimized());
+            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(requireContext(), null, isMinimized());
         }
     }
 
@@ -359,8 +317,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     public void externalReadWritePermission(String fileUrl) {
         this.fileUrl = fileUrl;
-        if (!KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            KaPermissionsHelper.requestForPermission(this, CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (!KaPermissionsHelper.hasPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            KaPermissionsHelper.requestForPermission(requireActivity(), CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
         }
     }
 
@@ -372,10 +330,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
-            if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                if (!StringUtils.isNullOrEmpty(fileUrl)) KaMediaUtils.saveFileFromUrlToKorePath(NewBotChatActivity.this, fileUrl);
+            if (KaPermissionsHelper.hasPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                if (!StringUtils.isNullOrEmpty(fileUrl)) KaMediaUtils.saveFileFromUrlToKorePath(requireContext(), fileUrl);
             } else {
-                Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
+                Toast.makeText(requireActivity(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -387,7 +345,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
@@ -524,7 +482,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     public void invokeGenericWebView(String url) {
         if (url != null && !url.isEmpty()) {
-            Intent intent = new Intent(getApplicationContext(), GenericWebViewActivity.class);
+            Intent intent = new Intent(requireContext(), GenericWebViewActivity.class);
             intent.putExtra("url", url);
             intent.putExtra("header", getResources().getString(R.string.app_name));
             startActivity(intent);
@@ -559,10 +517,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         viewModel.setIsActivityResumed(true);
         if (!SDKConfiguration.Client.isWebHook) {
-            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
+            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(requireContext(), false);
             updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
         }
 
@@ -592,7 +550,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @SuppressLint("MissingPermission")
     protected boolean isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         Network nw = connectivityManager.getActiveNetwork();
         if (nw == null) return false;
         NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
@@ -602,15 +560,14 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private void attachFragments() {
         if (SDKConfiguration.Client.enablePanel) {
             //Fragment Approach
-            FrameLayout composerView = findViewById(R.id.chatLayoutPanelContainer);
             composerView.setVisibility(VISIBLE);
             BottomPanelFragment composerFragment = new BottomPanelFragment();
-            Bundle bundle = getIntent().getExtras();
+            Bundle bundle = getArguments();
             if (bundle != null) bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
 
             composerFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
-            composerFragment.setPanelComposeFooterInterface(NewBotChatActivity.this, SDKConfiguration.Client.identity);
+            getChildFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
+            composerFragment.setPanelComposeFooterInterface(BotChatFragment.this, SDKConfiguration.Client.identity);
         }
     }
 
@@ -673,7 +630,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
                 if (!TextUtils.isEmpty(errorMsg)) {
                     LogUtils.i("File upload error", errorMsg);
-                    ToastUtils.showToast(NewBotChatActivity.this, "Unable to attach!");
+                    ToastUtils.showToast(requireContext(), "Unable to attach!");
                 }
             }
         }
@@ -708,8 +665,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     void showProgressDialogue() {
-        progressBar = new Dialog(this);
-        View view = LayoutInflater.from(this).inflate(R.layout.progress_bar_dialog, null);
+        progressBar = new Dialog(requireContext());
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.progress_bar_dialog, null);
         progressBar.setContentView(view);
         Objects.requireNonNull(progressBar.getWindow()).setLayout((int) (250 * dp1), (int) (100 * dp1));
         progressBar.setCancelable(false);
@@ -725,8 +682,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         ScrollView svWelcome;
         ImageView ivStarterLogo;
 
-        welcomeDialog = new Dialog(this, R.style.MyDialogTheme);
-        View view = LayoutInflater.from(this).inflate(R.layout.welcome_screen, null);
+        welcomeDialog = new Dialog(requireContext(), R.style.MyDialogTheme);
+        View view = LayoutInflater.from(requireContext()).inflate(R.layout.welcome_screen, null);
         llOuterHeader = view.findViewById(R.id.llOuterHeader);
         llStartConversation = view.findViewById(R.id.llStartConversation);
         lvPromotions = view.findViewById(R.id.lvPromotions);
@@ -748,10 +705,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
             if (!StringUtils.isNullOrEmpty(welcomeModel.getLayout())) {
                 if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE)) {
-                    llHeaderLayout = (RelativeLayout) View.inflate(NewBotChatActivity.this, R.layout.welcome_header_2, null);
+                    llHeaderLayout = (RelativeLayout) View.inflate(requireContext(), R.layout.welcome_header_2, null);
                 } else if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_MEDIUM)) {
-                    llHeaderLayout = (RelativeLayout) View.inflate(NewBotChatActivity.this, R.layout.welcome_header_3, null);
-                } else llHeaderLayout = (RelativeLayout) View.inflate(NewBotChatActivity.this, R.layout.welcome_header, null);
+                    llHeaderLayout = (RelativeLayout) View.inflate(requireContext(), R.layout.welcome_header_3, null);
+                } else llHeaderLayout = (RelativeLayout) View.inflate(requireContext(), R.layout.welcome_header, null);
             }
 
             if (llHeaderLayout != null) {
@@ -777,7 +734,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                         if (welcomeModel.getBackground().getType().equalsIgnoreCase(BundleUtils.COLOR)) {
                             llInnerHeader.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(welcomeModel.getBackground().getColor())));
                         } else if (!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getImg())) {
-                            Glide.with(NewBotChatActivity.this).load(welcomeModel.getBackground().getImg()).into(new CustomTarget<Drawable>() {
+                            Glide.with(requireContext()).load(welcomeModel.getBackground().getImg()).into(new CustomTarget<Drawable>() {
                                 @Override
                                 public void onResourceReady(@androidx.annotation.NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
                                     llInnerHeader.setBackground(null);
@@ -804,16 +761,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     } else {
                         switch (botOptionsModel.getHeader().getIcon().getIcon_url()) {
                             case "icon-1":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_1, getTheme()));
+                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_1, requireContext().getTheme()));
                                 break;
                             case "icon-2":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_2, getTheme()));
+                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_2, requireContext().getTheme()));
                                 break;
                             case "icon-3":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_3, getTheme()));
+                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_3, requireContext().getTheme()));
                                 break;
                             case "icon-4":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_4, getTheme()));
+                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_4, requireContext().getTheme()));
                                 break;
                         }
                     }
@@ -851,7 +808,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             TextView tvStartConversation = view.findViewById(R.id.tvStartConversation);
             RelativeLayout rlLinks = view.findViewById(R.id.rlLinks);
 
-            rvLinks.setLayoutManager(new LinearLayoutManager(NewBotChatActivity.this, LinearLayoutManager.VERTICAL, false));
+            rvLinks.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
 
             llOuterHeader.addView(llHeaderLayout);
 
@@ -894,7 +851,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     }
 
                     if (welcomeModel.getStarter_box().getQuick_start_buttons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons().size() > 0) {
-                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(NewBotChatActivity.this);
+                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
 
                         if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle())) {
                             if (welcomeModel.getStarter_box().getQuick_start_buttons().getStyle().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST)) {
@@ -902,7 +859,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                                 rvStarterButtons.setLayoutManager(layoutManager);
 
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(NewBotChatActivity.this, BotResponse.TEMPLATE_TYPE_LIST, !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
+                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireContext(), BotResponse.TEMPLATE_TYPE_LIST, !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
                                 quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
                                 rvStarterButtons.setAdapter(quickRepliesAdapter);
                             } else {
@@ -910,10 +867,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                                 layoutManager.setJustifyContent(JustifyContent.FLEX_START);
                                 rvStarterButtons.setLayoutManager(layoutManager);
 
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(NewBotChatActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL, (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
+                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireContext(), BotResponse.TEMPLATE_TYPE_CAROUSEL, (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
                                 quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                                quickRepliesAdapter.setComposeFooterInterface(NewBotChatActivity.this);
-                                quickRepliesAdapter.setInvokeGenericWebViewInterface(NewBotChatActivity.this);
+                                quickRepliesAdapter.setComposeFooterInterface(BotChatFragment.this);
+                                quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatFragment.this);
                                 rvStarterButtons.setAdapter(quickRepliesAdapter);
                             }
                         }
@@ -923,7 +880,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
             if (welcomeModel.getPromotional_content().getPromotions() != null && welcomeModel.getPromotional_content().isShow() && welcomeModel.getPromotional_content().getPromotions().size() > 0) {
                 lvPromotions.setVisibility(VISIBLE);
-                lvPromotions.setAdapter(new PromotionsAdapter(NewBotChatActivity.this, welcomeModel.getPromotional_content().getPromotions()));
+                lvPromotions.setAdapter(new PromotionsAdapter(requireContext(), welcomeModel.getPromotional_content().getPromotions()));
             }
 
             if (welcomeModel.getStatic_links() != null) {
@@ -933,16 +890,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
                         if (!StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
                             hvpLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(NewBotChatActivity.this, welcomeModel.getStatic_links().getLinks(), (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
-                            quickRepliesAdapter.setComposeFooterInterface(NewBotChatActivity.this);
-                            quickRepliesAdapter.setInvokeGenericWebViewInterface(NewBotChatActivity.this);
+                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(requireContext(), welcomeModel.getStatic_links().getLinks(), (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
+                            quickRepliesAdapter.setComposeFooterInterface(BotChatFragment.this);
+                            quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatFragment.this);
                             hvpLinks.setAdapter(quickRepliesAdapter);
                         } else {
                             rvLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinkListAdapter welcomeStaticLinkListAdapter = new WelcomeStaticLinkListAdapter(NewBotChatActivity.this, rvLinks);
+                            WelcomeStaticLinkListAdapter welcomeStaticLinkListAdapter = new WelcomeStaticLinkListAdapter(requireContext(), rvLinks);
                             welcomeStaticLinkListAdapter.setWelcomeStaticLinksArrayList(welcomeModel.getStatic_links().getLinks());
-                            welcomeStaticLinkListAdapter.setComposeFooterInterface(NewBotChatActivity.this);
-                            welcomeStaticLinkListAdapter.setInvokeGenericWebViewInterface(NewBotChatActivity.this);
+                            welcomeStaticLinkListAdapter.setComposeFooterInterface(BotChatFragment.this);
+                            welcomeStaticLinkListAdapter.setInvokeGenericWebViewInterface(BotChatFragment.this);
                             rvLinks.setAdapter(welcomeStaticLinkListAdapter);
                         }
                     } else rlLinks.setVisibility(View.GONE);
@@ -968,7 +925,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void showAlertDialog(EventModel eventModel) {
-        alertDialog = new Dialog(NewBotChatActivity.this);
+        alertDialog = new Dialog(requireContext());
         LayoutInflater inflater = this.getLayoutInflater();
         View dialogView = inflater.inflate(R.layout.incoming_call_layout, null);
         alertDialog.setContentView(dialogView);
@@ -1008,17 +965,17 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     void openNextScreen(String sipUser, boolean isVideoCall) {
-        Prefs.setFirstLogin(this, false);
+        Prefs.setFirstLogin(requireContext(), false);
         //start login and open app main screen
         new Thread(new Runnable() {
             @Override
             public void run() {
                 if (!ACManager.getInstance().isRegisterState()) {
-                    ACManager.getInstance().startLogin(NewBotChatActivity.this, false, true);
+                    ACManager.getInstance().startLogin(requireContext(), false, true);
                 }
 
-                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(NewBotChatActivity.this)) {
-                    Toast.makeText(NewBotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show();
+                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(requireContext())) {
+                    Toast.makeText(requireContext(), R.string.no_registration, Toast.LENGTH_SHORT).show();
                 } else {
                     ACManager.getInstance().callNumber(sipUser, isVideoCall);
                 }
@@ -1030,11 +987,12 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void showReconnectionStopped() {
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
-                finish();
+                BotSocketConnectionManager.killInstance();
+                if (fragmentListener != null) fragmentListener.onReconnectionAttemptExceed();
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(NewBotChatActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setMessage(R.string.bot_not_connected).setCancelable(false).setPositiveButton(R.string.ok, dialogClickListener).show();
     }
 
@@ -1049,9 +1007,13 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     public void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation) {
         if (!SDKConfiguration.Client.isWebHook) {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(NewBotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(NewBotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), NewBotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(requireContext()).getAccessToken(), SocketWrapper.getInstance(requireContext()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireContext(), BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         } else {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(NewBotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), NewBotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(requireContext()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireContext(), BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         }
+    }
+
+    public void setListener(BotChatFragmentListener listener) {
+        fragmentListener = listener;
     }
 }

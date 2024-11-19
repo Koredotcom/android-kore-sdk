@@ -4,8 +4,17 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import java.util.HashMap;
+
+import kore.botssdk.fragment.content.BaseContentFragment;
+import kore.botssdk.fragment.footer.BaseFooterFragment;
+import kore.botssdk.fragment.header.BaseHeaderFragment;
+
 public class SDKConfig {
     private static boolean isMinimized = false;
+    private static final HashMap<String, BaseHeaderFragment> customHeaders = new HashMap<>();
+    private static BaseFooterFragment customFooterFragment = null;
+    private static BaseContentFragment customContentFragment = null;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
@@ -48,4 +57,27 @@ public class SDKConfig {
         return isMinimized;
     }
 
+    public static BaseHeaderFragment getCustomHeaderFragment(String size) {
+        return customHeaders.get(size);
+    }
+
+    public static void setCustomHeaderFragment(String size, BaseHeaderFragment fragment) {
+        customHeaders.put(size, fragment);
+    }
+
+    public static void setCustomFooterFragment(BaseFooterFragment fragment){
+        customFooterFragment = fragment;
+    }
+
+    public static BaseFooterFragment getCustomFooterFragment() {
+        return customFooterFragment;
+    }
+
+    public static BaseContentFragment getCustomContentFragment() {
+        return customContentFragment;
+    }
+
+    public static void setCustomContentFragment(BaseContentFragment customContentFragment) {
+        SDKConfig.customContentFragment = customContentFragment;
+    }
 }

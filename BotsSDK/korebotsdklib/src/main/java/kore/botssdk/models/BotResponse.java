@@ -94,6 +94,14 @@ public class BotResponse extends BaseBotMessage {
     public static final String THEME_NAME_1 = "THEME_NAME_1";
     public static final String THEME_NAME_2 = "THEME_NAME_2";
 
+    public static final String ICON_1 = "icon-1";
+    public static final String ICON_2 = "icon-2";
+    public static final String ICON_3 = "icon-3";
+    public static final String ICON_4 = "icon-4";
+
+    public static final String HEADER_SIZE_COMPACT = "compact";
+    public static final String HEADER_SIZE_LARGE = "large";
+
     private String type;
     private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;

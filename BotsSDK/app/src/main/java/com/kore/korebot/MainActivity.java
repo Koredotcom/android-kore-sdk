@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
 
         SDKConfiguration.Server.setQueryParams(getQueryParams());
         SDKConfiguration.Server.setCustomData(getCustomData());
+//        SDKConfig.setCustomContentFragment(new CustomContentFragment());
+//        SDKConfig.setCustomFooterFragment(new CustomFooterFragment());
+//        SDKConfig.setCustomHeaderFragment(BotResponse.HEADER_SIZE_COMPACT, new CustomHeaderFragment());
 
         //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
         String jwtToken = "";
