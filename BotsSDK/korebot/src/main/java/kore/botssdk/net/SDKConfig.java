@@ -24,29 +24,34 @@ public class SDKConfig {
         SDKConfiguration.setCustomTemplateViewHolder(templateName, templateViewHolder);
     }
 
-    public static void initialize(String botId, String botName, String clientId, String clientName, String identity, String jwtToken) {
+    public static void initialize(String botId, String botName, String clientId, String clientName, String identity, String jwtToken, String serverUrl, String brandingUrl, String jwtServerUrl) {
         SDKConfiguration.Client.setBot_id(botId);
         SDKConfiguration.Client.setBot_name(botName);
         SDKConfiguration.Client.setClient_id(clientId);
         SDKConfiguration.Client.setClient_secret(clientName);
         SDKConfiguration.Client.setIdentity(identity);
         SDKConfiguration.JWTServer.setJwt_token(jwtToken);
+        SDKConfiguration.Server.setServerUrl(serverUrl);
+        SDKConfiguration.Server.setBrandingUrl(brandingUrl);
+        SDKConfiguration.JWTServer.setJwtServerUrl(jwtServerUrl);
+    }
+
+    public static void setWidgetBotConfig(String botId, String botName, String clientId, String clientName, String identity, String serverUrl, String jwtTokenUrl) {
+        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setBot_id(botId);
+        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setBot_name(botName);
+        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setClient_id(clientId);
+        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setClient_secret(clientName);
+        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setIdentity(identity);
+        com.kore.ai.widgetsdk.net.SDKConfiguration.Server.setServerUrl(serverUrl);
+        com.kore.ai.widgetsdk.net.SDKConfiguration.JWTServer.setJwtServerUrl(jwtTokenUrl);
     }
 
     public static void isWebHook(boolean isWebHook) {
         SDKConfiguration.Client.isWebHook = isWebHook;
     }
 
-    public static void setServerUrl(String url) {
-        SDKConfiguration.Server.setServerUrl(url);
-    }
-
-    public static void setBrandingUrl(String url) {
-        SDKConfiguration.Server.setBrandingUrl(url);
-    }
-
-    public static void setJwtTokenUrl(String url) {
-        SDKConfiguration.JWTServer.setJwtServerUrl(url);
+    public static void enableWidgetPanel(boolean enable) {
+        SDKConfiguration.Client.enablePanel = enable;
     }
 
     public static void setIsMinimized(boolean isMinimize) {
@@ -65,7 +70,7 @@ public class SDKConfig {
         customHeaders.put(size, fragment);
     }
 
-    public static void setCustomFooterFragment(BaseFooterFragment fragment){
+    public static void setCustomFooterFragment(BaseFooterFragment fragment) {
         customFooterFragment = fragment;
     }
 
@@ -79,5 +84,25 @@ public class SDKConfig {
 
     public static void setCustomContentFragment(BaseContentFragment customContentFragment) {
         SDKConfig.customContentFragment = customContentFragment;
+    }
+
+    public static void setIsShowIcon(boolean isShow) {
+        SDKConfiguration.BubbleColors.showIcon = isShow;
+    }
+
+    public static void setIsShowIconTop(boolean isShow) {
+        SDKConfiguration.OverrideKoreConfig.showIconTop = isShow;
+    }
+
+    public static void setIsTimeStampsRequired(boolean isRequired) {
+        SDKConfiguration.setTimeStampsRequired(isRequired);
+    }
+
+    public static void setQueryParams(HashMap<String, Object> queryParams) {
+        SDKConfiguration.Server.queryParams = queryParams;
+    }
+
+    public static void setCustomData(RestResponse.BotCustomData customData) {
+        SDKConfiguration.Server.customData = customData;
     }
 }

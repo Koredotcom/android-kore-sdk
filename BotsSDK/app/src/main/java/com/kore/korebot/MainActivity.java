@@ -3,7 +3,6 @@ package com.kore.korebot;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -12,14 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 
-import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionRequest;
@@ -39,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SDKConfiguration.Server.setQueryParams(getQueryParams());
-        SDKConfiguration.Server.setCustomData(getCustomData());
+        SDKConfig.setQueryParams(getQueryParams());
+        SDKConfig.setCustomData(getCustomData());
 //        SDKConfig.setCustomContentFragment(new CustomContentFragment());
 //        SDKConfig.setCustomFooterFragment(new CustomFooterFragment());
 //        SDKConfig.setCustomHeaderFragment(BotResponse.HEADER_SIZE_COMPACT, new CustomHeaderFragment());
@@ -72,31 +67,27 @@ public class MainActivity extends AppCompatActivity {
         //Set jwtServerUrl, This value is mandatory
         String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
 
-        //Set Server url
-        SDKConfig.setServerUrl(serverUrl);
-        //Set Branding url
-        SDKConfig.setBrandingUrl(brandingUrl);
-        //Set Jwt Server url
-        SDKConfig.setJwtTokenUrl(jwtServerUrl);
-
         //Set isWebHook
         SDKConfig.isWebHook(false);
 
         //Initialize the bot with bot config
         //You can pass client id and client secret as empty when you pass jwt token
-        SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken);
+        SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
 
         //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
 
         //Flag to show the bot icon beside the bot response
-        SDKConfiguration.BubbleColors.showIcon = true;
+        SDKConfig.setIsShowIcon(true);
 
         //Flag to show the bot icon in top position or bottom of the bot response
-        SDKConfiguration.OverrideKoreConfig.showIconTop = false;
+        SDKConfig.setIsShowIconTop(true);
 
         //Flag to show timestamp of each bot and user messages
-        SDKConfiguration.setTimeStampsRequired(true);
+        SDKConfig.setIsTimeStampsRequired(true);
+
+        //Flag to show widget panel
+        SDKConfig.enableWidgetPanel(false);
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
@@ -105,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void appPermissionCheck() {
-
         Log.d(TAG, "Check requestAllPermissions");
         boolean isPermissionRequestActive = true;
         PermissionRequest permissionRequest = new PermissionRequest() {
