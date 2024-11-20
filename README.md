@@ -26,60 +26,33 @@ Kore.ai SDK for Android enables you to talk to Kore.ai bots over a web socket. T
 ## Instructions
 
 ### Setup Bot Configuration
-* Setting up clientId, clientSecret, botId, botName and identity in SDKConfiguration.java
+* Setting up following in SDKConfig.java
 
  ```
- // It's mandatory field to setup Ex: cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
- String clientId = "PLEASE_ENTER_CLIENT_ID";
- 
-// It's mandatory field to setup Ex: Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
-String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+//Initialize the bot with bot config
+SDKConfig.initialize(
+	botId, //It's mandatory field to setup. Ex: st-acecd91f-b009-5f3f-9c15-7249186d827d
+	botName, // copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. "Demo Bot"
+	clientId, // It's mandatory field to setup Ex: cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
+	clientSecret, // It's mandatory field to setup Ex: Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
+	identity, // It's mandatory field to setup. User identity - this should represent the subject for JWT token that could be an email or phone number in case of known 		     user. In case of anonymous user, this can be a randomly generated unique id.
+	jwtToken, // It's mandatory field to setup. This value should be **empty** if BotSdk itself create the Jwt Token. Otherwise need to provide respective JwtToken.
+	serverUrl, // It's mandatory field to setup. Ex: https://xxx.kore.ai/
+	brandingUrl, // It's mandatory field to setup. It can be same as serverUrl. Based on your usage Ex: https://xxx.kore.ai/
+	jwtServerUrl If you want to use your own JwtToken creation url then provide respective url. Otherwise **empty**. e.g. https://jwt-token-server.example.com/
+);
 
-// It's mandatory field to setup. User identity - this should represent the subject for JWT token that could be an email or phone number in case of known user. In case of anonymous user, this can be a randomly generated unique id.
-String identity = "PLEASE_ENTER_IDENTITY";
-
-// copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. "Demo Bot"
-String botName = "PLEASE_ENTER_BOT_NAME";
-
-// It's mandatory field to setup. Ex: st-acecd91f-b009-5f3f-9c15-7249186d827d
-String botId = "PLEASE_ENTER_BOT_ID"; 
-
-Server URL - replace it with your server URL, if required
- 
-// It's mandatory field to setup. Ex: https://xxx.kore.ai/
-String serverUrl = "PLEASE_ENTER_KORE_BOT_SERVER_URL";
-
-// It's mandatory field to setup. It can be same as serverUrl. Based on your usage Ex: https://xxx.kore.ai/
-String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
-
-// It's mandatory field to setup. This value should be **empty** if BotSdk itself create the Jwt Token. Otherwise need to provide respective JwtToken.
-String jwtToken = "PLEASE_ENTER_JWT_TOKEN";
-
-JWT Server URL - If you want to use your own JwtToken creation url then provide respective url. Otherwise **empty**. e.g. https://jwt-token-server.example.com/
-public static final String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
-
-//Set Server url
-SDKConfig.setServerUrl(serverUrl);
-//Set Branding url
-SDKConfig.setBrandingUrl(brandingUrl); or
-SDKConfig.setBrandingUrl(serverUrl);
-//Set Jwt Server url
-SDKConfig.setJwtTokenUrl(jwtServerUrl);
-
-//Set isWebHook
+//Set isWebHook enable or not
 SDKConfig.isWebHook(false);
 
-//Initialize the bot with bot config
-SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken);
-
 //Flag to show the bot icon beside the bot response
-SDKConfiguration.BubbleColors.showIcon = true;
+SDKConfig.setIsShowIcon(true);
 
 //Flag to show the bot icon in top position or bottom of the bot response
-SDKConfiguration.OverrideKoreConfig.showIconTop = true;
+SDKConfig.setIsShowIconTop(true);
 
 //Flag to show timestamp of each bot and user messages
-SDKConfiguration.setTimeStampsRequired(true);
+SDKConfig.setIsTimeStampsRequired(true);
 
 ```
 
