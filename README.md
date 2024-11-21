@@ -53,7 +53,6 @@ SDKConfig.setIsShowIconTop(true);
 
 //Flag to show timestamp of each bot and user messages
 SDKConfig.setIsTimeStampsRequired(true);
-
 ```
 
 ## Running the Demo app
@@ -63,24 +62,54 @@ SDKConfig.setIsTimeStampsRequired(true);
   
 ## Steps to integrate BotSdk with UI through gradle implementation
 
-#### 1. Add below snippet in app/build.gradle under dependencies
+#### 1. Add below snippet in project/build.gradle
+```
+maven { url 'https://www.jitpack.io' }
+```
+#### 2. Add below snippet in app/build.gradle under dependencies
 ```
 implementation 'com.github.Koredotcom:android-kore-sdk:0.0.5'
 ```
-#### 2. You can initialize the bot by providing the bot config as mentioned above at **Setup Bot Configuration**
+#### 3. You can initialize the bot by providing the bot config as mentioned below.
 
-#### 3. You can navigate to the bot chat window through Intent as below snippet
+ ```
+//Initialize the bot with bot config
+SDKConfig.initialize(
+	botId, //It's mandatory field to setup. Ex: st-acecd91f-b009-5f3f-9c15-7249186d827d
+	botName, // copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. "Demo Bot"
+	clientId, // It's mandatory field to setup Ex: cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
+	clientSecret, // It's mandatory field to setup Ex: Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
+	identity, // It's mandatory field to setup. User identity - this should represent the subject for JWT token that could be an email or phone number in case of known 		     user. In case of anonymous user, this can be a randomly generated unique id.
+	jwtToken, // It's mandatory field to setup. This value should be **empty** if BotSdk itself create the Jwt Token. Otherwise need to provide respective JwtToken.
+	serverUrl, // It's mandatory field to setup. Ex: https://xxx.kore.ai/
+	brandingUrl, // It's mandatory field to setup. It can be same as serverUrl. Based on your usage Ex: https://xxx.kore.ai/
+	jwtServerUrl If you want to use your own JwtToken creation url then provide respective url. Otherwise **empty**. e.g. https://jwt-token-server.example.com/
+);
+
+//Set isWebHook enable or not
+SDKConfig.isWebHook(false);
+
+//Flag to show the bot icon beside the bot response
+SDKConfig.setIsShowIcon(true);
+
+//Flag to show the bot icon in top position or bottom of the bot response
+SDKConfig.setIsShowIconTop(true);
+
+//Flag to show timestamp of each bot and user messages
+SDKConfig.setIsTimeStampsRequired(true);
 ```
-Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+
+#### 4. You can navigate to the bot chat window through Intent as below snippet
+```
+Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
 Bundle bundle = new Bundle();
 //This should not be null
 bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
 bundle.putString(BundleUtils.BOT_NAME_INITIALS,"B");
 intent.putExtras(bundle);
 startActivity(intent);
-
 ```
-#### 4. You can have your customized templates(new template or replace existing template with your own template) an fragments without touching the SDK code.
+#### 5. You can have your customized templates(new template or replace existing template with your own template) an fragments without touching the SDK code.
 
 Please refer the sample app for adding custom templates into sdk and add custom templates and fragments as follows.
 
@@ -93,6 +122,9 @@ SDKConfig.addCustomContentFragment(new CustomContentFragment());
 
 // To add your custom footer fragment instead of using existing
 SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
+
+// To add your custom header fragment instead of using existing
+SDKConfig.setCustomHeaderFragment(BotResponse.HEADER_SIZE_COMPACT, new CustomHeaderFragment());
 ```
 
 ## Steps to integrate BotSdk withoutUI(Only Bot communication) through gradle implementation
@@ -106,7 +138,34 @@ maven { url 'https://www.jitpack.io' }
 ```
 implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:0.0.5'
 ```
-#### 3. You can change the bot config as mentioned above at **Setup Bot Configuration**
+#### 3. You can change the bot config as mentioned below.
+
+ ```
+//Initialize the bot with bot config
+SDKConfig.initialize(
+	botId, //It's mandatory field to setup. Ex: st-acecd91f-b009-5f3f-9c15-7249186d827d
+	botName, // copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. "Demo Bot"
+	clientId, // It's mandatory field to setup Ex: cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
+	clientSecret, // It's mandatory field to setup Ex: Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
+	identity, // It's mandatory field to setup. User identity - this should represent the subject for JWT token that could be an email or phone number in case of known 		     user. In case of anonymous user, this can be a randomly generated unique id.
+	jwtToken, // It's mandatory field to setup. This value should be **empty** if BotSdk itself create the Jwt Token. Otherwise need to provide respective JwtToken.
+	serverUrl, // It's mandatory field to setup. Ex: https://xxx.kore.ai/
+	brandingUrl, // It's mandatory field to setup. It can be same as serverUrl. Based on your usage Ex: https://xxx.kore.ai/
+	jwtServerUrl If you want to use your own JwtToken creation url then provide respective url. Otherwise **empty**. e.g. https://jwt-token-server.example.com/
+);
+
+//Set isWebHook enable or not
+SDKConfig.isWebHook(false);
+
+//Flag to show the bot icon beside the bot response
+SDKConfig.setIsShowIcon(true);
+
+//Flag to show the bot icon in top position or bottom of the bot response
+SDKConfig.setIsShowIconTop(true);
+
+//Flag to show timestamp of each bot and user messages
+SDKConfig.setIsTimeStampsRequired(true);
+```
    
 #### 4. You can intialize the Bot as below
    
