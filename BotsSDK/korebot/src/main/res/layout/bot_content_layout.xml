@@ -7,36 +7,13 @@
     android:background="@android:color/transparent">
 
     <RelativeLayout
-        android:id="@+id/header_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <kore.botssdk.view.CustomTextViewBold
-            android:id="@+id/tvChaseTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginStart="@dimen/dimen_15dp"
-            android:layout_marginTop="@dimen/dimen_15dp"
-            android:layout_marginEnd="@dimen/dimen_15dp"
-            android:layout_marginBottom="@dimen/dimen_15dp"
-            android:text="@string/app_name"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_header"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/header_layout">
+        android:layout_height="match_parent">
 
         <include
             layout="@layout/kora_timestamps_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/header_layout"
             android:visibility="gone" />
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -69,7 +46,6 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="3dp"
             android:visibility="gone" />
-
 
         <LinearLayout xmlns:cpv="http://schemas.android.com/apk/res-auto"
             xmlns:dots="http://schemas.android.com/apk/res-auto"
@@ -107,5 +83,4 @@
                 dots:period="1000" />
         </LinearLayout>
     </RelativeLayout>
-
 </RelativeLayout>

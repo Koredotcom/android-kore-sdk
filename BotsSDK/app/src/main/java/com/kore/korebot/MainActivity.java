@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
+import com.kore.korebot.fragment.CustomHeaderFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setQueryParams(getQueryParams());
         SDKConfig.setCustomData(getCustomData());
 //        SDKConfig.setIsShowHeader(false);
+//        SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
 //        SDKConfig.addCustomContentFragment(new CustomContentFragment());
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 

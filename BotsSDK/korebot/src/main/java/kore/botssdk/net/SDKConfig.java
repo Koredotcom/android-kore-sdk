@@ -8,10 +8,12 @@ import java.util.HashMap;
 
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
+import kore.botssdk.fragment.header.BaseHeaderFragment;
 
 public class SDKConfig {
     private static BaseContentFragment customContentFragment = null;
     private static BaseFooterFragment customFooterFragment = null;
+    private static BaseHeaderFragment customHeaderFragment = null;
     private static boolean isShowHeader = true;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
@@ -52,6 +54,14 @@ public class SDKConfig {
 
     public static BaseFooterFragment getCustomFooterFragment() {
         return customFooterFragment;
+    }
+
+    public static BaseHeaderFragment getCustomHeaderFragment() {
+        return customHeaderFragment;
+    }
+
+    public static void addCustomHeaderFragment(BaseHeaderFragment customHeaderFragment) {
+        SDKConfig.customHeaderFragment = customHeaderFragment;
     }
 
     public static boolean isShowHeader() {

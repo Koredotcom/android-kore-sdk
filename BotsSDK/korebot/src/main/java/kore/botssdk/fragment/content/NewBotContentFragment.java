@@ -2,7 +2,6 @@ package kore.botssdk.fragment.content;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -30,21 +28,16 @@ import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
-import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.repository.history.HistoryRepository;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.DotsTextView;
 import kore.botssdk.view.QuickReplyView;
-import kore.botssdk.viewmodels.content.BotContentViewModel;
-import kore.botssdk.viewmodels.content.BotContentViewModelFactory;
 
 @SuppressWarnings("UnKnownNullness")
 public class NewBotContentFragment extends BaseContentFragment {
     private RelativeLayout rvChatContent;
-    private RelativeLayout botHeaderLayout;
     private RecyclerView botsBubblesListView;
     private QuickReplyView quickReplyView;
     private LinearLayout botTypingStatusRl;
@@ -52,7 +45,6 @@ public class NewBotContentFragment extends BaseContentFragment {
     private String mChannelIconURL;
     private String mBotNameInitials;
     private int mBotIconId;
-    private TextView tvChaseTitle;
     private LinearLayoutManager layoutManager;
 
     @Nullable
@@ -86,15 +78,11 @@ public class NewBotContentFragment extends BaseContentFragment {
         botsBubblesListView = view.findViewById(R.id.chatContentListView);
         TextView headerView = view.findViewById(R.id.filesSectionHeader);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
-        tvChaseTitle = view.findViewById(R.id.tvChaseTitle);
-        botHeaderLayout = view.findViewById(R.id.header_layout);
         headerView.setVisibility(View.GONE);
-        tvChaseTitle.setText(Html.fromHtml(SDKConfiguration.Client.bot_name));
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         botsBubblesListView.setItemViewCacheSize(100);
         botsBubblesListView.setItemAnimator(null);
-        botHeaderLayout.setVisibility(SDKConfig.isShowHeader() ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -102,11 +90,6 @@ public class NewBotContentFragment extends BaseContentFragment {
         if (!StringUtils.isNullOrEmpty(bgColor)) {
             rvChatContent.setBackgroundColor(Color.parseColor(bgColor));
         }
-
-        botHeaderLayout.setBackgroundColor(Color.parseColor(textBgColor));
-        tvChaseTitle.setTextColor(Color.parseColor(textColor));
-
-        if (!StringUtils.isNullOrEmpty(botName)) tvChaseTitle.setText(botName);
 
         if (SDKConfiguration.OverrideKoreConfig.paginated_scroll_enable) {
             swipeRefreshLayout.setEnabled(true);

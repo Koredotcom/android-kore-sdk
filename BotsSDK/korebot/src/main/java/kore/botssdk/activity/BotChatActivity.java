@@ -412,7 +412,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         SDKConfiguration.BubbleColors.quickBorderColor = brandingModel.getButtonBorderColor();
 
         if (botContentFragment != null)
-            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetTextColor(), brandingModel.getBotName());
+            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor());
 
         if (composeFooterFragment != null)
             composeFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
