@@ -68,12 +68,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.kore.korefileuploadsdk.core.KoreWorker;
 import com.kore.korefileuploadsdk.core.UploadBulkFile;
 
-import net.gotev.speech.GoogleVoiceTypingDisabledException;
-import net.gotev.speech.Speech;
-import net.gotev.speech.SpeechDelegate;
-import net.gotev.speech.SpeechRecognitionNotAvailable;
-import net.gotev.speech.SpeechUtil;
-import net.gotev.speech.ui.SpeechProgressView;
+import kore.botssdk.speech.GoogleVoiceTypingDisabledException;
+import kore.botssdk.speech.Speech;
+import kore.botssdk.speech.SpeechDelegate;
+import kore.botssdk.speech.SpeechRecognitionNotAvailable;
+import kore.botssdk.speech.SpeechUtil;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -111,6 +110,7 @@ import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.limits.Attachment;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.speech.ui.SpeechProgressView;
 import kore.botssdk.utils.AppPermissionsHelper;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;

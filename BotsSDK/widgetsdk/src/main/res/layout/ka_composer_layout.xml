@@ -138,7 +138,7 @@
              android:orientation="vertical"
              android:visibility="gone">
 
-             <net.gotev.speech.ui.SpeechProgressView
+             <kore.botssdk.speech.SpeechProgressView
                  android:id="@+id/progress"
                  android:layout_width="120dp"
                  android:layout_height="50dp" />
@@ -234,7 +234,7 @@
             android:orientation="vertical"
             android:visibility="invisible">
 
-<!--            <net.gotev.speech.ui.SpeechProgressView-->
+<!--            <kore.botssdk.speech.SpeechProgressView-->
 <!--                android:id="@+id/progress"-->
 <!--                android:layout_width="120dp"-->
 <!--                android:layout_gravity="center"-->
