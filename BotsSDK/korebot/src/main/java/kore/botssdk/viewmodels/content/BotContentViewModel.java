@@ -46,8 +46,7 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
 
             @Override
             public void onNext(@NonNull ServerBotMsgResponse re) {
-                ArrayList<BaseBotMessage> list = null;
-                list = re.getBotMessages();
+                ArrayList<BaseBotMessage> list = re.getBotMessages();
                 offset = (!SDKConfiguration.Client.isWebHook ? _offset : 0) + re.getOriginalSize();
 
                 if (list != null && !list.isEmpty()) {
