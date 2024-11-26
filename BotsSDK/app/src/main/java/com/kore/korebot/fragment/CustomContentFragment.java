@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,10 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.kore.korebot.R;
+
 import java.util.ArrayList;
 import java.util.Objects;
 
-import kore.botssdk.R;
 import kore.botssdk.adapter.ChatAdapter;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
@@ -51,7 +51,7 @@ public class CustomContentFragment extends BaseContentFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(com.kore.korebot.R.layout.custom_content_layout, null);
+        View view = inflater.inflate(R.layout.custom_content_layout, null);
         getBundleInfo();
         return view;
     }
@@ -77,9 +77,7 @@ public class CustomContentFragment extends BaseContentFragment {
     private void findViews(View view) {
         rvChatContent = view.findViewById(R.id.rvChatContent);
         botsBubblesListView = view.findViewById(R.id.chatContentListView);
-        TextView headerView = view.findViewById(R.id.filesSectionHeader);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
-        headerView.setVisibility(View.GONE);
         swipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
         botsBubblesListView.getRecycledViewPool().setMaxRecycledViews(0, 0);
         botsBubblesListView.setItemViewCacheSize(100);

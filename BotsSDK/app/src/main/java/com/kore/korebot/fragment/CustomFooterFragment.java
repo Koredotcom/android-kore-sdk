@@ -27,12 +27,13 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kore.korebot.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import kore.botssdk.R;
 import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
@@ -85,7 +86,7 @@ public class CustomFooterFragment extends BaseFooterFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(com.kore.korebot.R.layout.custom_footer_fragment, null);
+        View view = inflater.inflate(R.layout.custom_footer_fragment, null);
         findViews(view);
         isDisabled = true;
         isFirstTime = true;

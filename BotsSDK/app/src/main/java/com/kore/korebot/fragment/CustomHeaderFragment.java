@@ -2,7 +2,6 @@ package com.kore.korebot.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,11 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import kore.botssdk.R;
+import com.kore.korebot.R;
+
 import kore.botssdk.fragment.header.BaseHeaderFragment;
-import kore.botssdk.models.BrandingHeaderModel;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.net.SDKConfiguration;
 
 public class CustomHeaderFragment extends BaseHeaderFragment {
     private View view;

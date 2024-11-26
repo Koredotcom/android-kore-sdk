@@ -17,14 +17,6 @@
         android:splitMotionEvents="false"
         android:visibility="gone">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingVertical="10dp"
-            android:text="Custom Footer Layout"
-            android:textSize="16sp" />
-
         <!-- Bot Message Fragment resides -->
         <FrameLayout
             android:id="@+id/post_frame_parent"

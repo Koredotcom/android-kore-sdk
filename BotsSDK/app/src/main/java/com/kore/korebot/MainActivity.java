@@ -19,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
+import com.kore.korebot.fragment.CustomContentFragment;
+import com.kore.korebot.fragment.CustomFooterFragment;
 import com.kore.korebot.fragment.CustomHeaderFragment;
 
 import java.io.IOException;
@@ -43,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
 
         SDKConfig.setQueryParams(getQueryParams());
         SDKConfig.setCustomData(getCustomData());
-//        SDKConfig.setIsShowHeader(false);
 //        SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
 //        SDKConfig.addCustomContentFragment(new CustomContentFragment());
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
@@ -93,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
         //Flag to show timestamp of each bot and user messages
         SDKConfig.setIsTimeStampsRequired(true);
+
+        //Flag to show bot header or hide the header
+        SDKConfig.setIsShowHeader(false);
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
