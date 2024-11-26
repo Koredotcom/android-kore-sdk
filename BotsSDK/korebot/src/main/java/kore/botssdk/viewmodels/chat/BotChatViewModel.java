@@ -220,7 +220,7 @@ public class BotChatViewModel extends ViewModel {
             if (payloadInner != null && payloadInner.getTemplate_type() != null && "start_timer".equalsIgnoreCase(payloadInner.getTemplate_type())) {
                 BotSocketConnectionManager.getInstance().startDelayMsgTimer();
             }
-            chatView.showTypingStatus();
+
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
             }

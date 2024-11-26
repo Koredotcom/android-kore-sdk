@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setIsTimeStampsRequired(true);
 
         //Flag to show bot header or hide the header
-        SDKConfig.setIsShowHeader(false);
+        SDKConfig.setIsShowHeader(true);
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {

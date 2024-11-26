@@ -296,6 +296,8 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
+        botContentFragment.showTypingStatus();
+
         if (!StringUtils.isNullOrEmpty(message)) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
@@ -308,6 +310,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
+        botContentFragment.showTypingStatus();
         if (!SDKConfiguration.Client.isWebHook) {
             if (payload != null) {
                 BotSocketConnectionManager.getInstance().sendPayload(message, payload);
@@ -328,6 +331,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
+        botContentFragment.showTypingStatus();
         if (attachments != null && attachments.size() > 0) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {

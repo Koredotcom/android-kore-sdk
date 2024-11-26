@@ -247,4 +247,8 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
             mContentViewModel.loadReconnectionChatHistory(_offset, limit, SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken(), botsChatAdapter.getBaseBotMessageArrayList());
         else mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
     }
+
+    public boolean getmChannelIconURL() {
+        return getmChannelIconURL();
+    }
 }

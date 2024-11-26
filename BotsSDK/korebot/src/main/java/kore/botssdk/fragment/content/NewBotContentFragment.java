@@ -125,6 +125,10 @@ public class NewBotContentFragment extends BaseContentFragment {
     @Override
     public void showTypingStatus() {
         if (typingStatusItemDots != null) {
+            if (StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url())) {
+                mChannelIconURL = SDKConfiguration.BubbleColors.getIcon_url();
+                initializeBotTypingStatus(botTypingStatusRl, mChannelIconURL);
+            }
             botTypingStatusRl.setVisibility(View.VISIBLE);
             typingStatusItemDots.start();
         }
@@ -159,6 +163,11 @@ public class NewBotContentFragment extends BaseContentFragment {
     }
 
     public void addMessageToBotChatAdapter(BotResponse botResponse) {
+        if (StringUtils.isNullOrEmpty(mChannelIconURL) && !StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url())) {
+            mChannelIconURL = SDKConfiguration.BubbleColors.getIcon_url();
+            initializeBotTypingStatus(botTypingStatusRl, mChannelIconURL);
+        }
+
         botsChatAdapter.addBaseBotMessage(botResponse);
         botTypingStatusRl.setVisibility(View.GONE);
         botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getItemCount());
