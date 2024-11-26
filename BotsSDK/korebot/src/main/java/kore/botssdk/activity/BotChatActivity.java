@@ -63,7 +63,6 @@ import java.util.UUID;
 
 import io.reactivex.annotations.NonNull;
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
@@ -413,7 +412,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         SDKConfiguration.BubbleColors.quickBorderColor = brandingModel.getButtonBorderColor();
 
         if (botContentFragment != null)
-            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetTextColor(), brandingModel.getBotName());
+            botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor());
 
         if (composeFooterFragment != null)
             composeFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
@@ -461,7 +460,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onPause() {
-        BotApplication.activityPaused();
+//        BotApplication.activityPaused();
         ttsSynthesizer.stopTextToSpeech();
         super.onPause();
     }
@@ -563,11 +562,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
             if (botClient != null && isAgentTransfer) {
                 botClient.sendReceipts(BundleConstants.MESSAGE_DELIVERED, botResponse.getMessageId());
-                if (BotApplication.isActivityVisible()) {
+//                if (BotApplication.isActivityVisible()) {
                     botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.getMessageId());
-                } else {
-                    arrMessageList.add(botResponse.getMessageId());
-                }
+//                } else {
+//                    arrMessageList.add(botResponse.getMessageId());
+//                }
             }
 
             PayloadOuter payOuter = null;
@@ -592,9 +591,9 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                 payloadInner.convertElementToAppropriate();
             }
 
-            if (!BotApplication.isActivityVisible()) {
+//            if (!BotApplication.isActivityVisible()) {
                 postNotification("Kore Message", "Received new message.");
-            }
+//            }
 
             handler.postDelayed(new Runnable() {
                 @Override
@@ -913,7 +912,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     @Override
     protected void onResume() {
-        BotApplication.activityResumed();
+//        BotApplication.activityResumed();
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
             updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());

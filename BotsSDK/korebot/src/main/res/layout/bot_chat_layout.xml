@@ -8,13 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/chatLayoutPanelContainer">
+        <!-- For the header -->
+        <FrameLayout
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <!-- For the footer -->
         <FrameLayout
             android:id="@+id/chatLayoutFooterContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/tap_to_speak"
+            android:layout_alignParentBottom="true"
             android:minHeight="50dp" />
 
         <!-- For the content -->
@@ -22,7 +27,8 @@
             android:id="@+id/chatLayoutContentContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/chatLayoutFooterContainer" />
+            android:layout_above="@id/chatLayoutFooterContainer"
+            android:layout_below="@+id/header_container" />
 
         <!-- Progress bar representing loading -->
         <ProgressBar
@@ -34,22 +40,14 @@
             android:layout_marginTop="-7dp"
             android:indeterminate="true"
             android:theme="@style/LinearProgress" />
-
-        <FrameLayout
-            android:id="@+id/tap_to_speak"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
-
     </RelativeLayout>
 
     <FrameLayout
         android:id="@+id/chatLayoutPanelContainer"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/readReceiptGrey"
-        android:layout_height="wrap_content"
         android:minHeight="50dp"
-        android:visibility="gone"/>
-
+        android:visibility="gone" />
 </RelativeLayout>

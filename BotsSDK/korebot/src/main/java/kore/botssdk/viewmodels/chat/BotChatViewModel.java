@@ -1,9 +1,7 @@
 package kore.botssdk.viewmodels.chat;
 
-import static kore.botssdk.activity.KaCaptureImageActivity.rotateIfNecessary;
 import static kore.botssdk.net.SDKConfiguration.Client.enable_ack_delivery;
 import static kore.botssdk.utils.BundleConstants.GROUP_KEY_NOTIFICATIONS;
-import static kore.botssdk.utils.ToastUtils.showToast;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -12,7 +10,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -25,13 +22,9 @@ import androidx.lifecycle.ViewModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.Reader;
-import java.nio.file.Files;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -40,7 +33,6 @@ import java.util.UUID;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.listener.BaseSocketConnectionManager;
@@ -57,7 +49,6 @@ import kore.botssdk.models.BotResponseMessage;
 import kore.botssdk.models.BotResponsePayLoadText;
 import kore.botssdk.models.ComponentModel;
 import kore.botssdk.models.ComponentModelPayloadText;
-import kore.botssdk.models.KoreMedia;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
@@ -65,8 +56,6 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.pushnotification.PushNotificationRegister;
 import kore.botssdk.repository.branding.BrandingRepository;
 import kore.botssdk.repository.webhook.WebHookRepository;
-import kore.botssdk.utils.AsyncTaskExecutor;
-import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
@@ -91,6 +80,7 @@ public class BotChatViewModel extends ViewModel {
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     protected final int compressQualityInt = 100;
+    private boolean isActivityResumed = false;
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -102,6 +92,10 @@ public class BotChatViewModel extends ViewModel {
 
     public void getBrandingDetails(String botId, String botToken, String state, String version, String language) {
         repository.getBrandingDetails(botId, botToken, state, version, language);
+    }
+
+    public void setIsActivityResumed(boolean isResumed) {
+        isActivityResumed = isResumed;
     }
 
     public BotOptionsModel getDataFromTxt() {
@@ -202,7 +196,7 @@ public class BotChatViewModel extends ViewModel {
 
             if (botClient != null && isAgentTransfer) {
                 botClient.sendReceipts(BundleConstants.MESSAGE_DELIVERED, botResponse.getMessageId());
-                if (BotApplication.isActivityVisible()) {
+                if (isActivityResumed) {
                     botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.getMessageId());
                 } else {
                     arrMessageList.add(botResponse.getMessageId());
@@ -231,7 +225,7 @@ public class BotChatViewModel extends ViewModel {
                 payloadInner.convertElementToAppropriate();
             }
 
-            if (!BotApplication.isActivityVisible()) {
+            if (!isActivityResumed) {
                 postNotification("Kore Message", "Received new message.");
             }
 
