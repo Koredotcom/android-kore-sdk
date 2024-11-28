@@ -43,13 +43,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SDKConfig.setQueryParams(getQueryParams());
-        SDKConfig.setCustomData(getCustomData());
+//        Can set your customized Header view in the chat window by using this method. By extending BaseHeaderFragment. Can find examples under fragments package
 //        SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
+
+//        Can set your customized Content view in the chat window by using this method. By extending BaseContentFragment. Can find examples under fragments package
 //        SDKConfig.addCustomContentFragment(new CustomContentFragment());
+
+//        Can set your customized Footer view in the chat window by using this method. By extending BaseFooterFragment. Can find examples under fragments package
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
-        //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
+        //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection. Can find examples under fragments package
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
@@ -82,6 +85,12 @@ public class MainActivity extends AppCompatActivity {
         //Initialize the bot with bot config
         //You can pass client id and client secret as empty when you pass jwt token
         SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
+
+        //You can pass the custom data to the bot by using this method. Can get sample format from the mentioned method
+        SDKConfig.setCustomData(getCustomData());
+
+        //You can set query parameters to the socket url by using this method. Can get sample format from the mentioned method
+        SDKConfig.setQueryParams(getQueryParams());
 
         //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
