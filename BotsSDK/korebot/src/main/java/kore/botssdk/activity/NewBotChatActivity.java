@@ -29,13 +29,14 @@ import java.util.List;
 import java.util.Objects;
 
 import kore.botssdk.R;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.content.NewBotContentFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.footer.ComposeFooterFragment;
+import kore.botssdk.fragment.header.BaseHeaderFragment;
+import kore.botssdk.fragment.header.BotHeaderFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -65,6 +66,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     private ProgressBar taskProgressBar;
     private String jwt;
     private BotClient botClient;
+    private BaseHeaderFragment botHeaderFragment;
     private BaseContentFragment botContentFragment;
     private BaseFooterFragment baseFooterFragment;
     private SharedPreferences sharedPreferences;
@@ -151,6 +153,16 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         baseFooterFragment.setBotClient(botClient);
         fragmentTransaction.add(R.id.chatLayoutFooterContainer, baseFooterFragment).commit();
 
+        if (SDKConfig.isShowHeader()) {
+            botHeaderFragment = SDKConfig.getCustomHeaderFragment();
+            if (botHeaderFragment == null) botHeaderFragment = new BotHeaderFragment();
+            botHeaderFragment.setComposeFooterInterface(this);
+            botHeaderFragment.setInvokeGenericWebViewInterface(this);
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.add(R.id.header_container, botHeaderFragment);
+            transaction.commitNow();
+        }
+
         setupTextToSpeech();
         KoreEventCenter.register(this);
     }
@@ -184,6 +196,10 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
             if (baseFooterFragment != null)
                 baseFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
+
+            if (botHeaderFragment != null) {
+                botHeaderFragment.setBrandingDetails(brandingModel);
+            }
         }
 
         if (botContentFragment != null && isReconnection) {
@@ -280,6 +296,8 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
+        botContentFragment.showTypingStatus();
+
         if (!StringUtils.isNullOrEmpty(message)) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
@@ -292,6 +310,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
+        botContentFragment.showTypingStatus();
         if (!SDKConfiguration.Client.isWebHook) {
             if (payload != null) {
                 BotSocketConnectionManager.getInstance().sendPayload(message, payload);
@@ -312,6 +331,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
+        botContentFragment.showTypingStatus();
         if (attachments != null && attachments.size() > 0) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
@@ -380,7 +400,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     protected void onResume() {
-        BotApplication.activityResumed();
+        mViewModel.setIsActivityResumed(true);
 
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
@@ -393,7 +413,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     protected void onPause() {
-        BotApplication.activityPaused();
         super.onPause();
     }
 
@@ -438,9 +457,9 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
     }
 
-
     @Override
     protected void onStop() {
+        mViewModel.setIsActivityResumed(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();

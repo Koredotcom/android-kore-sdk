@@ -46,8 +46,7 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
 
             @Override
             public void onNext(@NonNull ServerBotMsgResponse re) {
-                ArrayList<BaseBotMessage> list = null;
-                list = re.getBotMessages();
+                ArrayList<BaseBotMessage> list = re.getBotMessages();
                 offset = (!SDKConfiguration.Client.isWebHook ? _offset : 0) + re.getOriginalSize();
 
                 if (list != null && !list.isEmpty()) {
@@ -108,6 +107,8 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                                 ((BotResponse) botResp.get(i)).setFromAgent(true);
                             requiredList.add(botResp.get(i));
                         }
+                    } else {
+                        requiredList.addAll(list);
                     }
 
                     chatView.onReconnectionChatHistory(requiredList, offset, false);

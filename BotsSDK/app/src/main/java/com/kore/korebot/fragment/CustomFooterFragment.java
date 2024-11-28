@@ -27,12 +27,13 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.kore.korebot.R;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import kore.botssdk.R;
 import kore.botssdk.adapter.ComposebarAttachmentAdapter;
 import kore.botssdk.dialogs.OptionsActionSheetFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
@@ -85,7 +86,7 @@ public class CustomFooterFragment extends BaseFooterFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(com.kore.korebot.R.layout.custom_footer_fragment, null);
+        View view = inflater.inflate(R.layout.custom_footer_fragment, null);
         findViews(view);
         isDisabled = true;
         isFirstTime = true;
@@ -194,6 +195,8 @@ public class CustomFooterFragment extends BaseFooterFragment {
 
         if (SDKConfiguration.OverrideKoreConfig.showTextToSpeech) audioSpeakTts.setVisibility(View.VISIBLE);
 
+        if (SDKConfiguration.OverrideKoreConfig.showHamburgerMenu) newMenuLogo.setVisibility(View.VISIBLE);
+
         if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone && StringUtils.isNullOrEmpty(editTextMessage.getText().toString()))
             recAudioImg.setVisibility(View.VISIBLE);
 
@@ -283,14 +286,11 @@ public class CustomFooterFragment extends BaseFooterFragment {
 
                 if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(View.VISIBLE);
 
-                if (isAgentConnected && botClient != null)
-                    botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
+                if (isAgentConnected && botClient != null) botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
 
-            } else if ((llSend.getVisibility() != View.VISIBLE)
-                    || (s.length() > 0 && llSend.getVisibility() != View.VISIBLE)) {
+            } else if ((llSend.getVisibility() != View.VISIBLE) || (s.length() > 0 && llSend.getVisibility() != View.VISIBLE)) {
 
-                if (isAgentConnected && botClient != null)
-                    botClient.sendReceipts(BundleConstants.TYPING, "");
+                if (isAgentConnected && botClient != null) botClient.sendReceipts(BundleConstants.TYPING, "");
 
                 llSend.setVisibility(View.VISIBLE);
                 recAudioImg.setVisibility(View.GONE);
@@ -308,32 +308,25 @@ public class CustomFooterFragment extends BaseFooterFragment {
             String msg = editTextMessage.getText().toString();
             if (!msg.trim().isEmpty()) {
                 if (composebarAttachmentAdapter.getItemCount() > 0) {
-                    if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png")
-                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg")
-                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
+                    if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                     else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp4"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                    else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3")
-                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
+                    else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                     else
                         sendMessageAttachmentText(msg + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                } else
-                    sendMessageText(msg);
+                } else sendMessageText(msg);
 
                 editTextMessage.setText("");
                 composebarAttachmentAdapter.clearAll();
                 enableOrDisableSendButton(false);
             } else if (composebarAttachmentAdapter.getItemCount() > 0) {
-                if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png")
-                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg")
-                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
+                if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                 else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp4"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3")
-                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
+                else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                 else
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.attachment) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
@@ -449,21 +442,14 @@ public class CustomFooterFragment extends BaseFooterFragment {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage(R.string.speech_not_available)
-                .setCancelable(false)
-                .setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener)
-                .show();
+        builder.setMessage(R.string.speech_not_available).setCancelable(false).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void showEnableGoogleVoiceTyping() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage(R.string.enable_google_voice_typing)
-                .setCancelable(false)
-                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-                    // do nothing
-                })
-                .show();
+        builder.setMessage(R.string.enable_google_voice_typing).setCancelable(false).setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+            // do nothing
+        }).show();
     }
 
     @Override
@@ -481,8 +467,7 @@ public class CustomFooterFragment extends BaseFooterFragment {
             llSend.setVisibility(View.VISIBLE);
             recAudioImg.setVisibility(View.GONE);
         } else {
-            if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone)
-                recAudioImg.setVisibility(View.VISIBLE);
+            if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(View.VISIBLE);
 
             llSend.setVisibility(View.GONE);
         }

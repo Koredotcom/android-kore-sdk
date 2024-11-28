@@ -11,7 +11,7 @@
         android:id="@+id/tv_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/schedue_meeting"
+        android:text="@string/schedule_meeting"
         android:textSize="16sp"
         android:gravity="start|center_vertical"
         android:padding="13dp"

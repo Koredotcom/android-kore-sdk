@@ -17,7 +17,6 @@
 
     <application
         android:usesCleartextTraffic="true"
-        android:name=".application.BotApplication"
         android:enableOnBackInvokedCallback="true"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"

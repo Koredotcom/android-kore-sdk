@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">"Kore.ai Bot"</string>
+    <string name="socket_connecting">Conectando</string>
+    <string name="socket_connected">Conectado</string>
+</resources>

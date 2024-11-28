@@ -1,7 +1,7 @@
 # Kore.ai SDK
 Kore.ai offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
 
-With just few lines of code, you can embed our Kore.ai chat widget into your applications to enable end-users to interact with your applications using Natural Language. For more information, refer to https://developer.kore.com/docs/bots/kore-web-sdk/
+With just few lines of code, you can embed our Kore.ai chat widget into your applications to enable end-users to interact with your applications using Natural Language.
 
 # Kore.ai Android SDK for developers
 
@@ -11,7 +11,7 @@ Kore.ai SDK for Android enables you to talk to Kore.ai bots over a web socket. T
 
 ### Prerequisites
 * Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
-* SDK app credentials 
+* SDK bot credentials 
 * Login to the Bots platform
 	* Navigate to the Bot builder
 	* Search and click on the bot 
@@ -25,333 +25,50 @@ Kore.ai SDK for Android enables you to talk to Kore.ai bots over a web socket. T
 
 ## Instructions
 
-### Configuration changes
-* Setting up clientId, clientSecret, botId, botName and identity in SDKConfiguration.java
+### Setup Bot Configuration
+* Setting up following in SDKConfig.java
 
-Client id - Copy this id from Bot Builder SDK Settings ex. cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
  ```
- public static final String client_id = "PLEASE_ENTER_CLIENT_ID";
- ```
+//Initialize the bot with bot config
+SDKConfig.initialize(
+	botId, //It's mandatory field to setup. Ex: st-acecd91f-b009-5f3f-9c15-7249186d827d
+	botName, // copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. "Demo Bot"
+	clientId, // It's mandatory field to setup Ex: cs-5250bdc9-6bfe-5ece-92c9-ab54aa2d4285
+	clientSecret, // It's mandatory field to setup Ex: Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
+	identity, // It's mandatory field to setup. User identity - this should represent the subject for JWT token that could be an email or phone number in case of known 		     user. In case of anonymous user, this can be a randomly generated unique id.
+	jwtToken, // It's mandatory field to setup. This value should be **empty** if BotSdk itself create the Jwt Token. Otherwise need to provide respective JwtToken.
+	serverUrl, // It's mandatory field to setup. Ex: https://xxx.kore.ai/
+	brandingUrl, // It's mandatory field to setup. It can be same as serverUrl. Based on your usage Ex: https://xxx.kore.ai/
+	jwtServerUrl If you want to use your own JwtToken creation url then provide respective url. Otherwise **empty**. e.g. https://jwt-token-server.example.com/
+);
 
-Client secret - copy this value from Bot Builder SDK Settings ex. Wibn3ULagYyq0J10LCndswYycHGLuIWbwHvTRSfLwhs=
- ```
-public static final String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
- ```
+//Set isWebHook enable or not
+SDKConfig.isWebHook(false);
 
-User identity - this should represent the subject for JWT token that could be an email or phone number in case of known user. In case of anonymous user, this can be a randomly generated unique id.
- ```
-public static final String identity = "PLEASE_ENTER_IDENTITY";
- ```
+//Flag to show the bot icon beside the bot response
+SDKConfig.setIsShowIcon(true);
 
-Bot name - copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. "Demo Bot"
- ```
-public static final String bot_name = "PLEASE_ENTER_BOT_NAME";
- ```
+//Flag to show the bot icon in top position or bottom of the bot response
+SDKConfig.setIsShowIconTop(true);
 
-Bot Id - copy this value from Bot Builder -> Channels -> Web/Mobile SDK config  ex. st-acecd91f-b009-5f3f-9c15-7249186d827d
- ```
-public static final String bot_id = "PLEASE_ENTER_BOT_ID"; 
- ```
-
-Server URL - replace it with your server URL, if required
- ```
-public static final String KORE_BOT_SERVER_URL = "PLEASE_ENTER_KORE_BOT_SERVER_URL";
- ```
-
-Anonymous user - if not anonymous, assign same identity (such as email or phone number) while making a connection
- ```
-public static final boolean IS_ANONYMOUS_USER = true; 
- ```
-
-Speech server URL
- ```
-public static final String SPEECH_SERVER_BASE_URL = "wss://speech.kore.ai/speechcntxt/ws/speech";
- ```
-
-JWT Server URL - specify the server URL for JWT token generation. This token is used to authorize the SDK client. Refer to documentation on how to setup the JWT server for token generation - e.g. https://jwt-token-server.example.com/
- ```
-public static final String JWT_SERVER_URL = "PLEASE_ENTER_JWT_SERVER_URL";
+//Flag to show timestamp of each bot and user messages
+SDKConfig.setIsTimeStampsRequired(true);
 
 ```
 
-### Running the Demo app
+## Running the Demo app
 *	Download or clone the repository.
 *	Import the project.
 *	Run the app.
   
-# How to integrate BotSdk with UI through gradle implementation
+## Steps to integrate BotSdk with UI through gradle implementation
 
-1. Add below snippet in project/build.gradle
-   
-```
-maven { url 'https://www.jitpack.io' }
-```
-2. Add below snippet in app/build.gradle under dependencies
+#### 1. Add below snippet in app/build.gradle under dependencies
 ```
 implementation 'com.github.Koredotcom:android-kore-sdk:0.0.5'
 ```
-3. You can initialize the bot by providing the bot config like below. You can pass Jwt Token as empty so that we generate token in the SDK. If token is passed we will use it to establish bot connection.
-```
-//If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
-String jwtToken = "";
+#### 2. You can initialize the bot by providing the bot config as mentioned above at **Setup Bot Configuration**
 
-//Set clientId, If jwtToken is empty this value is mandatory
-String clientId = "PLEASE_ENTER_CLIENT_ID";
-
-//Set clientSecret, If jwtToken is empty this value is mandatory
-String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-
-//Set botId, This value is mandatory
-String botId = "PLEASE_ENTER_BOT_ID";
-
-//Set identity, This value is mandatory
-String identity = "PLEASE_ENTER_IDENTITY";
-
-//Set botName, This value is mandatory
-String botName = "PLEASE_ENTER_BOT_NAME";
-
-//Set serverUrl, This value is mandatory
-String serverUrl = "PLEASE_ENTER_SERVER_URL";
-
-//Set brandingUrl, This value is mandatory
-String brandingUrl = "PLEASE_ENTER_BRANDING_SERVER_URL";
-
-//Set Server url
-SDKConfig.setServerUrl(serverUrl);
-//Set Branding url
-SDKConfig.setBrandingUrl(brandingUrl);
-
-//Set isWebHook
-SDKConfig.isWebHook(false);
-
-//Initialize the bot with bot config
-//You can pass client id and client secret as empty when you pass jwt token
-SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken);
-
-//Inject the custom template like below
-SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
-
-//Flag to show the bot icon beside the bot response
-SDKConfiguration.BubbleColors.showIcon = true;
-
-//Flag to show the bot icon in top position or bottom of the bot response
-SDKConfiguration.OverrideKoreConfig.showIconTop = true;
-
-//Flag to show timestamp of each bot and user messages
-SDKConfiguration.setTimeStampsRequired(true);
-```
-4. You can navigate to the bot chat window through Intent as below snippet
-```
-Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
-Bundle bundle = new Bundle();
-//This should not be null
-bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-bundle.putString(BundleUtils.BOT_NAME_INITIALS,"B");
-intent.putExtras(bundle);
-startActivity(intent);
-```
-# 5. You can have your customized templates without touching the SDK code can check it in below provided branch "LinkTemplateView"
-   
-  https://github.com/Koredotcom/android-kore-sdk/tree/master_gradle
-
-# How to integrate BotSdk withoutUI through gradle implementation
-
-1. Add below snippet in project/build.gradle
-   
-```
-maven { url 'https://www.jitpack.io' }
-```
-2. Add below snippet in app/build.gradle under dependencies
-```
-implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:0.0.5'
-```
-3. You can change the bot config like below
-```
-SDKConfiguration.Client.bot_id = "PLEASE_ENTER_BOT_ID";
-SDKConfiguration.Client.bot_name = "PLEASE_ENTER_BOT_NAME";
-SDKConfiguration.Client.client_id = "PLEASE_ENTER_CLIENT_ID";
-SDKConfiguration.Client.client_secret = "PLEASE_ENTER_CLIENT_SECRET";
-SDKConfiguration.Client.identity = "PLEASE_ENTER_IDENTITY";
-
- public static boolean isWebHook = false;
-```
-4. You can intialize the Bot like below
-   
-```
-//Initiating BotClient
-BotClient botClient = new BotClient(this);
-
-//Local library to generate JWT token can be replaced as per requirement(Can be client side API call)
-String jwt = botClient.generateJWT(SDKConfiguration.Client.identity,SDKConfiguration.Client.client_secret,SDKConfiguration.Client.client_id,SDKConfiguration.Server.IS_ANONYMOUS_USER);
-
-//Initiating bot connection once connected callbacks will be fired on respective actions
-botClient.connectAsAnonymousUser(jwt,SDKConfiguration.Client.bot_name,SDKConfiguration.Client.bot_id, MainActivity.this);
-```
-5. Where the Bot initiated, that class should implement "SocketConnectionListener" to receive the bot response as below
-```
-public class MainActivity extends AppCompatActivity implements SocketConnectionListener
-```
-6. Application class can send message to bot as below
-```
-botClient.sendMessage("Your message to bot");
-```
-7. Application class can receive message at Override method "onTextMessage(String payload)" as String as below
-```
-@Override
-public void onTextMessage(String payload) {
-Log.e("onTextMessage payload", payload);
-}
-```
-
-## Integrating into your app with library code base
-Copy "korebotsdklib" module available in this repository into your application and follow the below steps
-
-1. Create BotClient object providing context
-```
-BotClient botClient = new BotClient(this);
-```
-#### 2. Implement SocketConnectionListener to receive callback
-```
-SocketConnectionListener socketConnectionListener = new SocketConnectionListener() {
-    @Override
-    public void onOpen() {
-    }
-    @Override
-    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
-    }
-    @Override
-    public void onTextMessage(String payload) {
-    }
-    @Override
-    public void onRawTextMessage(byte[] payload) {
-    }
-    @Override
-    public void onBinaryMessage(byte[] payload) {
-    }
-};
-```
-#### 3. Initialize RTM client
-```
-botClient.connectAsAnonymousUser(jwt,
-            SDKConfiguration.Config.demo_client_id,chatBot,taskBotId, BotChatActivity.this);
-
-```
-#### 4. JWT generation
-    a. You need to have secure token service hosted in your environment which returns the JWT token.
-    b. Generate JWT in your enviornment.
-
-NOTE: Please refer about JWT signing and verification at - https://developer.kore.com/docs/bots/kore-web-sdk/
-
-#### 5. Connect with JWT
-    private void getJWTToken(){
-        String id;
-        if(SDKConfiguration.Config.IS_ANONYMOUS_USER){
-            id = UUID.randomUUID().toString();
-        }else{
-            id = SDKConfiguration.Config.identity;
-        }
-
-        JWTGrantRequest request = new JWTGrantRequest(SDKConfiguration.Config.demo_client_id,
-                SDKConfiguration.Config.clientSecret, id,SDKConfiguration.Config.IS_ANONYMOUS_USER);
-        spiceManagerForJWT.execute(request, new RequestListener<RestResponse.JWTTokenResponse>() {
-            @Override
-            public void onRequestFailure(SpiceException e) {
-
-            }
-
-            @Override
-            public void onRequestSuccess(RestResponse.JWTTokenResponse jwt) {
-                botClient.connectAsAnonymousUser(jwt.getJwt(),
-                        SDKConfiguration.Config.demo_client_id,chatBot,taskBotId, BotChatActivity.this);
-            }
-        });
-    }
-
-#### 6. Send message
-```
-botClient.sendMessage("Tweet hello")
-```
-#### 7. Listen to events in socketConnectionListener
-```
-@Override
-public void onOpen() {
-}
-@Override
-public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
-}
-@Override
-public void onTextMessage(String payload) {
-}
-@Override
-public void onRawTextMessage(byte[] payload) {
-}
-@Override
-public void onBinaryMessage(byte[] payload) {
-}
-```
-
-#### 8. Subscribe to push notifications
-```
-PushNotificationRegistrar pushNotificationRegistrar =  new PushNotification(requestListener);
-pushNotificationRegistrar.registerPushNotification(Context context, String userId, String accessToken);
-```
-#### 9. Unsubscribe to push notifications
-```
-PushNotificationRegistrar pushNotificationRegistrar =  new PushNotification(requestListener);
-pushNotificationRegistrar.unsubscribePushNotification(Context context, String accessToken);
-```
-#### 10. Disconnect
-----
-Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
-botconnector.disconnect();
-```
-```
-# How to enable API based (webhook channel) message communication
-----
-#### 1. Enable the webhook channel by following the below link
-	https://developer.kore.ai/docs/bots/channel-enablement/adding-webhook-channel/
-	
-#### 2. You can initialize the bot by providing the bot config like below. You can pass Jwt Token as empty so that we generate token in the SDK. If token is passed we will use it to establish bot connection.
-```
-//If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
-String jwtToken = "";
-
-//Set clientId, If jwtToken is empty this value is mandatory
-String clientId = "PLEASE_ENTER_CLIENT_ID";
-
-//Set clientSecret, If jwtToken is empty this value is mandatory
-String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
-
-//Set botId, This value is mandatory
-String botId = "PLEASE_ENTER_BOT_ID";
-
-//Set identity, This value is mandatory
-String identity = "PLEASE_ENTER_IDENTITY";
-
-//Set botName, This value is mandatory
-String botName = "PLEASE_ENTER_BOT_NAME";
-
-//Set serverUrl, This value is mandatory
-String serverUrl = "PLEASE_ENTER_SERVER_URL";
-
-//Set brandingUrl, This value is mandatory
-String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
-
-//Set Server url
-SDKConfig.setServerUrl(serverUrl);
-//Set Branding url
-SDKConfig.setBrandingUrl(brandingUrl);
-
-//Set isWebHook
-SDKConfig.isWebHook(true);
-
-//Initialize the bot with bot config
-//You can pass client id and client secret as empty when you pass jwt token
-SDKConfig.initialize(botId, botName,clientId , clientSecret, identity, jwtToken);
-
-//Inject the custom template like below
-SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
-```
 #### 3. You can navigate to the bot chat window through Intent as below snippet
 ```
 Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
@@ -362,5 +79,101 @@ bundle.putString(BundleUtils.BOT_NAME_INITIALS,"B");
 intent.putExtras(bundle);
 startActivity(intent);
 
+```
+#### 4. You can have your customized templates(new template or replace existing template with your own template) an fragments without touching the SDK code.
+
+Please refer the sample app for adding custom templates into sdk and add custom templates and fragments as follows.
+
+```
+//Inject the custom template like below
+SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
+
+// To add your custom content fragment instead of using existing
+SDKConfig.addCustomContentFragment(new CustomContentFragment());
+
+// To add your custom footer fragment instead of using existing
+SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
+```
+
+## Steps to integrate BotSdk withoutUI(Only Bot communication) through gradle implementation
+
+#### 1. Add below snippet in project/build.gradle
+   
+```
+maven { url 'https://www.jitpack.io' }
+```
+#### 2. Add below snippet in app/build.gradle under dependencies
+```
+implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:0.0.5'
+```
+#### 3. You can change the bot config as mentioned above at **Setup Bot Configuration**
+   
+#### 4. You can intialize the Bot as below
+   
+```
+//Initiating BotClient
+BotClient botClient = new BotClient(this);
+SocketConnectionListener socketConnectionListener = new SocketConnectionListener() {
+    @Override
+    public void onOpen() {
+	// Executes when socket connection success
+    }
+    @Override
+    public void onClose(WebSocket.WebSocketConnectionObserver.WebSocketCloseNotification code, String reason) {
+	// Executes when socket connection closed.
+    }
+    @Override
+    public void onTextMessage(String payload) {
+	// Executes when a message is received from the bot.
+    }
+    @Override
+    public void onRawTextMessage(byte[] payload) {
+        // Execites when Text message payload received as raw UTF-8 or null (empty payload).
+    }
+    @Override
+    public void onBinaryMessage(byte[] payload) {
+	// Executes when Binary message payload or null (empty payload).
+    }
+	@Override
+    public void refreshJwtToken() {
+	// Executes when Jwt token is refreshed.
+    }
+	@Override
+    public void onReconnectStopped(String reconnectionStopped) {
+	// Executes when reconnection attempts exceeded.
+    }
+};
+
+//Initiating bot connection once connected callbacks will be fired on respective actions
+botClient.connectAsAnonymousUser(jwt,SDKConfiguration.Client.bot_name,SDKConfiguration.Client.bot_id, socketConnectionListener);
+```
+#### 5. Send message to bot as below
+```
+botClient.sendMessage("Your message to bot");
+botClient.sendMessage("Your message to bot", attachmentsList);   // attachmentsList is having the list of attachments to send.
+```
+
+#### 6. Subscribe to push notifications
+```
+PushNotificationRegistrar pushNotificationRegistrar =  new PushNotification(requestListener);
+pushNotificationRegistrar.registerPushNotification(Context context, String userId, String accessToken);
+```
+#### 7. Unsubscribe to push notifications
+```
+PushNotificationRegistrar pushNotificationRegistrar =  new PushNotification(requestListener);
+pushNotificationRegistrar.unsubscribePushNotification(Context context, String accessToken);
+```
+#### 8. Disconnect
+Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view.
+```
+botClient.disconnect();
+```
+# How to enable API based (webhook channel) message communication
+```
+// Webhook is nothing but api communication. If webhook is enabled then api's will be used for the bot communication. Otherwise it will be sockect communication.  
+// If you pass true it will use webhook. Otherwise pass false.
+SDKConfig.isWebHook(true); 
+```
+	
 License
 Copyright © Kore.ai, Inc. MIT License; see LICENSE for further details.

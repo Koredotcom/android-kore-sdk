@@ -195,14 +195,15 @@ public class SDKConfiguration {
         public static boolean isEmojiShortcutEnable = true;
         public static int typing_indicator_timeout = 10000;
         public static boolean history_enable = true;
-        public static boolean paginated_scroll_enable = true;
         public static int history_batch_size = 10;
+        public static boolean paginated_scroll_enable = true;
         public static int paginated_scroll_batch_size = 10;
         public static String paginated_scroll_loading_label = "Loading old messages";
         public static boolean showIconTop = true;
         public static boolean showAttachment = true;
         public static boolean showASRMicroPhone = true;
         public static boolean showTextToSpeech = true;
+        public static boolean showHamburgerMenu = false;
         public static boolean history_initial_call = false;
     }
 

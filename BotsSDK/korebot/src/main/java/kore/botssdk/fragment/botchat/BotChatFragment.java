@@ -35,7 +35,6 @@ import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
-import kore.botssdk.application.BotApplication;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fragment.content.BaseContentFragment;
@@ -256,7 +255,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             if (which == DialogInterface.BUTTON_POSITIVE) {
                 BotSocketConnectionManager.killInstance();
-                fragmentListener.onReconnectionAttemptExceed();
+                if (fragmentListener != null) fragmentListener.onReconnectionAttemptExceed();
             }
         };
 
@@ -379,7 +378,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
     @Override
     public void onResume() {
-        BotApplication.activityResumed();
+        mViewModel.setIsActivityResumed(true);
 
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().checkConnectionAndRetry(requireContext(), false);
@@ -391,13 +390,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     @Override
-    public void onPause() {
-        BotApplication.activityPaused();
-        super.onPause();
-    }
-
-    @Override
     public void onStop() {
+        mViewModel.setIsActivityResumed(false);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ActivityManager activityManager = (ActivityManager) requireContext().getSystemService(ACTIVITY_SERVICE);
             List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();

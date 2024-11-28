@@ -1,4 +1,15 @@
 <resources>
     <string name="get_started">Get Started</string>
     <string name="app_name">Kore.ai Bot</string>
+    <string name="custom_content_layout">Custom Content Layout</string>
+    <string name="camera">&#128247;</string>
+    <string name="video">&#127909;</string>
+    <string name="attachment">&#128195;</string>
+    <string name="audio">&#9835;</string>
+    <string name="repeat">Please repeat</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="speech_not_available">Speech recognition is not available on this device. Do you want to install Google app to have speech recognition?</string>
+    <string name="permission_required">You need to grant the permission to use the microphone</string>
+    <string name="enable_google_voice_typing">Please enable Google Voice Typing to use speech recognition!</string>
 </resources>
