@@ -36,11 +36,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 @SuppressWarnings("UnKnownNullness")
-public class HistoryRepository
-{
+public class HistoryRepository {
     BotContentFragmentUpdate botContentFragmentUpdate;
     Context context;
     Gson gson = new Gson();
+
     public HistoryRepository(Context context, BotContentFragmentUpdate botContentFragmentUpdate) {
         this.botContentFragmentUpdate = botContentFragmentUpdate;
         this.context = context;
@@ -56,17 +56,17 @@ public class HistoryRepository
                     Call<BotHistory> _resp = RestBuilder.getRestAPI().getBotHistory("bearer " + jwt, SDKConfiguration.Client.bot_id, limit, _offset, true);
                     Response<BotHistory> rBody = _resp.execute();
                     BotHistory history = rBody.body();
-
                     if (rBody.isSuccessful() && history != null) {
                         List<BotHistoryMessage> messages = history.getMessages();
                         ArrayList<BaseBotMessage> msgs;
-                        if (messages != null && messages.size() > 0) {
+                        if (messages != null && !messages.isEmpty()) {
                             msgs = new ArrayList<>();
                             for (int index = 0; index < messages.size(); index++) {
                                 BotHistoryMessage msg = messages.get(index);
                                 if (msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
                                     List<Component> components = msg.getComponents();
                                     String data = components.get(0).getData().getText();
+                                    if (data != null && data.isEmpty()) continue;
                                     try {
                                         PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
                                         BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
