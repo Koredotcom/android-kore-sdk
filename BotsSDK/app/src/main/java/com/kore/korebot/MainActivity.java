@@ -50,31 +50,31 @@ public class MainActivity extends AppCompatActivity {
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
         //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
-        String jwtToken = getConfigValue("jwtToken");
+        String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = getConfigValue("clientId");
+        String clientId = "PLEASE_ENTER_BOT_CLIENT_ID";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = getConfigValue("clientSecret");
+        String clientSecret = "PLEASE_ENTER_BOT_CLIENT_SECRET";
 
         //Set botId, This value is mandatory
-        String botId = getConfigValue("botId");
+        String botId = "PLEASE_ENTER_BOT_ID";
 
         //Set identity, This value is mandatory
-        String identity = getConfigValue("identity");
+        String identity = "PLEASE_ENTER_IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = getConfigValue("botName");
+        String botName = "PLEASE_ENTER_BOT_NAME";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = getConfigValue("serverUrl");
+        String serverUrl = "PLEASE_ENTER_SERVER_URL";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = getConfigValue("brandingUrl");
+        String brandingUrl = "PLEASE_ENTER_BRANDING_SERVER_URL";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = getConfigValue("jwtServerUrl");
+        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -98,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
         //Flag to show bot header or hide the header
         SDKConfig.setIsShowHeader(true);
 
-        SDKConfiguration.OverrideKoreConfig.showAttachment = false;
-        SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = false;
-        SDKConfiguration.OverrideKoreConfig.showTextToSpeech = false;
+        SDKConfiguration.OverrideKoreConfig.showAttachment = true;
+        SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
+        SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {
@@ -163,21 +163,6 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissionLauncher.launch(POST_NOTIFICATIONS);
             }
         }
-    }
-
-    public String getConfigValue(String name) {
-        try {
-            InputStream rawResource = getResources().openRawResource(R.raw.config);
-            Properties properties = new Properties();
-            properties.load(rawResource);
-            return properties.getProperty(name);
-        } catch (Resources.NotFoundException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
-        }
-
-        return null;
     }
 
 }
