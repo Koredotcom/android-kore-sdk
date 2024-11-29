@@ -47,9 +47,6 @@ public class MainActivity extends AppCompatActivity {
 //        SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
 
 //        Can set your customized Content view in the chat window by using this method. By extending BaseContentFragment. Can find examples under fragments package
-        SDKConfig.setQueryParams(getQueryParams());
-        SDKConfig.setCustomData(getCustomData());
-//        SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
 //        SDKConfig.addCustomContentFragment(new CustomContentFragment());
 
 //        Can set your customized Footer view in the chat window by using this method. By extending BaseFooterFragment. Can find examples under fragments package
@@ -94,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         //You can set query parameters to the socket url by using this method. Can get sample format from the mentioned method
         SDKConfig.setQueryParams(getQueryParams());
+
         SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
 
         //Inject the custom template like below
