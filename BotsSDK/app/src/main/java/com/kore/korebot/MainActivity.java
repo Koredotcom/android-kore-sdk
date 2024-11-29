@@ -19,9 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
-import com.kore.korebot.fragment.CustomContentFragment;
-import com.kore.korebot.fragment.CustomFooterFragment;
-import com.kore.korebot.fragment.CustomHeaderFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +32,7 @@ import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.LangUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Can set Language for Bot SDK
+        LangUtils.setAppLanguages(this, LangUtils.LANG_EN);
 
 //        Can set your customized Header view in the chat window by using this method. By extending BaseHeaderFragment. Can find examples under fragments package
 //        SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
