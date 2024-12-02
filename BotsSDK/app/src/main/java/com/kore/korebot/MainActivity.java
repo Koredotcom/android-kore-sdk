@@ -19,9 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
-import com.kore.korebot.fragment.CustomContentFragment;
-import com.kore.korebot.fragment.CustomFooterFragment;
-import com.kore.korebot.fragment.CustomHeaderFragment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,6 +32,7 @@ import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.LangUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,14 +40,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //Can set Language for Bot SDK
+        LangUtils.setAppLanguages(this, LangUtils.LANG_EN);
 
-        SDKConfig.setQueryParams(getQueryParams());
-        SDKConfig.setCustomData(getCustomData());
+//        Can set your customized Header view in the chat window by using this method. By extending BaseHeaderFragment. Can find examples under fragments package
 //        SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
+
+//        Can set your customized Content view in the chat window by using this method. By extending BaseContentFragment. Can find examples under fragments package
 //        SDKConfig.addCustomContentFragment(new CustomContentFragment());
+
+//        Can set your customized Footer view in the chat window by using this method. By extending BaseFooterFragment. Can find examples under fragments package
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
-        //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
+        //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection. Can find examples under fragments package
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
@@ -81,6 +84,14 @@ public class MainActivity extends AppCompatActivity {
 
         //Initialize the bot with bot config
         //You can pass client id and client secret as empty when you pass jwt token
+        SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
+
+        //You can pass the custom data to the bot by using this method. Can get sample format from the mentioned method
+        SDKConfig.setCustomData(getCustomData());
+
+        //You can set query parameters to the socket url by using this method. Can get sample format from the mentioned method
+        SDKConfig.setQueryParams(getQueryParams());
+
         SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
 
         //Inject the custom template like below

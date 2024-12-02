@@ -47,6 +47,10 @@ public interface SocketConnectionListener {
 
     void refreshJwtToken();
 
+    /**
+     * Fired when a sdk reached maximum attempts to connect to Bot.
+     * @param reconnectionStopped with reason.
+     */
     void onReconnectStopped(String reconnectionStopped);
 
 }
