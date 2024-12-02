@@ -92,8 +92,6 @@ public class MainActivity extends AppCompatActivity {
         //You can set query parameters to the socket url by using this method. Can get sample format from the mentioned method
         SDKConfig.setQueryParams(getQueryParams());
 
-        SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
-
         //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
 
