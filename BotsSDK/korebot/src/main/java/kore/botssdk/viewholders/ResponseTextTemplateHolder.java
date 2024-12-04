@@ -36,12 +36,13 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
         } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
             message = payOuter.getPayload().getText();
             isError = true;
-        } else if (payOuter.getType().equals(BotResponse.COMPONENT_TYPE_TEXT)) {
+        } else if (payOuter.getType() != null && payOuter.getType().equals(BotResponse.COMPONENT_TYPE_TEXT)) {
             message = payOuter.getText();
         }
         PayloadInner payInner;
-        if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-            message = payOuter.getText().replace("&quot;", "\"");
+        if (payOuter.getText() != null) {
+            if (payOuter.getText().contains("&quot")) message = payOuter.getText().replace("&quot;", "\"");
+            else message = payOuter.getText();
         }
         payInner = payOuter.getPayload();
         if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
@@ -51,8 +52,8 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
                 message = payInner.getText_message();
         } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type()))
             message = payInner.getTemplate_type();
-        else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText())) {
-            message = "";
+        else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText()) && payOuter.getType() != null) {
+            message = payOuter.getType();
         }
         if (!isError) {
             setResponseText((LinearLayoutCompat) itemView, message);

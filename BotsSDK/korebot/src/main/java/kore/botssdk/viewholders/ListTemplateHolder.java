@@ -49,7 +49,7 @@ public class ListTemplateHolder extends BaseViewHolder {
         recyclerView.setAdapter(botListTemplateAdapter);
         botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        if (buttons != null && buttons.size() > 0) {
+        if (buttons != null && !buttons.isEmpty()) {
             botCustomListViewButton.setText(buttons.get(0).getTitle());
             botCustomListViewButton.setOnClickListener(v -> {
                 BotButtonModel botButtonModel = buttons.get(0);
