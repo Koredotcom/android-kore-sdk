@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import static android.view.View.GONE;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -33,6 +34,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.BotListDefaultModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
@@ -89,6 +91,13 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             botCarouselItemButtonAdapter.populateData(botCarouselModel.getButtons(), isEnabled);
         }
 
+        if(botCarouselModel.getDefault_action() != null) {
+            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
+                holder.carouselAction.setVisibility(View.VISIBLE);
+                holder.carouselAction.setText(botCarouselModel.getDefault_action().getUrl());
+                holder.carouselAction.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+            }
+        }
         String price = Utils.isNullOrEmpty(botCarouselModel.getPrice()) ? "" : botCarouselModel.getPrice();
         String cost_price = Utils.isNullOrEmpty(botCarouselModel.getCost_price()) ? "" : botCarouselModel.getCost_price();
 
@@ -143,7 +152,6 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             }
         });
 
-        holder.koraItems.setVisibility(View.GONE);
     }
 
     private BotCarouselModel getItem(int position) {
@@ -173,11 +181,8 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ImageView carouselItemImage;
         public TextView carouselItemTitle;
+        public TextView carouselAction;
         public TextView carouselItemSubTitle;
-        public TextView hashTagsView;
-        public TextView knowledgeType;
-        public TextView knowledgeMode;
-        public RelativeLayout koraItems;
         public RecyclerView buttons;
         public CardView carouselItemRoot;
         public FrameLayout carouselOfferPrice_FL;
@@ -191,11 +196,8 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             carouselItemImage = itemView.findViewById(R.id.carousel_item_image);
             carouselItemTitle = itemView.findViewById(R.id.carousel_item_title);
             carouselItemSubTitle = itemView.findViewById(R.id.carousel_item_subtitle);
+            carouselAction = itemView.findViewById(R.id.carouselAction);
             buttons = itemView.findViewById(R.id.carousel_button_listview);
-            hashTagsView = itemView.findViewById(R.id.hash_tags_view);
-            knowledgeType = itemView.findViewById(R.id.knowledge_type);
-            knowledgeMode = itemView.findViewById(R.id.knowledge_mode);
-            koraItems = itemView.findViewById(R.id.kora_items);
             carouselOfferPrice_FL = itemView.findViewById(R.id.offer_price_fl);
             carouselSavedPrice_FL = itemView.findViewById(R.id.saved_price_fl);
             carousel_item_offer = itemView.findViewById(R.id.carousel_item_offer);

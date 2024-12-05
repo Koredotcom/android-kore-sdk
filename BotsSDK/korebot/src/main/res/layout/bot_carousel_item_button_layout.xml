@@ -9,17 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:background="@color/colorPrimary"
-        android:textColor="@color/white"
-        android:clickable="false"
-        android:focusable="false"
-        android:tag="medium"
-        android:focusableInTouchMode="false"
         android:maxLines="1"
-        android:ellipsize="end"
-        android:textSize="15sp"
-        android:text="Button"/>
-
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
 
 
 </RelativeLayout>

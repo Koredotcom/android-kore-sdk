@@ -1,6 +1,8 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaFontUtils;
 
@@ -43,6 +46,9 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
         if (carouselButtonModel == null) return;
         KaFontUtils.applyCustomFont(holder.button.getContext(), holder.itemView);
         holder.button.setText(carouselButtonModel.getTitle());
+        holder.button.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+        holder.button.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
+
         holder.button.setOnClickListener(view -> {
             if (invokeGenericWebViewInterface != null) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(carouselButtonModel.getType())) {
