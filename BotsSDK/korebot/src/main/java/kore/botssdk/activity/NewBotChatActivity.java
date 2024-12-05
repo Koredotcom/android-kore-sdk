@@ -135,17 +135,17 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private ProgressBar taskProgressBar;
     private String jwt;
     private Handler actionBarTitleUpdateHandler;
-    private BotClient botClient;
+    BotClient botClient;
     private BaseContentFragment botContentFragment;
     private BaseFooterFragment composeFooterFragment;
     private TTSSynthesizer ttsSynthesizer;
     private final Gson gson = new Gson();
     private RelativeLayout rlChatWindow;
-    private SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences;
     private final Handler messageHandler = new Handler();
     private String fileUrl;
     private Dialog progressBar, welcomeDialog;
-    private boolean isAgentTransfer = false;
+    boolean isAgentTransfer = false;
     private Dialog alertDialog;
     private BotChatViewModel viewModel;
 
@@ -460,6 +460,17 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onBrandingDetails(BotBrandingModel botOptionsModel, boolean isWelcomeVisible) {
         if (botOptionsModel != null) {
             viewModel.onBrandingDetails(botOptionsModel);
+
+            if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) {
+                botOptionsModel.getHeader().setBg_color(botOptionsModel.getGeneral().getColors().getSecondary());
+                botOptionsModel.getFooter().setBg_color(botOptionsModel.getGeneral().getColors().getSecondary());
+                botOptionsModel.getFooter().getCompose_bar().setOutline_color(botOptionsModel.getGeneral().getColors().getPrimary());
+                botOptionsModel.getFooter().getCompose_bar().setInline_color(botOptionsModel.getGeneral().getColors().getSecondary_text());
+                botOptionsModel.getHeader().getTitle().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
+                botOptionsModel.getHeader().setAvatar_bg_color(botOptionsModel.getGeneral().getColors().getPrimary());
+                botOptionsModel.getHeader().getSub_title().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
+            }
+
             if (botOptionsModel.getWelcome_screen() != null && isWelcomeVisible) {
                 if (botOptionsModel.getWelcome_screen().isShow()) showWelcomeDialog(botOptionsModel);
             }

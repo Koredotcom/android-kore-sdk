@@ -28,6 +28,7 @@ import kore.botssdk.models.BrandingQuickStartButtonActionModel;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.StringUtils;
 
 public class ChatHeaderTwoFragment extends BaseHeaderFragment {
     private BrandingHeaderModel brandingModel;
@@ -66,7 +67,8 @@ public class ChatHeaderTwoFragment extends BaseHeaderFragment {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) (40 * dp1), (int) (40 * dp1));
                     ivBotAvatar.setLayoutParams(layoutParams);
                 } else {
-                    llBotAvatar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(brandingModel.getBg_color())));
+                    if (!StringUtils.isNullOrEmpty(brandingModel.getAvatar_bg_color()))
+                        llBotAvatar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(brandingModel.getAvatar_bg_color())));
 
                     switch (brandingModel.getIcon().getIcon_url()) {
                         case BotResponse.ICON_1:

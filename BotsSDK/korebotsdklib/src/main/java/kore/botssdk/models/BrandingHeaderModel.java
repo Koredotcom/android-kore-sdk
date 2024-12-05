@@ -7,10 +7,19 @@ public class BrandingHeaderModel implements Serializable {
     private String size;
     private String style;
     private String icons_color;
+    private String avatar_bg_color;
     private BrandingIconModel icon;
     private BrandingTitleModel title;
     private BrandingTitleModel sub_title;
     private BrandingHeaderButtonsModel buttons;
+
+    public void setAvatar_bg_color(String avatar_bg_color) {
+        this.avatar_bg_color = avatar_bg_color;
+    }
+
+    public String getAvatar_bg_color() {
+        return avatar_bg_color;
+    }
 
     public void setIcon(BrandingIconModel icon) {
         this.icon = icon;
