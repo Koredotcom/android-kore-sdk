@@ -1,5 +1,7 @@
 package kore.botssdk.viewholders;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -13,6 +15,7 @@ import java.util.Map;
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 
 public class ClockTemplateHolder extends BaseViewHolder {
@@ -66,6 +69,16 @@ public class ClockTemplateHolder extends BaseViewHolder {
             seekbarHours.setProgress(progress);
             seekbarMinutes.setProgress(Integer.parseInt(currentTime[1]));
         }
+
+        seekbarHours.setThumbTintList(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor)));
+        seekbarMinutes.setThumbTintList(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor)));
+
+        seekbarHours.setProgressTintList(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
+        seekbarMinutes.setProgressTintList(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
+
+        confirm.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+        confirm.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
+
         confirm.setOnClickListener(view -> {
             String msg = hoursText.getText() + ":" + minutesText.getText() + " " + amPm.getText();
             composeFooterInterface.onSendClick(msg, msg, false);

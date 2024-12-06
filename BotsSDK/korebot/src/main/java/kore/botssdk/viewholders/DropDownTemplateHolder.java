@@ -1,6 +1,11 @@
 package kore.botssdk.viewholders;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
@@ -20,6 +26,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.DropDownElementsModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 
 public class DropDownTemplateHolder extends BaseViewHolder {
     private final TextView tvDropDownTitle;
@@ -28,6 +35,7 @@ public class DropDownTemplateHolder extends BaseViewHolder {
     private String placeHolder;
     private String msgId;
     private int selectedIndex;
+    LinearLayoutCompat llSpinner;
 
     public static DropDownTemplateHolder getInstance(ViewGroup parent) {
         return new DropDownTemplateHolder(createView(R.layout.template_dropdown, parent));
@@ -38,6 +46,7 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         tvDropDownTitle = itemView.findViewById(R.id.tvDropDownTitle);
         tvSubmit = itemView.findViewById(R.id.submit);
         spinner = itemView.findViewById(R.id.spinner);
+        llSpinner = itemView.findViewById(R.id.llSpinner);
     }
 
     @Override
@@ -56,6 +65,14 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
         selectedIndex = contentState != null && contentState.containsKey(BotResponse.SELECTED_ITEM) ? (int) contentState.get(BotResponse.SELECTED_ITEM) : -1;
         spinner.setSelection(selectedIndex);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) llSpinner.getBackground();
+        gradientDrawable.setStroke((int) (1*dp1), ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor)));
+        gradientDrawable.setColor(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor)));
+
+        tvSubmit.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+        tvSubmit.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
+
         tvSubmit.setOnClickListener(view -> {
             if (!isLastItem()) return;
             if (selectedIndex != -1 && !elements.get(selectedIndex).getTitle().equals(placeHolder)) {

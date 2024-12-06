@@ -10,11 +10,49 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <RelativeLayout
+        android:id="@+id/root_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/check_select_all"
+            android:layout_width="@dimen/dimen_30dp"
+            android:layout_height="30dp"
+            android:layout_centerVertical="true"
+            android:button="@drawable/multi_checkbox_drawable"
+            android:buttonTintMode="multiply"
+            android:gravity="center"
+            android:padding="10dp" />
+
+        <kore.botssdk.view.CustomTextView
+            android:id="@+id/text_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_12dp"
+            android:layout_marginEnd="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_12dp"
+            android:layout_toEndOf="@+id/check_select_all"
+            android:ellipsize="end"
+            android:gravity="center_vertical|start"
+            android:maxLines="1"
+            android:minWidth="300dp"
+            android:minHeight="30dp"
+            android:text="@string/select_all"
+            android:textColor="@color/kora_grey"
+            android:textSize="@dimen/text_size_normal" />
+
+    </RelativeLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/multi_select_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:nestedScrollingEnabled="false"
-        android:background="@drawable/round_rect"
         android:visibility="visible" />
 </androidx.appcompat.widget.LinearLayoutCompat>

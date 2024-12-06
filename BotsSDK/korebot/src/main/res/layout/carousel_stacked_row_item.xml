@@ -9,6 +9,7 @@
     card_view:cardUseCompatPadding="true">
 
     <FrameLayout
+        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rectangle_4dpradius" />
@@ -72,6 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/dimen_10dp"
             android:divider="@color/white"
             android:dividerHeight="1dp"
             android:nestedScrollingEnabled="false"

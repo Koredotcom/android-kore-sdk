@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.LogUtils;
 
 public class ListViewTemplateHolder extends BaseViewHolder {
@@ -58,7 +60,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(10));
         if (listElements != null && listElements.size() > 0) {
             int size = moreCount != 0 && listElements.size() > moreCount ? moreCount : listElements.size();
-            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(context, listElements, isLastItem(), size);
+            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(listElements, isLastItem(), size);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             recyclerView.setAdapter(botListTemplateAdapter);
@@ -66,7 +68,8 @@ public class ListViewTemplateHolder extends BaseViewHolder {
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
 
             if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
-                botCustomListViewButton.setText(Html.fromHtml("<u>" + botButtonModelArrayList.get(0).getTitle() + "</u>"));
+                botCustomListViewButton.setText(botButtonModelArrayList.get(0).getTitle());
+                botCustomListViewButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
                 botCustomListViewButton.setOnClickListener(v -> {
                     ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
                     bottomSheetDialog.setisFromFullView(false);

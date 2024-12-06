@@ -208,4 +208,5 @@
     <color name="kora_grey">#202124</color>
     <color name="gray_modern">#4B5565</color>
     <color name="neutral">#404040</color>
+    <color name="default_button_color">#eaf1fc</color>
 </resources>

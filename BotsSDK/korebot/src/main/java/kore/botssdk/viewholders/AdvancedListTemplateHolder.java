@@ -54,7 +54,7 @@ public class AdvancedListTemplateHolder extends BaseViewHolder {
             botCustomListViewButton.setText(payloadInner.getSeeMoreTitle());
             botCustomListViewButton.setTextColor(itemView.getContext().getColor(R.color.bgBlueSignup));
         } else {
-            botCustomListViewButton.setVisibility(VISIBLE);
+            botCustomListViewButton.setVisibility(GONE);
         }
 
         botCustomListViewButton.setOnClickListener(v -> {

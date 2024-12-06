@@ -3,13 +3,18 @@ package kore.botssdk.adapter;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.GravityInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +25,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 
@@ -109,6 +115,10 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
                 multiSelectListener.itemSelected(item);
             }
         });
+
+        GradientDrawable gradientDrawable = (GradientDrawable) holder.root_layout.getBackground();
+        gradientDrawable.setStroke((int) (1*dp1), ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
+
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);
@@ -128,10 +138,12 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
         CheckBox checkBox;
         TextView textView;
         ImageView ivAdvMultiSelect;
+        RelativeLayout root_layout;
 
         public ViewHolder(@NonNull View convertView, int viewType) {
             super(convertView);
             if (viewType == MULTI_SELECT_ITEM) {
+                root_layout = convertView.findViewById(R.id.root_layout);
                 textView = convertView.findViewById(R.id.text_view);
                 checkBox = convertView.findViewById(R.id.check_multi_item);
                 ivAdvMultiSelect = convertView.findViewById(R.id.ivAdvMultiSelect);

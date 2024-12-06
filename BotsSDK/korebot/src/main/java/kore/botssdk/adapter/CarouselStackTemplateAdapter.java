@@ -1,12 +1,19 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.ScaleDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +23,7 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselStackModel;
+import kore.botssdk.net.SDKConfiguration;
 
 public class CarouselStackTemplateAdapter extends RecyclerView.Adapter<CarouselStackTemplateAdapter.ViewHolder> {
     private final ArrayList<BotCarouselStackModel> botCarouselModels;
@@ -40,10 +48,15 @@ public class CarouselStackTemplateAdapter extends RecyclerView.Adapter<CarouselS
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotCarouselStackModel botCarouselModel = getItem(position);
         if (botCarouselModel == null) return;
+
+        GradientDrawable leftDrawable = (GradientDrawable) holder.cardView.getBackground();
+        leftDrawable.setStroke((int)(1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+
         holder.carouselItemTitle.setText(botCarouselModel.getTopSection().title);
         holder.carouselItemSubtitle.setText(botCarouselModel.getMiddleSection().description);
         holder.carouselBottomTitle.setText(botCarouselModel.getBottomSection().title);
         holder.carouselBottomValue.setText(botCarouselModel.getBottomSection().description);
+
         if (botCarouselModel.getButtons() != null) {
             CarouselItemButtonAdapter botCarouselItemButtonAdapter = new CarouselItemButtonAdapter(holder.itemView.getContext());
             holder.buttons.setLayoutManager(new LinearLayoutManager(holder.itemView.getContext()));
@@ -77,6 +90,7 @@ public class CarouselStackTemplateAdapter extends RecyclerView.Adapter<CarouselS
         TextView carouselItemSubtitle;
         TextView carouselBottomTitle;
         TextView carouselBottomValue;
+        FrameLayout cardView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -85,6 +99,7 @@ public class CarouselStackTemplateAdapter extends RecyclerView.Adapter<CarouselS
             carouselItemSubtitle = itemView.findViewById(R.id.carousel_item_subtitle);
             carouselBottomTitle = itemView.findViewById(R.id.carousel_bottom_title);
             carouselBottomValue = itemView.findViewById(R.id.carousel_bottom_value);
+            cardView = itemView.findViewById(R.id.cardView);
         }
     }
 }

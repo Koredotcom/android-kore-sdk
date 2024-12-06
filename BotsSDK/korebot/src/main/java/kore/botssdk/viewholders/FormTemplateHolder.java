@@ -9,6 +9,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -25,10 +26,11 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 
 public class FormTemplateHolder extends BaseViewHolder {
-    private final RecyclerView recyclerView;
-    private final TextView tvFormTemplateTitle;
-    private final TextView btFieldButton;
-    private final String leftTextColor;
+    final RecyclerView recyclerView;
+    final TextView tvFormTemplateTitle;
+    final TextView btFieldButton;
+    final String leftTextColor;
+    LinearLayout llFormRoot;
 
     public static FormTemplateHolder getInstance(ViewGroup parent) {
         return new FormTemplateHolder(createView(R.layout.template_form, parent));
@@ -43,10 +45,16 @@ public class FormTemplateHolder extends BaseViewHolder {
         KaFontUtils.applyCustomFont(itemView.getContext(), itemView);
         tvFormTemplateTitle = itemView.findViewById(R.id.tvform_template_title);
         btFieldButton = itemView.findViewById(R.id.btfieldButton);
+        llFormRoot = itemView.findViewById(R.id.llFormRoot);
 
         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");
+        String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#EBEBEB");
+        String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#EBEBEB");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
+
+        btFieldButton.setBackgroundColor(Color.parseColor(rightBgColor));
+        btFieldButton.setTextColor(Color.parseColor(rightTextColor));
 
         GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(
                 itemView.getContext().getResources(),
@@ -56,7 +64,7 @@ public class FormTemplateHolder extends BaseViewHolder {
         if (leftDrawable != null) {
             leftDrawable.setColor(Color.parseColor(leftBgColor));
             leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
-            itemView.setBackground(leftDrawable);
+            llFormRoot.setBackground(leftDrawable);
         }
     }
 
@@ -71,7 +79,6 @@ public class FormTemplateHolder extends BaseViewHolder {
 
         if (!StringUtils.isNullOrEmpty(leftTextColor)) {
             tvFormTemplateTitle.setTextColor(Color.parseColor(leftTextColor));
-            btFieldButton.setTextColor(Color.parseColor(leftTextColor));
         }
 
         if (payloadInner.getFieldButton() != null)

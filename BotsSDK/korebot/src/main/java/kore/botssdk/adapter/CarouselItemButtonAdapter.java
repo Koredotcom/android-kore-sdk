@@ -1,13 +1,17 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -46,8 +50,12 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
         if (carouselButtonModel == null) return;
         KaFontUtils.applyCustomFont(holder.button.getContext(), holder.itemView);
         holder.button.setText(carouselButtonModel.getTitle());
-        holder.button.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+
         holder.button.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
+
+        GradientDrawable leftDrawable = (GradientDrawable) holder.button.getBackground();
+        leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+        leftDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
         holder.button.setOnClickListener(view -> {
             if (invokeGenericWebViewInterface != null) {
@@ -101,7 +109,7 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public Button button;
+        public TextView button;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

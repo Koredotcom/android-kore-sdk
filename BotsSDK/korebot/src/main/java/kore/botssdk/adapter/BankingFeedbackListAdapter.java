@@ -20,9 +20,9 @@ public class BankingFeedbackListAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<FeedbackListModel> feedbackListModels;
-    private final ArrayList<FeedbackListModel> checkedItems = new ArrayList<>();
-    private final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
-    private final boolean isEnabled;
+    final ArrayList<FeedbackListModel> checkedItems = new ArrayList<>();
+    final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
+    final boolean isEnabled;
 
     public BankingFeedbackListAdapter(Context context, ArrayList<FeedbackListModel> feedbackListModels, FeedbackExperienceUpdateListner feedbackExperienceUpdateListner, boolean isEnabled)
     {
@@ -60,7 +60,6 @@ public class BankingFeedbackListAdapter extends BaseAdapter
             holder = new ExperienceItemViewHolder();
             holder.text_view = convertView.findViewById(R.id.text_view);
             holder.check_multi_item = convertView.findViewById(R.id.check_multi_item);
-            holder.vDivider = convertView.findViewById(R.id.vDivider);
             convertView.setTag(holder);
         }
         else

@@ -3,6 +3,7 @@ package kore.botssdk.viewholders;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import kore.botssdk.models.AdvancedMultiSelectModel;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 
 @SuppressWarnings("UnKnownNullness")
 public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements AdvanceMultiSelectListener {
@@ -53,6 +55,9 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
         TextView tvViewMore = itemView.findViewById(R.id.tvViewMore);
         TextView tvAdvanceDone = itemView.findViewById(R.id.tvAdvanceDone);
         ArrayList<AdvancedMultiSelectModel> models = payloadInner.getAdvancedMultiSelectModels();
+        tvAdvanceDone.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+        tvViewMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+        tvAdvanceDone.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
 
         if (models != null && !models.isEmpty()) {
             multiSelectLayout.setVisibility(VISIBLE);

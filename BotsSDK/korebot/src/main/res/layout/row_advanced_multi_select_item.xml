@@ -37,6 +37,7 @@
             android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:button="@drawable/multi_checkbox_drawable"
+            android:buttonTintMode="multiply"
             android:gravity="center"
             android:padding="10dp" />
 
@@ -56,6 +57,7 @@
             android:text="@string/select_all"
             android:textColor="@color/kora_grey"
             android:textSize="@dimen/text_size_normal" />
+
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -64,8 +66,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginEnd="@dimen/dimen_10dp"
-        android:divider="@color/white"
-        android:dividerHeight="@dimen/dimen_10dp"
         android:visibility="visible" />
 
     <RelativeLayout

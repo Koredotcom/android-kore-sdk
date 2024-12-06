@@ -77,6 +77,7 @@ import kore.botssdk.adapter.PromotionsAdapter;
 import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
 import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
+import kore.botssdk.application.AppControl;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
@@ -124,6 +125,7 @@ import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.HeightAdjustableViewPager;
+import kore.botssdk.view.viewUtils.DimensionUtil;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 import kore.botssdk.viewmodels.chat.BotChatViewModel;
 import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
@@ -169,6 +171,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bot_chat_layout);
         botClient = new BotClient(this);
+
+        new DimensionUtil(NewBotChatActivity.this);
 
         BotChatViewModelFactory factory = new BotChatViewModelFactory(NewBotChatActivity.this, botClient, NewBotChatActivity.this);
         viewModel = new ViewModelProvider(this, factory).get(BotChatViewModel.class);

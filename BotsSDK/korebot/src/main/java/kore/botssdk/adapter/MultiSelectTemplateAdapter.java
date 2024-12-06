@@ -1,5 +1,10 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +27,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotMultiSelectElementModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MultiSelectBase;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 
 public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelectTemplateAdapter.ViewHolder> {
@@ -49,9 +55,13 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
         MultiSelectBase item = getItem(position);
         if (item == null) return;
         if (item instanceof BotMultiSelectElementModel) {
+            GradientDrawable gradientDrawable = (GradientDrawable) holder.root_layout.getBackground();
+            gradientDrawable.setStroke((int) (1*dp1), ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
+            
             holder.textView.setTag(item);
             holder.textView.setText(((BotMultiSelectElementModel) item).getTitle());
             holder.checkBox.setChecked(checkedItems.contains(item));
@@ -65,13 +75,15 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
                         }
                         if (listener != null) listener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
                     } else {
-                        ((CompoundButton) v).setChecked(!isChecked);
+                        v.setChecked(!isChecked);
                     }
                 }
             });
         } else {
             holder.textView.setTag(item);
             holder.textView.setText(((BotButtonModel) item).getTitle());
+            holder.textView.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
+            holder.textView.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
             holder.textView.setOnClickListener(v -> {
                 if (composeFooterInterface != null && isEnabled && checkedItems.size() > 0) {
                     StringBuilder sb = new StringBuilder();

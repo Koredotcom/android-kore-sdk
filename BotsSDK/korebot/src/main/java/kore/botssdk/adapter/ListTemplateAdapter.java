@@ -1,10 +1,14 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -21,6 +25,7 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
@@ -52,6 +57,9 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
             Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
         }
 
+        GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.getBackground();
+        gradientDrawable.setStroke((int) (1*dp1), ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
+
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
@@ -79,6 +87,15 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
                 }
             });
         }
+
+        if (botListModel.getDefault_action() != null) {
+            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
+                holder.botListAction.setVisibility(View.VISIBLE);
+                holder.botListAction.setText(botListModel.getDefault_action().getUrl());
+                holder.botListAction.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+            }
+        }
+
         holder.botListItemRoot.setOnClickListener(v -> {
             if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                 BotListModel _botListModel = getItem(position);
@@ -108,6 +125,7 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
         TextView botListItemTitle;
         TextView botListItemSubtitle;
         TextView botListItemButton;
+        TextView botListAction;
 
         public ViewHolder(@NonNull View view) {
             super(view);
@@ -116,6 +134,7 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
             botListItemTitle = view.findViewById(R.id.bot_list_item_title);
             botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
             botListItemButton = view.findViewById(R.id.bot_list_item_button);
+            botListAction = view.findViewById(R.id.bot_list_action);
         }
     }
 

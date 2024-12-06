@@ -205,10 +205,17 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 holder.ivDescription.setVisibility(GONE);
             }
 
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.ivDescription.getLayoutParams();
+            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) holder.botListItemTitle.getLayoutParams();
+            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) holder.botListItemSubtitle.getLayoutParams();
+
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
+            params.addRule(RelativeLayout.ALIGN_PARENT_START);
+            params1.addRule(RelativeLayout.END_OF, R.id.ivDescription);
+            params2.addRule(RelativeLayout.END_OF, R.id.ivDescription);
+            params2.addRule(RelativeLayout.BELOW, R.id.bot_list_item_title);
+
             if (!StringUtils.isNullOrEmpty(botListModel.getDescriptionIconAlignment())) {
-                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.ivDescription.getLayoutParams();
-                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) holder.botListItemTitle.getLayoutParams();
-                RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) holder.botListItemSubtitle.getLayoutParams();
 
                 if (botListModel.getDescriptionIconAlignment().equalsIgnoreCase("right")) {
                     params.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -222,11 +229,11 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     params2.addRule(RelativeLayout.RIGHT_OF, R.id.ivDescription);
                     params2.addRule(RelativeLayout.BELOW, R.id.bot_list_item_title);
                 }
-
-                holder.botListItemSubtitle.setLayoutParams(params2);
-                holder.ivDescription.setLayoutParams(params);
-                holder.botListItemTitle.setLayoutParams(params1);
             }
+
+            holder.botListItemSubtitle.setLayoutParams(params2);
+            holder.ivDescription.setLayoutParams(params);
+            holder.botListItemTitle.setLayoutParams(params1);
         }
 
         LayerDrawable layerDrawable = (LayerDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.advanced_cell_bg, context.getTheme());

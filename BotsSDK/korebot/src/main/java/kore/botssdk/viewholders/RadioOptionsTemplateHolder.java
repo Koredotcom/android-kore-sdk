@@ -1,5 +1,6 @@
 package kore.botssdk.viewholders;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.RadioOptionModel;
+import kore.botssdk.net.SDKConfiguration;
 
 public class RadioOptionsTemplateHolder extends BaseViewHolder {
     private final TextView title;
@@ -43,6 +45,10 @@ public class RadioOptionsTemplateHolder extends BaseViewHolder {
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
         int selectedItem = contentState != null ? (Integer) contentState.get(BotResponse.SELECTED_ITEM) : -1;
         RadioOptionsItemAdapter adapter = new RadioOptionsItemAdapter(msgId, radioOptions, isLastItem(), selectedItem, contentStateListener);
+
+        confirm.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
+        confirm.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+
         confirm.setOnClickListener(view -> {
             Map<String, Object> changedState = ((BotResponse) baseBotMessage).getContentState();
             if (isLastItem() && composeFooterInterface != null && changedState != null) {
