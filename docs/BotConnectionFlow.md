@@ -1,197 +1,191 @@
-Bot Connection Flow Documentation
+# Bot Connection Flow
 
-# Overview
+## Overview
+The `connectToBot` method in `BotChatViewModel` is a crucial component that manages the initialization and establishment of bot connections. This method serves as the primary entry point for starting bot communication sessions.
 
-The connectToBot flow in BotChatViewModel manages the WebSocket connection between the client and the Kore.ai bot server. This flow handles both initial connections and reconnection scenarios.
+## Method Signature
+```java
+public void connectToBot(boolean isReconnect)
+```
 
-# Connection Flow Diagram
+## Parameters
+- `isReconnect` (boolean): Indicates whether this is a reconnection attempt
+  - `true`: Connection is being reestablished after a disconnection
+  - `false`: Initial connection attempt
 
-\[User\] -> \[BotChatViewModel\] -> \[BotSocketConnectionManager\] -> \[WebSocket Server\]
+## Implementation Details
 
-↑ ↓ ↓
-
-└──────\[BotChatView\]←──────\[SocketChatListener\]
-
-Main Components
-
-1.  BotChatViewModel
-
-public void connectToBot(boolean isReconnect) { if (!SDKConfiguration.Client.isWebHook) {
-
-BotSocketConnectionManager.getInstance().setChatListener(sListener);
-
+### 1. WebHook Check
+```java
+if (!SDKConfiguration.Client.isWebHook) {
+    BotSocketConnectionManager.getInstance().setChatListener(sListener);
 }
+```
+- Verifies if the connection is not using WebHook mode
+- Sets up the socket chat listener for real-time communication
+- WebHook mode bypasses socket listener setup
 
-BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect( context,
-
-SDKConfiguration.Server.customData, isReconnect
-
+### 2. Connection Initialization
+```java
+BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(
+    context, 
+    SDKConfiguration.Server.customData, 
+    isReconnect
 );
+```
+- Initiates the bot connection process
+- Passes application context for system operations
+- Includes custom server data for connection configuration
+- Handles reconnection state management
 
+### 3. Socket Listener Implementation
+The method utilizes a `SocketChatListener` (`sListener`) with the following callbacks:
+
+#### Message Handling
+```java
+@Override
+public void onMessage(BotResponse botResponse) {
+    processPayload("", botResponse);
 }
+```
+- Processes incoming bot responses
+- Handles message payload processing
 
-Parameters
-
-isReconnect: Boolean flag indicating if this is a reconnection attempt
-
-1.  Socket Listener Implementation
-
-final SocketChatListener sListener = new SocketChatListener() { @Override
-
-public void onMessage(BotResponse botResponse) @Override
-
-public void onConnectionStateChanged(CONNECTION\_STATE state, boolean isReconnection) @Override
-
-public void onMessage(SocketDataTransferModel data)
-
+#### Connection State Management
+```java
+@Override
+public void onConnectionStateChanged(CONNECTION_STATE state, boolean isReconnection) {
+    // Handles different connection states
+    if (state == CONNECTION_STATE.CONNECTED) {
+        // Connection successful
+        chatView.onConnectionStateChanged(state, isReconnection);
+        // Fetch branding details
+        getBrandingDetails(...);
+    } else if (state == CONNECTION_STATE.RECONNECTION_STOPPED) {
+        // Handle reconnection failure
+        chatView.showReconnectionStopped();
+    }
+    // Register for push notifications
+    // Update UI elements
 }
+```
 
-# Connection States and Events
-
-*   1.  Connection States
-
-CONNECTED: Successfully connected to the bot
-
-RECONNECTION\_STOPPED: Reconnection attempts have been exhausted
-
-Other states managed by BaseSocketConnectionManager.CONNECTION\_STATE
-
-*   1.  Event Types
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAf0lEQVQYlX2PsQlDMQxExQ8HqewRskBwplAhDZkt/m/+EhZ4Ak2QlHajVIZgSA6uOh7co4ggMyuqugMYAIaq7mZWIoLIzEpK6U1E8d2c88vMysXdn621Oy3pvV/d/UYAxkrPAhjbSq7ZmPn8NTLzSbXWx7+TNDVF5JiaInJMzQ+ohE6avqQn4AAAAABJRU5ErkJggg==) TYPE\_TEXT\_MESSAGE: Regular text messages
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAf0lEQVQYlX2PsQlDMQxExQ8HqewRskBwplAhDZkt/m/+EhZ4Ak2QlHajVIZgSA6uOh7co4ggMyuqugMYAIaq7mZWIoLIzEpK6U1E8d2c88vMysXdn621Oy3pvV/d/UYAxkrPAhjbSq7ZmPn8NTLzSbXWx7+TNDVF5JiaInJMzQ+ohE6avqQn4AAAAABJRU5ErkJggg==) TYPE\_MESSAGE\_UPDATE: Message updates/edits
-
-# Connection Flow Steps
-
-## Initialization
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAArklEQVQYlY2QMQ6FMAxDTYYO3KfNWWD4M1PvwpQdqTlLEefJwEDyJ6Qv9AcsebG9+CEi4O6Dqk7M3InoIqKLmbuqTu4+RATg7kOtdQUQ/1xrXd19gKpOACKldIrIYmajmY0isqSUTgChqhOYuQMIEVkiAr8WkQVAMHMHEV0AwszG59DMRgBBRBfhpSjnfADAtm2fZ3lnOefj/ZnXeG7grbW5lLLfwEspe2ttvoF/Adkyog2mm1YnAAAAAElFTkSuQmCC) Check if WebHook mode is disabled ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAArklEQVQYlY2QMQ6FMAxDTYYO3KfNWWD4M1PvwpQdqTlLEefJwEDyJ6Qv9AcsebG9+CEi4O6Dqk7M3InoIqKLmbuqTu4+RATg7kOtdQUQ/1xrXd19gKpOACKldIrIYmajmY0isqSUTgChqhOYuQMIEVkiAr8WkQVAMHMHEV0AwszG59DMRgBBRBfhpSjnfADAtm2fZ3lnOefj/ZnXeG7grbW5lLLfwEspe2ttvoF/Adkyog2mm1YnAAAAAElFTkSuQmCC) Set up socket chat listener
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAArklEQVQYlY2QMQ6FMAxDTYYO3KfNWWD4M1PvwpQdqTlLEefJwEDyJ6Qv9AcsebG9+CEi4O6Dqk7M3InoIqKLmbuqTu4+RATg7kOtdQUQ/1xrXd19gKpOACKldIrIYmajmY0isqSUTgChqhOYuQMIEVkiAr8WkQVAMHMHEV0AwszG59DMRgBBRBfhpSjnfADAtm2fZ3lnOefj/ZnXeG7grbW5lLLfwEspe2ttvoF/Adkyog2mm1YnAAAAAElFTkSuQmCC) Initialize connection manager
-
-## Connection Establishment
-
-BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect()
-
-1.  **Post-Connection Actions** When connection is successful:
-
-Update connection state Reset reconnection flags Fetch branding details
-
-Register for push notifications Update UI elements
-
-## Message Handling
-
-Process incoming messages Handle message updates Manage delivery receipts
-
-# Event Handling
-
-1.  Message Events
-
-public void onMessage(BotResponse botResponse) { processPayload("", botResponse);
-
-}
-
-1.  Connection State Changes
-
-public void onConnectionStateChanged(CONNECTION\_STATE state, boolean isReconnection) { if (state == CONNECTION\_STATE.CONNECTED) {
-
-// Handle successful connection
-
-} else if (state == CONNECTION\_STATE.RECONNECTION\_STOPPED) {
-
-// Handle reconnection failure
-
-}
-
-}
-
-1.  Data Transfer Events
-
+#### Data Transfer Handling
+```java
+@Override
 public void onMessage(SocketDataTransferModel data) {
-
-// Handle different event types
-
-if (data.getEvent\_type().equals(TYPE\_TEXT\_MESSAGE)) { processPayload(data.getPayLoad(), null);
-
-} else if (data.getEvent\_type().equals(TYPE\_MESSAGE\_UPDATE)) { chatView.updateContentListOnSend(data.getBotRequest());
-
+    // Process different types of messages
+    if (data.getEvent_type().equals(TYPE_TEXT_MESSAGE)) {
+        processPayload(data.getPayLoad(), null);
+    } else if (data.getEvent_type().equals(TYPE_MESSAGE_UPDATE)) {
+        chatView.updateContentListOnSend(data.getBotRequest());
+    }
 }
+```
 
-}
+## Connection States
+The method handles various connection states:
+1. `CONNECTED`: Successfully established connection
+2. `CONNECTING`: Connection attempt in progress
+3. `DISCONNECTED`: No active connection
+4. `RECONNECTION_STOPPED`: Failed reconnection attempts
 
-# Additional Features
+## Features
 
-1.  Push Notification Registration
+### 1. Automatic Reconnection
+- Handles network interruptions
+- Implements progressive retry mechanism
+- Maintains session continuity
 
-new PushNotificationRegister().registerPushNotification( botClient.getUserId(),
+### 2. Push Notification Integration
+- Registers device for push notifications
+- Handles notification delivery
+- Manages notification tokens
 
-botClient.getAccessToken(), getUniqueDeviceId(context)
+### 3. Branding Support
+- Fetches bot branding details
+- Applies brand-specific configurations
+- Updates UI elements accordingly
 
-);
+### 4. Message Acknowledgment
+- Implements delivery receipts
+- Handles read receipts
+- Manages message state tracking
 
-1.  Branding Integration
+## Usage Example
 
-getBrandingDetails( SDKConfiguration.Client.bot\_id,
-
-SocketWrapper.getInstance(context).getAccessToken(), "published",
-
-"1",
-
-"en\_US"
-
-);
-
-1.  Message Acknowledgment
-
-if (botClient != null && enable\_ack\_delivery) { botClient.sendMsgAcknowledgement(timestamp, key);
-
-}
-
-# Error Handling
-
-## Reconnection Management
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAArklEQVQYlY2QMQ6FMAxDTYYO3KfNWWD4M1PvwpQdqTlLEefJwEDyJ6Qv9AcsebG9+CEi4O6Dqk7M3InoIqKLmbuqTu4+RATg7kOtdQUQ/1xrXd19gKpOACKldIrIYmajmY0isqSUTgChqhOYuQMIEVkiAr8WkQVAMHMHEV0AwszG59DMRgBBRBfhpSjnfADAtm2fZ3lnOefj/ZnXeG7grbW5lLLfwEspe2ttvoF/Adkyog2mm1YnAAAAAElFTkSuQmCC) Tracks reconnection attempts
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAuUlEQVQYlY2QMW7DQAwEVyyu0H90fIsMJLWq+4sr9hKOb5GT97BwIW6aCDAEF15gm8U0OyCJzBzcfVbVXUQOETlUdXf3OTMHkkBmDq21OwC+a2vtnpkD3H0GwFLK08yWiBgjYjSzpZTyBEB3n6GqOwCa2UISrzWzBQBVdYeIHAAYEeMVjIgRAEXkEPyH5IBLXjeptf4AwLqu31dw27YvAJim6ffzMx/rOYX33m+11scpvNb66L3fTuF/LumoDaRVc3wAAAAASUVORK5CYII=) Notifies UI when reconnection stops ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAtklEQVQYlY2QIQ7DQAwE9wwO5EH2V5qA4qD7S5F5pHO+kuY/BgWxSxqpigq60pLVkB1kJiKimNkoIhsRHUR0iMhmZmNElMwEIqK01h4A8ldba4+IKDCzEUDWWl+qOrv74O6Dqs611heANLMRIrIBSFWdMxPfVdUZQIrIBiI6AKS7D1fQ3QcASUQH4ZPMLLjkeyNm3gFgWZb7FTw3Zt7/OrOu6+1/Pafw3vvEzM9TODM/e+/TKfwNL4WoDw8xwbQAAAAASUVORK5CYII=) Manages reconnection state
-
-## Message Processing Errors
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAuUlEQVQYlY2QMWrEQBAEWxNsoPdIO2/RgR0r2r9cNLnEzlt02N+Z4AJNOxKYw5hraOigki6QRGYO7r6o6iEip4icqnq4+5KZA0kgM4fW2h0A/2pr7Z6ZA9x9AcBSytPM1ogYI2I0s7WU8gRAd1+gqgcAmtlKEr9rZisAquoBETkBMCLGVzAiRgAUkVPwT0gO15Zpmr4BYNu2z1dw3/cPAJjn+ev9M2/ruYT33m+11sclvNb66L3fLuE/5LilCwyF3bgAAAAASUVORK5CYII=) Handles JSON parsing errors
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAtklEQVQYlY2QIQ7DQAwE9wwO5EH2V5qA4qD7S5F5pHO+kuY/BgWxSxqpigq60pLVkB1kJiKimNkoIhsRHUR0iMhmZmNElMwEIqK01h4A8ldba4+IKDCzEUDWWl+qOrv74O6Dqs611heANLMRIrIBSFWdMxPfVdUZQIrIBiI6AKS7D1fQ3QcASUQH4ZPMLLjkeyNm3gFgWZb7FTw3Zt7/OrOu6+1/Pafw3vvEzM9TODM/e+/TKfwNL4WoDw8xwbQAAAAASUVORK5CYII=) Manages different message formats ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAtklEQVQYlY2QIQ7DQAwE9wwO5EH2V5qA4qD7S5F5pHO+kuY/BgWxSxqpigq60pLVkB1kJiKimNkoIhsRHUR0iMhmZmNElMwEIqK01h4A8ldba4+IKDCzEUDWWl+qOrv74O6Dqs611heANLMRIrIBSFWdMxPfVdUZQIrIBiI6AKS7D1fQ3QcASUQH4ZPMLLjkeyNm3gFgWZb7FTw3Zt7/OrOu6+1/Pafw3vvEzM9TODM/e+/TKfwNL4WoDw8xwbQAAAAASUVORK5CYII=) Provides fallback mechanisms
-
-# Best Practices
-
-## Connection Management
-
-Always check connection state before sending messages
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAxUlEQVQYlY2QMW7DQAwE91hcoQeRX4lcpFZz9xe7YS/g6K/I/g8LFyLTRIAhOEAW2GYxzQ4yExFRzGwWkY2IdiLaRWQzszkiSmYCEVFaazcA+amttVtEFJjZDCBrrS9VXdx9cvdJVZda6wtAmtkMEdkApKoumYn3quoCIEVkAxHtANLdpzPo7hOAJKKd8JvMLDjlfSNmfgLAuq7fZ/DYmPn5rzP3+/0LEVF679e/9PTerxFRcAgfY1yY+XEIZ+bHGONyCP8BKg2oC66NSX8AAAAASUVORK5CYII=) Implement proper reconnection logic ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAxUlEQVQYlY2QMW7DQAwE91hcoQeRX4lcpFZz9xe7YS/g6K/I/g8LFyLTRIAhOEAW2GYxzQ4yExFRzGwWkY2IdiLaRWQzszkiSmYCEVFaazcA+amttVtEFJjZDCBrrS9VXdx9cvdJVZda6wtAmtkMEdkApKoumYn3quoCIEVkAxHtANLdpzPo7hOAJKKd8JvMLDjlfSNmfgLAuq7fZ/DYmPn5rzP3+/0LEVF679e/9PTerxFRcAgfY1yY+XEIZ+bHGONyCP8BKg2oC66NSX8AAAAASUVORK5CYII=) Handle timeouts appropriately
-
-## Message Handling
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAxUlEQVQYlY2QMW7DQAwE91hcoQeRX4lcpFZz9xe7YS/g6K/I/g8LFyLTRIAhOEAW2GYxzQ4yExFRzGwWkY2IdiLaRWQzszkiSmYCEVFaazcA+amttVtEFJjZDCBrrS9VXdx9cvdJVZda6wtAmtkMEdkApKoumYn3quoCIEVkAxHtANLdpzPo7hOAJKKd8JvMLDjlfSNmfgLAuq7fZ/DYmPn5rzP3+/0LEVF679e/9PTerxFRcAgfY1yY+XEIZ+bHGONyCP8BKg2oC66NSX8AAAAASUVORK5CYII=) Validate message format before processing
-
-![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAxUlEQVQYlY2QMW7DQAwE91hcoQeRX4lcpFZz9xe7YS/g6K/I/g8LFyLTRIAhOEAW2GYxzQ4yExFRzGwWkY2IdiLaRWQzszkiSmYCEVFaazcA+amttVtEFJjZDCBrrS9VXdx9cvdJVZda6wtAmtkMEdkApKoumYn3quoCIEVkAxHtANLdpzPo7hOAJKKd8JvMLDjlfSNmfgLAuq7fZ/DYmPn5rzP3+/0LEVF679e/9PTerxFRcAgfY1yY+XEIZ+bHGONyCP8BKg2oC66NSX8AAAAASUVORK5CYII=) Handle different message types appropriately ![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAxUlEQVQYlY2QMW7DQAwE91hcoQeRX4lcpFZz9xe7YS/g6K/I/g8LFyLTRIAhOEAW2GYxzQ4yExFRzGwWkY2IdiLaRWQzszkiSmYCEVFaazcA+amttVtEFJjZDCBrrS9VXdx9cvdJVZda6wtAmtkMEdkApKoumYn3quoCIEVkAxHtANLdpzPo7hOAJKKd8JvMLDjlfSNmfgLAuq7fZ/DYmPn5rzP3+/0LEVF679e/9PTerxFRcAgfY1yY+XEIZ+bHGONyCP8BKg2oC66NSX8AAAAASUVORK5CYII=) Implement proper error handling
-
-## State Management
-
-Track connection states Manage reconnection attempts
-
-Handle UI updates based on connection state
-
-Usage Example
-
+```java
 // Initialize BotChatViewModel
+BotChatViewModel viewModel = new BotChatViewModel(context, botClient, chatListener);
 
-BotChatViewModel viewModel = new BotChatViewModel(context, botClient, chatView);
+// Initial connection
+viewModel.connectToBot(false);
 
-// Connect to bot
+// Reconnection attempt
+viewModel.connectToBot(true);
+```
 
-viewModel.connectToBot(false); // false for initial connection
+## Error Handling
 
-// Handle reconnection
+### 1. Connection Failures
+- Implements automatic retry mechanism
+- Notifies user of connection status
+- Maintains connection state history
 
-viewModel.connectToBot(true); // true for reconnection attempt
+### 2. Message Processing Errors
+- Handles malformed messages
+- Manages payload processing failures
+- Implements error recovery
+
+### 3. State Management
+- Tracks connection states
+- Handles state transitions
+- Manages reconnection attempts
+
+## Best Practices
+
+1. **Connection Management**
+   - Always check network state before connecting
+   - Handle reconnection scenarios gracefully
+   - Implement proper error handling
+
+2. **Resource Management**
+   - Clean up resources on disconnection
+   - Handle memory efficiently
+   - Manage background processes
+
+3. **User Experience**
+   - Provide connection status feedback
+   - Handle UI updates smoothly
+   - Maintain responsive interface
+
+## Security Considerations
+
+1. **Authentication**
+   - Secure token handling
+   - Protected connection establishment
+   - Safe credential management
+
+2. **Data Protection**
+   - Encrypted communication
+   - Secure message handling
+   - Protected user information
+
+## Troubleshooting
+
+### Common Issues
+1. **Connection Failures**
+   - Check network connectivity
+   - Verify server configuration
+   - Validate credentials
+
+2. **Message Handling Problems**
+   - Verify payload format
+   - Check message processing
+   - Monitor error callbacks
+
+### Debug Tips
+- Enable detailed logging
+- Monitor connection states
+- Track message flow
+- Verify configuration settings
