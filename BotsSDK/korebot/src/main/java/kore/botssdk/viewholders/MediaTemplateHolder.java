@@ -4,7 +4,6 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -45,7 +44,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
-import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 
 public class MediaTemplateHolder extends BaseViewHolder {
@@ -216,18 +214,11 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 tvTheme1.setOnClickListener(v -> {
                     popupWindow.dismiss();
-                    if (checkForPermissionAccessAndRequest()) {
-                        KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
-                    } else if (composeFooterInterface != null) {
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getAudioUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
-                    }
+                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
                 });
 
                 break;
@@ -305,18 +296,11 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 tvTheme1.setOnClickListener(v -> {
                     popupWindow.dismiss();
-                    if (checkForPermissionAccessAndRequest()) {
-                        KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
-                    } else if (composeFooterInterface != null) {
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getVideoUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
-                    }
+                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
                 });
                 break;
         }
@@ -390,11 +374,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
             }
         });
     }
-
-    private boolean checkForPermissionAccessAndRequest() {
-        return KaPermissionsHelper.hasPermission(itemView.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
-    }
-
 
     // display video progress
     public void setAudioProgress() {

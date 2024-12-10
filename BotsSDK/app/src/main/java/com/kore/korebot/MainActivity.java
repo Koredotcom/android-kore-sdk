@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 //        Can set your customized Footer view in the chat window by using this method. By extending BaseFooterFragment. Can find examples under fragments package
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
-        //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection. Can find examples under fragments package
+        //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
@@ -91,8 +91,6 @@ public class MainActivity extends AppCompatActivity {
 
         //You can set query parameters to the socket url by using this method. Can get sample format from the mentioned method
         SDKConfig.setQueryParams(getQueryParams());
-
-        SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
 
         //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
