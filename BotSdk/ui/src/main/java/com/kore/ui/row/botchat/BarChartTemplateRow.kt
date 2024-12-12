@@ -16,7 +16,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.BAR_CHART_DIRECTION_VERTICAL
 import com.kore.model.constants.BotResponseConstants.DIRECTION
@@ -27,8 +26,8 @@ import com.kore.model.constants.BotResponseConstants.VALUES
 import com.kore.model.constants.BotResponseConstants.X_AXIS
 import com.kore.ui.R
 import com.kore.ui.databinding.BarChartTemplateBinding
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.formatters.BarChartDataFormatter
-import com.kore.ui.utils.ColorTemplate
 import com.kore.ui.views.CustomMarkerView
 
 class BarChartTemplateRow(
@@ -120,7 +119,7 @@ class BarChartTemplateRow(
                 } else {
                     for (k in 0 until size) {
                         dataSet[k] = BarDataSet(yValues[k], elements[k][KEY_TITLE] as String?)
-                        dataSet[k]!!.color = ColorTemplate.MATERIAL_COLORS[k % 4]
+                        dataSet[k]!!.color = MATERIAL_COLORS[k % 4]
                         barDataSets.add(dataSet[k])
                     }
                 }
@@ -190,7 +189,7 @@ class BarChartTemplateRow(
     private fun getColors(stackSize: Int): IntArray {
         // have as many colors as stack-values per entry
         val colors = IntArray(stackSize)
-        System.arraycopy(ColorTemplate.MATERIAL_COLORS, 0, colors, 0, colors.size)
+        System.arraycopy(MATERIAL_COLORS, 0, colors, 0, colors.size)
         return colors
     }
 

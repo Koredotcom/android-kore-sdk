@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.github.mikephil.charting.utils.ColorTemplate.rgb
 import com.kore.botclient.databinding.BaseRowBinding
 import com.kore.extensions.dpToPx
 import com.kore.ui.row.listener.ChatContentStateListener
@@ -17,6 +18,9 @@ import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
 
 abstract class SimpleListRow {
+    companion object {
+        val MATERIAL_COLORS = intArrayOf(rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db"))
+    }
 
     abstract val type: SimpleListRowType
 
