@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
+
 import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -7,6 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -131,6 +136,19 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public ChatAdapter() {
         super();
         baseBotMessageArrayList = new ArrayList<>();
+        overrideColors();
+    }
+
+    private void overrideColors() {
+        try {
+            Field field = ColorTemplate.class.getDeclaredField("MATERIAL_COLORS");
+            field.setAccessible(true);
+
+            // Modify the value
+            field.set(null, new int[]{rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db")});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public BaseBotMessage getItem(int position) {
