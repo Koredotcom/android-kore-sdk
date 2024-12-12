@@ -11,10 +11,10 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import com.github.mikephil.charting.utils.ColorTemplate
 import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.databinding.LineChartTemplateBinding
-import com.kore.ui.utils.ColorTemplate
 
 class LineChartTemplateRow(
     private val id: String,
@@ -60,8 +60,8 @@ class LineChartTemplateRow(
                 dataSet[baseIndex].lineWidth = 2.5f
                 dataSet[baseIndex].circleRadius = 4.5f
                 dataSet[baseIndex].setDrawValues(false)
-                dataSet[baseIndex].color = ColorTemplate.MATERIAL_COLORS[baseIndex % 4]
-                dataSet[baseIndex].setCircleColor(ColorTemplate.holoBlue)
+                dataSet[baseIndex].color = MATERIAL_COLORS[baseIndex % 4]
+                dataSet[baseIndex].setCircleColor(ColorTemplate.getHoloBlue())
                 dataSet[baseIndex].lineWidth = 1f
                 dataSet[baseIndex].circleRadius = 3f
                 dataSet[baseIndex].setDrawCircleHole(false)

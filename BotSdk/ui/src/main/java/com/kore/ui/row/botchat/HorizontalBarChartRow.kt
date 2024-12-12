@@ -20,7 +20,6 @@ import com.kore.model.constants.BotResponseConstants.DISPLAY_VALUES
 import com.kore.model.constants.BotResponseConstants.X_AXIS
 import com.kore.ui.databinding.HorizontalBarChartTemplateBinding
 import com.kore.ui.row.formatters.BarChartDataFormatter
-import com.kore.ui.utils.ColorTemplate
 
 class HorizontalBarChartRow(
     private val id: String,
@@ -120,7 +119,7 @@ class HorizontalBarChartRow(
 
                     for (k in entries.indices) {
                         val barDataSet = BarDataSet(yVals1[k], entries[k][BotResponseConstants.KEY_TITLE] as String)
-                        barDataSet.color = ColorTemplate.MATERIAL_COLORS[k % 4]
+                        barDataSet.color = MATERIAL_COLORS[k % 4]
                         barDataSets.add(barDataSet)
                     }
 
