@@ -1,5 +1,7 @@
 package com.kore.ai.widgetsdk.views.widgetviews;
 
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
+
 import android.content.Context;
 import android.view.ViewGroup;
 
@@ -8,7 +10,9 @@ import com.kore.ai.widgetsdk.models.KnowledgeCollectionModel;
 import com.kore.ai.widgetsdk.utils.Utility;
 
 public abstract class BaseWidgetView extends ViewGroup implements VerticalListViewActionHelper {
-
+    public static final int[] MATERIAL_COLORS = {
+            rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db")
+    };
     protected final float dp1;
 //    protected final int viewHeight;
     public BaseWidgetView(Context context) {

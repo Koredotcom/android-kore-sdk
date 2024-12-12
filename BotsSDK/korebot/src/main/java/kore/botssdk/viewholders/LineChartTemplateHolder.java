@@ -75,7 +75,7 @@ public class LineChartTemplateHolder extends BaseViewHolder implements OnChartGe
             dataSet[baseIndex].setLineWidth(2.5f);
             dataSet[baseIndex].setCircleRadius(4.5f);
             dataSet[baseIndex].setDrawValues(false);
-            dataSet[baseIndex].setColor(ColorTemplate.MATERIAL_COLORS[baseIndex % 4]);
+            dataSet[baseIndex].setColor(MATERIAL_COLORS[baseIndex % 4]);
             dataSet[baseIndex].setCircleColor(ColorTemplate.getHoloBlue());
             dataSet[baseIndex].setLineWidth(1f);
             dataSet[baseIndex].setCircleRadius(3f);

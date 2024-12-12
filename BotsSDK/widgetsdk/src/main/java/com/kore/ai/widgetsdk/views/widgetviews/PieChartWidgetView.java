@@ -469,7 +469,7 @@ public class PieChartWidgetView extends BaseWidgetView {
 
                 for (int k = 0; k < size; k++) {
                     dataSet[k] = new BarDataSet(yVals1[k], barChartElements.get(k).getTitle());
-                    dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
+                    dataSet[k].setColor(MATERIAL_COLORS[k % 4]);
                     barDataSets.add(dataSet[k]);
                 }
 

@@ -56,7 +56,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValueSelectedListener*/ {
-
     private WidgetsModel mWidget;
     private AuthData authData;
     private UserData userData;
@@ -348,7 +347,7 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
 
             for (int k = 0; k < size; k++) {
                 dataSet[k] = new BarDataSet(yVals1[k], barChartElements.get(k).getTitle());
-                dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
+                dataSet[k].setColor(MATERIAL_COLORS[k % 4]);
                 barDataSets.add(dataSet[k]);
             }
 
