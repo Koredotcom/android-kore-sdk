@@ -10,14 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <kore.botssdk.charts.charts.BarChart
+    <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barChart"
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <kore.botssdk.charts.charts.HorizontalBarChart
+    <com.github.mikephil.charting.charts.HorizontalBarChart
         android:id="@+id/horizontalBarChart"
         android:layout_width="match_parent"
         android:layout_height="300dp"

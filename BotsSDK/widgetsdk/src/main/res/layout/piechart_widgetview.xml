@@ -192,7 +192,7 @@
                 android:layout_below="@+id/chart_progress"
                 android:orientation="vertical">
 
-                <com.kore.ai.widgetsdk.charts.charts.PieChart
+                <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/mChart"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"

@@ -53,6 +53,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
     implementation 'de.greenrobot:eventbus:2.4.0'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.eftimoff:android-pathview:1.0.8@aar'
     implementation 'com.makeramen:roundedimageview:2.2.0'
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'

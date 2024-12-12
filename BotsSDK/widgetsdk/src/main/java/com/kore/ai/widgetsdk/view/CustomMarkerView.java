@@ -4,12 +4,12 @@ import android.content.Context;
 import android.widget.TextView;
 
 import com.kore.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.charts.components.MarkerView;
-import com.kore.ai.widgetsdk.charts.data.CandleEntry;
-import com.kore.ai.widgetsdk.charts.data.Entry;
-import com.kore.ai.widgetsdk.charts.highlight.Highlight;
-import com.kore.ai.widgetsdk.charts.utils.MPPointF;
-import com.kore.ai.widgetsdk.charts.utils.Utils;
+import com.github.mikephil.charting.components.MarkerView;
+import com.github.mikephil.charting.data.CandleEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.Utils;
 
 public class CustomMarkerView extends MarkerView {
 

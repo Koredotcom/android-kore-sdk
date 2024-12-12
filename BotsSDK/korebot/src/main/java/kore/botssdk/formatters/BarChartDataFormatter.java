@@ -2,11 +2,11 @@ package kore.botssdk.formatters;
 
 import java.text.DecimalFormat;
 
-import kore.botssdk.charts.components.AxisBase;
-import kore.botssdk.charts.data.Entry;
-import kore.botssdk.charts.formatter.IAxisValueFormatter;
-import kore.botssdk.charts.formatter.ValueFormatter;
-import kore.botssdk.charts.utils.ViewPortHandler;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 public class BarChartDataFormatter extends ValueFormatter implements IAxisValueFormatter {
     private static String[] SUFFIX = new String[]{"", "k", "m", "b", "t"};

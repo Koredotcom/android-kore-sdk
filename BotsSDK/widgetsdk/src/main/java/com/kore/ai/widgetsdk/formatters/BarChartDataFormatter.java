@@ -1,10 +1,10 @@
 package com.kore.ai.widgetsdk.formatters;
 
-import com.kore.ai.widgetsdk.charts.components.AxisBase;
-import com.kore.ai.widgetsdk.charts.data.Entry;
-import com.kore.ai.widgetsdk.charts.formatter.IAxisValueFormatter;
-import com.kore.ai.widgetsdk.charts.formatter.ValueFormatter;
-import com.kore.ai.widgetsdk.charts.utils.ViewPortHandler;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import java.text.DecimalFormat;
 

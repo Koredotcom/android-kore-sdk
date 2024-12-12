@@ -1,11 +1,16 @@
 package kore.botssdk.adapter;
 
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
+
 import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -130,6 +135,28 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public ChatAdapter() {
         super();
         baseBotMessageArrayList = new ArrayList<>();
+        overrideFinalVariable();
+    }
+
+    private void overrideFinalVariable() {
+        try {
+            Field field = ColorTemplate.class.getDeclaredField("MATERIAL_COLORS");
+            field.setAccessible(true);
+
+            // You cannot reassign the reference of a final field directly,
+            // but you can replace the array with a new one using reflection.
+            int[] newArray = new int[]{rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db")};  // New array
+
+            field.set(null, newArray);  // Replace the original array with the new one
+
+            // Print the new array to verify
+            int[] array = (int[]) field.get(null);
+            for (int i : array) {
+                System.out.println(i);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public BaseBotMessage getItem(int position) {
