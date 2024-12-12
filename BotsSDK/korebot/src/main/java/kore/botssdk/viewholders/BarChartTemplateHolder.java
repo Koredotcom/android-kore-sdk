@@ -173,7 +173,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
             } else {
                 for (int k = 0; k < size; k++) {
                     dataSet[k] = new BarDataSet(yValues[k], payloadInner.getBarChartDataModels().get(k).getTitle());
-                    dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
+                    dataSet[k].setColor(MATERIAL_COLORS[k % 4]);
                     barDataSets.add(dataSet[k]);
                 }
             }
@@ -237,7 +237,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
     private int[] getColors(int stackSize) {
         // have as many colors as stack-values per entry
         int[] colors = new int[stackSize];
-        System.arraycopy(ColorTemplate.MATERIAL_COLORS, 0, colors, 0, colors.length);
+        System.arraycopy(MATERIAL_COLORS, 0, colors, 0, colors.length);
         return colors;
     }
 

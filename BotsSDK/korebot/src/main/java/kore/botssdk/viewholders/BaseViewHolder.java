@@ -1,5 +1,6 @@
 package kore.botssdk.viewholders;
 
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
@@ -65,6 +66,9 @@ import kore.botssdk.view.LinkifyTextView;
 
 @SuppressWarnings("UnKnownNullness")
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+    public static final int[] MATERIAL_COLORS = {
+            rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db")
+    };
     private final Context context;
     private final String REGEX_CHAR = "%%.*?%%";
     private final Gson gson = new Gson();

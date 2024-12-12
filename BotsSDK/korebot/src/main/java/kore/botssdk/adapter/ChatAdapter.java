@@ -136,19 +136,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public ChatAdapter() {
         super();
         baseBotMessageArrayList = new ArrayList<>();
-        overrideColors();
-    }
-
-    private void overrideColors() {
-        try {
-            Field field = ColorTemplate.class.getDeclaredField("MATERIAL_COLORS");
-            field.setAccessible(true);
-
-            // Modify the value
-            field.set(null, new int[]{rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db")});
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public BaseBotMessage getItem(int position) {
