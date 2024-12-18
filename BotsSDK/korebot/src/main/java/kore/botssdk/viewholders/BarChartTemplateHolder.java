@@ -8,30 +8,30 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import kore.botssdk.R;
-import kore.botssdk.charts.charts.BarChart;
-import kore.botssdk.charts.charts.HorizontalBarChart;
-import kore.botssdk.charts.components.Legend;
-import kore.botssdk.charts.components.XAxis;
-import kore.botssdk.charts.components.YAxis;
-import kore.botssdk.charts.data.BarData;
-import kore.botssdk.charts.data.BarDataSet;
-import kore.botssdk.charts.data.BarEntry;
-import kore.botssdk.charts.data.Entry;
-import kore.botssdk.charts.formatter.LargeValueFormatter;
-import kore.botssdk.charts.formatter.ValueFormatter;
-import kore.botssdk.charts.highlight.Highlight;
-import kore.botssdk.charts.interfaces.datasets.IBarDataSet;
-import kore.botssdk.charts.listener.OnChartValueSelectedListener;
-import kore.botssdk.charts.utils.ColorTemplate;
 import kore.botssdk.formatters.BarChartDataFormatter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBarChartDataModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.CustomMarkerView;
 
 public class BarChartTemplateHolder extends BaseViewHolder implements OnChartValueSelectedListener {
@@ -173,7 +173,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
             } else {
                 for (int k = 0; k < size; k++) {
                     dataSet[k] = new BarDataSet(yValues[k], payloadInner.getBarChartDataModels().get(k).getTitle());
-                    dataSet[k].setColor(ColorTemplate.MATERIAL_COLORS[k % 4]);
+                    dataSet[k].setColor(MATERIAL_COLORS[k % 4]);
                     barDataSets.add(dataSet[k]);
                 }
             }
@@ -237,7 +237,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
     private int[] getColors(int stackSize) {
         // have as many colors as stack-values per entry
         int[] colors = new int[stackSize];
-        System.arraycopy(ColorTemplate.MATERIAL_COLORS, 0, colors, 0, colors.length);
+        System.arraycopy(MATERIAL_COLORS, 0, colors, 0, colors.length);
         return colors;
     }
 

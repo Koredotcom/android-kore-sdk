@@ -41,6 +41,8 @@ import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.content.NewBotContentFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.footer.ComposeFooterFragment;
+import kore.botssdk.fragment.header.BaseHeaderFragment;
+import kore.botssdk.fragment.header.BotHeaderFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -69,6 +71,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     private ProgressBar taskProgressBar;
     private String jwt;
     private BotClient botClient;
+    private BaseHeaderFragment botHeaderFragment;
     private BaseContentFragment botContentFragment;
     private BaseFooterFragment baseFooterFragment;
     private SharedPreferences sharedPreferences;
@@ -131,6 +134,16 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         WebHookRestBuilder.setContext(requireContext());
         BrandingRestBuilder.setContext(requireContext());
 
+        if (SDKConfig.isShowHeader()) {
+            botHeaderFragment = SDKConfig.getCustomHeaderFragment();
+            if (botHeaderFragment == null) botHeaderFragment = new BotHeaderFragment();
+            botHeaderFragment.setComposeFooterInterface(this);
+            botHeaderFragment.setInvokeGenericWebViewInterface(this);
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.add(R.id.header_container, botHeaderFragment);
+            transaction.commitNow();
+        }
+
         FragmentTransaction fragmentTransaction = getChildFragmentManager().beginTransaction();
         //Add Bot Content Fragment
         BaseContentFragment customContentFragment = SDKConfig.getCustomContentFragment();
@@ -183,6 +196,9 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
             if (baseFooterFragment != null)
                 baseFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
+
+            if (botHeaderFragment != null)
+                botHeaderFragment.setBrandingDetails(brandingModel);
         }
 
         if (botContentFragment != null && isReconnection) {

@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
+
 import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -7,6 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
