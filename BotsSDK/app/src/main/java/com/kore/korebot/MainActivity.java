@@ -48,28 +48,28 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = getConfigValue("clientId");
+        String clientId = "PLEASE_ENTER_BOT_CLIENT_ID";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = getConfigValue("clientSecret");
+        String clientSecret = "PLEASE_ENTER_BOT_CLIENT_SECRET";
 
         //Set botId, This value is mandatory
-        String botId = getConfigValue("botId");
+        String botId = "PLEASE_ENTER_BOT_ID";
 
         //Set identity, This value is mandatory
-        String identity = getConfigValue("identity");
+        String identity = "PLEASE_ENTER_IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = getConfigValue("botName");
+        String botName = "PLEASE_ENTER_BOT_NAME";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = getConfigValue("serverUrl");
+        String serverUrl = "PLEASE_ENTER_SERVER_URL";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = getConfigValue("brandingUrl");
+        String brandingUrl = "PLEASE_ENTER_BRANDING_SERVER_URL";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = getConfigValue("jwtServerUrl");
+        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);

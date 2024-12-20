@@ -1,7 +1,7 @@
 package kore.botssdk.models;
 
 public class FeedbackThumbsModel {
-    private int thumpUpId;
+    private Object thumpUpId;
     private String value;
     private String reviewText;
 
@@ -13,7 +13,7 @@ public class FeedbackThumbsModel {
         return value;
     }
 
-    public int getThumpUpId() {
+    public Object getThumpUpId() {
         return thumpUpId;
     }
 }
