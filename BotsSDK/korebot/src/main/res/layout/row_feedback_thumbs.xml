@@ -4,6 +4,7 @@
     android:id="@+id/thumbs_feedback_root"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:minWidth="100dp"
     android:layout_marginEnd="@dimen/dimen_5dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
