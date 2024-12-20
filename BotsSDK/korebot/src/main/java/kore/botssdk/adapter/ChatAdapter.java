@@ -164,7 +164,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                         return TEMPLATE_CAROUSEL;
                     case BotResponse.TEMPLATE_TYPE_LIST:
                         return TEMPLATE_LIST;
-                    case BotResponse.TEMPLATE_TYPE_PIECHART:
+                    case BotResponse.TEMPLATE_TYPE_PIE_CHART:
                         return TEMPLATE_PIE_CHART;
                     case BotResponse.TEMPLATE_TYPE_TABLE:
                         if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
@@ -176,13 +176,13 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                         break;
                     case BotResponse.TEMPLATE_TYPE_CLOCK:
                         return TEMPLATE_CLOCK;
-                    case BotResponse.TEMPLATE_TYPE_MINITABLE:
+                    case BotResponse.TEMPLATE_TYPE_MINI_TABLE:
                         return TEMPLATE_MINI_TABLE;
                     case BotResponse.TEMPLATE_TYPE_MULTI_SELECT:
                         return TEMPLATE_MULTI_SELECT;
                     case BotResponse.ADVANCED_LIST_TEMPLATE:
                         return TEMPLATE_ADVANCED_LIST_TEMPLATE;
-                    case BotResponse.TEMPLATE_TYPE_LINECHART:
+                    case BotResponse.TEMPLATE_TYPE_LINE_CHART:
                         return TEMPLATE_LINE_CHART;
                     case BotResponse.TEMPLATE_TYPE_BARCHART:
                         return TEMPLATE_BAR_CHART;
@@ -384,9 +384,9 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     }
 
     private BaseViewHolder getCustomTemplate(ViewGroup parent, Class<?> clazzType) {
-        Class<?> clazz = null;
-        Method method = null;
-        BaseViewHolder holder = null;
+        Class<?> clazz;
+        Method method;
+        BaseViewHolder holder;
         try {
             clazz = Class.forName(clazzType.getName());
             // Get the method by name and parameter types

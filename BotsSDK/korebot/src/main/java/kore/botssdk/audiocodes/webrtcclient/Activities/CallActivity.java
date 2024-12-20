@@ -53,33 +53,33 @@ import kore.botssdk.utils.BundleConstants;
 @SuppressWarnings("UnknownNullness")
 public class CallActivity extends BaseAppCompatActivity implements AudioCodesSessionEventListener {
     public static String ACTION_CALL_TERMINATED = "com.kore.botsdk.ACTION_CALL_TERMINATED";
-    private static final String TAG = "CallActivity";
+    static final String TAG = "CallActivity";
     public static final String SESSION_ID = "sessionID";
-    private TextView callStateTextView;
-    private TextView transferStateNumberTextView;
-    private TextView contactNameTextView;
-    private TextView contactPhoneNumberTextView;
-    private ImageView contactImageView;
-    private AudioCodesSession session;
-    private View endCallButton;
-    private View holdButton;
-    private View muteAudioButton;
-    private View switchCallButton;
-    private View audioRouteButton;
-    private View muteVideoButton;
-    private View addVideoButton;
-    private boolean dtmfEnabled = false;
-    private boolean guiInitialized;
-    private int count = 0;
-    private WebRTCAudioManager ac;
-    private WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
-    private final Handler timerHandler = new Handler();
-    private final ArrayList<Integer> sessionList = new ArrayList<>();
-    private Runnable runnable;
-    private final MyAudioCodesSessionEventListener myAudioCodesSessionEventListener = new MyAudioCodesSessionEventListener();
-    private int lastSessionIndex;
+     TextView callStateTextView;
+     TextView transferStateNumberTextView;
+    TextView contactNameTextView;
+     TextView contactPhoneNumberTextView;
+     ImageView contactImageView;
+     AudioCodesSession session;
+     View endCallButton;
+     View holdButton;
+     View muteAudioButton;
+     View switchCallButton;
+     View audioRouteButton;
+     View muteVideoButton;
+     View addVideoButton;
+     boolean dtmfEnabled = false;
+     boolean guiInitialized;
+    int count = 0;
+     WebRTCAudioManager ac;
+     WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
+    final Handler timerHandler = new Handler();
+     final ArrayList<Integer> sessionList = new ArrayList<>();
+     Runnable runnable;
+     final MyAudioCodesSessionEventListener myAudioCodesSessionEventListener = new MyAudioCodesSessionEventListener();
+     int lastSessionIndex;
 
-    private final CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
+     final CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
         @Override
         public void loginStateChange(Context context, boolean state) {
             if (handler != null) {
@@ -94,7 +94,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         }
     };
 
-    private final BroadcastReceiver callTerminateReceiver = new BroadcastReceiver() {
+     final BroadcastReceiver callTerminateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             finish();
@@ -468,7 +468,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         session.hold(hold);
     }
 
-    private void initDtmf() {
+     void initDtmf() {
         int[] keypadButtonClickListID = {R.id.call_button_keypad_1, R.id.call_button_keypad_2, R.id.call_button_keypad_3, R.id.call_button_keypad_4, R.id.call_button_keypad_5, R.id.call_button_keypad_6, R.id.call_button_keypad_7, R.id.call_button_keypad_8, R.id.call_button_keypad_9, R.id.call_button_keypad_hash, R.id.call_button_keypad_0, R.id.call_button_keypad_asterisk};
 
         View.OnClickListener dialpadClickListener = new View.OnClickListener() {
@@ -565,7 +565,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     }
 
     void updateVideoButton() {
-        int hasVideoInt = 0;
+        int hasVideoInt;
         if (session.hasVideo() && !session.isVideoMuted()) {
             hasVideoInt = R.mipmap.call_button_icon_mute_video;
         } else {
@@ -636,6 +636,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         //CallBackHandler.unregisterCallStateChanged(callStateChanged);
         CallBackHandler.unregisterLoginStateChange(loginStateChanged);
         timerHandler.removeCallbacks(runnable);
+        count = 0;
     }
 
     @Override

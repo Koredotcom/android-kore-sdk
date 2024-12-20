@@ -480,11 +480,11 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<BotTableListModel>>() {
                         }.getType();
                         tableListElements = gson.fromJson(elementsAsString, listType);
-                    } else if (BotResponse.TEMPLATE_TYPE_PIECHART.equalsIgnoreCase(template_type)) {
+                    } else if (BotResponse.TEMPLATE_TYPE_PIE_CHART.equalsIgnoreCase(template_type)) {
                         Type listType = new TypeToken<ArrayList<BotPieChartElementModel>>() {
                         }.getType();
                         pieChartElements = gson.fromJson(elementsAsString, listType);
-                    } else if (BotResponse.TEMPLATE_TYPE_LINECHART.equalsIgnoreCase(template_type)) {
+                    } else if (BotResponse.TEMPLATE_TYPE_LINE_CHART.equalsIgnoreCase(template_type)) {
                         Type listType = new TypeToken<ArrayList<BotLineChartDataModel>>() {
                         }.getType();
                         lineChartDataModels = gson.fromJson(elementsAsString, listType);
@@ -497,7 +497,7 @@ public class PayloadInner {
                         Type tableType = new TypeToken<ArrayList<BotTableDataModel>>() {
                         }.getType();
                         tableDataModel = gson.fromJson(elementsAsString, tableType);
-                    } else if (BotResponse.TEMPLATE_TYPE_MINITABLE.equalsIgnoreCase(template_type)) {
+                    } else if (BotResponse.TEMPLATE_TYPE_MINI_TABLE.equalsIgnoreCase(template_type)) {
                         Type tableType = new TypeToken<ArrayList<BotMiniTableModel>>() {
                         }.getType();
                         miniTableDataModels = gson.fromJson(elementsAsString, tableType);

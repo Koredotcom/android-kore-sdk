@@ -10,11 +10,11 @@ import java.util.Map;
 public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "list";
-    public static final String TEMPLATE_TYPE_PIECHART = "piechart";
-    public static final String TEMPLATE_TYPE_LINECHART = "linechart";
+    public static final String TEMPLATE_TYPE_PIE_CHART = "piechart";
+    public static final String TEMPLATE_TYPE_LINE_CHART = "linechart";
     public static final String TEMPLATE_TYPE_BARCHART = "barchart";
     public static final String TEMPLATE_TYPE_TABLE = "table";
-    public static final String TEMPLATE_TYPE_MINITABLE = "mini_table";
+    public static final String TEMPLATE_TYPE_MINI_TABLE = "mini_table";
     public static final String TEMPLATE_TYPE_CAROUSEL = "carousel";
     public static final String TEMPLATE_TYPE_CAROUSEL_ADV = "carouselAdv";
     public static final String TEMPLATE_TYPE_QUICK_REPLIES = "quick_replies";
@@ -33,7 +33,6 @@ public class BotResponse extends BaseBotMessage {
     public static final String VIEW_THUMBS_UP_DOWN = "ThumbsUpDown";
     static final String TEMPLATE_TYPE_PICKER = "picker";
     public static final String TEMPLATE_TYPE_WELCOME_CAROUSEL = "kora_welcome_carousel";
-    public static final String TEMPLATE_TYPE_HIDDEN_DIALOG = "hidden_dialog";
     public static final String NARRATOR_TEXT = "narrator";
     public static final String TEMPLATE_TYPE_MULTI_SELECT = "multi_select";
 
@@ -83,22 +82,18 @@ public class BotResponse extends BaseBotMessage {
     public static final String BUBBLE_LEFT_TEXT_COLOR = "BUBBLE_LEFT_TEXT_COLOR";
     public static final String BUBBLE_RIGHT_TEXT_COLOR = "BUBBLE_RIGHT_TEXT_COLOR";
     public static final String BUTTON_ACTIVE_BG_COLOR = "BUTTON_ACTIVE_BG_COLOR";
-    public static final String BUTTON_ACTIVE_TXT_COLOR = "BUTTON_ACTIVE_TXT_COLOR";
     public static final String TIME_STAMP_TXT_COLOR = "TIME_STAMP_TXT_COLOR";
+
+    public static final String BUTTON_ACTIVE_TXT_COLOR = "BUTTON_ACTIVE_TXT_COLOR";
     public static final String BUTTON_INACTIVE_BG_COLOR = "BUTTON_INACTIVE_BG_COLOR";
     public static final String BUTTON_INACTIVE_TXT_COLOR = "BUTTON_INACTIVE_TXT_COLOR";
     public static final String WIDGET_BG_COLOR = "WIDGET_BG_COLOR";
     public static final String WIDGET_TXT_COLOR = "WIDGET_TXT_COLOR";
     public static final String WIDGET_BORDER_COLOR = "WIDGET_BORDER_COLOR";
-    public static final String APPLY_THEME_NAME = "APPLY_THEME_NAME";
-    public static final String THEME_NAME_1 = "THEME_NAME_1";
-    public static final String THEME_NAME_2 = "THEME_NAME_2";
-
     public static final String ICON_1 = "icon-1";
     public static final String ICON_2 = "icon-2";
     public static final String ICON_3 = "icon-3";
     public static final String ICON_4 = "icon-4";
-
     public static final String HEADER_SIZE_COMPACT = "compact";
     public static final String HEADER_SIZE_LARGE = "large";
 
