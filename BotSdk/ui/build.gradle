@@ -42,7 +42,9 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
     buildFeatures {
         viewBinding true
         buildConfig true
