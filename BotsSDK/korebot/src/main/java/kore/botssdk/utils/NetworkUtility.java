@@ -14,9 +14,8 @@ public class NetworkUtility {
     public final static String FILE_SCHEME = "file:";
     public final static String CONTENT_SCHEME = "content:";
 
-    /**
+    /*
      * Method to check Network Connections
-     *
      * @param context
      * @return boolean value
      */

@@ -132,6 +132,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         chatListener.onConnectionStateChanged(CONNECTION_STATE.RECONNECTION_STOPPED, false);
     }
 
+    @Override
+    public void onStartCompleted(boolean isReconnect) {
+        chatListener.onStartCompleted(isReconnect);
+    }
+
     private void makeStsJwtCallWithConfig(final boolean isRefresh) {
         Call<JWTTokenResponse> getBankingConfigService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(getRequestObject());
         getBankingConfigService.enqueue(new Callback<JWTTokenResponse>() {
