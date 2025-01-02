@@ -11,9 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import kore.botssdk.R;
 import kore.botssdk.utils.ToastUtils;
 
-/**
- * Created by Ramachandra Pradeep on 27-Mar-18.
- */
 @SuppressLint("UnknownNullness")
 public class BotAppCompactActivity extends AppCompatActivity {
 

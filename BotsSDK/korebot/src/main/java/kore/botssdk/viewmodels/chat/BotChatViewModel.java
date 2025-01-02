@@ -130,8 +130,6 @@ public class BotChatViewModel extends ViewModel {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
-                getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
-
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
                     isReconnectionStopped = true;
@@ -153,6 +151,12 @@ public class BotChatViewModel extends ViewModel {
                 chatView.updateContentListOnSend(data.getBotRequest());
             }
         }
+
+        @Override
+        public void onStartCompleted(boolean isStartCompleted) {
+            getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
+        }
+
     };
 
     public void sendReadReceipts() {

@@ -241,8 +241,6 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
         public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 isReconnectionStopped = false;
-                getBrandingDetails(isReconnection);
-
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
                     isReconnectionStopped = true;
@@ -265,6 +263,11 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
                     botContentFragment.updateContentListOnSend(data.getBotRequest());
                 }
             }
+        }
+
+        @Override
+        public void onStartCompleted(boolean isReconnection) {
+            getBrandingDetails(isReconnection);
         }
     };
 

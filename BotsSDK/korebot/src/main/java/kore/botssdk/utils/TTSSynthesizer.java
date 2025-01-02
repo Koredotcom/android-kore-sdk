@@ -157,6 +157,11 @@ public class TTSSynthesizer {
                 PlayAudio(audio);
             }
         }
+
+        @Override
+        public void onStartCompleted(boolean isStartCompleted) {
+
+        }
     };
 
     void PlayAudio(String audio) {

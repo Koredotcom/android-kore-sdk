@@ -246,6 +246,7 @@ public final class SocketWrapper {
                             queryParams.append("=");
                             queryParams.append(entry.getValue());
                         }
+                        socketConnectionListener.onStartCompleted(isReconnect);
                         connectToSocket(rtmUrl.getUrl().concat("&isReconnect=false") + queryParams, false);
                     } catch (URISyntaxException e) {
                         e.printStackTrace();

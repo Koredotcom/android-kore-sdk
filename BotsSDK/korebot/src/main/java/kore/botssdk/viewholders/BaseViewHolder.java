@@ -69,11 +69,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public static final int[] MATERIAL_COLORS = {
             rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db")
     };
-    private final Context context;
+    final Context context;
     private final String REGEX_CHAR = "%%.*?%%";
-    private final Gson gson = new Gson();
+    final Gson gson = new Gson();
     private boolean isLastItem = true;
-    private LinkifyTextView bubbleText;
+    LinkifyTextView bubbleText;
 
     protected ComposeFooterInterface composeFooterInterface;
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -84,7 +84,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View baseView = inflater.inflate(R.layout.base_view_holder, parent, false);
         View childView = inflater.inflate(layoutId, null);
-        LinearLayoutCompat contentLayout = (LinearLayoutCompat) baseView.findViewById(R.id.contentLayout);
+        LinearLayoutCompat contentLayout = baseView.findViewById(R.id.contentLayout);
         contentLayout.addView(childView, LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         return baseView;
     }
@@ -173,7 +173,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         return compModel;
     }
 
-    private String getRemovedEntityEditString(String _str) {
+    String getRemovedEntityEditString(String _str) {
         String str = _str.replaceAll(REGEX_CHAR, "");
         str = str.replaceAll("\\s{2,}", " ");
         return str;
@@ -211,6 +211,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9");
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#000000");
         String bubble_style = sharedPreferences.getString(BundleConstants.BUBBLE_STYLE, "rounded");
+
+        LogUtils.e("leftBgColor", rightBgColor);
 
         //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
         float[] roundedRadii = {16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};

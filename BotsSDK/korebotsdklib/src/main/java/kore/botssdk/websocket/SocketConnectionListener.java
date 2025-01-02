@@ -52,5 +52,6 @@ public interface SocketConnectionListener {
      * @param reconnectionStopped with reason.
      */
     void onReconnectStopped(String reconnectionStopped);
+    void onStartCompleted(boolean isReconnect);
 
 }
