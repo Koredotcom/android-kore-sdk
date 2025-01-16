@@ -157,6 +157,14 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                                     val templateType = innerMap[BotResponseConstants.KEY_TEMPLATE_TYPE]
                                     newRows = createCustomTemplate(templateType.toString(), baseBotMsg, isLastItem, rows)
+                                    if (newRows == rows) {
+                                        if (innerMap[BotResponseConstants.CAROUSEL_TYPE] != null) {
+                                            newRows =
+                                                createCustomTemplate(innerMap[BotResponseConstants.CAROUSEL_TYPE].toString(), baseBotMsg, isLastItem, rows)
+                                        } else if (innerMap[BotResponseConstants.TABLE_DESIGN] != null) {
+                                            newRows = createCustomTemplate(innerMap[BotResponseConstants.TABLE_DESIGN].toString(), baseBotMsg, isLastItem, rows)
+                                        }
+                                    }
                                     if (newRows.size != rows.size) {
                                         rows = newRows
                                         continue
@@ -390,8 +398,18 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                 }
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_MESSAGE)) {
                                 if (body.payload?.get(BotResponseConstants.AUDIO_URL) != null) {
+                                    newRows = createCustomTemplate(COMPONENT_TYPE_AUDIO, baseBotMsg, isLastItem, rows)
+                                    if (newRows != rows) {
+                                        rows = newRows
+                                        continue
+                                    }
                                     rows = rows + ImageTemplateRow(baseBotMsg.messageId, iconUrl, body.payload!!, COMPONENT_TYPE_AUDIO, actionEvent)
                                 } else if (body.payload?.get(BotResponseConstants.VIDEO_URL) != null) {
+                                    newRows = createCustomTemplate(COMPONENT_TYPE_AUDIO, baseBotMsg, isLastItem, rows)
+                                    if (newRows != rows) {
+                                        rows = newRows
+                                        continue
+                                    }
                                     rows = rows + VideoTemplateRow(baseBotMsg.messageId, iconUrl, body.payload!!, actionEvent)
                                 }
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_ERROR)) {

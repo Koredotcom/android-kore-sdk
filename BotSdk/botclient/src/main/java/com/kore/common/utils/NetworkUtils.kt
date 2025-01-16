@@ -18,10 +18,13 @@ class NetworkUtils {
          * @return boolean value
          */
         fun isNetworkAvailable(context: Context): Boolean {
-            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-            val isNetworkAvailable = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork) != null
-            if (!isNetworkAvailable) LogUtils.e(LOG_TAG, "No internet is available!. Please connect to the internet!")
-            return isNetworkAvailable
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+            if (connectivityManager != null) {
+                val network = connectivityManager.activeNetwork
+                val capabilities = connectivityManager.getNetworkCapabilities(network)
+                return capabilities != null
+            }
+            return false
         }
     }
 }

@@ -1,5 +1,7 @@
 package com.kore.common.utils
 
+import java.util.concurrent.TimeUnit
+
 class StringUtils {
     companion object {
         fun getInitials(fn: String?, ln: String?): String {
@@ -10,25 +12,20 @@ class StringUtils {
 
         fun timeConversion(value: Long): String {
             val songTime: String
-            val dur = value.toInt()
-            val hrs = dur / 3600000
-            val mns = dur / 60000 % 60000
-            val scs = dur % 60000 / 1000
-            songTime = if (hrs > 0) {
-                String.format("%02d:%02d:%02d", hrs, mns, scs)
+            val hours = TimeUnit.MILLISECONDS.toHours(value)
+            val minutes = TimeUnit.MILLISECONDS.toMinutes(value) % 60
+            val seconds = TimeUnit.MILLISECONDS.toSeconds(value) % 60
+            songTime = if (hours > 0) {
+                String.format("%02d:%02d:%02d", hours, minutes, seconds)
             } else {
-                String.format("%02d:%02d", mns, scs)
+                String.format("%02d:%02d", minutes, seconds)
             }
             return songTime
         }
 
         fun getFileNameFromUrl(url: String): String {
-            return try {
-                url.substring(url.lastIndexOf('/') + 1)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                ""
-            }
+            val index = url.lastIndexOf('/')
+            return if (index != -1) url.substring(url.lastIndexOf('/') + 1) else ""
         }
     }
 }
