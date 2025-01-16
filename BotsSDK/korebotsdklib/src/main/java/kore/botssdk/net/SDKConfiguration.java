@@ -100,7 +100,7 @@ public class SDKConfiguration {
         public static String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
         public static String identity = "PLEASE_ENTER_IDENTITY";
         public static String bot_name = "Kore.ai Bot";
-        public static String bot_id = "st-fc50f8c4-91a0-5ae7-bff2-283ad3c81700";
+        public static String bot_id = "PLEASE_ENTER_BOT_ID";
         public static boolean enable_ack_delivery = false;
 
         //Webhook

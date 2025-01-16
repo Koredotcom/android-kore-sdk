@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -35,10 +36,13 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.LangUtils;
 
 public class MainActivity extends AppCompatActivity {
+    String botId, clientSecret, botName, serverUrl;
+    String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
         //Can set Language for Bot SDK
         LangUtils.setAppLanguages(this, LangUtils.LANG_EN);

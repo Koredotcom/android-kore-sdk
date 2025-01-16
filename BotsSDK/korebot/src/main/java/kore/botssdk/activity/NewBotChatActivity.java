@@ -65,13 +65,13 @@ import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 public class NewBotChatActivity extends AppCompatActivity implements BotChatViewListener, ComposeFooterInterface, InvokeGenericWebViewInterface {
     private ProgressBar taskProgressBar;
     private String jwt;
-    private BotClient botClient;
+    BotClient botClient;
     private BaseHeaderFragment botHeaderFragment;
-    private BaseContentFragment botContentFragment;
+    BaseContentFragment botContentFragment;
     private BaseFooterFragment baseFooterFragment;
-    private SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
-    private boolean isAgentTransfer;
+    boolean isAgentTransfer;
     private boolean isReconnection;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
@@ -80,6 +80,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             if (isAgentTransfer && botClient != null) {
                 botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
             }
+
 
             LogUtils.e("onDestroyReceiver", "onDestroyReceiver called");
             SharedPreferences.Editor editor = sharedPreferences.edit();
