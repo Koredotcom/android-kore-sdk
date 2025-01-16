@@ -1,7 +1,5 @@
 package kore.botssdk.adapter;
 
-import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
-
 import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -9,9 +7,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.mikephil.charting.utils.ColorTemplate;
-
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -158,6 +153,13 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             payInner = payOuter.getPayload();
             if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 int customTemplateType = getCustomTemplateType(payInner.getTemplate_type());
+                if (customTemplateType == -1) {
+                    if (payInner.getTableDesign() != null) {
+                        customTemplateType = getCustomTemplateType(payInner.getTableDesign());
+                    } else if (payInner.getCarousel_type() != null) {
+                        customTemplateType = getCustomTemplateType(payInner.getCarousel_type());
+                    }
+                }
                 if (customTemplateType != -1) return customTemplateType;
 
                 switch (payInner.getTemplate_type()) {
@@ -232,12 +234,19 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 if (!StringUtils.isNullOrEmpty(payInner.getVideoUrl())) {
                     payOuter.setType(BundleConstants.MEDIA_TYPE_VIDEO);
+                    int customTemplateType = getCustomTemplateType(payOuter.getType());
+                    if (customTemplateType != -1) return customTemplateType;
                     return TEMPLATE_MEDIA;
                 } else if (!StringUtils.isNullOrEmpty(payInner.getAudioUrl())) {
                     payOuter.setType(BundleConstants.MEDIA_TYPE_AUDIO);
+                    int customTemplateType = getCustomTemplateType(payOuter.getType());
+                    if (customTemplateType != -1) return customTemplateType;
                     return TEMPLATE_MEDIA;
                 }
             } else if (!StringUtils.isNullOrEmpty(payOuter.getType())) {
+                int customTemplateType = getCustomTemplateType(payOuter.getType());
+                if (customTemplateType != -1) return customTemplateType;
+
                 switch (payOuter.getType()) {
                     case BotResponse.COMPONENT_TYPE_IMAGE:
                     case BotResponse.COMPONENT_TYPE_AUDIO:
@@ -246,8 +255,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                     default:
                         break;
                 }
-                int customTemplateType = getCustomTemplateType(payOuter.getType());
-                if (customTemplateType != -1) return customTemplateType;
             }
             return TEMPLATE_BUBBLE_RESPONSE;
         }
@@ -292,74 +299,41 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         if (customTemplates.containsKey(viewType)) {
             return getCustomTemplate(parent, SDKConfiguration.getCustomTemplateViewHolder(customTemplates.get(viewType)));
         }
-        switch (viewType) {
-            case TEMPLATE_BUBBLE_REQUEST:
-                return RequestTextTemplateHolder.getInstance(parent);
-            case TEMPLATE_BUTTON:
-                return ButtonTemplateHolder.getInstance(parent);
-            case TEMPLATE_BUTTON_LINK:
-                return ButtonLinkTemplateHolder.getInstance(parent);
-            case TEMPLATE_LIST_VIEW:
-                return ListViewTemplateHolder.getInstance(parent);
-            case TEMPLATE_LIST:
-                return ListTemplateHolder.getInstance(parent);
-            case TEMPLATE_CAROUSEL:
-                return CarouselTemplateHolder.getInstance(parent);
-            case TEMPLATE_CAROUSEL_STACKED:
-                return CarouselStackedTemplateHolder.getInstance(parent);
-            case TEMPLATE_PIE_CHART:
-                return PieChartTemplateHolder.getInstance(parent);
-            case TEMPLATE_ADVANCED_LIST_TEMPLATE:
-                return AdvancedListTemplateHolder.getInstance(parent);
-            case TEMPLATE_LINE_CHART:
-                return LineChartTemplateHolder.getInstance(parent);
-            case TEMPLATE_FORM:
-                return FormTemplateHolder.getInstance(parent);
-            case TEMPLATE_TABLE_LIST:
-                return TableListTemplateHolder.getInstance(parent);
-            case TEMPLATE_LIST_WIDGET_2:
-                return ListWidgetTemplateHolder.getInstance(parent);
-            case TEMPLATE_CARD:
-                return CardTemplateHolder.getInstance(parent);
-            case TEMPLATE_BAR_CHART:
-                return BarChartTemplateHolder.getInstance(parent);
-            case TEMPLATE_MINI_TABLE:
-                return MiniTableTemplateHolder.getInstance(parent);
-            case TEMPLATE_TABLE_RESPONSIVE:
-                return TableResponsiveTemplateHolder.getInstance(parent);
-            case TEMPLATE_TABLE:
-                return TableTemplateHolder.getInstance(parent);
-            case TEMPLATE_CLOCK:
-                return ClockTemplateHolder.getInstance(parent);
-            case TEMPLATE_DROP_DOWN:
-                return DropDownTemplateHolder.getInstance(parent);
-            case TEMPLATE_MEDIA:
-                return MediaTemplateHolder.getInstance(parent);
-            case TEMPLATE_FEEDBACK:
-                return FeedbackTemplateHolder.getInstance(parent);
-            case TEMPLATE_RADIO_OPTIONS:
-                return RadioOptionsTemplateHolder.getInstance(parent);
-            case TEMPLATE_WELCOME_QUICK_REPLIES:
-                return WelcomeQuickRepliesTemplateHolder.getInstance(parent);
-            case TEMPLATE_NOTIFICATIONS:
-                return AgentTransferTemplateHolder.getInstance(parent);
-            case TEMPLATE_CONTACT_CARD:
-                return ContactCardTemplateHolder.getInstance(parent);
-            case TEMPLATE_BANKING_FEEDBACK:
-                return BankingFeedbackTemplateHolder.getInstance(parent);
-            case TEMPLATE_PDF_DOWNLOAD:
-                return PdfTemplateHolder.getInstance(parent);
-            case TEMPLATE_BENEFICIARY:
-                return BeneficiaryTemplateHolder.getInstance(parent);
-            case TEMPLATE_MULTI_SELECT:
-                return MultiSelectTemplateHolder.getInstance(parent);
-            case TEMPLATE_ADVANCE_MULTI_SELECT:
-                return AdvanceMultiSelectTemplateHolder.getInstance(parent);
-            case TEMPLATE_RESULTS:
-                return ResultsTemplateHolder.getInstance(parent);
-            default:
-                return ResponseTextTemplateHolder.getInstance(parent);
-        }
+        return switch (viewType) {
+            case TEMPLATE_BUBBLE_REQUEST -> RequestTextTemplateHolder.getInstance(parent);
+            case TEMPLATE_BUTTON -> ButtonTemplateHolder.getInstance(parent);
+            case TEMPLATE_BUTTON_LINK -> ButtonLinkTemplateHolder.getInstance(parent);
+            case TEMPLATE_LIST_VIEW -> ListViewTemplateHolder.getInstance(parent);
+            case TEMPLATE_LIST -> ListTemplateHolder.getInstance(parent);
+            case TEMPLATE_CAROUSEL -> CarouselTemplateHolder.getInstance(parent);
+            case TEMPLATE_CAROUSEL_STACKED -> CarouselStackedTemplateHolder.getInstance(parent);
+            case TEMPLATE_PIE_CHART -> PieChartTemplateHolder.getInstance(parent);
+            case TEMPLATE_ADVANCED_LIST_TEMPLATE -> AdvancedListTemplateHolder.getInstance(parent);
+            case TEMPLATE_LINE_CHART -> LineChartTemplateHolder.getInstance(parent);
+            case TEMPLATE_FORM -> FormTemplateHolder.getInstance(parent);
+            case TEMPLATE_TABLE_LIST -> TableListTemplateHolder.getInstance(parent);
+            case TEMPLATE_LIST_WIDGET_2 -> ListWidgetTemplateHolder.getInstance(parent);
+            case TEMPLATE_CARD -> CardTemplateHolder.getInstance(parent);
+            case TEMPLATE_BAR_CHART -> BarChartTemplateHolder.getInstance(parent);
+            case TEMPLATE_MINI_TABLE -> MiniTableTemplateHolder.getInstance(parent);
+            case TEMPLATE_TABLE_RESPONSIVE -> TableResponsiveTemplateHolder.getInstance(parent);
+            case TEMPLATE_TABLE -> TableTemplateHolder.getInstance(parent);
+            case TEMPLATE_CLOCK -> ClockTemplateHolder.getInstance(parent);
+            case TEMPLATE_DROP_DOWN -> DropDownTemplateHolder.getInstance(parent);
+            case TEMPLATE_MEDIA -> MediaTemplateHolder.getInstance(parent);
+            case TEMPLATE_FEEDBACK -> FeedbackTemplateHolder.getInstance(parent);
+            case TEMPLATE_RADIO_OPTIONS -> RadioOptionsTemplateHolder.getInstance(parent);
+            case TEMPLATE_WELCOME_QUICK_REPLIES -> WelcomeQuickRepliesTemplateHolder.getInstance(parent);
+            case TEMPLATE_NOTIFICATIONS -> AgentTransferTemplateHolder.getInstance(parent);
+            case TEMPLATE_CONTACT_CARD -> ContactCardTemplateHolder.getInstance(parent);
+            case TEMPLATE_BANKING_FEEDBACK -> BankingFeedbackTemplateHolder.getInstance(parent);
+            case TEMPLATE_PDF_DOWNLOAD -> PdfTemplateHolder.getInstance(parent);
+            case TEMPLATE_BENEFICIARY -> BeneficiaryTemplateHolder.getInstance(parent);
+            case TEMPLATE_MULTI_SELECT -> MultiSelectTemplateHolder.getInstance(parent);
+            case TEMPLATE_ADVANCE_MULTI_SELECT -> AdvanceMultiSelectTemplateHolder.getInstance(parent);
+            case TEMPLATE_RESULTS -> ResultsTemplateHolder.getInstance(parent);
+            default -> ResponseTextTemplateHolder.getInstance(parent);
+        };
     }
 
     @Override
