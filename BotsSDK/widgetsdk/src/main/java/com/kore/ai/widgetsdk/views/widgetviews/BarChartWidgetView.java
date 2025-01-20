@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kore.ai.widgetsdk.R;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
@@ -23,7 +22,7 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.formatters.BarChartDataFormatter;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
@@ -401,14 +400,6 @@ public class BarChartWidgetView extends BaseWidgetView /*implements OnChartValue
             l.setFormSize(9f);
             l.setTextSize(11f);
             l.setXEntrySpace(4f);
-            // l.setExtra(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-            // "def", "ghj", "ikl", "mno" });
-            // l.setCustom(ColorTemplate.VORDIPLOM_COLORS, new String[] { "abc",
-            // "def", "ghj", "ikl", "mno" });
-
-//            XYMarkerView mv = new XYMarkerView(this, xAxisFormatter);
-//            mv.setChartView(mChart); // For bounds control
-//            mChart.setMarker(mv); // Set the marker to the chart
 
             mChart.setData(data);
 
