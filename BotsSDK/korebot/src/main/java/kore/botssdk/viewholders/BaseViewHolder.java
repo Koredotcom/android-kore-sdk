@@ -68,6 +68,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public static final int[] MATERIAL_COLORS = {
             Color.parseColor("#4A9AF2"), Color.parseColor("#5BC8C4"), Color.parseColor("#e74c3c"), Color.parseColor("#3498db")
     };
+    public static final int HOLO_BLUE = Color.rgb(51, 181, 229);
     private final Context context;
     private final String REGEX_CHAR = "%%.*?%%";
     private final Gson gson = new Gson();
