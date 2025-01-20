@@ -12,8 +12,6 @@ import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
 import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
 import com.kore.common.model.BotConfigModel
 import com.kore.ui.botchat.BotChatActivity
-import com.kore.ui.botchat.BotChatFragment
-import com.kore.ui.botchat.BotChatFragmentListener
 import java.io.IOException
 import java.util.Locale
 import java.util.Properties
@@ -41,6 +39,11 @@ class MainActivity : AppCompatActivity() {
         SDKConfig.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
         // Replacing existing template(Button template) with user owned template
 //        SDKConfig.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
+//        SDKConfig.addCustomTemplate(BotResponseConstants.COMPONENT_TYPE_VIDEO, BotResponseConstants.COMPONENT_TYPE_VIDEO, DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
+//        SDKConfig.addCustomTemplate(BotResponseConstants.TABLE_VIEW_RESPONSIVE, BotResponseConstants.TABLE_VIEW_RESPONSIVE, DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
+//        SDKConfig.addCustomTemplate(BotResponseConstants.PIE_TYPE_DONUT, BotResponseConstants.PIE_TYPE_DONUT, DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
+//        SDKConfig.addCustomTemplate(BotResponseConstants.BAR_CHART_DIRECTION_VERTICAL, BotResponseConstants.BAR_CHART_DIRECTION_VERTICAL, DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
+//        SDKConfig.addCustomTemplate(BotResponseConstants.CAROUSEL_STACKED, BotResponseConstants.CAROUSEL_STACKED, DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
         // Adding user custom Header fragment
 //        SDKConfig.addCustomHeaderFragment(BotResponseConstants.HEADER_SIZE_COMPACT, CustomHeaderFragment())
         // Adding user custom Content fragment

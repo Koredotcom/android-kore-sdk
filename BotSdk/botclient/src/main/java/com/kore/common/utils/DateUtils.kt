@@ -24,14 +24,6 @@ object DateUtils {
     val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.ENGLISH)
     private val dynamicDate = SimpleDateFormat(BotResponseConstants.DATE_FORMAT, Locale.ENGLISH)
 
-    private fun isYesterday(millis: Long): Boolean {
-        return DateUtils.isToday(millis + DateUtils.DAY_IN_MILLIS)
-    }
-
-    private fun isTomorrow(millis: Long): Boolean {
-        return DateUtils.isToday(millis - DateUtils.DAY_IN_MILLIS)
-    }
-
     fun getTimeInAmPm(dateInMs: Long): String {
         return if (BotResponseConstants.TIME_FORMAT == 12) dateTime.format(Date(dateInMs))
         else date24Time.format(Date(dateInMs))
@@ -48,9 +40,9 @@ object DateUtils {
         yearFormat.format(Date()).toInt()
         val time: String = if (DateUtils.isToday(lastModified)) {
             "Today"
-        } else if (isYesterday(lastModified)) {
+        } else if (DateUtils.isToday(lastModified + DateUtils.DAY_IN_MILLIS)) {
             "Yesterday"
-        } else if (isTomorrow(lastModified)) {
+        } else if (DateUtils.isToday(lastModified - DateUtils.DAY_IN_MILLIS)) {
             "Tomorrow"
         } else {
             dynamicDate.format(Date(lastModified))
@@ -69,9 +61,9 @@ object DateUtils {
         yearFormat.format(Date()).toInt()
         val time: String = if (DateUtils.isToday(lastModified)) {
             "Today, " + dateMonthDay.format(Date(lastModified))
-        } else if (isYesterday(lastModified)) {
+        } else if (DateUtils.isToday(lastModified + DateUtils.DAY_IN_MILLIS)) {
             "Yesterday, " + dateMonthDay.format(Date(lastModified))
-        } else if (isTomorrow(lastModified)) {
+        } else if (DateUtils.isToday(lastModified - DateUtils.DAY_IN_MILLIS)) {
             "Tomorrow, " + dateMonthDay.format(Date(lastModified))
         } else {
             dynamicDate.format(Date(lastModified))

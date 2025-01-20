@@ -5,9 +5,6 @@ import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListAdapter
-import com.kore.ui.row.SimpleListRow
-import com.kore.ui.row.listener.ChatContentStateListener
 import com.kore.common.utils.LogUtils
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotRequest
@@ -16,10 +13,14 @@ import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.COLOR
 import com.kore.model.constants.BotResponseConstants.COMPONENT_TYPE_AUDIO
+import com.kore.model.constants.BotResponseConstants.COMPONENT_TYPE_IMAGE
+import com.kore.model.constants.BotResponseConstants.COMPONENT_TYPE_VIDEO
+import com.kore.model.constants.BotResponseConstants.DIRECTION
 import com.kore.model.constants.BotResponseConstants.DISPLAY_LIMIT
 import com.kore.model.constants.BotResponseConstants.ELEMENTS
 import com.kore.model.constants.BotResponseConstants.HEADING
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
+import com.kore.model.constants.BotResponseConstants.PIE_TYPE
 import com.kore.model.constants.BotResponseConstants.PROGRESS
 import com.kore.model.constants.BotResponseConstants.SELECTED_FEEDBACK
 import com.kore.model.constants.BotResponseConstants.SELECTED_ITEM
@@ -27,6 +28,8 @@ import com.kore.model.constants.BotResponseConstants.SELECTED_POSITION
 import com.kore.model.constants.BotResponseConstants.SELECTED_TIME
 import com.kore.model.constants.BotResponseConstants.TEXT_MESSAGE
 import com.kore.ui.R
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.AdvanceTemplateRow
 import com.kore.ui.row.botchat.BarChartTemplateRow
 import com.kore.ui.row.botchat.BotChatRowType
@@ -57,6 +60,7 @@ import com.kore.ui.row.botchat.listview.ListViewTemplateRow
 import com.kore.ui.row.botchat.multiselect.MultiSelectTemplateRow
 import com.kore.ui.row.botchat.radiooptions.RadioOptionsTemplateRow
 import com.kore.ui.row.botchat.tablelist.TableListTemplateRow
+import com.kore.ui.row.listener.ChatContentStateListener
 
 class BotChatAdapter(private val context: Context, types: List<SimpleListRow.SimpleListRowType>) : SimpleListAdapter(types),
     ChatContentStateListener {
@@ -157,8 +161,24 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                                     val templateType = innerMap[BotResponseConstants.KEY_TEMPLATE_TYPE]
                                     newRows = createCustomTemplate(templateType.toString(), baseBotMsg, isLastItem, rows)
+                                    if (newRows == rows) {
+                                        if (innerMap[BotResponseConstants.CAROUSEL_TYPE] != null) {
+                                            newRows =
+                                                createCustomTemplate(innerMap[BotResponseConstants.CAROUSEL_TYPE].toString(), baseBotMsg, isLastItem, rows)
+                                        } else if (innerMap[PIE_TYPE] != null) {
+                                            newRows = createCustomTemplate(innerMap[PIE_TYPE].toString(), baseBotMsg, isLastItem, rows)
+                                        } else if (innerMap[DIRECTION] != null) {
+                                            newRows = createCustomTemplate(innerMap[DIRECTION].toString(), baseBotMsg, isLastItem, rows)
+                                        } else if (innerMap[BotResponseConstants.TABLE_DESIGN] != null) {
+                                            newRows = createCustomTemplate(innerMap[BotResponseConstants.TABLE_DESIGN].toString(), baseBotMsg, isLastItem, rows)
+                                        }
+                                    }
                                     if (newRows.size != rows.size) {
-                                        rows = newRows
+                                        var msgRow: TextTemplateRow? = null
+                                        if (isTextMsg) {
+                                            msgRow = createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
+                                        }
+                                        rows = if (msgRow == null) newRows else rows + msgRow + newRows.last()
                                         continue
                                     }
 
@@ -343,7 +363,6 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                             if (isTextMsg) {
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }
-
                                             rows = if (innerMap[BotResponseConstants.TABLE_DESIGN] != null) {
                                                 when (innerMap[BotResponseConstants.TABLE_DESIGN] as String) {
                                                     BotResponseConstants.TABLE_VIEW_RESPONSIVE -> {
@@ -384,14 +403,20 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                 } else {
                                     rows = rows + createTextTemplate(msgId, false, innerMap[KEY_TEXT].toString(), iconUrl, isLastItem)
                                 }
-                            } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_IMAGE)) {
-                                body.payload?.let {
-                                    rows = rows + ImageTemplateRow(baseBotMsg.messageId, iconUrl, it, body.type as String, actionEvent)
-                                }
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_MESSAGE)) {
                                 if (body.payload?.get(BotResponseConstants.AUDIO_URL) != null) {
+                                    newRows = createCustomTemplate(COMPONENT_TYPE_AUDIO, baseBotMsg, isLastItem, rows)
+                                    if (newRows != rows) {
+                                        rows = newRows
+                                        continue
+                                    }
                                     rows = rows + ImageTemplateRow(baseBotMsg.messageId, iconUrl, body.payload!!, COMPONENT_TYPE_AUDIO, actionEvent)
                                 } else if (body.payload?.get(BotResponseConstants.VIDEO_URL) != null) {
+                                    newRows = createCustomTemplate(COMPONENT_TYPE_VIDEO, baseBotMsg, isLastItem, rows)
+                                    if (newRows != rows) {
+                                        rows = newRows
+                                        continue
+                                    }
                                     rows = rows + VideoTemplateRow(baseBotMsg.messageId, iconUrl, body.payload!!, actionEvent)
                                 }
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_ERROR)) {
@@ -407,6 +432,25 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                     )
                                 }
                             } else {
+                                newRows = createCustomTemplate(body.type, baseBotMsg, isLastItem, rows)
+                                if (newRows != rows) {
+                                    rows = newRows
+                                    continue
+                                }
+
+                                when (body.type) {
+                                    COMPONENT_TYPE_IMAGE, COMPONENT_TYPE_AUDIO -> {
+                                        body.payload?.let {
+                                            rows = rows + ImageTemplateRow(baseBotMsg.messageId, iconUrl, it, body.type as String, actionEvent)
+                                        }
+                                        continue
+                                    }
+
+                                    COMPONENT_TYPE_VIDEO -> {
+                                        rows = rows + VideoTemplateRow(baseBotMsg.messageId, iconUrl, body.payload!!, actionEvent)
+                                        continue
+                                    }
+                                }
                                 rows = rows + createTextTemplate(msgId, false, body.type, iconUrl, isLastItem, msgTime)
                             }
                         }
