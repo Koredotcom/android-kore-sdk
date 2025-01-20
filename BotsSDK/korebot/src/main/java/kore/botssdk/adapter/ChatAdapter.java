@@ -158,6 +158,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                         customTemplateType = getCustomTemplateType(payInner.getTableDesign());
                     } else if (payInner.getCarousel_type() != null) {
                         customTemplateType = getCustomTemplateType(payInner.getCarousel_type());
+                    } else if (payInner.getDirection() != null) {
+                        customTemplateType = getCustomTemplateType(payInner.getDirection());
+                    } else if (payInner.getPie_type() != null) {
+                        customTemplateType = getCustomTemplateType(payInner.getPie_type());
                     }
                 }
                 if (customTemplateType != -1) return customTemplateType;
