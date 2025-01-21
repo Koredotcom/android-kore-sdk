@@ -1,6 +1,5 @@
 package kore.botssdk.viewholders;
 
-import static com.github.mikephil.charting.utils.ColorTemplate.rgb;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
@@ -67,13 +66,14 @@ import kore.botssdk.view.LinkifyTextView;
 @SuppressWarnings("UnKnownNullness")
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public static final int[] MATERIAL_COLORS = {
-            rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db")
+            Color.parseColor("#4A9AF2"), Color.parseColor("#5BC8C4"), Color.parseColor("#e74c3c"), Color.parseColor("#3498db")
     };
-    final Context context;
+    public static final int HOLO_BLUE = Color.rgb(51, 181, 229);
+    private final Context context;
     private final String REGEX_CHAR = "%%.*?%%";
-    final Gson gson = new Gson();
+    private final Gson gson = new Gson();
     private boolean isLastItem = true;
-    LinkifyTextView bubbleText;
+    private LinkifyTextView bubbleText;
 
     protected ComposeFooterInterface composeFooterInterface;
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -84,7 +84,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View baseView = inflater.inflate(R.layout.base_view_holder, parent, false);
         View childView = inflater.inflate(layoutId, null);
-        LinearLayoutCompat contentLayout = baseView.findViewById(R.id.contentLayout);
+        LinearLayoutCompat contentLayout = (LinearLayoutCompat) baseView.findViewById(R.id.contentLayout);
         contentLayout.addView(childView, LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         return baseView;
     }
@@ -173,7 +173,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         return compModel;
     }
 
-    String getRemovedEntityEditString(String _str) {
+    private String getRemovedEntityEditString(String _str) {
         String str = _str.replaceAll(REGEX_CHAR, "");
         str = str.replaceAll("\\s{2,}", " ");
         return str;
@@ -211,8 +211,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9");
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#000000");
         String bubble_style = sharedPreferences.getString(BundleConstants.BUBBLE_STYLE, "rounded");
-
-        LogUtils.e("leftBgColor", rightBgColor);
 
         //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
         float[] roundedRadii = {16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};
