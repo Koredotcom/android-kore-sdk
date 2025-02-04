@@ -231,7 +231,7 @@ class MediaAttachmentHelper(
             val hover = BitmapFactory.decodeResource(context.resources, R.drawable.btn_video_play_irc)
             thumbnail = overlay(thumbnail, hover)
             val orientation = if (thumbnail.width > thumbnail.height) BitmapUtils.ORIENTATION_LS else BitmapUtils.ORIENTATION_PT
-            val bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, COMPRESS_QUALITY)
+            val bmpPath = BitmapUtils.createImageThumbnailForBulk(context, thumbnail, realPath, COMPRESS_QUALITY)
             processFileUpload(
                 fileName,
                 realPath,
@@ -322,7 +322,7 @@ class MediaAttachmentHelper(
                 }
                 thumbnail = overlay(thumbnail!!, hover)
                 val orientation = if (thumbnail.width > thumbnail.height) BitmapUtils.ORIENTATION_LS else BitmapUtils.ORIENTATION_PT
-                val bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, filePath, COMPRESS_QUALITY)
+                val bmpPath = BitmapUtils.createImageThumbnailForBulk(context, thumbnail, filePath, COMPRESS_QUALITY)
                 processFileUpload(fileName, filePath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation)
             }
         }
