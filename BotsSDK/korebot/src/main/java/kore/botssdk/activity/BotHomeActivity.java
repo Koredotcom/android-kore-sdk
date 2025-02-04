@@ -66,7 +66,7 @@ BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.Provi
                 Log.e("Has Permission", "true");
             } else {
                 KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST,
-                        Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO);
+                        Manifest.permission.POST_NOTIFICATIONS);
             }
         }
     }
