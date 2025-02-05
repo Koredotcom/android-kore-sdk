@@ -1,6 +1,7 @@
 package com.kore.ui.row
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.Rect
 import android.view.View
 import android.widget.LinearLayout.LayoutParams
@@ -20,6 +21,7 @@ import com.kore.model.constants.BotResponseConstants
 abstract class SimpleListRow {
     companion object {
         val MATERIAL_COLORS = intArrayOf(rgb("#4A9AF2"), rgb("#5BC8C4"), rgb("#e74c3c"), rgb("#3498db"))
+        val HOLO_BLUE = Color.rgb(51, 181, 229)
     }
 
     abstract val type: SimpleListRowType
