@@ -16,8 +16,8 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.constants.MediaConstants
-import com.kore.extensions.dpToPx
 import com.kore.common.utils.LogUtils
+import com.kore.extensions.dpToPx
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -28,6 +28,8 @@ import java.util.Locale
 object BitmapUtils {
     private val LOG_TAG = BitmapUtils::class.java.simpleName
 
+    private const val MEDIA_APP_FOLDER: String = "Kore"
+    private const val DOWNLOADED_IMAGE_FOLDER: String = "Kore Image"
     const val ORIENTATION_LS = "landscape"
     const val ORIENTATION_PT = "portrait"
     private const val EXT_DOTX = "dotx"
@@ -270,12 +272,14 @@ object BitmapUtils {
     }
 
     @SuppressLint("LogConditional")
-    fun createImageThumbnailForBulk(bitmap: Bitmap, thumbNailPath: String, compressQualityInt: Int): String {
+    fun createImageThumbnailForBulk(context: Context, bitmap: Bitmap, thumbNailPath: String, compressQualityInt: Int): String {
         var thumbnail = bitmap
         var thumbPath = thumbNailPath
-        val index = thumbPath.lastIndexOf(".")
-        thumbPath = thumbPath.substring(0, index) + "_th.png"
-        LogUtils.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail path = $thumbPath")
+        val fileName = thumbPath.substring(thumbPath.lastIndexOf("/"), thumbPath.lastIndexOf("."))
+        val path: String = context.filesDir.toString() + File.separator + MEDIA_APP_FOLDER
+        val mediaStorageDir = File(path, DOWNLOADED_IMAGE_FOLDER).absolutePath
+
+        thumbPath = mediaStorageDir + fileName + "_th.png"
         val thumbnailFile = File(thumbPath)
         LogUtils.d("BitmapUtils", "createImageThumbnailForBulk() - thumbnail file name & path = " + thumbnailFile.absolutePath)
         try {

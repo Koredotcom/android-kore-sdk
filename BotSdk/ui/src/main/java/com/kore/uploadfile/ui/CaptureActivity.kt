@@ -18,7 +18,6 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
-import com.kore.ui.base.BaseActivity
 import com.kore.common.constants.MediaConstants
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_ACTION
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_DOCUMENT_MIME
@@ -30,12 +29,13 @@ import com.kore.common.constants.MediaConstants.Companion.EXTRA_FILE_URI
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_MEDIA_TYPE
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_PICK_TYPE
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_THUMBNAIL_FILE_PATH
+import com.kore.common.utils.LogUtils
 import com.kore.helper.RuntimePermissionHelper
 import com.kore.helper.RuntimePermissionHelper.Companion.hasPermissions
-import com.kore.common.utils.LogUtils
-import com.kore.ui.utils.MediaUtils.Companion.setupAppDir
 import com.kore.ui.R
+import com.kore.ui.base.BaseActivity
 import com.kore.ui.databinding.ActivityCaptureMediaBinding
+import com.kore.ui.utils.MediaUtils.Companion.setupAppDir
 import java.io.IOException
 
 class CaptureActivity : BaseActivity<ActivityCaptureMediaBinding, CaptureView, CaptureViewModel>(), CaptureView {
@@ -201,7 +201,7 @@ class CaptureActivity : BaseActivity<ActivityCaptureMediaBinding, CaptureView, C
     }
 
     private fun checkForPermissionAccessAndRequest() {
-        if (mediaPickType == MediaConstants.CHOOSE_TYPE_DOCUMENT_PICK || hasPermissions(this, runtimeMediaPermissions)) {
+        if ((mediaPickType != MediaConstants.CHOOSE_TYPE_CAPTURE_IMAGE && mediaPickType != MediaConstants.CHOOSE_TYPE_CAPTURE_VIDEO && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) || hasPermissions(this, runtimeMediaPermissions)) {
             openMediaIntent(mediaPickType)
         } else {
             runtimePermissionHelper.requestPermissions(runtimeMediaPermissions)
@@ -218,13 +218,11 @@ class CaptureActivity : BaseActivity<ActivityCaptureMediaBinding, CaptureView, C
             }
 
             MediaConstants.CHOOSE_TYPE_IMAGE_PICK -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) runtimeMediaPermissions.add(Manifest.permission.READ_MEDIA_IMAGES)
-                else runtimeMediaPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+                runtimeMediaPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
 
             MediaConstants.CHOOSE_TYPE_VIDEO_PICK -> {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) runtimeMediaPermissions.add(Manifest.permission.READ_MEDIA_VIDEO)
-                else runtimeMediaPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
+                runtimeMediaPermissions.add(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
         }
     }
@@ -299,19 +297,20 @@ class CaptureActivity : BaseActivity<ActivityCaptureMediaBinding, CaptureView, C
 
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                intent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
                 captureVideoLauncher.launch(intent)
             } else if (MediaConstants.CHOOSE_TYPE_IMAGE_PICK == mediaPickType) {
                 //use standard intent to pick an image from gallery
-                val photoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
-                photoPickerIntent.type = "image/*"
-                photoPickerIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
+                val photoPickerIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
                 pickImageLauncher.launch(photoPickerIntent)
             } else if (mediaPickType == MediaConstants.CHOOSE_TYPE_VIDEO_PICK) {
                 //use standard intent to pick a video from gallery
-                val videoPickerIntent = Intent(Intent.ACTION_GET_CONTENT)
+                val videoPickerIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+                videoPickerIntent.type = "video/*"
+                videoPickerIntent.addCategory(Intent.CATEGORY_OPENABLE)
+                videoPickerIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION)
                 videoPickerIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 videoPickerIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-                videoPickerIntent.type = "video/*"
                 pickVideoLauncher.launch(videoPickerIntent)
             } else if (mediaPickType == MediaConstants.CHOOSE_TYPE_DOCUMENT_PICK) {
                 val filePickerIntent = Intent(Intent.ACTION_GET_CONTENT)
