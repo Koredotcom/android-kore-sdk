@@ -115,27 +115,17 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.CAMERA);
             }
         } else if (CHOOSE_TYPE_VIDEO_PICK.equalsIgnoreCase(imagePickType)) {
-            if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_VIDEO) :
-                    KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (Build.VERSION.SDK_INT >= TIRAMISU || KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             } else {
-                if (Build.VERSION.SDK_INT >= TIRAMISU) {
-                    KaPermissionsHelper.requestForPermission(this, CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_MEDIA_VIDEO);
-                } else {
-                    KaPermissionsHelper.requestForPermission(this, CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST,
-                            Manifest.permission.READ_EXTERNAL_STORAGE);
-                }
+                KaPermissionsHelper.requestForPermission(this, CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST,
+                        Manifest.permission.READ_EXTERNAL_STORAGE);
             }
         } else if (CHOOSE_TYPE_IMAGE_PICK.equalsIgnoreCase(imagePickType)) {
-            if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_IMAGES) :
-                    KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (Build.VERSION.SDK_INT >= TIRAMISU || KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             } else {
-                if (Build.VERSION.SDK_INT >= TIRAMISU) {
-                    KaPermissionsHelper.requestForPermission(this, CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_MEDIA_IMAGES);
-                } else {
-                    KaPermissionsHelper.requestForPermission(this, CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
-                }
+                KaPermissionsHelper.requestForPermission(this, CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.READ_EXTERNAL_STORAGE);
             }
         } else if (CHOOSE_TYPE_CAPTURE_VIDEO.equalsIgnoreCase(imagePickType)) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO)) {
@@ -158,13 +148,11 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 openImageIntent(imagePickType);
             }
         } else if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
-            if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_IMAGES) :
-                    KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (Build.VERSION.SDK_INT >= TIRAMISU || KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             }
         } else if (requestCode == CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST) {
-            if (Build.VERSION.SDK_INT >= TIRAMISU ? KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_MEDIA_VIDEO) :
-                    KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (Build.VERSION.SDK_INT >= TIRAMISU || KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 openImageIntent(imagePickType);
             }
         } else if (requestCode == CAPTURE_VIDEO_BUNDLED_PERMISSION_REQUEST) {

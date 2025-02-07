@@ -31,7 +31,7 @@ import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.StringUtils;
 
 @SuppressLint("UnknownNullness")
-public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener{
+public class BotHomeActivity extends BotAppCompactActivity implements ProviderInstaller.ProviderInstallListener {
     private Button launchBotBtn;
     EditText etIdentity;
     private static final int ERROR_DIALOG_REQUEST_CODE = 1;
@@ -53,16 +53,14 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
         etIdentity = findViewById(R.id.etIdentity);
         launchBotBtn.setText(getResources().getString(R.string.get_started));
         etIdentity.setText(SDKConfiguration.Client.identity);
-        if(etIdentity.getText().length() > 0)
+        if (etIdentity.getText().length() > 0)
             etIdentity.setSelection(etIdentity.getText().toString().length());
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.POST_NOTIFICATIONS)) {
                 Log.e("Has Permission", "true");
-            } else
-            {
-                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST,
-                        Manifest.permission.POST_NOTIFICATIONS, Manifest.permission.READ_MEDIA_IMAGES, Manifest.permission.READ_MEDIA_VIDEO, Manifest.permission.READ_MEDIA_AUDIO);
+            } else {
+                KaPermissionsHelper.requestForPermission(this, CAPTURE_IMAGE_BUNDLED_PERMISSION_REQUEST, Manifest.permission.POST_NOTIFICATIONS);
             }
         }
     }
@@ -77,29 +75,20 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
     final View.OnClickListener launchBotBtnOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (isOnline())
-            {
-                if(!StringUtils.isNullOrEmpty(etIdentity.getText().toString()))
-                {
-                    if(StringUtils.isValidEmail(etIdentity.getText().toString()))
-                    {
-                        if(!SDKConfiguration.Client.isWebHook)
-                        {
-                            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(),null);
+            if (isOnline()) {
+                if (!StringUtils.isNullOrEmpty(etIdentity.getText().toString())) {
+                    if (StringUtils.isValidEmail(etIdentity.getText().toString())) {
+                        if (!SDKConfiguration.Client.isWebHook) {
+                            BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithConfig(getApplicationContext(), null);
+                            launchBotChatActivity();
+                        } else {
                             launchBotChatActivity();
                         }
-                        else
-                        {
-                            launchBotChatActivity();
-                        }
-                    }
-                    else
+                    } else
                         Toast.makeText(BotHomeActivity.this, "Please enter a valid Email.", Toast.LENGTH_SHORT).show();
-                }
-                else
+                } else
                     Toast.makeText(BotHomeActivity.this, "Please enter your Email.", Toast.LENGTH_SHORT).show();
-            } else
-                {
+            } else {
                 Toast.makeText(BotHomeActivity.this, "No internet connectivity", Toast.LENGTH_SHORT).show();
             }
         }
@@ -108,9 +97,8 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
 
     /**
      * Launching BotchatActivity where user can interact with bot
-     *
      */
-    void launchBotChatActivity(){
+    void launchBotChatActivity() {
         Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
@@ -120,6 +108,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
 
         startActivity(intent);
     }
+
     @SuppressLint("MissingPermission")
     protected boolean isOnline() {
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

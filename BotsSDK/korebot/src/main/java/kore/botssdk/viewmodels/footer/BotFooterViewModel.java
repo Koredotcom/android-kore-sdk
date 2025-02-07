@@ -115,7 +115,7 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
             Bitmap hover = BitmapFactory.decodeResource(context.get().getResources(), R.drawable.btn_video_play_irc);
             thumbnail = overlay(thumbnail, hover);
             orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-            String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, COMPRESS_QUALITY_INT);
+            String bmpPath = BitmapUtils.createImageThumbnailForBulk(context.get(), thumbnail, realPath, COMPRESS_QUALITY_INT);
             processFileUpload(jwt, fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
         } else {
             try {
@@ -378,7 +378,7 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
                 }
                 thumbnail = overlay(thumbnail, hover);
                 String orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-                String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, filePath, COMPRESS_QUALITY_INT);
+                String bmpPath = BitmapUtils.createImageThumbnailForBulk(context.get(), thumbnail, filePath, COMPRESS_QUALITY_INT);
                 processFileUpload(jwt, fileName, filePath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
             }
         }
