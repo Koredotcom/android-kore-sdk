@@ -203,7 +203,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             }
         }
 
-        if (botContentFragment != null && isReconnection) {
+        if (botContentFragment != null && sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false)) {
             if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
                 botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
             else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
