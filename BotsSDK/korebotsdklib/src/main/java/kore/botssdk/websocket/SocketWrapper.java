@@ -246,13 +246,14 @@ public final class SocketWrapper {
                             queryParams.append("=");
                             queryParams.append(entry.getValue());
                         }
-                        socketConnectionListener.onStartCompleted(isReconnect);
+                        socketConnectionListener.onStartCompleted(false);
                         connectToSocket(rtmUrl.getUrl().concat("&isReconnect=false") + queryParams, false);
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
+                        socketConnectionListener.onStartCompleted(true);
                         connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), isReconnect);
                     } catch (URISyntaxException e) {
                         throw new RuntimeException(e);
