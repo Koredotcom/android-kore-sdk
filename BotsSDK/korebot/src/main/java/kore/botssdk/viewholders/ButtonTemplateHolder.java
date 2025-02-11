@@ -38,10 +38,12 @@ public class ButtonTemplateHolder extends BaseViewHolder {
         RecyclerView buttonsList = itemView.findViewById(R.id.buttonsList);
         buttonsList.setLayoutManager(new LinearLayoutManager(buttonsList.getContext()));
 
-        buttonTypeAdapter = new ButtonTemplateAdapter(buttonsList.getContext());
-        buttonsList.setAdapter(buttonTypeAdapter);
-        buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
-        buttonTypeAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        buttonTypeAdapter.populateData(botButtonModels, isLastItem());
+        if(botButtonModels != null && !botButtonModels.isEmpty()) {
+            buttonTypeAdapter = new ButtonTemplateAdapter(buttonsList.getContext());
+            buttonsList.setAdapter(buttonTypeAdapter);
+            buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
+            buttonTypeAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+            buttonTypeAdapter.populateData(botButtonModels, isLastItem());
+        }
     }
 }
