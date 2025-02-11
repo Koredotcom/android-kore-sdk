@@ -38,6 +38,60 @@ import kore.botssdk.utils.LangUtils;
 public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
     String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
+    String localBranding = "{\n" +
+            "   \"_id\":\"wsth-793c50ac-ebe1-53c0-853a-065f41d7c683\",\n" +
+            "   \"streamId\":\"st-89185ffe-d861-54c4-b3b9-8f182997b2be\",\n" +
+            "   \"__v\":0,\n" +
+            "   \"activeTheme\":true,\n" +
+            "   \"botMessage\":{\n" +
+            "      \"bubbleColor\":\"#445877\",\n" +
+            "      \"fontColor\":\"#fbfcff\",\n" +
+            "      \"borderColor\":\"#F3F5F8\"\n" +
+            "   },\n" +
+            "   \"buttons\":{\n" +
+            "      \"defaultButtonColor\":\"#0dd6fd\",\n" +
+            "      \"defaultFontColor\":\"#ffffff\",\n" +
+            "      \"onHoverButtonColor\":\"#0659d2\",\n" +
+            "      \"onHoverFontColor\":\"#ffffff\",\n" +
+            "      \"borderColor\":\"#0D6EFD\"\n" +
+            "   },\n" +
+            "   \"createdBy\":\"u-f37609a4-6430-5f4c-8724-abfc08e174ae\",\n" +
+            "   \"createdOn\":\"2025-02-11T05:37:19.516Z\",\n" +
+            "   \"defaultTheme\":false,\n" +
+            "   \"digitalViews\":{\n" +
+            "      \"panelTheme\":\"theme_one\"\n" +
+            "   },\n" +
+            "   \"generalAttributes\":{\n" +
+            "      \"bubbleShape\":\"square\",\n" + //circle or square
+            "      \"borderColor\":\"#F3F5F8\"\n" +
+            "   },\n" +
+            "   \"lastModifiedBy\":\"u-f37609a4-6430-5f4c-8724-abfc08e174ae\",\n" +
+            "   \"lastModifiedOn\":\"2025-02-11T05:36:54.512Z\",\n" +
+            "   \"refId\":\"8c3dc424-f82d-5e06-83b1-ecb9390a03e0\",\n" +
+            "   \"state\":\"published\",\n" +
+            "   \"themeName\":\"New Theme\",\n" +
+            "   \"userMessage\":{\n" +
+            "      \"bubbleColor\":\"#fdc80d\",\n" +
+            "      \"fontColor\":\"#a10808\",\n" +
+            "      \"borderColor\":\"#0D6EFD\"\n" +
+            "   },\n" +
+            "   \"widgetBody\":{\n" +
+            "      \"backgroundImage\":\"\",\n" +
+            "      \"backgroundColor\":\"#ffffff\",\n" +
+            "      \"useBackgroundImage\":false\n" +
+            "   },\n" +
+            "   \"widgetFooter\":{\n" +
+            "      \"backgroundColor\":\"#ffa4a4\",\n" +
+            "      \"fontColor\":\"#4e4c4c\",\n" +
+            "      \"borderColor\":\"#E4E5E7\",\n" +
+            "      \"placeHolder\":\"#6b3e3e\"\n" +
+            "   },\n" +
+            "   \"widgetHeader\":{\n" +
+            "      \"backgroundColor\":\"#fb0dfd\",\n" +
+            "      \"fontColor\":\"#ffffff\",\n" +
+            "      \"borderColor\":\"#e5e8ec\"\n" +
+            "   }\n" +
+            "}";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,13 +157,16 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setIsShowIcon(true);
 
         //Flag to show the bot icon in top position or bottom of the bot response
-        SDKConfig.setIsShowIconTop(true);
+        SDKConfig.setIsShowIconTop(false);
 
         //Flag to show timestamp of each bot and user messages
         SDKConfig.setIsTimeStampsRequired(true);
 
         //Flag to show bot header or hide the header
         SDKConfig.setIsShowHeader(true);
+
+        //Set local branding by overriding the branding api response
+        SDKConfig.setLocalBranding(true, localBranding);
 
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
