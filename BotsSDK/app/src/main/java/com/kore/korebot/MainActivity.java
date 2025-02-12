@@ -38,60 +38,7 @@ import kore.botssdk.utils.LangUtils;
 public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
     String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
-    String localBranding = "{\n" +
-            "   \"_id\":\"id\",\n" +
-            "   \"streamId\":\"streamId\",\n" +
-            "   \"__v\":0,\n" +
-            "   \"activeTheme\":true,\n" +
-            "   \"botMessage\":{\n" +
-            "      \"bubbleColor\":\"#445877\",\n" +
-            "      \"fontColor\":\"#fbfcff\",\n" +
-            "      \"borderColor\":\"#F3F5F8\"\n" +
-            "   },\n" +
-            "   \"buttons\":{\n" +
-            "      \"defaultButtonColor\":\"#0dd6fd\",\n" +
-            "      \"defaultFontColor\":\"#ffffff\",\n" +
-            "      \"onHoverButtonColor\":\"#0659d2\",\n" +
-            "      \"onHoverFontColor\":\"#ffffff\",\n" +
-            "      \"borderColor\":\"#0D6EFD\"\n" +
-            "   },\n" +
-            "   \"createdBy\":\"userId\",\n" +
-            "   \"createdOn\":\"2025-02-11\",\n" +
-            "   \"defaultTheme\":false,\n" +
-            "   \"digitalViews\":{\n" +
-            "      \"panelTheme\":\"theme_one\"\n" +
-            "   },\n" +
-            "   \"generalAttributes\":{\n" +
-            "      \"bubbleShape\":\"square\",\n" + //circle or square
-            "      \"borderColor\":\"#F3F5F8\"\n" +
-            "   },\n" +
-            "   \"lastModifiedBy\":\"userId\",\n" +
-            "   \"lastModifiedOn\":\"2025-02-11\",\n" +
-            "   \"refId\":\"refId\",\n" +
-            "   \"state\":\"published\",\n" +
-            "   \"themeName\":\"New Theme\",\n" +
-            "   \"userMessage\":{\n" +
-            "      \"bubbleColor\":\"#fdc80d\",\n" +
-            "      \"fontColor\":\"#a10808\",\n" +
-            "      \"borderColor\":\"#0D6EFD\"\n" +
-            "   },\n" +
-            "   \"widgetBody\":{\n" +
-            "      \"backgroundImage\":\"\",\n" +
-            "      \"backgroundColor\":\"#ffffff\",\n" +
-            "      \"useBackgroundImage\":false\n" +
-            "   },\n" +
-            "   \"widgetFooter\":{\n" +
-            "      \"backgroundColor\":\"#ffa4a4\",\n" +
-            "      \"fontColor\":\"#4e4c4c\",\n" +
-            "      \"borderColor\":\"#E4E5E7\",\n" +
-            "      \"placeHolder\":\"#6b3e3e\"\n" +
-            "   },\n" +
-            "   \"widgetHeader\":{\n" +
-            "      \"backgroundColor\":\"#fb0dfd\",\n" +
-            "      \"fontColor\":\"#ffffff\",\n" +
-            "      \"borderColor\":\"#e5e8ec\"\n" +
-            "   }\n" +
-            "}";
+    String localBranding = "PLEASE_ENTER_BRANDING_JSON";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,31 +58,31 @@ public class MainActivity extends AppCompatActivity {
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
         //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
-        String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzkzMzc3NTgsImV4cCI6MTczOTQyNDE1OCwiYXVkIjoiIiwiaXNzIjoiY3MtZDdhODI5MjktMmRlNy01MGExLTk3NTUtNDIwNmYyMGJkMzc4Iiwic3ViIjoiZmFlOTk1ZGQtMGU2MS00YWQxLThiMTQtNjdmNDc0YjBmNjEwYjgyYWZlY2EtMzgxOS00MzRkLTkyNGQtNTNjM2E4OGE2MWY3IiwiaXNBbm9ueW1vdXMiOmZhbHNlfQ.yopnIW7rW86_XpMkaWw7mCI3VGEbAtmTmOXFtOuaYec";
+        String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "cs-d7a82929-2de7-50a1-9755-4206f20bd378";
+        String clientId = "PLEASE_ENTER_CLIENT_ID";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "57roBOfA5w5/yBYQQS7fzKah057c9TycF7Jhxa/5y1E=";
+        String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
         //Set botId, This value is mandatory
-        String botId = "st-89185ffe-d861-54c4-b3b9-8f182997b2be";
+        String botId = "PLEASE_ENTER_BOT_ID";
 
         //Set identity, This value is mandatory
-        String identity = "IDENTITY";
+        String identity = "PLEASE_ENTER_IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = "BOT_NAME";
+        String botName = "PLEASE_ENTER_BOT_NAME";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "https://bots.kore.ai/";
+        String serverUrl = "PLEASE_ENTER_SERVER_URL";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "https://bots.kore.ai/";
+        String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "";
+        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
