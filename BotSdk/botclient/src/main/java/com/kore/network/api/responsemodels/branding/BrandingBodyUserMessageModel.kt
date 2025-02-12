@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class BrandingBodyUserMessageModel(
     @SerializedName("bg_color")
-    val bgColor: String = "",
+    val bgColor: String? = null,
     @SerializedName("color")
-    val color: String = ""
+    val color: String? = null
 )

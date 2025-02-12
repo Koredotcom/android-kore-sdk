@@ -62,37 +62,37 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
             dismiss()
         }
 
-        if (botBrandingModel.welcomeScreen.layout.isNotEmpty()) {
+        if (!botBrandingModel.welcomeScreen?.layout.isNullOrEmpty()) {
             if (botBrandingModel.general.colors.useColorPaletteOnly) {
-                botBrandingModel.welcomeScreen.background.color = botBrandingModel.general.colors.primary
+                botBrandingModel.welcomeScreen?.background?.color = botBrandingModel.general.colors.primary
                 binding.llStartConversation.backgroundTintList =
                     ColorStateList.valueOf(Color.parseColor(botBrandingModel.general.colors.primary))
                 binding.svWelcome.backgroundTintList = ColorStateList.valueOf(Color.parseColor(botBrandingModel.general.colors.secondary))
                 binding.llStarterLogo.backgroundTintList = ColorStateList.valueOf(Color.parseColor(botBrandingModel.general.colors.primary))
             }
 
-            when (botBrandingModel.welcomeScreen.layout) {
+            when (botBrandingModel.welcomeScreen?.layout) {
                 BotResponseConstants.HEADER_SIZE_LARGE -> applyFragment(2, botBrandingModel.welcomeScreen)
                 BotResponseConstants.HEADER_SIZE_MEDIUM -> applyFragment(3, botBrandingModel.welcomeScreen)
                 else -> applyFragment(1, botBrandingModel.welcomeScreen)
             }
         }
 
-        if (botBrandingModel.welcomeScreen.promotionalContent.promotions.size > 0) {
+        if (!botBrandingModel.welcomeScreen?.promotionalContent?.promotions.isNullOrEmpty()) {
             binding.lvPromotions.isVisible = true
             binding.lvPromotions.adapter = WelcomePromotionsAdapter(
-                requireContext(), botBrandingModel.welcomeScreen.promotionalContent.promotions
+                requireContext(), botBrandingModel.welcomeScreen?.promotionalContent?.promotions!!
             )
         }
 
-        if (botBrandingModel.welcomeScreen.starterBox.title.isNotEmpty()) {
+        if (!botBrandingModel.welcomeScreen?.starterBox?.title.isNullOrEmpty()) {
             binding.tvStarterTitle.isVisible = true
-            binding.tvStarterTitle.text = botBrandingModel.welcomeScreen.starterBox.title
+            binding.tvStarterTitle.text = botBrandingModel.welcomeScreen?.starterBox?.title
         }
 
-        if (botBrandingModel.welcomeScreen.starterBox.subText.isNotEmpty()) {
+        if (!botBrandingModel.welcomeScreen?.starterBox?.subText.isNullOrEmpty()) {
             binding.tvStarterDesc.isVisible = true
-            binding.tvStarterDesc.text = botBrandingModel.welcomeScreen.starterBox.subText
+            binding.tvStarterDesc.text = botBrandingModel.welcomeScreen?.starterBox?.subText
         }
 
         if (botBrandingModel.header.icon != null) {
@@ -123,29 +123,29 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
             }
         }
 
-        if (botBrandingModel.welcomeScreen.starterBox.quickStartButtons.buttons.size > 0) {
+        if (!botBrandingModel.welcomeScreen?.starterBox?.quickStartButtons?.buttons.isNullOrEmpty()) {
             val layoutManager = FlexboxLayoutManager(requireContext())
             layoutManager.justifyContent = JustifyContent.FLEX_START
 
-            when (botBrandingModel.welcomeScreen.starterBox.quickStartButtons.style) {
+            when (botBrandingModel.welcomeScreen?.starterBox?.quickStartButtons?.style) {
                 TEMPLATE_TYPE_LIST -> layoutManager.flexDirection = COLUMN
                 else -> layoutManager.flexDirection = ROW
             }
 
             binding.rvStarterButtons.layoutManager = layoutManager
-            val adapter = WelcomeStarterButtonsAdapter(requireContext(), botBrandingModel.welcomeScreen.starterBox.quickStartButtons.style)
-            adapter.setWelcomeStarterButtonsArrayList(botBrandingModel.welcomeScreen.starterBox.quickStartButtons.buttons)
+            val adapter = WelcomeStarterButtonsAdapter(requireContext(), botBrandingModel.welcomeScreen?.starterBox?.quickStartButtons?.style)
+            adapter.setWelcomeStarterButtonsArrayList(botBrandingModel.welcomeScreen?.starterBox?.quickStartButtons?.buttons!!)
             binding.rvStarterButtons.adapter = adapter
         }
 
-        if (botBrandingModel.welcomeScreen.staticLinks.links.size > 0) {
+        if (!botBrandingModel.welcomeScreen?.staticLinks?.links.isNullOrEmpty()) {
             binding.rlLinks.isVisible = true
 
-            when (botBrandingModel.welcomeScreen.staticLinks.layout) {
+            when (botBrandingModel.welcomeScreen?.staticLinks?.layout) {
                 TEMPLATE_TYPE_CAROUSEL -> {
                     binding.hvpLinks.isVisible = true
                     binding.rvLinks.isVisible = false
-                    binding.hvpLinks.adapter = WelcomeStaticLinksAdapter(requireContext(), botBrandingModel.welcomeScreen.staticLinks.links)
+                    binding.hvpLinks.adapter = WelcomeStaticLinksAdapter(requireContext(), botBrandingModel.welcomeScreen?.staticLinks?.links!!)
                 }
 
                 else -> {
@@ -153,7 +153,7 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
                     binding.rvLinks.isVisible = true
                     binding.rvLinks.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
                     binding.rvLinks.adapter =
-                        WelcomeStaticLinksListAdapter(requireContext(), botBrandingModel.welcomeScreen.staticLinks.links)
+                        WelcomeStaticLinksListAdapter(requireContext(), botBrandingModel.welcomeScreen?.staticLinks?.links!!)
                 }
             }
         } else {
@@ -161,17 +161,17 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
         }
     }
 
-    private fun applyFragment(key: Int, header: BrandingWelcomeModel) {
+    private fun applyFragment(key: Int, header: BrandingWelcomeModel?) {
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
         val bundle = Bundle()
-        bundle.putString(BotResponseConstants.KEY_TITLE, header.title.name)
-        bundle.putString(BotResponseConstants.KEY_SUB_TITLE, header.subTitle.name)
-        bundle.putString(BotResponseConstants.NOTE, header.note.name)
-        bundle.putString(BotResponseConstants.BACKGROUND_COLOR, header.background.color)
-        bundle.putString(BotResponseConstants.BACKGROUND_IMAGE, header.background.img)
-        bundle.putString(BotResponseConstants.LOGO_URL, header.logo.logoUrl)
+        bundle.putString(BotResponseConstants.KEY_TITLE, header?.title?.name)
+        bundle.putString(BotResponseConstants.KEY_SUB_TITLE, header?.subTitle?.name)
+        bundle.putString(BotResponseConstants.NOTE, header?.note?.name)
+        bundle.putString(BotResponseConstants.BACKGROUND_COLOR, header?.background?.color)
+        bundle.putString(BotResponseConstants.BACKGROUND_IMAGE, header?.background?.img)
+        bundle.putString(BotResponseConstants.LOGO_URL, header?.logo?.logoUrl)
 
         when (key) {
             1 -> navController.navigate(R.id.welcomeHeaderOne, bundle)

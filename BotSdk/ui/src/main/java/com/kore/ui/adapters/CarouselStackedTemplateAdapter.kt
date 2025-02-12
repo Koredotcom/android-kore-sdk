@@ -38,10 +38,10 @@ class CarouselStackedTemplateAdapter(
         holder.carouselBottomTitle.text = bottomSection[BotResponseConstants.KEY_TITLE] as String
         holder.carouselBottomValue.text = bottomSection[BotResponseConstants.DESCRIPTION] as String
 
-        val buttons: List<Map<String, *>> = buttonMap[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>
-        buttons.isNotEmpty().let {
+        val buttons: List<Map<String, *>>? = buttonMap[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>?
+        buttons?.isNotEmpty().let {
             holder.carouselButtonListview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            holder.carouselButtonListview.adapter = CarouselItemButtonAdapter(context, buttons, isLastItem, actionEvent)
+            holder.carouselButtonListview.adapter = CarouselItemButtonAdapter(context, buttons!!, isLastItem, actionEvent)
         }
     }
 }

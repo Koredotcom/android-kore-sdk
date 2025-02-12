@@ -4,9 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class BrandingBodyBackgroundModel(
     @SerializedName("type")
-    val type : String = "",
+    val type : String? = null,
     @SerializedName("color")
-    val color : String = "",
+    val color : String? = null,
     @SerializedName("img")
-    val img : String = ""
+    val img : String? = null
 )

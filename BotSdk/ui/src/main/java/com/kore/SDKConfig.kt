@@ -68,4 +68,12 @@ object SDKConfig {
     }
 
     fun isMinimized(): Boolean = isMinimized
+
+    fun setIsShowIconTop(isShow: Boolean) {
+        SDKConfiguration.OverrideKoreConfig.showIconTop = isShow
+    }
+
+    fun setIsShowHamburgerMenu(isShow: Boolean) {
+        SDKConfiguration.OverrideKoreConfig.showHamburgerMenu = isShow
+    }
 }

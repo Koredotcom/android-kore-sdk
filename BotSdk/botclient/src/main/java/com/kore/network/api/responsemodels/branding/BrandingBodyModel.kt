@@ -16,17 +16,17 @@ data class BrandingBodyModel(
     @SerializedName("bubble_style")
     val bubbleStyle: String = "",
     @SerializedName("bodyIconModel")
-    val bodyIconModel: BrandingBodyIconModel,
+    val bodyIconModel: BrandingBodyIconModel? = null,
     @SerializedName("time_stamp")
-    val timeStamp: BrandingBodyTimeStampModel?,
+    val timeStamp: BrandingBodyTimeStampModel? = null,
     @SerializedName("agent_message")
-    val agentMessage: BrandingBodyAgentMsgModel,
+    val agentMessage: BrandingBodyAgentMsgModel? = null,
     @SerializedName("bot_message")
-    val botMessage: BrandingBodyUserMessageModel,
+    val botMessage: BrandingBodyUserMessageModel? = null,
     @SerializedName("user_message")
-    val userMessage: BrandingBodyUserMessageModel,
+    val userMessage: BrandingBodyUserMessageModel? = null,
     @SerializedName("font")
-    val font: BrandingBodyFontModel,
+    val font: BrandingBodyFontModel? = null,
     @SerializedName("background")
-    val background: BrandingBodyBackgroundModel
+    val background: BrandingBodyBackgroundModel? = null
 )
