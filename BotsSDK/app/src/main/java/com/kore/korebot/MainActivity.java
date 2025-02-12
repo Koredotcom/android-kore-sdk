@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
     String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
     String localBranding = "{\n" +
-            "   \"_id\":\"wsth-793c50ac-ebe1-53c0-853a-065f41d7c683\",\n" +
-            "   \"streamId\":\"st-89185ffe-d861-54c4-b3b9-8f182997b2be\",\n" +
+            "   \"_id\":\"id\",\n" +
+            "   \"streamId\":\"streamId\",\n" +
             "   \"__v\":0,\n" +
             "   \"activeTheme\":true,\n" +
             "   \"botMessage\":{\n" +
@@ -55,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
             "      \"onHoverFontColor\":\"#ffffff\",\n" +
             "      \"borderColor\":\"#0D6EFD\"\n" +
             "   },\n" +
-            "   \"createdBy\":\"u-f37609a4-6430-5f4c-8724-abfc08e174ae\",\n" +
-            "   \"createdOn\":\"2025-02-11T05:37:19.516Z\",\n" +
+            "   \"createdBy\":\"userId\",\n" +
+            "   \"createdOn\":\"2025-02-11\",\n" +
             "   \"defaultTheme\":false,\n" +
             "   \"digitalViews\":{\n" +
             "      \"panelTheme\":\"theme_one\"\n" +
@@ -65,9 +65,9 @@ public class MainActivity extends AppCompatActivity {
             "      \"bubbleShape\":\"square\",\n" + //circle or square
             "      \"borderColor\":\"#F3F5F8\"\n" +
             "   },\n" +
-            "   \"lastModifiedBy\":\"u-f37609a4-6430-5f4c-8724-abfc08e174ae\",\n" +
-            "   \"lastModifiedOn\":\"2025-02-11T05:36:54.512Z\",\n" +
-            "   \"refId\":\"8c3dc424-f82d-5e06-83b1-ecb9390a03e0\",\n" +
+            "   \"lastModifiedBy\":\"userId\",\n" +
+            "   \"lastModifiedOn\":\"2025-02-11\",\n" +
+            "   \"refId\":\"refId\",\n" +
             "   \"state\":\"published\",\n" +
             "   \"themeName\":\"New Theme\",\n" +
             "   \"userMessage\":{\n" +
@@ -111,31 +111,31 @@ public class MainActivity extends AppCompatActivity {
 //        SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
         //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
-        String jwtToken = "";
+        String jwtToken = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3MzkzMzc3NTgsImV4cCI6MTczOTQyNDE1OCwiYXVkIjoiIiwiaXNzIjoiY3MtZDdhODI5MjktMmRlNy01MGExLTk3NTUtNDIwNmYyMGJkMzc4Iiwic3ViIjoiZmFlOTk1ZGQtMGU2MS00YWQxLThiMTQtNjdmNDc0YjBmNjEwYjgyYWZlY2EtMzgxOS00MzRkLTkyNGQtNTNjM2E4OGE2MWY3IiwiaXNBbm9ueW1vdXMiOmZhbHNlfQ.yopnIW7rW86_XpMkaWw7mCI3VGEbAtmTmOXFtOuaYec";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "PLEASE_ENTER_BOT_CLIENT_ID";
+        String clientId = "cs-d7a82929-2de7-50a1-9755-4206f20bd378";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "PLEASE_ENTER_BOT_CLIENT_SECRET";
+        String clientSecret = "57roBOfA5w5/yBYQQS7fzKah057c9TycF7Jhxa/5y1E=";
 
         //Set botId, This value is mandatory
-        String botId = "PLEASE_ENTER_BOT_ID";
+        String botId = "st-89185ffe-d861-54c4-b3b9-8f182997b2be";
 
         //Set identity, This value is mandatory
-        String identity = "PLEASE_ENTER_IDENTITY";
+        String identity = "IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = "PLEASE_ENTER_BOT_NAME";
+        String botName = "BOT_NAME";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "PLEASE_ENTER_SERVER_URL";
+        String serverUrl = "https://bots.kore.ai/";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "PLEASE_ENTER_BRANDING_SERVER_URL";
+        String brandingUrl = "https://bots.kore.ai/";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
+        String jwtServerUrl = "";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
