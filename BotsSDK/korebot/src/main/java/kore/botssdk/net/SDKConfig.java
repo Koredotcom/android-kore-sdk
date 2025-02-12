@@ -76,6 +76,13 @@ public class SDKConfig {
         SDKConfiguration.BubbleColors.showIcon = isShow;
     }
 
+    public static void setLocalBranding(boolean enable, String branding) {
+        if (enable) {
+            SDKConfiguration.BubbleColors.enableLocalBranding = true;
+            SDKConfiguration.BubbleColors.localBranding = branding;
+        }
+    }
+
     public static void setIsShowIconTop(boolean isShow) {
         SDKConfiguration.OverrideKoreConfig.showIconTop = isShow;
     }

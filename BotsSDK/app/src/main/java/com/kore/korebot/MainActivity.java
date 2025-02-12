@@ -38,6 +38,7 @@ import kore.botssdk.utils.LangUtils;
 public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
     String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
+    String localBranding = "PLEASE_ENTER_BRANDING_JSON";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "PLEASE_ENTER_BOT_CLIENT_ID";
+        String clientId = "PLEASE_ENTER_CLIENT_ID";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "PLEASE_ENTER_BOT_CLIENT_SECRET";
+        String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
         //Set botId, This value is mandatory
         String botId = "PLEASE_ENTER_BOT_ID";
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         String serverUrl = "PLEASE_ENTER_SERVER_URL";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "PLEASE_ENTER_BRANDING_SERVER_URL";
+        String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
 
         //Set jwtServerUrl, This value is mandatory
         String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
@@ -103,13 +104,16 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setIsShowIcon(true);
 
         //Flag to show the bot icon in top position or bottom of the bot response
-        SDKConfig.setIsShowIconTop(true);
+        SDKConfig.setIsShowIconTop(false);
 
         //Flag to show timestamp of each bot and user messages
         SDKConfig.setIsTimeStampsRequired(true);
 
         //Flag to show bot header or hide the header
         SDKConfig.setIsShowHeader(true);
+
+        //Set local branding by overriding the branding api response
+        SDKConfig.setLocalBranding(true, localBranding);
 
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;

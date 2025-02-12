@@ -210,7 +210,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         String leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
         String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9");
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#000000");
-        String bubble_style = sharedPreferences.getString(BundleConstants.BUBBLE_STYLE, "rounded");
+        String bubble_style = sharedPreferences.getString(BotResponse.BUBBLE_STYLE, "rounded");
 
         //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
         float[] roundedRadii = {16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};
