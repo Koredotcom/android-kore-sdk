@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.google.gson.internal.LinkedTreeMap
+import com.kore.common.SDKConfiguration
 import com.kore.ui.base.BaseView
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.NetworkUtils
@@ -50,6 +51,7 @@ class ChatContentFragment : BaseContentFragment() {
         binding.chatContentList.adapter = chatAdapter
         binding.chatContentList.addItemDecoration(BotChatItemDecoration(requireContext()))
         binding.swipeContainerChat.setOnRefreshListener {
+            if (!SDKConfiguration.OverrideKoreConfig.paginatedScrollEnable) return@setOnRefreshListener
             if (!NetworkUtils.isNetworkAvailable(requireContext())) {
                 Toast.makeText(context, getString(R.string.no_network), Toast.LENGTH_SHORT).show()
                 binding.swipeContainerChat.isRefreshing = false
@@ -151,5 +153,6 @@ class ChatContentFragment : BaseContentFragment() {
 
     override fun onBrandingDetails() {
         chatAdapter.onBrandingDetails()
+        binding.swipeContainerChat.isEnabled = SDKConfiguration.OverrideKoreConfig.paginatedScrollEnable
     }
 }

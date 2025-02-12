@@ -39,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         // New template adding here
         SDKConfig.addCustomTemplate("link", "link", DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)
+//        SDKConfig.setIsShowIconTop(false)
         // Replacing existing template(Button template) with user owned template
 //        SDKConfig.addCustomTemplate(BotChatRowType.ROW_BUTTON_PROVIDER, BotResponseConstants.TEMPLATE_TYPE_BUTTON, SampleTemplateProvider(), SampleTemplateRow::class)
 //        SDKConfig.addCustomTemplate(BotResponseConstants.COMPONENT_TYPE_VIDEO, BotResponseConstants.COMPONENT_TYPE_VIDEO, DownloadLinkTemplateProvider(), DownloadLinkTemplateRow::class)

@@ -5,6 +5,7 @@ import com.kore.ui.base.BaseView
 import com.kore.common.event.UserActionEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.network.api.responsemodels.branding.BotActiveThemeModel
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 
 interface BotChatView : BaseView {
@@ -12,7 +13,7 @@ interface BotChatView : BaseView {
     fun addMessageToAdapter(baseBotMessage: BaseBotMessage)
     fun onActionEvent(event: UserActionEvent)
     fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean)
-    fun onBrandingDetails(header: BotBrandingModel?)
+    fun onBrandingDetails(header: BotActiveThemeModel?)
     fun onBotEventMessage(botResponse: BotEventResponse)
     fun showCalenderTemplate(payload: HashMap<String, Any>)
     fun showTypingIndicator(icon: String?)

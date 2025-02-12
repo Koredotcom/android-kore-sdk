@@ -15,24 +15,26 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
+import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
 import com.kore.extensions.formatEmojis
 import com.kore.markdown.MarkdownImageTagHandler
 import com.kore.markdown.MarkdownTagHandler
 import com.kore.markdown.MarkdownUtil
-import com.kore.ui.row.SimpleListRow
-import com.kore.data.repository.preference.PreferenceRepositoryImpl
-import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 import com.kore.ui.databinding.RowTextTemplateBinding
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.EmojiUtils
 
 class TextTemplateRow(
     override val type: SimpleListRowType,
     private val context: Context,
     private val id: String,
-    private val botMessage: String?,
+    private var botMessage: String?,
     private val isBotRequest: Boolean,
     private val iconUrl: String?,
     private val isLastItem: Boolean = false,
@@ -75,6 +77,7 @@ class TextTemplateRow(
                     root.addView(msgTimeStamp, 0)
                 }
             }
+            botMessage?.let { if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable) botMessage = EmojiUtils.replaceEmoticonsWithEmojis(it) }
             val stringBuilder = MarkdownUtil.processMarkDown(botMessage?.formatEmojis() ?: "")
             val sequence = stringBuilder.replace("\n", "<br />").let {
                 HtmlCompat.fromHtml(

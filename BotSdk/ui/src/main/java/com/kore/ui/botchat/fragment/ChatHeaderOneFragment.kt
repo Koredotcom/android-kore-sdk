@@ -14,8 +14,8 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
@@ -32,8 +32,7 @@ class ChatHeaderOneFragment : BaseHeaderFragment() {
         this.onActionEvent = onActionEvent
     }
 
-    override fun setBrandingDetails(brandingModel: BrandingHeaderModel?) {
-        this.brandingModel = brandingModel
+    override fun setBrandingHeader(brandingModel: BrandingHeaderModel?) {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {

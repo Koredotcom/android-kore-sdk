@@ -12,7 +12,7 @@ import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActi
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonButtonsModel
 import com.kore.ui.R
 
-class WelcomeStarterButtonsAdapter (private val context: Context, private val type: String) : RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder>() {
+class WelcomeStarterButtonsAdapter (private val context: Context, private val type: String?) : RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder>() {
 
     private var quickReplyTemplateArrayList: ArrayList<BrandingQuickStartButtonButtonsModel>? = null
 

@@ -5,19 +5,19 @@ import java.io.Serializable
 
 data class BrandingIconModel (
     @SerializedName("icon_url")
-    val iconUrl : String?,
+    val iconUrl : String = "",
     @SerializedName("size")
-    val size : String?,
+    val size : String = "",
     @SerializedName("shape")
-    val shape : String?,
+    val shape : String = "",
     @SerializedName("type")
-    val type : String?,
+    val type : String = "",
     @SerializedName("show")
-    val show : Boolean,
+    val show : Boolean = true,
     @SerializedName("color")
-    val color : String?,
+    val color : String = "",
     @SerializedName("icon")
-    val icon : String?,
+    val icon : String = "",
     @SerializedName("action")
-    val action : BrandingQuickStartButtonActionModel?
+    val action : BrandingQuickStartButtonActionModel? = null
 ): Serializable

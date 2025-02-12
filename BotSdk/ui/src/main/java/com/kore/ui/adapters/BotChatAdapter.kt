@@ -19,6 +19,7 @@ import com.kore.model.constants.BotResponseConstants.DIRECTION
 import com.kore.model.constants.BotResponseConstants.DISPLAY_LIMIT
 import com.kore.model.constants.BotResponseConstants.ELEMENTS
 import com.kore.model.constants.BotResponseConstants.HEADING
+import com.kore.model.constants.BotResponseConstants.KEY_BUTTONS
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.model.constants.BotResponseConstants.PIE_TYPE
 import com.kore.model.constants.BotResponseConstants.PROGRESS
@@ -185,6 +186,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                                     when (templateType) {
                                         BotResponseConstants.TEMPLATE_TYPE_BUTTON -> {
+                                            if (!innerMap.containsKey(KEY_BUTTONS)) continue
                                             if (isTextMsg) {
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }

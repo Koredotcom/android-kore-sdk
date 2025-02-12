@@ -37,6 +37,7 @@ import com.kore.model.constants.BotResponseConstants.FORMAT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
 import com.kore.model.constants.BotResponseConstants.START_DATE
+import com.kore.network.api.responsemodels.branding.BotActiveThemeModel
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.services.ClosingService
@@ -60,6 +61,7 @@ import com.kore.ui.botchat.fragment.ChatFooterFragment
 import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
+import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
@@ -129,7 +131,7 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         tr.commitAllowingStateLoss()
     }
 
-    private fun addHeaderFragmentToActivity(fragment: Fragment, brandingHeaderModel: BrandingHeaderModel?) {
+    private fun addHeaderFragmentToActivity(fragment: Fragment, brandingModel: BotBrandingModel?) {
         val fm = childFragmentManager
         val tr = fm.beginTransaction()
 
@@ -138,7 +140,8 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         fragment.arguments = bundle
         if (fragment is BaseHeaderFragment) {
             fragment.setActionEvent(this::onActionEvent)
-            fragment.setBrandingDetails(brandingHeaderModel)
+            fragment.setBrandingHeader(brandingModel?.header)
+            fragment.setBrandingDetails(brandingModel)
         }
         tr.add(R.id.header_container, fragment)
         tr.commitAllowingStateLoss()
@@ -195,35 +198,46 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         footerFragment.enableSendButton(state == ConnectionState.CONNECTED)
     }
 
-    override fun onBrandingDetails(header: BotBrandingModel?) {
-        header?.let {
+    override fun onBrandingDetails(header: BotActiveThemeModel?) {
+        if (header?.botMessage == null && header?.brandingModel != null) {
             Handler(Looper.getMainLooper()).postDelayed({
                 binding?.clProgress?.isVisible = false
-                val dialog = WelcomeDialogFragment(header)
-                dialog.setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
-                    override fun onUpdateUI() {
-                        binding?.chatWindow?.isVisible = true
+                if (header.brandingModel?.welcomeScreen?.show == true) {
+                    WelcomeDialogFragment(header.brandingModel!!).apply {
+                        setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
+                            override fun onUpdateUI() {
+                                binding?.chatWindow?.isVisible = true
+                            }
+                        })
+                        this.show(childFragmentManager, "My Dialog")
                     }
-                })
-                dialog.show(childFragmentManager, "My Dialog")
+                }
 
-                val customHeaderFragment = SDKConfig.getCustomHeaderFragment(it.header.size.toString())
+                val customHeaderFragment = SDKConfig.getCustomHeaderFragment(header.brandingModel?.header?.size.toString())
 
-                when (it.header.size) {
-                    HEADER_SIZE_COMPACT -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderOneFragment(), it.header)
-                    HEADER_SIZE_LARGE -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderThreeFragment(), it.header)
-                    else -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderTwoFragment(), it.header)
+                when (header.brandingModel?.header?.size) {
+                    HEADER_SIZE_COMPACT -> addHeaderFragmentToActivity(
+                        customHeaderFragment ?: ChatHeaderOneFragment(),
+                        header.brandingModel
+                    )
+
+                    HEADER_SIZE_LARGE -> addHeaderFragmentToActivity(
+                        customHeaderFragment ?: ChatHeaderThreeFragment(),
+                        header.brandingModel
+                    )
+
+                    else -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderTwoFragment(), header.brandingModel)
                 }
                 contentFragment.onBrandingDetails()
 
             }, 1000)
-        } ?: run {
+        } else {
             binding?.clProgress?.isVisible = false
             binding?.chatWindow?.isVisible = true
             val customHeaderFragment = SDKConfig.getCustomHeaderFragment(HEADER_SIZE_COMPACT)
-            addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderOneFragment(), null)
+            addHeaderFragmentToActivity(customHeaderFragment ?: ChatV2HeaderFragment(), null)
         }
-        footerFragment.setBrandingDetails(header)
+        footerFragment.setBrandingDetails(header?.brandingModel)
     }
 
     override fun onBotEventMessage(botResponse: BotEventResponse) {

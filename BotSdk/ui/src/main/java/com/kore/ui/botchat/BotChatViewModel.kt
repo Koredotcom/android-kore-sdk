@@ -19,6 +19,8 @@ import com.kore.botclient.BotRequestState
 import com.kore.botclient.ConnectionState
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
+import com.kore.common.SDKConfiguration
+import com.kore.common.SDKConfiguration.OverrideKoreConfig.historyBatchSize
 import com.kore.common.SDKConfiguration.getBotConfigModel
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
@@ -161,12 +163,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     ConnectionState.CONNECTED -> {
                         isFirstTime = false
                         viewModelScope.launch {
-                            getBrandingDetails(token)
-                            if (isReconnection) {
-                                historyOffset = 0
-                                moreHistory = true
-                                fetchChatHistory(true)
-                            }
+                            getBrandingDetails(token, isReconnection)
                         }
                     }
 
@@ -296,7 +293,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         }
     }
 
-    internal suspend fun getBrandingDetails(token: String) {
+    internal suspend fun getBrandingDetails(token: String, isReconnection: Boolean) {
         val botConfigModel = getBotConfigModel()
 
         if (NetworkUtils.isNetworkAvailable(context)) {
@@ -306,13 +303,15 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
             }
             when (val response = brandingRepository.getBranding(botConfigModel.botId, token)) {
                 is Result.Success -> {
-                    setButtonBranding(response.data?.v3)
-                    getView()?.onBrandingDetails(response.data?.v3)
+                    onBrandingDetails(response.data?.brandingModel)
+                    getView()?.onBrandingDetails(response.data)
+                    loadChatHistory(isReconnection)
                 }
 
                 else -> {
                     getView()?.onBrandingDetails(null)
                     LogUtils.e(LOG_TAG, "BrandingDetails Response error: $response")
+                    loadChatHistory(isReconnection)
                 }
             }
         }
@@ -336,7 +335,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
                 return@launch
             }
-            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
+            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, historyBatchSize)
             when (val response =
                 chatHistoryRepository.getChatHistory(
                     context,
@@ -344,7 +343,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     botConfigModel.botId,
                     botConfigModel.botName,
                     historyOffset,
-                    if (historyCount > 10 || historyCount == 0) 10 else historyCount,
+                    if (historyCount > 10 || historyCount == 0) historyBatchSize else historyCount,
                     botConfigModel.isWebHook
                 )) {
                 is Result.Success -> {
@@ -364,6 +363,14 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     SDKConfig.setIsMinimized(false)
                 }
             }
+        }
+    }
+
+    private fun loadChatHistory(isReconnect: Boolean) {
+        if (isReconnect || (SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
+            historyOffset = 0
+            moreHistory = true
+            fetchChatHistory(true)
         }
     }
 
@@ -431,7 +438,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         sendMessage(formattedDate, formattedDate)
     }
 
-    private fun setButtonBranding(brandingModel: BotBrandingModel?) {
+    private fun onBrandingDetails(brandingModel: BotBrandingModel?) {
         brandingModel?.let {
             if (it.general.colors.useColorPaletteOnly) {
                 it.header.bgColor = it.general.colors.secondary
@@ -439,8 +446,8 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 it.header.title?.color = it.general.colors.primary
                 it.header.subTitle?.color = it.general.colors.primary
 
-                it.footer.composeBar.outlineColor = it.general.colors.primary
-                it.footer.composeBar.inlineColor = it.general.colors.secondaryText
+                it.footer.composeBar?.outlineColor = it.general.colors.primary
+                it.footer.composeBar?.inlineColor = it.general.colors.secondaryText
             }
 
             if (it.body.timeStamp != null) {
@@ -448,13 +455,13 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 BotResponseConstants.TIME_FORMAT = it.body.timeStamp!!.timeFormat
             }
 
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, it.body.botMessage.bgColor)
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, it.body.botMessage.color)
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, it.body.userMessage.bgColor)
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, it.body.userMessage.color)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, it.body.botMessage?.bgColor)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, it.body.botMessage?.color)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, it.body.userMessage?.bgColor)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, it.body.userMessage?.color)
 
-            if (it.chatBubble.style.isNotEmpty()) {
-                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_STYLE, it.chatBubble.style)
+            if (!it.chatBubble?.style.isNullOrEmpty()) {
+                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_STYLE, it.chatBubble?.style)
             }
 
             if (it.body.bubbleStyle.isNotEmpty()) {

@@ -8,6 +8,22 @@ object SDKConfiguration {
     private var queryParams: HashMap<String, Any>? = null
     private var customData: HashMap<String, Any>? = null
 
+    object OverrideKoreConfig {
+        var isEmojiShortcutEnable: Boolean = true
+        var typingIndicatorTimeout: Int = 10000
+        var historyEnable: Boolean = true
+        var historyBatchSize: Int = 10
+        var paginatedScrollEnable: Boolean = true
+        var paginatedScrollBatchSize: Int = 10
+        var paginatedScrollLoadingLabel: String? = "Loading old messages"
+        var showIconTop: Boolean = true
+        var showAttachment: Boolean = true
+        var showASRMicroPhone: Boolean = true
+        var showTextToSpeech: Boolean = true
+        var showHamburgerMenu: Boolean = false
+        var historyInitialCall: Boolean = false
+    }
+
     fun initialize(botConfigModel: BotConfigModel) {
         this.botConfigModel = botConfigModel
     }

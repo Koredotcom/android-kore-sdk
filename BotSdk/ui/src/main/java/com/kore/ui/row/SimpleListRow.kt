@@ -3,6 +3,7 @@ package com.kore.ui.row
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
+import android.view.Gravity
 import android.view.View
 import android.widget.LinearLayout.LayoutParams
 import androidx.core.view.isVisible
@@ -13,6 +14,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.github.mikephil.charting.utils.ColorTemplate.rgb
 import com.kore.botclient.databinding.BaseRowBinding
+import com.kore.common.SDKConfiguration
 import com.kore.extensions.dpToPx
 import com.kore.ui.row.listener.ChatContentStateListener
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
@@ -52,13 +54,14 @@ abstract class SimpleListRow {
             val isTimeStampVisible = PreferenceRepositoryImpl()
                 .getSharedPreference(root.context, BotResponseConstants.THEME_NAME)
                 .getBoolean(BotResponseConstants.IS_TIME_STAMP_REQUIRED, false)
+            val layoutParams = botIcon.layoutParams as LayoutParams
+            layoutParams.gravity = if (SDKConfiguration.OverrideKoreConfig.showIconTop) Gravity.TOP else Gravity.BOTTOM
 
             if (isTimeStampVisible && !isTemplate) {
-                val layoutParams = botIcon.layoutParams as LayoutParams
                 layoutParams.topMargin = (25.dpToPx(context))
                 layoutParams.marginEnd = (5.dpToPx(context))
-                botIcon.layoutParams = layoutParams
             }
+            botIcon.layoutParams = layoutParams
 
             if (isShow && !url.isNullOrEmpty()) {
                 Glide.with(context).load(url.toString()).error(com.kore.botclient.R.drawable.ic_launcher)
