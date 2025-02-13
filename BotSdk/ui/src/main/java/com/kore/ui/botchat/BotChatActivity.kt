@@ -217,6 +217,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                         })
                         this.show(supportFragmentManager, "My Dialog")
                     }
+                } else {
+                    binding.chatWindow.isVisible = true
                 }
 
                 val customHeaderFragment = SDKConfig.getCustomHeaderFragment(header.brandingModel?.header?.size.toString())
