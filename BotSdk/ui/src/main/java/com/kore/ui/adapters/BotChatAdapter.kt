@@ -1,9 +1,7 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import com.google.gson.Gson
 import com.kore.SDKConfig
-import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
 import com.kore.model.BaseBotMessage
@@ -95,14 +93,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
     }
 
     fun onBrandingDetails() {
-        messages = messages.mapIndexed { index, baseBotMessage ->
-            if (index == 0 && baseBotMessage is BotResponse) {
-                val json = Gson().toJson(baseBotMessage)
-                BotClientHelper.processBotResponse(Gson().fromJson(json, BotResponse::class.java))
-            } else {
-                baseBotMessage
-            }
-        }
+        submitList(createRows(emptyList()))
         submitList(createRows(messages))
     }
 

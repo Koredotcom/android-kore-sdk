@@ -301,7 +301,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
                 return
             }
-            when (val response = brandingRepository.getBranding(botConfigModel.botId, token)) {
+            when (val response = brandingRepository.getBranding(context, botConfigModel.botId, token)) {
                 is Result.Success -> {
                     onBrandingDetails(response.data?.brandingModel)
                     getView()?.onBrandingDetails(response.data)
