@@ -214,6 +214,10 @@ public class StringUtils {
         return string == null || string.isEmpty();
     }
 
+    public static boolean isNotEmpty(String string) {
+        return string != null && !string.isEmpty();
+    }
+
     public static boolean isNullOrEmptyWithTrim(String string) {
         return string == null || string.trim().isEmpty();
     }

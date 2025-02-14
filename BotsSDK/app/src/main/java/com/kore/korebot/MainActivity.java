@@ -5,27 +5,21 @@ import static android.Manifest.permission.POST_NOTIFICATIONS;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.NewBotChatActivity;
@@ -38,7 +32,6 @@ import kore.botssdk.utils.LangUtils;
 public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
     String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
-    String localBranding = "PLEASE_ENTER_BRANDING_JSON";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,9 +105,6 @@ public class MainActivity extends AppCompatActivity {
         //Flag to show bot header or hide the header
         SDKConfig.setIsShowHeader(true);
 
-        //Set local branding by overriding the branding api response
-        SDKConfig.setLocalBranding(true, localBranding);
-
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
         SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
@@ -181,5 +171,4 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
 }

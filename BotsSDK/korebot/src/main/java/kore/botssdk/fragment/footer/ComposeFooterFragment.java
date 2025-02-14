@@ -57,11 +57,11 @@ import kore.botssdk.utils.Utility;
 @SuppressLint("UnknownNullness")
 public class ComposeFooterFragment extends BaseFooterFragment {
     private final String LOG_TAG = ComposeFooterFragment.class.getName();
-    private EditText editTextMessage;
+    EditText editTextMessage;
     private TextView speakerText;
-    private LinearLayout mainContentLayout;
-    private LinearLayout defaultFooterLayout;
-    private ImageView recAudioImg;
+    LinearLayout mainContentLayout;
+    LinearLayout defaultFooterLayout;
+    ImageView recAudioImg;
     private ImageView audioSpeakTts;
     private ImageView keyboardImg;
     private ImageView newMenuLogo;
@@ -70,12 +70,12 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     private TextView textViewSpeech, sendTv;
     private boolean isDisabled;
     private boolean isFirstTime;
-    private boolean isTTSEnabled = false;
-    private TTSUpdate ttsUpdate;
-    private LinearLayout llSend;
+    boolean isTTSEnabled = false;
+    TTSUpdate ttsUpdate;
+    LinearLayout llSend;
     private BotOptionsModel botOptionsModel;
-    private ComposebarAttachmentAdapter composebarAttachmentAdapter;
-    private RecyclerView attachmentRecycler;
+    ComposebarAttachmentAdapter composebarAttachmentAdapter;
+    RecyclerView attachmentRecycler;
     private RelativeLayout rlFooter;
     private RelativeLayout rlSpeaker;
     private RelativeLayout rlSpeakerCircle;

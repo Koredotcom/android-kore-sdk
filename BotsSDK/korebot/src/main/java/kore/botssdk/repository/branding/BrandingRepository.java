@@ -21,6 +21,7 @@ import kore.botssdk.models.BrandingNewModel;
 import kore.botssdk.models.BrandingV3Model;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.StringUtils;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +41,6 @@ public class BrandingRepository {
     String resp;
 
     public void getBrandingDetails(String botId, String botToken, String state, String version, String language) {
-
         Call<ResponseBody> getBankingConfigService = BrandingRestBuilder.getRestAPI().getBrandingNewDetails(botId, "bearer " + botToken, state, version, language, botId);
         getBankingConfigService.enqueue(new Callback<>() {
             @Override
@@ -68,12 +68,17 @@ public class BrandingRepository {
                             brandingModel.setBotName(SDKConfiguration.Client.bot_name);
                             brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
                             brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
+
                             brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
                             brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
                             brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
                             brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
+
                             brandingModel.setChatBubbleStyle(brandingNewDos.getGeneralAttributes().getBubbleShape());
-                            onEvent(brandingModel);
+
+                            if (!SDKConfiguration.BubbleColors.enableLocalBranding)
+                                onEvent(brandingModel);
+                            else onEventLocalBranding(brandingModel, SDKConfiguration.BubbleColors.localBranding);
                         } else {
                             throw new Exception("Something went wrong!");
                         }
@@ -143,28 +148,37 @@ public class BrandingRepository {
                                         }
                                     }
 
-                                    onEvent(brandingModel);
-
+                                    if (!SDKConfiguration.BubbleColors.enableLocalBranding)
+                                        onEvent(brandingModel);
+                                    else onEventLocalBranding(brandingModel, SDKConfiguration.BubbleColors.localBranding);
                                 } catch (Exception ex) {
                                     ex.printStackTrace();
                                 }
                             } else {
-                                onEvent(getBrandingDataFromTxt());
+                                if (!SDKConfiguration.BubbleColors.enableLocalBranding)
+                                    onEvent(getBrandingDataFromTxt());
+                                else onEventLocalBranding(getBrandingDataFromTxt(), SDKConfiguration.BubbleColors.localBranding);
                             }
 
                         } catch (Exception ex) {
-                            onEvent(getBrandingDataFromTxt());
+                            if (!SDKConfiguration.BubbleColors.enableLocalBranding)
+                                onEvent(getBrandingDataFromTxt());
+                            else onEventLocalBranding(getBrandingDataFromTxt(), SDKConfiguration.BubbleColors.localBranding);
                             throw new RuntimeException(ex);
                         }
                     }
                 } else {
-                    onEvent(getBrandingDataFromTxt());
+                    if (!SDKConfiguration.BubbleColors.enableLocalBranding)
+                        onEvent(getBrandingDataFromTxt());
+                    else onEventLocalBranding(getBrandingDataFromTxt(), SDKConfiguration.BubbleColors.localBranding);
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                onEvent(getBrandingDataFromTxt());
+                if (!SDKConfiguration.BubbleColors.enableLocalBranding)
+                    onEvent(getBrandingDataFromTxt());
+                else onEventLocalBranding(getBrandingDataFromTxt(), SDKConfiguration.BubbleColors.localBranding);
             }
         });
 
@@ -205,42 +219,6 @@ public class BrandingRepository {
         }
         return null;
     }
-    public BrandingModel getBrandingLocal(String localBranding) {
-        try {
-            Type avtiveThemeType = new TypeToken<BotActiveThemeModel>() {
-            }.getType();
-            BotActiveThemeModel brandingNewDos = gson.fromJson(localBranding, avtiveThemeType);
-            if (brandingNewDos != null) {
-                BrandingModel brandingModel = new BrandingModel();
-                brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
-                brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());
-                brandingModel.setUserchatBgColor(brandingNewDos.getUserMessage().getBubbleColor());
-                brandingModel.setUserchatTextColor(brandingNewDos.getUserMessage().getFontColor());
-
-                brandingModel.setButtonActiveBgColor(brandingNewDos.getButtons().getDefaultButtonColor());
-                brandingModel.setButtonActiveTextColor(brandingNewDos.getButtons().getDefaultFontColor());
-
-                brandingModel.setButtonInactiveBgColor(brandingNewDos.getButtons().getOnHoverButtonColor());
-                brandingModel.setButtonInactiveTextColor(brandingNewDos.getButtons().getOnHoverFontColor());
-                brandingModel.setButtonBorderColor(brandingNewDos.getButtons().getBorderColor());
-
-                brandingModel.setBotName(SDKConfiguration.Client.bot_name);
-                brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
-                brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
-                brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
-                brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
-                brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
-                brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
-                brandingModel.setChatBubbleStyle(brandingNewDos.getGeneralAttributes().getBubbleShape());
-                onEvent(brandingModel);
-            } else {
-                throw new Exception("Something went wrong!");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
     public void onEvent(BrandingModel brandingModel) {
         SharedPreferences.Editor editor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
@@ -263,6 +241,36 @@ public class BrandingRepository {
         SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getButtonActiveBgColor();
         SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getButtonActiveTextColor();
         SDKConfiguration.BubbleColors.quickBorderColor = brandingModel.getButtonBorderColor();
+
+        botChatView.onBrandingDetails(brandingModel);
+    }
+
+    public void onEventLocalBranding(BrandingModel brandingModel, BrandingModel localBranding) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, StringUtils.isNotEmpty(localBranding.getBotchatBgColor()) ? localBranding.getBotchatBgColor() : brandingModel.getBotchatBgColor());
+        editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, StringUtils.isNotEmpty(localBranding.getBotchatTextColor()) ? localBranding.getBotchatTextColor() : brandingModel.getBotchatTextColor());
+        editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, StringUtils.isNotEmpty(localBranding.getUserchatBgColor()) ? localBranding.getUserchatBgColor() : brandingModel.getUserchatBgColor());
+        editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, StringUtils.isNotEmpty(localBranding.getUserchatTextColor()) ? localBranding.getUserchatTextColor() : brandingModel.getUserchatTextColor());
+        editor.putString(BotResponse.BUTTON_ACTIVE_BG_COLOR, StringUtils.isNotEmpty(localBranding.getButtonActiveBgColor()) ? localBranding.getButtonActiveBgColor() : brandingModel.getButtonActiveBgColor());
+        editor.putString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, StringUtils.isNotEmpty(localBranding.getButtonActiveTextColor()) ? localBranding.getButtonActiveTextColor() : brandingModel.getButtonActiveTextColor());
+        editor.putString(BotResponse.BUTTON_INACTIVE_BG_COLOR, StringUtils.isNotEmpty(localBranding.getButtonInactiveBgColor()) ? localBranding.getButtonInactiveBgColor() : brandingModel.getButtonInactiveBgColor());
+        editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, StringUtils.isNotEmpty(localBranding.getButtonInactiveTextColor()) ? localBranding.getButtonInactiveTextColor() : brandingModel.getButtonInactiveTextColor());
+        editor.putString(BotResponse.WIDGET_BG_COLOR, StringUtils.isNotEmpty(localBranding.getWidgetBodyColor()) ? localBranding.getWidgetBodyColor() : brandingModel.getWidgetBodyColor());
+        editor.putString(BotResponse.WIDGET_TXT_COLOR, StringUtils.isNotEmpty(localBranding.getWidgetTextColor()) ? localBranding.getWidgetTextColor() : brandingModel.getWidgetTextColor());
+        editor.putString(BotResponse.WIDGET_BORDER_COLOR, StringUtils.isNotEmpty(localBranding.getWidgetBorderColor()) ? localBranding.getWidgetBorderColor() : brandingModel.getWidgetBorderColor());
+        editor.putString(BotResponse.BUTTON_BORDER_COLOR, StringUtils.isNotEmpty(localBranding.getButtonBorderColor()) ? localBranding.getButtonBorderColor() : brandingModel.getButtonBorderColor());
+        editor.putString(BotResponse.WIDGET_DIVIDER_COLOR, StringUtils.isNotEmpty(localBranding.getWidgetDividerColor()) ? localBranding.getWidgetDividerColor() : brandingModel.getWidgetDividerColor());
+        editor.putString(BotResponse.BUBBLE_STYLE, StringUtils.isNotEmpty(localBranding.getChatBubbleStyle()) ? localBranding.getChatBubbleStyle() : brandingModel.getChatBubbleStyle());
+        editor.apply();
+
+        SDKConfiguration.BubbleColors.quickReplyColor = StringUtils.isNotEmpty(localBranding.getButtonActiveBgColor()) ? localBranding.getButtonActiveBgColor() : brandingModel.getButtonActiveBgColor();
+        SDKConfiguration.BubbleColors.quickReplyTextColor = StringUtils.isNotEmpty(localBranding.getButtonActiveTextColor()) ? localBranding.getButtonActiveTextColor() : brandingModel.getButtonActiveTextColor();
+        SDKConfiguration.BubbleColors.quickBorderColor = StringUtils.isNotEmpty(localBranding.getButtonBorderColor()) ? localBranding.getButtonBorderColor() : brandingModel.getButtonBorderColor();
+
+        brandingModel.setWidgetHeaderColor(StringUtils.isNotEmpty(localBranding.getWidgetHeaderColor()) ? localBranding.getWidgetHeaderColor() : brandingModel.getWidgetHeaderColor());
+        brandingModel.setWidgetFooterColor(StringUtils.isNotEmpty(localBranding.getWidgetFooterColor()) ? localBranding.getWidgetFooterColor() : brandingModel.getWidgetFooterColor());
+        brandingModel.setWidgetFooterBorderColor(StringUtils.isNotEmpty(localBranding.getWidgetFooterBorderColor()) ? localBranding.getWidgetFooterBorderColor() : brandingModel.getWidgetFooterBorderColor());
+        brandingModel.setWidgetFooterHintColor(StringUtils.isNotEmpty(localBranding.getWidgetFooterHintColor()) ? localBranding.getWidgetFooterHintColor() : brandingModel.getWidgetFooterHintColor());
 
         botChatView.onBrandingDetails(brandingModel);
     }
