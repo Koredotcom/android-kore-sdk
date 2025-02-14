@@ -73,7 +73,6 @@ public class BrandingRepository {
                             brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
                             brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
                             brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
-
                             brandingModel.setChatBubbleStyle(brandingNewDos.getGeneralAttributes().getBubbleShape());
 
                             if (!SDKConfiguration.BubbleColors.enableLocalBranding)
@@ -213,6 +212,42 @@ public class BrandingRepository {
                 brandingModel.setWidgetFooterHintColor(botActiveThemeModel.getWidgetFooter().getPlaceHolder());
                 brandingModel.setChatBubbleStyle(botActiveThemeModel.getGeneralAttributes().getBubbleShape());
                 return brandingModel;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public BrandingModel getBrandingLocal(String localBranding) {
+        try {
+            Type avtiveThemeType = new TypeToken<BotActiveThemeModel>() {
+            }.getType();
+            BotActiveThemeModel brandingNewDos = gson.fromJson(localBranding, avtiveThemeType);
+            if (brandingNewDos != null) {
+                BrandingModel brandingModel = new BrandingModel();
+                brandingModel.setBotchatBgColor(brandingNewDos.getBotMessage().getBubbleColor());
+                brandingModel.setBotchatTextColor(brandingNewDos.getBotMessage().getFontColor());
+                brandingModel.setUserchatBgColor(brandingNewDos.getUserMessage().getBubbleColor());
+                brandingModel.setUserchatTextColor(brandingNewDos.getUserMessage().getFontColor());
+
+                brandingModel.setButtonActiveBgColor(brandingNewDos.getButtons().getDefaultButtonColor());
+                brandingModel.setButtonActiveTextColor(brandingNewDos.getButtons().getDefaultFontColor());
+
+                brandingModel.setButtonInactiveBgColor(brandingNewDos.getButtons().getOnHoverButtonColor());
+                brandingModel.setButtonInactiveTextColor(brandingNewDos.getButtons().getOnHoverFontColor());
+                brandingModel.setButtonBorderColor(brandingNewDos.getButtons().getBorderColor());
+
+                brandingModel.setBotName(SDKConfiguration.Client.bot_name);
+                brandingModel.setWidgetBodyColor(brandingNewDos.getWidgetBody().getBackgroundColor());
+                brandingModel.setWidgetTextColor(brandingNewDos.getWidgetHeader().getFontColor());
+                brandingModel.setWidgetHeaderColor(brandingNewDos.getWidgetHeader().getBackgroundColor());
+                brandingModel.setWidgetFooterColor(brandingNewDos.getWidgetFooter().getBackgroundColor());
+                brandingModel.setWidgetFooterBorderColor(brandingNewDos.getWidgetFooter().getBorderColor());
+                brandingModel.setWidgetFooterHintColor(brandingNewDos.getWidgetFooter().getPlaceHolder());
+                brandingModel.setChatBubbleStyle(brandingNewDos.getGeneralAttributes().getBubbleShape());
+                onEvent(brandingModel);
+            } else {
+                throw new Exception("Something went wrong!");
             }
         } catch (Exception e) {
             e.printStackTrace();
