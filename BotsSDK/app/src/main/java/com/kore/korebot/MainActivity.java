@@ -32,7 +32,6 @@ import kore.botssdk.utils.LangUtils;
 public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
     String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
-    String localBranding = "PLEASE_ENTER_BRANDING_JSON";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +104,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Flag to show bot header or hide the header
         SDKConfig.setIsShowHeader(true);
-
-        //Set local branding by overriding the branding api response
-        SDKConfig.setLocalBranding(true, localBranding);
 
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;

@@ -90,10 +90,7 @@ public class BotChatViewModel extends ViewModel {
     }
 
     public void getBrandingDetails(String botId, String botToken, String state, String version, String language) {
-        if (!SDKConfiguration.BubbleColors.enableLocalBranding)
-            repository.getBrandingDetails(botId, botToken, state, version, language);
-        else
-            repository.getBrandingLocal(SDKConfiguration.BubbleColors.localBranding);
+        repository.getBrandingDetails(botId, botToken, state, version, language);
     }
 
     public void setIsActivityResumed(boolean isResumed) {
