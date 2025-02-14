@@ -12,5 +12,15 @@ data class BrandingColorsModel(
     @SerializedName("secondary_text")
     val secondaryText: String? = null,
     @SerializedName("useColorPaletteOnly")
-    val useColorPaletteOnly: Boolean = false
+    val useColorPaletteOnly: Boolean? = null
 )
+
+fun BrandingColorsModel.updateWith(configModel: BrandingColorsModel): BrandingColorsModel {
+    return this.copy(
+        primary = configModel.primary?.ifEmpty { this.primary },
+        secondary = configModel.secondary?.ifEmpty { this.secondary },
+        primaryText = configModel.primaryText?.ifEmpty { this.primaryText },
+        secondaryText = configModel.secondaryText?.ifEmpty { this.secondaryText },
+        useColorPaletteOnly = configModel.useColorPaletteOnly ?: this.useColorPaletteOnly,
+    )
+}

@@ -2,6 +2,7 @@ package com.kore
 
 import com.kore.common.SDKConfiguration
 import com.kore.common.model.BotConfigModel
+import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.base.BaseContentFragment
 import com.kore.ui.base.BaseFooterFragment
 import com.kore.ui.base.BaseHeaderFragment
@@ -76,4 +77,10 @@ object SDKConfig {
     fun setIsShowHamburgerMenu(isShow: Boolean) {
         SDKConfiguration.OverrideKoreConfig.showHamburgerMenu = isShow
     }
+
+    fun setBotBrandingConfig(botBrandingModel: BotBrandingModel?) {
+        SDKConfiguration.setBotBrandingConfig(botBrandingModel)
+    }
+
+    fun getBotBrandingConfig(): BotBrandingModel? = SDKConfiguration.getBotBrandingConfig()
 }

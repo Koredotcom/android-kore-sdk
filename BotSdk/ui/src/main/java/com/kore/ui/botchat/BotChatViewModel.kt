@@ -440,7 +440,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     private fun onBrandingDetails(brandingModel: BotBrandingModel?) {
         brandingModel?.let {
-            if (it.general.colors.useColorPaletteOnly) {
+            if (it.general.colors.useColorPaletteOnly == true) {
                 it.header.bgColor = it.general.colors.secondary
                 it.header.avatarBgColor = it.general.colors.primary
                 it.header.title?.color = it.general.colors.primary
@@ -452,7 +452,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
             if (it.body.timeStamp != null) {
                 BotResponseConstants.DATE_FORMAT = it.body.timeStamp!!.dateFormat.replace("mm", "MM")
-                BotResponseConstants.TIME_FORMAT = it.body.timeStamp!!.timeFormat
+                BotResponseConstants.TIME_FORMAT = if (it.body.timeStamp!!.timeFormat.isNotEmpty()) it.body.timeStamp!!.timeFormat.toInt() else 12
             }
 
             preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, it.body.botMessage?.bgColor)
@@ -468,7 +468,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_STYLE, it.body.bubbleStyle)
             }
 
-            if (it.general.colors.useColorPaletteOnly) {
+            if (it.general.colors.useColorPaletteOnly == true) {
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_BG_COLOR, it.general.colors.primary)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, it.general.colors.primaryText)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_INACTIVE_BG_COLOR, it.general.colors.secondary)
@@ -487,7 +487,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 )
 
                 preferenceRepository.putBooleanValue(context, THEME_NAME, BotResponseConstants.TIME_STAMP_IS_BOTTOM, timeStamp.position == "Top")
-                preferenceRepository.putBooleanValue(context, THEME_NAME, BotResponseConstants.IS_TIME_STAMP_REQUIRED, timeStamp.show)
+                preferenceRepository.putBooleanValue(context, THEME_NAME, BotResponseConstants.IS_TIME_STAMP_REQUIRED, timeStamp.show ?: false)
             }
         }
     }

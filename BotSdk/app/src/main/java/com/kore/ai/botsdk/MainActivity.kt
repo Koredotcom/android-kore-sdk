@@ -1,19 +1,23 @@
 package com.kore.ai.botsdk
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Resources.NotFoundException
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.ai.botsdk.databinding.ActivityMainBinding
 import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
 import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
 import com.kore.common.model.BotConfigModel
+import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.botchat.BotChatActivity
 import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
+import java.io.InputStreamReader
 import java.util.Locale
 import java.util.Properties
 import java.util.TimeZone
@@ -54,10 +58,19 @@ class MainActivity : AppCompatActivity() {
         // Adding user custom Footer fragment
 //        SDKConfig.addCustomFooterFragment(CustomFooterFragment())
 
+//        SDKConfig.setBotBrandingConfig(getDefaultBrandingModel(this))
+
         binding.launchBotBtn.setOnClickListener {
             val intent = Intent(this, BotChatActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun getDefaultBrandingModel(context: Context): BotBrandingModel? {
+        val inputStream = context.resources.openRawResource(R.raw.config_branding_details)
+        val reader = InputStreamReader(inputStream)
+        val jsonText = reader.readText().also { reader.close() }
+        return Gson().fromJson(jsonText, BotBrandingModel::class.java)
     }
 
     private fun getBotConfigModel(): BotConfigModel? {

@@ -359,7 +359,7 @@ class CustomFooterFragment : BaseFooterFragment() {
         binding.newMenuLogo.isVisible = botBrandingModel?.footer?.buttons?.menu?.show == true
         if (botBrandingModel == null) return
         botOptionModels = botBrandingModel.footer.buttons?.menu?.actions
-        if (botBrandingModel.general.colors.useColorPaletteOnly) {
+        if (botBrandingModel.general.colors.useColorPaletteOnly == true) {
             binding.composeFooterRl.setBackgroundColor(Color.parseColor(botBrandingModel.general.colors.secondary))
         } else {
             binding.composeFooterRl.setBackgroundColor(Color.parseColor(botBrandingModel.footer.bgColor))

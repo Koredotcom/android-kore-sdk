@@ -8,3 +8,10 @@ data class BrandingBodyUserMessageModel(
     @SerializedName("color")
     val color: String? = null
 )
+
+fun BrandingBodyUserMessageModel.updateWith(configModel: BrandingBodyUserMessageModel): BrandingBodyUserMessageModel {
+    return this.copy(
+        bgColor = configModel.bgColor?.ifEmpty { this.bgColor },
+        color = configModel.color?.ifEmpty { this.color },
+    )
+}

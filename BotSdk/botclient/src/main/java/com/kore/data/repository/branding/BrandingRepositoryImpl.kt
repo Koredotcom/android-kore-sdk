@@ -17,6 +17,7 @@ import com.kore.network.api.responsemodels.branding.BrandingFooterModel
 import com.kore.network.api.responsemodels.branding.BrandingGeneralModel
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.network.api.responsemodels.branding.BrandingTitleModel
+import com.kore.network.api.responsemodels.branding.updateWith
 import com.kore.network.api.service.BrandingApi
 import java.io.InputStreamReader
 
@@ -33,8 +34,8 @@ class BrandingRepositoryImpl : BrandingRepository {
             val brandingApi = ApiClient.getInstance().createService(BrandingApi::class.java)
             val response = brandingApi.getBrandingNewDetails(botId, "bearer $token", state, version, language, botId)
             if (response.isSuccessful) {
-                val model: BotActiveThemeModel? = response.body()
-                Result.Success(processResponse(model?:getLocalBrandingDetails(context)))
+                val model: BotActiveThemeModel? = response.body() ?: getLocalBrandingDetails(context)
+                Result.Success(processResponse(model))
             } else {
                 Result.Success(processResponse(getLocalBrandingDetails(context)))
             }
@@ -51,23 +52,26 @@ internal fun getLocalBrandingDetails(context: Context): BotActiveThemeModel? {
     return Gson().fromJson(jsonText, BotActiveThemeModel::class.java)
 }
 
-internal fun processResponse(model: BotActiveThemeModel?): BotActiveThemeModel? {
+internal fun processResponse(responseModel: BotActiveThemeModel?): BotActiveThemeModel? {
+    val configBrandingModel = SDKConfiguration.getBotBrandingConfig()
+    val model = if (configBrandingModel != null) responseModel?.updateWith(configBrandingModel) else responseModel
+
     if (model?.brandingModel?.overrideKoreConfig?.isEnable == true) {
         val brandingModel = model.brandingModel
         SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = brandingModel.overrideKoreConfig?.emojiShortCut == true
         SDKConfiguration.OverrideKoreConfig.typingIndicatorTimeout = brandingModel.overrideKoreConfig?.typingIndicatorTimeout ?: 0
         if (brandingModel.footer.buttons != null) {
-            SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = brandingModel.footer.buttons.microphone.show
-            SDKConfiguration.OverrideKoreConfig.showAttachment = brandingModel.footer.buttons.attachment.show
-            SDKConfiguration.OverrideKoreConfig.showTextToSpeech = brandingModel.footer.buttons.speaker.show
+            SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = brandingModel.footer.buttons.microphone.show == true
+            SDKConfiguration.OverrideKoreConfig.showAttachment = brandingModel.footer.buttons.attachment.show == true
+            SDKConfiguration.OverrideKoreConfig.showTextToSpeech = brandingModel.footer.buttons.speaker.show == true
         }
         if (brandingModel.overrideKoreConfig?.history != null) {
-            SDKConfiguration.OverrideKoreConfig.historyEnable = brandingModel.overrideKoreConfig.history.isEnable
+            SDKConfiguration.OverrideKoreConfig.historyEnable = brandingModel.overrideKoreConfig.history.isEnable ?: false
             if (brandingModel.overrideKoreConfig.history.recent != null) SDKConfiguration.OverrideKoreConfig.historyBatchSize =
-                brandingModel.overrideKoreConfig.history.recent.batchSize
+                brandingModel.overrideKoreConfig.history.recent.batchSize ?: 0
             if (brandingModel.overrideKoreConfig.history.paginatedScroll != null) {
-                SDKConfiguration.OverrideKoreConfig.paginatedScrollEnable = brandingModel.overrideKoreConfig.history.paginatedScroll.isEnable
-                SDKConfiguration.OverrideKoreConfig.paginatedScrollBatchSize = brandingModel.overrideKoreConfig.history.paginatedScroll.batchSize
+                SDKConfiguration.OverrideKoreConfig.paginatedScrollEnable = brandingModel.overrideKoreConfig.history.paginatedScroll.isEnable == true
+                SDKConfiguration.OverrideKoreConfig.paginatedScrollBatchSize = brandingModel.overrideKoreConfig.history.paginatedScroll.batchSize ?: 0
                 SDKConfiguration.OverrideKoreConfig.paginatedScrollLoadingLabel =
                     brandingModel.overrideKoreConfig.history.paginatedScroll.loadingLabel
             }
