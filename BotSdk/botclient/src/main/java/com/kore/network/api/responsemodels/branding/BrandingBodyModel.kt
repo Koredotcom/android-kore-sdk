@@ -30,3 +30,21 @@ data class BrandingBodyModel(
     @SerializedName("background")
     val background: BrandingBodyBackgroundModel? = null
 )
+
+fun BrandingBodyModel.updateWith(configModel: BrandingBodyModel): BrandingBodyModel {
+    return this.copy(
+        img = configModel.img.ifEmpty { this.img },
+        secondaryHoverColor = configModel.secondaryHoverColor.ifEmpty { this.secondaryHoverColor },
+        secondaryColor = configModel.secondaryColor.ifEmpty { this.secondaryColor },
+        primaryHoverColor = configModel.primaryHoverColor.ifEmpty { this.primaryHoverColor },
+        primaryColor = configModel.primaryColor.ifEmpty { this.primaryColor },
+        bubbleStyle = configModel.bubbleStyle.ifEmpty { this.bubbleStyle },
+        timeStamp = this.timeStamp?.updateWith(configModel.timeStamp ?: this.timeStamp),
+        bodyIconModel = this.bodyIconModel?.updateWith(configModel.bodyIconModel ?: this.bodyIconModel),
+        agentMessage = this.agentMessage?.updateWith(configModel.agentMessage ?: this.agentMessage),
+        botMessage = this.botMessage?.updateWith(configModel.botMessage ?: this.botMessage),
+        userMessage = this.userMessage?.updateWith(configModel.userMessage ?: this.userMessage),
+        font = this.font?.updateWith(configModel.font ?: this.font),
+        background = this.background?.updateWith(configModel.background ?: this.background),
+    )
+}

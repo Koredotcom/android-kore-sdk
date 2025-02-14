@@ -26,3 +26,17 @@ data class BrandingHeaderModel(
     @SerializedName("buttons")
     val buttons: BrandingHeaderButtonsModel? = null
 ) : Parcelable
+
+fun BrandingHeaderModel.updateWith(configModel: BrandingHeaderModel): BrandingHeaderModel {
+    return this.copy(
+        bgColor = configModel.bgColor?.ifEmpty { this.bgColor },
+        size = configModel.size?.ifEmpty { this.size },
+        style = configModel.style?.ifEmpty { this.style },
+        iconsColor = configModel.style?.ifEmpty { this.style },
+        avatarBgColor = configModel.style?.ifEmpty { this.style },
+        icon = this.icon?.updateWith(configModel.icon ?: this.icon),
+        title = this.title?.updateWith(configModel.title ?: this.title),
+        subTitle = this.subTitle?.updateWith(configModel.subTitle ?: this.subTitle),
+        buttons = this.buttons?.updateWith(configModel.buttons ?: this.buttons),
+    )
+}

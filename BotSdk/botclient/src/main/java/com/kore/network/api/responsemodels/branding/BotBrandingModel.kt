@@ -18,3 +18,15 @@ data class BotBrandingModel(
     @SerializedName("override_kore_config")
     val overrideKoreConfig: BrandingOverrideConfigModel? = null
 )
+
+fun BotBrandingModel.updateWith(configModel: BotBrandingModel): BotBrandingModel {
+    return this.copy(
+        general = general.updateWith(configModel.general),
+        header = header.updateWith(configModel.header),
+        footer = footer.updateWith(configModel.footer),
+        body = body.updateWith(configModel.body),
+        chatBubble = chatBubble?.updateWith(configModel.chatBubble ?: chatBubble),
+        welcomeScreen = welcomeScreen?.updateWith(configModel.welcomeScreen ?: welcomeScreen),
+        overrideKoreConfig = overrideKoreConfig?.updateWith(configModel.overrideKoreConfig ?: overrideKoreConfig)
+    )
+}

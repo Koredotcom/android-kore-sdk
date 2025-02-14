@@ -1,12 +1,14 @@
 package com.kore.common
 
 import com.kore.common.model.BotConfigModel
+import com.kore.network.api.responsemodels.branding.BotBrandingModel
 
 object SDKConfiguration {
     private var botConfigModel: BotConfigModel? = null
     private var loginToken: String? = null
     private var queryParams: HashMap<String, Any>? = null
     private var customData: HashMap<String, Any>? = null
+    private var botBrandingModel: BotBrandingModel? = null
 
     object OverrideKoreConfig {
         var isEmojiShortcutEnable: Boolean = true
@@ -47,4 +49,10 @@ object SDKConfiguration {
     }
 
     fun getCustomData(): HashMap<String, Any>? = customData
+
+    fun setBotBrandingConfig(botBrandingModel: BotBrandingModel?) {
+        this.botBrandingModel = botBrandingModel
+    }
+
+    fun getBotBrandingConfig(): BotBrandingModel? = botBrandingModel
 }

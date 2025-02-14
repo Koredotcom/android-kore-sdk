@@ -63,7 +63,7 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
         }
 
         if (!botBrandingModel.welcomeScreen?.layout.isNullOrEmpty()) {
-            if (botBrandingModel.general.colors.useColorPaletteOnly) {
+            if (botBrandingModel.general.colors.useColorPaletteOnly == true) {
                 botBrandingModel.welcomeScreen?.background?.color = botBrandingModel.general.colors.primary
                 binding.llStartConversation.backgroundTintList =
                     ColorStateList.valueOf(Color.parseColor(botBrandingModel.general.colors.primary))

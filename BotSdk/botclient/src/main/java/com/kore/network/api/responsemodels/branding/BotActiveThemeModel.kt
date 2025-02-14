@@ -42,3 +42,9 @@ data class BotActiveThemeModel(
     @SerializedName("widgetHeader")
     var widgetHeader: BrandingWidgetBodyModel? = null
 )
+
+fun BotActiveThemeModel.updateWith(configModel: BotBrandingModel): BotActiveThemeModel {
+    return this.copy(
+        brandingModel = brandingModel?.updateWith(configModel),
+    )
+}
