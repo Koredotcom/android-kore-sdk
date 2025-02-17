@@ -49,7 +49,8 @@ class BotClient private constructor() {
         private const val SYS_PROP_HTTP_AGENT = "http.agent"
         private const val KEY_ASSERTION = "assertion"
         private const val KEY_BOT_INFO = "botInfo"
-        private const val RECONNECT_PARAM = "&isReconnect=true"
+        private const val IS_RECONNECT_PARAM = "&isReconnect=true"
+        private const val CONNECTION_MODE_PARAM = "&ConnectionMode=Reconnect"
 
         private const val RECONNECT_ATTEMPT_LIMIT = 16
         private const val POLL_DELAY_REPEAT = 5000L
@@ -311,7 +312,12 @@ class BotClient private constructor() {
                         queryParams.append(value)
                     }
                 }
-                val socketUrl = rtmUrl + if (isReconnectionAttempt) RECONNECT_PARAM else "" + queryParams
+                val connectionMode = SDKConfiguration.getConnectionMode();
+                val socketUrl = if (isReconnectionAttempt) {
+                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else CONNECTION_MODE_PARAM + queryParams
+                } else {
+                    rtmUrl + if (!connectionMode.isNullOrEmpty()) connectionMode else "" + queryParams
+                }
                 LogUtils.d(LOG_TAG, "socketUrl $socketUrl")
                 socketConnection.connect(
                     socketUrl,

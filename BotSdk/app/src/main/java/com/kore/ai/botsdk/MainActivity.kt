@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
 //        SDKConfig.addCustomFooterFragment(CustomFooterFragment())
 
 //        SDKConfig.setBotBrandingConfig(getDefaultBrandingModel(this))
+//        SDKConfig.setConnectionMode("Start_New_Resume_Agent") // it can be Start_New, Start_New_Resume_Agent or Default
 
         binding.launchBotBtn.setOnClickListener {
             val intent = Intent(this, BotChatActivity::class.java)

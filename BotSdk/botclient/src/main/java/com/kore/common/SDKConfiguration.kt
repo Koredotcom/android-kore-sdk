@@ -9,6 +9,7 @@ object SDKConfiguration {
     private var queryParams: HashMap<String, Any>? = null
     private var customData: HashMap<String, Any>? = null
     private var botBrandingModel: BotBrandingModel? = null
+    private var socketConnectionMode: String? = null
 
     object OverrideKoreConfig {
         var isEmojiShortcutEnable: Boolean = true
@@ -55,4 +56,10 @@ object SDKConfiguration {
     }
 
     fun getBotBrandingConfig(): BotBrandingModel? = botBrandingModel
+
+    fun setConnectionMode(connectionMode: String) {
+        socketConnectionMode = "&ConnectionMode=$connectionMode"
+    }
+
+    fun getConnectionMode(): String? = socketConnectionMode
 }
