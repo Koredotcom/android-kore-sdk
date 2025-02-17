@@ -180,7 +180,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun addMessageToAdapter(baseBotMessage: BaseBotMessage) {
-        contentFragment.addMessagesToAdapter(listOf(baseBotMessage), false)
+        contentFragment.addMessagesToAdapter(listOf(baseBotMessage), false, false)
     }
 
     override fun onActionEvent(event: UserActionEvent) {
@@ -385,8 +385,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.hideQuickReplies()
     }
 
-    override fun onChatHistory(list: List<BaseBotMessage>) {
-        contentFragment.addMessagesToAdapter(list, !isMinimized())
+    override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
+        contentFragment.addMessagesToAdapter(list, !isMinimized(), isReconnection)
     }
 
     fun showCloseAlert() {

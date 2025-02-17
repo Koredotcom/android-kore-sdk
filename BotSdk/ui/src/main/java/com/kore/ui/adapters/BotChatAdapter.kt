@@ -77,9 +77,33 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
         this.actionEvent = actionEvent
     }
 
-    fun addAndCreateRows(baseBotMessage: List<BaseBotMessage>, isHistory: Boolean = false): List<SimpleListRow> {
-        messages = messages + baseBotMessage
-        if (isHistory) messages = messages.distinctBy { it.messageId }.sortedBy { it.timeMillis }
+    fun addAndCreateRows(baseBotMessages: List<BaseBotMessage>, isHistory: Boolean = false, isReconnection: Boolean): List<SimpleListRow> {
+        messages = if (isHistory) {
+            if (!isReconnection) {
+                messages + baseBotMessages
+            } else {
+                var latestChatMsg: BotResponse? = null
+                for (botMessage in messages.reversed()) {
+                    if (botMessage is BotResponse) {
+                        latestChatMsg = botMessage
+                        break
+                    }
+                }
+                if (latestChatMsg != null) {
+                    for (historyItem in baseBotMessages) {
+                        if (historyItem.timeMillis > latestChatMsg.timeMillis) {
+                            messages += historyItem
+                        }
+                    }
+                    messages
+                } else {
+                    messages + baseBotMessages
+                }
+            }.distinctBy { it.messageId }.sortedBy { it.timeMillis }
+        } else {
+            messages + baseBotMessages
+        }
+
         return createRows(messages)
     }
 
