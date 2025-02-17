@@ -79,7 +79,6 @@ public class BotChatViewModel extends ViewModel {
     ArrayList<String> arrMessageList = new ArrayList<>();
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    protected final int compressQualityInt = 100;
     private boolean isActivityResumed = false;
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {

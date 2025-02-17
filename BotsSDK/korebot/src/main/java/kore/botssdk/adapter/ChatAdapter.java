@@ -166,74 +166,76 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                 }
                 if (customTemplateType != -1) return customTemplateType;
 
-                switch (payInner.getTemplate_type()) {
-                    case BotResponse.TEMPLATE_TYPE_BUTTON:
-                        return TEMPLATE_BUTTON;
-                    case BotResponse.TEMPLATE_TYPE_CAROUSEL:
-                        if (payInner.getCarousel_type() != null && payInner.getCarousel_type().equals(BotResponse.STACKED)) {
-                            return TEMPLATE_CAROUSEL_STACKED;
-                        }
-                        return TEMPLATE_CAROUSEL;
-                    case BotResponse.TEMPLATE_TYPE_LIST:
-                        return TEMPLATE_LIST;
-                    case BotResponse.TEMPLATE_TYPE_PIECHART:
-                        return TEMPLATE_PIE_CHART;
-                    case BotResponse.TEMPLATE_TYPE_TABLE:
-                        if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
-                            return TEMPLATE_TABLE_RESPONSIVE;
-                        } else {
-                            return TEMPLATE_TABLE;
-                        }
-                    case BotResponse.CUSTOM_TABLE_TEMPLATE:
-                        break;
-                    case BotResponse.TEMPLATE_TYPE_CLOCK:
-                        return TEMPLATE_CLOCK;
-                    case BotResponse.TEMPLATE_TYPE_MINITABLE:
-                        return TEMPLATE_MINI_TABLE;
-                    case BotResponse.TEMPLATE_TYPE_MULTI_SELECT:
-                        return TEMPLATE_MULTI_SELECT;
-                    case BotResponse.ADVANCED_LIST_TEMPLATE:
-                        return TEMPLATE_ADVANCED_LIST_TEMPLATE;
-                    case BotResponse.TEMPLATE_TYPE_LINECHART:
-                        return TEMPLATE_LINE_CHART;
-                    case BotResponse.TEMPLATE_TYPE_BARCHART:
-                        return TEMPLATE_BAR_CHART;
-                    case BotResponse.TEMPLATE_TYPE_FORM:
-                        return TEMPLATE_FORM;
-                    case BotResponse.TEMPLATE_TYPE_LIST_VIEW:
-                        return TEMPLATE_LIST_VIEW;
-                    case BotResponse.TEMPLATE_TYPE_TABLE_LIST:
-                        return TEMPLATE_TABLE_LIST;
-                    case BotResponse.TEMPLATE_TYPE_FEEDBACK:
-                        return TEMPLATE_FEEDBACK;
-                    case BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2:
-                        return TEMPLATE_LIST_WIDGET_2;
-                    case BotResponse.TEMPLATE_DROPDOWN:
-                        return TEMPLATE_DROP_DOWN;
-                    case BotResponse.CARD_TEMPLATE:
-                        return TEMPLATE_CARD;
-                    case BotResponse.COMPONENT_TYPE_IMAGE:
-                        return TEMPLATE_MEDIA;
-                    case BotResponse.TEMPLATE_TYPE_RADIO_OPTIONS:
-                        return TEMPLATE_RADIO_OPTIONS;
-                    case BotResponse.TEMPLATE_TYPE_WELCOME_QUICK_REPLIES:
-                        return TEMPLATE_WELCOME_QUICK_REPLIES;
-                    case BotResponse.TEMPLATE_TYPE_NOTIFICATIONS:
-                        return TEMPLATE_NOTIFICATIONS;
-                    case BotResponse.CONTACT_CARD_TEMPLATE:
-                        return TEMPLATE_CONTACT_CARD;
-                    case BotResponse.TEMPLATE_BANKING_FEEDBACK:
-                        return TEMPLATE_BANKING_FEEDBACK;
-                    case BotResponse.TEMPLATE_PDF_DOWNLOAD:
-                        return TEMPLATE_PDF_DOWNLOAD;
-                    case BotResponse.TEMPLATE_BENEFICIARY:
-                        return TEMPLATE_BENEFICIARY;
-                    case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE:
-                        return TEMPLATE_ADVANCE_MULTI_SELECT;
-                    case BotResponse.TEMPLATE_TYPE_RESULTS_LIST:
-                        return TEMPLATE_RESULTS;
-                    default:
-                        return TEMPLATE_BUBBLE_RESPONSE;
+                if (StringUtils.isNotEmpty(payInner.getTemplate_type())) {
+                    switch (payInner.getTemplate_type()) {
+                        case BotResponse.TEMPLATE_TYPE_BUTTON:
+                            return TEMPLATE_BUTTON;
+                        case BotResponse.TEMPLATE_TYPE_CAROUSEL:
+                            if (payInner.getCarousel_type() != null && payInner.getCarousel_type().equals(BotResponse.STACKED)) {
+                                return TEMPLATE_CAROUSEL_STACKED;
+                            }
+                            return TEMPLATE_CAROUSEL;
+                        case BotResponse.TEMPLATE_TYPE_LIST:
+                            return TEMPLATE_LIST;
+                        case BotResponse.TEMPLATE_TYPE_PIECHART:
+                            return TEMPLATE_PIE_CHART;
+                        case BotResponse.TEMPLATE_TYPE_TABLE:
+                            if (payInner.getTableDesign().equals(BotResponse.TABLE_VIEW_RESPONSIVE)) {
+                                return TEMPLATE_TABLE_RESPONSIVE;
+                            } else {
+                                return TEMPLATE_TABLE;
+                            }
+                        case BotResponse.CUSTOM_TABLE_TEMPLATE:
+                            break;
+                        case BotResponse.TEMPLATE_TYPE_CLOCK:
+                            return TEMPLATE_CLOCK;
+                        case BotResponse.TEMPLATE_TYPE_MINITABLE:
+                            return TEMPLATE_MINI_TABLE;
+                        case BotResponse.TEMPLATE_TYPE_MULTI_SELECT:
+                            return TEMPLATE_MULTI_SELECT;
+                        case BotResponse.ADVANCED_LIST_TEMPLATE:
+                            return TEMPLATE_ADVANCED_LIST_TEMPLATE;
+                        case BotResponse.TEMPLATE_TYPE_LINECHART:
+                            return TEMPLATE_LINE_CHART;
+                        case BotResponse.TEMPLATE_TYPE_BARCHART:
+                            return TEMPLATE_BAR_CHART;
+                        case BotResponse.TEMPLATE_TYPE_FORM:
+                            return TEMPLATE_FORM;
+                        case BotResponse.TEMPLATE_TYPE_LIST_VIEW:
+                            return TEMPLATE_LIST_VIEW;
+                        case BotResponse.TEMPLATE_TYPE_TABLE_LIST:
+                            return TEMPLATE_TABLE_LIST;
+                        case BotResponse.TEMPLATE_TYPE_FEEDBACK:
+                            return TEMPLATE_FEEDBACK;
+                        case BotResponse.TEMPLATE_TYPE_LIST_WIDGET_2:
+                            return TEMPLATE_LIST_WIDGET_2;
+                        case BotResponse.TEMPLATE_DROPDOWN:
+                            return TEMPLATE_DROP_DOWN;
+                        case BotResponse.CARD_TEMPLATE:
+                            return TEMPLATE_CARD;
+                        case BotResponse.COMPONENT_TYPE_IMAGE:
+                            return TEMPLATE_MEDIA;
+                        case BotResponse.TEMPLATE_TYPE_RADIO_OPTIONS:
+                            return TEMPLATE_RADIO_OPTIONS;
+                        case BotResponse.TEMPLATE_TYPE_WELCOME_QUICK_REPLIES:
+                            return TEMPLATE_WELCOME_QUICK_REPLIES;
+                        case BotResponse.TEMPLATE_TYPE_NOTIFICATIONS:
+                            return TEMPLATE_NOTIFICATIONS;
+                        case BotResponse.CONTACT_CARD_TEMPLATE:
+                            return TEMPLATE_CONTACT_CARD;
+                        case BotResponse.TEMPLATE_BANKING_FEEDBACK:
+                            return TEMPLATE_BANKING_FEEDBACK;
+                        case BotResponse.TEMPLATE_PDF_DOWNLOAD:
+                            return TEMPLATE_PDF_DOWNLOAD;
+                        case BotResponse.TEMPLATE_BENEFICIARY:
+                            return TEMPLATE_BENEFICIARY;
+                        case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE:
+                            return TEMPLATE_ADVANCE_MULTI_SELECT;
+                        case BotResponse.TEMPLATE_TYPE_RESULTS_LIST:
+                            return TEMPLATE_RESULTS;
+                        default:
+                            return TEMPLATE_BUBBLE_RESPONSE;
+                    }
                 }
             } else if (BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
                 if (!StringUtils.isNullOrEmpty(payInner.getVideoUrl())) {
