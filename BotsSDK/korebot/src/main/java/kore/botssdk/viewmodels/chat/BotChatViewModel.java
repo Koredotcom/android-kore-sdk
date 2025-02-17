@@ -65,7 +65,7 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotChatViewModel extends ViewModel {
-    private static final String LOG_TAG = "BotChatActivity";
+    private static final String LOG_TAG = "NewBotChatActivity";
     Context context;
     Gson gson = new Gson();
     BotClient botClient;
@@ -90,10 +90,7 @@ public class BotChatViewModel extends ViewModel {
     }
 
     public void getBrandingDetails(String botId, String botToken, String state, String version, String language) {
-        if (!SDKConfiguration.BubbleColors.enableLocalBranding)
-            repository.getBrandingDetails(botId, botToken, state, version, language);
-        else
-            repository.getBrandingLocal(SDKConfiguration.BubbleColors.localBranding);
+        repository.getBrandingDetails(botId, botToken, state, version, language);
     }
 
     public void setIsActivityResumed(boolean isResumed) {
@@ -155,8 +152,11 @@ public class BotChatViewModel extends ViewModel {
         }
 
         @Override
-        public void onStartCompleted(boolean isStartCompleted) {
-            getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
+        public void onStartCompleted(boolean isReconnect) {
+            if (!isReconnect)
+                getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
+            else
+                chatView.loadOnConnectionHistory(true);
         }
 
     };
