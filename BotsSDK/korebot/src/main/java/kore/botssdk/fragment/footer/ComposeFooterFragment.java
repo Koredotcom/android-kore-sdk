@@ -1,5 +1,6 @@
 package kore.botssdk.fragment.footer;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
@@ -137,7 +138,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
             composebarAttachmentAdapter = new ComposebarAttachmentAdapter(requireActivity(), new AttachmentListner() {
                 @Override
                 public void onRemoveAttachment() {
-                    attachmentRecycler.setVisibility(View.GONE);
+                    attachmentRecycler.setVisibility(GONE);
                     enableOrDisableSendButton(composebarAttachmentAdapter.getItemCount() > 0 || !TextUtils.isEmpty(editTextMessage.getText().toString().trim()));
                 }
             });
@@ -291,7 +292,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (s.length() == 0) {
-                llSend.setVisibility(View.GONE);
+                llSend.setVisibility(GONE);
 
                 if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(VISIBLE);
                 else llSend.setVisibility(VISIBLE);
@@ -303,7 +304,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
                 if (isAgentConnected && botClient != null) botClient.sendReceipts(BundleConstants.TYPING, "");
 
                 llSend.setVisibility(VISIBLE);
-                recAudioImg.setVisibility(View.GONE);
+                recAudioImg.setVisibility(GONE);
             }
         }
 
@@ -381,7 +382,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     }
 
     private void initialSetUp() {
-        mainContentLayout.setVisibility(View.GONE);
+        mainContentLayout.setVisibility(GONE);
         animateLayoutGone(mainContentLayout);
         animateLayoutVisible(defaultFooterLayout);
     }
@@ -395,7 +396,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     protected void onRecordAudioPermissionGranted() {
         stopTTS();
         Utility.hideVirtualKeyboard(requireActivity());
-        speakerText.setVisibility(View.GONE);
+        speakerText.setVisibility(GONE);
         rlSpeakerCircle.setVisibility(VISIBLE);
         textViewSpeech.setVisibility(VISIBLE);
         textViewSpeech.setText("");
@@ -422,7 +423,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     @Override
     public void onSpeechResult(String result) {
         speakerText.setVisibility(VISIBLE);
-        rlSpeakerCircle.setVisibility(View.GONE);
+        rlSpeakerCircle.setVisibility(GONE);
         textViewSpeech.setText(result);
 
         if (result.isEmpty()) {
@@ -436,7 +437,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
                 LogUtils.e(LOG_TAG, "ComposeFooterInterface is not found. Please set the interface first.");
             }
         }
-        textViewSpeech.setVisibility(View.GONE);
+        textViewSpeech.setVisibility(GONE);
     }
 
     private void showSpeechNotSupportedDialog() {
@@ -475,9 +476,9 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     public void enableOrDisableSendButton(boolean enable) {
         if (composebarAttachmentAdapter.getItemCount() > 0 || enable) {
             llSend.setVisibility(VISIBLE);
-            recAudioImg.setVisibility(View.GONE);
+            recAudioImg.setVisibility(GONE);
         } else {
-            llSend.setVisibility(View.GONE);
+            llSend.setVisibility(GONE);
 
             if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(VISIBLE);
             else llSend.setVisibility(VISIBLE);

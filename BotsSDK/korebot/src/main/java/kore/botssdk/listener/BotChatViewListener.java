@@ -31,6 +31,7 @@ public interface BotChatViewListener extends BaseView {
     void showReconnectionStopped();
 
     void getBrandingDetails();
+    void loadOnConnectionHistory(boolean isReconnect);
     void addAttachmentToAdapter(HashMap<String, String> attachmentKey);
     void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation);
 }

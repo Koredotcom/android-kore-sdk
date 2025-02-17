@@ -72,7 +72,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
     boolean isAgentTransfer;
-    private boolean isReconnection;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -183,7 +182,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     @Override
     public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
         if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
-            this.isReconnection = isReconnection;
             taskProgressBar.setVisibility(View.GONE);
             baseFooterFragment.enableSendButton();
         }
@@ -201,14 +199,20 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
             }
-        }
 
-        if (botContentFragment != null && sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false)) {
+            loadOnConnectionHistory(false);
+        }
+    }
+
+    @Override
+    public void loadOnConnectionHistory(boolean isReconnect) {
+        if (botContentFragment != null && isReconnect) {
             if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
                 botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
             else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
                 botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
-            else botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+            else if (SDKConfiguration.Client.history_on_network_resume)
+                botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
         } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
             botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
         }
@@ -333,7 +337,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
         botContentFragment.showTypingStatus();
-        if (attachments != null && attachments.size() > 0) {
+        if (attachments != null && !attachments.isEmpty()) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
                 mViewModel.addSentMessageToChat(message);

@@ -70,14 +70,13 @@ import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 public class BotChatFragment extends Fragment implements BotChatViewListener, ComposeFooterInterface, InvokeGenericWebViewInterface {
     private ProgressBar taskProgressBar;
     private String jwt;
-    private BotClient botClient;
+    BotClient botClient;
     private BaseHeaderFragment botHeaderFragment;
     private BaseContentFragment botContentFragment;
     private BaseFooterFragment baseFooterFragment;
-    private SharedPreferences sharedPreferences;
+    SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
-    private boolean isAgentTransfer;
-    private boolean isReconnection;
+    boolean isAgentTransfer;
     private BotChatFragmentListener fragmentListener;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
@@ -182,7 +181,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
         if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
-            this.isReconnection = isReconnection;
             taskProgressBar.setVisibility(View.GONE);
             baseFooterFragment.enableSendButton();
         }
@@ -201,15 +199,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
                 botHeaderFragment.setBrandingDetails(brandingModel);
         }
 
-        if (botContentFragment != null && isReconnection) {
-            if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
-                botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
-            else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
-                botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
-            else botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
-        } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
-            botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
-        }
+        loadOnConnectionHistory(false);
     }
 
     @Override
@@ -282,6 +272,20 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void getBrandingDetails() {
         mViewModel.getBrandingDetails(SDKConfiguration.Client.bot_id, jwt, "published", "1", "en_US");
+    }
+
+    @Override
+    public void loadOnConnectionHistory(boolean isReconnect) {
+        if (botContentFragment != null && isReconnect) {
+            if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
+                botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+            else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
+                botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
+            else if (SDKConfiguration.Client.history_on_network_resume)
+                botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+        } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
+            botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+        }
     }
 
     @Override

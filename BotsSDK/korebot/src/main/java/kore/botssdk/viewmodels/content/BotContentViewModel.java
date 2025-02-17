@@ -28,9 +28,9 @@ import kore.botssdk.viewmodels.BaseViewModel;
 @SuppressWarnings("UnKnownNullness")
 public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate> {
     private Context context;
-    private final BotContentFragmentUpdate chatView;
+    final BotContentFragmentUpdate chatView;
     private final HistoryRepository repository;
-    private int offset = 0;
+    int offset = 0;
 
     public BotContentViewModel(Context context, BotContentFragmentUpdate chatView, HistoryRepository repository) {
         this.context = context.getApplicationContext();
@@ -101,14 +101,14 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                         }
                     }
 
-                    if (pos != 0 && (pos + 1) < botResp.size()) {
+                    if (pos != 0) {
                         for (int i = pos + 1; i < botResp.size(); i++) {
                             if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
                                 ((BotResponse) botResp.get(i)).setFromAgent(true);
                             requiredList.add(botResp.get(i));
                         }
                     } else {
-                        requiredList.addAll(list);
+                        requiredList.addAll(botResp);
                     }
 
                     chatView.onReconnectionChatHistory(requiredList, offset, false);

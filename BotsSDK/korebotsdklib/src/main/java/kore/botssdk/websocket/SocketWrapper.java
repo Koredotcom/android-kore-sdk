@@ -32,6 +32,7 @@ import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.LogUtils;
+import kore.botssdk.utils.StringUtils;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -247,14 +248,14 @@ public final class SocketWrapper {
                             queryParams.append(entry.getValue());
                         }
                         socketConnectionListener.onStartCompleted(false);
-                        connectToSocket(rtmUrl.getUrl().concat("&isReconnect=false") + queryParams, false);
+                        connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode="+SDKConfiguration.Client.connection_mode: "") + queryParams, false);
                     } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                 } else {
                     try {
                         socketConnectionListener.onStartCompleted(true);
-                        connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), isReconnect);
+                        connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), true);
                     } catch (URISyntaxException e) {
                         throw new RuntimeException(e);
                     }
@@ -458,6 +459,7 @@ public final class SocketWrapper {
             @Override
             public void onNext(RestResponse.RTMUrl rtmUrl) {
                 try {
+                    socketConnectionListener.onStartCompleted(true);
                     connectToSocket(rtmUrl.getUrl().concat("&isReconnect=true").concat("&ConnectionMode=Reconnect"), true);
                 } catch (URISyntaxException e) {
                     e.printStackTrace();

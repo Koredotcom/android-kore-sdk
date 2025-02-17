@@ -152,8 +152,11 @@ public class BotChatViewModel extends ViewModel {
         }
 
         @Override
-        public void onStartCompleted(boolean isStartCompleted) {
-            getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
+        public void onStartCompleted(boolean isReconnect) {
+            if (!isReconnect)
+                getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
+            else
+                chatView.loadOnConnectionHistory(true);
         }
 
     };
