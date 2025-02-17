@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         //Flag to show bot header or hide the header
         SDKConfig.setIsShowHeader(true);
 
-        //Set local branding by overriding the branding api response
+        //Set local branding model by overriding the branding api response
         SDKConfig.setLocalBranding(false, getLocalBrandingModel());
 
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;

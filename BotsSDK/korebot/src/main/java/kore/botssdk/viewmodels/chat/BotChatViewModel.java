@@ -65,7 +65,7 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotChatViewModel extends ViewModel {
-    private static final String LOG_TAG = "BotChatActivity";
+    private static final String LOG_TAG = "NewBotChatActivity";
     Context context;
     Gson gson = new Gson();
     BotClient botClient;
