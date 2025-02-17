@@ -83,4 +83,8 @@ object SDKConfig {
     }
 
     fun getBotBrandingConfig(): BotBrandingModel? = SDKConfiguration.getBotBrandingConfig()
+
+    fun setConnectionMode(connectionMode: String) {
+        SDKConfiguration.setConnectionMode(connectionMode)
+    }
 }
