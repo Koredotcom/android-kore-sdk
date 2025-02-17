@@ -20,7 +20,7 @@ interface BotChatView : BaseView {
     fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?)
     fun getAdapterLastItems(): BaseBotMessage?
     fun hideQuickReplies()
-    fun onChatHistory(list: List<BaseBotMessage>)
+    fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean)
     fun onSwipeRefresh()
     fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int)
 }

@@ -18,6 +18,7 @@ object SDKConfig {
     private var customContentFragment: BaseContentFragment? = null
     private var customFooterFragment: BaseFooterFragment? = null
     private var isMinimized: Boolean = false
+    private var historyOnNetworkResume = true
 
     fun initialize(botConfigModel: BotConfigModel) {
         SDKConfiguration.initialize(botConfigModel)
@@ -87,4 +88,10 @@ object SDKConfig {
     fun setConnectionMode(connectionMode: String) {
         SDKConfiguration.setConnectionMode(connectionMode)
     }
+
+    fun setHistoryOnNetworkResume(loadHistory: Boolean) {
+        historyOnNetworkResume = loadHistory
+    }
+
+    fun getHistoryOnNetworkResume() = historyOnNetworkResume
 }

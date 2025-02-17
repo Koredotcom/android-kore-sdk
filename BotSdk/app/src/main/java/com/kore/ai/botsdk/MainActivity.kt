@@ -57,9 +57,12 @@ class MainActivity : AppCompatActivity() {
 //        SDKConfig.addCustomContentFragment(CustomContentFragment())
         // Adding user custom Footer fragment
 //        SDKConfig.addCustomFooterFragment(CustomFooterFragment())
-
+        // Set client defined V3 branding configuration
 //        SDKConfig.setBotBrandingConfig(getDefaultBrandingModel(this))
-//        SDKConfig.setConnectionMode("Start_New_Resume_Agent") // it can be Start_New, Start_New_Resume_Agent or Default
+        // Set client required connection mode(Like: Start_New, Start_New_Resume_Agent or Default) for the socket connection
+//        SDKConfig.setConnectionMode("Default")
+        // To disable loading history when socket reconnected in case of socket disconnect and reconnect
+//        SDKConfig.setHistoryOnNetworkResume(false)
 
         binding.launchBotBtn.setOnClickListener {
             val intent = Intent(this, BotChatActivity::class.java)

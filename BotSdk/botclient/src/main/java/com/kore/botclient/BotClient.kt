@@ -314,7 +314,7 @@ class BotClient private constructor() {
                 }
                 val connectionMode = SDKConfiguration.getConnectionMode();
                 val socketUrl = if (isReconnectionAttempt) {
-                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else CONNECTION_MODE_PARAM + queryParams
+                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else IS_RECONNECT_PARAM+CONNECTION_MODE_PARAM + queryParams
                 } else {
                     rtmUrl + if (!connectionMode.isNullOrEmpty()) connectionMode else "" + queryParams
                 }

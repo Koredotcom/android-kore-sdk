@@ -43,7 +43,7 @@ data class BotActiveThemeModel(
     var widgetHeader: BrandingWidgetBodyModel? = null
 )
 
-fun BotActiveThemeModel.updateWith(configModel: BotBrandingModel): BotActiveThemeModel {
+fun BotActiveThemeModel.updateWithV3Model(configModel: BotBrandingModel): BotActiveThemeModel {
     return this.copy(
         brandingModel = brandingModel?.updateWith(configModel),
     )

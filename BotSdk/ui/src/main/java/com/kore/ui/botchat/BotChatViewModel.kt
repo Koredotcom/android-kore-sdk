@@ -319,19 +319,19 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     fun fetchChatHistory(isReconnect: Boolean) {
         if (!moreHistory) {
-            getView()?.onChatHistory(emptyList())
+            getView()?.onChatHistory(emptyList(), isReconnect)
             return
         }
         viewModelScope.launch {
             val botConfigModel = getBotConfigModel()
 
             if (!NetworkUtils.isNetworkAvailable(context)) {
-                getView()?.onChatHistory(emptyList())
+                getView()?.onChatHistory(emptyList(), isReconnect)
                 Toast.makeText(context, context.getString(R.string.no_network), Toast.LENGTH_SHORT).show()
                 return@launch
             }
             if (botConfigModel == null) {
-                getView()?.onChatHistory(emptyList())
+                getView()?.onChatHistory(emptyList(), isReconnect)
                 Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
                 return@launch
             }
@@ -349,7 +349,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 is Result.Success -> {
                     var historyMessages = response.data.first
                     if (isReconnect && !isMinimized()) historyMessages = historyMessages.filterIsInstance<BotResponse>()
-                    getView()?.onChatHistory(historyMessages)
+                    getView()?.onChatHistory(historyMessages, isReconnect)
                     historyOffset += response.data.first.size
                     moreHistory = response.data.second
                     SDKConfig.setIsMinimized(false)
@@ -358,7 +358,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 }
 
                 else -> {
-                    getView()?.onChatHistory(emptyList())
+                    getView()?.onChatHistory(emptyList(), isReconnect)
                     LogUtils.e(LOG_TAG, "RtmUrlResponse error: $response")
                     SDKConfig.setIsMinimized(false)
                 }
@@ -367,7 +367,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     private fun loadChatHistory(isReconnect: Boolean) {
-        if (isReconnect || (SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
+        if ((isReconnect && SDKConfig.getHistoryOnNetworkResume()) || (!isReconnect && SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
             historyOffset = 0
             moreHistory = true
             fetchChatHistory(true)
