@@ -23,6 +23,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.NewBotChatActivity;
+import kore.botssdk.models.BrandingModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
@@ -105,6 +106,9 @@ public class MainActivity extends AppCompatActivity {
         //Flag to show bot header or hide the header
         SDKConfig.setIsShowHeader(true);
 
+        //Set local branding by overriding the branding api response
+        SDKConfig.setLocalBranding(false, getLocalBrandingModel());
+
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
         SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
@@ -170,5 +174,30 @@ public class MainActivity extends AppCompatActivity {
                 requestPermissionLauncher.launch(POST_NOTIFICATIONS);
             }
         }
+    }
+
+    private BrandingModel getLocalBrandingModel()
+    {
+        BrandingModel brandingModel = new BrandingModel();
+        brandingModel.setBotchatBgColor("#F3F5F8");
+        brandingModel.setBotchatTextColor("#202124");
+        brandingModel.setButtonActiveBgColor("#0D6EFD");
+        brandingModel.setButtonActiveTextColor("#ffffff");
+        brandingModel.setButtonInactiveBgColor("#0659d2");
+        brandingModel.setButtonInactiveTextColor("#ffffff");
+        brandingModel.setUserchatBgColor("#0D6EFD");
+        brandingModel.setUserchatTextColor("#ffffff");
+        brandingModel.setWidgetHeaderColor("#0D6EFD");
+        brandingModel.setWidgetFooterColor("#FFFFFF");
+        brandingModel.setWidgetFooterBorderColor("#E4E5E7");
+        brandingModel.setWidgetFooterHintColor("#262626");
+        brandingModel.setWidgetFooterHintText("Type your message...");
+        brandingModel.setWidgetTextColor("#ffffff");
+        brandingModel.setWidgetBorderColor("#E4E5E7");
+        brandingModel.setButtonBorderColor("#0D6EFD");
+        brandingModel.setWidgetBodyColor("#ffffff");
+        brandingModel.setBotName("Bot Name");
+        brandingModel.setChatBubbleStyle("square");
+        return brandingModel;
     }
 }
