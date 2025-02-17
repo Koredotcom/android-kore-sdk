@@ -50,17 +50,17 @@
             android:gravity="center_vertical"
             android:visibility="gone">
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/composeFooterRl"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <RelativeLayout
                     android:id="@+id/tasksRl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:gravity="center_vertical">
 
                     <ImageView
@@ -93,11 +93,12 @@
 
                     <ImageView
                         android:id="@+id/attachemnt"
-                        android:layout_width="@dimen/dimen_35dp"
+                        android:layout_width="@dimen/dimen_32dp"
                         android:layout_height="@dimen/dimen_32dp"
                         android:layout_gravity="center_vertical"
+                        android:layout_marginStart="@dimen/dimen_5dp"
                         android:importantForAccessibility="no"
-                        android:padding="3dp"
+                        android:padding="@dimen/dimen_3dp"
                         android:visibility="gone"
                         app:srcCompat="@drawable/attachment_comp" />
 
@@ -136,17 +137,14 @@
 
                 <LinearLayout
                     android:id="@+id/composeFrameLl"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="45dp"
-                    android:layout_centerVertical="true"
                     android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
                     android:layout_marginBottom="5dp"
-                    android:layout_toStartOf="@+id/btnsend1"
-                    android:layout_toEndOf="@id/tasksRl"
+                    android:layout_weight="1"
                     android:background="@drawable/input_compose"
                     android:gravity="center"
                     android:orientation="horizontal">
@@ -235,7 +233,7 @@
 
                     <ImageView
                         android:id="@+id/rec_audio_img"
-                        android:layout_width="@dimen/dimen_30dp"
+                        android:layout_width="@dimen/dimen_25dp"
                         android:layout_height="@dimen/dimen_30dp"
                         android:layout_gravity="center_vertical"
                         android:importantForAccessibility="no"
@@ -245,7 +243,7 @@
 
                 </LinearLayout>
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/footerConnectBotWrapper"

@@ -1,5 +1,9 @@
 package kore.botssdk.fragment.footer;
 
+import static android.view.View.VISIBLE;
+
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -59,7 +63,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     private final String LOG_TAG = ComposeFooterFragment.class.getName();
     EditText editTextMessage;
     private TextView speakerText;
-    LinearLayout mainContentLayout;
+    LinearLayout mainContentLayout, composeFrameLl;
     LinearLayout defaultFooterLayout;
     ImageView recAudioImg;
     private ImageView audioSpeakTts;
@@ -120,6 +124,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         sendTv = view.findViewById(R.id.sendTv);
         rlSpeakerCircle = view.findViewById(R.id.rlSpeakerCircle);
         textViewSpeech = view.findViewById(R.id.text_view_speech);
+        composeFrameLl = view.findViewById(R.id.composeFrameLl);
 
         attachmentRecycler = view.findViewById(R.id.attachment_recycler);
         attachmentRecycler.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -181,20 +186,28 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     }
 
     public void changeThemeBackGround(String widgetFooterColor, String widgetFooterHintColor) {
-        rlFooter.setVisibility(View.VISIBLE);
+        rlFooter.setVisibility(VISIBLE);
 
         if (widgetFooterColor != null) {
             rlFooter.setBackgroundColor(Color.parseColor(widgetFooterColor));
             rlSpeaker.setBackgroundColor(Color.parseColor(widgetFooterColor));
         }
         if (widgetFooterHintColor != null) editTextMessage.setHintTextColor(Color.parseColor(widgetFooterHintColor));
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) composeFrameLl.getLayoutParams();
 
-        if (SDKConfiguration.OverrideKoreConfig.showAttachment) ivAttachment.setVisibility(View.VISIBLE);
+        if (SDKConfiguration.OverrideKoreConfig.showAttachment) {
+            ivAttachment.setVisibility(VISIBLE);
+            layoutParams.setMarginStart(0);
+        } else {
+            layoutParams.setMarginStart((int) (10 * dp1));
+        }
+        composeFrameLl.setLayoutParams(layoutParams);
 
-        if (SDKConfiguration.OverrideKoreConfig.showTextToSpeech) audioSpeakTts.setVisibility(View.VISIBLE);
+        if (SDKConfiguration.OverrideKoreConfig.showTextToSpeech) audioSpeakTts.setVisibility(VISIBLE);
 
         if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone && StringUtils.isNullOrEmpty(editTextMessage.getText().toString()))
-            recAudioImg.setVisibility(View.VISIBLE);
+            recAudioImg.setVisibility(VISIBLE);
+        else llSend.setVisibility(VISIBLE);
 
         SharedPreferences sharedPreferences = getSharedPreferences();
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
@@ -280,18 +293,16 @@ public class ComposeFooterFragment extends BaseFooterFragment {
             if (s.length() == 0) {
                 llSend.setVisibility(View.GONE);
 
-                if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(View.VISIBLE);
+                if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(VISIBLE);
+                else llSend.setVisibility(VISIBLE);
 
-                if (isAgentConnected && botClient != null)
-                    botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
+                if (isAgentConnected && botClient != null) botClient.sendReceipts(BundleConstants.STOP_TYPING, "");
 
-            } else if ((llSend.getVisibility() != View.VISIBLE)
-                    || (s.length() > 0 && llSend.getVisibility() != View.VISIBLE)) {
+            } else if ((llSend.getVisibility() != VISIBLE) || (s.length() > 0 && llSend.getVisibility() != VISIBLE)) {
 
-                if (isAgentConnected && botClient != null)
-                    botClient.sendReceipts(BundleConstants.TYPING, "");
+                if (isAgentConnected && botClient != null) botClient.sendReceipts(BundleConstants.TYPING, "");
 
-                llSend.setVisibility(View.VISIBLE);
+                llSend.setVisibility(VISIBLE);
                 recAudioImg.setVisibility(View.GONE);
             }
         }
@@ -307,32 +318,25 @@ public class ComposeFooterFragment extends BaseFooterFragment {
             String msg = editTextMessage.getText().toString();
             if (!msg.trim().isEmpty()) {
                 if (composebarAttachmentAdapter.getItemCount() > 0) {
-                    if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png")
-                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg")
-                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
+                    if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                     else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp4"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                    else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3")
-                            || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
+                    else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
                         sendMessageAttachmentText(msg + "\n" + requireActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                     else
                         sendMessageAttachmentText(msg + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                } else
-                    sendMessageText(msg);
+                } else sendMessageText(msg);
 
                 editTextMessage.setText("");
                 composebarAttachmentAdapter.clearAll();
                 enableOrDisableSendButton(false);
             } else if (composebarAttachmentAdapter.getItemCount() > 0) {
-                if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png")
-                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg")
-                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
+                if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".png") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpg") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".jpeg"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.camera) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                 else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp4"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.video) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
-                else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3")
-                        || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
+                else if (Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".mp3") || Objects.requireNonNull(composebarAttachmentAdapter.getData().get(0).get("fileName")).contains(".m4a"))
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.audio) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
                 else
                     sendMessageAttachmentText(requireActivity().getResources().getString(R.string.attachment) + " " + composebarAttachmentAdapter.getData().get(0).get("fileName"), composebarAttachmentAdapter.getData());
@@ -392,8 +396,8 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         stopTTS();
         Utility.hideVirtualKeyboard(requireActivity());
         speakerText.setVisibility(View.GONE);
-        rlSpeakerCircle.setVisibility(View.VISIBLE);
-        textViewSpeech.setVisibility(View.VISIBLE);
+        rlSpeakerCircle.setVisibility(VISIBLE);
+        textViewSpeech.setVisibility(VISIBLE);
         textViewSpeech.setText("");
 
         try {
@@ -417,7 +421,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
 
     @Override
     public void onSpeechResult(String result) {
-        speakerText.setVisibility(View.VISIBLE);
+        speakerText.setVisibility(VISIBLE);
         rlSpeakerCircle.setVisibility(View.GONE);
         textViewSpeech.setText(result);
 
@@ -448,21 +452,14 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage(R.string.speech_not_available)
-                .setCancelable(false)
-                .setPositiveButton(R.string.yes, dialogClickListener)
-                .setNegativeButton(R.string.no, dialogClickListener)
-                .show();
+        builder.setMessage(R.string.speech_not_available).setCancelable(false).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
     }
 
     private void showEnableGoogleVoiceTyping() {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-        builder.setMessage(R.string.enable_google_voice_typing)
-                .setCancelable(false)
-                .setPositiveButton(R.string.yes, (dialogInterface, i) -> {
-                    // do nothing
-                })
-                .show();
+        builder.setMessage(R.string.enable_google_voice_typing).setCancelable(false).setPositiveButton(R.string.yes, (dialogInterface, i) -> {
+            // do nothing
+        }).show();
     }
 
     @Override
@@ -477,19 +474,19 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     @Override
     public void enableOrDisableSendButton(boolean enable) {
         if (composebarAttachmentAdapter.getItemCount() > 0 || enable) {
-            llSend.setVisibility(View.VISIBLE);
+            llSend.setVisibility(VISIBLE);
             recAudioImg.setVisibility(View.GONE);
         } else {
-            if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone)
-                recAudioImg.setVisibility(View.VISIBLE);
-
             llSend.setVisibility(View.GONE);
+
+            if (SDKConfiguration.OverrideKoreConfig.showASRMicroPhone) recAudioImg.setVisibility(VISIBLE);
+            else llSend.setVisibility(VISIBLE);
         }
     }
 
     @Override
     public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
-        attachmentRecycler.setVisibility(View.VISIBLE);
+        attachmentRecycler.setVisibility(VISIBLE);
         composebarAttachmentAdapter.addAttachment(attachmentKey);
         if (composebarAttachmentAdapter.getItemCount() > 0) {
             enableOrDisableSendButton(true);
