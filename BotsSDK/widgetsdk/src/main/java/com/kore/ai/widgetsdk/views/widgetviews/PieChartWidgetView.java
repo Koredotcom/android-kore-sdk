@@ -26,10 +26,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.R;
-import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
-import com.kore.ai.widgetsdk.adapters.ButtonListAdapter;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -48,7 +44,10 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.google.gson.Gson;
+import com.kore.ai.widgetsdk.R;
+import com.kore.ai.widgetsdk.activities.GenericWebViewActivity;
+import com.kore.ai.widgetsdk.adapters.ButtonListAdapter;
 import com.kore.ai.widgetsdk.events.EntityEditEvent;
 import com.kore.ai.widgetsdk.events.KoreEventCenter;
 import com.kore.ai.widgetsdk.formatters.BarChartDataFormatter;
@@ -91,7 +90,6 @@ import io.reactivex.schedulers.Schedulers;
 
 @SuppressLint("ViewConstructor")
 public class PieChartWidgetView extends BaseWidgetView {
-
     private WidgetsModel mWidget;
     private AuthData authData;
     private UserData userData;

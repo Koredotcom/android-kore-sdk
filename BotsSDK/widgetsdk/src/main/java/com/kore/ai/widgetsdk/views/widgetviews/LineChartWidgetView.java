@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
-import com.kore.ai.widgetsdk.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -22,7 +21,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
+import com.kore.ai.widgetsdk.R;
 import com.kore.ai.widgetsdk.managers.UserDataManager;
 import com.kore.ai.widgetsdk.models.BaseCalenderTemplateModel;
 import com.kore.ai.widgetsdk.models.BotCaourselButtonModel;
@@ -194,7 +193,7 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
             dataSet[baseIndex].setCircleRadius(4.5f);
             dataSet[baseIndex].setDrawValues(false);
             dataSet[baseIndex].setColor(MATERIAL_COLORS[baseIndex % 4]);
-            dataSet[baseIndex].setCircleColor(ColorTemplate.getHoloBlue());
+            dataSet[baseIndex].setCircleColor(HOLO_BLUE);
             dataSet[baseIndex].setLineWidth(1f);
             dataSet[baseIndex].setCircleRadius(3f);
             dataSet[baseIndex].setDrawCircleHole(false);

@@ -8,9 +8,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import java.util.ArrayList;
-
-import kore.botssdk.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -22,7 +19,10 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
-import com.github.mikephil.charting.utils.ColorTemplate;
+
+import java.util.ArrayList;
+
+import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotLineChartDataModel;
 import kore.botssdk.models.PayloadInner;
@@ -76,7 +76,7 @@ public class LineChartTemplateHolder extends BaseViewHolder implements OnChartGe
             dataSet[baseIndex].setCircleRadius(4.5f);
             dataSet[baseIndex].setDrawValues(false);
             dataSet[baseIndex].setColor(MATERIAL_COLORS[baseIndex % 4]);
-            dataSet[baseIndex].setCircleColor(ColorTemplate.getHoloBlue());
+            dataSet[baseIndex].setCircleColor(HOLO_BLUE);
             dataSet[baseIndex].setLineWidth(1f);
             dataSet[baseIndex].setCircleRadius(3f);
             dataSet[baseIndex].setDrawCircleHole(false);
