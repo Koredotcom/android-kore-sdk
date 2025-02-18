@@ -136,14 +136,14 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                             }
                         }
 
-                        if (pos != 0 && (pos + 1) < botResp.size()) {
+                        if (pos != 0) {
                             for (int i = pos + 1; i < botResp.size(); i++) {
                                 if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
                                     ((BotResponse) botResp.get(i)).setFromAgent(true);
                                 requiredList.add(botResp.get(i));
                             }
                         } else {
-                            requiredList.addAll(list);
+                            requiredList.addAll(botResp);
                         }
 
                         chatView.onReconnectionChatHistory(requiredList, offset, false);
@@ -193,12 +193,14 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                             }
                         }
 
-                        if (pos != 0 && (pos + 1) < botResp.size()) {
+                        if (pos != 0) {
                             for (int i = pos + 1; i < botResp.size(); i++) {
                                 if (((BotResponse) botResp.get(i)).getMessage() != null && ((BotResponse) botResp.get(i)).getMessage().get(0) != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload() != null && ((BotResponse) botResp.get(i)).getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type().equalsIgnoreCase(BotResponse.LIVE_AGENT))
                                     ((BotResponse) botResp.get(i)).setFromAgent(true);
                                 requiredList.add(botResp.get(i));
                             }
+                        } else {
+                            requiredList.addAll(botResp);
                         }
 
                         chatView.onReconnectionChatHistory(requiredList, offset, false);

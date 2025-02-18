@@ -9,9 +9,8 @@ import android.os.StrictMode;
 import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.activity.BotHomeActivity;
-import kore.botssdk.activity.NewBotChatActivity;
+import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.audiocodes.oauth.OAuthManager;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.Log;
@@ -117,7 +116,7 @@ public class SplashActivity extends BaseAppCompatActivity {
                 android.util.Log.d(TAG, "relogin!");
                 Prefs.setFirstLogin(SplashActivity.this, true);
                 finish();
-                Intent intent = new Intent(SplashActivity.this, NewBotChatActivity.class);
+                Intent intent = new Intent(SplashActivity.this, BotChatActivity.class);
                 intent.putExtra(LoginActivity.OAUTH_FAILED, true);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 SplashActivity.this.startActivity(intent);

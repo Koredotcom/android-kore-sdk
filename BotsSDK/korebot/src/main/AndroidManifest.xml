@@ -51,20 +51,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activity.WelcomeScreenActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.UserDialog"
-            android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activity.BotChatActivity"
-            android:layerType="hardware"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".activity.NewBotChatActivity"
             android:layerType="hardware"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

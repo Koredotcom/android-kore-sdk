@@ -7,4 +7,5 @@ public interface SocketChatListener {
     void onMessage(BotResponse resp);
     void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection);
     void onMessage(SocketDataTransferModel data);
+    void onStartCompleted(boolean isReconnect);
 }

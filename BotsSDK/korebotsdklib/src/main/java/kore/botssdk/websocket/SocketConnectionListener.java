@@ -47,4 +47,10 @@ public interface SocketConnectionListener {
      * Callback for when reconnection attempts stopped
      */
     void onReconnectStopped(String reason);
+
+    /**
+     * Fired when a sdk completed start call during connect to Bot.
+     * @param isReconnect with reconnect status.
+     */
+    void onStartCompleted(boolean isReconnect);
 }

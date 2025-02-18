@@ -94,7 +94,8 @@ public class SDKConfiguration {
         public static void setBot_id(String bot_id) {
             Client.bot_id = bot_id;
         }
-
+        public static String connection_mode = "";
+        public static boolean history_on_network_resume = false;
         public static String client_id = "PLEASE_ENTER_CLIENT_ID";
         public static String client_secret = "PLEASE_ENTER_CLIENT_SECRET";
         public static String identity = "PLEASE_ENTER_IDENTITY";

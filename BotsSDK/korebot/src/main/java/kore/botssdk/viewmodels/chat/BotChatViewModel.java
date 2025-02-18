@@ -133,13 +133,13 @@ public class BotChatViewModel extends ViewModel {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
-                getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), isReconnection);
+
                 if (isReconnection) {
                     if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 19) {
                         chatView.loadChatHistory(0, 20);
                     } else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0) {
                         chatView.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
-                    } else {
+                    } else if (SDKConfiguration.Client.history_on_network_resume) {
                         chatView.loadReconnectionChatHistory(0, 10);
                     }
                 }
@@ -165,6 +165,13 @@ public class BotChatViewModel extends ViewModel {
                 chatView.updateContentListOnSend(data.getBotRequest());
             }
         }
+
+        @Override
+        public void onStartCompleted(boolean isReconnection) {
+            getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), isReconnection);
+        }
+
+
     };
 
     public void sendReadReceipts() {
@@ -411,14 +418,10 @@ public class BotChatViewModel extends ViewModel {
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationManager mNotificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         NotificationCompat.Builder nBuilder;
-        if (Build.VERSION.SDK_INT >= 26) {
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel notificationChannel = new NotificationChannel("Kore_Push_Service", "Kore_Android", importance);
-            mNotificationManager.createNotificationChannel(notificationChannel);
-            nBuilder = new NotificationCompat.Builder(context, notificationChannel.getId());
-        } else {
-            nBuilder = new NotificationCompat.Builder(context);
-        }
+        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        NotificationChannel notificationChannel = new NotificationChannel("Kore_Push_Service", "Kore_Android", importance);
+        mNotificationManager.createNotificationChannel(notificationChannel);
+        nBuilder = new NotificationCompat.Builder(context, notificationChannel.getId());
 
         nBuilder.setContentTitle(title).setSmallIcon(R.mipmap.ic_launcher).setColor(Color.parseColor("#009dab")).setContentText(pushMessage).setGroup(GROUP_KEY_NOTIFICATIONS).setGroupSummary(true).setAutoCancel(true).setPriority(NotificationCompat.PRIORITY_HIGH);
         if (alarmSound != null) {

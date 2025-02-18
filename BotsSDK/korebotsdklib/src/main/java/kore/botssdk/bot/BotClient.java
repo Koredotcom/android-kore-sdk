@@ -63,41 +63,13 @@ public class BotClient {
         this.customData = customData;
     }
 
-    public void connectAsAnonymousUserForKora(String userAccessToken, String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener,
-                                              String url, String botUserId, String auth) {
-        botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
-        SocketWrapper.getInstance(mContext).ConnectAnonymousForKora(userAccessToken, jwtToken, botInfoModel, socketConnectionListener, url, botUserId, auth);
-    }
-
-    /**
-     * Connection for anonymous user
-     */
-    public void connectAsAnonymousUser(String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener) {
-        botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, socketConnectionListener, null);
-    }
-
-    /**
+    /*
      * Connection for anonymous user
      */
     public void connectAsAnonymousUser(String jwtToken, String chatBotName, String taskBotId, SocketConnectionListener socketConnectionListener, boolean isReconnect) {
         botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
         SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, socketConnectionListener, null, isReconnect);
     }
-
-    public void shouldAttemptToReconnect(boolean value) {
-        SocketWrapper.getInstance(mContext).shouldAttemptToReconnect(value);
-    }
-
-    /**
-     * Connection for anonymous user
-     */
-    public void connectAsAnonymousUserWithOptions(String jwtToken, String chatBotName,
-                                                  String taskBotId, SocketConnectionListener socketConnectionListener, BotSocketOptions options) {
-        botInfoModel = new BotInfoModel(chatBotName, taskBotId, customData);
-        SocketWrapper.getInstance(mContext).connectAnonymous(jwtToken, botInfoModel, socketConnectionListener, options);
-    }
-
 
     public String getAccessToken() {
         return SocketWrapper.getInstance(mContext).getAccessToken();
@@ -197,7 +169,7 @@ public class BotClient {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
 
-            if (attachements != null && attachements.size() > 0)
+            if (attachements != null && !attachements.isEmpty())
                 botMessage = new RestResponse.BotMessage(msg, attachements);
 
             customData.put("botToken", getAccessToken());
@@ -214,7 +186,7 @@ public class BotClient {
 
             LogUtils.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
-        } else if (attachements != null && attachements.size() > 0) {
+        } else if (attachements != null && !attachements.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage("", attachements);
 

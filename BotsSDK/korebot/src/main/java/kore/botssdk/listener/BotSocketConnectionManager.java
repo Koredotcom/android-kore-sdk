@@ -28,7 +28,6 @@ import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
-import kore.botssdk.models.TokenResponseModel;
 import kore.botssdk.net.BotJWTRestBuilder;
 import kore.botssdk.net.RestAPIHelper;
 import kore.botssdk.net.RestBuilder;
@@ -140,6 +139,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         chatListener.onConnectionStateChanged(CONNECTION_STATE.RECONNECTION_STOPPED, false);
     }
 
+    @Override
+    public void onStartCompleted(boolean isReconnect) {
+        chatListener.onStartCompleted(isReconnect);
+    }
+
     private void makeStsJwtCallWithConfig(final boolean isRefresh) {
         Call<JWTTokenResponse> getBankingConfigService = BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(getRequestObject());
         getBankingConfigService.enqueue(new Callback<JWTTokenResponse>() {
@@ -159,7 +163,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                             }
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LogUtils.stackTrace(LOG_TAG, e);
                         Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
                         connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
                         if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
@@ -391,9 +395,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void sendAttachmentMessage(String message, ArrayList<HashMap<String, String>> attachments) {
         stopTextToSpeech();
         if (message != null) {
-            if (attachments != null && attachments.size() > 0) botClient.sendMessage(message, attachments);
+            if (attachments != null && !attachments.isEmpty()) botClient.sendMessage(message, attachments);
             else botClient.sendMessage(message);
-        } else if (attachments != null && attachments.size() > 0) botClient.sendMessage(message, attachments);
+        } else if (attachments != null && !attachments.isEmpty()) botClient.sendMessage(message, attachments);
 
         //Update the bot content list with the send message
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
@@ -524,7 +528,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         try {
             if (ttsSynthesizer != null) ttsSynthesizer.stopTextToSpeech();
         } catch (IllegalArgumentException | NullPointerException exception) {
-            exception.printStackTrace();
+            LogUtils.stackTrace(LOG_TAG, exception);;
         }
     }
 
@@ -601,8 +605,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     /**
      * The reconnection attempt delay(incremental delay)
-     *
-     * @return
      */
     private int getDelay() {
         mAttemptCount++;
@@ -660,6 +662,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     try {
                         chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount - 1], streamId, botName));
                     } catch (ArrayIndexOutOfBoundsException aiobe) {
+                        LogUtils.stackTrace(LOG_TAG, aiobe);
                     }
                 }
                 postAlertDelayMessage();

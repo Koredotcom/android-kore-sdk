@@ -55,31 +55,31 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     public static String ACTION_CALL_TERMINATED = "com.kore.botsdk.ACTION_CALL_TERMINATED";
     static final String TAG = "CallActivity";
     public static final String SESSION_ID = "sessionID";
-     TextView callStateTextView;
-     TextView transferStateNumberTextView;
+    TextView callStateTextView;
+    TextView transferStateNumberTextView;
     TextView contactNameTextView;
-     TextView contactPhoneNumberTextView;
-     ImageView contactImageView;
-     AudioCodesSession session;
-     View endCallButton;
-     View holdButton;
-     View muteAudioButton;
-     View switchCallButton;
-     View audioRouteButton;
-     View muteVideoButton;
-     View addVideoButton;
-     boolean dtmfEnabled = false;
-     boolean guiInitialized;
+    TextView contactPhoneNumberTextView;
+    ImageView contactImageView;
+    AudioCodesSession session;
+    View endCallButton;
+    View holdButton;
+    View muteAudioButton;
+    View switchCallButton;
+    View audioRouteButton;
+    View muteVideoButton;
+    View addVideoButton;
+    boolean dtmfEnabled = false;
+    boolean guiInitialized;
     int count = 0;
-     WebRTCAudioManager ac;
-     WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
+    WebRTCAudioManager ac;
+    WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
     final Handler timerHandler = new Handler();
-     final ArrayList<Integer> sessionList = new ArrayList<>();
-     Runnable runnable;
-     final MyAudioCodesSessionEventListener myAudioCodesSessionEventListener = new MyAudioCodesSessionEventListener();
-     int lastSessionIndex;
+    final ArrayList<Integer> sessionList = new ArrayList<>();
+    Runnable runnable;
+    final MyAudioCodesSessionEventListener myAudioCodesSessionEventListener = new MyAudioCodesSessionEventListener();
+    int lastSessionIndex;
 
-     final CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
+    final CallBackHandler.LoginStateChanged loginStateChanged = new CallBackHandler.LoginStateChanged() {
         @Override
         public void loginStateChange(Context context, boolean state) {
             if (handler != null) {
@@ -94,7 +94,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         }
     };
 
-     final BroadcastReceiver callTerminateReceiver = new BroadcastReceiver() {
+    final BroadcastReceiver callTerminateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             finish();
@@ -468,7 +468,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         session.hold(hold);
     }
 
-     void initDtmf() {
+    void initDtmf() {
         int[] keypadButtonClickListID = {R.id.call_button_keypad_1, R.id.call_button_keypad_2, R.id.call_button_keypad_3, R.id.call_button_keypad_4, R.id.call_button_keypad_5, R.id.call_button_keypad_6, R.id.call_button_keypad_7, R.id.call_button_keypad_8, R.id.call_button_keypad_9, R.id.call_button_keypad_hash, R.id.call_button_keypad_0, R.id.call_button_keypad_asterisk};
 
         View.OnClickListener dialpadClickListener = new View.OnClickListener() {
