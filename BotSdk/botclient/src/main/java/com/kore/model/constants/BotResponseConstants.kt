@@ -40,6 +40,9 @@ object BotResponseConstants {
     const val TEMPLATE_TYPE_CLOCK = "clockTemplate"
     const val TEMPLATE_TYPE_CARD = "cardTemplate"
     const val TEMPLATE_TYPE_RESULTS = "search";
+    const val TEMPLATE_TYPE_ARTICLE = "articleTemplate";
+    const val TEMPLATE_TYPE_OTP = "otpValidationTemplate";
+    const val TEMPLATE_TYPE_RESET_PIN = "resetPinTemplate";
 
     //Theme Properties
     const val THEME_NAME = "KORE_PREFS"
@@ -194,6 +197,7 @@ object BotResponseConstants {
     const val LIMIT = "limit"
     const val BUTTON_TYPE_WEB_URL = "web_url"
     const val BUTTON_TYPE_URL = "url"
+    const val BUTTON_TYPE_POSTBACK = "postback"
     const val BUTTON_VARIATION = "variation"
     const val BUTTON_STACKED = "stackedButtons"
     const val CAROUSEL_STACKED = "stacked"
@@ -254,6 +258,15 @@ object BotResponseConstants {
     const val HEADER_SIZE_LARGE = "large"
     const val HEADER_SIZE_MEDIUM = "medium"
     const val FAQ = "faq"
+    const val CREATED_ON = "createdOn"
+    const val UPDATED_ON = "updatedOn"
+    const val SLIDER_VIEW = "sliderView"
+    const val MOBILE_NUMBER = "mobileNumber"
+    const val OTP_BUTTONS = "otpButtons"
+    const val ENTER_PIN_TITLE = "enterPinTitle"
+    const val REENTER_PIN_TITLE = "reEnterPinTitle"
+    const val WARNING_MESSAGE = "warningMessage"
+    const val RESET_BUTTONS = "resetButtons"
     var DATE_FORMAT = "dd/MM/yyyy"
     var TIME_FORMAT = 24
 }

@@ -25,6 +25,7 @@ import com.kore.model.constants.BotResponseConstants.SELECTED_FEEDBACK
 import com.kore.model.constants.BotResponseConstants.SELECTED_ITEM
 import com.kore.model.constants.BotResponseConstants.SELECTED_POSITION
 import com.kore.model.constants.BotResponseConstants.SELECTED_TIME
+import com.kore.model.constants.BotResponseConstants.SLIDER_VIEW
 import com.kore.model.constants.BotResponseConstants.TEXT_MESSAGE
 import com.kore.ui.R
 import com.kore.ui.row.SimpleListAdapter
@@ -46,7 +47,9 @@ import com.kore.ui.row.botchat.ImageTemplateRow
 import com.kore.ui.row.botchat.LineChartTemplateRow
 import com.kore.ui.row.botchat.ListWidgetTemplateRow
 import com.kore.ui.row.botchat.MiniTableTemplateRow
+import com.kore.ui.row.botchat.OtpTemplateRow
 import com.kore.ui.row.botchat.PieChartTemplateRow
+import com.kore.ui.row.botchat.ResetPinTemplateRow
 import com.kore.ui.row.botchat.ResultsTemplateRow
 import com.kore.ui.row.botchat.TableResponsiveRow
 import com.kore.ui.row.botchat.TableTemplateRow
@@ -54,6 +57,7 @@ import com.kore.ui.row.botchat.TextTemplateRow
 import com.kore.ui.row.botchat.TimeStampTemplateRow
 import com.kore.ui.row.botchat.VideoTemplateRow
 import com.kore.ui.row.botchat.advancemultiselect.AdvanceMultiSelectTemplateRow
+import com.kore.ui.row.botchat.article.ArticleTemplateRow
 import com.kore.ui.row.botchat.form.FormTemplateRow
 import com.kore.ui.row.botchat.listview.ListViewTemplateRow
 import com.kore.ui.row.botchat.multiselect.MultiSelectTemplateRow
@@ -221,14 +225,6 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }
                                             val items = (innerMap[BotResponseConstants.KEY_ELEMENTS] as List<Map<String, *>>)
-//                                            if (innerMap[BotResponseConstants.CAROUSEL_TYPE] != null) {
-//                                                newRows =
-//                                                    createCustomTemplate(innerMap[BotResponseConstants.CAROUSEL_TYPE].toString(), baseBotMsg, isLastItem, rows)
-//                                            }
-//                                            if (newRows != rows) {
-//                                                rows = newRows
-//                                                continue
-//                                            }
                                             rows = rows +
                                                     if (innerMap[BotResponseConstants.CAROUSEL_TYPE] == BotResponseConstants.CAROUSEL_STACKED) {
                                                         CarouselStackedTemplateRow(baseBotMsg.messageId, items, iconUrl, isLastItem, actionEvent)
@@ -241,13 +237,6 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                             if (isTextMsg) {
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }
-//                                            if (innerMap[DIRECTION] != null) {
-//                                                newRows = createCustomTemplate(innerMap[DIRECTION].toString(), baseBotMsg, isLastItem, rows)
-//                                            }
-//                                            if (newRows != rows) {
-//                                                rows = newRows
-//                                                continue
-//                                            }
                                             rows = rows + BarChartTemplateRow(baseBotMsg.messageId, iconUrl, innerMap)
                                         }
 
@@ -255,13 +244,6 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                             if (isTextMsg) {
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }
-//                                            if (innerMap[PIE_TYPE] != null) {
-//                                                newRows = createCustomTemplate(innerMap[PIE_TYPE].toString(), baseBotMsg, isLastItem, rows)
-//                                            }
-//                                            if (newRows != rows) {
-//                                                rows = newRows
-//                                                continue
-//                                            }
                                             rows = rows + PieChartTemplateRow(baseBotMsg.messageId, innerMap)
                                         }
 
@@ -403,14 +385,6 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                             if (isTextMsg) {
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }
-//                                            if (innerMap[BotResponseConstants.TABLE_DESIGN] != null) {
-//                                                newRows =
-//                                                    createCustomTemplate(innerMap[BotResponseConstants.TABLE_DESIGN].toString(), baseBotMsg, isLastItem, rows)
-//                                            }
-//                                            if (newRows != rows) {
-//                                                rows = newRows
-//                                                continue
-//                                            }
                                             rows = if (innerMap[BotResponseConstants.TABLE_DESIGN] != null) {
                                                 when (innerMap[BotResponseConstants.TABLE_DESIGN] as String) {
                                                     BotResponseConstants.TABLE_VIEW_RESPONSIVE -> {
@@ -432,6 +406,22 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                                         BotResponseConstants.TEMPLATE_TYPE_RESULTS -> {
                                             rows = rows + ResultsTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, actionEvent)
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_ARTICLE -> {
+                                            rows = rows + ArticleTemplateRow(baseBotMsg.messageId, innerMap, isLastItem, actionEvent)
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_OTP -> {
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == false) {
+                                                rows = rows + OtpTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, isLastItem, actionEvent)
+                                            }
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_RESET_PIN -> {
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == false) {
+                                                rows = rows + ResetPinTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, isLastItem, actionEvent)
+                                            }
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_QUICK_REPLIES,

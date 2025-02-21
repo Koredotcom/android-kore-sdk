@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
+import com.kore.extensions.getDotMessage
 import com.kore.ui.R
 
 class FormListAdapter(
@@ -41,22 +42,16 @@ class FormListAdapter(
             holder.edtFormInput.isFocusable = isLastItem
             holder.edtFormInput.isClickable = isLastItem
             holder.btnFieldButton.setOnClickListener {
-                if (isLastItem) actionEvent(
-                    BotChatEvent.SendMessage(
-                        getDotMessage(holder.edtFormInput.text.toString()),
-                        holder.edtFormInput.text.toString()
+                if (isLastItem) {
+                    actionEvent(
+                        BotChatEvent.SendMessage(
+                            holder.edtFormInput.text.toString().getDotMessage(),
+                            holder.edtFormInput.text.toString()
+                        )
                     )
-                )
+                }
             }
         }
-    }
-
-    private fun getDotMessage(strPassword: String): String {
-        val strDots = StringBuilder()
-        for (i in strPassword.indices) {
-            strDots.append("•")
-        }
-        return strDots.toString()
     }
 
     class FormHolder(view: View) : RecyclerView.ViewHolder(view) {

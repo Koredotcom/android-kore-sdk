@@ -51,7 +51,7 @@ class BotClientHelper {
             var botRequest: BotRequest = Gson().fromJson(jsonPayload, BotRequest::class.java)
             val calendar = Calendar.getInstance()
             botRequest = botRequest.copy(
-                message = botMessage,
+                message = botMessage.copy(body = message),
                 messageId = calendar.timeInMillis.toString(),
                 resourceId = botPayLoad.resourceId,
                 timeMillis = calendar.timeInMillis,

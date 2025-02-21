@@ -45,7 +45,9 @@ import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE_RANGE
+import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_OTP
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_QUICK_REPLIES
+import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_RESET_PIN
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
@@ -130,6 +132,18 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                                                     innerMap[TEMPLATE_TYPE_QUICK_REPLIES] as List<Map<String, *>>,
                                                     if (innerMap[TYPE] != null) innerMap[TYPE] as String else ""
                                                 )
+                                            }
+
+                                            TEMPLATE_TYPE_OTP -> {
+                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
+                                                    getView()?.showOtpBottomSheet(innerMap)
+                                                }
+                                            }
+
+                                            TEMPLATE_TYPE_RESET_PIN -> {
+                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
+                                                    getView()?.showPinResetBottomSheet(innerMap)
+                                                }
                                             }
 
                                             else -> {
