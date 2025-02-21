@@ -16,6 +16,7 @@ import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.ELEMENTS
 import com.kore.model.constants.BotResponseConstants.FORM_PLACE_HOLDER
+import com.kore.model.constants.BotResponseConstants.HEADING
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.LABEL
 import com.kore.ui.R
@@ -54,7 +55,7 @@ class DropDownTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, true, true)
         val childBinding = RowDropdownTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
-            tvDropDownTitle.text = payload[LABEL] as String
+            tvDropDownTitle.text = (payload[LABEL] ?: payload[HEADING]).toString()
             commonBind()
         }
     }

@@ -33,6 +33,8 @@ import com.kore.common.utils.LogUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotResponse
+import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.END_DATE
 import com.kore.model.constants.BotResponseConstants.FORMAT
@@ -63,6 +65,8 @@ import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
+import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
+import com.kore.ui.bottomsheet.PinResetTemplateBottomSheet
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
@@ -387,6 +391,16 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
         contentFragment.addMessagesToAdapter(list, !isMinimized(), isReconnection)
+    }
+
+    override fun showOtpBottomSheet(payload: HashMap<String, Any>) {
+        val bottomSheet = OtpTemplateBottomSheet()
+        bottomSheet.showData(payload, true, supportFragmentManager, this::onActionEvent)
+    }
+
+    override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
+        val bottomSheet = PinResetTemplateBottomSheet()
+        bottomSheet.showData(payload, true, supportFragmentManager, this::onActionEvent)
     }
 
     fun showCloseAlert() {

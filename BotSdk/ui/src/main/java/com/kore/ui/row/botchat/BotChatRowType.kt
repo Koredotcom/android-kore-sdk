@@ -3,6 +3,7 @@ package com.kore.ui.row.botchat
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.SimpleListViewHolderProvider
 import com.kore.ui.row.botchat.advancemultiselect.AdvanceMultiSelectTemplateProvider
+import com.kore.ui.row.botchat.article.ArticleTemplateProvider
 import com.kore.ui.row.botchat.form.FormTemplateProvider
 import com.kore.ui.row.botchat.listview.ListViewTemplateProvider
 import com.kore.ui.row.botchat.multiselect.MultiSelectProvider
@@ -46,6 +47,9 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
         const val ROW_TIME_STAMP_PROVIDER = "TimeStampTemplate"
         const val ROW_MULTI_SELECT_PROVIDER = "MultiSelectTemplate"
         const val ROW_RESULTS_PROVIDER = "ResultsTemplate"
+        const val ROW_ARTICLE_PROVIDER = "ArticleTemplate"
+        const val ROW_OTP_PROVIDER = "OtpValidationTemplate"
+        const val ROW_RESET_PIN_PROVIDER = "ResetPinTemplate"
 
         private val providers = mutableMapOf<String, SimpleListViewHolderProvider<*>>()
 
@@ -73,7 +77,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
 
         fun find(type: Int): RowType? = dynamicRowTypes.values.find { it.ordinal == type }
 
-        private fun prepareRowTypes() {
+        internal fun prepareRowTypes() {
             if (providers.isEmpty()) prepareProviders()
             createRowType(ROW_REQUEST_MSG_PROVIDER, providers[ROW_REQUEST_MSG_PROVIDER]!!)
             createRowType(ROW_RESPONSE_MSG_PROVIDER, providers[ROW_RESPONSE_MSG_PROVIDER]!!)
@@ -104,6 +108,9 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             createRowType(ROW_TIME_STAMP_PROVIDER, providers[ROW_TIME_STAMP_PROVIDER]!!)
             createRowType(ROW_MULTI_SELECT_PROVIDER, providers[ROW_MULTI_SELECT_PROVIDER]!!)
             createRowType(ROW_RESULTS_PROVIDER, providers[ROW_RESULTS_PROVIDER]!!)
+            createRowType(ROW_ARTICLE_PROVIDER, providers[ROW_ARTICLE_PROVIDER]!!)
+            createRowType(ROW_OTP_PROVIDER, providers[ROW_OTP_PROVIDER]!!)
+            createRowType(ROW_RESET_PIN_PROVIDER, providers[ROW_RESET_PIN_PROVIDER]!!)
         }
 
         fun getRowType(rowType: String): RowType {
@@ -145,6 +152,9 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             providers[ROW_TIME_STAMP_PROVIDER] = TimeStampTemplateProvider()
             providers[ROW_MULTI_SELECT_PROVIDER] = MultiSelectProvider()
             providers[ROW_RESULTS_PROVIDER] = ResultsTemplateProvider()
+            providers[ROW_ARTICLE_PROVIDER] = ArticleTemplateProvider()
+            providers[ROW_OTP_PROVIDER] = OtpTemplateProvider()
+            providers[ROW_RESET_PIN_PROVIDER] = ResetPinTemplateProvider()
         }
     }
 }

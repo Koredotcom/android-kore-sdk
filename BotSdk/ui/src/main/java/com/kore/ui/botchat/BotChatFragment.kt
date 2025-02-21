@@ -62,6 +62,8 @@ import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
+import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
+import com.kore.ui.bottomsheet.PinResetTemplateBottomSheet
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
@@ -379,6 +381,16 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
         contentFragment.addMessagesToAdapter(list, !isMinimized(), isReconnection)
+    }
+
+    override fun showOtpBottomSheet(payload: HashMap<String, Any>) {
+        val bottomSheet = OtpTemplateBottomSheet()
+        bottomSheet.showData(payload, true, childFragmentManager, this::onActionEvent)
+    }
+
+    override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
+        val bottomSheet = PinResetTemplateBottomSheet()
+        bottomSheet.showData(payload, true, childFragmentManager, this::onActionEvent)
     }
 
     inner class NetworkCallbackImpl : ConnectivityManager.NetworkCallback() {
