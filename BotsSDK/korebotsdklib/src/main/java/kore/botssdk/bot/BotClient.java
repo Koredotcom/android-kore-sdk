@@ -137,7 +137,7 @@ public class BotClient {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
 
-            if (attachments != null && attachments.size() > 0) botMessage = new RestResponse.BotMessage(msg, attachments);
+            if (attachments != null && !attachments.isEmpty()) botMessage = new RestResponse.BotMessage(msg, attachments);
 
             customData.put("botToken", getAccessToken());
 
@@ -153,7 +153,7 @@ public class BotClient {
 
             LogUtils.d("BotClient", "Payload : " + jsonPayload);
             SocketWrapper.getInstance(mContext).sendMessage(jsonPayload);
-        } else if (attachments != null && attachments.size() > 0) {
+        } else if (attachments != null && !attachments.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
             RestResponse.BotMessage botMessage = new RestResponse.BotMessage("", attachments);
 
