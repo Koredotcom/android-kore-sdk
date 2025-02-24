@@ -1,6 +1,7 @@
 package kore.botssdk.viewmodels.content;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
@@ -21,13 +22,14 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.repository.history.HistoryRepository;
 import kore.botssdk.retroresponse.ServerBotMsgResponse;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewmodels.BaseViewModel;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate> {
-    private Context context;
+    Context context;
     final BotContentFragmentUpdate chatView;
     private final HistoryRepository repository;
     int offset = 0;
@@ -52,6 +54,11 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                 if (list != null && !list.isEmpty()) {
                     chatView.onChatHistory(list, offset, _offset == 0);
                 }
+
+                SharedPreferences.Editor editor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                editor.apply();
             }
 
             @Override

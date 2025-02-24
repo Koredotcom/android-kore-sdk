@@ -219,6 +219,7 @@ public final class SocketWrapper {
                         isConnecting = false;
                         mReconnectionCount = 1;
                         mReconnectDelay = 1000;
+                        mIsReconnectionAttemptNeeded = true;
                         KoreEventCenter.post(new RTMConnectionEvent(true));
                     }
 
