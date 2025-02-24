@@ -93,6 +93,10 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (SDKConfiguration.OverrideKoreConfig.disable_action_bar)
+            Objects.requireNonNull(getSupportActionBar()).hide();
+
         setContentView(R.layout.bot_chat_layout);
         botClient = new BotClient(NewBotChatActivity.this);
 
@@ -199,8 +203,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
             }
-
-            loadOnConnectionHistory(false);
         }
     }
 

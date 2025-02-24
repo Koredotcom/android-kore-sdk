@@ -349,7 +349,11 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         holder.setIsLastItem(isLastItem);
         holder.setMsgTime(baseBotMessage.getTimeStamp(), baseBotMessage instanceof BotRequest);
         if (baseBotMessage instanceof BotResponse) {
-            holder.setBotIcon(((BotResponse) baseBotMessage).getIcon());
+            if (StringUtils.isNotEmpty(((BotResponse) baseBotMessage).getIcon()))
+                holder.setBotIcon(((BotResponse) baseBotMessage).getIcon());
+            else if (StringUtils.isNotEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
+                holder.setBotIcon(SDKConfiguration.BubbleColors.getIcon_url());
+            else holder.setBotIcon(null);
         }
         Integer headerPosition = headersMap.get(baseBotMessage.getFormattedDate());
         holder.setTimeStamp(headerPosition != null && headerPosition == position ? baseBotMessage.getFormattedDate() : null);

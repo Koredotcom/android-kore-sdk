@@ -114,10 +114,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public void setBotIcon(String iconUrl) {
         ImageView botIcon = itemView.findViewById(R.id.bot_icon);
         if (botIcon != null) {
-            boolean isShowIcon = SDKConfiguration.BubbleColors.showIcon && iconUrl != null;
-            botIcon.setVisibility(isShowIcon ? View.VISIBLE : View.GONE);
-            if (isShowIcon) {
-                Glide.with(context).load(iconUrl).error(R.drawable.ic_launcher).into(new DrawableImageViewTarget(botIcon));
+            botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon ? View.VISIBLE : View.GONE);
+            if (SDKConfiguration.BubbleColors.showIcon) {
+                if (StringUtils.isNotEmpty(iconUrl))
+                    Glide.with(context).load(iconUrl).error(R.drawable.ic_launcher).into(new DrawableImageViewTarget(botIcon));
+                else
+                    botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_launcher, context.getTheme()));
             }
 
             if (SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.OverrideKoreConfig.showIconTop) {

@@ -153,10 +153,8 @@ public class BotChatViewModel extends ViewModel {
 
         @Override
         public void onStartCompleted(boolean isReconnect) {
-            if (!isReconnect)
-                getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
-            else
-                chatView.loadOnConnectionHistory(true);
+            getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
+            chatView.loadOnConnectionHistory(isReconnect);
         }
 
     };
@@ -417,6 +415,7 @@ public class BotChatViewModel extends ViewModel {
                 botResponse.setType(componentModel.getType());
                 botResponse.setMessage(arrBotResponseMessages);
                 botResponse.setMessageId(messageId);
+                botResponse.setIcon(SDKConfiguration.BubbleColors.getIcon_url());
 
                 if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon())) botResponse.setIcon(botMetaModel.getIcon());
 
