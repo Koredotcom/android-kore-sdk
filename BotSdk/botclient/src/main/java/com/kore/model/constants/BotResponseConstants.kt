@@ -43,6 +43,7 @@ object BotResponseConstants {
     const val TEMPLATE_TYPE_ARTICLE = "articleTemplate";
     const val TEMPLATE_TYPE_OTP = "otpValidationTemplate";
     const val TEMPLATE_TYPE_RESET_PIN = "resetPinTemplate";
+    const val TEMPLATE_TYPE_ANSWER_TEMPLATE = "answerTemplate"
 
     //Theme Properties
     const val THEME_NAME = "KORE_PREFS"
@@ -246,6 +247,7 @@ object BotResponseConstants {
     const val CENTER_PANEL = "center_panel"
     const val QUESTION = "question"
     const val ANSWER = "answer"
+    const val ANSWER_PAYLOAD = "answer_payload"
     const val PAGE_TITLE = "page_title"
     const val PAGE_PREVIEW = "page_preview"
     const val PAGE_IMAGE_URL = "page_image_url"
@@ -254,6 +256,7 @@ object BotResponseConstants {
     const val SNIPPET_TITLE = "snippet_title"
     const val SNIPPET_CONTENT = "snippet_content"
     const val SOURCE = "source"
+    const val SOURCES = "sources"
     const val HEADER_SIZE_COMPACT = "compact"
     const val HEADER_SIZE_LARGE = "large"
     const val HEADER_SIZE_MEDIUM = "medium"

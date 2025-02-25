@@ -321,4 +321,6 @@
     <string name="menu">Menu</string>
     <string name="didnt_get_a_code">Didn\'t get a code?</string>
     <string name="resend_otp">Resend OTP</string>
+    <string name="answered_by_ai">Answered by AI</string>
+    <string name="source_item">%s. %s</string>
 </resources>

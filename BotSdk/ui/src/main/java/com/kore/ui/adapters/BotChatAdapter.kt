@@ -31,6 +31,7 @@ import com.kore.ui.R
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.AdvanceTemplateRow
+import com.kore.ui.row.botchat.AnswerTemplateRow
 import com.kore.ui.row.botchat.BarChartTemplateRow
 import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.ui.row.botchat.BotChatRowType.Companion.ROW_REQUEST_MSG_PROVIDER
@@ -406,6 +407,10 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                                         BotResponseConstants.TEMPLATE_TYPE_RESULTS -> {
                                             rows = rows + ResultsTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, actionEvent)
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_ANSWER_TEMPLATE -> {
+                                            rows = rows + AnswerTemplateRow(baseBotMsg.messageId, innerMap, actionEvent)
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_ARTICLE -> {
