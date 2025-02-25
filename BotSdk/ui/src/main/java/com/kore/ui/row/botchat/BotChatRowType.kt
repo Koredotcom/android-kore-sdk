@@ -50,6 +50,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
         const val ROW_ARTICLE_PROVIDER = "ArticleTemplate"
         const val ROW_OTP_PROVIDER = "OtpValidationTemplate"
         const val ROW_RESET_PIN_PROVIDER = "ResetPinTemplate"
+        const val ROW_ANSWER_PROVIDER = "AnswerTemplate"
 
         private val providers = mutableMapOf<String, SimpleListViewHolderProvider<*>>()
 
@@ -111,6 +112,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             createRowType(ROW_ARTICLE_PROVIDER, providers[ROW_ARTICLE_PROVIDER]!!)
             createRowType(ROW_OTP_PROVIDER, providers[ROW_OTP_PROVIDER]!!)
             createRowType(ROW_RESET_PIN_PROVIDER, providers[ROW_RESET_PIN_PROVIDER]!!)
+            createRowType(ROW_ANSWER_PROVIDER, providers[ROW_ANSWER_PROVIDER]!!)
         }
 
         fun getRowType(rowType: String): RowType {
@@ -155,6 +157,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             providers[ROW_ARTICLE_PROVIDER] = ArticleTemplateProvider()
             providers[ROW_OTP_PROVIDER] = OtpTemplateProvider()
             providers[ROW_RESET_PIN_PROVIDER] = ResetPinTemplateProvider()
+            providers[ROW_ANSWER_PROVIDER] = AnswerTemplateProvider()
         }
     }
 }

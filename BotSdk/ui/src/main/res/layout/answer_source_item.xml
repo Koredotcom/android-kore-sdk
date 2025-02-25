@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.kore.ui.textview.CustomTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="6dp"
+    android:textColor="@color/color_98A2B3"
+    android:textSize="12sp"
+    tools:text="1. AI for Work | Empower Your Workplace with AI - Kore.ai" />
