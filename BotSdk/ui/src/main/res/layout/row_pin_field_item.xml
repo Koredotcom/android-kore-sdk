@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatEditText xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/otp_field"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/otp_rounded_bg"
+    android:gravity="center"
+    android:hint="0"
+    android:imeOptions="actionDone"
+    android:inputType="number"
+    android:maxLength="1"
+    android:maxLines="1"
+    android:paddingVertical="10dp"
+    android:textColor="@color/black"
+    android:textSize="30sp" />

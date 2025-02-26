@@ -266,6 +266,7 @@ object BotResponseConstants {
     const val SLIDER_VIEW = "sliderView"
     const val MOBILE_NUMBER = "mobileNumber"
     const val OTP_BUTTONS = "otpButtons"
+    const val PIN_LENGTH = "pinLength"
     const val ENTER_PIN_TITLE = "enterPinTitle"
     const val REENTER_PIN_TITLE = "reEnterPinTitle"
     const val WARNING_MESSAGE = "warningMessage"

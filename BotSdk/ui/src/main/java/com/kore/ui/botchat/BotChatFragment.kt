@@ -39,7 +39,6 @@ import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
 import com.kore.model.constants.BotResponseConstants.START_DATE
 import com.kore.network.api.responsemodels.branding.BotActiveThemeModel
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
-import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.services.ClosingService
 import com.kore.ui.BR
 import com.kore.ui.R
@@ -63,7 +62,7 @@ import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
 import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
-import com.kore.ui.bottomsheet.PinResetTemplateBottomSheet
+import com.kore.ui.bottomsheet.ResetPinTemplateBottomSheet
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
@@ -389,7 +388,7 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
-        val bottomSheet = PinResetTemplateBottomSheet()
+        val bottomSheet = ResetPinTemplateBottomSheet()
         bottomSheet.showData(payload, true, childFragmentManager, this::onActionEvent)
     }
 

@@ -7,6 +7,7 @@ import android.text.style.UnderlineSpan
 import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
 import com.kore.event.BotChatEvent
@@ -16,7 +17,12 @@ import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.MOBILE_NUMBER
 import com.kore.model.constants.BotResponseConstants.OTP_BUTTONS
 import com.kore.model.constants.BotResponseConstants.PAYLOAD
+import com.kore.model.constants.BotResponseConstants.PIN_LENGTH
+import com.kore.ui.R
+import com.kore.ui.bottomsheet.row.PinFieldItemRowType
+import com.kore.ui.bottomsheet.row.pinfielditem.PinFieldItemRow.Companion.createRows
 import com.kore.ui.databinding.RowOtpTemplateBinding
+import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
 
 class OtpTemplateRow(
@@ -27,6 +33,8 @@ class OtpTemplateRow(
     private val actionEvent: (event: UserActionEvent) -> Unit,
 ) : SimpleListRow() {
     override val type: SimpleListRowType = BotChatRowType.getRowType(BotChatRowType.ROW_OTP_PROVIDER)
+    private val itemSpace = 10
+    private var pinLength = 0
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is OtpTemplateRow) return false
@@ -50,10 +58,25 @@ class OtpTemplateRow(
             title.text = payload[KEY_TITLE] as String?
             description.text = payload[DESCRIPTION] as String?
             phoneNumber.text = payload[MOBILE_NUMBER] as String?
-            addTextWatcher(null, otpField1, otpField2)
-            addTextWatcher(otpField1, otpField2, otpField3)
-            addTextWatcher(otpField2, otpField3, otpField4)
-            addTextWatcher(otpField3, otpField4, null)
+            pinLength = (payload[PIN_LENGTH] as Double).toInt()
+            otpRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
+            otpRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
+            otpRecycler.post {
+                otpRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                    submitList(createRows(pinLength, otpRecycler.width, itemSpace))
+                    otpRecycler.post {
+                        val childCount = otpRecycler.childCount
+                        for (index in 0 until childCount) {
+                            val childView: EditText = otpRecycler.getChildAt(index).findViewById(R.id.otp_field)
+                            val prevChildView: EditText? =
+                                if (index - 1 >= 0) otpRecycler.getChildAt(index - 1).findViewById(R.id.otp_field) else null
+                            val nextChildView: EditText? =
+                                if (index + 1 < childCount) otpRecycler.getChildAt(index + 1).findViewById(R.id.otp_field) else null
+                            addTextWatcher(prevChildView, childView, nextChildView)
+                        }
+                    }
+                }
+            }
             (payload[OTP_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 submit.text = list[0][KEY_TITLE]
                 val content = SpannableString(list[1][KEY_TITLE])
@@ -75,9 +98,13 @@ class OtpTemplateRow(
         (payload[OTP_BUTTONS] as List<Map<String, String>>?)?.let { list ->
             submit.setOnClickListener {
                 if (!isLastItem) return@setOnClickListener
-                val otp = otpField1.text.toString() + otpField2.text.toString() +
-                        otpField3.text.toString() + otpField4.text.toString()
-                if (otp.length == 4) {
+                var otp = ""
+                val childCount = otpRecycler.childCount
+                for (index in 0 until childCount) {
+                    val childView: EditText = otpRecycler.getChildAt(index).findViewById(R.id.otp_field)
+                    otp += childView.text.toString()
+                }
+                if (otp.length == pinLength) {
                     actionEvent(BotChatEvent.SendMessage(otp.getDotMessage(), otp))
                 }
             }
