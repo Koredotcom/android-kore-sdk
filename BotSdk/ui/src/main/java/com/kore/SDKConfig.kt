@@ -2,6 +2,7 @@ package com.kore
 
 import com.kore.common.SDKConfiguration
 import com.kore.common.model.BotConfigModel
+import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.base.BaseContentFragment
 import com.kore.ui.base.BaseFooterFragment
 import com.kore.ui.base.BaseHeaderFragment
@@ -15,6 +16,7 @@ object SDKConfig {
     private var customContentFragment: BaseContentFragment? = null
     private var customFooterFragment: BaseFooterFragment? = null
     private var isMinimized: Boolean = false
+    private var historyOnNetworkResume = true
 
     fun initialize(botConfigModel: BotConfigModel) {
         SDKConfiguration.initialize(botConfigModel)
@@ -62,4 +64,28 @@ object SDKConfig {
     }
 
     fun isMinimized(): Boolean = isMinimized
+
+    fun setIsShowIconTop(isShow: Boolean) {
+        SDKConfiguration.OverrideKoreConfig.showIconTop = isShow
+    }
+
+    fun setIsShowHamburgerMenu(isShow: Boolean) {
+        SDKConfiguration.OverrideKoreConfig.showHamburgerMenu = isShow
+    }
+
+    fun setBotBrandingConfig(botBrandingModel: BotBrandingModel?) {
+        SDKConfiguration.setBotBrandingConfig(botBrandingModel)
+    }
+
+    fun getBotBrandingConfig(): BotBrandingModel? = SDKConfiguration.getBotBrandingConfig()
+
+    fun setConnectionMode(connectionMode: String) {
+        SDKConfiguration.setConnectionMode(connectionMode)
+    }
+
+    fun setHistoryOnNetworkResume(loadHistory: Boolean) {
+        historyOnNetworkResume = loadHistory
+    }
+
+    fun getHistoryOnNetworkResume() = historyOnNetworkResume
 }

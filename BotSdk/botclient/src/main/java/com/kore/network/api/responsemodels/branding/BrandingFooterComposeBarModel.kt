@@ -4,11 +4,11 @@ import com.google.gson.annotations.SerializedName
 
 data class BrandingFooterComposeBarModel (
     @SerializedName("bg_color")
-    var bgColor : String = "",
+    var bgColor : String? = null,
     @SerializedName("outline-color")
-    var outlineColor : String = "",
+    var outlineColor : String? = null,
     @SerializedName("inline-color")
-    var inlineColor : String = "",
+    var inlineColor : String? = null,
     @SerializedName("placeholder")
-    val placeholder : String = ""
+    val placeholder : String? = null
 )

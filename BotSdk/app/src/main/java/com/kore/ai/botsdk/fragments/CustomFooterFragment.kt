@@ -347,8 +347,8 @@ class CustomFooterFragment : BaseFooterFragment() {
         this.botBrandingModel = botBrandingModel
         binding.newMenuLogo.isVisible = botBrandingModel?.footer?.buttons?.menu?.show == true
         if (botBrandingModel == null) return
-        botOptionModels = botBrandingModel.footer.buttons.menu.actions
-        if (botBrandingModel.general.colors.useColorPaletteOnly) {
+        botOptionModels = botBrandingModel.footer.buttons?.menu?.actions
+        if (botBrandingModel.general.colors.useColorPaletteOnly == true) {
             binding.composeFooterRl.setBackgroundColor(Color.parseColor(botBrandingModel.general.colors.secondary))
         } else {
             binding.composeFooterRl.setBackgroundColor(Color.parseColor(botBrandingModel.footer.bgColor))
@@ -361,42 +361,41 @@ class CustomFooterFragment : BaseFooterFragment() {
 
         val footerModel = botBrandingModel.footer
 
-        if (solidColor != null && footerModel.composeBar.bgColor.isNotEmpty()) {
-            solidColor.setTintList(ColorStateList.valueOf(Color.parseColor(footerModel.composeBar.bgColor)))
+        if (solidColor != null && !footerModel.composeBar?.bgColor.isNullOrEmpty()) {
+            solidColor.setTintList(ColorStateList.valueOf(Color.parseColor(footerModel.composeBar?.bgColor)))
             binding.llEdtText.background = solidColor
         }
-        if (footerModel.composeBar.outlineColor.isNotEmpty()) {
-
-            send.setTint(Color.parseColor(footerModel.composeBar.outlineColor))
+        if (!footerModel.composeBar?.outlineColor.isNullOrEmpty()) {
+            send.setTint(Color.parseColor(footerModel.composeBar?.outlineColor))
             binding.llSend.background = send
 
             if (stroke != null) {
-                stroke.setTint(Color.parseColor(footerModel.composeBar.outlineColor))
+                stroke.setTint(Color.parseColor(footerModel.composeBar?.outlineColor))
                 binding.mainContent.background = stroke
             }
 
-            binding.rlSpeaker.backgroundTintList = ColorStateList.valueOf(Color.parseColor(footerModel.composeBar.outlineColor))
+            binding.rlSpeaker.backgroundTintList = ColorStateList.valueOf(Color.parseColor(footerModel.composeBar?.outlineColor))
         }
 
-        if (footerModel.composeBar.inlineColor.isNotEmpty()) {
+        if (!footerModel.composeBar?.inlineColor.isNullOrEmpty()) {
             if (sendSmall != null) {
-                sendSmall.setTint(Color.parseColor(footerModel.composeBar.inlineColor))
+                sendSmall.setTint(Color.parseColor(footerModel.composeBar?.inlineColor))
                 binding.sendTv.background = sendSmall
             }
-            binding.ivSpeaker.backgroundTintList = ColorStateList.valueOf(Color.parseColor(footerModel.composeBar.inlineColor))
+            binding.ivSpeaker.backgroundTintList = ColorStateList.valueOf(Color.parseColor(footerModel.composeBar?.inlineColor))
             val colors = intArrayOf(
-                Color.parseColor(footerModel.composeBar.inlineColor),
-                Color.parseColor(footerModel.composeBar.inlineColor),
-                Color.parseColor(footerModel.composeBar.inlineColor)
+                Color.parseColor(footerModel.composeBar?.inlineColor),
+                Color.parseColor(footerModel.composeBar?.inlineColor),
+                Color.parseColor(footerModel.composeBar?.inlineColor)
             )
             binding.progress.setColors(colors)
         }
 
-        if (footerModel.composeBar.placeholder.isNotEmpty()) {
-            binding.edtTxtMessage.hint = footerModel.composeBar.placeholder
+        if (!footerModel.composeBar?.placeholder.isNullOrEmpty()) {
+            binding.edtTxtMessage.hint = footerModel.composeBar?.placeholder
         }
 
-        if (footerModel.iconsColor.isNotEmpty()) {
+        if (!footerModel.iconsColor.isNullOrEmpty()) {
             binding.newMenuLogo.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
             binding.attachment.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
             binding.recAudioImg.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
@@ -405,10 +404,10 @@ class CustomFooterFragment : BaseFooterFragment() {
             binding.edtTxtMessage.setHintTextColor(Color.parseColor(footerModel.iconsColor))
         }
 
-        binding.newMenuLogo.isVisible = footerModel.buttons.menu.show
-        binding.attachment.isVisible = footerModel.buttons.attachment.show
-        binding.recAudioImg.isVisible = footerModel.buttons.microphone.show
-        binding.audioSpeakTts.isVisible = footerModel.buttons.speaker.show
+        binding.newMenuLogo.isVisible = footerModel.buttons?.menu?.show == true
+        binding.attachment.isVisible = footerModel.buttons?.attachment?.show == true
+        binding.recAudioImg.isVisible = footerModel.buttons?.microphone?.show == true
+        binding.audioSpeakTts.isVisible = footerModel.buttons?.speaker?.show == true
     }
 
     private val onTTSEnableSwitchClickListener = View.OnClickListener {

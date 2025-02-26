@@ -20,3 +20,11 @@ fun String.stringToDate(formatType: String): Date? {
     }
     return null
 }
+
+fun String.getDotMessage(): String {
+    val strDots = StringBuilder()
+    for (i in this.indices) {
+        strDots.append("•")
+    }
+    return strDots.toString()
+}

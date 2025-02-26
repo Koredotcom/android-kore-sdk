@@ -2,15 +2,25 @@ package com.kore.network.api.responsemodels.branding
 
 import com.google.gson.annotations.SerializedName
 
-data class BrandingQuickStartButtons (
+data class BrandingQuickStartButtons(
     @SerializedName("show")
-    val show : Boolean,
+    val show: Boolean?,
     @SerializedName("style")
-    val style : String = "",
+    val style: String = "",
     @SerializedName("buttons")
-    val buttons : ArrayList<BrandingQuickStartButtonButtonsModel>,
+    val buttons: ArrayList<BrandingQuickStartButtonButtonsModel>,
     @SerializedName("input")
-    val input : String = "",
+    val input: String = "",
     @SerializedName("action")
-    val action : BrandingQuickStartButtonActionModel
+    val action: BrandingQuickStartButtonActionModel
 )
+
+fun BrandingQuickStartButtons.updateWith(configModel: BrandingQuickStartButtons): BrandingQuickStartButtons {
+    return this.copy(
+        show = configModel.show ?: show,
+        style = style.ifEmpty { style },
+        buttons = configModel.buttons.ifEmpty { buttons },
+        input = input.ifEmpty { input },
+        action = action.updateWith(configModel.action)
+    )
+}

@@ -193,6 +193,8 @@
     <color name="color_d8d8d8">#d8d8d8</color>
     <color name="color_E4E5EB">#e4e5eb</color> <!-- upcoming notif-->
     <color name="color_f6f6f8">#f6f6f8</color>
+    <color name="color_0076FF">#0076FF</color>
+    <color name="color_98A2B3">#98A2B3</color>
 
     <color name="colorSpeechPrimary">#3F51B5</color>
     <color name="colorSpeechPrimaryDark">#303F9F</color>

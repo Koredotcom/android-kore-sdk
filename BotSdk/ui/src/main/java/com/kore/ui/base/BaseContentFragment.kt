@@ -20,7 +20,7 @@ abstract class BaseContentFragment : Fragment(), QuickRepliesClickListener {
 
     abstract fun hideQuickReplies()
 
-    abstract fun addMessagesToAdapter(messages: List<BaseBotMessage>, isHistory: Boolean)
+    abstract fun addMessagesToAdapter(messages: List<BaseBotMessage>, isHistory: Boolean, isReconnection: Boolean)
 
     abstract fun getAdapterCount(): Int
 

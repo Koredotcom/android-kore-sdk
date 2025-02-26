@@ -19,6 +19,8 @@ import com.kore.botclient.BotRequestState
 import com.kore.botclient.ConnectionState
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
+import com.kore.common.SDKConfiguration
+import com.kore.common.SDKConfiguration.OverrideKoreConfig.historyBatchSize
 import com.kore.common.SDKConfiguration.getBotConfigModel
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
@@ -43,7 +45,9 @@ import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE_RANGE
+import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_OTP
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_QUICK_REPLIES
+import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_RESET_PIN
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
@@ -130,6 +134,18 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                                                 )
                                             }
 
+                                            TEMPLATE_TYPE_OTP -> {
+                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
+                                                    getView()?.showOtpBottomSheet(innerMap)
+                                                }
+                                            }
+
+                                            TEMPLATE_TYPE_RESET_PIN -> {
+                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
+                                                    getView()?.showPinResetBottomSheet(innerMap)
+                                                }
+                                            }
+
                                             else -> {
                                                 getView()?.hideQuickReplies()
                                             }
@@ -161,12 +177,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     ConnectionState.CONNECTED -> {
                         isFirstTime = false
                         viewModelScope.launch {
-                            getBrandingDetails(token)
-                            if (isReconnection) {
-                                historyOffset = 0
-                                moreHistory = true
-                                fetchChatHistory(true)
-                            }
+                            getBrandingDetails(token, isReconnection)
                         }
                     }
 
@@ -296,7 +307,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         }
     }
 
-    internal suspend fun getBrandingDetails(token: String) {
+    internal suspend fun getBrandingDetails(token: String, isReconnection: Boolean) {
         val botConfigModel = getBotConfigModel()
 
         if (NetworkUtils.isNetworkAvailable(context)) {
@@ -304,15 +315,17 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
                 return
             }
-            when (val response = brandingRepository.getBranding(botConfigModel.botId, token)) {
+            when (val response = brandingRepository.getBranding(context, botConfigModel.botId, token)) {
                 is Result.Success -> {
-                    setButtonBranding(response.data?.v3)
-                    getView()?.onBrandingDetails(response.data?.v3)
+                    onBrandingDetails(response.data?.brandingModel)
+                    getView()?.onBrandingDetails(response.data)
+                    loadChatHistory(isReconnection)
                 }
 
                 else -> {
                     getView()?.onBrandingDetails(null)
                     LogUtils.e(LOG_TAG, "BrandingDetails Response error: $response")
+                    loadChatHistory(isReconnection)
                 }
             }
         }
@@ -320,23 +333,23 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     fun fetchChatHistory(isReconnect: Boolean) {
         if (!moreHistory) {
-            getView()?.onChatHistory(emptyList())
+            getView()?.onChatHistory(emptyList(), isReconnect)
             return
         }
         viewModelScope.launch {
             val botConfigModel = getBotConfigModel()
 
             if (!NetworkUtils.isNetworkAvailable(context)) {
-                getView()?.onChatHistory(emptyList())
+                getView()?.onChatHistory(emptyList(), isReconnect)
                 Toast.makeText(context, context.getString(R.string.no_network), Toast.LENGTH_SHORT).show()
                 return@launch
             }
             if (botConfigModel == null) {
-                getView()?.onChatHistory(emptyList())
+                getView()?.onChatHistory(emptyList(), isReconnect)
                 Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
                 return@launch
             }
-            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
+            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, historyBatchSize)
             when (val response =
                 chatHistoryRepository.getChatHistory(
                     context,
@@ -344,13 +357,13 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     botConfigModel.botId,
                     botConfigModel.botName,
                     historyOffset,
-                    if (historyCount > 10 || historyCount == 0) 10 else historyCount,
+                    if (historyCount > 10 || historyCount == 0) historyBatchSize else historyCount,
                     botConfigModel.isWebHook
                 )) {
                 is Result.Success -> {
                     var historyMessages = response.data.first
                     if (isReconnect && !isMinimized()) historyMessages = historyMessages.filterIsInstance<BotResponse>()
-                    getView()?.onChatHistory(historyMessages)
+                    getView()?.onChatHistory(historyMessages, isReconnect)
                     historyOffset += response.data.first.size
                     moreHistory = response.data.second
                     SDKConfig.setIsMinimized(false)
@@ -359,11 +372,19 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 }
 
                 else -> {
-                    getView()?.onChatHistory(emptyList())
+                    getView()?.onChatHistory(emptyList(), isReconnect)
                     LogUtils.e(LOG_TAG, "RtmUrlResponse error: $response")
                     SDKConfig.setIsMinimized(false)
                 }
             }
+        }
+    }
+
+    private fun loadChatHistory(isReconnect: Boolean) {
+        if ((isReconnect && SDKConfig.getHistoryOnNetworkResume()) || (!isReconnect && SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
+            historyOffset = 0
+            moreHistory = true
+            fetchChatHistory(true)
         }
     }
 
@@ -431,37 +452,37 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         sendMessage(formattedDate, formattedDate)
     }
 
-    private fun setButtonBranding(brandingModel: BotBrandingModel?) {
+    private fun onBrandingDetails(brandingModel: BotBrandingModel?) {
         brandingModel?.let {
-            if (it.general.colors.useColorPaletteOnly) {
+            if (it.general.colors.useColorPaletteOnly == true) {
                 it.header.bgColor = it.general.colors.secondary
                 it.header.avatarBgColor = it.general.colors.primary
                 it.header.title?.color = it.general.colors.primary
                 it.header.subTitle?.color = it.general.colors.primary
 
-                it.footer.composeBar.outlineColor = it.general.colors.primary
-                it.footer.composeBar.inlineColor = it.general.colors.secondaryText
+                it.footer.composeBar?.outlineColor = it.general.colors.primary
+                it.footer.composeBar?.inlineColor = it.general.colors.secondaryText
             }
 
             if (it.body.timeStamp != null) {
                 BotResponseConstants.DATE_FORMAT = it.body.timeStamp!!.dateFormat.replace("mm", "MM")
-                BotResponseConstants.TIME_FORMAT = it.body.timeStamp!!.timeFormat
+                BotResponseConstants.TIME_FORMAT = if (it.body.timeStamp!!.timeFormat.isNotEmpty()) it.body.timeStamp!!.timeFormat.toInt() else 12
             }
 
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, it.body.botMessage.bgColor)
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, it.body.botMessage.color)
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, it.body.userMessage.bgColor)
-            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, it.body.userMessage.color)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, it.body.botMessage?.bgColor)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, it.body.botMessage?.color)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, it.body.userMessage?.bgColor)
+            preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, it.body.userMessage?.color)
 
-            if (it.chatBubble.style.isNotEmpty()) {
-                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_STYLE, it.chatBubble.style)
+            if (!it.chatBubble?.style.isNullOrEmpty()) {
+                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_STYLE, it.chatBubble?.style)
             }
 
             if (it.body.bubbleStyle.isNotEmpty()) {
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_STYLE, it.body.bubbleStyle)
             }
 
-            if (it.general.colors.useColorPaletteOnly) {
+            if (it.general.colors.useColorPaletteOnly == true) {
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_BG_COLOR, it.general.colors.primary)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, it.general.colors.primaryText)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_INACTIVE_BG_COLOR, it.general.colors.secondary)
@@ -480,7 +501,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 )
 
                 preferenceRepository.putBooleanValue(context, THEME_NAME, BotResponseConstants.TIME_STAMP_IS_BOTTOM, timeStamp.position == "Top")
-                preferenceRepository.putBooleanValue(context, THEME_NAME, BotResponseConstants.IS_TIME_STAMP_REQUIRED, timeStamp.show)
+                preferenceRepository.putBooleanValue(context, THEME_NAME, BotResponseConstants.IS_TIME_STAMP_REQUIRED, timeStamp.show ?: false)
             }
         }
     }

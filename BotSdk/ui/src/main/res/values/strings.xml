@@ -30,6 +30,7 @@
     <!-- threads-->
     <!-- teams-->
 
+    <string name="reset_pin">Reset Pin</string>
     <string name="save">Save</string>
     <string name="connect">Connect</string>
     <string name="submit">Submit</string>
@@ -318,4 +319,8 @@
     <string name="bot_minimize_event">minimize_button_event</string>
 
     <string name="menu">Menu</string>
+    <string name="didnt_get_a_code">Didn\'t get a code?</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="answered_by_ai">Answered by AI</string>
+    <string name="source_item">%s. %s</string>
 </resources>
