@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -26,8 +27,13 @@ import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.MOBILE_NUMBER
 import com.kore.model.constants.BotResponseConstants.OTP_BUTTONS
 import com.kore.model.constants.BotResponseConstants.PAYLOAD
+import com.kore.model.constants.BotResponseConstants.PIN_LENGTH
 import com.kore.ui.R
+import com.kore.ui.bottomsheet.row.PinFieldItemRowType
+import com.kore.ui.bottomsheet.row.pinfielditem.PinFieldItemRow.Companion.createRows
 import com.kore.ui.databinding.OtpTemplateBottomSheetBinding
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow.HorizontalSpaceItemDecoration
 
 class OtpTemplateBottomSheet : BottomSheetDialogFragment() {
     private var binding: OtpTemplateBottomSheetBinding? = null
@@ -35,6 +41,8 @@ class OtpTemplateBottomSheet : BottomSheetDialogFragment() {
     private lateinit var payload: Map<String, Any>
     private var isLastItem: Boolean = false
     private lateinit var actionEvent: (event: UserActionEvent) -> Unit
+    private val adapter = SimpleListAdapter(PinFieldItemRowType.values().asList())
+    private val itemSpace = 10
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.otp_template_bottom_sheet, container, false)
@@ -49,20 +57,38 @@ class OtpTemplateBottomSheet : BottomSheetDialogFragment() {
             otpTemplate.title.text = payload[KEY_TITLE] as String?
             otpTemplate.description.text = payload[DESCRIPTION] as String?
             otpTemplate.phoneNumber.text = payload[MOBILE_NUMBER] as String?
-            addTextWatcher(null, otpTemplate.otpField1, otpTemplate.otpField2)
-            addTextWatcher(otpTemplate.otpField1, otpTemplate.otpField2, otpTemplate.otpField3)
-            addTextWatcher(otpTemplate.otpField2, otpTemplate.otpField3, otpTemplate.otpField4)
-            addTextWatcher(otpTemplate.otpField3, otpTemplate.otpField4, null)
+            val pinLength = (payload[PIN_LENGTH] as Double).toInt()
+            otpTemplate.otpRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
+            otpTemplate.otpRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
+            otpTemplate.otpRecycler.post {
+                otpTemplate.otpRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                    submitList(createRows(pinLength, otpTemplate.otpRecycler.width, itemSpace))
+                    otpTemplate.otpRecycler.post {
+                        val childCount = otpTemplate.otpRecycler.childCount
+                        for (index in 0 until childCount) {
+                            val childView: EditText = otpTemplate.otpRecycler.getChildAt(index).findViewById(R.id.otp_field)
+                            val prevChildView: EditText? =
+                                if (index - 1 >= 0) otpTemplate.otpRecycler.getChildAt(index - 1).findViewById(R.id.otp_field) else null
+                            val nextChildView: EditText? =
+                                if (index + 1 < childCount) otpTemplate.otpRecycler.getChildAt(index + 1).findViewById(R.id.otp_field) else null
+                            addTextWatcher(prevChildView, childView, nextChildView)
+                        }
+                    }
+                }
+            }
             (payload[OTP_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 otpTemplate.submit.text = list[0][KEY_TITLE]
                 val content = SpannableString(list[1][KEY_TITLE])
                 content.setSpan(UnderlineSpan(), 0, content.length, 0)
                 otpTemplate.resendOtp.text = content
                 otpTemplate.submit.setOnClickListener {
-                    val otp =
-                        otpTemplate.otpField1.text.toString() + otpTemplate.otpField2.text.toString() +
-                                otpTemplate.otpField3.text.toString() + otpTemplate.otpField4.text.toString()
-                    if (otp.length == 4) {
+                    var otp = ""
+                    val childCount = otpTemplate.otpRecycler.childCount
+                    for (index in 0 until childCount) {
+                        val childView: EditText = otpTemplate.otpRecycler.getChildAt(index).findViewById(R.id.otp_field)
+                        otp += childView.text.toString()
+                    }
+                    if (otp.length == pinLength) {
                         bottomSheetDialog?.dismiss()
                         actionEvent(BotChatEvent.SendMessage(otp.getDotMessage(), otp))
                     }
