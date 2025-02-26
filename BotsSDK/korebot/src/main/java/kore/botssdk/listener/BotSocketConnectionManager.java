@@ -37,6 +37,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.NetworkUtility;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
 import retrofit2.Call;
@@ -129,6 +130,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void refreshJwtToken() {
         if (isWithAuth) {
             makeJwtCallWithToken(true);
+        } else if (!StringUtils.isNullOrEmpty(SDKConfiguration.JWTServer.getJwt_token())) {
+            makeJwtGrantCall(SDKConfiguration.JWTServer.getJwt_token(), true);
         } else {
             makeStsJwtCallWithConfig(SDKConfiguration.Client.isWebHook);
         }
@@ -142,6 +145,23 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     @Override
     public void onStartCompleted(boolean isReconnect) {
         chatListener.onStartCompleted(isReconnect);
+    }
+
+    private void makeJwtGrantCall(String jwtToken, boolean isRefresh) {
+        try {
+            botName = SDKConfiguration.Client.bot_name;
+            streamId = SDKConfiguration.Client.bot_id;
+            if (!isRefresh) {
+                botClient.connectAsAnonymousUser(jwtToken, botName, streamId, botSocketConnectionManager, isReconnect);
+            } else {
+                KoreEventCenter.post(jwtToken);
+            }
+        } catch (Exception e) {
+            LogUtils.stackTrace(e);
+            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
+            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
+        }
     }
 
     private void makeStsJwtCallWithConfig(final boolean isRefresh) {
@@ -163,7 +183,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                             }
                         }
                     } catch (Exception e) {
-                        LogUtils.stackTrace(LOG_TAG, e);
+                        LogUtils.stackTrace(e);
                         Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
                         connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
                         if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
@@ -344,21 +364,11 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         if (isWithAuth) {
             makeJwtCallWithToken(false);
+        } else if (!StringUtils.isNullOrEmpty(SDKConfiguration.JWTServer.getJwt_token())) {
+            makeJwtGrantCall(SDKConfiguration.JWTServer.getJwt_token(), SDKConfiguration.Client.isWebHook);
         } else {
             makeStsJwtCallWithConfig(SDKConfiguration.Client.isWebHook);
         }
-    }
-
-    public String getStreamId() {
-        return streamId;
-    }
-
-    public void setStreamId(String streamId) {
-        this.streamId = streamId;
-    }
-
-    public void sendInitMessage(String initialMessage) {
-        if (botClient != null) botClient.sendMessage(initialMessage);
     }
 
     public void sendMessage(String message, String payLoad) {
@@ -528,7 +538,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         try {
             if (ttsSynthesizer != null) ttsSynthesizer.stopTextToSpeech();
         } catch (IllegalArgumentException | NullPointerException exception) {
-            LogUtils.stackTrace(LOG_TAG, exception);;
+            LogUtils.stackTrace(exception);
         }
     }
 
@@ -662,7 +672,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                     try {
                         chatListener.onMessage(Utils.buildBotMessage(BundleConstants.SESSION_END_ALERT_MESSAGES[mAlertAttemptCount - 1], streamId, botName));
                     } catch (ArrayIndexOutOfBoundsException aiobe) {
-                        LogUtils.stackTrace(LOG_TAG, aiobe);
+                        LogUtils.stackTrace(aiobe);
                     }
                 }
                 postAlertDelayMessage();

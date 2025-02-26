@@ -476,6 +476,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             if (botOptionsModel.getWelcome_screen() != null && isWelcomeVisible) {
                 if (botOptionsModel.getWelcome_screen().isShow()) showWelcomeDialog(botOptionsModel);
             }
+            else rlChatWindow.setVisibility(VISIBLE);
 
             if (composeFooterFragment != null) {
                 composeFooterFragment.setBotBrandingModel(botOptionsModel);
@@ -599,7 +600,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         try {
             ttsSynthesizer.stopTextToSpeech();
         } catch (IllegalArgumentException exception) {
-            exception.printStackTrace();
+            LogUtils.stackTrace(exception);
         }
     }
 

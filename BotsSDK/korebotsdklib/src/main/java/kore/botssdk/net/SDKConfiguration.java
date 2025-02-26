@@ -95,6 +95,7 @@ public class SDKConfiguration {
             Client.bot_id = bot_id;
         }
         public static String connection_mode = "";
+        public static boolean connection_mode_on_reconnect = true;
         public static boolean history_on_network_resume = false;
         public static String client_id = "PLEASE_ENTER_CLIENT_ID";
         public static String client_secret = "PLEASE_ENTER_CLIENT_SECRET";

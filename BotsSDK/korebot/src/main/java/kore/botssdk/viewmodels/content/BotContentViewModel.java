@@ -1,6 +1,7 @@
 package kore.botssdk.viewmodels.content;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import androidx.annotation.NonNull;
 
@@ -18,9 +19,11 @@ import io.reactivex.schedulers.Schedulers;
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.repository.history.HistoryRepository;
 import kore.botssdk.retroresponse.ServerBotMsgResponse;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewmodels.BaseViewModel;
@@ -51,13 +54,14 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                     list = re.getBotMessages();
                     offset = _offset + re.getOriginalSize();
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         chatView.onChatHistory(list, offset, _offset == 0);
                     }
 
-                    if (list != null) {
-                        list.size();
-                    }
+                    SharedPreferences.Editor editor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                    SDKConfig.setIsMinimized(false);
+                    editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                    editor.apply();
                 }
 
                 @Override
@@ -83,13 +87,14 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
                     list = re.getBotMessages();
                     offset = re.getOriginalSize();
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         chatView.onChatHistory(list, offset, _offset == 0);
                     }
 
-                    if (list != null) {
-                        list.size();
-                    }
+                    SharedPreferences.Editor editor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+                    SDKConfig.setIsMinimized(false);
+                    editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                    editor.apply();
                 }
 
                 @Override

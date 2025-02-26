@@ -34,7 +34,7 @@ public class LogUtils {
         if (LOG) android.util.Log.w(tag, string);
     }
 
-    public static void stackTrace(@NonNull String tag, @NonNull Exception e) {
+    public static void stackTrace(@NonNull Exception e) {
         if (LOG) logger.log(Level.SEVERE, "An error occurred", e);
     }
 

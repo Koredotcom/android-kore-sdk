@@ -135,8 +135,8 @@ public class BotChatViewModel extends ViewModel {
                 isReconnectionStopped = false;
 
                 if (isReconnection) {
-                    if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 19) {
-                        chatView.loadChatHistory(0, 20);
+                    if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size) {
+                        chatView.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
                     } else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0) {
                         chatView.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
                     } else if (SDKConfiguration.Client.history_on_network_resume) {

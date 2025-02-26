@@ -162,12 +162,12 @@ public final class SocketWrapper {
                         socketConnectionListener.onStartCompleted(false);
                         connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode=" + SDKConfiguration.Client.connection_mode : "") + queryParams, false);
                     } catch (URISyntaxException e) {
-                        LogUtils.stackTrace(LOG_TAG, e);
+                        LogUtils.stackTrace(e);
                     }
                 } else {
                     try {
                         socketConnectionListener.onStartCompleted(true);
-                        connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "" : "&isReconnect=true").concat("&ConnectionMode=Reconnect"), false);
+                        connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode=" + (SDKConfiguration.Client.connection_mode_on_reconnect ? SDKConfiguration.Client.connection_mode : "Reconnect") : "&isReconnect=true"), true);
                     } catch (URISyntaxException e) {
                         throw new RuntimeException(e);
                     }
@@ -201,7 +201,7 @@ public final class SocketWrapper {
             if (options != null) {
                 url = options.replaceOptions(url, options);
             }
-            LogUtils.d("Socket url", url);
+            LogUtils.e("Socket url", url);
             WebSocketOptions connectOptions = new WebSocketOptions();
             connectOptions.setReconnectInterval(0);
             try {
@@ -217,6 +217,7 @@ public final class SocketWrapper {
                         isConnecting = false;
                         mReconnectionCount = 1;
                         mReconnectDelay = 1000;
+                        mIsReconnectionAttemptNeeded = true;
                         KoreEventCenter.post(new RTMConnectionEvent(true));
                     }
 
@@ -230,7 +231,6 @@ public final class SocketWrapper {
                         }
 
                         isConnecting = false;
-
                         reconnectAttempt();
                     }
 
@@ -253,7 +253,7 @@ public final class SocketWrapper {
                     mReconnectionCount = 1;
                     mReconnectDelay = 1000;
                 }
-                LogUtils.stackTrace(LOG_TAG, e);
+                LogUtils.stackTrace(e);
             }
         }
     }
@@ -318,9 +318,9 @@ public final class SocketWrapper {
             @Override
             public void onNext(RestResponse.RTMUrl rtmUrl) {
                 try {
-                    connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "" : "&isReconnect=true").concat("&ConnectionMode=Reconnect"), true);
+                    connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode=" + (SDKConfiguration.Client.connection_mode_on_reconnect ? SDKConfiguration.Client.connection_mode : "Reconnect") : "&isReconnect=true"), true);
                 } catch (URISyntaxException e) {
-                    LogUtils.stackTrace(LOG_TAG, e);
+                    LogUtils.stackTrace(e);
                 }
             }
 
@@ -387,9 +387,9 @@ public final class SocketWrapper {
             public void onNext(RestResponse.RTMUrl rtmUrl) {
                 try {
                     socketConnectionListener.onStartCompleted(true);
-                    connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "" : "&isReconnect=true").concat("&ConnectionMode=Reconnect"), true);
+                    connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode=" + (SDKConfiguration.Client.connection_mode_on_reconnect ? SDKConfiguration.Client.connection_mode : "Reconnect") : "&isReconnect=true"), true);
                 } catch (URISyntaxException e) {
-                    LogUtils.stackTrace(LOG_TAG, e);
+                    LogUtils.stackTrace(e);
                 }
             }
 

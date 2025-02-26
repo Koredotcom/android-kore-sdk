@@ -425,11 +425,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         headersMap.clear();
         for (i = 0; i < baseBotMessageArrayList.size(); i++) {
             BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
-            } else if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
-                headersMap.put(baseBotMessage.getFormattedDate(), i);
-            }
+            headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
         }
     }
 
