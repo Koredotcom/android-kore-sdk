@@ -3,6 +3,7 @@ package com.kore.botclient.helper
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
+import com.google.gson.internal.LinkedTreeMap
 import com.google.gson.reflect.TypeToken
 import com.kore.common.model.BotConfigModel
 import com.kore.common.utils.DateUtils
@@ -23,6 +24,8 @@ import com.kore.model.To
 import com.kore.model.WebHookMessage
 import com.kore.model.WebHookUserInfo
 import com.kore.model.constants.BotResponseConstants.CHAT_BOT
+import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
+import com.kore.model.constants.BotResponseConstants.PAYLOAD
 import java.lang.reflect.Type
 import java.util.Calendar
 import java.util.Locale
@@ -51,7 +54,7 @@ class BotClientHelper {
             var botRequest: BotRequest = Gson().fromJson(jsonPayload, BotRequest::class.java)
             val calendar = Calendar.getInstance()
             botRequest = botRequest.copy(
-                message = BotMessage(message),
+                message = botMessage.copy(body = message),
                 messageId = calendar.timeInMillis.toString(),
                 resourceId = botPayLoad.resourceId,
                 timeMillis = calendar.timeInMillis,
@@ -124,7 +127,24 @@ class BotClientHelper {
                 e.printStackTrace()
             }
 
-            if (outerPayload == null) return botResponse
+            if (outerPayload == null) {
+                val outer = botResponse.message[0].component?.payload
+                if (outer != null) {
+                    val inner = (outer as Map<String, Any>)[PAYLOAD] as LinkedTreeMap<String, Any>?
+                    if (inner != null && inner.containsKey(KEY_TEMPLATE_TYPE)) {
+                        val jsonOuter = Gson().toJson(outer)
+                        try {
+                            outerPayload = parseBotResponse(jsonOuter, object : TypeToken<PayloadOuter>() {}.type)
+                        } catch (e: JsonSyntaxException) {
+                            e.printStackTrace()
+                        }
+                    } else {
+                        return botResponse
+                    }
+                } else {
+                    return botResponse
+                }
+            }
             msg = msg.copy(cInfo = msg.cInfo?.copy(body = outerPayload))
             botResponse.message[0] = msg
             return botResponse

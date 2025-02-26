@@ -4,13 +4,23 @@ import com.google.gson.annotations.SerializedName
 
 data class BrandingColorsModel(
     @SerializedName("primary")
-    val primary: String = "",
+    val primary: String? = null,
     @SerializedName("secondary")
-    val secondary: String = "",
+    val secondary: String? = null,
     @SerializedName("primary_text")
-    val primaryText: String = "",
+    val primaryText: String? = null,
     @SerializedName("secondary_text")
-    val secondaryText: String = "",
+    val secondaryText: String? = null,
     @SerializedName("useColorPaletteOnly")
-    val useColorPaletteOnly: Boolean
+    val useColorPaletteOnly: Boolean? = null
 )
+
+fun BrandingColorsModel.updateWith(configModel: BrandingColorsModel): BrandingColorsModel {
+    return this.copy(
+        primary = configModel.primary?.ifEmpty { this.primary },
+        secondary = configModel.secondary?.ifEmpty { this.secondary },
+        primaryText = configModel.primaryText?.ifEmpty { this.primaryText },
+        secondaryText = configModel.secondaryText?.ifEmpty { this.secondaryText },
+        useColorPaletteOnly = configModel.useColorPaletteOnly ?: this.useColorPaletteOnly,
+    )
+}
