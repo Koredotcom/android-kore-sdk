@@ -1,9 +1,7 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import com.google.gson.Gson
 import com.kore.SDKConfig
-import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
 import com.kore.model.BaseBotMessage
@@ -19,6 +17,7 @@ import com.kore.model.constants.BotResponseConstants.DIRECTION
 import com.kore.model.constants.BotResponseConstants.DISPLAY_LIMIT
 import com.kore.model.constants.BotResponseConstants.ELEMENTS
 import com.kore.model.constants.BotResponseConstants.HEADING
+import com.kore.model.constants.BotResponseConstants.KEY_BUTTONS
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.model.constants.BotResponseConstants.PIE_TYPE
 import com.kore.model.constants.BotResponseConstants.PROGRESS
@@ -26,11 +25,13 @@ import com.kore.model.constants.BotResponseConstants.SELECTED_FEEDBACK
 import com.kore.model.constants.BotResponseConstants.SELECTED_ITEM
 import com.kore.model.constants.BotResponseConstants.SELECTED_POSITION
 import com.kore.model.constants.BotResponseConstants.SELECTED_TIME
+import com.kore.model.constants.BotResponseConstants.SLIDER_VIEW
 import com.kore.model.constants.BotResponseConstants.TEXT_MESSAGE
 import com.kore.ui.R
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.AdvanceTemplateRow
+import com.kore.ui.row.botchat.AnswerTemplateRow
 import com.kore.ui.row.botchat.BarChartTemplateRow
 import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.ui.row.botchat.BotChatRowType.Companion.ROW_REQUEST_MSG_PROVIDER
@@ -47,7 +48,9 @@ import com.kore.ui.row.botchat.ImageTemplateRow
 import com.kore.ui.row.botchat.LineChartTemplateRow
 import com.kore.ui.row.botchat.ListWidgetTemplateRow
 import com.kore.ui.row.botchat.MiniTableTemplateRow
+import com.kore.ui.row.botchat.OtpTemplateRow
 import com.kore.ui.row.botchat.PieChartTemplateRow
+import com.kore.ui.row.botchat.ResetPinTemplateRow
 import com.kore.ui.row.botchat.ResultsTemplateRow
 import com.kore.ui.row.botchat.TableResponsiveRow
 import com.kore.ui.row.botchat.TableTemplateRow
@@ -55,6 +58,7 @@ import com.kore.ui.row.botchat.TextTemplateRow
 import com.kore.ui.row.botchat.TimeStampTemplateRow
 import com.kore.ui.row.botchat.VideoTemplateRow
 import com.kore.ui.row.botchat.advancemultiselect.AdvanceMultiSelectTemplateRow
+import com.kore.ui.row.botchat.article.ArticleTemplateRow
 import com.kore.ui.row.botchat.form.FormTemplateRow
 import com.kore.ui.row.botchat.listview.ListViewTemplateRow
 import com.kore.ui.row.botchat.multiselect.MultiSelectTemplateRow
@@ -78,9 +82,33 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
         this.actionEvent = actionEvent
     }
 
-    fun addAndCreateRows(baseBotMessage: List<BaseBotMessage>, isHistory: Boolean = false): List<SimpleListRow> {
-        messages = messages + baseBotMessage
-        if (isHistory) messages = messages.distinctBy { it.messageId }.sortedBy { it.timeMillis }
+    fun addAndCreateRows(baseBotMessages: List<BaseBotMessage>, isHistory: Boolean = false, isReconnection: Boolean): List<SimpleListRow> {
+        messages = if (isHistory) {
+            if (!isReconnection) {
+                messages + baseBotMessages
+            } else {
+                var latestChatMsg: BotResponse? = null
+                for (botMessage in messages.reversed()) {
+                    if (botMessage is BotResponse) {
+                        latestChatMsg = botMessage
+                        break
+                    }
+                }
+                if (latestChatMsg != null) {
+                    for (historyItem in baseBotMessages) {
+                        if (historyItem.timeMillis > latestChatMsg.timeMillis) {
+                            messages += historyItem
+                        }
+                    }
+                    messages
+                } else {
+                    messages + baseBotMessages
+                }
+            }.distinctBy { it.messageId }.sortedBy { it.timeMillis }
+        } else {
+            messages + baseBotMessages
+        }
+
         return createRows(messages)
     }
 
@@ -94,14 +122,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
     }
 
     fun onBrandingDetails() {
-        messages = messages.mapIndexed { index, baseBotMessage ->
-            if (index == 0 && baseBotMessage is BotResponse) {
-                val json = Gson().toJson(baseBotMessage)
-                BotClientHelper.processBotResponse(Gson().fromJson(json, BotResponse::class.java))
-            } else {
-                baseBotMessage
-            }
-        }
+        submitList(createRows(emptyList()))
         submitList(createRows(messages))
     }
 
@@ -170,7 +191,8 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         } else if (innerMap[DIRECTION] != null) {
                                             newRows = createCustomTemplate(innerMap[DIRECTION].toString(), baseBotMsg, isLastItem, rows)
                                         } else if (innerMap[BotResponseConstants.TABLE_DESIGN] != null) {
-                                            newRows = createCustomTemplate(innerMap[BotResponseConstants.TABLE_DESIGN].toString(), baseBotMsg, isLastItem, rows)
+                                            newRows =
+                                                createCustomTemplate(innerMap[BotResponseConstants.TABLE_DESIGN].toString(), baseBotMsg, isLastItem, rows)
                                         }
                                     }
                                     if (newRows.size != rows.size) {
@@ -184,6 +206,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                                     when (templateType) {
                                         BotResponseConstants.TEMPLATE_TYPE_BUTTON -> {
+                                            if (!innerMap.containsKey(KEY_BUTTONS)) continue
                                             if (isTextMsg) {
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }
@@ -384,6 +407,26 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                                         BotResponseConstants.TEMPLATE_TYPE_RESULTS -> {
                                             rows = rows + ResultsTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, actionEvent)
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_ANSWER_TEMPLATE -> {
+                                            rows = rows + AnswerTemplateRow(baseBotMsg.messageId, innerMap, actionEvent)
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_ARTICLE -> {
+                                            rows = rows + ArticleTemplateRow(baseBotMsg.messageId, innerMap, isLastItem, actionEvent)
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_OTP -> {
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == false) {
+                                                rows = rows + OtpTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, isLastItem, actionEvent)
+                                            }
+                                        }
+
+                                        BotResponseConstants.TEMPLATE_TYPE_RESET_PIN -> {
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == false) {
+                                                rows = rows + ResetPinTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, isLastItem, actionEvent)
+                                            }
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_QUICK_REPLIES,

@@ -12,13 +12,13 @@ import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActi
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonButtonsModel
 import com.kore.ui.R
 
-class WelcomeStarterButtonsAdapter (private val context: Context, private val type: String) : RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder>() {
+class WelcomeStarterButtonsAdapter (private val context: Context, private val type: String?) : RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder>() {
 
     private var quickReplyTemplateArrayList: ArrayList<BrandingQuickStartButtonButtonsModel>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
         val convertView: View = if (type.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true)) LayoutInflater.from(context)
-                .inflate(R.layout.welcome_quick_buttons_full, parent, false) else LayoutInflater.from(context).inflate(R.layout.welcome_quick_buttons, parent, false)
+            .inflate(R.layout.welcome_quick_buttons_full, parent, false) else LayoutInflater.from(context).inflate(R.layout.welcome_quick_buttons, parent, false)
         return QuickReplyViewHolder(convertView)
     }
 

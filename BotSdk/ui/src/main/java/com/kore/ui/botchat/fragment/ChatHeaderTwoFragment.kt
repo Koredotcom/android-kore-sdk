@@ -30,7 +30,7 @@ class ChatHeaderTwoFragment : BaseHeaderFragment() {
         this.onActionEvent = onActionEvent
     }
 
-    override fun setBrandingDetails(brandingModel: BrandingHeaderModel?) {
+    override fun setBrandingHeader(brandingModel: BrandingHeaderModel?) {
         this.brandingModel = brandingModel
     }
 

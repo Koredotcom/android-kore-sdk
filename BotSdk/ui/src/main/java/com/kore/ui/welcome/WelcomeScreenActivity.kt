@@ -63,7 +63,7 @@ class WelcomeScreenActivity : AppCompatActivity() {
             withContext(Dispatchers.IO) {
                 try {
                     if (botConfigModel != null) {
-                        when (val result = brandingRepository.getBranding(botConfigModel.botId, "")) {
+                        when (val result = brandingRepository.getBranding(this@WelcomeScreenActivity, botConfigModel.botId, "")) {
                             is com.kore.common.Result.Success -> LogUtils.e(LOG_TAG, "getJwtGrant error: ${result.data.toString()}")
                             is com.kore.common.Result.Error -> LogUtils.e(LOG_TAG, "getJwtGrant error: ${result.exception.message}")
                             else -> {}

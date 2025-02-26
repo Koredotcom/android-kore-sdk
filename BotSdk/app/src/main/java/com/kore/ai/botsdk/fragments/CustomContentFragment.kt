@@ -98,10 +98,10 @@ class CustomContentFragment : BaseContentFragment() {
         binding.quickReplyView.isVisible = false
     }
 
-    override fun addMessagesToAdapter(messages: List<BaseBotMessage>, isHistory: Boolean) {
+    override fun addMessagesToAdapter(messages: List<BaseBotMessage>, isHistory: Boolean, isReconnection: Boolean) {
         binding.swipeContainerChat.isRefreshing = false
         if (messages.isEmpty()) return
-        chatAdapter.submitList(chatAdapter.addAndCreateRows(messages, isHistory))
+        chatAdapter.submitList(chatAdapter.addAndCreateRows(messages, isHistory, isReconnection))
         binding.chatContentList.postDelayed({
             if (!isHistory && chatAdapter.itemCount > 0) {
                 binding.chatContentList.verticalSmoothScrollTo(chatAdapter.itemCount - 1, LinearSmoothScroller.SNAP_TO_START)

@@ -75,13 +75,13 @@ class OptionsActionSheetFragment : BottomSheetDialogFragment() {
 
         if (botBrandingModel != null) {
             if (!botBrandingModel?.welcomeScreen?.starterBox?.quickStartButtons?.buttons.isNullOrEmpty()) {
-                if (botBrandingModel!!.welcomeScreen.starterBox.quickStartButtons.style.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true)) {
+                if (botBrandingModel?.welcomeScreen?.starterBox?.quickStartButtons?.style.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true)) {
                     layoutManager.flexDirection = FlexDirection.COLUMN
                     layoutManager.justifyContent = JustifyContent.FLEX_START
                     rvQuickData.layoutManager = layoutManager
 
                     val quickRepliesAdapter = WelcomeStarterButtonsAdapter(requireActivity(), BotResponseConstants.TEMPLATE_TYPE_LIST)
-                    quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel!!.welcomeScreen.starterBox.quickStartButtons.buttons)
+                    quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel!!.welcomeScreen?.starterBox?.quickStartButtons?.buttons!!)
                     rvQuickData.adapter = quickRepliesAdapter
                 } else {
                     layoutManager.flexDirection = FlexDirection.ROW
@@ -89,7 +89,7 @@ class OptionsActionSheetFragment : BottomSheetDialogFragment() {
                     rvQuickData.layoutManager = layoutManager
 
                     val quickRepliesAdapter = WelcomeStarterButtonsAdapter(requireActivity(), BotResponseConstants.TEMPLATE_TYPE_CAROUSEL)
-                    quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel!!.welcomeScreen.starterBox.quickStartButtons.buttons)
+                    quickRepliesAdapter.setWelcomeStarterButtonsArrayList(botBrandingModel!!.welcomeScreen?.starterBox?.quickStartButtons?.buttons!!)
                     rvQuickData.adapter = quickRepliesAdapter
                 }
             }

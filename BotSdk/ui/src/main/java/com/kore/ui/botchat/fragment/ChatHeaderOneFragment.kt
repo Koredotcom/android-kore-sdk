@@ -32,8 +32,7 @@ class ChatHeaderOneFragment : BaseHeaderFragment() {
         this.onActionEvent = onActionEvent
     }
 
-    override fun setBrandingDetails(brandingModel: BrandingHeaderModel?) {
-        this.brandingModel = brandingModel
+    override fun setBrandingHeader(brandingModel: BrandingHeaderModel?) {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
