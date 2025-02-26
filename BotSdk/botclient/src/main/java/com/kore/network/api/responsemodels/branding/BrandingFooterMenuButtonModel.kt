@@ -4,9 +4,17 @@ import com.google.gson.annotations.SerializedName
 
 data class BrandingFooterMenuButtonModel(
     @SerializedName("show")
-    val show: Boolean,
+    val show: Boolean?,
     @SerializedName("icon")
-    val icon: String = "",
+    val icon: String? = null,
     @SerializedName("actions")
     val actions: ArrayList<BrandingQuickStartButtonActionModel>,
 )
+
+fun BrandingFooterMenuButtonModel.updateWith(configModel: BrandingFooterMenuButtonModel): BrandingFooterMenuButtonModel {
+    return this.copy(
+        show = configModel.show ?: show,
+        icon = configModel.icon?.ifEmpty { icon },
+        actions = configModel.actions.ifEmpty { this.actions }
+    )
+}

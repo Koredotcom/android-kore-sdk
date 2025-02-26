@@ -2,9 +2,16 @@ package com.kore.network.api.responsemodels.branding
 
 import com.google.gson.annotations.SerializedName
 
-data class PromotionalContentModel (
+data class PromotionalContentModel(
     @SerializedName("show")
-    val show : Boolean,
+    val show: Boolean?,
     @SerializedName("promotions")
-    val promotions : ArrayList<PromotionsModel>
+    val promotions: ArrayList<PromotionsModel>
 )
+
+fun PromotionalContentModel.updateWith(configModel: PromotionalContentModel): PromotionalContentModel {
+    return this.copy(
+        show = configModel.show ?: show,
+        promotions = promotions.ifEmpty { promotions }
+    )
+}
