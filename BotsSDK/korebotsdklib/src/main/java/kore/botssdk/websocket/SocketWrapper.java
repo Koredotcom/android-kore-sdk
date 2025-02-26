@@ -170,7 +170,7 @@ public final class SocketWrapper {
                 } else {
                     try {
                         socketConnectionListener.onStartCompleted(true);
-                        connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "" : "&isReconnect=true").concat("&ConnectionMode=Reconnect"), true);
+                        connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode=" + (SDKConfiguration.Client.connection_mode_on_reconnect ? SDKConfiguration.Client.connection_mode : "Reconnect") : "&isReconnect=true"), true);
                     } catch (URISyntaxException e) {
                         throw new RuntimeException(e);
                     }
@@ -316,7 +316,7 @@ public final class SocketWrapper {
             @Override
             public void onNext(RestResponse.RTMUrl rtmUrl) {
                 try {
-                    connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "" : "&isReconnect=true").concat("&ConnectionMode=Reconnect"), true);
+                    connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode=" + (SDKConfiguration.Client.connection_mode_on_reconnect ? SDKConfiguration.Client.connection_mode : "Reconnect") : "&isReconnect=true"), true);
                 } catch (URISyntaxException e) {
                     LogUtils.stackTrace(e);
                 }

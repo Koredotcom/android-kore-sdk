@@ -136,6 +136,7 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
 
+            chatView.loadOnConnectionHistory(isReconnection);
             new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(context));
             chatView.updateTitleBar(state);
         }
@@ -154,7 +155,6 @@ public class BotChatViewModel extends ViewModel {
         @Override
         public void onStartCompleted(boolean isReconnect) {
             getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), "published", "1", "en_US");
-            chatView.loadOnConnectionHistory(isReconnect);
         }
 
     };
