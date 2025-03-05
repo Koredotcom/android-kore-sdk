@@ -79,20 +79,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun getBotConfigModel(): BotConfigModel? {
         try {
-            val rawResource = resources.openRawResource(R.raw.config)
-            val properties = Properties()
-            properties.load(rawResource)
             return BotConfigModel(
-                botName = properties.getProperty("botName"),
-                botId = properties.getProperty("botId"),
-                clientId = properties.getProperty("clientId"),
-                clientSecret = properties.getProperty("clientSecret"),
-                botUrl = properties.getProperty("botUrl"),
-                identity = properties.getProperty("identity"),
+                botName = "Please enter Bot name",
+                botId = "Please enter botID",
+                clientId = "Please enter  clientId",
+                clientSecret = "Please enter clientSecret",
+                botUrl = "Please enter botUrl",
+                identity = "Please enter identity",
                 isWebHook = false,
-                jwtServerUrl = properties.getProperty("jwtServerUrl"),
+                jwtServerUrl = "Please enter jwtServerUrl",
                 enablePanel = true,
-                jwtToken = properties.getProperty("jwtToken")
+                jwtToken = "Please enter jwtToken"
             )
         } catch (e: NotFoundException) {
             Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
@@ -108,13 +105,13 @@ class MainActivity : AppCompatActivity() {
             val properties = Properties()
             properties.load(rawResource)
             return WidgetConfigModel(
-                botName = properties.getProperty("widgetBotName"),
-                botId = properties.getProperty("widgetBotId"),
-                clientId = properties.getProperty("widgetClientId"),
-                clientSecret = properties.getProperty("widgetClientSecret"),
-                botUrl = properties.getProperty("widgetBotUrl"),
-                identity = properties.getProperty("widgetIdentity"),
-                jwtServerUrl = properties.getProperty("widgetJwtServerUrl"),
+                botName = "Please enter widget Bot name",
+                botId = "Please enter widget botID",
+                clientId = "Please enter  widget clientId",
+                clientSecret = "Please enter widget clientSecret",
+                botUrl = "Please enter widget botUrl",
+                identity = "Please enter widget identity",
+                jwtServerUrl = "Please enter widget jwtServerUrl",
             )
         } catch (e: NotFoundException) {
             Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
@@ -123,6 +120,53 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }
+
+//    private fun getBotConfigModel(): BotConfigModel? {
+//        try {
+//            val rawResource = resources.openRawResource(R.raw.config)
+//            val properties = Properties()
+//            properties.load(rawResource)
+//            return BotConfigModel(
+//                botName = properties.getProperty("botName"),
+//                botId = properties.getProperty("botId"),
+//                clientId = properties.getProperty("clientId"),
+//                clientSecret = properties.getProperty("clientSecret"),
+//                botUrl = properties.getProperty("botUrl"),
+//                identity = properties.getProperty("identity"),
+//                isWebHook = false,
+//                jwtServerUrl = properties.getProperty("jwtServerUrl"),
+//                enablePanel = true,
+//                jwtToken = properties.getProperty("jwtToken")
+//            )
+//        } catch (e: NotFoundException) {
+//            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
+//        } catch (e: IOException) {
+//            Log.e(LOG_TAG, "Failed to open config file.")
+//        }
+//        return null
+//    }
+//
+//    private fun getWidgetBotConfigModel(): WidgetConfigModel? {
+//        try {
+//            val rawResource = resources.openRawResource(R.raw.config)
+//            val properties = Properties()
+//            properties.load(rawResource)
+//            return WidgetConfigModel(
+//                botName = properties.getProperty("widgetBotName"),
+//                botId = properties.getProperty("widgetBotId"),
+//                clientId = properties.getProperty("widgetClientId"),
+//                clientSecret = properties.getProperty("widgetClientSecret"),
+//                botUrl = properties.getProperty("widgetBotUrl"),
+//                identity = properties.getProperty("widgetIdentity"),
+//                jwtServerUrl = properties.getProperty("widgetJwtServerUrl"),
+//            )
+//        } catch (e: NotFoundException) {
+//            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
+//        } catch (e: IOException) {
+//            Log.e(LOG_TAG, "Failed to open config file.")
+//        }
+//        return null
+//    }
 
     private fun getQueryParams(): HashMap<String, Any> {
         val queryParams = HashMap<String, Any>()
