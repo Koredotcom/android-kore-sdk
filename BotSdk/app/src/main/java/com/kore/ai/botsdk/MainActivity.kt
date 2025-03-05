@@ -19,7 +19,6 @@ import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Locale
-import java.util.Properties
 import java.util.TimeZone
 
 class MainActivity : AppCompatActivity() {
@@ -101,9 +100,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun getWidgetBotConfigModel(): WidgetConfigModel? {
         try {
-            val rawResource = resources.openRawResource(R.raw.config)
-            val properties = Properties()
-            properties.load(rawResource)
             return WidgetConfigModel(
                 botName = "Please enter widget Bot name",
                 botId = "Please enter widget botID",
