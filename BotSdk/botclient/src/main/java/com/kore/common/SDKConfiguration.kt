@@ -27,39 +27,51 @@ object SDKConfiguration {
         var historyInitialCall: Boolean = false
     }
 
+    @JvmStatic
     fun initialize(botConfigModel: BotConfigModel) {
         this.botConfigModel = botConfigModel
     }
 
+    @JvmStatic
     fun getBotConfigModel(): BotConfigModel? = botConfigModel
 
+    @JvmStatic
     fun setLoginToken(token: String) {
         loginToken = token
     }
 
+    @JvmStatic
     fun getLoginToken(): String? = loginToken
 
+    @JvmStatic
     fun setQueryParams(queryParams: HashMap<String, Any>) {
         this.queryParams = queryParams
     }
 
+    @JvmStatic
     fun getQueryParams(): HashMap<String, Any>? = queryParams
 
+    @JvmStatic
     fun setCustomData(customData: HashMap<String, Any>) {
         this.customData = customData
     }
 
+    @JvmStatic
     fun getCustomData(): HashMap<String, Any>? = customData
 
+    @JvmStatic
     fun setBotBrandingConfig(botBrandingModel: BotBrandingModel?) {
         this.botBrandingModel = botBrandingModel
     }
 
+    @JvmStatic
     fun getBotBrandingConfig(): BotBrandingModel? = botBrandingModel
 
+    @JvmStatic
     fun setConnectionMode(connectionMode: String) {
         socketConnectionMode = "&ConnectionMode=$connectionMode"
     }
 
+    @JvmStatic
     fun getConnectionMode(): String? = socketConnectionMode
 }

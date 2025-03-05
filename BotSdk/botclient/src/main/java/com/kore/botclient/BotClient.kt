@@ -68,23 +68,30 @@ class BotClient private constructor() {
         private var instance: BotClient? = null
         private var callEventMessage: HashMap<String, Any>? = null
 
+        @JvmStatic
         fun getJwtToken(): String = userJwtToken.ifEmpty { jwtToken }
 
+        @JvmStatic
         fun getAccessToken(): String = accessToken
 
+        @JvmStatic
         fun getUserId(): String = userId
 
+        @JvmStatic
         fun isConnected(): Boolean = socketConnection.isConnected
 
+        @JvmStatic
         fun getInstance(): BotClient {
             if (instance == null) instance = BotClient()
             return instance!!
         }
 
+        @JvmStatic
         fun setCallEventMessage(callEventMessage: HashMap<String, Any>) {
             this.callEventMessage = callEventMessage
         }
 
+        @JvmStatic
         fun getCallEventMessage(): HashMap<String, Any>? = callEventMessage
     }
 
