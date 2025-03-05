@@ -62,7 +62,7 @@ class BotClient private constructor() {
         private var accessToken = ""
         private var jwtToken = ""
         private var userJwtToken = ""
-        private var userId = ""
+        private var botUserId = ""
         private var connectionState = ConnectionState.DISCONNECTED
         private val socketConnection: IWebSocket = WebSocketConnection()
         private var instance: BotClient? = null
@@ -74,8 +74,9 @@ class BotClient private constructor() {
         @JvmStatic
         fun getAccessToken(): String = accessToken
 
+        @JvmName("getBotUserId")
         @JvmStatic
-        fun getUserId(): String = userId
+        fun getUserId(): String = botUserId
 
         @JvmStatic
         fun isConnected(): Boolean = socketConnection.isConnected
@@ -128,12 +129,12 @@ class BotClient private constructor() {
         }
         jwtToken = ""
         accessToken = ""
-        userId = ""
+        botUserId = ""
         handler.removeCallbacksAndMessages(null)
     }
 
     fun getUserId(): String {
-        return userId
+        return botUserId
     }
 
     fun connectToBot(context: Context, isFirstTime: Boolean, jwtToken: String) {
@@ -252,7 +253,7 @@ class BotClient private constructor() {
                     when (val result = jwtRepository.getJwtGrant(request)) {
                         is Result.Success -> {
                             val botAuthorizationResponse = result.data
-                            userId = botAuthorizationResponse?.userInfo?.userId ?: ""
+                            botUserId = botAuthorizationResponse?.userInfo?.userId ?: ""
                             accessToken = botAuthorizationResponse?.authorization?.accessToken ?: ""
                             listener?.onJwtTokenGenerated(accessToken)
                             if (SDKConfiguration.getBotConfigModel()?.isWebHook == true) {
@@ -341,7 +342,7 @@ class BotClient private constructor() {
                         override fun onClose(code: Int, reason: String?) {
                             accessToken = ""
                             jwtToken = ""
-                            userId = ""
+                            botUserId = ""
 
                             LogUtils.d(LOG_TAG, "Connection Lost...")
                             connectionState = ConnectionState.DISCONNECTED
