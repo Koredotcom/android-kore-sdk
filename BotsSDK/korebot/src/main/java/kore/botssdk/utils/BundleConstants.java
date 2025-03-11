@@ -52,4 +52,5 @@ public class BundleConstants {
     public static final String STOP_TYPING = "stop_typing";
     public static final String TYPING = "typing";
     public static final String CENTER = "center";
+    public static final String FIT_TO_WIDTH = "fitToWidth";
 }

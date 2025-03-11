@@ -24,16 +24,15 @@ import kore.botssdk.viewholders.QuickReplyViewHolder;
 import kore.botssdk.viewUtils.DimensionUtil;
 
 /**
- * Created by Pradeep Mahato on 28/7/17.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHolder> {
 
-    private ArrayList<QuickReplyTemplate> quickReplyTemplateArrayList;
+    ArrayList<QuickReplyTemplate> quickReplyTemplateArrayList;
     final Context context;
-    private final RecyclerView parentRecyclerView;
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    final RecyclerView parentRecyclerView;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int quickWidgetColor;
     private final int fillColor;
     private final int quickReplyFontColor;
@@ -80,7 +79,7 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
 
-                    String quickReplyPayload = null;
+                    String quickReplyPayload;
                     try {
                         quickReplyPayload = (String) quickReplyTemplate.getPayload();
                     }catch (Exception e)

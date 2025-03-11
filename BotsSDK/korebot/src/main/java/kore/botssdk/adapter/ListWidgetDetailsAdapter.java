@@ -1,8 +1,6 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -14,7 +12,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.ContentModel;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
@@ -24,13 +21,13 @@ public class ListWidgetDetailsAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<ContentModel> contentModels;
-    private final SharedPreferences sharedPreferences;
+//    private final SharedPreferences sharedPreferences;
 
     protected ListWidgetDetailsAdapter(Context context, ArrayList<ContentModel> contentModels)
     {
         this.context = context;
         this.contentModels = contentModels;
-        this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+//        this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
     @Override
     public int getCount()
@@ -74,10 +71,10 @@ public class ListWidgetDetailsAdapter extends BaseAdapter
         ContentModel dataObj = (ContentModel) getItem(position);
         holder.tvBtnText.setText(dataObj.getDescription());
 
-        if(sharedPreferences != null)
-        {
-            holder.tvBtnText.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
-        }
+//        if(sharedPreferences != null)
+//        {
+//            holder.tvBtnText.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+//        }
 
         if(holder.ivListBtnIcon != null && !StringUtils.isNullOrEmpty(dataObj.getImage().getImage_src()))
         {
@@ -88,9 +85,9 @@ public class ListWidgetDetailsAdapter extends BaseAdapter
         }
     }
 
-    private class DetailsViewHolder {
-        private TextView tvBtnText;
-        private ImageView ivListBtnIcon;
+    static class DetailsViewHolder {
+        TextView tvBtnText;
+        ImageView ivListBtnIcon;
 
     }
 }

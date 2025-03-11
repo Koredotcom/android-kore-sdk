@@ -1,5 +1,9 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,7 @@ import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotMultiSelectElementModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MultiSelectBase;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 
 public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelectTemplateAdapter.ViewHolder> {
@@ -73,7 +78,7 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
             holder.textView.setTag(item);
             holder.textView.setText(((BotButtonModel) item).getTitle());
             holder.textView.setOnClickListener(v -> {
-                if (composeFooterInterface != null && isEnabled && checkedItems.size() > 0) {
+                if (composeFooterInterface != null && isEnabled && !checkedItems.isEmpty()) {
                     StringBuilder sb = new StringBuilder();
                     StringBuilder sbValue = new StringBuilder();
                     for (MultiSelectBase item1 : checkedItems) {
@@ -127,6 +132,11 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
             } else {
                 textView = itemView.findViewById(R.id.text_view_button);
                 root_layout_btn = itemView.findViewById(R.id.root_layout);
+
+                GradientDrawable gradientDrawable = (GradientDrawable) textView.getBackground();
+                gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                textView.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
             }
 
             KaFontUtils.applyCustomFont(itemView.getContext(), itemView);

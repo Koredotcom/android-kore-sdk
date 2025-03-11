@@ -9,7 +9,7 @@
     <kore.botssdk.view.CustomTextView
         android:id="@+id/text_view_button"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="45dp"
         android:layout_gravity="center_vertical"
         android:background="@drawable/rounded_rectangle_bubble_blue"
         android:ellipsize="end"

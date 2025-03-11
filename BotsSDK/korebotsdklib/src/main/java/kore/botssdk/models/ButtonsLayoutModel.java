@@ -4,6 +4,11 @@ public class ButtonsLayoutModel
 {
     private String buttonAligment;
     private DisplayLimit displayLimit;
+    private String style;
+
+    public String getStyle() {
+        return style;
+    }
 
     public String getButtonAligment() {
         return buttonAligment;

@@ -4,6 +4,7 @@ import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -26,6 +27,7 @@ import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotTableDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 
 public class TableResponsiveTemplateHolder extends BaseViewHolder {
     private final TextView tvShowMore;
@@ -52,6 +54,7 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         List<BotTableDataModel> rows = payloadInner.getTable_elements_data();
         List<List<String>> columns = payloadInner.getColumns();
+        tvShowMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
 
         tvShowMore.setOnClickListener(view -> showTableViewDialog(view.getContext(), columns, rows));
         rvTableView.setAdapter(new TableResponsiveAdapter(itemView.getContext(), rows, columns));

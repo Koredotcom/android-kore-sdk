@@ -69,11 +69,11 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             Color.parseColor("#4A9AF2"), Color.parseColor("#5BC8C4"), Color.parseColor("#e74c3c"), Color.parseColor("#3498db")
     };
     public static final int HOLO_BLUE = Color.rgb(51, 181, 229);
-    private final Context context;
+    final Context context;
     private final String REGEX_CHAR = "%%.*?%%";
-    private final Gson gson = new Gson();
+    final Gson gson = new Gson();
     private boolean isLastItem = true;
-    private LinkifyTextView bubbleText;
+    LinkifyTextView bubbleText;
 
     protected ComposeFooterInterface composeFooterInterface;
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -175,7 +175,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         return compModel;
     }
 
-    private String getRemovedEntityEditString(String _str) {
+    String getRemovedEntityEditString(String _str) {
         String str = _str.replaceAll(REGEX_CHAR, "");
         str = str.replaceAll("\\s{2,}", " ");
         return str;

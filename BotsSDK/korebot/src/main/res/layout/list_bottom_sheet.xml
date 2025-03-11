@@ -41,9 +41,9 @@
             android:id="@+id/llTabHeader"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:padding="@dimen/dimen_12dp"
-            android:baselineAligned="false">
+            android:padding="@dimen/dimen_12dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,9 +54,9 @@
 
                 <kore.botssdk.view.CustomTextView
                     android:id="@+id/tvTab1"
-                    android:layout_width="@dimen/carousel_view_button_height_individual"
+                    android:layout_width="60dp"
                     android:layout_height="30dp"
-                    android:background="@drawable/bottom_sheet_button_bg"
+                    android:background="@drawable/theme_1_button_bg"
                     android:gravity="center"
                     android:text="@string/tab1"
                     android:textColor="@color/white"
@@ -74,9 +74,9 @@
 
                 <kore.botssdk.view.CustomTextView
                     android:id="@+id/tvTab2"
-                    android:layout_width="@dimen/carousel_view_button_height_individual"
+                    android:layout_width="60dp"
                     android:layout_height="@dimen/dimen_30dp"
-                    android:background="@drawable/calender_view_background"
+                    android:background="@drawable/theme_1_button_bg"
                     android:gravity="center"
                     android:text="@string/tab2" />
 
@@ -88,10 +88,10 @@
             android:id="@+id/rvMoreData"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
             android:layout_marginLeft="@dimen/dimen_10dp"
             android:layout_marginRight="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_10dp"
+            android:nestedScrollingEnabled="false"
             android:visibility="gone" />
 
         <kore.botssdk.view.AutoExpandListView

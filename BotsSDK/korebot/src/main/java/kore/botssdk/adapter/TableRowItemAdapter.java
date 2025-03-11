@@ -16,8 +16,8 @@ import java.util.List;
 import kore.botssdk.R;
 
 public class TableRowItemAdapter extends RecyclerView.Adapter<TableRowItemAdapter.ViewHolder> {
-    private final String RIGHT = "right";
-    private final String CENTER = "center";
+    final String RIGHT = "right";
+    final String LEFT = "left";
     private final List<String> rowItems;
     private final List<List<String>> headers;
     private final LayoutInflater layoutInflater;
@@ -41,12 +41,12 @@ public class TableRowItemAdapter extends RecyclerView.Adapter<TableRowItemAdapte
         List<String> cols = headers.get(position);
 
         holder.value.setText((CharSequence) rowItem);
-        holder.value.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+        holder.value.setGravity(Gravity.CENTER);
 
         if (cols.size() > 1) {
             switch (cols.get(1)) {
-                case CENTER:
-                    holder.value.setGravity(Gravity.CENTER);
+                case LEFT:
+                    holder.value.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
                     break;
                 case RIGHT:
                     holder.value.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);

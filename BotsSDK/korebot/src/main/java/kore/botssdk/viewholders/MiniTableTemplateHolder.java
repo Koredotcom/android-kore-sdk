@@ -34,6 +34,7 @@ public class MiniTableTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         recyclerView.setAdapter(adapter);
         adapter.populateData(payloadInner.getMiniTableDataModels(), isLastItem());
     }

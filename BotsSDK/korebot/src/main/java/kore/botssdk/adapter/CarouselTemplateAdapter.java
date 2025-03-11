@@ -1,8 +1,10 @@
 package kore.botssdk.adapter;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -33,6 +35,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCarouselModel;
 import kore.botssdk.models.BotListDefaultModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
@@ -65,14 +68,14 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
         if (!StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
             holder.carouselItemSubTitle.setText(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? botCarouselModel.getSubtitle() : Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
             holder.carouselItemSubTitle.setMaxLines(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? Integer.MAX_VALUE : 3);
-            holder.carouselItemSubTitle.setVisibility(View.VISIBLE);
+            holder.carouselItemSubTitle.setVisibility(VISIBLE);
         } else {
             holder.carouselItemSubTitle.setVisibility(GONE);
         }
         try {
             if (botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty()) {
                 Picasso.get().load(botCarouselModel.getImage_url()).into(holder.carouselItemImage);
-                holder.carouselItemImage.setVisibility(View.VISIBLE);
+                holder.carouselItemImage.setVisibility(VISIBLE);
             } else {
                 holder.carouselItemImage.setVisibility(GONE);
             }
@@ -100,30 +103,59 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
         StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
 
         // Apply the strike through text to the span
-        ssBuilder.setSpan(
-                strikethroughSpan, // Span to add
+        ssBuilder.setSpan(strikethroughSpan, // Span to add
                 text.indexOf(price), // Start of the span (inclusive)
                 text.indexOf(price) + price.length(), // End of the span (exclusive)
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE // Do not extend the span when text add later
         );
 
         if (!Utils.isNullOrEmpty(botCarouselModel.getPrice()) || !Utils.isNullOrEmpty(botCarouselModel.getCost_price())) {
-            holder.carouselOfferPrice_FL.setVisibility(View.VISIBLE);
-            if (!Utils.isNullOrEmpty(botCarouselModel.getCost_price()))
-                holder.carousel_item_offer.setText(ssBuilder);
-            else
-                holder.carousel_item_offer.setText(text);
+            holder.carouselOfferPrice_FL.setVisibility(VISIBLE);
+            if (!Utils.isNullOrEmpty(botCarouselModel.getCost_price())) holder.carousel_item_offer.setText(ssBuilder);
+            else holder.carousel_item_offer.setText(text);
         } else {
             holder.carouselOfferPrice_FL.setVisibility(View.GONE);
         }
 
         if (!Utils.isNullOrEmpty(botCarouselModel.getSaved_price())) {
-            holder.carouselSavedPrice_FL.setVisibility(View.VISIBLE);
+            holder.carouselSavedPrice_FL.setVisibility(VISIBLE);
             holder.carousel_item_save_price.setText(botCarouselModel.getSaved_price());
         } else {
             holder.carouselSavedPrice_FL.setVisibility(View.GONE);
         }
 
+        BotListDefaultModel botDefaultModel = botCarouselModel.getDefault_action();
+        if (botDefaultModel != null) {
+            holder.carouselItemDefaultAction.setVisibility(VISIBLE);
+            holder.carouselItemDefaultAction.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+
+            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botDefaultModel.getType())) {
+                holder.carouselItemDefaultAction.setText(botDefaultModel.getUrl());
+            } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botDefaultModel.getType())) {
+                holder.carouselItemDefaultAction.setText(botCarouselModel.getDefault_action().getPayload());
+            } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botDefaultModel.getType())) {
+                holder.carouselItemDefaultAction.setText(botCarouselModel.getDefault_action().getPayload());
+            }
+        }
+
+        holder.carouselItemDefaultAction.setOnClickListener(v -> {
+            BotListDefaultModel botListDefaultModel = botCarouselModel.getDefault_action();
+            if (invokeGenericWebViewInterface != null && botListDefaultModel != null) {
+                if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(botListDefaultModel.getUrl());
+                } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    invokeGenericWebViewInterface.handleUserActions(botListDefaultModel.getAction(), botListDefaultModel.getCustomData());
+                }
+            } else if (isEnabled && composeFooterInterface != null && botListDefaultModel != null) {
+                if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                    composeFooterInterface.onSendClick(buttonPayload, false);
+                } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                    composeFooterInterface.onSendClick(buttonPayload, false);
+                }
+            }
+        });
         holder.carouselItemRoot.setOnClickListener(v -> {
             BotListDefaultModel botListDefaultModel = botCarouselModel.getDefault_action();
             if (invokeGenericWebViewInterface != null && botListDefaultModel != null) {
@@ -171,19 +203,20 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView carouselItemImage;
-        public TextView carouselItemTitle;
-        public TextView carouselItemSubTitle;
-        public TextView hashTagsView;
-        public TextView knowledgeType;
-        public TextView knowledgeMode;
-        public RelativeLayout koraItems;
-        public RecyclerView buttons;
-        public CardView carouselItemRoot;
-        public FrameLayout carouselOfferPrice_FL;
-        public FrameLayout carouselSavedPrice_FL;
-        public TextView carousel_item_offer;
-        public TextView carousel_item_save_price;
+        ImageView carouselItemImage;
+        TextView carouselItemTitle;
+        TextView carouselItemSubTitle;
+        TextView carouselItemDefaultAction;
+        TextView hashTagsView;
+        TextView knowledgeType;
+        TextView knowledgeMode;
+        RelativeLayout koraItems;
+        RecyclerView buttons;
+        CardView carouselItemRoot;
+        FrameLayout carouselOfferPrice_FL;
+        FrameLayout carouselSavedPrice_FL;
+        TextView carousel_item_offer;
+        TextView carousel_item_save_price;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -191,6 +224,7 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             carouselItemImage = itemView.findViewById(R.id.carousel_item_image);
             carouselItemTitle = itemView.findViewById(R.id.carousel_item_title);
             carouselItemSubTitle = itemView.findViewById(R.id.carousel_item_subtitle);
+            carouselItemDefaultAction = itemView.findViewById(R.id.carousel_item_default_action);
             buttons = itemView.findViewById(R.id.carousel_button_listview);
             hashTagsView = itemView.findViewById(R.id.hash_tags_view);
             knowledgeType = itemView.findViewById(R.id.knowledge_type);

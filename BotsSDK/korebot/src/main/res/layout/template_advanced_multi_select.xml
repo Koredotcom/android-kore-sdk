@@ -27,7 +27,7 @@
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:text="@string/view_more"
-        android:textColor="@color/right_bubble_unselected"
+        android:textColor="@color/txtFontBlack"
         android:visibility="gone" />
 
     <kore.botssdk.view.CustomTextViewBold
@@ -35,8 +35,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_10dp"
-        android:background="@drawable/button_drawable"
+        android:background="@drawable/theme_1_button_bg"
         android:gravity="center"
+        android:padding="@dimen/dimen_10dp"
         android:text="@string/done"
         android:textColor="@color/white"
         android:visibility="gone" />
