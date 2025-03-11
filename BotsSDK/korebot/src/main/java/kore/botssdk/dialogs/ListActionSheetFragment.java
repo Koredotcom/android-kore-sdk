@@ -1,9 +1,12 @@
 package kore.botssdk.dialogs;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
@@ -30,6 +34,7 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.viewUtils.DimensionUtil;
 
 public class ListActionSheetFragment extends BottomSheetDialogFragment {
@@ -77,6 +82,19 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         } else {
             botListTemplateAdapter = (BotListViewTemplateAdapter) lvMoreData.getAdapter();
         }
+
+        tvTab1.setText(ContextCompat.getString(requireActivity(), R.string.tab1));
+        GradientDrawable gDrawable = (GradientDrawable) tvTab1.getBackground();
+        gDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        gDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        tvTab1.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+
+        tvTab2.setText(ContextCompat.getString(requireActivity(), R.string.tab2));
+        GradientDrawable ungDrawable = (GradientDrawable) tvTab2.getBackground();
+        ungDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
+        ungDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
+        tvTab2.setTextColor(ContextCompat.getColor(requireActivity(), R.color.txtFontBlack));
+
         botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
         botListTemplateAdapter.notifyDataSetChanged();
 
@@ -85,21 +103,34 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
             llTabHeader.setVisibility(View.GONE);
 
         tvTab1.setOnClickListener(v -> {
-            tvTab1.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.bottom_sheet_button_bg, requireActivity().getTheme()));
-            tvTab1.setTextColor(requireActivity().getColor(R.color.white));
+            tvTab1.setText(ContextCompat.getString(requireActivity(), R.string.tab1));
+            GradientDrawable gradientDrawable = (GradientDrawable) tvTab1.getBackground();
+            gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            tvTab1.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
-            tvTab2.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.calender_view_background, requireActivity().getTheme()));
-            tvTab2.setTextColor(requireActivity().getColor(R.color.footer_color_dark_grey));
+            tvTab2.setText(ContextCompat.getString(requireActivity(), R.string.tab2));
+            GradientDrawable unGradientDrawable = (GradientDrawable) tvTab2.getBackground();
+            unGradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
+            unGradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
+            tvTab2.setTextColor(ContextCompat.getColor(requireActivity(), R.color.txtFontBlack));
 
             botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
         });
 
         tvTab2.setOnClickListener(v -> {
-            tvTab2.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.bottom_sheet_button_bg, requireActivity().getTheme()));
-            tvTab2.setTextColor(requireActivity().getColor(R.color.white));
+            tvTab2.setText(ContextCompat.getString(requireActivity(), R.string.tab2));
+            GradientDrawable gradientDrawable = (GradientDrawable) tvTab2.getBackground();
+            gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            tvTab2.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
-            tvTab1.setBackground(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.calender_view_background, requireActivity().getTheme()));
-            tvTab1.setTextColor(requireActivity().getColor(R.color.footer_color_dark_grey));
+
+            tvTab1.setText(ContextCompat.getString(requireActivity(), R.string.tab1));
+            GradientDrawable unGradientDrawable = (GradientDrawable) tvTab1.getBackground();
+            unGradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
+            unGradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
+            tvTab1.setTextColor(ContextCompat.getColor(requireActivity(), R.color.txtFontBlack));
 
             botListTemplateAdapter.setBotListModelArrayList(model.getTab2());
         });

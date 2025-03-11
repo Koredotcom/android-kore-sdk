@@ -21,8 +21,9 @@
             <ImageView
                 android:id="@+id/carousel_item_image"
                 android:layout_width="match_parent"
-                android:layout_height="125dp"
+                android:layout_height="225dp"
                 android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 android:src="@mipmap/imageplaceholder_left" />
 
             <FrameLayout
@@ -76,22 +77,20 @@
                     android:visibility="visible" />
             </FrameLayout>
 
-            <kore.botssdk.view.CustomTextView
+            <kore.botssdk.view.CustomTextViewBold
                 android:id="@+id/carousel_item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/carousel_item_image"
                 android:layout_gravity="top"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:ellipsize="end"
-                android:gravity="center_horizontal"
                 android:maxLines="2"
-                android:paddingLeft="7dp"
-                android:paddingTop="10dp"
-                android:paddingRight="7dp"
-                android:paddingBottom="5dp"
                 android:tag="regular"
                 android:textColor="@color/color_1a1a1a"
-                android:textSize="15sp"
+                android:textSize="@dimen/text_size_sub_header"
                 android:textStyle="normal" />
 
             <kore.botssdk.view.CustomTextView
@@ -100,15 +99,32 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/carousel_item_title"
                 android:layout_gravity="top"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
                 android:ellipsize="end"
-                android:gravity="center_horizontal"
                 android:maxLines="3"
-                android:paddingLeft="7dp"
-                android:paddingRight="7dp"
                 android:tag="regular"
-                android:textColor="@color/color_8b93a0"
+                android:textColor="@color/txtFontBlack"
                 android:textSize="14sp"
                 android:textStyle="normal" />
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/carousel_item_default_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/carousel_item_subtitle"
+                android:layout_gravity="top"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginEnd="@dimen/dimen_10dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:tag="regular"
+                android:textColor="@color/txtFontBlack"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                android:visibility="gone" />
 
         </RelativeLayout>
 
@@ -142,7 +158,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/hash_tags_view"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:ellipsize="end"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
@@ -158,8 +174,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/hash_tags_view"
-                android:layout_alignParentRight="true"
-                android:layout_toLeftOf="@+id/knowledge_type"
+                android:layout_alignParentEnd="true"
+                android:layout_toStartOf="@+id/knowledge_type"
                 android:ellipsize="end"
                 android:paddingLeft="10dp"
                 android:paddingTop="5dp"
@@ -181,7 +197,7 @@
             android:id="@+id/carousel_button_listview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:layout_marginTop="6dp" />
+            android:layout_marginTop="6dp"
+            android:nestedScrollingEnabled="false" />
     </LinearLayout>
 </androidx.cardview.widget.CardView>

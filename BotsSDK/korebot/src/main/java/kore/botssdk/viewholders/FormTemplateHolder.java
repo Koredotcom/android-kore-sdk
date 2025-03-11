@@ -22,15 +22,17 @@ import kore.botssdk.adapter.FormTemplateAdapter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.ToastUtils;
 
 public class FormTemplateHolder extends BaseViewHolder {
     private final RecyclerView recyclerView;
     private final TextView tvFormTemplateTitle;
     private final TextView btFieldButton;
     private final String leftTextColor;
-    private final LinearLayout llFormRoot;
+    final LinearLayout llFormRoot;
 
     public static FormTemplateHolder getInstance(ViewGroup parent) {
         return new FormTemplateHolder(createView(R.layout.template_form, parent));
@@ -45,6 +47,11 @@ public class FormTemplateHolder extends BaseViewHolder {
         KaFontUtils.applyCustomFont(itemView.getContext(), itemView);
         tvFormTemplateTitle = itemView.findViewById(R.id.tvform_template_title);
         btFieldButton = itemView.findViewById(R.id.btfieldButton);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) btFieldButton.getBackground();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        btFieldButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");
@@ -87,7 +94,11 @@ public class FormTemplateHolder extends BaseViewHolder {
                     EditText et = view.findViewById(R.id.edtFormInput);
                     sb.append(et.getText().toString());
                 }
-                composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(), false);
+
+                if (StringUtils.isNotEmpty(sb.toString()))
+                    composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(), false);
+                else
+                    ToastUtils.showToast(context, "Text should not be empty.");
             }
         });
     }

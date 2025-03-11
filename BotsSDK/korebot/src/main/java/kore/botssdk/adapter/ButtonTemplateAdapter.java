@@ -38,14 +38,10 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
-//        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
         textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
-//        disabledTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
 
         splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
-//        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
         textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
-//        disabledTextColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, disabledTextColor);
     }
 
     @NonNull
@@ -59,7 +55,8 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
         BotButtonModel buttonTemplate = getItem(position);
         if (buttonTemplate == null) return;
         ((GradientDrawable) holder.button.getBackground()).setStroke((int) (2 * dp1), Color.parseColor(splashColour));
-        holder.button.setTextColor(Color.parseColor(splashColour));
+        ((GradientDrawable) holder.button.getBackground()).setColor(Color.parseColor(splashColour));
+        holder.button.setTextColor(Color.parseColor(textColor));
         holder.button.setText(buttonTemplate.getTitle());
 
         holder.button.setOnClickListener(v -> {

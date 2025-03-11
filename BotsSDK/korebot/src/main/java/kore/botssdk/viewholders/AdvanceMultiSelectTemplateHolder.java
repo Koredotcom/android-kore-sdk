@@ -3,6 +3,10 @@ package kore.botssdk.viewholders;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -22,6 +26,7 @@ import kore.botssdk.models.AdvancedMultiSelectModel;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 
 @SuppressWarnings("UnKnownNullness")
 public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements AdvanceMultiSelectListener {
@@ -53,6 +58,11 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
         TextView tvViewMore = itemView.findViewById(R.id.tvViewMore);
         TextView tvAdvanceDone = itemView.findViewById(R.id.tvAdvanceDone);
         ArrayList<AdvancedMultiSelectModel> models = payloadInner.getAdvancedMultiSelectModels();
+
+        GradientDrawable gradientDrawable = (GradientDrawable) tvAdvanceDone.getBackground();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        tvAdvanceDone.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
         if (models != null && !models.isEmpty()) {
             multiSelectLayout.setVisibility(VISIBLE);

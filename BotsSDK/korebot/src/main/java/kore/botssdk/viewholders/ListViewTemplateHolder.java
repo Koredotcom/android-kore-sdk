@@ -29,6 +29,7 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.LogUtils;
 
 public class ListViewTemplateHolder extends BaseViewHolder {
@@ -72,6 +73,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
             if (isLastItem()) botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             if (botButtonModelArrayList != null && !botButtonModelArrayList.isEmpty()) {
+                botCustomListViewButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
                 botCustomListViewButton.setText(Html.fromHtml("<u>" + botButtonModelArrayList.get(0).getTitle() + "</u>"));
                 botCustomListViewButton.setOnClickListener(v -> {
                     ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();

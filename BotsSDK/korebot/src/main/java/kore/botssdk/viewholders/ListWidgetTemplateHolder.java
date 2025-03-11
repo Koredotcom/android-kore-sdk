@@ -111,16 +111,16 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
             widgetHeader.setVisibility(VISIBLE);
             widgetHeader.setText(payloadInner.getTitle());
 
-            if (sharedPreferences != null)
-                widgetHeader.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+//            if (sharedPreferences != null)
+//                widgetHeader.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
         }
 
         if (!StringUtils.isNullOrEmpty(payloadInner.getDescription())) {
             meetingDesc.setVisibility(VISIBLE);
             meetingDesc.setText(payloadInner.getDescription());
 
-            if (sharedPreferences != null)
-                meetingDesc.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
+//            if (sharedPreferences != null)
+//                meetingDesc.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
         }
 
         if (payloadInner.getHeaderOptions() != null && payloadInner.getHeaderOptions() instanceof HeaderOptionsModel && ((HeaderOptionsModel) payloadInner.getHeaderOptions()).getType() != null) {

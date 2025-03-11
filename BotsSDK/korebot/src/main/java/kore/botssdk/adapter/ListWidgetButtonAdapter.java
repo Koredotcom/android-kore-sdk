@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.Widget;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 
 public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder> {
@@ -42,8 +44,9 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     private String skillName;
     private final String trigger;
     private BottomSheetDialog bottomSheetDialog;
-
+    int displayLimit = -1;
     private boolean isEnabled = true;
+    private int type;
 
     public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String trigger) {
         this.buttons = buttons;
@@ -55,6 +58,9 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     @NonNull
     @Override
     public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        if (type == 1) {
+            return new ButtonViewHolder(inflater.inflate(R.layout.advance_button_fullwidth, viewGroup, false));
+        }
         return new ButtonViewHolder(inflater.inflate(R.layout.widget_button_list_item, viewGroup, false));
     }
 
@@ -63,6 +69,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
 
         Widget.Button btn = buttons.get(i);
         holder.tv.setText(btn.getTitle());
+        holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
 
         holder.tv.setOnClickListener(v -> {
             if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
@@ -71,6 +78,13 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
                 composeFooterInterface.onSendClick(btn.getPayload(), true);
             }
         });
+    }
+
+    public void setDisplayLimit(int displayLimit) {
+        this.displayLimit = displayLimit;
+    }
+    public void setType(int type) {
+        this.type = type;
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -91,14 +105,11 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
 
     @Override
     public int getItemCount() {
-        return buttons != null ? buttons.size() : 0;
-        /*if(buttons != null){
-            if(buttons.size()<3)
-                buttons.size();
-            else return 3;
+        if (buttons != null) {
+            return (displayLimit > -1 && buttons.size() > displayLimit ) ? displayLimit : buttons.size();
         }
-            return 0;
-*/
+
+        return 0;
     }
 
     boolean isFullView;
@@ -108,14 +119,11 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     }
 
     public class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tv;
-//        private LinearLayout ll;
+        final TextView tv;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
             tv = itemView.findViewById(R.id.buttonTV);
-//            ll = itemView.findViewById(R.id.buttonsLayout);
-
         }
     }
 
@@ -133,8 +141,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         StringBuffer msg = new StringBuffer();
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("refresh", Boolean.TRUE);
-        if (appendUtterance && trigger != null)
-            msg = msg.append(trigger).append(" ");
+        if (appendUtterance && trigger != null) msg = msg.append(trigger).append(" ");
         msg.append(utterance);
         event.setMessage(msg.toString());
         event.setPayLoad(new Gson().toJson(hashMap));
@@ -177,11 +184,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         try {
             Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
             intent.setData(Uri.parse(url));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NO_HISTORY
-                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
             context.startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
@@ -192,8 +195,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         boolean shouldShowRequestPermissionRationale = true;
         int permissionLength = permission.length;
         for (int i = 0; i < permissionLength; i++) {
-            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                    ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
+            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale && ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
         }
         return shouldShowRequestPermissionRationale;
     }

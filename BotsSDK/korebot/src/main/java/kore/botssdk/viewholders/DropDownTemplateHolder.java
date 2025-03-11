@@ -1,6 +1,10 @@
 package kore.botssdk.viewholders;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +24,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.DropDownElementsModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 
 public class DropDownTemplateHolder extends BaseViewHolder {
     private final TextView tvDropDownTitle;
@@ -38,6 +43,11 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         tvDropDownTitle = itemView.findViewById(R.id.tvDropDownTitle);
         tvSubmit = itemView.findViewById(R.id.submit);
         spinner = itemView.findViewById(R.id.spinner);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) tvSubmit.getBackground();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        tvSubmit.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
     }
 
     @Override

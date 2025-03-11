@@ -1,6 +1,10 @@
 
 package kore.botssdk.viewholders;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -18,6 +22,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.RadioOptionModel;
+import kore.botssdk.net.SDKConfiguration;
 
 public class RadioOptionsTemplateHolder extends BaseViewHolder {
     private final TextView title;
@@ -33,6 +38,11 @@ public class RadioOptionsTemplateHolder extends BaseViewHolder {
         title = itemView.findViewById(R.id.title);
         list = itemView.findViewById(R.id.list);
         confirm = itemView.findViewById(R.id.confirm);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) confirm.getBackground();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        confirm.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
     }
 
     @Override

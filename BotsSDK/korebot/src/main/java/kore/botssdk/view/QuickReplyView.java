@@ -56,7 +56,6 @@ public class QuickReplyView extends ViewGroup {
                 (int) getResources().getDimension(R.dimen.quick_reply_recycler_layout_padding_bottom));
         recyclerView.setClipToPadding(false);
         staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.HORIZONTAL);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         addView(recyclerView);
@@ -78,7 +77,6 @@ public class QuickReplyView extends ViewGroup {
             }
 
             quickRepliesAdapter = (QuickRepliesAdapter) recyclerView.getAdapter();
-
             quickRepliesAdapter.setQuickReplyTemplateArrayList(quickReplyTemplates);
             quickRepliesAdapter.notifyDataSetChanged();
             listViewHeight = (((quickReplyTemplates.size()/2) + (quickReplyTemplates.size()%2)) * (int) getResources().getDimension(R.dimen.quick_reply_layout_height));

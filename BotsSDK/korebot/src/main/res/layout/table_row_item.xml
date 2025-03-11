@@ -4,10 +4,7 @@
     android:id="@+id/tvTableValue"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dimen_40dp"
-    android:layout_marginStart="@dimen/dimen_5dp"
-    android:layout_marginEnd="@dimen/dimen_5dp"
     android:gravity="center_vertical"
     android:singleLine="true"
-    android:text="@string/app_name"
     android:textIsSelectable="true"
     tools:ignore="MissingClass" />

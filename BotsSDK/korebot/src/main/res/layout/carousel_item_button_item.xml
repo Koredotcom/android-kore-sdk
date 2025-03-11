@@ -2,18 +2,23 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/carousel_view_button_height"
+    android:layout_marginStart="@dimen/dimen_10dp"
+    android:layout_marginTop="@dimen/dimen_5dp"
+    android:layout_marginEnd="@dimen/dimen_10dp"
+    android:layout_marginBottom="@dimen/dimen_5dp"
     android:descendantFocusability="blocksDescendants">
 
-    <Button
+    <kore.botssdk.view.CustomTextViewSemiBold
         android:id="@+id/bot_carousel_item_button"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:background="@color/colorPrimaryDark"
+        android:background="@drawable/theme_1_button_bg"
         android:clickable="false"
         android:ellipsize="end"
         android:focusable="false"
         android:focusableInTouchMode="false"
+        android:gravity="center"
         android:maxLines="1"
         android:tag="medium"
         android:text="Button"

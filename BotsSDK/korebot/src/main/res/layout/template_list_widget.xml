@@ -16,7 +16,7 @@
         android:id="@+id/botCustomListRoot"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/theme_1_button_bg"
+        android:background="@drawable/rectangle_4dpradius"
         android:orientation="vertical"
         android:paddingTop="4dp"
         android:paddingBottom="4dp">

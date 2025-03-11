@@ -4,9 +4,12 @@ import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,6 +29,7 @@ import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotTableDataModel;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 
 public class TableResponsiveTemplateHolder extends BaseViewHolder {
     private final TextView tvShowMore;
@@ -52,6 +56,7 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
         List<BotTableDataModel> rows = payloadInner.getTable_elements_data();
         List<List<String>> columns = payloadInner.getColumns();
+        tvShowMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
 
         tvShowMore.setOnClickListener(view -> showTableViewDialog(view.getContext(), columns, rows));
         rvTableView.setAdapter(new TableResponsiveAdapter(itemView.getContext(), rows, columns));
@@ -62,6 +67,7 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         dialog.setContentView(R.layout.table_dialog_view);
         RecyclerView rvTableView = dialog.findViewById(R.id.rvTableView);
         RecyclerView rvTableViewHeader = dialog.findViewById(R.id.rvTableViewHeader);
+        RelativeLayout rlRootView = dialog.findViewById(R.id.rlRootView);
         ImageView ivCancel = dialog.findViewById(R.id.ivCancel);
 
         ivCancel.setOnClickListener(view -> dialog.dismiss());
@@ -72,6 +78,13 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         for (BotTableDataModel model : values) {
             rowValues.add(model.getValues());
         }
+
+        GradientDrawable gradientDrawable = (GradientDrawable) rvTableViewHeader.getBackground();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+
+        GradientDrawable gradientDDrawable = (GradientDrawable) rlRootView.getBackground();
+        gradientDDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+
         rvTableView.setAdapter(new TableRowAdapter(context, rowValues, cols, isLastItem()));
         rvTableViewHeader.setLayoutManager(new GridLayoutManager(context, cols.size()));
         rvTableViewHeader.setAdapter(new TableHeaderAdapter(context, cols, isLastItem()));
