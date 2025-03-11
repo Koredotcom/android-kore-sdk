@@ -5,10 +5,8 @@ import static android.Manifest.permission.POST_NOTIFICATIONS;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -20,11 +18,8 @@ import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.NewBotChatActivity;
@@ -60,28 +55,28 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = getConfigValue("clientId");
+        String clientId = "PLEASE_ENTER_CLIENT_ID";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = getConfigValue("clientSecret");
+        String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
         //Set botId, This value is mandatory
-        String botId = getConfigValue("botId");
+        String botId = "PLEASE_ENTER_BOT_ID";
 
         //Set identity, This value is mandatory
-        String identity = getConfigValue("identity");
+        String identity = "PLEASE_ENTER_IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = getConfigValue("botName");
+        String botName = "PLEASE_ENTER_BOT_NAME";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = getConfigValue("serverUrl");
+        String serverUrl = "PLEASE_ENTER_SERVER_URL";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = getConfigValue("brandingUrl");
+        String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = getConfigValue("jwtServerUrl");
+        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -181,27 +176,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public String getConfigValue(String name) {
-        try {
-            InputStream rawResource = getResources().openRawResource(R.raw.config);
-            Properties properties = new Properties();
-            properties.load(rawResource);
-            return properties.getProperty(name);
-        } catch (Resources.NotFoundException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
-        }
-
-        return null;
-    }
-
     private BrandingModel getLocalBrandingModel()
     {
         BrandingModel brandingModel = new BrandingModel();
         brandingModel.setBotchatBgColor("#F3F5F8");
         brandingModel.setBotchatTextColor("#202124");
-        brandingModel.setButtonActiveBgColor("#14568D");
+        brandingModel.setButtonActiveBgColor("#0D6EFD");
         brandingModel.setButtonActiveTextColor("#ffffff");
         brandingModel.setButtonInactiveBgColor("#0659d2");
         brandingModel.setButtonInactiveTextColor("#ffffff");
