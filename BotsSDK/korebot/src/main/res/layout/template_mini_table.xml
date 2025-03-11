@@ -13,6 +13,8 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:nestedScrollingEnabled="false"
+        android:paddingStart="1dp"
+        android:paddingEnd="10dp"
         android:layout_height="wrap_content"
         android:clipToPadding="false" />
 </androidx.appcompat.widget.LinearLayoutCompat>

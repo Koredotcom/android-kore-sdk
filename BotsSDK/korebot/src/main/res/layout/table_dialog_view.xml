@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/round_rect"
+    android:background="@color/white"
     android:padding="@dimen/dimen_10dp">
 
     <ImageView
@@ -14,18 +14,27 @@
         android:layout_marginBottom="@dimen/dimen_15dp"
         android:src="@drawable/cancel_widget" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTableViewHeader"
+    <RelativeLayout
+        android:id="@+id/rlRootView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"
         android:layout_below="@+id/ivCancel"
-        android:background="@drawable/round_rect_table_header" />
+        android:background="@drawable/round_rect">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTableView"
-        android:layout_width="match_parent"
-        android:nestedScrollingEnabled="false"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rvTableViewHeader" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTableViewHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/round_rect_table_header"
+            android:nestedScrollingEnabled="false" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTableView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rvTableViewHeader"
+            android:nestedScrollingEnabled="false" />
+
+    </RelativeLayout>
+
 </RelativeLayout>
