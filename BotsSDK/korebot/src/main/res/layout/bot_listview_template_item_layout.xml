@@ -34,7 +34,7 @@
             android:clickable="false"
             android:ellipsize="end"
             android:maxLines="2"
-            android:textColor="@color/left_bubble_text_color"
+            android:textColor="@color/txtFontBlack"
             android:textSize="14sp" />
 
         <kore.botssdk.view.CustomTextView
@@ -46,7 +46,7 @@
             android:maxLines="1"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:textColor="@color/footer_color_dark_grey"
+            android:textColor="@color/gray_modern"
             android:textSize="12sp"
             android:visibility="gone" />
 

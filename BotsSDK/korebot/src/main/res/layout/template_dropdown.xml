@@ -50,9 +50,8 @@
         <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/submit"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/carousel_view_button_height"
             android:layout_marginTop="20dp"
-            android:padding="@dimen/dimen_10dp"
             android:background="@drawable/theme_1_button_bg"
             android:gravity="center"
             android:text="@string/submit"

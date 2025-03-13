@@ -45,7 +45,7 @@ public class ListTemplateHolder extends BaseViewHolder {
         recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int) (1*dp1)));
         ListTemplateAdapter botListTemplateAdapter;
-        botListTemplateAdapter = new ListTemplateAdapter(listElements, isLastItem());
+        botListTemplateAdapter = new ListTemplateAdapter(itemView.getContext(), listElements, isLastItem());
         recyclerView.setAdapter(botListTemplateAdapter);
         botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

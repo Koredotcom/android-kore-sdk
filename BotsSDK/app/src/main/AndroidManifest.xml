@@ -22,6 +22,7 @@
         </activity>
         <activity android:name="kore.botssdk.activity.BotChatActivity" />
         <activity android:name="kore.botssdk.activity.GenericWebViewActivity" />
+        <activity android:name=".FragmentActivity" />
 
     </application>
 
