@@ -1,31 +1,29 @@
 package com.kore.korebot;
 
 import android.annotation.SuppressLint;
-import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import kore.botssdk.fragment.botchat.BotChatFragment;
+import kore.botssdk.listener.ActivityCloseListener;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.LangUtils;
+import kore.botssdk.utils.NetworkUtility;
 
-public class FragmentActivity extends AppCompatActivity {
+public class FragmentActivity extends AppCompatActivity implements ActivityCloseListener {
     BotChatFragment botChatFragment;
 
     @Override
@@ -101,7 +99,10 @@ public class FragmentActivity extends AppCompatActivity {
         SDKConfig.setIsShowHeader(true);
 
         //Set local branding model by overriding the branding api response
-        SDKConfig.setLocalBranding(true, getLocalBrandingModel());
+        SDKConfig.setLocalBranding(false, getLocalBrandingModel());
+
+        //Method to reset the bot connection and start a new session by overriding the previous state
+        // SDKConfig.disconnectBotSession(FragmentActivity.this);
 
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
@@ -111,6 +112,16 @@ public class FragmentActivity extends AppCompatActivity {
         //Add Bot Content Fragment
         botChatFragment = new BotChatFragment();
         fragmentTransaction.add(R.id.flChatBot, botChatFragment).commit();
+
+        botChatFragment.setActivityCloseListener(FragmentActivity.this);
+
+        this.getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            public void handleOnBackPressed() {
+                if (NetworkUtility.isNetworkConnectionAvailable(FragmentActivity.this)) {
+                    botChatFragment.showCloseAlert();
+                }
+            }
+        });
     }
 
     @SuppressLint("UnknownNullness")
@@ -156,5 +167,11 @@ public class FragmentActivity extends AppCompatActivity {
         brandingModel.setBotName("Bot Name");
         brandingModel.setChatBubbleStyle("square");
         return brandingModel;
+    }
+
+    @Override
+    public void onFragmentClosed() {
+        //Customize the call back as per the requirement
+        finish();
     }
 }

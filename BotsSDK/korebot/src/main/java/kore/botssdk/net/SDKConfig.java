@@ -1,5 +1,7 @@
 package kore.botssdk.net;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -9,7 +11,10 @@ import java.util.HashMap;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.header.BaseHeaderFragment;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.BundleUtils;
 
 public class SDKConfig {
     private static BaseContentFragment customContentFragment = null;
@@ -98,5 +103,13 @@ public class SDKConfig {
 
     public static void setCustomData(RestResponse.BotCustomData customData) {
         SDKConfiguration.Server.customData = customData;
+    }
+
+    public static void disconnectBotSession(@NonNull Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("IS_RECONNECT", false);
+        editor.putInt("HISTORY_COUNT", 0);
+        editor.apply();
     }
 }
