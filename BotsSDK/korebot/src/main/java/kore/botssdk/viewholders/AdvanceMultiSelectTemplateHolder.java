@@ -20,6 +20,7 @@ import java.util.Map;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.AdvancedMultiSelectAdapter;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
 import kore.botssdk.models.AdvancedMultiSelectModel;

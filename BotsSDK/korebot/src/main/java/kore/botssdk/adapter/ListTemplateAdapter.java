@@ -1,6 +1,10 @@
 package kore.botssdk.adapter;
 
+import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
+
+import android.content.Context;
 import android.graphics.Typeface;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -23,18 +28,23 @@ import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
+import kore.botssdk.utils.markdown.MarkdownTagHandler;
+import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapter.ViewHolder> {
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final boolean isEnabled;
-    private final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
-    private final List<BotListModel> botListModels;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    final boolean isEnabled;
+    final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
+    final List<BotListModel> botListModels;
+    Context context;
 
-    public ListTemplateAdapter(List<BotListModel> botListModels, boolean isEnabled) {
+    public ListTemplateAdapter(Context context, List<BotListModel> botListModels, boolean isEnabled) {
         this.botListModels = botListModels;
         this.isEnabled = isEnabled;
+        this.context = context;
     }
 
     @NonNull
@@ -57,7 +67,14 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         if (!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-            holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+
+            String textualContent = unescapeHtml4(botListModel.getSubtitle());
+            textualContent = StringUtils.unescapeHtml3(textualContent.trim());
+            textualContent = MarkdownUtil.processMarkDown(textualContent);
+            CharSequence sequence = HtmlCompat.fromHtml(textualContent.replace("\n", "<br />"), HtmlCompat.FROM_HTML_MODE_LEGACY, new MarkdownImageTagHandler(context, holder.botListItemSubtitle, textualContent), new MarkdownTagHandler());
+            SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+
+            holder.botListItemSubtitle.setText(strBuilder);
         }
         if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
             holder.botListItemButton.setVisibility(View.GONE);

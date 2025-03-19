@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">"Kore.ai Bot"</string>
+    <string name="socket_connecting">Conectando</string>
+    <string name="socket_connected">Conectado</string>
+    <string name="get_started">Empezar</string>
+    <string name="custom_content_layout">Diseño de contenido personalizado</string>
+    <string name="camera">&#128247;</string>
+    <string name="video">&#127909;</string>
+    <string name="attachment">&#128195;</string>
+    <string name="audio">&#9835;</string>
+    <string name="repeat">Por favor repita</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="speech_not_available">El reconocimiento de voz no está disponible en este dispositivo. ¿Quieres instalar la app de Google para tenerlo?</string>
+    <string name="permission_required">Necesitas conceder permiso para usar el micrófono.</string>
+    <string name="enable_google_voice_typing">¡Habilite Google Voice Typing para utilizar el reconocimiento de voz!</string>
+    <string name="minimize">Minimizar</string>
+    <string name="close">Cerca</string>
+    <string name="cancel">Cancelar</string>
+    <string name="close_or_minimize">¿Quieres cerrar la conversación o minimizarla?</string>
+</resources>

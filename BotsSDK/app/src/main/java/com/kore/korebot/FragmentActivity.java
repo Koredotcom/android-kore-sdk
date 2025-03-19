@@ -1,20 +1,12 @@
 package com.kore.korebot;
 
-import static android.Manifest.permission.POST_NOTIFICATIONS;
-
 import android.annotation.SuppressLint;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
@@ -22,23 +14,23 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import kore.botssdk.activity.NewBotChatActivity;
+import kore.botssdk.fragment.botchat.BotChatFragment;
+import kore.botssdk.listener.ActivityCloseListener;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.LangUtils;
+import kore.botssdk.utils.NetworkUtility;
 
-public class MainActivity extends AppCompatActivity {
-    String botId, clientSecret, botName, serverUrl;
-    String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
+public class FragmentActivity extends AppCompatActivity implements ActivityCloseListener {
+    BotChatFragment botChatFragment;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_activity);
 
-        setContentView(R.layout.activity_main);
         //Can set Language for Bot SDK
         LangUtils.setAppLanguages(this, LangUtils.LANG_EN);
 
@@ -109,32 +101,28 @@ public class MainActivity extends AppCompatActivity {
         //Set local branding model by overriding the branding api response
         SDKConfig.setLocalBranding(false, getLocalBrandingModel());
 
+        //Method to reset the bot connection and start a new session by overriding the previous state
+        // SDKConfig.disconnectBotSession(FragmentActivity.this);
+
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
         SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
         SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
 
-        Button launchBotBtn = findViewById(R.id.launchBotBtn);
-        launchBotBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                launchBotChatActivity();
+        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+        //Add Bot Content Fragment
+        botChatFragment = new BotChatFragment();
+        fragmentTransaction.add(R.id.flChatBot, botChatFragment).commit();
+
+        botChatFragment.setActivityCloseListener(FragmentActivity.this);
+
+        this.getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            public void handleOnBackPressed() {
+                if (NetworkUtility.isNetworkConnectionAvailable(FragmentActivity.this)) {
+                    botChatFragment.showCloseAlert();
+                }
             }
         });
-
-//        askNotificationPermission();
-    }
-
-    /**
-     * Launching BotChatActivity where user can interact with bot
-     */
-    void launchBotChatActivity() {
-        Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
-        Bundle bundle = new Bundle();
-        //This should not be null
-        bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
-        intent.putExtras(bundle);
-        startActivity(intent);
     }
 
     @SuppressLint("UnknownNullness")
@@ -158,27 +146,7 @@ public class MainActivity extends AppCompatActivity {
         return customData;
     }
 
-    // Declare the launcher at the top of your Activity/Fragment:
-    private final ActivityResultLauncher<String> requestPermissionLauncher =
-            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                if (!isGranted) {
-                    Toast.makeText(this, "Permission needed to send push notifications", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-    private void askNotificationPermission() {
-        // This is only necessary for API level >= 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                // FCM SDK (and your app) can post notifications.
-                requestPermissionLauncher.launch(POST_NOTIFICATIONS);
-            }
-        }
-    }
-
-    private BrandingModel getLocalBrandingModel()
-    {
+    private BrandingModel getLocalBrandingModel() {
         BrandingModel brandingModel = new BrandingModel();
         brandingModel.setBotchatBgColor("#F3F5F8");
         brandingModel.setBotchatTextColor("#202124");
@@ -200,5 +168,11 @@ public class MainActivity extends AppCompatActivity {
         brandingModel.setBotName("Bot Name");
         brandingModel.setChatBubbleStyle("square");
         return brandingModel;
+    }
+
+    @Override
+    public void onFragmentClosed() {
+        //Customize the call back as per the requirement
+        finish();
     }
 }

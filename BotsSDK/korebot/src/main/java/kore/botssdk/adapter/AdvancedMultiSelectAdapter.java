@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
 import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
 import kore.botssdk.models.AdvancedMultiSelectModel;
@@ -133,6 +136,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
                 tvMultiSelectTitle = itemView.findViewById(R.id.tvMultiSelectTitle);
                 advMultiSelectList = itemView.findViewById(R.id.adv_multi_select_list);
                 advMultiSelectList.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+                advMultiSelectList.addItemDecoration(new VerticalSpaceItemDecoration(10 * (int) dp1));
                 rootLayout = itemView.findViewById(R.id.root_layout);
             } else {
                 rootLayoutBtn = itemView.findViewById(R.id.root_layout);

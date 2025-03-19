@@ -75,6 +75,11 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
                 }
             });
         } else {
+            GradientDrawable gradientDrawable = (GradientDrawable) holder.textView.getBackground();
+            gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            holder.textView.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+
             holder.textView.setTag(item);
             holder.textView.setText(((BotButtonModel) item).getTitle());
             holder.textView.setOnClickListener(v -> {

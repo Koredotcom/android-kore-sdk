@@ -96,6 +96,9 @@ public class BrandingRepository {
                                     brandingModel.setUserchatBgColor(brandingNewDos.getBody().getUser_message().getBg_color());
                                     brandingModel.setUserchatTextColor(brandingNewDos.getBody().getUser_message().getColor());
 
+                                    brandingModel.setButtonActiveBgColor(brandingNewDos.getBody().getUser_message().getBg_color());
+                                    brandingModel.setButtonActiveTextColor(brandingNewDos.getBody().getUser_message().getColor());
+
                                     brandingModel.setBotName(brandingNewDos.getHeader().getTitle().getName());
                                     brandingModel.setWidgetBodyColor(brandingNewDos.getBody().getBackground().getColor());
                                     brandingModel.setWidgetTextColor((brandingNewDos.getHeader().getTitle().getColor()));
@@ -116,16 +119,19 @@ public class BrandingRepository {
                                     }
 
                                     if (brandingNewDos.getGeneral() != null && brandingNewDos.getGeneral().getColors() != null && brandingNewDos.getGeneral().getColors().isUseColorPaletteOnly()) {
-                                        brandingModel.setButtonActiveBgColor(brandingNewDos.getGeneral().getColors().getPrimary());
-                                        brandingModel.setButtonActiveTextColor(brandingNewDos.getGeneral().getColors().getPrimary_text());
                                         brandingModel.setButtonInactiveBgColor(brandingNewDos.getGeneral().getColors().getSecondary());
-                                        brandingModel.setButtonInactiveTextColor(brandingNewDos.getGeneral().getColors().getSecondary_text());
+                                        brandingModel.setButtonInactiveTextColor(brandingNewDos.getGeneral().getColors().getPrimary_text());
                                         SDKConfiguration.BubbleColors.quickReplyColor = brandingNewDos.getGeneral().getColors().getSecondary();
                                         SDKConfiguration.BubbleColors.quickReplyTextColor = brandingNewDos.getGeneral().getColors().getPrimary();
+                                        SDKConfiguration.BubbleColors.leftBubbleSelected = brandingNewDos.getGeneral().getColors().getSecondary();
                                         brandingModel.setBotchatBgColor(brandingNewDos.getGeneral().getColors().getSecondary());
                                         brandingModel.setBotchatTextColor(brandingNewDos.getGeneral().getColors().getPrimary_text());
                                         brandingModel.setUserchatBgColor(brandingNewDos.getGeneral().getColors().getPrimary());
                                         brandingModel.setUserchatTextColor(brandingNewDos.getGeneral().getColors().getSecondary_text());
+
+                                        brandingModel.setButtonActiveBgColor(brandingNewDos.getGeneral().getColors().getPrimary());
+                                        brandingModel.setButtonActiveTextColor(brandingNewDos.getGeneral().getColors().getSecondary_text());
+
                                         brandingModel.setWidgetHeaderColor(brandingNewDos.getGeneral().getColors().getSecondary());
                                         brandingModel.setWidgetFooterColor(brandingNewDos.getGeneral().getColors().getSecondary());
                                         brandingModel.setWidgetTextColor((brandingNewDos.getGeneral().getColors().getPrimary_text()));

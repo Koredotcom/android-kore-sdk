@@ -43,6 +43,7 @@ import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.footer.ComposeFooterFragment;
 import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.fragment.header.BotHeaderFragment;
+import kore.botssdk.listener.ActivityCloseListener;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -72,12 +73,13 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     private String jwt;
     BotClient botClient;
     private BaseHeaderFragment botHeaderFragment;
-    private BaseContentFragment botContentFragment;
+    BaseContentFragment botContentFragment;
     private BaseFooterFragment baseFooterFragment;
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
     boolean isAgentTransfer;
     private BotChatFragmentListener fragmentListener;
+    ActivityCloseListener activityCloseListener;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -216,6 +218,10 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     public void setIsAgentConnected(boolean isAgentConnected) {
         isAgentTransfer = isAgentConnected;
         baseFooterFragment.setIsAgentConnected(isAgentConnected);
+    }
+
+    public void setActivityCloseListener(ActivityCloseListener activityCloseListener) {
+        this.activityCloseListener = activityCloseListener;
     }
 
     @Override
@@ -384,6 +390,10 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     public void handleUserActions(String payload, HashMap<String, Object> type) {
     }
 
+    public SharedPreferences getSharedPreferences() {
+        return sharedPreferences;
+    }
+
     @Override
     public void onDestroy() {
         if (isAgentTransfer && botClient != null)
@@ -409,6 +419,44 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         super.onResume();
     }
 
+    public void showCloseAlert() {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_NEUTRAL:
+                        dialog.dismiss();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        if (sharedPreferences != null) {
+                            if (botClient != null && isAgentTransfer) {
+                                botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+                            }
+
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean("IS_RECONNECT", false);
+                            editor.putInt("HISTORY_COUNT", 0);
+                            editor.apply();
+                            BotSocketConnectionManager.killInstance();
+                            activityCloseListener.onFragmentClosed();
+                        }
+                        break;
+                    case DialogInterface.BUTTON_POSITIVE:
+                        if (sharedPreferences != null) {
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putBoolean("IS_RECONNECT", true);
+                            editor.putInt("HISTORY_COUNT", botContentFragment.getAdapterCount());
+                            editor.apply();
+                            BotSocketConnectionManager.killInstance();
+                            activityCloseListener.onFragmentClosed();
+                        }
+                }
+
+            }
+        };
+        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+        builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
+    }
+
     @Override
     public void onStop() {
         mViewModel.setIsActivityResumed(false);
@@ -416,7 +464,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             ActivityManager activityManager = (ActivityManager) requireContext().getSystemService(ACTIVITY_SERVICE);
             List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();
 
-            if (!taskList.isEmpty()) {
+            if (!taskList.isEmpty() && taskList.get(0) != null && taskList.get(0).getTaskInfo() != null && taskList.get(0).getTaskInfo().topActivity != null) {
                 String topClassName = Objects.requireNonNull(taskList.get(0).getTaskInfo().topActivity).toString();
                 if (!topClassName.contains(requireContext().getPackageName())) {
 
