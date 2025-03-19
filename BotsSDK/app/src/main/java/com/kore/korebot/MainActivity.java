@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
         SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
+        SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(new View.OnClickListener() {

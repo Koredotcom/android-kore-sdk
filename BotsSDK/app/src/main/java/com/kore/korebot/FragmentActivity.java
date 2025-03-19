@@ -107,6 +107,7 @@ public class FragmentActivity extends AppCompatActivity implements ActivityClose
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
         SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
+        SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
 
         FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
         //Add Bot Content Fragment
