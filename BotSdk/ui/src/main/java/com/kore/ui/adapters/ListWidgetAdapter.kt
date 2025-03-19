@@ -1,7 +1,6 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,9 +19,12 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 
 class ListWidgetAdapter(
@@ -42,12 +45,12 @@ class ListWidgetAdapter(
         var iconImageLoad: ImageView = itemView.findViewById(R.id.icon_image_load)
         var tvText: TextView = itemView.findViewById(R.id.tv_text)
         var tvUrl: TextView = itemView.findViewById(R.id.tv_url)
-        var tvButton: TextView = itemView.findViewById(R.id.tv_button)
+        var tvButtonMore: TextView = itemView.findViewById(R.id.btnMore)
         var tvButtonParent: LinearLayout = itemView.findViewById(R.id.tv_values_layout)
         var rvDetails: RecyclerView = itemView.findViewById(R.id.rvDetails)
         val llMoreButton: LinearLayout = itemView.findViewById(R.id.llMoreButton);
 
-        val sharedPreferences = PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
+        val sharedPreferences = PreferenceRepositoryImpl().getSharedPreference(context, THEME_NAME)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListWidgetHolder {
@@ -76,26 +79,18 @@ class ListWidgetAdapter(
 
         if (listTemplateModel[BotResponseConstants.KEY_TITLE] != null) {
             holder.txtTitle.text = listTemplateModel[BotResponseConstants.KEY_TITLE] as String
-            holder.txtTitle.setTextColor(
-                Color.parseColor(
-                    holder.sharedPreferences.getString(
-                        BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, "#000000"
-                    )
-                )
-            )
+            holder.sharedPreferences.getString(BUTTON_ACTIVE_TXT_COLOR, "#000000")?.toColorInt()?.let {
+                holder.txtTitle.setTextColor(it)
+            }
         } else {
             holder.txtTitle.visibility = View.GONE
         }
 
         if (listTemplateModel[BotResponseConstants.KEY_SUB_TITLE] != null) {
             holder.txtSubTitle.text = listTemplateModel[BotResponseConstants.KEY_SUB_TITLE] as String
-            holder.txtSubTitle.setTextColor(
-                Color.parseColor(
-                    holder.sharedPreferences.getString(
-                        BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, "#000000"
-                    )
-                )
-            )
+            holder.sharedPreferences.getString(BUTTON_ACTIVE_TXT_COLOR, "#000000")?.toColorInt()?.let {
+                holder.txtSubTitle.setTextColor(it)
+            }
         } else {
             holder.txtSubTitle.visibility = View.GONE
         }
@@ -193,7 +188,7 @@ class ListWidgetAdapter(
                     holder.imgUpDown.isVisible = true
                     holder.imgUpDown.setOnClickListener {
                         holder.rvButtonsList.isVisible = holder.rvButtonsList.visibility != View.VISIBLE
-                        holder.imgUpDown.rotation = if (holder.rvButtonsList.visibility == View.VISIBLE) 90F else 0F
+                        holder.imgUpDown.rotation = if (holder.rvButtonsList.isVisible) 90F else 0F
                     }
                 }
             }
@@ -202,7 +197,9 @@ class ListWidgetAdapter(
                 context, if (style == BotResponseConstants.FIT_TO_WIDTH) LinearLayoutManager.VERTICAL else LinearLayoutManager.HORIZONTAL, false
             )
             holder.rvButtonsList.adapter = ListWidgetButtonAdapter(context, btns, limit, style, null, isLastItem, actionEvent)
-
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val txtColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            holder.tvButtonMore.setTextColor(txtColor)
             holder.llMoreButton.setOnClickListener {
                 rvPopBtns.adapter = ListWidgetButtonAdapter(context, btns, btns.size, style, popupWindow, isLastItem, actionEvent)
                 popupWindow.showAsDropDown(holder.llMoreButton)

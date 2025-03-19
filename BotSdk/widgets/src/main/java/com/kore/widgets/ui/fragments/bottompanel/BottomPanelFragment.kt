@@ -44,7 +44,7 @@ class BottomPanelFragment : Fragment(), BottomPanelView, GestureDetector.OnGestu
     private lateinit var panelAdapter: WidgetSimpleListAdapter
     private var actionEvent: (event: BaseActionEvent) -> Unit = {}
 
-    private val viewModel: BottomPanelFragmentViewModel by viewModels()
+    internal val viewModel: BottomPanelFragmentViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         _binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_bottom_panel, null, false)
@@ -69,9 +69,9 @@ class BottomPanelFragment : Fragment(), BottomPanelView, GestureDetector.OnGestu
     }
 
     override fun init() {
-        panelAdapter = WidgetSimpleListAdapter(BottomPanelRowType.values().asList())
+        panelAdapter = WidgetSimpleListAdapter(BottomPanelRowType.entries)
         binding.panelRecycler.adapter = panelAdapter
-        binding.recyclerViewPanel.adapter = WidgetSimpleListAdapter(PanelWidgetRowType.values().asList())
+        binding.recyclerViewPanel.adapter = WidgetSimpleListAdapter(PanelWidgetRowType.entries)
         bottomSheetBehavior = WidgetCustomBottomSheetBehavior.from(binding.persistentPanel) as WidgetCustomBottomSheetBehavior<LinearLayout>
         bottomSheetBehavior?.setState(BottomSheetBehavior.STATE_HIDDEN)
         bottomSheetBehavior?.setBottomSheetCallback(object : WidgetCustomBottomSheetBehavior.BottomSheetCallback() {
@@ -83,7 +83,7 @@ class BottomPanelFragment : Fragment(), BottomPanelView, GestureDetector.OnGestu
                     BottomSheetBehavior.STATE_COLLAPSED, BottomSheetBehavior.STATE_HIDDEN -> {
                         bottomSheetBehavior?.setLocked(false)
                         binding.recyclerViewPanel.adapter = null
-                        binding.recyclerViewPanel.adapter = WidgetSimpleListAdapter(PanelWidgetRowType.values().asList())
+                        binding.recyclerViewPanel.adapter = WidgetSimpleListAdapter(PanelWidgetRowType.entries)
                         binding.persistentPanel.visibility = View.GONE
                     }
                 }

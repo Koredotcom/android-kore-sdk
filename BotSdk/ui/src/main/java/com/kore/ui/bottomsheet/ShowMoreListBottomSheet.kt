@@ -44,7 +44,7 @@ class ShowMoreListBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
             rvMoreData.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-            val adapter = SimpleListAdapter(ListViewTemplateItemRowType.values().asList())
+            val adapter = SimpleListAdapter(ListViewTemplateItemRowType.entries)
             rvMoreData.adapter = adapter
             llTabHeader.isVisible = isShowHeader
 

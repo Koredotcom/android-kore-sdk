@@ -1,16 +1,23 @@
 package com.kore.ui.row.botchat.radiooptions
 
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.HEADING
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.POSTBACK
 import com.kore.model.constants.BotResponseConstants.RADIO_OPTIONS
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.VALUE
 import com.kore.ui.databinding.RowRadioOptionsTemplateBinding
 import com.kore.ui.row.botchat.BotChatRowType
@@ -46,7 +53,13 @@ class RadioOptionsTemplateRow(
         childBinding.apply {
             title.text = payload[HEADING].toString()
             list.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-            list.adapter = SimpleListAdapter(RadioOptionsTemplateItemRowType.values().asList())
+            list.adapter = SimpleListAdapter(RadioOptionsTemplateItemRowType.entries)
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+            confirm.setRoundedCorner(6.dpToPx(root.context).toFloat())
+            confirm.setBackgroundColor(bgColor)
+            confirm.setTextColor(txtColor)
             commonBind()
         }
     }

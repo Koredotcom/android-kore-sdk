@@ -25,4 +25,5 @@ interface BotChatView : BaseView {
     fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int)
     fun showOtpBottomSheet(payload: HashMap<String, Any>)
     fun showPinResetBottomSheet(payload: HashMap<String, Any>)
+    fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>)
 }

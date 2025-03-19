@@ -7,11 +7,15 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
-import com.kore.ui.utils.BitmapUtils
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUTTON_TYPE_URL
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
+import com.kore.ui.utils.BitmapUtils
 
 class AdvanceListButtonAdapter(
     val context: Context,
@@ -21,6 +25,12 @@ class AdvanceListButtonAdapter(
     private val isLastItem: Boolean,
     val actionEvent: (event: BotChatEvent) -> Unit
 ) : RecyclerView.Adapter<ButtonViewHolder>() {
+    private var advancedOptionsAdapter: AdvanceOptionsAdapter? = null
+
+    fun setAdvancedOptionsAdapter(advancedOptionsAdapter: AdvanceOptionsAdapter?) {
+        this.advancedOptionsAdapter = advancedOptionsAdapter
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ButtonViewHolder {
         if (type.isNotEmpty() && type == BotResponseConstants.FULL_WIDTH) {
             return ButtonViewHolder(LayoutInflater.from(context).inflate(R.layout.advance_button_full_width, parent, false))
@@ -51,8 +61,30 @@ class AdvanceListButtonAdapter(
                 holder.ivBtnImage.visibility = View.GONE
             }
         }
-
-        holder.buttonTV.setOnClickListener { holder.layoutDetails.performClick() }
+        val sharedPrefs = PreferenceRepositoryImpl()
+        val txtColor = sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
+        holder.buttonTV.setTextColor(txtColor.toColorInt())
+        holder.buttonTV.setOnClickListener {
+            advancedOptionsAdapter?.let {
+                if (button[BotResponseConstants.BTN_TYPE] != null) {
+                    if (!isLastItem) return@setOnClickListener
+                    if (button[BotResponseConstants.BTN_TYPE] == BotResponseConstants.CONFIRM) {
+                        actionEvent(BotChatEvent.SendMessage("Confirm: ${it.getSelectedItems().joinToString(",")}"))
+                    } else {
+                        it.clearSelectedItems()
+                    }
+                } else {
+                    if (button[BotResponseConstants.TYPE] == BUTTON_TYPE_URL) {
+                        actionEvent(BotChatEvent.UrlClick(button[BotResponseConstants.URL].toString()))
+                    } else {
+                        if (!isLastItem) return@setOnClickListener
+                        val title: String = button[BotResponseConstants.KEY_TITLE].toString()
+                        val payload: String = button[BotResponseConstants.PAYLOAD].toString()
+                        actionEvent(BotChatEvent.SendMessage(title, payload))
+                    }
+                }
+            }
+        }
 
         holder.layoutDetails.setOnClickListener {
             val listElementButtonPayload = if (button[BotResponseConstants.PAYLOAD] != null) {
@@ -87,13 +119,7 @@ class AdvanceListButtonAdapter(
 
 
 class ButtonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val buttonTV: TextView
-    val ivBtnImage: ImageView
-    val layoutDetails: LinearLayout
-
-    init {
-        buttonTV = itemView.findViewById(R.id.buttonTV)
-        ivBtnImage = itemView.findViewById(R.id.ivBtnImage)
-        layoutDetails = itemView.findViewById(R.id.layout_details)
-    }
+    val buttonTV: TextView = itemView.findViewById(R.id.buttonTV)
+    val ivBtnImage: ImageView = itemView.findViewById(R.id.ivBtnImage)
+    val layoutDetails: LinearLayout = itemView.findViewById(R.id.layout_details)
 }

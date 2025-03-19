@@ -51,7 +51,7 @@ class ListViewTemplateRow(
         childBinding.apply {
             showMore.paintFlags = Paint.UNDERLINE_TEXT_FLAG
             list.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-            list.adapter = SimpleListAdapter(ListViewTemplateItemRowType.values().asList())
+            list.adapter = SimpleListAdapter(ListViewTemplateItemRowType.entries)
             (payload[KEY_BUTTONS] as List<Map<String, String>>?)?.get(0)?.get(KEY_TITLE)?.let { showMore.text = it }
             payload[SEE_MORE]?.let { showMore.isVisible = it as Boolean }
             commonBind()

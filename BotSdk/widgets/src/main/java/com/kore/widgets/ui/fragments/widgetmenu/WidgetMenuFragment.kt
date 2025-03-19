@@ -44,7 +44,7 @@ class WidgetMenuFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.menus.layoutManager = LinearLayoutManager(requireContext())
-        binding.menus.adapter = WidgetSimpleListAdapter(WidgetMenuRowType.values().asList())
+        binding.menus.adapter = WidgetSimpleListAdapter(WidgetMenuRowType.entries)
         (binding.menus.adapter as WidgetSimpleListAdapter).submitList(menus.map { WidgetMenuItemRow(it, this::menuActionEvent) })
     }
 

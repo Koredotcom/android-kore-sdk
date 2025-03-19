@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/round_rect"
+    android:background="@color/white"
     android:padding="@dimen/dimen_10dp">
 
     <ImageView
@@ -15,17 +16,23 @@
         android:contentDescription="@string/table_dialog_cancel"
         android:src="@drawable/cancel_widget" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTableViewHeader"
+    <LinearLayout
+        android:id="@+id/llContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ivCancel"
-        android:background="@drawable/round_rect_table_header" />
+        android:orientation="vertical"
+        android:padding="1dp">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTableView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/rvTableViewHeader" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTableViewHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTableView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 </RelativeLayout>

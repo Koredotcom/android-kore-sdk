@@ -58,7 +58,7 @@ class PanelWidgetRow(
     override fun <Binding : ViewBinding> bind(binding: Binding) {
         (binding as RowPanelWidgetBinding).apply {
             widgetLayout.layoutManager = LinearLayoutManager(root.context)
-            widgetLayout.adapter = WidgetSimpleListAdapter(WidgetInfoRowType.values().asList())
+            widgetLayout.adapter = WidgetSimpleListAdapter(WidgetInfoRowType.entries)
             commonBind()
         }
     }

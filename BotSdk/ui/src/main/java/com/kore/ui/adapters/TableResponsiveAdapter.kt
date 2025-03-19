@@ -1,11 +1,13 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
@@ -20,19 +22,12 @@ class TableResponsiveAdapter(
 ) : RecyclerView.Adapter<TableResponsiveAdapter.TableViewHolder>() {
 
     class TableViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvTableSerial: TextView
-        val tvTableTitle: TextView
-        val rvTableResponsive: RecyclerView
-        val llTableResponsive: LinearLayout
-        val ivTableResponsiveExpand: ImageView
-
-        init {
-            tvTableSerial = view.findViewById(R.id.tvTableSerial)
-            tvTableTitle = view.findViewById(R.id.tvTableTitle)
-            rvTableResponsive = view.findViewById(R.id.rvTableResponsive)
-            llTableResponsive = view.findViewById(R.id.llTableResponsive);
-            ivTableResponsiveExpand = view.findViewById(R.id.ivTableResponsiveExpand);
-        }
+        val rlTableResponsive: RelativeLayout = view.findViewById(R.id.rlTableResponsive)
+        val tvTableSerial: TextView = view.findViewById(R.id.tvTableSerial)
+        val tvTableTitle: TextView = view.findViewById(R.id.tvTableTitle)
+        val rvTableResponsive: RecyclerView = view.findViewById(R.id.rvTableResponsive)
+        val llTableResponsive: LinearLayout = view.findViewById(R.id.llTableResponsive)
+        val ivTableResponsiveExpand: ImageView = view.findViewById(R.id.ivTableResponsiveExpand)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TableViewHolder {
@@ -48,6 +43,7 @@ class TableResponsiveAdapter(
     override fun onBindViewHolder(holder: TableViewHolder, position: Int) {
         val listElementsMap: Map<String, *> = listItems[position]
         val values = listElementsMap[BotResponseConstants.VALUES_CAP] as List<String>
+        holder.rlTableResponsive.setBackgroundColor(if (position % 2 == 0) Color.TRANSPARENT else Color.WHITE)
 
         holder.tvTableSerial.text = values[0]
         holder.tvTableTitle.text = values[1]

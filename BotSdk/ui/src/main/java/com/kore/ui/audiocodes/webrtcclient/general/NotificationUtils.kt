@@ -7,12 +7,12 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.media.AudioAttributes
 import android.media.RingtoneManager
 import android.view.View
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
+import androidx.core.graphics.toColorInt
 import com.audiocodes.mv.webrtcsdk.session.CallState
 import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA
 import com.kore.ui.R
@@ -210,8 +210,8 @@ object NotificationUtils {
             .setTimeoutAfter((IncomingCallActivity.INCOMING_CALL_RINGING_TIMEOUT_SEC * 1000).toLong())
             .setColorized(true)
             .setCustomContentView(remoteViews)
-        val buttonTextColor = Color.parseColor("#ffffff")
-        val titleTextColor = Color.parseColor("#000000")
+        val buttonTextColor = "#ffffff".toColorInt()
+        val titleTextColor = "#000000".toColorInt()
         remoteViews.setOnClickPendingIntent(R.id.accept, pendingAnswerIntent)
         remoteViews.setTextColor(R.id.accept, buttonTextColor)
         remoteViews.setTextViewText(R.id.accept, context.resources.getString(R.string.incoming_call_button_answer_text))

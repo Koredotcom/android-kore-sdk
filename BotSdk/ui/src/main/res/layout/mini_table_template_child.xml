@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rlMiniTable"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginEnd="@dimen/dimen_5dp"
-    android:background="@drawable/round_rect">
+    android:padding="1dp">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTableViewHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_rect_table_header" />
+        android:background="@color/white" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTableView"

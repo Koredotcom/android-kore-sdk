@@ -7,12 +7,17 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
 import com.kore.listeners.QuickRepliesClickListener
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
@@ -25,26 +30,39 @@ class QuickRepliesTemplateAdapter(
 ) : RecyclerView.Adapter<QuickRepliesTemplateAdapter.QuickReplyViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
-        val convertView: View = if (type.equals(
-                BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true
-            )
-        ) LayoutInflater.from(context)
-            .inflate(R.layout.quick_replies_full, parent, false) else LayoutInflater.from(context)
-            .inflate(R.layout.quick_replies_cell, parent, false)
+        val convertView: View = if (type.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true))
+            LayoutInflater.from(context).inflate(R.layout.quick_replies_full, parent, false)
+        else LayoutInflater.from(context).inflate(R.layout.quick_replies_cell, parent, false)
         return QuickReplyViewHolder(convertView)
     }
 
     override fun onBindViewHolder(holder: QuickReplyViewHolder, position: Int) {
         val quickReplyTemplate = quickReplies[position]
+        val sharedPrefs = PreferenceRepositoryImpl()
+        val bgColor = sharedPrefs.getStringValue(
+            holder.quickReplyView.context,
+            BotResponseConstants.THEME_NAME,
+            BotResponseConstants.BUBBLE_LEFT_BG_COLOR,
+            "#efeffc"
+        ).toColorInt()
+        val textColor: String = sharedPrefs.getStringValue(
+            holder.quickReplyView.context,
+            BotResponseConstants.THEME_NAME,
+            BotResponseConstants.BUBBLE_RIGHT_BG_COLOR,
+            "#3F51B5"
+        )
+        holder.quickReplyView.setRoundedCorner(4.dpToPx(holder.itemView.context).toFloat())
+        holder.quickReplyView.setBackgroundColor(bgColor)
+        holder.quickReplyTitle.setTextColor(textColor.toColorInt())
 
         if (quickReplyTemplate[BotResponseConstants.KEY_TITLE] != null) {
             holder.quickReplyTitle.text = quickReplyTemplate[BotResponseConstants.KEY_TITLE] as String
         }
-
-        if (quickReplyTemplate[BotResponseConstants.COMPONENT_TYPE_IMAGE_URL] != null) {
-            holder.quickReplyImage.isVisible = true
+        holder.quickReplyImage.isVisible = quickReplyTemplate[BotResponseConstants.COMPONENT_TYPE_IMAGE_URL] != null
+        quickReplyTemplate[BotResponseConstants.COMPONENT_TYPE_IMAGE_URL]?.let {
             Glide.with(context)
-                .load(quickReplyTemplate[BotResponseConstants.COMPONENT_TYPE_IMAGE_URL])
+                .load(it)
+                .apply(RequestOptions.bitmapTransform(CircleCrop()))
                 .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).error(R.drawable.ic_image_photo)
                 .into<DrawableImageViewTarget>(DrawableImageViewTarget(holder.quickReplyImage))
         }
@@ -63,14 +81,9 @@ class QuickRepliesTemplateAdapter(
     }
 
     class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val quickReplyTitle: TextView
-        val quickReplyRoot: RelativeLayout
-        val quickReplyImage: ImageView
-
-        init {
-            quickReplyTitle = view.findViewById(R.id.quick_reply_item_text)
-            quickReplyRoot = view.findViewById(R.id.quick_reply_item_root)
-            quickReplyImage = view.findViewById(R.id.quick_reply_item_image)
-        }
+        val quickReplyView: RelativeLayout = view.findViewById(R.id.quick_reply_view)
+        val quickReplyTitle: TextView = view.findViewById(R.id.quick_reply_item_text)
+        val quickReplyRoot: RelativeLayout = view.findViewById(R.id.quick_reply_item_root)
+        val quickReplyImage: ImageView = view.findViewById(R.id.quick_reply_item_image)
     }
 }

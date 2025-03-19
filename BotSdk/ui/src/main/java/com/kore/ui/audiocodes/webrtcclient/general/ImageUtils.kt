@@ -4,12 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.graphics.Rect
 import android.net.Uri
+import androidx.core.graphics.toColorInt
 import com.kore.common.utils.LogUtils
 import java.io.FileNotFoundException
 
@@ -55,7 +55,7 @@ object ImageUtils {
         paint.isFilterBitmap = true
         paint.isDither = true
         canvas.drawARGB(0, 0, 0, 0)
-        paint.color = Color.parseColor("#ffffff")
+        paint.color = "#ffffff".toColorInt()
         canvas.drawCircle((sbmp.width / 2).toFloat(), (sbmp.height / 2).toFloat(), (sbmp.width / 2).toFloat(), paint)
         paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
         canvas.drawBitmap(sbmp, rect, rect, paint)

@@ -1,19 +1,24 @@
 package com.kore.ui.row.botchat.advancemultiselect
 
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListAdapter
-import com.kore.ui.row.SimpleListRow
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.COLLECTION
 import com.kore.model.constants.BotResponseConstants.COLLECTION_TITLE
 import com.kore.model.constants.BotResponseConstants.HEADING
 import com.kore.model.constants.BotResponseConstants.KEY_ELEMENTS
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.databinding.RowAdvanceMultiSelectBinding
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.ui.row.botchat.advancemultiselect.category.AdvanceMultiSelectCategoryRow
 
@@ -25,8 +30,6 @@ class AdvanceMultiSelectTemplateRow(
     private val isLastItem: Boolean = false,
     private val selectedItems: ArrayList<Map<String, String>>,
     private val onSaveState: (msgId: String, value: Any?, key: String) -> Unit,
-//    private val onItemSelect: (id: String, key: String, items: List<String>, isChecked: Boolean) -> Unit,
-//    private val onViewMore: (id: String, limit: Int?, key: String) -> Unit,
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : SimpleListRow() {
 
@@ -49,15 +52,20 @@ class AdvanceMultiSelectTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, false, true)
         val childBinding = RowAdvanceMultiSelectBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
-
             if (payload[HEADING] != null) {
                 advanceMultiSelectTitle.isVisible = true
                 advanceMultiSelectTitle.text = payload[HEADING] as String
             }
 
-            val adapter = SimpleListAdapter(AdvancedMultiSelectCategoryRowType.values().asList())
+            val adapter = SimpleListAdapter(AdvancedMultiSelectCategoryRowType.entries)
             categoryList.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
             categoryList.adapter = adapter
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")
+            val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
+            done.setBackgroundColor(bgColor.toColorInt())
+            done.setTextColor(txtColor.toColorInt())
+            done.setRoundedCorner(6.dpToPx(root.context).toFloat())
             commonBind()
         }
     }

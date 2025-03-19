@@ -43,6 +43,7 @@ import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
+import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_ADVANCED_MULTI_SELECT
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE_RANGE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_OTP
@@ -143,6 +144,12 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                                             TEMPLATE_TYPE_RESET_PIN -> {
                                                 if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
                                                     getView()?.showPinResetBottomSheet(innerMap)
+                                                }
+                                            }
+
+                                            TEMPLATE_TYPE_ADVANCED_MULTI_SELECT -> {
+                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
+                                                    getView()?.showAdvancedMultiSelectBottomSheet(botResponse.messageId, innerMap)
                                                 }
                                             }
 

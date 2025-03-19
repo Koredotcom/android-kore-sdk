@@ -15,13 +15,8 @@ class TableResponsiveChildAdapter(
 ) : RecyclerView.Adapter<TableResponsiveChildAdapter.TableViewHolder>() {
 
     class TableViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvTableColumnName: TextView
-        val tvTableValue: TextView
-
-        init {
-            tvTableColumnName = view.findViewById(R.id.tvTableColumnName)
-            tvTableValue = view.findViewById(R.id.tvTableValue)
-        }
+        val tvTableColumnName: TextView = view.findViewById(R.id.tvTableColumnName)
+        val tvTableValue: TextView = view.findViewById(R.id.tvTableValue)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TableViewHolder {

@@ -3,6 +3,7 @@ package com.kore.ui.row.botchat.advancemultiselect.category
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
+import com.kore.extensions.clearItemDecorations
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants.SELECTED_ITEM
@@ -37,8 +38,10 @@ class AdvanceMultiSelectCategoryRow(
         val childBinding = RowAdvancedMultiSelectCategoryBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
             tvMultiSelectTitle.text = categoryName
+            list.clearItemDecorations()
+            list.addItemDecoration(VerticalSpaceItemDecoration(10))
             list.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-            val adapter = SimpleListAdapter(AdvancedMultiSelectCategorySubItemRowType.values().asList())
+            val adapter = SimpleListAdapter(AdvancedMultiSelectCategorySubItemRowType.entries)
             list.adapter = adapter
             commonBind()
         }

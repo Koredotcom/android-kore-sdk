@@ -298,16 +298,22 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                             if (innerMap[DISPLAY_LIMIT] == null) {
                                                 innerMap[DISPLAY_LIMIT] = (innerMap[BotResponseConstants.LIMIT] as Double).toInt()
                                             }
-                                            rows = rows + AdvanceMultiSelectTemplateRow(
-                                                msgId,
-                                                iconUrl,
-                                                innerMap,
-                                                innerMap[DISPLAY_LIMIT] as Int,
-                                                isLastItem,
-                                                innerMap[SELECTED_ITEM] as ArrayList<Map<String, String>>? ?: ArrayList(),
-                                                this::onSaveState,
-                                                actionEvent
-                                            )
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == true) {
+                                                if (isTextMsg) {
+                                                    rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
+                                                }
+                                            } else {
+                                                rows = rows + AdvanceMultiSelectTemplateRow(
+                                                    msgId,
+                                                    iconUrl,
+                                                    innerMap,
+                                                    innerMap[DISPLAY_LIMIT] as Int,
+                                                    isLastItem,
+                                                    innerMap[SELECTED_ITEM] as ArrayList<Map<String, String>>? ?: ArrayList(),
+                                                    this::onSaveState,
+                                                    actionEvent
+                                                )
+                                            }
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_MULTI_SELECT -> {

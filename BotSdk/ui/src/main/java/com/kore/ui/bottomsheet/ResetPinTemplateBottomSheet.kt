@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
@@ -18,14 +19,19 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
 import com.kore.extensions.getDotMessage
+import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.ENTER_PIN_TITLE
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.PIN_LENGTH
 import com.kore.model.constants.BotResponseConstants.REENTER_PIN_TITLE
 import com.kore.model.constants.BotResponseConstants.RESET_BUTTONS
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.WARNING_MESSAGE
 import com.kore.ui.R
 import com.kore.ui.bottomsheet.row.PinFieldItemRowType
@@ -59,7 +65,7 @@ class ResetPinTemplateBottomSheet : BottomSheetDialogFragment() {
             template.newPinRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
             template.newPinRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             template.newPinRecycler.post {
-                template.newPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                template.newPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.entries).apply {
                     submitList(createRows(pinLength, template.newPinRecycler.width, itemSpace))
                     template.newPinRecycler.post {
                         val childCount = template.newPinRecycler.childCount
@@ -78,7 +84,7 @@ class ResetPinTemplateBottomSheet : BottomSheetDialogFragment() {
             template.reenterPinRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
             template.reenterPinRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             template.reenterPinRecycler.post {
-                template.reenterPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                template.reenterPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.entries).apply {
                     submitList(createRows(pinLength, template.reenterPinRecycler.width, itemSpace))
                     template.reenterPinRecycler.post {
                         val childCount = template.reenterPinRecycler.childCount
@@ -96,6 +102,12 @@ class ResetPinTemplateBottomSheet : BottomSheetDialogFragment() {
 
             (payload[RESET_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 template.reset.text = list[0][KEY_TITLE]
+                val sharedPrefs = PreferenceRepositoryImpl()
+                val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+                val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+                template.reset.setRoundedCorner(6.dpToPx(root.context).toFloat())
+                template.reset.setBackgroundColor(bgColor)
+                template.reset.setTextColor(txtColor)
                 template.reset.setOnClickListener {
                     var enteredPin = ""
                     var childCount = template.newPinRecycler.childCount

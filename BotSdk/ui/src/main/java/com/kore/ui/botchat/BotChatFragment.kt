@@ -61,6 +61,7 @@ import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
+import com.kore.ui.bottomsheet.AdvancedMultiSelectBottomSheet
 import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
 import com.kore.ui.bottomsheet.ResetPinTemplateBottomSheet
 import com.kore.ui.databinding.ActivityBotChatBinding
@@ -390,6 +391,11 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
     override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
         val bottomSheet = ResetPinTemplateBottomSheet()
         bottomSheet.showData(payload, true, childFragmentManager, this::onActionEvent)
+    }
+
+    override fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>) {
+        val bottomSheet = AdvancedMultiSelectBottomSheet()
+        bottomSheet.showData(msgId, payload, this::onActionEvent, childFragmentManager)
     }
 
     inner class NetworkCallbackImpl : ConnectivityManager.NetworkCallback() {

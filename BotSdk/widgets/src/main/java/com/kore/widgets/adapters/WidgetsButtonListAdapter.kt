@@ -2,11 +2,11 @@ package com.kore.widgets.adapters
 
 import android.app.Activity
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.kore.widgets.R
@@ -34,9 +34,9 @@ class WidgetsButtonListAdapter(
         val btn = buttons!![i]
         holder.tv.text = btn.title
         try {
-            holder.tv.setTextColor(Color.parseColor(btn.theme))
+            btn.theme?.toColorInt()?.let { holder.tv.setTextColor(it) }
         } catch (e: Exception) {
-            holder.tv.setTextColor(Color.parseColor("#3942f6"))
+            holder.tv.setTextColor("#3942f6".toColorInt())
         }
         holder.tv.setOnClickListener { buttonAction(context, btn, !skillName.isNullOrEmpty()) }
     }

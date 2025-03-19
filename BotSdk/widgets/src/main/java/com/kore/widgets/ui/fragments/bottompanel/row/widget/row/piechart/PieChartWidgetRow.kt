@@ -22,6 +22,7 @@ import com.kore.widgets.model.WidgetInfoModel
 import com.kore.widgets.model.WidgetsModel
 import com.kore.widgets.row.WidgetSimpleListRow
 import com.kore.widgets.ui.fragments.bottompanel.row.widget.row.WidgetInfoRowType
+import androidx.core.graphics.toColorInt
 
 class PieChartWidgetRow(
     private val skillName: String,
@@ -96,7 +97,7 @@ class PieChartWidgetRow(
             for (i in yVal.indices) {
                 val legendEntryA = LegendEntry()
                 legendEntryA.label = arrLabels[i]
-                legendEntryA.formColor = Color.parseColor(colorsArray[i])
+                legendEntryA.formColor = colorsArray[i].toColorInt()
                 arrLegendEntries.add(legendEntryA)
             }
 
@@ -129,7 +130,7 @@ class PieChartWidgetRow(
         val colors = java.util.ArrayList<Int>()
         val colorsArray: Array<String> = pieChart.context.resources.getStringArray(R.array.color_set)
         for (color in colorsArray) {
-            colors.add(Color.parseColor(color))
+            colors.add(color.toColorInt())
         }
         dataSet.colors = colors
         if (pieType == Constants.PIE_TYPE_DONUT) {
