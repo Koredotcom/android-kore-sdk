@@ -215,17 +215,17 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
     override fun onBrandingDetails(header: BotActiveThemeModel?) {
         if (header?.botMessage == null && header?.brandingModel != null) {
             Handler(Looper.getMainLooper()).postDelayed({
-                if (!isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
-                    isWelcomeScreenShown = true
-                    WelcomeDialogFragment(header.brandingModel!!).apply {
-                        setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
-                            override fun onUpdateUI() {
-                                binding?.chatWindow?.isVisible = true
-                            }
-                        })
-                        this.show(childFragmentManager, "My Dialog")
-                    }
-                }
+//                if (!isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
+//                    isWelcomeScreenShown = true
+//                    WelcomeDialogFragment(header.brandingModel!!).apply {
+//                        setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
+//                            override fun onUpdateUI() {
+//                                binding?.chatWindow?.isVisible = true
+//                            }
+//                        })
+//                        this.show(childFragmentManager, "My Dialog")
+//                    }
+//                }
 
                 val customHeaderFragment = SDKConfig.getCustomHeaderFragment(header.brandingModel?.header?.size.toString())
 
@@ -477,5 +477,9 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
 
     fun setListener(listener: BotChatFragmentListener) {
         fragmentListener = listener
+    }
+
+    fun setBotChatCloseListener(listener: BotChatCloseListener) {
+        closeListener = listener
     }
 }

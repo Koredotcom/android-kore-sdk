@@ -7,12 +7,14 @@ import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.URLSpan
+import android.text.util.Linkify
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.text.HtmlCompat
+import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.kore.common.SDKConfiguration
@@ -20,7 +22,6 @@ import com.kore.common.event.UserActionEvent
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
-import com.kore.extensions.formatEmojis
 import com.kore.markdown.MarkdownImageTagHandler
 import com.kore.markdown.MarkdownTagHandler
 import com.kore.markdown.MarkdownUtil
@@ -29,7 +30,6 @@ import com.kore.ui.R
 import com.kore.ui.databinding.RowTextTemplateBinding
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.utils.EmojiUtils
-import androidx.core.text.parseAsHtml
 
 class TextTemplateRow(
     override val type: SimpleListRowType,
@@ -43,6 +43,10 @@ class TextTemplateRow(
     private val timeStamp: String,
     private val errorTextColor: String = ""
 ) : SimpleListRow() {
+
+    companion object {
+        private const val LINK_TEXT_COLOR = "#3942f6"
+    }
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is TextTemplateRow) return false
@@ -77,7 +81,7 @@ class TextTemplateRow(
                 }
             }
             botMessage?.let { if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable) botMessage = EmojiUtils.replaceEmoticonsWithEmojis(it) }
-            val stringBuilder = MarkdownUtil.processMarkDown(botMessage?.formatEmojis() ?: "")
+            val stringBuilder = MarkdownUtil.processMarkDown(botMessage ?: "")
             val sequence = stringBuilder.replace("\n", "<br />")
                 .parseAsHtml(HtmlCompat.FROM_HTML_MODE_LEGACY, MarkdownImageTagHandler(context, message, stringBuilder), MarkdownTagHandler())
 
@@ -152,6 +156,8 @@ class TextTemplateRow(
 
 
             message.movementMethod = LinkMovementMethod.getInstance()
+            message.autoLinkMask = Linkify.WEB_URLS
+            message.setLinkTextColor(LINK_TEXT_COLOR.toColorInt())
             root.gravity = if (isBotRequest) Gravity.END else Gravity.START
             commonBind()
         }
