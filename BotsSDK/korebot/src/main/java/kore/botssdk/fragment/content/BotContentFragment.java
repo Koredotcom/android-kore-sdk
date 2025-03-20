@@ -706,7 +706,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         offset = _offset + re.getOriginalSize();
                     }
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         addMessagesToBotChatAdapter(list, _offset == 0);
                     }
 
@@ -752,7 +752,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         offset = re.getOriginalSize();
                     }
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         addMessagesToBotChatAdapter(list, _offset == 0);
                     }
 

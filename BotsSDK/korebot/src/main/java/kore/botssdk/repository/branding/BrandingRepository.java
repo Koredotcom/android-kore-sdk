@@ -247,6 +247,8 @@ public class BrandingRepository {
         SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getButtonActiveTextColor();
         SDKConfiguration.BubbleColors.quickBorderColor = brandingModel.getButtonBorderColor();
         SDKConfiguration.BubbleColors.leftBubbleSelected = brandingModel.getBotchatBgColor();
+        if (StringUtils.isNotEmpty(brandingModel.getWidgetFooterHintText()))
+            SDKConfiguration.BubbleColors.footer_hint_text = brandingModel.getWidgetFooterHintText();
 
         botChatView.onBrandingDetails(brandingModel);
     }
@@ -273,12 +275,14 @@ public class BrandingRepository {
         SDKConfiguration.BubbleColors.quickReplyTextColor = StringUtils.isNotEmpty(localBranding.getButtonActiveTextColor()) ? localBranding.getButtonActiveTextColor() : brandingModel.getButtonActiveTextColor();
         SDKConfiguration.BubbleColors.quickBorderColor = StringUtils.isNotEmpty(localBranding.getButtonBorderColor()) ? localBranding.getButtonBorderColor() : brandingModel.getButtonBorderColor();
         SDKConfiguration.BubbleColors.leftBubbleSelected = StringUtils.isNotEmpty(localBranding.getBotchatBgColor()) ? localBranding.getBotchatBgColor() : brandingModel.getBotchatBgColor();
+        SDKConfiguration.Client.bot_name = StringUtils.isNotEmpty(localBranding.getBotName()) ? localBranding.getBotName() : brandingModel.getBotName();
+        SDKConfiguration.BubbleColors.footer_hint_text = StringUtils.isNotEmpty(localBranding.getWidgetFooterHintText()) ? localBranding.getWidgetFooterHintText() : (StringUtils.isNotEmpty(brandingModel.getWidgetFooterHintText()) ? brandingModel.getWidgetFooterHintText() : "Type your message...");
 
+        brandingModel.setBotName(StringUtils.isNotEmpty(localBranding.getBotName()) ? localBranding.getBotName() : brandingModel.getBotName());
         brandingModel.setWidgetHeaderColor(StringUtils.isNotEmpty(localBranding.getWidgetHeaderColor()) ? localBranding.getWidgetHeaderColor() : brandingModel.getWidgetHeaderColor());
         brandingModel.setWidgetFooterColor(StringUtils.isNotEmpty(localBranding.getWidgetFooterColor()) ? localBranding.getWidgetFooterColor() : brandingModel.getWidgetFooterColor());
         brandingModel.setWidgetFooterBorderColor(StringUtils.isNotEmpty(localBranding.getWidgetFooterBorderColor()) ? localBranding.getWidgetFooterBorderColor() : brandingModel.getWidgetFooterBorderColor());
         brandingModel.setWidgetFooterHintColor(StringUtils.isNotEmpty(localBranding.getWidgetFooterHintColor()) ? localBranding.getWidgetFooterHintColor() : brandingModel.getWidgetFooterHintColor());
-
         botChatView.onBrandingDetails(brandingModel);
     }
 }

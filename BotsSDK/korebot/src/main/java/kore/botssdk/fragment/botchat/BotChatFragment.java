@@ -43,7 +43,7 @@ import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.footer.ComposeFooterFragment;
 import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.fragment.header.BotHeaderFragment;
-import kore.botssdk.listener.ActivityCloseListener;
+import kore.botssdk.listener.BotChatCloseListener;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -79,7 +79,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     private BotChatViewModel mViewModel;
     boolean isAgentTransfer;
     private BotChatFragmentListener fragmentListener;
-    ActivityCloseListener activityCloseListener;
+    BotChatCloseListener activityCloseListener;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -220,7 +220,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         baseFooterFragment.setIsAgentConnected(isAgentConnected);
     }
 
-    public void setActivityCloseListener(ActivityCloseListener activityCloseListener) {
+    public void setActivityCloseListener(BotChatCloseListener activityCloseListener) {
         this.activityCloseListener = activityCloseListener;
     }
 
@@ -437,7 +437,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
                             editor.putInt("HISTORY_COUNT", 0);
                             editor.apply();
                             BotSocketConnectionManager.killInstance();
-                            activityCloseListener.onFragmentClosed();
+                            activityCloseListener.onChatBotClosed();
                         }
                         break;
                     case DialogInterface.BUTTON_POSITIVE:
@@ -447,7 +447,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
                             editor.putInt("HISTORY_COUNT", botContentFragment.getAdapterCount());
                             editor.apply();
                             BotSocketConnectionManager.killInstance();
-                            activityCloseListener.onFragmentClosed();
+                            activityCloseListener.onChatBotMinimized();
                         }
                 }
 
