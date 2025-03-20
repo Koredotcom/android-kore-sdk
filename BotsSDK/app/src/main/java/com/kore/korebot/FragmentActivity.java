@@ -15,15 +15,16 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import kore.botssdk.fragment.botchat.BotChatFragment;
-import kore.botssdk.listener.ActivityCloseListener;
+import kore.botssdk.listener.BotChatCloseListener;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.LangUtils;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.NetworkUtility;
 
-public class FragmentActivity extends AppCompatActivity implements ActivityCloseListener {
+public class FragmentActivity extends AppCompatActivity implements BotChatCloseListener {
     BotChatFragment botChatFragment;
 
     @Override
@@ -171,8 +172,15 @@ public class FragmentActivity extends AppCompatActivity implements ActivityClose
     }
 
     @Override
-    public void onFragmentClosed() {
+    public void onChatBotClosed() {
         //Customize the call back as per the requirement
+        LogUtils.e("onChatBotClosed", "onChatBotClosed called");
+        finish();
+    }
+    @Override
+    public void onChatBotMinimized() {
+        //Customize the call back as per the requirement
+        LogUtils.e("onChatBotMinimized", "onChatBotMinimized called");
         finish();
     }
 }

@@ -3,6 +3,7 @@ package com.kore.korebot;
 import static android.Manifest.permission.POST_NOTIFICATIONS;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,6 +23,7 @@ import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.NewBotChatActivity;
@@ -29,6 +33,7 @@ import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.LangUtils;
+import kore.botssdk.utils.LogUtils;
 
 public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
@@ -125,6 +130,22 @@ public class MainActivity extends AppCompatActivity {
 //        askNotificationPermission();
     }
 
+    // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
+    ActivityResultLauncher<Intent> chatActivityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        // There are no request codes
+                        Intent data = result.getData();
+                        if (data != null && data.hasExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED)) {
+                            LogUtils.e("ChatBot is", Objects.requireNonNull(data.getStringExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED)));
+                        }
+                    }
+                }
+            });
+
     /**
      * Launching BotChatActivity where user can interact with bot
      */
@@ -134,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
         //This should not be null
         bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
         intent.putExtras(bundle);
-        startActivity(intent);
+        chatActivityResultLauncher.launch(intent);
     }
 
     @SuppressLint("UnknownNullness")

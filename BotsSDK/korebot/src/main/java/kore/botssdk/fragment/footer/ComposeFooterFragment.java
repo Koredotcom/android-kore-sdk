@@ -193,7 +193,10 @@ public class ComposeFooterFragment extends BaseFooterFragment {
             rlFooter.setBackgroundColor(Color.parseColor(widgetFooterColor));
             rlSpeaker.setBackgroundColor(Color.parseColor(widgetFooterColor));
         }
-        if (widgetFooterHintColor != null) editTextMessage.setHintTextColor(Color.parseColor(widgetFooterHintColor));
+        if (widgetFooterHintColor != null) {
+            editTextMessage.setHintTextColor(Color.parseColor(widgetFooterHintColor));
+            editTextMessage.setHint(StringUtils.isNotEmpty(SDKConfiguration.BubbleColors.footer_hint_text) ? SDKConfiguration.BubbleColors.footer_hint_text : "");
+        }
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) composeFrameLl.getLayoutParams();
 
         if (SDKConfiguration.OverrideKoreConfig.showAttachment) {

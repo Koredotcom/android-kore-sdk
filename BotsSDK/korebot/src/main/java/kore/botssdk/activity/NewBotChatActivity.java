@@ -435,6 +435,10 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
                             editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
                             editor.apply();
                             BotSocketConnectionManager.killInstance();
+
+                            Intent intent = new Intent();
+                            intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
+                            setResult(RESULT_OK, intent);
                             finish();
                         }
                     }
@@ -449,6 +453,9 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
                             editor.putInt(BotResponse.HISTORY_COUNT, 0);
                             editor.apply();
                             BotSocketConnectionManager.killInstance();
+                            Intent intent = new Intent();
+                            intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
+                            setResult(RESULT_OK, intent);
                             finish();
                         }
                     }

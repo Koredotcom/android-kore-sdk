@@ -10,5 +10,7 @@ public class BundleUtils {
     public static final String JWT_TKN = "jwtToken";
     public static final String PICK_TYPE = "pickType";
     public static final String BOT_ICON_ID = "bot_icon_id";
-    public static final String BOT_NEW_SESSION ="bot_new_session";
+    public static final String CHAT_BOT_CLOSE_OR_MINIMIZED ="chat_bot_close_or_minimized";
+    public static final String CHAT_BOT_MINIMIZED ="chat_bot_minimized";
+    public static final String CHAT_BOT_CLOSE ="chat_bot_close";
 }
