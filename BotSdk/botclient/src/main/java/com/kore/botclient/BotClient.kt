@@ -301,6 +301,7 @@ class BotClient private constructor() {
     }
 
     private fun connectToSocket(url: String?, isReconnectionAttempt: Boolean) {
+        listener?.onAccessTokenReady()
         if (url != null) {
             var rtmUrl = url
             options?.let {
@@ -322,7 +323,7 @@ class BotClient private constructor() {
                 }
                 val connectionMode = SDKConfiguration.getConnectionMode();
                 val socketUrl = if (isReconnectionAttempt) {
-                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else IS_RECONNECT_PARAM+CONNECTION_MODE_PARAM + queryParams
+                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else IS_RECONNECT_PARAM + CONNECTION_MODE_PARAM + queryParams
                 } else {
                     rtmUrl + if (!connectionMode.isNullOrEmpty()) connectionMode else "" + queryParams
                 }

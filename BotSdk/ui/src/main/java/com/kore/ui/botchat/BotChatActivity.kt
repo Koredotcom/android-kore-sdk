@@ -82,6 +82,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     private val networkCallback = NetworkCallbackImpl()
     private val acManager: ACManager = ACManager.getInstance()
     private var alertDialog: Dialog? = null
+    private var isWelcomeScreenShown = false
 
     private val connectivityManager by lazy {
         getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -204,13 +205,18 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean) {
         footerFragment.enableSendButton(state == ConnectionState.CONNECTED)
+        if (state == ConnectionState.CONNECTED) {
+            binding.clProgress.isVisible = false
+            binding.chatWindow.isVisible = true
+        }
     }
 
     override fun onBrandingDetails(header: BotActiveThemeModel?) {
         if (header?.botMessage == null && header?.brandingModel != null) {
             Handler(Looper.getMainLooper()).postDelayed({
-                binding.clProgress.isVisible = false
-                if (header.brandingModel?.welcomeScreen?.show == true) {
+//                binding.clProgress.isVisible = false
+                if (!isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
+                    isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
                         setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
                             override fun onUpdateUI() {
@@ -242,7 +248,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
             }, 2000)
         } else {
-            binding.clProgress.isVisible = false
+//            binding.clProgress.isVisible = false
             binding.chatWindow.isVisible = true
             val customHeaderFragment = SDKConfig.getCustomHeaderFragment(HEADER_SIZE_COMPACT)
             addHeaderFragmentToActivity(customHeaderFragment ?: ChatV2HeaderFragment(), header?.brandingModel)
@@ -385,6 +391,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun hideQuickReplies() {
         contentFragment.hideQuickReplies()
+    }
+
+    override fun onLoadingHistory() {
+        contentFragment.onLoadingHistory()
     }
 
     override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {

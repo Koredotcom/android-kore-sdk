@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -15,6 +16,8 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity.RESULT_OK
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -29,6 +32,7 @@ import com.kore.botclient.ConnectionState
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
 import com.kore.event.BotChatEvent
+import com.kore.listeners.BotChatCloseListener
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
 import com.kore.model.constants.BotResponseConstants
@@ -67,6 +71,8 @@ import com.kore.ui.bottomsheet.ResetPinTemplateBottomSheet
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
+import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
+import org.webrtc.NetworkMonitor
 import java.util.Calendar
 
 class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
@@ -79,6 +85,8 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
     private val acManager: ACManager = ACManager.getInstance()
     private var alertDialog: Dialog? = null
     private var fragmentListener: BotChatFragmentListener? = null
+    private var isWelcomeScreenShown = false
+    private var closeListener: BotChatCloseListener? = null
 
     private val connectivityManager by lazy {
         requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -192,19 +200,23 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
             is BotChatEvent.OnDropDownItemClicked -> footerFragment.setMessage(event.selectedItem)
             is BotChatEvent.ShowAttachmentOptions -> footerFragment.showAttachmentActionSheet()
             is BotChatEvent.DownloadLink -> botChatViewModel.downloadFile(event.msgId, event.url, event.fileName)
-//            is BotChatEvent.OnBackPressed -> if (isOnline()) showCloseAlert()
+            is BotChatEvent.OnBackPressed -> if (NetworkMonitor.isOnline()) showCloseAlert()
         }
     }
 
     override fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean) {
         footerFragment.enableSendButton(state == ConnectionState.CONNECTED)
+        if (state == ConnectionState.CONNECTED) {
+            binding?.clProgress?.isVisible = false
+            binding?.chatWindow?.isVisible = true
+        }
     }
 
     override fun onBrandingDetails(header: BotActiveThemeModel?) {
         if (header?.botMessage == null && header?.brandingModel != null) {
             Handler(Looper.getMainLooper()).postDelayed({
-                binding?.clProgress?.isVisible = false
-                if (header.brandingModel?.welcomeScreen?.show == true) {
+                if (!isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
+                    isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
                         setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
                             override fun onUpdateUI() {
@@ -383,6 +395,10 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.addMessagesToAdapter(list, !isMinimized(), isReconnection)
     }
 
+    override fun onLoadingHistory() {
+        contentFragment.onLoadingHistory()
+    }
+
     override fun showOtpBottomSheet(payload: HashMap<String, Any>) {
         val bottomSheet = OtpTemplateBottomSheet()
         bottomSheet.showData(payload, true, childFragmentManager, this::onActionEvent)
@@ -396,6 +412,48 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
     override fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>) {
         val bottomSheet = AdvancedMultiSelectBottomSheet()
         bottomSheet.showData(msgId, payload, this::onActionEvent, childFragmentManager)
+    }
+
+    fun showCloseAlert() {
+        val dialogClickListener = DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
+            val intent = Intent()
+            val result = java.util.HashMap<String, String>()
+            when (which) {
+                DialogInterface.BUTTON_POSITIVE -> {
+                    val event = R.string.bot_minimize_event
+                    botChatViewModel.sendCloseOrMinimizeEvent(event)
+                    botChatViewModel.onMinimize(contentFragment.getAdapterCount())
+                    result["event_code"] = "BotMinimized"
+                    result["event_message"] = "Bot Minimized by the user"
+                    intent.putExtra(EXTRA_RESULT, Gson().toJson(result))
+                    closeListener?.onBotChatMinimized()
+                }
+
+                DialogInterface.BUTTON_NEGATIVE -> {
+                    val event = if (botChatViewModel.isAgentTransfer()) R.string.agent_bot_close_event else R.string.bot_close_event
+                    botChatViewModel.sendCloseOrMinimizeEvent(event)
+                    botChatViewModel.onMinimize(0)
+                    result["event_code"] = "BotClosed"
+                    result["event_message"] = "Bot closed by the user"
+                    intent.putExtra(EXTRA_RESULT, Gson().toJson(result))
+                    closeListener?.onBotChatClosed()
+                }
+
+                DialogInterface.BUTTON_NEUTRAL -> {
+                    dialog?.dismiss()
+                    return@OnClickListener
+                }
+            }
+            dialog?.dismiss()
+            botChatViewModel.disconnectBot()
+            requireActivity().setResult(RESULT_OK, intent)
+            requireActivity().finish()
+        }
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(R.string.close_or_minimize).setCancelable(false)
+            .setPositiveButton(R.string.minimize, dialogClickListener)
+            .setNegativeButton(R.string.close, dialogClickListener)
+            .setNeutralButton(R.string.cancel, dialogClickListener).show()
     }
 
     inner class NetworkCallbackImpl : ConnectivityManager.NetworkCallback() {
