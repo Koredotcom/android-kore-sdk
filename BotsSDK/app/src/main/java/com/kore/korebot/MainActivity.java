@@ -114,9 +114,14 @@ public class MainActivity extends AppCompatActivity {
         //Set local branding model by overriding the branding api response
         SDKConfig.setLocalBranding(false, getLocalBrandingModel());
 
+        //Method to reset the bot connection and start a new session by overriding the previous state
+        // SDKConfig.disconnectBotSession(MainActivity.this);
+
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
         SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
+
+        //Enable the flag if the bot needs to support Emoji short cuts decryption
         SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);

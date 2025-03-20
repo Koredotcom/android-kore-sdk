@@ -108,6 +108,8 @@ public class FragmentActivity extends AppCompatActivity implements BotChatCloseL
         SDKConfiguration.OverrideKoreConfig.showAttachment = true;
         SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
         SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
+
+        //Enable the flag if the bot needs to support Emoji short cuts decryption
         SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
 
         FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
