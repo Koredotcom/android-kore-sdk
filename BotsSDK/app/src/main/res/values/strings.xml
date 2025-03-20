@@ -1,5 +1,7 @@
 <resources>
     <string name="get_started">Get Started</string>
+    <string name="socket_connecting">Connecting</string>
+    <string name="socket_connected">Connected</string>
     <string name="app_name">Kore.ai Bot</string>
     <string name="custom_content_layout">Custom Content Layout</string>
     <string name="camera">&#128247;</string>
