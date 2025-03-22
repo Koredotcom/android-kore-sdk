@@ -1,5 +1,7 @@
 package kore.botssdk.activity;
 
+import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
+
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
@@ -72,6 +74,15 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
     boolean isAgentTransfer;
+    private final BroadcastReceiver closeBotChatReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Objects.equals(intent.getAction(), CLOSE_CHAT_BOT_EVENT)) {
+                if (botClient != null && botClient.isConnected()) BotSocketConnectionManager.killInstance();
+                finish();
+            }
+        }
+    };
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -79,7 +90,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             if (isAgentTransfer && botClient != null) {
                 botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
             }
-
 
             LogUtils.e("onDestroyReceiver", "onDestroyReceiver called");
             SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -117,9 +127,13 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
         mViewModel.connectToBot(sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED);
-        else registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
+            registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
+        } else {
+            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
+            registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
+        }
 
         startService(new Intent(getApplicationContext(), ClosingService.class));
     }
@@ -395,6 +409,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
     @Override
     protected void onDestroy() {
+        unregisterReceiver(closeBotChatReceiver);
         if (isAgentTransfer && botClient != null)
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
@@ -506,5 +521,4 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         new Handler().post(() -> BotSocketConnectionManager.getInstance().subscribe());
         super.onStart();
     }
-
 }
