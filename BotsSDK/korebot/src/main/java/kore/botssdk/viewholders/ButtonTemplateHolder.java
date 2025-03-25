@@ -32,7 +32,7 @@ public class ButtonTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         ArrayList<BotButtonModel> botButtonModels = payloadInner.getButtons();
         final ButtonTemplateAdapter buttonTypeAdapter;
         RecyclerView buttonsList = itemView.findViewById(R.id.buttonsList);

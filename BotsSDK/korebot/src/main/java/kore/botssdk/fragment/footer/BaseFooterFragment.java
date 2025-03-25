@@ -91,7 +91,8 @@ public abstract class BaseFooterFragment extends Fragment implements ComposeFoot
     @Override
     public void onDestroy() {
         KoreEventCenter.unregister(this);
-        Speech.getInstance().shutdown();
+        if (Speech.getInstance() != null)
+            Speech.getInstance().shutdown();
         super.onDestroy();
     }
 

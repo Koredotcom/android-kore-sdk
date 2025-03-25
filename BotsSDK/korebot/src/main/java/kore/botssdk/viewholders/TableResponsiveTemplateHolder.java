@@ -53,7 +53,7 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         List<BotTableDataModel> rows = payloadInner.getTable_elements_data();
         List<List<String>> columns = payloadInner.getColumns();
         tvShowMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));

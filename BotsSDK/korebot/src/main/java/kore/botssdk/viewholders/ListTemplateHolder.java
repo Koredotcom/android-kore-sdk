@@ -39,7 +39,7 @@ public class ListTemplateHolder extends BaseViewHolder {
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         ArrayList<BotListModel> listElements = payloadInner.getListElements();
         ArrayList<BotButtonModel> buttons = payloadInner.getButtons();
         recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));

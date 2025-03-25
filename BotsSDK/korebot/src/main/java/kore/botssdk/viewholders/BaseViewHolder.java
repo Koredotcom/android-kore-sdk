@@ -129,9 +129,9 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    public void setMsgTime(String msgTime, boolean isBotRequest) {
+    public void setMsgTime(String msgTime, boolean isBotRequest, int viewType) {
         TextView msgTimeView = itemView.findViewById(R.id.msg_time);
-        msgTimeView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? View.VISIBLE : View.GONE);
+        msgTimeView.setVisibility((SDKConfiguration.isTimeStampsRequired() && viewType < 2) ? View.VISIBLE : View.GONE);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) msgTimeView.getLayoutParams();
 
         if (SDKConfiguration.isTimeStampsRequired()) {
@@ -275,7 +275,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    protected void setResponseText(LinearLayoutCompat layoutBubble, String textualContent) {
+    protected void setResponseText(LinearLayoutCompat layoutBubble, String textualContent, String msgTime) {
         if (bubbleText == null) initBubbleText(layoutBubble, false);
         bubbleText.setVisibility(View.VISIBLE);
         bubbleText.setText("");
@@ -364,6 +364,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             bubbleText.setText(strBuilder);
             bubbleText.setMovementMethod(LinkMovementMethod.getInstance());
             bubbleText.setVisibility(View.VISIBLE);
+            setMsgTime(msgTime, false, 0);
         } else {
             bubbleText.setText("");
             bubbleText.setVisibility(View.GONE);

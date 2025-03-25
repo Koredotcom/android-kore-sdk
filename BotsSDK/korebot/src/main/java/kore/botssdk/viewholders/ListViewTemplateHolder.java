@@ -57,13 +57,12 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
         TextView title = itemView.findViewById(R.id.title);
         ViewGroup botCustomListRoot = itemView.findViewById(R.id.botCustomListRoot);
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(10));
         String heading = payloadInner.getHeading();
         title.setText(heading);
         title.setVisibility(heading != null && !heading.isEmpty() ? VISIBLE : GONE);
-        title.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         if (listElements != null && !listElements.isEmpty()) {
             int size = moreCount != 0 && listElements.size() > moreCount ? moreCount : listElements.size();
             ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(context, listElements, isLastItem(), size);
