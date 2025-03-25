@@ -1,7 +1,6 @@
 package com.kore.widgets.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -77,14 +77,12 @@ class WidgetsListWidgetAdapter(
         if (listTemplateModel[Constants.KEY_TITLE] != null) {
             holder.txtTitle.text = listTemplateModel[Constants.KEY_TITLE] as String
             holder.txtTitle.setTextColor(
-                Color.parseColor(
-                    widgetPreferenceRepository.getStringValue(
-                        context,
-                        Constants.THEME_NAME,
-                        BUTTON_ACTIVE_TXT_COLOR,
-                        "#000000"
-                    )
-                )
+                widgetPreferenceRepository.getStringValue(
+                    context,
+                    Constants.THEME_NAME,
+                    BUTTON_ACTIVE_TXT_COLOR,
+                    "#000000"
+                ).toColorInt()
             )
         } else {
             holder.txtTitle.visibility = View.GONE
@@ -93,7 +91,7 @@ class WidgetsListWidgetAdapter(
         if (listTemplateModel[Constants.KEY_SUB_TITLE] != null) {
             holder.txtSubTitle.text = listTemplateModel[Constants.KEY_SUB_TITLE] as String
             holder.txtSubTitle.setTextColor(
-                Color.parseColor(widgetPreferenceRepository.getStringValue(context, Constants.THEME_NAME, BUTTON_ACTIVE_TXT_COLOR, "#000000"))
+                widgetPreferenceRepository.getStringValue(context, Constants.THEME_NAME, BUTTON_ACTIVE_TXT_COLOR, "#000000").toColorInt()
             )
         } else {
             holder.txtSubTitle.visibility = View.GONE

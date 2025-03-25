@@ -41,7 +41,7 @@ class ContactListFragment : BaseFragment(), FragmentLifecycle {
                 ToastUtils.showToast(requireContext(), "No contacts found!", Toast.LENGTH_LONG)
                 return@apply
             }
-            val adapter = SimpleListAdapter(ContactListItemRowType.values().asList())
+            val adapter = SimpleListAdapter(ContactListItemRowType.entries)
             contactList.layoutManager = LinearLayoutManager(root.context)
             contactList.addItemDecoration(SimpleListRow.VerticalSpaceItemDecoration(2))
             contactList.adapter = adapter

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:background="@drawable/contact_list_seperator"
+    android:background="@drawable/theme1_left_bubble_bg"
     android:orientation="vertical"
     android:paddingBottom="2dp">
 

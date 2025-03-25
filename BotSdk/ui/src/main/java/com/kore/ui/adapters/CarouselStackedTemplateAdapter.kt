@@ -47,17 +47,9 @@ class CarouselStackedTemplateAdapter(
 }
 
 class CarouselStackedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    var carouselItemTitle: TextView
-    var carouselItemSubtitle: TextView
-    var carouselBottomTitle: TextView
-    var carouselBottomValue: TextView
-    var carouselButtonListview: RecyclerView
-
-    init {
-        carouselItemTitle = view.findViewById(R.id.carousel_item_title)
-        carouselItemSubtitle = view.findViewById(R.id.carousel_item_subtitle)
-        carouselBottomTitle = view.findViewById(R.id.carousel_bottom_title)
-        carouselBottomValue = view.findViewById(R.id.carousel_bottom_value)
-        carouselButtonListview = view.findViewById(R.id.carousel_button_listview)
-    }
+    var carouselItemTitle: TextView = view.findViewById(R.id.carousel_item_title)
+    var carouselItemSubtitle: TextView = view.findViewById(R.id.carousel_item_subtitle)
+    var carouselBottomTitle: TextView = view.findViewById(R.id.carousel_bottom_title)
+    var carouselBottomValue: TextView = view.findViewById(R.id.carousel_bottom_value)
+    var carouselButtonListview: RecyclerView = view.findViewById(R.id.carousel_button_listview)
 }

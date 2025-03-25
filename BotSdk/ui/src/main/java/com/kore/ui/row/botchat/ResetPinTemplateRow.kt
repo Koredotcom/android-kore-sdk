@@ -5,17 +5,24 @@ import android.text.TextWatcher
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.extensions.getDotMessage
+import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.ENTER_PIN_TITLE
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.PIN_LENGTH
 import com.kore.model.constants.BotResponseConstants.REENTER_PIN_TITLE
 import com.kore.model.constants.BotResponseConstants.RESET_BUTTONS
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.WARNING_MESSAGE
 import com.kore.ui.R
 import com.kore.ui.bottomsheet.row.PinFieldItemRowType
@@ -58,11 +65,17 @@ class ResetPinTemplateRow(
             reenterNewPin.text = payload[REENTER_PIN_TITLE] as String?
             (payload[RESET_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 reset.text = list[0][KEY_TITLE]
+                val sharedPrefs = PreferenceRepositoryImpl()
+                val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+                val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+                reset.setRoundedCorner(6.dpToPx(root.context).toFloat())
+                reset.setBackgroundColor(bgColor)
+                reset.setTextColor(txtColor)
                 pinLength = (payload[PIN_LENGTH] as Double).toInt()
                 newPinRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
                 newPinRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
                 newPinRecycler.post {
-                    newPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                    newPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.entries).apply {
                         submitList(createRows(pinLength, newPinRecycler.width, itemSpace))
                         newPinRecycler.post {
                             val childCount = newPinRecycler.childCount
@@ -81,7 +94,7 @@ class ResetPinTemplateRow(
                 reenterPinRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
                 reenterPinRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
                 reenterPinRecycler.post {
-                    reenterPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                    reenterPinRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.entries).apply {
                         submitList(createRows(pinLength, reenterPinRecycler.width, itemSpace))
                         reenterPinRecycler.post {
                             val childCount = reenterPinRecycler.childCount

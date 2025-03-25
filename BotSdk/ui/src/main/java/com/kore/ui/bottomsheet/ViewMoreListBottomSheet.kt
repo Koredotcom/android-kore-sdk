@@ -13,11 +13,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kore.extensions.dpToPx
-import com.kore.ui.row.SimpleListAdapter
-import com.kore.ui.row.SimpleListRow
 import com.kore.ui.R
 import com.kore.ui.bottomsheet.row.item.ViewMoreListItemRow
 import com.kore.ui.databinding.DialogBottomSheetViewMoreBinding
+import com.kore.ui.row.SimpleListAdapter
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.listview.ListViewTemplateItemRowType
 
 class ViewMoreListBottomSheet : BottomSheetDialogFragment() {
@@ -35,7 +35,7 @@ class ViewMoreListBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
             rvViewMore.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-            rvViewMore.adapter = SimpleListAdapter(ListViewTemplateItemRowType.values().asList()).apply {
+            rvViewMore.adapter = SimpleListAdapter(ListViewTemplateItemRowType.entries).apply {
                 submitList(createRows())
             }
 

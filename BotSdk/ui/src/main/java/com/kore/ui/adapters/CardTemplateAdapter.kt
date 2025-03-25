@@ -1,7 +1,6 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
@@ -15,18 +14,19 @@ import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
-import com.kore.ui.utils.BitmapUtils
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.LARGE
 import com.kore.model.constants.BotResponseConstants.SMALL
 import com.kore.ui.R
+import com.kore.ui.utils.BitmapUtils
 
 class CardTemplateAdapter(
     val context: Context,
@@ -91,14 +91,14 @@ class CardTemplateAdapter(
             }
             if (cardHeading[BotResponseConstants.HEADER_STYLES] != null) {
                 val headerStyles = cardHeading[BotResponseConstants.HEADER_STYLES] as Map<String, *>
-                holder.tvOnlyTitle.setTextColor(Color.parseColor(headerStyles[BotResponseConstants.COLOR] as String))
+                holder.tvOnlyTitle.setTextColor((headerStyles[BotResponseConstants.COLOR] as String).toColorInt())
                 val rightDrawable = ContextCompat.getDrawable(context, R.drawable.card_title_bg) as GradientDrawable?
                 if (rightDrawable != null) {
-                    rightDrawable.setColor(Color.parseColor(headerStyles[BotResponseConstants.BG_COLOR] as String))
+                    rightDrawable.setColor((headerStyles[BotResponseConstants.BG_COLOR] as String).toColorInt())
                     if (headerStyles[BotResponseConstants.BORDER] != null) {
                         val border: List<String> = (headerStyles[BotResponseConstants.BORDER] as String).split("#")
-                        if (border.isNotEmpty()) rightDrawable.setStroke((1.dpToPx(context)).toInt(), Color.parseColor("#" + border[1]))
-                    } else rightDrawable.setStroke((1.dpToPx(context)).toInt(), Color.parseColor("#00000000"))
+                        if (border.isNotEmpty()) rightDrawable.setStroke((1.dpToPx(context)), ("#" + border[1]).toColorInt())
+                    } else rightDrawable.setStroke((1.dpToPx(context)), "#00000000".toColorInt())
                 }
                 holder.tvOnlyTitle.background = rightDrawable
                 headerStyles[BotResponseConstants.FONT_WEIGHT]?.let {
@@ -199,17 +199,17 @@ class CardTemplateAdapter(
                     val rightDrawable = ContextCompat.getDrawable(context, R.drawable.card_btn_bg) as GradientDrawable?
                     if (rightDrawable != null) {
                         if (buttonStyle[BotResponseConstants.BACKGROUND_COLOR] != null) {
-                            rightDrawable.setColor(Color.parseColor(buttonStyle[BotResponseConstants.BACKGROUND_COLOR] as String))
+                            rightDrawable.setColor((buttonStyle[BotResponseConstants.BACKGROUND_COLOR] as String).toColorInt())
                         } else {
-                            rightDrawable.setColor(Color.parseColor("#ffffff"))
+                            rightDrawable.setColor("#ffffff".toColorInt())
                         }
                         if (buttonStyle[BotResponseConstants.BORDER] != null) {
                             val border: List<String> = (buttonStyle[BotResponseConstants.BORDER] as String).split("#")
                             if (border.isNotEmpty()) rightDrawable.setStroke(
                                 1.dpToPx(context),
-                                Color.parseColor("#" + border[1].replace(";", ""))
+                                ("#" + border[1].replace(";", "")).toColorInt()
                             )
-                        } else rightDrawable.setStroke(1.dpToPx(context), Color.parseColor("#00000000"))
+                        } else rightDrawable.setStroke(1.dpToPx(context), "#00000000".toColorInt())
                     }
                     holder.tvCardButton.background = rightDrawable
                 }
@@ -223,14 +223,14 @@ class CardTemplateAdapter(
                 if (cardStyles[BotResponseConstants.BORDER_LEFT] != null) {
                     val border: List<String> = (cardStyles[BotResponseConstants.BORDER_LEFT] as String).split(" ")
                     if (border.size > 1) {
-                        rightDrawable.setColor(Color.parseColor(border[2].replace(";", "")))
-                        rightDrawable.setStroke(1.dpToPx(context), Color.parseColor(border[2].replace(";", "")))
+                        rightDrawable.setColor(border[2].replace(";", "").toColorInt())
+                        rightDrawable.setStroke(1.dpToPx(context), border[2].replace(";", "").toColorInt())
                     }
                 } else if (cardStyles[BotResponseConstants.BORDER_RIGHT] != null) {
                     val border: List<String> = (cardStyles[BotResponseConstants.BORDER_RIGHT] as String).split(" ")
                     if (border.size > 1) {
-                        rightDrawable.setColor(Color.parseColor(border[2].replace(";", "")))
-                        rightDrawable.setStroke(1.dpToPx(context), Color.parseColor(border[2].replace(";", "")))
+                        rightDrawable.setColor(border[2].replace(";", "").toColorInt())
+                        rightDrawable.setStroke(1.dpToPx(context), border[2].replace(";", "").toColorInt())
                     }
                     val buttonLayoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                     buttonLayoutParams.setMargins(0, 0, 15, 0)
@@ -238,8 +238,8 @@ class CardTemplateAdapter(
                 } else if (cardStyles[BotResponseConstants.BORDER_TOP] != null) {
                     val border: List<String> = (cardStyles[BotResponseConstants.BORDER_TOP] as String).split(" ")
                     if (border.size > 1) {
-                        rightDrawable.setColor(Color.parseColor(border[2].replace(";", "")))
-                        rightDrawable.setStroke(1.dpToPx(context), Color.parseColor(border[2].replace(";", "")))
+                        rightDrawable.setColor(border[2].replace(";", "").toColorInt())
+                        rightDrawable.setStroke(1.dpToPx(context), border[2].replace(";", "").toColorInt())
                     }
                     val buttonLayoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                     buttonLayoutParams.setMargins(0, 15, 0, 0)
@@ -247,13 +247,13 @@ class CardTemplateAdapter(
                 } else if (cardStyles[BotResponseConstants.BORDER_BOTTOM] != null) {
                     val border: List<String> = (cardStyles[BotResponseConstants.BORDER_BOTTOM] as String).split(" ")
                     if (border.size > 1) {
-                        rightDrawable.setColor(Color.parseColor(border[2].replace(";", "")))
-                        rightDrawable.setStroke(1.dpToPx(context), Color.parseColor(border[2].replace(";", "")))
+                        rightDrawable.setColor(border[2].replace(";", "").toColorInt())
+                        rightDrawable.setStroke(1.dpToPx(context), border[2].replace(";", "").toColorInt())
                     }
                     val buttonLayoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
                     buttonLayoutParams.setMargins(0, 0, 0, 15)
                     holder.llCardView.layoutParams = buttonLayoutParams
-                } else rightDrawable.setStroke((1.dpToPx(context)), Color.parseColor("#00000000"))
+                } else rightDrawable.setStroke((1.dpToPx(context)), "#00000000".toColorInt())
             }
             val buttonLayoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
             buttonLayoutParams.setMargins(0, 10, 0, 0)
@@ -261,18 +261,18 @@ class CardTemplateAdapter(
             holder.llCardViewTop.background = rightDrawable
             val templateBb = ContextCompat.getDrawable(context, R.drawable.card_template_bg) as GradientDrawable?
             if (templateBb != null) {
-                templateBb.setColor(Color.parseColor("#ffffff"))
+                templateBb.setColor("#ffffff".toColorInt())
                 if (cardStyles[BotResponseConstants.BACKGROUND_COLOR] != null) {
-                    templateBb.setColor(Color.parseColor(cardStyles[BotResponseConstants.BACKGROUND_COLOR] as String))
+                    templateBb.setColor((cardStyles[BotResponseConstants.BACKGROUND_COLOR] as String).toColorInt())
                 }
-                templateBb.setStroke(1.dpToPx(context), Color.parseColor("#84959B"))
+                templateBb.setStroke(1.dpToPx(context), "#84959B".toColorInt())
             }
             holder.llCardView.background = templateBb
         } else {
             val rightDrawable = ContextCompat.getDrawable(context, R.drawable.card_template_top_bg) as GradientDrawable?
             if (rightDrawable != null) {
-                rightDrawable.setColor(Color.parseColor("#ffffff"))
-                rightDrawable.setStroke(1.dpToPx(context), Color.parseColor("#00000000"))
+                rightDrawable.setColor("#ffffff".toColorInt())
+                rightDrawable.setStroke(1.dpToPx(context), "#00000000".toColorInt())
                 holder.llCardViewTop.background = rightDrawable
             }
             val buttonLayoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -285,22 +285,22 @@ class CardTemplateAdapter(
             val cardContentStyle = cardTemplateModel[BotResponseConstants.CARD_CONTENT_STYLES] as Map<String, *>
             if (rightDrawable != null) {
                 if (cardContentStyle[BotResponseConstants.BACKGROUND_COLOR] != null)
-                    rightDrawable.setColor(Color.parseColor(cardContentStyle[BotResponseConstants.BACKGROUND_COLOR] as String))
+                    rightDrawable.setColor((cardContentStyle[BotResponseConstants.BACKGROUND_COLOR] as String).toColorInt())
                 else
-                    rightDrawable.setColor(Color.parseColor("#ffffff"))
+                    rightDrawable.setColor("#ffffff".toColorInt())
                 if (cardContentStyle[BotResponseConstants.BORDER] != null) {
                     val border: List<String> = (cardContentStyle[BotResponseConstants.BORDER] as String).split("#")
                     if (border.isNotEmpty()) {
-                        rightDrawable.setStroke(1.dpToPx(context), Color.parseColor("#" + border[1].replace(";", "")))
+                        rightDrawable.setStroke(1.dpToPx(context), ("#" + border[1].replace(";", "")).toColorInt())
                     }
-                } else rightDrawable.setStroke(1.dpToPx(context), Color.parseColor("#84959B"))
+                } else rightDrawable.setStroke(1.dpToPx(context), "#84959B".toColorInt())
             }
             if (cardContentStyle[BotResponseConstants.BORDER_LEFT] != null) {
                 val border: List<String> = (cardContentStyle[BotResponseConstants.BORDER_LEFT] as String).split(" ")
                 holder.vBorder.visibility = View.VISIBLE
                 val viewDrawable = ContextCompat.getDrawable(context, R.drawable.card_view_bg) as GradientDrawable?
                 if (viewDrawable != null && border.size > 1) {
-                    viewDrawable.setColor(Color.parseColor(border[2].replace(";", "")))
+                    viewDrawable.setColor(border[2].replace(";", "").toColorInt())
                 }
                 holder.vBorder.background = viewDrawable
             } else {
@@ -313,13 +313,13 @@ class CardTemplateAdapter(
         } else {
             val rightDrawable = ContextCompat.getDrawable(context, R.drawable.card_template_bg) as GradientDrawable?
             if (rightDrawable != null) {
-                rightDrawable.setColor(Color.parseColor("#ffffff"))
+                rightDrawable.setColor("#ffffff".toColorInt())
                 if (cardTemplateModel[BotResponseConstants.CARD_STYLES] != null) {
                     val cardStyle = cardTemplateModel[BotResponseConstants.CARD_STYLES] as Map<String, *>
                     if (cardStyle[BotResponseConstants.BACKGROUND_COLOR] != null)
-                        rightDrawable.setColor(Color.parseColor(cardStyle[BotResponseConstants.BACKGROUND_COLOR] as String))
+                        rightDrawable.setColor((cardStyle[BotResponseConstants.BACKGROUND_COLOR] as String).toColorInt())
                 }
-                rightDrawable.setStroke(1.dpToPx(context), Color.parseColor("#84959B"))
+                rightDrawable.setStroke(1.dpToPx(context), "#84959B".toColorInt())
                 holder.llCardView.background = rightDrawable
             }
         }
@@ -330,32 +330,17 @@ class CardTemplateAdapter(
     }
 
     class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val botListItemImage: ImageView
-        val ivHeaderExtra: ImageView
-        val botListItemTitle: TextView
-        val botListItemSubtitle: TextView
-        val tvOnlyTitle: TextView
-        val tvCardButton: TextView
-        val tvHeaderExtraTitle: TextView
-        val rlTitle: RelativeLayout
-        val rvDescription: RecyclerView
-        val llCardView: LinearLayout
-        val llCardViewTop: LinearLayout
-        val vBorder: View
-
-        init {
-            llCardView = itemView.findViewById(R.id.llCardView)
-            llCardViewTop = itemView.findViewById(R.id.llCardViewTop)
-            botListItemTitle = itemView.findViewById(R.id.bot_list_item_title)
-            botListItemSubtitle = itemView.findViewById(R.id.bot_list_item_subtitle)
-            botListItemImage = itemView.findViewById(R.id.bot_list_item_image)
-            tvOnlyTitle = itemView.findViewById(R.id.tvOnlyTitle)
-            rlTitle = itemView.findViewById(R.id.rlTitle)
-            rvDescription = itemView.findViewById(R.id.rvDescription)
-            tvCardButton = itemView.findViewById(R.id.tvCardButton)
-            vBorder = itemView.findViewById(R.id.vBorder)
-            ivHeaderExtra = itemView.findViewById(R.id.ivheaderExtra)
-            tvHeaderExtraTitle = itemView.findViewById(R.id.tvheaderExtraTitle)
-        }
+        val botListItemImage: ImageView = itemView.findViewById(R.id.bot_list_item_image)
+        val ivHeaderExtra: ImageView = itemView.findViewById(R.id.ivheaderExtra)
+        val botListItemTitle: TextView = itemView.findViewById(R.id.bot_list_item_title)
+        val botListItemSubtitle: TextView = itemView.findViewById(R.id.bot_list_item_subtitle)
+        val tvOnlyTitle: TextView = itemView.findViewById(R.id.tvOnlyTitle)
+        val tvCardButton: TextView = itemView.findViewById(R.id.tvCardButton)
+        val tvHeaderExtraTitle: TextView = itemView.findViewById(R.id.tvheaderExtraTitle)
+        val rlTitle: RelativeLayout = itemView.findViewById(R.id.rlTitle)
+        val rvDescription: RecyclerView = itemView.findViewById(R.id.rvDescription)
+        val llCardView: LinearLayout = itemView.findViewById(R.id.llCardView)
+        val llCardViewTop: LinearLayout = itemView.findViewById(R.id.llCardViewTop)
+        val vBorder: View = itemView.findViewById(R.id.vBorder)
     }
 }

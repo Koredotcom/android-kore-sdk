@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.NavHostFragment
@@ -20,7 +21,6 @@ import com.google.android.flexbox.FlexDirection.COLUMN
 import com.google.android.flexbox.FlexDirection.ROW
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
-import com.kore.ui.base.BaseDialogFragment
 import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_CAROUSEL
@@ -33,6 +33,7 @@ import com.kore.ui.adapters.WelcomePromotionsAdapter
 import com.kore.ui.adapters.WelcomeStarterButtonsAdapter
 import com.kore.ui.adapters.WelcomeStaticLinksAdapter
 import com.kore.ui.adapters.WelcomeStaticLinksListAdapter
+import com.kore.ui.base.BaseDialogFragment
 import com.kore.ui.databinding.WelcomeScreenBinding
 
 class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
@@ -66,9 +67,9 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
             if (botBrandingModel.general.colors.useColorPaletteOnly == true) {
                 botBrandingModel.welcomeScreen?.background?.color = botBrandingModel.general.colors.primary
                 binding.llStartConversation.backgroundTintList =
-                    ColorStateList.valueOf(Color.parseColor(botBrandingModel.general.colors.primary))
-                binding.svWelcome.backgroundTintList = ColorStateList.valueOf(Color.parseColor(botBrandingModel.general.colors.secondary))
-                binding.llStarterLogo.backgroundTintList = ColorStateList.valueOf(Color.parseColor(botBrandingModel.general.colors.primary))
+                    botBrandingModel.general.colors.primary?.toColorInt()?.let { ColorStateList.valueOf(it) }
+                binding.svWelcome.backgroundTintList = botBrandingModel.general.colors.secondary?.toColorInt()?.let { ColorStateList.valueOf(it) }
+                binding.llStarterLogo.backgroundTintList = botBrandingModel.general.colors.primary?.toColorInt()?.let { ColorStateList.valueOf(it) }
             }
 
             when (botBrandingModel.welcomeScreen?.layout) {

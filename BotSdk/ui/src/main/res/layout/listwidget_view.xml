@@ -217,7 +217,6 @@
             android:layout_height="wrap_content"
             android:letterSpacing="0.1"
             android:text="@string/more_dot"
-            android:textAllCaps="true"
             android:textColor="#4741fa"
             android:textSize="14sp" />
     </LinearLayout>

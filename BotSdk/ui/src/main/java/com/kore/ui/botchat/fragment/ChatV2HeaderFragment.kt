@@ -1,10 +1,10 @@
 package com.kore.ui.botchat.fragment
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
@@ -32,8 +32,10 @@ class ChatV2HeaderFragment : BaseHeaderFragment() {
     private fun updateUI() {
         binding.tvBotName.text = brandingModel?.header?.title?.name ?: SDKConfiguration.getBotConfigModel()?.botName
         brandingModel?.let {
-            if (!brandingModel?.general?.colors?.secondary.isNullOrEmpty()) binding.root.setBackgroundColor(Color.parseColor(it.general.colors.secondary))
-            if (!brandingModel?.general?.colors?.secondary.isNullOrEmpty()) binding.tvBotName.setTextColor(Color.parseColor(it.general.colors.primaryText))
+            if (!brandingModel?.general?.colors?.secondary.isNullOrEmpty()) it.general.colors.secondary?.toColorInt()
+                ?.let { it1 -> binding.root.setBackgroundColor(it1) }
+            if (!brandingModel?.general?.colors?.secondary.isNullOrEmpty()) it.general.colors.primaryText?.toColorInt()
+                ?.let { it1 -> binding.tvBotName.setTextColor(it1) }
         }
     }
 

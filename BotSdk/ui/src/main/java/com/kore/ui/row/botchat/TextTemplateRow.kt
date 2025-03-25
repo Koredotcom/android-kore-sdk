@@ -2,17 +2,19 @@ package com.kore.ui.row.botchat
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.text.SpannableStringBuilder
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.URLSpan
+import android.text.util.Linkify
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.text.HtmlCompat
+import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.kore.common.SDKConfiguration
@@ -20,7 +22,6 @@ import com.kore.common.event.UserActionEvent
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
-import com.kore.extensions.formatEmojis
 import com.kore.markdown.MarkdownImageTagHandler
 import com.kore.markdown.MarkdownTagHandler
 import com.kore.markdown.MarkdownUtil
@@ -43,6 +44,10 @@ class TextTemplateRow(
     private val errorTextColor: String = ""
 ) : SimpleListRow() {
 
+    companion object {
+        private const val LINK_TEXT_COLOR = "#3942f6"
+    }
+
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is TextTemplateRow) return false
         return otherRow.id == id
@@ -64,12 +69,10 @@ class TextTemplateRow(
                 .getSharedPreference(context, BotResponseConstants.THEME_NAME)
                 .getBoolean(BotResponseConstants.IS_TIME_STAMP_REQUIRED, false)
             if (isTimeStampRequired) {
-                msgTimeStamp.setTextColor(
-                    Color.parseColor(
-                        PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
-                            .getString(BotResponseConstants.TIME_STAMP_TXT_COLOR, "#B0B0B0")
-                    )
-                )
+                PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
+                    .getString(BotResponseConstants.TIME_STAMP_TXT_COLOR, "#B0B0B0")?.toColorInt()?.let {
+                        msgTimeStamp.setTextColor(it)
+                    }
                 if (!PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
                         .getBoolean(BotResponseConstants.TIME_STAMP_IS_BOTTOM, false)
                 ) {
@@ -78,12 +81,9 @@ class TextTemplateRow(
                 }
             }
             botMessage?.let { if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable) botMessage = EmojiUtils.replaceEmoticonsWithEmojis(it) }
-            val stringBuilder = MarkdownUtil.processMarkDown(botMessage?.formatEmojis() ?: "")
-            val sequence = stringBuilder.replace("\n", "<br />").let {
-                HtmlCompat.fromHtml(
-                    it, HtmlCompat.FROM_HTML_MODE_LEGACY, MarkdownImageTagHandler(context, message, stringBuilder), MarkdownTagHandler()
-                )
-            }
+            val stringBuilder = MarkdownUtil.processMarkDown(botMessage ?: "")
+            val sequence = stringBuilder.replace("\n", "<br />")
+                .parseAsHtml(HtmlCompat.FROM_HTML_MODE_LEGACY, MarkdownImageTagHandler(context, message, stringBuilder), MarkdownTagHandler())
 
             val strBuilder = SpannableStringBuilder(sequence)
             val urls = strBuilder.getSpans(0, sequence.length, URLSpan::class.java)
@@ -112,7 +112,7 @@ class TextTemplateRow(
                 }
             } else
                 sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")
-            message.setTextColor(ColorStateList.valueOf(Color.parseColor(textColor)))
+            message.setTextColor(ColorStateList.valueOf(textColor.toColorInt()))
             message.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
                     root.context.resources,
@@ -128,19 +128,16 @@ class TextTemplateRow(
                 else gradientDrawable.cornerRadii = balLeftRadii
 
                 gradientDrawable.setColor(
-                    Color.parseColor(
-                        sharedPrefs.getStringValue(
-                            context,
-                            BotResponseConstants.THEME_NAME,
-                            BotResponseConstants.BUBBLE_LEFT_BG_COLOR,
-                            "#efeffc"
-                        )
-                    )
+                    sharedPrefs.getStringValue(
+                        context,
+                        BotResponseConstants.THEME_NAME,
+                        BotResponseConstants.BUBBLE_LEFT_BG_COLOR,
+                        "#efeffc"
+                    ).toColorInt()
                 )
                 gradientDrawable.setStroke(
-                    (1.dpToPx(context)), Color.parseColor(
-                        sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#efeffc")
-                    )
+                    (1.dpToPx(context)),
+                    sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#efeffc").toColorInt()
                 )
 
             } else {
@@ -149,19 +146,18 @@ class TextTemplateRow(
                 else gradientDrawable.cornerRadii = balRightRadii
 
                 gradientDrawable.setColor(
-                    Color.parseColor(
-                        sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
-                    )
+                    sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
                 )
                 gradientDrawable.setStroke(
-                    (1.dpToPx(context)), Color.parseColor(
-                        sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
-                    )
+                    (1.dpToPx(context)),
+                    sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
                 )
             }
 
 
             message.movementMethod = LinkMovementMethod.getInstance()
+            message.autoLinkMask = Linkify.WEB_URLS
+            message.setLinkTextColor(LINK_TEXT_COLOR.toColorInt())
             root.gravity = if (isBotRequest) Gravity.END else Gravity.START
             commonBind()
         }
@@ -179,10 +175,8 @@ class TextTemplateRow(
         if (isTimeStampRequired) {
             msgTimeStamp.text = HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
             msgTimeStamp.setTextColor(
-                Color.parseColor(
-                    PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
-                        .getString(BotResponseConstants.TIME_STAMP_TXT_COLOR, "#B0B0B0")
-                )
+                PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
+                    .getString(BotResponseConstants.TIME_STAMP_TXT_COLOR, "#B0B0B0")!!.toColorInt()
             )
         }
     }

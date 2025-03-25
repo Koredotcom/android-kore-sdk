@@ -12,7 +12,7 @@
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:text="@string/view_more"
-        android:textColor="@color/gray_modern"
+        android:textColor="@color/black"
         android:textSize="@dimen/text_size_sub_header"
         android:visibility="gone" />
 

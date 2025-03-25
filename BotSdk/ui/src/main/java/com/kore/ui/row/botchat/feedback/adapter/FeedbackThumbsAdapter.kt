@@ -1,7 +1,6 @@
 package com.kore.ui.row.botchat.feedback.adapter
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.event.BotChatEvent
 import com.kore.extensions.setRoundedCorner
@@ -57,8 +57,8 @@ class FeedbackThumbsAdapter(
     private fun setTextColor(textView: TextView, selectedColor: String, unselectedColor: String) {
         val states = arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf(-android.R.attr.state_selected))
         val colors = intArrayOf(
-            Color.parseColor(selectedColor),
-            Color.parseColor(unselectedColor)
+            selectedColor.toColorInt(),
+            unselectedColor.toColorInt()
         )
         val colorStateList = ColorStateList(states, colors)
         textView.setTextColor(colorStateList)
@@ -68,7 +68,7 @@ class FeedbackThumbsAdapter(
         val drawable = ContextCompat.getDrawable(view.context, R.color.selector_feedback_thumbs_color)
         drawable?.mutate()
         val states = arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf(-android.R.attr.state_selected))
-        val colors = intArrayOf(Color.parseColor(selectedColor), Color.parseColor(unselectedColor))
+        val colors = intArrayOf(selectedColor.toColorInt(), unselectedColor.toColorInt())
         val colorStateList = ColorStateList(states, colors)
         drawable?.setTintList(colorStateList)
         view.background = drawable
@@ -78,21 +78,18 @@ class FeedbackThumbsAdapter(
         val drawable = ContextCompat.getDrawable(imageView.context, srcId) ?: return
         val wrappedDrawable = DrawableCompat.wrap(drawable)
         val states = arrayOf(intArrayOf(android.R.attr.state_selected), intArrayOf(-android.R.attr.state_selected))
-        val colors = intArrayOf(Color.parseColor(selectedColor), Color.parseColor(unselectedColor))
+        val colors = intArrayOf(selectedColor.toColorInt(), unselectedColor.toColorInt())
         val colorStateList = ColorStateList(states, colors)
         DrawableCompat.setTintList(wrappedDrawable, colorStateList)
         imageView.setImageDrawable(wrappedDrawable)
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var ivFeedbackThumbs: ImageView
-        var tvFeedbackThumbs: TextView
-        var thumbsFeedbackRoot: LinearLayoutCompat
+        var ivFeedbackThumbs: ImageView = itemView.findViewById(R.id.ivFeedbackThumbs)
+        var tvFeedbackThumbs: TextView = itemView.findViewById(R.id.tvFeedbackThumbs)
+        var thumbsFeedbackRoot: LinearLayoutCompat = itemView.findViewById(R.id.thumbs_feedback_root)
 
         init {
-            tvFeedbackThumbs = itemView.findViewById(R.id.tvFeedbackThumbs)
-            ivFeedbackThumbs = itemView.findViewById(R.id.ivFeedbackThumbs)
-            thumbsFeedbackRoot = itemView.findViewById(R.id.thumbs_feedback_root)
             thumbsFeedbackRoot.setRoundedCorner(8f)
         }
     }

@@ -134,10 +134,25 @@ object EmojiUtils {
     }
 
     fun replaceEmoticonsWithEmojis(text: String): String {
-        var text = text
-        for ((key, value) in emoticonToEmojiMap) {
-            text = text.replace(key, value)
+        val urlPattern = Regex("(https?://\\S+)")
+        val urls = mutableListOf<String>()
+
+        // Temporarily replace URLs with placeholders
+        var tempText = text.replace(urlPattern) {
+            urls.add(it.value)
+            "##URL##${urls.size - 1}" // Unique placeholder for each URL
         }
-        return text
+
+        // Replace emojis only in non-URL text
+        emoticonToEmojiMap.forEach { (shortcut, emoji) ->
+            tempText = tempText.replace(shortcut, emoji)
+        }
+
+        // Restore URLs from placeholders
+        urls.forEachIndexed { index, url ->
+            tempText = tempText.replace("##URL##$index", url)
+        }
+
+        return tempText
     }
 }

@@ -3,12 +3,19 @@ package com.kore.ui.row.botchat
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.core.graphics.toColorInt
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListRow
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.databinding.RowClockTemplateBinding
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.BotChatRowType.Companion.ROW_CLOCK_PROVIDER
 
 class ClockTemplateRow(
@@ -24,7 +31,7 @@ class ClockTemplateRow(
         const val MERIDIAN_PM = "PM"
     }
 
-    override val type: SimpleListRow.SimpleListRowType = BotChatRowType.getRowType(ROW_CLOCK_PROVIDER)
+    override val type: SimpleListRowType = BotChatRowType.getRowType(ROW_CLOCK_PROVIDER)
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is ClockTemplateRow) return false
         return otherRow.id == id
@@ -41,6 +48,12 @@ class ClockTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, isShow = false, isTemplate = true)
         val childBinding = RowClockTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+            confirm.setRoundedCorner(6.dpToPx(root.context).toFloat())
+            confirm.setBackgroundColor(bgColor)
+            confirm.setTextColor(txtColor)
             commonBind()
         }
     }

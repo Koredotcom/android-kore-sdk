@@ -1,11 +1,10 @@
 package com.kore.ui.row.botchat.listview.item
 
-import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
 import com.kore.event.BotChatEvent.SendMessage
 import com.kore.model.constants.BotResponseConstants.BUTTON_TYPE_WEB_URL
@@ -20,6 +19,7 @@ import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.model.constants.BotResponseConstants.URL
 import com.kore.model.constants.BotResponseConstants.VALUE
 import com.kore.ui.databinding.RowListviewTemplateItemBinding
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.listview.ListViewTemplateItemRowType
 import com.kore.ui.transforms.RoundedCornersTransform
 import com.squareup.picasso.Picasso
@@ -51,7 +51,7 @@ class ListViewTemplateItemRow(
             tvSubTitle.isVisible = subTitle != null && subTitle.toString().isNotEmpty()
 
             itemCost.text = item[VALUE].toString()
-            item[COLOR]?.let { itemCost.setTextColor(Color.parseColor(it.toString())) }
+            item[COLOR]?.let { itemCost.setTextColor(it.toString().toColorInt()) }
 
             val imageUrl = item[IMAGE_URL]
             imageView.isVisible = imageUrl != null && imageUrl.toString().isNotEmpty()

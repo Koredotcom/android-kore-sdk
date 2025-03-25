@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/llOptionsBottom"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#70000000"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/llBottomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_options_bg"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/ivClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="end"
+                android:layout_margin="14dp"
+                android:padding="6dp"
+                android:src="@mipmap/ic_close_black_24dp" />
+
+            <com.kore.ui.textview.CustomTextViewBold
+                android:id="@+id/advance_multi_select_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ivClose"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_sub_header"
+                tools:text="Title" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/category_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/viewMore"
+                android:layout_below="@id/advance_multi_select_title"
+                android:visibility="visible" />
+
+            <com.kore.ui.textview.CustomTextView
+                android:id="@+id/viewMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/done"
+                android:layout_marginStart="@dimen/dimen_10dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/view_more"
+                android:textColor="@color/right_bubble_unselected"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <com.kore.ui.textview.CustomTextViewBold
+                android:id="@+id/done"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/baseView"
+                android:layout_margin="10dp"
+                android:background="@drawable/button_drawable"
+                android:gravity="center"
+                android:text="@string/done"
+                android:textColor="@color/white"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <View
+                android:id="@+id/baseView"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true" />
+        </RelativeLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

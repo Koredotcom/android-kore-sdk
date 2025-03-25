@@ -6,13 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
+import com.kore.ui.row.SimpleListRow
 
 class CarouselTemplateAdapter(
     private val context: Context,
@@ -35,6 +40,9 @@ class CarouselTemplateAdapter(
         if (buttonMap[BotResponseConstants.DEFAULT_ACTION] != null) {
             val btn: Map<*, *> = buttonMap[BotResponseConstants.DEFAULT_ACTION] as Map<*, *>
             holder.hashTagsView.text = btn[BotResponseConstants.URL] as String
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val bgColor = sharedPrefs.getStringValue(holder.hashTagsView.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            holder.hashTagsView.setTextColor(bgColor)
         }
 
         holder.carouselItemTitle.text = buttonMap[BotResponseConstants.KEY_TITLE] as String
@@ -50,7 +58,7 @@ class CarouselTemplateAdapter(
             else -> {}
         }
 
-        holder.carouselButtonListview.addItemDecoration(DividerItemDecoration(context, LinearLayoutManager.VERTICAL))
+        holder.carouselButtonListview.addItemDecoration(SimpleListRow.VerticalSpaceItemDecoration(10))
         val buttons: List<Map<String, *>>? = buttonMap[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>?
         buttons?.isNotEmpty().let {
             holder.carouselButtonListview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
@@ -60,17 +68,9 @@ class CarouselTemplateAdapter(
 }
 
 class CarouselViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val carouselItemImage: ImageView
-    val carouselItemTitle: TextView
-    val carouselItemSubTitle: TextView
-    val hashTagsView: TextView
-    val carouselButtonListview: RecyclerView
-
-    init {
-        carouselItemImage = view.findViewById(R.id.carousel_item_image)
-        carouselItemTitle = view.findViewById(R.id.carousel_item_title)
-        carouselItemSubTitle = view.findViewById(R.id.carousel_item_subtitle)
-        carouselButtonListview = view.findViewById(R.id.carousel_button_listview)
-        hashTagsView = view.findViewById(R.id.hash_tags_view)
-    }
+    val carouselItemImage: ImageView = view.findViewById(R.id.carousel_item_image)
+    val carouselItemTitle: TextView = view.findViewById(R.id.carousel_item_title)
+    val carouselItemSubTitle: TextView = view.findViewById(R.id.carousel_item_subtitle)
+    val hashTagsView: TextView = view.findViewById(R.id.hash_tags_view)
+    val carouselButtonListview: RecyclerView = view.findViewById(R.id.carousel_button_listview)
 }

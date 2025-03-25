@@ -63,6 +63,7 @@ import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
+import com.kore.ui.bottomsheet.AdvancedMultiSelectBottomSheet
 import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
 import com.kore.ui.bottomsheet.ResetPinTemplateBottomSheet
 import com.kore.ui.databinding.ActivityBotChatBinding
@@ -71,7 +72,6 @@ import com.kore.ui.utils.BundleConstants
 import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import org.webrtc.NetworkMonitor.isOnline
 import java.util.Calendar
-
 
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
     private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
@@ -82,6 +82,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     private val networkCallback = NetworkCallbackImpl()
     private val acManager: ACManager = ACManager.getInstance()
     private var alertDialog: Dialog? = null
+    private var isWelcomeScreenShown = false
 
     private val connectivityManager by lazy {
         getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -204,13 +205,18 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean) {
         footerFragment.enableSendButton(state == ConnectionState.CONNECTED)
+        if (state == ConnectionState.CONNECTED) {
+            binding.clProgress.isVisible = false
+            binding.chatWindow.isVisible = true
+        }
     }
 
     override fun onBrandingDetails(header: BotActiveThemeModel?) {
         if (header?.botMessage == null && header?.brandingModel != null) {
             Handler(Looper.getMainLooper()).postDelayed({
-                binding.clProgress.isVisible = false
-                if (header.brandingModel?.welcomeScreen?.show == true) {
+//                binding.clProgress.isVisible = false
+                if (!isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
+                    isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
                         setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
                             override fun onUpdateUI() {
@@ -242,7 +248,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
             }, 2000)
         } else {
-            binding.clProgress.isVisible = false
+//            binding.clProgress.isVisible = false
             binding.chatWindow.isVisible = true
             val customHeaderFragment = SDKConfig.getCustomHeaderFragment(HEADER_SIZE_COMPACT)
             addHeaderFragmentToActivity(customHeaderFragment ?: ChatV2HeaderFragment(), header?.brandingModel)
@@ -387,6 +393,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.hideQuickReplies()
     }
 
+    override fun onLoadingHistory() {
+        contentFragment.onLoadingHistory()
+    }
+
     override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
         contentFragment.addMessagesToAdapter(list, !isMinimized(), isReconnection)
     }
@@ -399,6 +409,11 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
         val bottomSheet = ResetPinTemplateBottomSheet()
         bottomSheet.showData(payload, true, supportFragmentManager, this::onActionEvent)
+    }
+
+    override fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>) {
+        val bottomSheet = AdvancedMultiSelectBottomSheet()
+        bottomSheet.showData(msgId, payload, this::onActionEvent, supportFragmentManager)
     }
 
     fun showCloseAlert() {

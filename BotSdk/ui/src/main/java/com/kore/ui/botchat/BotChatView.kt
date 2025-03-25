@@ -20,9 +20,11 @@ interface BotChatView : BaseView {
     fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?)
     fun getAdapterLastItems(): BaseBotMessage?
     fun hideQuickReplies()
+    fun onLoadingHistory()
     fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean)
     fun onSwipeRefresh()
     fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int)
     fun showOtpBottomSheet(payload: HashMap<String, Any>)
     fun showPinResetBottomSheet(payload: HashMap<String, Any>)
+    fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>)
 }

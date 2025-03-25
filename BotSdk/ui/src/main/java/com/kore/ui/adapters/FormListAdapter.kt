@@ -6,12 +6,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.extensions.getDotMessage
+import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 
 class FormListAdapter(
@@ -41,6 +48,13 @@ class FormListAdapter(
             holder.edtFormInput.isEnabled = isLastItem
             holder.edtFormInput.isFocusable = isLastItem
             holder.edtFormInput.isClickable = isLastItem
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val context = holder.btnFieldButton.context
+            val bgColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            val txtColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+            holder.btnFieldButton.setRoundedCorner(6.dpToPx(context).toFloat())
+            holder.btnFieldButton.setBackgroundColor(bgColor)
+            holder.btnFieldButton.setTextColor(txtColor)
             holder.btnFieldButton.setOnClickListener {
                 if (isLastItem) {
                     actionEvent(

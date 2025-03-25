@@ -43,6 +43,7 @@ import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
+import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_ADVANCED_MULTI_SELECT
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE_RANGE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_OTP
@@ -146,6 +147,12 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                                                 }
                                             }
 
+                                            TEMPLATE_TYPE_ADVANCED_MULTI_SELECT -> {
+                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
+                                                    getView()?.showAdvancedMultiSelectBottomSheet(botResponse.messageId, innerMap)
+                                                }
+                                            }
+
                                             else -> {
                                                 getView()?.hideQuickReplies()
                                             }
@@ -176,9 +183,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 when (state) {
                     ConnectionState.CONNECTED -> {
                         isFirstTime = false
-                        viewModelScope.launch {
-                            getBrandingDetails(token, isReconnection)
-                        }
+                        if(isReconnection) loadChatHistory(true)
                     }
 
                     else -> {}
@@ -193,6 +198,12 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
             override suspend fun onJwtTokenGenerated(token: String) {
                 this@BotChatViewModel.token = token
+            }
+
+            override fun onAccessTokenReady() {
+                viewModelScope.launch {
+                    getBrandingDetails(token)
+                }
             }
         })
     }
@@ -307,7 +318,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         }
     }
 
-    internal suspend fun getBrandingDetails(token: String, isReconnection: Boolean) {
+    internal suspend fun getBrandingDetails(token: String) {
         val botConfigModel = getBotConfigModel()
 
         if (NetworkUtils.isNetworkAvailable(context)) {
@@ -319,13 +330,13 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 is Result.Success -> {
                     onBrandingDetails(response.data?.brandingModel)
                     getView()?.onBrandingDetails(response.data)
-                    loadChatHistory(isReconnection)
+                    loadChatHistory(false)
                 }
 
                 else -> {
                     getView()?.onBrandingDetails(null)
                     LogUtils.e(LOG_TAG, "BrandingDetails Response error: $response")
-                    loadChatHistory(isReconnection)
+                    loadChatHistory(false)
                 }
             }
         }
@@ -380,10 +391,11 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         }
     }
 
-    private fun loadChatHistory(isReconnect: Boolean) {
+    internal fun loadChatHistory(isReconnect: Boolean) {
         if ((isReconnect && SDKConfig.getHistoryOnNetworkResume()) || (!isReconnect && SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
             historyOffset = 0
             moreHistory = true
+            getView()?.onLoadingHistory()
             fetchChatHistory(true)
         }
     }

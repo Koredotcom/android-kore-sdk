@@ -1,7 +1,6 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.LayerDrawable
@@ -16,20 +15,25 @@ import android.widget.PopupWindow
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
-import com.kore.ui.utils.BitmapUtils
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.DEFAULT
 import com.kore.model.constants.BotResponseConstants.IS_COLLAPSED
 import com.kore.model.constants.BotResponseConstants.LARGE
 import com.kore.model.constants.BotResponseConstants.LEFT
 import com.kore.model.constants.BotResponseConstants.RIGHT
 import com.kore.model.constants.BotResponseConstants.SMALL
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
+import com.kore.ui.utils.BitmapUtils
 
 class AdvancedListAdapter(
     val context: Context,
@@ -39,47 +43,26 @@ class AdvancedListAdapter(
 ) : RecyclerView.Adapter<AdvancedListAdapter.AdvanceHolder>() {
 
     class AdvanceHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val botListItemRoot: RelativeLayout
-        val rlDropDown: RelativeLayout
-        val rlTitle: RelativeLayout
-        val llChildViews: RelativeLayout
-        val botListItemImage: ImageView
-        val ivAction: ImageView
-        val ivDropDownAction: ImageView
-        val ivDescription: ImageView
-        val botListItemTitle: TextView
-        val tvAction: TextView
-        val botListItemSubtitle: TextView
-        val rvDefaultButtons: RecyclerView
-        val rvOptionButtons: RecyclerView
-        val lvDetails: RecyclerView
-        val lvOptions: RecyclerView
-        val lvTableList: RecyclerView
-        val llOptions: LinearLayout
-        val llButtonMore: LinearLayout
-        val rlAction: LinearLayout
-
-        init {
-            botListItemRoot = view.findViewById(R.id.bot_list_item_root)
-            botListItemImage = view.findViewById(R.id.bot_list_item_image)
-            botListItemTitle = view.findViewById(R.id.bot_list_item_title)
-            botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle)
-            ivAction = view.findViewById(R.id.ivAction)
-            tvAction = view.findViewById(R.id.tvAction)
-            rlAction = view.findViewById(R.id.rlAction)
-            rvDefaultButtons = view.findViewById(R.id.rvDefaultButtons)
-            lvDetails = view.findViewById(R.id.lvDetails)
-            ivDropDownAction = view.findViewById(R.id.ivDropDownAction)
-            rlDropDown = view.findViewById(R.id.rlDropDown)
-            lvOptions = view.findViewById(R.id.lvOptions)
-            llOptions = view.findViewById(R.id.llOptions)
-            rvOptionButtons = view.findViewById(R.id.rvOptionButtons)
-            lvTableList = view.findViewById(R.id.lvTableList)
-            ivDescription = view.findViewById(R.id.ivDescription)
-            rlTitle = view.findViewById(R.id.rlTitle)
-            llButtonMore = view.findViewById(R.id.llButtonMore)
-            llChildViews = view.findViewById(R.id.llChildViews)
-        }
+        val botListItemRoot: RelativeLayout = view.findViewById(R.id.bot_list_item_root)
+        val rlDropDown: RelativeLayout = view.findViewById(R.id.rlDropDown)
+        val rlTitle: RelativeLayout = view.findViewById(R.id.rlTitle)
+        val llChildViews: RelativeLayout = view.findViewById(R.id.llChildViews)
+        val botListItemImage: ImageView = view.findViewById(R.id.bot_list_item_image)
+        val ivAction: ImageView = view.findViewById(R.id.ivAction)
+        val ivDropDownAction: ImageView = view.findViewById(R.id.ivDropDownAction)
+        val ivDescription: ImageView = view.findViewById(R.id.ivDescription)
+        val botListItemTitle: TextView = view.findViewById(R.id.bot_list_item_title)
+        val tvAction: TextView = view.findViewById(R.id.tvAction)
+        val botListItemSubtitle: TextView = view.findViewById(R.id.bot_list_item_subtitle)
+        val rvDefaultButtons: RecyclerView = view.findViewById(R.id.rvDefaultButtons)
+        val rvOptionButtons: RecyclerView = view.findViewById(R.id.rvOptionButtons)
+        val lvDetails: RecyclerView = view.findViewById(R.id.lvDetails)
+        val lvOptions: RecyclerView = view.findViewById(R.id.lvOptions)
+        val lvTableList: RecyclerView = view.findViewById(R.id.lvTableList)
+        val llOptions: LinearLayout = view.findViewById(R.id.llOptions)
+        val llButtonMore: LinearLayout = view.findViewById(R.id.llButtonMore)
+        val buttonMore: TextView = view.findViewById(R.id.buttonTV)
+        val rlAction: LinearLayout = view.findViewById(R.id.rlAction)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdvanceHolder {
@@ -102,7 +85,9 @@ class AdvancedListAdapter(
 
         if (cardTemplateModel[BotResponseConstants.TITLE_STYLES] != null) {
             val titleStyle = cardTemplateModel[BotResponseConstants.TITLE_STYLES] as Map<String, *>
-            if (titleStyle[BotResponseConstants.COLOR] != null) holder.botListItemTitle.setTextColor(Color.parseColor(titleStyle[BotResponseConstants.COLOR] as String))
+            if (titleStyle[BotResponseConstants.COLOR] != null) holder.botListItemTitle.setTextColor(
+                (titleStyle[BotResponseConstants.COLOR] as String).toColorInt()
+            )
         }
 
         val layerDrawable = ResourcesCompat.getDrawable(context.resources, R.drawable.advanced_cell_bg, context.theme) as LayerDrawable?
@@ -110,7 +95,7 @@ class AdvancedListAdapter(
         if (cardTemplateModel[BotResponseConstants.ELEMENT_STYLES] != null) {
             val elementStyles = cardTemplateModel[BotResponseConstants.ELEMENT_STYLES] as Map<String, *>
             if (elementStyles[BotResponseConstants.BACKGROUND] != null) {
-                holder.rlTitle.setBackgroundColor(Color.parseColor(elementStyles[BotResponseConstants.BACKGROUND] as String))
+                holder.rlTitle.setBackgroundColor((elementStyles[BotResponseConstants.BACKGROUND] as String).toColorInt())
             }
 
             if (elementStyles[BotResponseConstants.BORDER_WIDTH] != null) {
@@ -133,7 +118,7 @@ class AdvancedListAdapter(
                     val color: List<String> = (elementStyles[BotResponseConstants.BORDER] as String).split(" ")
                     if (layerDrawable != null) {
                         val backgroundColor = layerDrawable.findDrawableByLayerId(R.id.item_bottom_stroke) as GradientDrawable
-                        backgroundColor.setColor(Color.parseColor(color[1]))
+                        backgroundColor.setColor(color[1].toColorInt())
                         val bagColor = layerDrawable.findDrawableByLayerId(R.id.item_navbar_background) as GradientDrawable
                         if (elementStyles[BotResponseConstants.BORDER_RADIUS] != null) {
                             val radius: String = (elementStyles[BotResponseConstants.BORDER_RADIUS] as String).replace("[^0-9]", "")
@@ -156,7 +141,7 @@ class AdvancedListAdapter(
             if (cardTemplateModel[BotResponseConstants.DESCRIPTION_STYLES] != null) {
                 val desStyles = cardTemplateModel[BotResponseConstants.DESCRIPTION_STYLES] as Map<String, *>
                 if (desStyles[BotResponseConstants.COLOR] != null) {
-                    holder.botListItemSubtitle.setTextColor(Color.parseColor(desStyles[BotResponseConstants.COLOR] as String))
+                    holder.botListItemSubtitle.setTextColor((desStyles[BotResponseConstants.COLOR] as String).toColorInt())
                 }
             }
         }
@@ -178,6 +163,7 @@ class AdvancedListAdapter(
                     layoutParams.width = 60
                 }
             }
+            holder.botListItemImage.setRoundedCorner(6.dpToPx(holder.itemView.context).toFloat())
 
             holder.botListItemImage.layoutParams = layoutParams
             try {
@@ -229,7 +215,7 @@ class AdvancedListAdapter(
 
         if (cardTemplateModel[BotResponseConstants.VIEW] != null) {
             when (cardTemplateModel[BotResponseConstants.VIEW] as String) {
-                BotResponseConstants.DEFAULT -> {
+                DEFAULT -> {
                     if (cardTemplateModel[BotResponseConstants.TEXT_INFORMATION] != null) {
                         val textInformation = cardTemplateModel[BotResponseConstants.TEXT_INFORMATION] as List<Map<String, *>>
                         if (textInformation.isNotEmpty()) {
@@ -285,17 +271,23 @@ class AdvancedListAdapter(
                                 ivDropDownCLose.setOnClickListener { btnPopUpWindow.dismiss() }
                             }
                             holder.llButtonMore.setOnClickListener { btnPopUpWindow.showAsDropDown(holder.llButtonMore, -15, -350) }
+
+                            val sharedPrefs = PreferenceRepositoryImpl()
+                            val txtColor = sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
+                            holder.buttonMore.setTextColor(txtColor.toColorInt())
                         }
                     }
                 }
 
                 BotResponseConstants.OPTIONS -> {
+                    var advanceOptionsAdapter: AdvanceOptionsAdapter? = null
                     if (cardTemplateModel[BotResponseConstants.OPTIONS_DATA] != null) {
                         val optionsData = cardTemplateModel[BotResponseConstants.OPTIONS_DATA] as List<Map<String, *>>
                         if (optionsData.isNotEmpty()) {
+                            advanceOptionsAdapter = AdvanceOptionsAdapter(context, optionsData, isLastItem)
                             holder.llOptions.visibility = View.VISIBLE
                             holder.lvOptions.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-                            holder.lvOptions.adapter = AdvanceOptionsAdapter(context, optionsData)
+                            holder.lvOptions.adapter = advanceOptionsAdapter
                         }
                     }
 
@@ -316,7 +308,9 @@ class AdvancedListAdapter(
                         holder.rvOptionButtons.visibility = View.VISIBLE
                         holder.rvOptionButtons.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                         holder.rvOptionButtons.adapter =
-                            AdvanceListButtonAdapter(context, BotResponseConstants.DEFAULT, buttons, buttons.size, isLastItem, actionEvent)
+                            AdvanceListButtonAdapter(context, DEFAULT, buttons, buttons.size, isLastItem, actionEvent).apply {
+                                setAdvancedOptionsAdapter(advanceOptionsAdapter)
+                            }
                     }
                 }
 
@@ -360,26 +354,26 @@ class AdvancedListAdapter(
                                 if (buttonStyle[BotResponseConstants.BORDER_COLOR] != null) {
                                     val borderColor = buttonStyle[BotResponseConstants.BORDER_COLOR] as String
                                     if (!borderColor.contains("#")) {
-                                        gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor("#$borderColor"))
+                                        gradientDrawable.setStroke(1.dpToPx(context), "#$borderColor".toColorInt())
                                     } else {
-                                        gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor(borderColor))
+                                        gradientDrawable.setStroke(1.dpToPx(context), borderColor.toColorInt())
                                     }
                                 } else if (buttonStyle[BotResponseConstants.BORDER] != null) {
                                     val border: List<String> = (buttonStyle[BotResponseConstants.BORDER] as String).split("#")
                                     if (border.isNotEmpty()) {
-                                        gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor("#" + border[1]))
+                                        gradientDrawable.setStroke(1.dpToPx(context), ("#" + border[1]).toColorInt())
                                     }
-                                } else gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor("#224741fa"))
+                                } else gradientDrawable.setStroke(1.dpToPx(context), "#224741fa".toColorInt())
                                 if (buttonStyle[BotResponseConstants.BACKGROUND] != null) {
                                     val background = buttonStyle[BotResponseConstants.BACKGROUND] as String
-                                    if (!background.contains("#")) gradientDrawable.setColor(Color.parseColor("#$background"))
-                                    else gradientDrawable.setColor(Color.parseColor(background))
+                                    if (!background.contains("#")) gradientDrawable.setColor("#$background".toColorInt())
+                                    else gradientDrawable.setColor(background.toColorInt())
                                 } else {
-                                    gradientDrawable.setColor(Color.parseColor("#224741fa"))
+                                    gradientDrawable.setColor("#224741fa".toColorInt())
                                 }
 
                                 if (buttonStyle[BotResponseConstants.COLOR] != null) {
-                                    holder.tvAction.setTextColor(Color.parseColor(buttonStyle[BotResponseConstants.COLOR] as String))
+                                    holder.tvAction.setTextColor((buttonStyle[BotResponseConstants.COLOR] as String).toColorInt())
                                 }
                             }
                             holder.tvAction.setTypeface(holder.tvAction.typeface, Typeface.BOLD)
@@ -430,7 +424,7 @@ class AdvancedListAdapter(
                                     val advanceListButtonAdapter =
                                         AdvanceListButtonAdapter(
                                             context,
-                                            BotResponseConstants.DEFAULT,
+                                            DEFAULT,
                                             options,
                                             options.size,
                                             isLastItem,
@@ -456,33 +450,35 @@ class AdvancedListAdapter(
                                 if (headerOptionsModel[BotResponseConstants.STYLES] != null) {
                                     val style = headerOptionsModel[BotResponseConstants.STYLES] as Map<String, *>
 
-                                    if (style[BotResponseConstants.COLOR] != null) holder.tvAction.setTextColor(Color.parseColor(style[BotResponseConstants.COLOR] as String))
+                                    if (style[BotResponseConstants.COLOR] != null) holder.tvAction.setTextColor(
+                                        (style[BotResponseConstants.COLOR] as String).toColorInt()
+                                    )
 
                                     if (style[BotResponseConstants.BORDER_COLOR] != null) {
                                         val borderColor = style[BotResponseConstants.BORDER_COLOR] as String
                                         if (!borderColor.contains("#")) {
-                                            gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor("#$borderColor"))
+                                            gradientDrawable.setStroke(1.dpToPx(context), "#$borderColor".toColorInt())
                                         } else {
-                                            gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor(borderColor))
+                                            gradientDrawable.setStroke(1.dpToPx(context), borderColor.toColorInt())
                                         }
                                     } else if (style[BotResponseConstants.BORDER] != null) {
                                         val border: List<String> = (style[BotResponseConstants.BORDER] as String).split("#")
                                         if (border.isNotEmpty()) {
-                                            gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor("#" + border[1]))
+                                            gradientDrawable.setStroke(1.dpToPx(context), ("#" + border[1]).toColorInt())
                                         }
                                     } else {
-                                        gradientDrawable.setStroke(1.dpToPx(context), Color.parseColor("#ffffff"))
+                                        gradientDrawable.setStroke(1.dpToPx(context), "#ffffff".toColorInt())
                                     }
 
                                     if (style[BotResponseConstants.BACKGROUND] != null) {
                                         val background = style[BotResponseConstants.BACKGROUND] as String
                                         if (!background.contains("#")) {
-                                            gradientDrawable.setColor(Color.parseColor("#$background"))
+                                            gradientDrawable.setColor("#$background".toColorInt())
                                         } else {
-                                            gradientDrawable.setColor(Color.parseColor(background))
+                                            gradientDrawable.setColor(background.toColorInt())
                                         }
                                     } else {
-                                        gradientDrawable.setColor(Color.parseColor("#ffffff"))
+                                        gradientDrawable.setColor("#ffffff".toColorInt())
                                     }
                                 }
                                 holder.tvAction.setTypeface(holder.tvAction.typeface, Typeface.BOLD)

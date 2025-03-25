@@ -62,29 +62,37 @@ class BotClient private constructor() {
         private var accessToken = ""
         private var jwtToken = ""
         private var userJwtToken = ""
-        private var userId = ""
+        private var botUserId = ""
         private var connectionState = ConnectionState.DISCONNECTED
         private val socketConnection: IWebSocket = WebSocketConnection()
         private var instance: BotClient? = null
         private var callEventMessage: HashMap<String, Any>? = null
 
+        @JvmStatic
         fun getJwtToken(): String = userJwtToken.ifEmpty { jwtToken }
 
+        @JvmStatic
         fun getAccessToken(): String = accessToken
 
-        fun getUserId(): String = userId
+        @JvmName("getBotUserId")
+        @JvmStatic
+        fun getUserId(): String = botUserId
 
+        @JvmStatic
         fun isConnected(): Boolean = socketConnection.isConnected
 
+        @JvmStatic
         fun getInstance(): BotClient {
             if (instance == null) instance = BotClient()
             return instance!!
         }
 
+        @JvmStatic
         fun setCallEventMessage(callEventMessage: HashMap<String, Any>) {
             this.callEventMessage = callEventMessage
         }
 
+        @JvmStatic
         fun getCallEventMessage(): HashMap<String, Any>? = callEventMessage
     }
 
@@ -121,12 +129,12 @@ class BotClient private constructor() {
         }
         jwtToken = ""
         accessToken = ""
-        userId = ""
+        botUserId = ""
         handler.removeCallbacksAndMessages(null)
     }
 
     fun getUserId(): String {
-        return userId
+        return botUserId
     }
 
     fun connectToBot(context: Context, isFirstTime: Boolean, jwtToken: String) {
@@ -245,7 +253,7 @@ class BotClient private constructor() {
                     when (val result = jwtRepository.getJwtGrant(request)) {
                         is Result.Success -> {
                             val botAuthorizationResponse = result.data
-                            userId = botAuthorizationResponse?.userInfo?.userId ?: ""
+                            botUserId = botAuthorizationResponse?.userInfo?.userId ?: ""
                             accessToken = botAuthorizationResponse?.authorization?.accessToken ?: ""
                             listener?.onJwtTokenGenerated(accessToken)
                             if (SDKConfiguration.getBotConfigModel()?.isWebHook == true) {
@@ -293,6 +301,7 @@ class BotClient private constructor() {
     }
 
     private fun connectToSocket(url: String?, isReconnectionAttempt: Boolean) {
+        listener?.onAccessTokenReady()
         if (url != null) {
             var rtmUrl = url
             options?.let {
@@ -314,7 +323,7 @@ class BotClient private constructor() {
                 }
                 val connectionMode = SDKConfiguration.getConnectionMode();
                 val socketUrl = if (isReconnectionAttempt) {
-                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else IS_RECONNECT_PARAM+CONNECTION_MODE_PARAM + queryParams
+                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else IS_RECONNECT_PARAM + CONNECTION_MODE_PARAM + queryParams
                 } else {
                     rtmUrl + if (!connectionMode.isNullOrEmpty()) connectionMode else "" + queryParams
                 }
@@ -334,7 +343,7 @@ class BotClient private constructor() {
                         override fun onClose(code: Int, reason: String?) {
                             accessToken = ""
                             jwtToken = ""
-                            userId = ""
+                            botUserId = ""
 
                             LogUtils.d(LOG_TAG, "Connection Lost...")
                             connectionState = ConnectionState.DISCONNECTED

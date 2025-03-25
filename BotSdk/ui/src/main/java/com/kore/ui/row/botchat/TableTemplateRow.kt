@@ -1,15 +1,17 @@
 package com.kore.ui.row.botchat
 
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
-import com.kore.ui.row.SimpleListRow
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.adapters.TableTemplateAdapter
 import com.kore.ui.adapters.TableTemplateHeaderAdapter
 import com.kore.ui.databinding.TableTemplateBinding
+import com.kore.ui.row.SimpleListRow
 
 class TableTemplateRow(
     private val id: String,
@@ -34,6 +36,14 @@ class TableTemplateRow(
         val childBinding = TableTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
             val cols = payload[BotResponseConstants.COLUMNS] as List<List<String>>
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val bgColor = sharedPrefs.getStringValue(
+                rvTableView.context,
+                BotResponseConstants.THEME_NAME,
+                BotResponseConstants.BUBBLE_LEFT_BG_COLOR,
+                "#efeffc"
+            ).toColorInt()
+            rvTableView.setBackgroundColor(bgColor)
 
             rvTableView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
 
@@ -43,10 +53,6 @@ class TableTemplateRow(
                 TableTemplateAdapter(root.context, payload[BotResponseConstants.KEY_ELEMENTS] as List<Map<String, *>>, cols)
             rvTableViewHeader.layoutManager =
                 GridLayoutManager(root.context, (payload[BotResponseConstants.COLUMNS] as List<List<String>>).size)
-//            rvTableViewHeader.layoutManager = LinearLayoutManager(
-//                root.context, LinearLayoutManager.HORIZONTAL, false
-//            )
-
             rvTableViewHeader.adapter = TableTemplateHeaderAdapter(root.context, cols)
         }
     }

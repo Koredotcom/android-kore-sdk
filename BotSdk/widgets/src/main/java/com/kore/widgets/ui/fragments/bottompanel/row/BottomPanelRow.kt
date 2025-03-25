@@ -1,10 +1,10 @@
 package com.kore.widgets.ui.fragments.bottompanel.row
 
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Build
 import android.util.Base64
 import android.view.animation.AccelerateDecelerateInterpolator
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.core.view.setPadding
 import androidx.viewbinding.ViewBinding
@@ -49,7 +49,7 @@ class BottomPanelRow(
         if (panel.icon != null && panel.icon.equals("url", true)) {
             imgSkill.isVisible = false
             imgIcon.isVisible = true
-            root.setBackgroundColor(Color.parseColor(panel.getThemeValue()))
+            root.setBackgroundColor(panel.getThemeValue().toColorInt())
             root.isSelected = panel.isItemClicked
         } else {
             imgIcon.isVisible = false
@@ -74,7 +74,7 @@ class BottomPanelRow(
             }
             imgSkill.setPadding(if (panel.isItemClicked) 3.dpToPx(root.context) else 0)
             if (panel.isItemClicked) {
-                root.setBackgroundColor(Color.parseColor(panel.getThemeValue()))
+                root.setBackgroundColor(panel.getThemeValue().toColorInt())
             } else {
                 root.background = null
             }

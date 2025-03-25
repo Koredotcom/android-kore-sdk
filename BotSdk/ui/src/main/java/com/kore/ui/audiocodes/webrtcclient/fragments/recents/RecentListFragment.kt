@@ -41,7 +41,7 @@ class RecentListFragment : BaseFragment(), FragmentLifecycle {
         binding?.apply {
             //Erase all table
             list.layoutManager = LinearLayoutManager(root.context)
-            list.adapter = SimpleListAdapter(RecentListItemRowType.values().asList())
+            list.adapter = SimpleListAdapter(RecentListItemRowType.entries)
             list.addItemDecoration(SimpleListRow.VerticalSpaceItemDecoration(2))
             recentButtonErase.setOnClickListener {
                 val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())

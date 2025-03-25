@@ -1,20 +1,18 @@
 package com.kore.ui.row.botchat.tablelist.item.subitem
 
-import android.graphics.Color
 import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
-import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
 import com.kore.event.BotChatEvent.SendMessage
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.COLOR
 import com.kore.model.constants.BotResponseConstants.IMAGE
@@ -34,6 +32,7 @@ import com.kore.model.constants.BotResponseConstants.URL
 import com.kore.model.constants.BotResponseConstants.VALUE
 import com.kore.ui.R
 import com.kore.ui.databinding.RowTableListTemplateSubItemBinding
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.tablelist.item.TableListTemplateSubItemRowType
 
 class TableListTemplateSubItemRow(
@@ -69,16 +68,9 @@ class TableListTemplateSubItemRow(
 
             image.isVisible = imageMap?.containsKey(IMAGE_SRC) == true
             imageMap?.get(IMAGE_SRC).let {
-
+                val radiusPx = ((imageMap?.get(RADIUS) as? Double)?.toInt()?.dpToPx(binding.root.context) ?: 10.dpToPx(binding.root.context)).toFloat()
+                image.setRoundedCorner(radiusPx)
                 Glide.with(binding.root.context).load(it).error(com.kore.botclient.R.drawable.ic_launcher)
-                    .apply(
-                        RequestOptions.bitmapTransform(
-                            RoundedCorners(
-                                ((if (imageMap?.get(RADIUS) != null)
-                                        (imageMap[RADIUS] as Double).toInt() else 10).dpToPx(binding.root.context))
-                            )
-                        )
-                    )
                     .into<DrawableImageViewTarget>(DrawableImageViewTarget(image))
             }
 
@@ -94,9 +86,9 @@ class TableListTemplateSubItemRow(
             itemCost.setTextColor(ResourcesCompat.getColor(root.context.resources, R.color.black, root.context.theme))
 
             titleMap?.get(ROW_COLOR)?.let {
-                title.setTextColor(Color.parseColor(it.toString()))
-                subTitle.setTextColor(Color.parseColor(it.toString()))
-                itemCost.setTextColor(Color.parseColor(it.toString()))
+                title.setTextColor(it.toString().toColorInt())
+                subTitle.setTextColor(it.toString().toColorInt())
+                itemCost.setTextColor(it.toString().toColorInt())
             }
 
             val type = valueMap?.get(TYPE).toString()
@@ -106,7 +98,7 @@ class TableListTemplateSubItemRow(
             when (type) {
                 KEY_TEXT -> {
                     valueMap?.get(KEY_TEXT)?.let { itemCost.text = it.toString() }
-                    layoutMap?.get(COLOR)?.let { itemCost.setTextColor(Color.parseColor(it)) }
+                    layoutMap?.get(COLOR)?.let { itemCost.setTextColor(it.toColorInt()) }
                 }
 
                 URL -> valueUrlMap?.get(KEY_TITLE)?.let {
@@ -114,7 +106,7 @@ class TableListTemplateSubItemRow(
                 }
             }
 
-            item[KEY_BG_COLOR]?.let { root.setBackgroundColor(Color.parseColor(it.toString())) }
+            item[KEY_BG_COLOR]?.let { root.setBackgroundColor(it.toString().toColorInt()) }
 
             root.setOnClickListener {
                 when (defaultActionMap?.get(TYPE)) {
