@@ -405,8 +405,10 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         textViewSpeech.setText("");
 
         try {
-            Speech.getInstance().stopTextToSpeech();
-            Speech.getInstance().startListening(progress, ComposeFooterFragment.this);
+            if (Speech.getInstance() != null) {
+                Speech.getInstance().stopTextToSpeech();
+                Speech.getInstance().startListening(progress, ComposeFooterFragment.this);
+            }
         } catch (SpeechRecognitionNotAvailable exc) {
             showSpeechNotSupportedDialog();
 
@@ -429,7 +431,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         rlSpeakerCircle.setVisibility(GONE);
         textViewSpeech.setText(result);
 
-        if (result.isEmpty()) {
+        if (result.isEmpty() && Speech.getInstance() != null) {
             Speech.getInstance().say(getString(R.string.repeat));
 
         } else {

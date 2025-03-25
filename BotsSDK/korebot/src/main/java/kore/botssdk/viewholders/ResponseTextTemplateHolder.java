@@ -56,7 +56,7 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
             message = payOuter.getType();
         }
         if (!isError) {
-            setResponseText((LinearLayoutCompat) itemView, message);
+            setResponseText(itemView.findViewById(R.id.layoutBubble), message, baseBotMessage.getTimeStamp());
         } else {
             populateErrorText((LinearLayoutCompat) itemView, message, payInner != null && payInner.getColor() != null ? payInner.getColor() : "#000000");
         }

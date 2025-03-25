@@ -19,3 +19,26 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep Retrofit annotations
+-dontwarn retrofit2.**
+-dontwarn okhttp3.**
+-dontwarn okio.**
+
+# Keep all classes, fields, and methods in your library package
+-keep class kore.botssdk.** { *; }
+
+# Prevent renaming of all classes in your library
+-keepnames class kore.botssdk.**
+
+# Keep subscriber classes and methods
+-keepclassmembers class ** {
+    public void onEvent*(**);
+}
+
+# Keep Retrofit interfaces
+-keep interface * { @retrofit2.http.* <methods>; }
+
+# Keep classes that use Gson for serialization
+-keep class com.google.gson.** { *; }
+-keep class * extends com.google.gson.TypeAdapter { *; }

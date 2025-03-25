@@ -117,7 +117,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         int barType = payloadInner.isStacked() ? BAR_STACKED : payloadInner.getDirection().equals(BAR_CHART_DIRECTION_VERTICAL) ? BAR_VERTICAL : BAR_HORIZONTAL;
         barChart.setVisibility(barType != BAR_HORIZONTAL ? View.VISIBLE : View.GONE);
         horizontalBarChart.setVisibility(barType == BAR_HORIZONTAL ? View.VISIBLE : View.GONE);

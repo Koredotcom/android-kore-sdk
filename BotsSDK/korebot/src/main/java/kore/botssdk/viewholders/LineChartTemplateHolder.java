@@ -52,7 +52,7 @@ public class LineChartTemplateHolder extends BaseViewHolder implements OnChartGe
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         if (payloadInner.getText() != null && !StringUtils.isNullOrEmptyWithTrim(payloadInner.getText())) {
             Description desc = new Description();
             desc.setText(payloadInner.getText());

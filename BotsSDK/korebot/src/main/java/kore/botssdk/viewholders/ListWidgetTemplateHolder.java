@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.Uri;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
@@ -106,7 +105,7 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         if (!StringUtils.isNullOrEmpty(payloadInner.getTitle())) {
             widgetHeader.setVisibility(VISIBLE);
             widgetHeader.setText(payloadInner.getTitle());

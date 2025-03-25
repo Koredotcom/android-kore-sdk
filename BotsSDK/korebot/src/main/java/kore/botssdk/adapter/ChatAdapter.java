@@ -25,6 +25,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewholders.AdvanceMultiSelectTemplateHolder;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
@@ -347,7 +348,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         boolean isLastItem = position == baseBotMessageArrayList.size() - 1;
         BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(position);
         holder.setIsLastItem(isLastItem);
-        holder.setMsgTime(baseBotMessage.getTimeStamp(), baseBotMessage instanceof BotRequest);
+        holder.setMsgTime(baseBotMessage.getTimeStamp(), baseBotMessage instanceof BotRequest, getItemViewType(position));
         if (baseBotMessage instanceof BotResponse) {
             if (StringUtils.isNotEmpty(((BotResponse) baseBotMessage).getIcon()))
                 holder.setBotIcon(((BotResponse) baseBotMessage).getIcon());
