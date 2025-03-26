@@ -36,6 +36,7 @@ public class BundleConstants {
     public static final String IS_RECONNECT = "IS_RECONNECT";
     public static final String DESTROY_EVENT = "destroy-event";
     public static final String CLOSE_CHAT_BOT_EVENT = "close-chat-bot";
+    public static final String MINIMIZE_CHAT_BOT_EVENT = "minimize-chat-bot";
     public static final String PICK_TYPE = "pickType";
     public static final String FILE_CONTEXT = "fileContext";
     public static final String FOR_MESSAGE = "message";
