@@ -114,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
         //Set local branding model by overriding the branding api response
         SDKConfig.setLocalBranding(false, getLocalBrandingModel());
 
+        // Flag to set status bar color as header background color
+        SDKConfig.setIsUpdateStatusBarColor(true);
+
         //Method to reset the bot connection and start a new session by overriding the previous state
         // SDKConfig.disconnectBotSession(MainActivity.this);
 

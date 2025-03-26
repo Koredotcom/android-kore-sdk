@@ -21,6 +21,7 @@ public class SDKConfig {
     private static BaseFooterFragment customFooterFragment = null;
     private static BaseHeaderFragment customHeaderFragment = null;
     private static boolean isShowHeader = true;
+    private static boolean isUpdateStatusBarColor = false;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
@@ -111,5 +112,13 @@ public class SDKConfig {
         editor.putBoolean("IS_RECONNECT", false);
         editor.putInt("HISTORY_COUNT", 0);
         editor.apply();
+    }
+
+    public static void setIsUpdateStatusBarColor(boolean isUpdate) {
+        isUpdateStatusBarColor = isUpdate;
+    }
+
+    public static boolean isUpdateStatusBarColor() {
+        return isUpdateStatusBarColor;
     }
 }
