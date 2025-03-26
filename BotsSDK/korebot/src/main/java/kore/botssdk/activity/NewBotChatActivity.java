@@ -1,6 +1,7 @@
 package kore.botssdk.activity;
 
 import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
+import static kore.botssdk.utils.BundleConstants.MINIMIZE_CHAT_BOT_EVENT;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
@@ -13,6 +14,7 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -74,11 +76,43 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
     boolean isAgentTransfer;
+    private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Objects.equals(intent.getAction(), MINIMIZE_CHAT_BOT_EVENT)) {
+                Log.e("Called", "minimize broadcast ");
+                if (sharedPreferences != null) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                    editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+                    editor.apply();
+                    BotSocketConnectionManager.killInstance();
+                    String name = intent.getStringExtra("ActivityToLaunch");
+                    Log.e("Called", "className "+name);
+                    if(name != null) {
+                        try {
+                            Class className = Class.forName(name);
+                            Intent activityIntent = new Intent(context, className);
+                            activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            context.startActivity(activityIntent);
+                        } catch (ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    finish();
+                }
+            }
+        }
+    };
     private final BroadcastReceiver closeBotChatReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Objects.equals(intent.getAction(), CLOSE_CHAT_BOT_EVENT)) {
-                if (botClient != null && botClient.isConnected()) BotSocketConnectionManager.killInstance();
+                if (botClient != null) BotSocketConnectionManager.killInstance();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                editor.apply();
                 finish();
             }
         }
@@ -130,9 +164,11 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
+            registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
         } else {
             registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
+            registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT));
         }
 
         startService(new Intent(getApplicationContext(), ClosingService.class));
