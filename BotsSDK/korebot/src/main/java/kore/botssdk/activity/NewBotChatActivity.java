@@ -11,11 +11,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
@@ -80,7 +82,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         @Override
         public void onReceive(Context context, Intent intent) {
             if (Objects.equals(intent.getAction(), MINIMIZE_CHAT_BOT_EVENT)) {
-                Log.e("Called", "minimize broadcast ");
                 if (sharedPreferences != null) {
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putBoolean(BundleConstants.IS_RECONNECT, true);
@@ -88,12 +89,13 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
                     editor.apply();
                     BotSocketConnectionManager.killInstance();
                     String name = intent.getStringExtra("ActivityToLaunch");
-                    Log.e("Called", "className "+name);
-                    if(name != null) {
+                    int launchMode = intent.getIntExtra("LaunchMode", -1);
+                    if (name != null) {
                         try {
                             Class className = Class.forName(name);
                             Intent activityIntent = new Intent(context, className);
-                            activityIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            if (launchMode != -1)
+                                activityIntent.setFlags(launchMode);
                             context.startActivity(activityIntent);
                         } catch (ClassNotFoundException e) {
                             throw new RuntimeException(e);
@@ -253,6 +255,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
             }
+            changeStatusBarColor(brandingModel.getWidgetHeaderColor());
         }
     }
 
@@ -472,6 +475,14 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    private void changeStatusBarColor(String color) {
+        if (SDKConfig.isUpdateStatusBarColor()) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.parseColor(color));
+        }
     }
 
     void showCloseAlert() {
