@@ -16,11 +16,7 @@ class TableTemplateDataAdapter(
     private val listHeaderItems: List<List<String>>,
 ) : RecyclerView.Adapter<TableTemplateDataAdapter.TableViewHolder>() {
     class TableViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvChildValue: TextView
-
-        init {
-            tvChildValue = view.findViewById(R.id.tvTableValue)
-        }
+        val tvChildValue: TextView = view.findViewById(R.id.tvTableValue)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TableViewHolder {

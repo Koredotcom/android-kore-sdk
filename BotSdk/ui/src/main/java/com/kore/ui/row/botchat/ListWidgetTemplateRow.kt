@@ -1,16 +1,16 @@
 package com.kore.ui.row.botchat
 
-import android.graphics.Color
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListRow
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.adapters.ListWidgetAdapter
 import com.kore.ui.databinding.BotListWidgetTemplateViewBinding
+import com.kore.ui.row.SimpleListRow
 
 class ListWidgetTemplateRow(
     private val id: String,
@@ -41,24 +41,20 @@ class ListWidgetTemplateRow(
                 meetingHeader.isVisible = true
                 meetingHeader.text = payload[BotResponseConstants.KEY_TITLE] as String
                 meetingHeader.setTextColor(
-                    Color.parseColor(sharedPreferences.getString(BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, "#000000"))
+                    sharedPreferences.getString(BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, "#000000")!!.toColorInt()
                 )
             }
 
             if (payload[BotResponseConstants.DESCRIPTION] != null) {
                 meetingDesc.isVisible = true
                 meetingDesc.text = payload[BotResponseConstants.DESCRIPTION] as String
-                meetingDesc.setTextColor(
-                    Color.parseColor(sharedPreferences.getString(BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, "#000000"))
-                )
+                sharedPreferences.getString(BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, "#000000")?.toColorInt()?.let {
+                    meetingDesc.setTextColor(it)
+                }
             }
-
-//            if (entries.isNotEmpty()) {
-//                if (entries.size > 3) botCustomListViewButton.visibility = View.VISIBLE
 
             botCustomListView.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
             commonBind()
-//            }
         }
     }
 

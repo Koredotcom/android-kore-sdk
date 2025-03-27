@@ -1,17 +1,17 @@
 package com.kore.ui.row.botchat
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListRow
-import com.kore.ui.utils.FontUtils
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.databinding.RowAttachmentTemplateBinding
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.FontUtils
 
 class AttachmentTemplateRow(
     private val id: String,
@@ -42,9 +42,9 @@ class AttachmentTemplateRow(
             val context = root.context
             val sharedPrefs = PreferenceRepositoryImpl()
             val drawable = upload.background as GradientDrawable
-            val btnBgColor = Color.parseColor(getColor(context, sharedPrefs, BotResponseConstants.BUTTON_ACTIVE_BG_COLOR, "#FF5E00"))
-            val textColor = Color.parseColor(getColor(context, sharedPrefs, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, "#313131"))
-            val rootBgColor = Color.parseColor(getColor(context, sharedPrefs, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#FCE9E6"))
+            val btnBgColor = getColor(context, sharedPrefs, BotResponseConstants.BUTTON_ACTIVE_BG_COLOR, "#FF5E00").toColorInt()
+            val textColor = getColor(context, sharedPrefs, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, "#313131").toColorInt()
+            val rootBgColor = getColor(context, sharedPrefs, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#FCE9E6").toColorInt()
             note.setTextColor(textColor)
             drawable.setColor(btnBgColor)
             upload.background = drawable

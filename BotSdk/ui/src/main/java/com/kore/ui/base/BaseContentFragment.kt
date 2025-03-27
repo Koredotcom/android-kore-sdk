@@ -25,4 +25,6 @@ abstract class BaseContentFragment : Fragment(), QuickRepliesClickListener {
     abstract fun getAdapterCount(): Int
 
     abstract fun onBrandingDetails()
+
+    abstract fun onLoadingHistory()
 }

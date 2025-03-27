@@ -1,37 +1,38 @@
 package com.kore.ai.botsdk
 
 import android.content.Context
-import android.content.Intent
 import android.content.res.Resources.NotFoundException
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import com.google.gson.Gson
 import com.kore.SDKConfig
-import com.kore.ai.botsdk.databinding.ActivityMainBinding
+import com.kore.ai.botsdk.databinding.FragmentActivityBinding
 import com.kore.ai.botsdk.row.DownloadLinkTemplateProvider
 import com.kore.ai.botsdk.row.DownloadLinkTemplateRow
 import com.kore.common.SDKConfiguration
 import com.kore.common.model.BotConfigModel
+import com.kore.common.utils.NetworkUtils
+import com.kore.listeners.BotChatCloseListener
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
-import com.kore.ui.botchat.BotChatActivity
+import com.kore.ui.botchat.BotChatFragment
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Locale
-import java.util.Properties
 import java.util.TimeZone
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityMainBinding
+class SampleFragmentActivity : AppCompatActivity(), BotChatCloseListener {
+    private lateinit var binding: FragmentActivityBinding
 
     companion object {
-        private val LOG_TAG = MainActivity::class.java.simpleName
+        private val LOG_TAG = SampleFragmentActivity::class.java.simpleName
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.inflate(layoutInflater, R.layout.activity_main, null, false)
+        binding = DataBindingUtil.inflate(layoutInflater, R.layout.fragment_activity, null, false)
         setContentView(binding.root)
 
         getBotConfigModel()?.let { SDKConfig.initialize(it) }
@@ -63,13 +64,22 @@ class MainActivity : AppCompatActivity() {
 //        SDKConfig.setConnectionMode("Default")
         // To disable loading history when socket reconnected in case of socket disconnect and reconnect
 //        SDKConfig.setHistoryOnNetworkResume(false)
-        // To enable or disable update status bar color as per branding details
-//        SDKConfig.setIsUpdateStatusBarColor(false)
 
-        binding.launchBotBtn.setOnClickListener {
-            val intent = Intent(this, BotChatActivity::class.java)
-            startActivity(intent)
-        }
+        val fragmentTransaction = this.supportFragmentManager.beginTransaction()
+
+        //Add Bot Content Fragment
+        val botChatFragment = BotChatFragment()
+        fragmentTransaction.add(R.id.flChatBot, botChatFragment).commit()
+
+        botChatFragment.setBotChatCloseListener(this)
+
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (NetworkUtils.isNetworkAvailable(this@SampleFragmentActivity)) {
+                    botChatFragment.showCloseAlert()
+                }
+            }
+        })
     }
 
     private fun getDefaultBrandingModel(context: Context): BotBrandingModel? {
@@ -79,44 +89,19 @@ class MainActivity : AppCompatActivity() {
         return Gson().fromJson(jsonText, BotBrandingModel::class.java)
     }
 
-//    private fun getBotConfigModel(): BotConfigModel? {
-//        try {
-//            return BotConfigModel(
-//                botName = "Please enter Bot name",
-//                botId = "Please enter botID",
-//                clientId = "Please enter  clientId",
-//                clientSecret = "Please enter clientSecret",
-//                botUrl = "Please enter botUrl",
-//                identity = "Please enter identity",
-//                isWebHook = false,
-//                jwtServerUrl = "Please enter jwtServerUrl",
-//                enablePanel = true,
-//                jwtToken = "Please enter jwtToken"
-//            )
-//        } catch (e: NotFoundException) {
-//            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
-//        } catch (e: IOException) {
-//            Log.e(LOG_TAG, "Failed to open config file.")
-//        }
-//        return null
-//    }
-
     private fun getBotConfigModel(): BotConfigModel? {
         try {
-            val rawResource = resources.openRawResource(R.raw.config)
-            val properties = Properties()
-            properties.load(rawResource)
             return BotConfigModel(
-                botName = properties.getProperty("botName"),
-                botId = properties.getProperty("botId"),
-                clientId = properties.getProperty("clientId"),
-                clientSecret = properties.getProperty("clientSecret"),
-                botUrl = properties.getProperty("botUrl"),
-                identity = properties.getProperty("identity"),
+                botName = "Please enter Bot name",
+                botId = "Please enter botID",
+                clientId = "Please enter  clientId",
+                clientSecret = "Please enter clientSecret",
+                botUrl = "Please enter botUrl",
+                identity = "Please enter identity",
                 isWebHook = false,
-                jwtServerUrl = properties.getProperty("jwtServerUrl"),
-                enablePanel = false,
-                jwtToken = properties.getProperty("jwtToken")
+                jwtServerUrl = "Please enter jwtServerUrl",
+                enablePanel = true,
+                jwtToken = "Please enter jwtToken"
             )
         } catch (e: NotFoundException) {
             Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
@@ -125,6 +110,31 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }
+
+//    private fun getBotConfigModel(): BotConfigModel? {
+//        try {
+//            val rawResource = resources.openRawResource(R.raw.config)
+//            val properties = Properties()
+//            properties.load(rawResource)
+//            return BotConfigModel(
+//                botName = properties.getProperty("botName"),
+//                botId = properties.getProperty("botId"),
+//                clientId = properties.getProperty("clientId"),
+//                clientSecret = properties.getProperty("clientSecret"),
+//                botUrl = properties.getProperty("botUrl"),
+//                identity = properties.getProperty("identity"),
+//                isWebHook = false,
+//                jwtServerUrl = properties.getProperty("jwtServerUrl"),
+//                enablePanel = false,
+//                jwtToken = properties.getProperty("jwtToken")
+//            )
+//        } catch (e: NotFoundException) {
+//            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
+//        } catch (e: IOException) {
+//            Log.e(LOG_TAG, "Failed to open config file.")
+//        }
+//        return null
+//    }
 //
     private fun getQueryParams(): HashMap<String, Any> {
         val queryParams = HashMap<String, Any>()
@@ -143,5 +153,13 @@ class MainActivity : AppCompatActivity() {
         customData["timeZoneOffset"] = -330
         customData["UserTimeInGMT"] = TimeZone.getDefault().id + " " + Locale.getDefault().isO3Language
         return customData
+    }
+
+    override fun onBotChatClosed() {
+        Log.d(SampleFragmentActivity::class.java.simpleName, "onBotChatClosed")
+    }
+
+    override fun onBotChatMinimized() {
+        Log.d(SampleFragmentActivity::class.java.simpleName, "onBotChatMinimized")
     }
 }

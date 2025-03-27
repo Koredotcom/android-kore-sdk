@@ -29,6 +29,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import com.kore.botclient.BotClient
 import com.kore.common.SDKConfiguration
@@ -181,12 +182,12 @@ class ChatFooterFragment : BaseFooterFragment() {
         ) as GradientDrawable?
 
         if (rightDrawable != null) {
-            rightDrawable.setColor(Color.parseColor(rightTextColor))
-            rightDrawable.setStroke((1.dpToPx(requireContext())), Color.parseColor(rightBgColor))
+            rightDrawable.setColor(rightTextColor!!.toColorInt())
+            rightDrawable.setStroke((1.dpToPx(requireContext())), rightBgColor!!.toColorInt())
         }
 
         binding.textViewSpeech.background = rightDrawable
-        binding.textViewSpeech.setTextColor(Color.parseColor(rightBgColor))
+        rightBgColor?.toColorInt()?.let { binding.textViewSpeech.setTextColor(it) }
 
         Speech.init(requireActivity(), requireActivity().packageName)
 
@@ -349,9 +350,9 @@ class ChatFooterFragment : BaseFooterFragment() {
         if (botBrandingModel == null) return
         botOptionModels = botBrandingModel.footer.buttons?.menu?.actions
         if (botBrandingModel.general.colors.useColorPaletteOnly == true) {
-            binding.composeFooterRl.setBackgroundColor(Color.parseColor(botBrandingModel.general.colors.secondary))
+            botBrandingModel.general.colors.secondary?.toColorInt()?.let { binding.composeFooterRl.setBackgroundColor(it) }
         } else {
-            binding.composeFooterRl.setBackgroundColor(Color.parseColor(botBrandingModel.footer.bgColor))
+            botBrandingModel.footer.bgColor?.toColorInt()?.let { binding.composeFooterRl.setBackgroundColor(it) }
         }
 
         val stroke = binding.mainContent.background
@@ -362,31 +363,31 @@ class ChatFooterFragment : BaseFooterFragment() {
         val footerModel = botBrandingModel.footer
 
         if (solidColor != null && !footerModel.composeBar?.bgColor.isNullOrEmpty()) {
-            solidColor.setTintList(ColorStateList.valueOf(Color.parseColor(footerModel.composeBar?.bgColor)))
+            solidColor.setTintList(footerModel.composeBar?.bgColor?.toColorInt()?.let { ColorStateList.valueOf(it) })
             binding.llEdtText.background = solidColor
         }
         if (!footerModel.composeBar?.outlineColor.isNullOrEmpty()) {
-            send.setTint(Color.parseColor(footerModel.composeBar?.outlineColor))
+            footerModel.composeBar?.outlineColor?.let { send.setTint(it.toColorInt()) }
             binding.llSend.background = send
 
             if (stroke != null) {
-                stroke.setTint(Color.parseColor(footerModel.composeBar?.outlineColor))
+                footerModel.composeBar?.outlineColor?.let { stroke.setTint(it.toColorInt()) }
                 binding.mainContent.background = stroke
             }
 
-            binding.rlSpeaker.backgroundTintList = ColorStateList.valueOf(Color.parseColor(footerModel.composeBar?.outlineColor))
+            binding.rlSpeaker.backgroundTintList = footerModel.composeBar?.outlineColor?.toColorInt()?.let { ColorStateList.valueOf(it) }
         }
 
         if (!footerModel.composeBar?.inlineColor.isNullOrEmpty()) {
             if (sendSmall != null) {
-                sendSmall.setTint(Color.parseColor(footerModel.composeBar?.inlineColor))
+                footerModel.composeBar?.inlineColor?.toColorInt()?.let { sendSmall.setTint(it) }
                 binding.sendTv.background = sendSmall
             }
-            binding.ivSpeaker.backgroundTintList = ColorStateList.valueOf(Color.parseColor(footerModel.composeBar?.inlineColor))
+            binding.ivSpeaker.backgroundTintList = ColorStateList.valueOf(footerModel.composeBar?.inlineColor!!.toColorInt())
             val colors = intArrayOf(
-                Color.parseColor(footerModel.composeBar?.inlineColor),
-                Color.parseColor(footerModel.composeBar?.inlineColor),
-                Color.parseColor(footerModel.composeBar?.inlineColor)
+                footerModel.composeBar?.inlineColor!!.toColorInt(),
+                footerModel.composeBar?.inlineColor!!.toColorInt(),
+                footerModel.composeBar?.inlineColor!!.toColorInt()
             )
             binding.progress.setColors(colors)
         }
@@ -396,12 +397,12 @@ class ChatFooterFragment : BaseFooterFragment() {
         }
 
         if (!footerModel.iconsColor.isNullOrEmpty()) {
-            binding.newMenuLogo.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
-            binding.attachment.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
-            binding.recAudioImg.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
-            binding.keyboardImage.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
-            binding.audioSpeakTts.imageTintList = ColorStateList.valueOf(Color.parseColor(footerModel.iconsColor))
-            binding.edtTxtMessage.setHintTextColor(Color.parseColor(footerModel.iconsColor))
+            binding.newMenuLogo.imageTintList = ColorStateList.valueOf(footerModel.iconsColor!!.toColorInt())
+            binding.attachment.imageTintList = ColorStateList.valueOf(footerModel.iconsColor!!.toColorInt())
+            binding.recAudioImg.imageTintList = ColorStateList.valueOf(footerModel.iconsColor!!.toColorInt())
+            binding.keyboardImage.imageTintList = ColorStateList.valueOf(footerModel.iconsColor!!.toColorInt())
+            binding.audioSpeakTts.imageTintList = ColorStateList.valueOf(footerModel.iconsColor!!.toColorInt())
+            binding.edtTxtMessage.setHintTextColor(footerModel.iconsColor!!.toColorInt())
         }
 
         binding.newMenuLogo.isVisible = SDKConfiguration.OverrideKoreConfig.showHamburgerMenu

@@ -1,19 +1,26 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 
 class ListWidgetButtonAdapter(
@@ -41,6 +48,10 @@ class ListWidgetButtonAdapter(
     override fun onBindViewHolder(holder: ButtonViewHolder, position: Int) {
         val btn = buttons[position]
         val image = btn[BotResponseConstants.COMPONENT_TYPE_IMAGE] as Map<String, *>
+        val context = holder.itemView.context
+        val sharedPrefs = PreferenceRepositoryImpl()
+        val txtColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+        holder.tvButtonTv.setTextColor(txtColor)
         holder.tvButtonTv.text = btn[BotResponseConstants.KEY_TITLE] as String
 
         holder.tvButtonTv.setOnClickListener {
@@ -52,7 +63,9 @@ class ListWidgetButtonAdapter(
 
         if (image[BotResponseConstants.IMAGE_SRC] != null && image[BotResponseConstants.IMAGE_SRC].toString().isNotEmpty()) {
             holder.ivBtnImage.isVisible = true
-            Glide.with(context).load(image[BotResponseConstants.IMAGE_SRC]).error(R.drawable.ic_correct)
+            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_correct)
+            drawable?.setTint(txtColor)
+            Glide.with(context).load(image[BotResponseConstants.IMAGE_SRC]).error(drawable)
                 .into<DrawableImageViewTarget>(DrawableImageViewTarget(holder.ivBtnImage))
         } else holder.ivBtnImage.isVisible = false
     }

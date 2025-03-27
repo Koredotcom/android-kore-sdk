@@ -1,15 +1,22 @@
 package com.kore.ui.row.botchat.multiselect
 
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
+import com.kore.ui.databinding.RowMultiSelectBinding
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
-import com.kore.event.BotChatEvent
-import com.kore.model.constants.BotResponseConstants
-import com.kore.ui.databinding.RowMultiSelectBinding
 import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.ui.row.botchat.multiselect.item.MultiSelectTemplateItemRow
 
@@ -43,8 +50,14 @@ class MultiSelectTemplateRow(
         childBinding.apply {
             list.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
             list.addItemDecoration(VerticalSpaceItemDecoration(10))
-            val adapter = SimpleListAdapter(MultiSelectItemRowType.values().asList())
+            val adapter = SimpleListAdapter(MultiSelectItemRowType.entries)
             list.adapter = adapter
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+            done.setRoundedCorner(6.dpToPx(root.context).toFloat())
+            done.setBackgroundColor(bgColor)
+            done.setTextColor(txtColor)
             commonBind()
         }
     }
@@ -57,7 +70,7 @@ class MultiSelectTemplateRow(
         done.isVisible = isLastItem && !selectedItems.isNullOrEmpty()
         val adapter = list.adapter as SimpleListAdapter
         adapter.submitList(createRows())
-        selectAll.isChecked = selectedItems != null && selectedItems.containsAll(elements)
+        selectAll.isChecked = selectedItems.containsAll(elements)
         selectAll.setOnCheckedChangeListener { checkBox, isChecked ->
             if (checkBox.isPressed) {
                 if (!isLastItem) {
@@ -71,7 +84,7 @@ class MultiSelectTemplateRow(
             }
         }
         done.setOnClickListener {
-            if (selectedItems.isNullOrEmpty()) return@setOnClickListener
+            if (selectedItems.isEmpty()) return@setOnClickListener
             val stringValues = StringBuilder()
             val stringKeys = StringBuilder()
             selectedItems.mapIndexed { index, item ->

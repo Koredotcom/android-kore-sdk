@@ -55,9 +55,9 @@ class BotListTemplateRow(
     }
 
     private fun ListTemplateViewBinding.commonBind() {
-        val items = (payload[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>)
-        items.isNotEmpty().let {
-            val btn: Map<*, *> = items[0]
+        val items = (payload[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>?)
+        items?.isNotEmpty().let {
+            val btn: Map<*, *> = items!![0]
             botCustomListViewButton.text = btn[BotResponseConstants.KEY_TITLE] as String
             botCustomListViewButton.setOnClickListener {
                 if (!isLastItem) return@setOnClickListener

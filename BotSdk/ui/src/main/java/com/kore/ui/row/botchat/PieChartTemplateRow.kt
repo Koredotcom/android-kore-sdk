@@ -14,6 +14,7 @@ import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 import com.kore.ui.databinding.PieChartTemplateBinding
+import androidx.core.graphics.toColorInt
 
 class PieChartTemplateRow(
     private val id: String,
@@ -73,7 +74,7 @@ class PieChartTemplateRow(
             for (i in yVal.indices) {
                 val legendEntryA = LegendEntry()
                 legendEntryA.label = arrLabels[i]
-                legendEntryA.formColor = Color.parseColor(colorsArray[i])
+                legendEntryA.formColor = colorsArray[i].toColorInt()
                 arrLegendEntries.add(legendEntryA)
             }
 
@@ -95,7 +96,7 @@ class PieChartTemplateRow(
         val colors = java.util.ArrayList<Int>()
         val colorsArray: Array<String> = binding.root.context.resources.getStringArray(R.array.color_set)
         for (color in colorsArray) {
-            colors.add(Color.parseColor(color))
+            colors.add(color.toColorInt())
         }
         dataSet.colors = colors
         if (pieType == BotResponseConstants.PIE_TYPE_DONUT) {

@@ -43,7 +43,7 @@ class TableListTemplateItemRow(
             sectionHeader?.let { title.text = it.toString() }
             sectionHeaderDesc?.let { description.text = it.toString() }
             list.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-            list.adapter = SimpleListAdapter(TableListTemplateSubItemRowType.values().asList())
+            list.adapter = SimpleListAdapter(TableListTemplateSubItemRowType.entries)
             commonBind()
         }
     }

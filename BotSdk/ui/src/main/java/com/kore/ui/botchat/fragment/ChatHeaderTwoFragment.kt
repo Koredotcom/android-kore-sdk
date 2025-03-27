@@ -1,19 +1,19 @@
 package com.kore.ui.botchat.fragment
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
@@ -41,7 +41,7 @@ class ChatHeaderTwoFragment : BaseHeaderFragment() {
             val title = model.title?.name
             binding.tvBotTitle.text = if (!title.isNullOrEmpty()) title else SDKConfiguration.getBotConfigModel()?.botName
             binding.tvBotDesc.text = model.subTitle?.name
-            binding.root.setBackgroundColor(Color.parseColor(model.bgColor))
+            model.bgColor?.toColorInt()?.let { binding.root.setBackgroundColor(it) }
 
             if (model.icon != null) {
                 if (model.icon?.type == (BotResponseConstants.CUSTOM)) {
@@ -72,7 +72,7 @@ class ChatHeaderTwoFragment : BaseHeaderFragment() {
             }
 
             model.buttons?.let { buttons ->
-                val bgColorTint = ColorStateList.valueOf(Color.parseColor(model.iconsColor))
+                val bgColorTint = model.iconsColor?.toColorInt()?.let { ColorStateList.valueOf(it) }
                 binding.ivBotArrowBack.backgroundTintList = bgColorTint
                 binding.ivBotHelp.isVisible = buttons.help?.show == true
                 binding.ivBotSupport.isVisible = buttons.liveAgent?.show == true

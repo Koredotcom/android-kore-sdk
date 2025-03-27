@@ -18,7 +18,7 @@ class WelcomeStarterButtonsAdapter (private val context: Context, private val ty
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
         val convertView: View = if (type.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true)) LayoutInflater.from(context)
-            .inflate(R.layout.welcome_quick_buttons_full, parent, false) else LayoutInflater.from(context).inflate(R.layout.welcome_quick_buttons, parent, false)
+                .inflate(R.layout.welcome_quick_buttons_full, parent, false) else LayoutInflater.from(context).inflate(R.layout.welcome_quick_buttons, parent, false)
         return QuickReplyViewHolder(convertView)
     }
 

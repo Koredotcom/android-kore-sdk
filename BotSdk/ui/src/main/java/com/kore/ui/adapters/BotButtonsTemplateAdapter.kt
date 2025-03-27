@@ -1,7 +1,6 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +8,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 
@@ -71,12 +71,12 @@ class BotButtonsTemplateAdapter(
             }
         }
 
-        (holder.buttonTitle.background as GradientDrawable).setColor(Color.parseColor(splashColour))
+        (holder.buttonTitle.background as GradientDrawable).setColor(splashColour.toColorInt())
         (holder.buttonTitle.background as GradientDrawable).setStroke(
             2.dpToPx(context),
-            Color.parseColor(splashColour)
+            splashColour.toColorInt()
         )
-        holder.buttonTitle.setTextColor(Color.parseColor(textColor))
+        holder.buttonTitle.setTextColor(textColor.toColorInt())
     }
 
     override fun getItemId(position: Int): Long {
@@ -88,12 +88,7 @@ class BotButtonsTemplateAdapter(
     }
 
     class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val buttonTitle: TextView
-        val rootLayout: LinearLayout
-
-        init {
-            buttonTitle = view.findViewById(R.id.button_title)
-            rootLayout = view.findViewById(R.id.root_layout)
-        }
+        val buttonTitle: TextView = view.findViewById(R.id.button_title)
+        val rootLayout: LinearLayout = view.findViewById(R.id.root_layout)
     }
 }

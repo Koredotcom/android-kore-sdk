@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
@@ -19,15 +20,20 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
 import com.kore.extensions.getDotMessage
+import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.DESCRIPTION
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.MOBILE_NUMBER
 import com.kore.model.constants.BotResponseConstants.OTP_BUTTONS
 import com.kore.model.constants.BotResponseConstants.PAYLOAD
 import com.kore.model.constants.BotResponseConstants.PIN_LENGTH
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.bottomsheet.row.PinFieldItemRowType
 import com.kore.ui.bottomsheet.row.pinfielditem.PinFieldItemRow.Companion.createRows
@@ -41,6 +47,7 @@ class OtpTemplateBottomSheet : BottomSheetDialogFragment() {
     private lateinit var payload: Map<String, Any>
     private var isLastItem: Boolean = false
     private lateinit var actionEvent: (event: UserActionEvent) -> Unit
+    private val adapter = SimpleListAdapter(PinFieldItemRowType.entries)
     private val itemSpace = 10
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -60,7 +67,7 @@ class OtpTemplateBottomSheet : BottomSheetDialogFragment() {
             otpTemplate.otpRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
             otpTemplate.otpRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             otpTemplate.otpRecycler.post {
-                otpTemplate.otpRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                otpTemplate.otpRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.entries).apply {
                     submitList(createRows(pinLength, otpTemplate.otpRecycler.width, itemSpace))
                     otpTemplate.otpRecycler.post {
                         val childCount = otpTemplate.otpRecycler.childCount
@@ -77,6 +84,12 @@ class OtpTemplateBottomSheet : BottomSheetDialogFragment() {
             }
             (payload[OTP_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 otpTemplate.submit.text = list[0][KEY_TITLE]
+                val sharedPrefs = PreferenceRepositoryImpl()
+                val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+                val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+                otpTemplate.submit.setRoundedCorner(6.dpToPx(root.context).toFloat())
+                otpTemplate.submit.setBackgroundColor(bgColor)
+                otpTemplate.submit.setTextColor(txtColor)
                 val content = SpannableString(list[1][KEY_TITLE])
                 content.setSpan(UnderlineSpan(), 0, content.length, 0)
                 otpTemplate.resendOtp.text = content

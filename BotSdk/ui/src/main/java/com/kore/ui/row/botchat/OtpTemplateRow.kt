@@ -6,18 +6,25 @@ import android.text.TextWatcher
 import android.text.style.UnderlineSpan
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.extensions.getDotMessage
+import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.DESCRIPTION
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.MOBILE_NUMBER
 import com.kore.model.constants.BotResponseConstants.OTP_BUTTONS
 import com.kore.model.constants.BotResponseConstants.PAYLOAD
 import com.kore.model.constants.BotResponseConstants.PIN_LENGTH
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.bottomsheet.row.PinFieldItemRowType
 import com.kore.ui.bottomsheet.row.pinfielditem.PinFieldItemRow.Companion.createRows
@@ -62,7 +69,7 @@ class OtpTemplateRow(
             otpRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
             otpRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             otpRecycler.post {
-                otpRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.values().asList()).apply {
+                otpRecycler.adapter = SimpleListAdapter(PinFieldItemRowType.entries).apply {
                     submitList(createRows(pinLength, otpRecycler.width, itemSpace))
                     otpRecycler.post {
                         val childCount = otpRecycler.childCount
@@ -79,6 +86,12 @@ class OtpTemplateRow(
             }
             (payload[OTP_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 submit.text = list[0][KEY_TITLE]
+                val sharedPrefs = PreferenceRepositoryImpl()
+                val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+                val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+                submit.setRoundedCorner(6.dpToPx(root.context).toFloat())
+                submit.setBackgroundColor(bgColor)
+                submit.setTextColor(txtColor)
                 val content = SpannableString(list[1][KEY_TITLE])
                 content.setSpan(UnderlineSpan(), 0, content.length, 0)
                 resendOtp.text = content

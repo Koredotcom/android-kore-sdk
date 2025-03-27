@@ -38,26 +38,18 @@ class CarouselStackedTemplateAdapter(
         holder.carouselBottomTitle.text = bottomSection[BotResponseConstants.KEY_TITLE] as String
         holder.carouselBottomValue.text = bottomSection[BotResponseConstants.DESCRIPTION] as String
 
-        val buttons: List<Map<String, *>> = buttonMap[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>
-        buttons.isNotEmpty().let {
+        val buttons: List<Map<String, *>>? = buttonMap[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>?
+        buttons?.isNotEmpty().let {
             holder.carouselButtonListview.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            holder.carouselButtonListview.adapter = CarouselItemButtonAdapter(context, buttons, isLastItem, actionEvent)
+            holder.carouselButtonListview.adapter = CarouselItemButtonAdapter(context, buttons!!, isLastItem, actionEvent)
         }
     }
 }
 
 class CarouselStackedViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    var carouselItemTitle: TextView
-    var carouselItemSubtitle: TextView
-    var carouselBottomTitle: TextView
-    var carouselBottomValue: TextView
-    var carouselButtonListview: RecyclerView
-
-    init {
-        carouselItemTitle = view.findViewById(R.id.carousel_item_title)
-        carouselItemSubtitle = view.findViewById(R.id.carousel_item_subtitle)
-        carouselBottomTitle = view.findViewById(R.id.carousel_bottom_title)
-        carouselBottomValue = view.findViewById(R.id.carousel_bottom_value)
-        carouselButtonListview = view.findViewById(R.id.carousel_button_listview)
-    }
+    var carouselItemTitle: TextView = view.findViewById(R.id.carousel_item_title)
+    var carouselItemSubtitle: TextView = view.findViewById(R.id.carousel_item_subtitle)
+    var carouselBottomTitle: TextView = view.findViewById(R.id.carousel_bottom_title)
+    var carouselBottomValue: TextView = view.findViewById(R.id.carousel_bottom_value)
+    var carouselButtonListview: RecyclerView = view.findViewById(R.id.carousel_button_listview)
 }

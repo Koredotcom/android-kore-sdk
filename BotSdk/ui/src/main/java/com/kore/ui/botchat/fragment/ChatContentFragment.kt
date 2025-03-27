@@ -112,6 +112,10 @@ class ChatContentFragment : BaseContentFragment() {
         }, 100)
     }
 
+    override fun onLoadingHistory() {
+        binding.swipeContainerChat.isRefreshing = true
+    }
+
     override fun getAdapterCount(): Int = chatAdapter.itemCount
 
     override fun quickRepliesClicked(quickReplyTemplate: Map<String, *>) {

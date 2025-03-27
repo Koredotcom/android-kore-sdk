@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -13,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -58,7 +58,7 @@ class OptionsActionSheetFragment : BottomSheetDialogFragment() {
         val sharedPreferences = requireActivity().getSharedPreferences(BotResponseConstants.THEME_NAME, Context.MODE_PRIVATE)
 
         if (sharedPreferences != null)
-            llBottomLayout.setBackgroundColor(Color.parseColor(sharedPreferences.getString(BotResponseConstants.WIDGET_BG_COLOR, "#FFFFFF")))
+            sharedPreferences.getString(BotResponseConstants.WIDGET_BG_COLOR, "#FFFFFF")?.toColorInt()?.let { llBottomLayout.setBackgroundColor(it) }
 
         val layoutManager = FlexboxLayoutManager(requireActivity())
         layoutManager.flexDirection = FlexDirection.ROW
@@ -97,9 +97,9 @@ class OptionsActionSheetFragment : BottomSheetDialogFragment() {
 
         tvOptionsTitle.text = requireActivity().resources.getString(R.string.menu)
 
-        if (sharedPreferences != null) tvOptionsTitle.setTextColor(
-            Color.parseColor(sharedPreferences.getString(BotResponseConstants.WIDGET_TXT_COLOR, "#000000"))
-        )
+        if (sharedPreferences != null) sharedPreferences.getString(BotResponseConstants.WIDGET_TXT_COLOR, "#000000")?.toColorInt()?.let {
+            tvOptionsTitle.setTextColor(it)
+        }
 
         llCloseBottomSheet.setOnClickListener { v: View? ->
             if (bottomSheetDialog != null) bottomSheetDialog!!.dismiss()

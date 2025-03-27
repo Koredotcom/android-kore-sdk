@@ -38,7 +38,7 @@ class TableListTemplateRow(
         val childBinding = RowTableListTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
             list.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
-            list.adapter = SimpleListAdapter(TableListTemplateItemRowType.values().asList())
+            list.adapter = SimpleListAdapter(TableListTemplateItemRowType.entries)
             commonBind()
         }
     }

@@ -2,11 +2,11 @@ package com.kore.ui.row.botchat.feedback.adapter
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.common.event.UserActionEvent
 import com.kore.event.BotChatEvent
@@ -40,7 +40,7 @@ class FeedbackRatingScaleAdapter(
             holder.tvRating.setTextColor(ContextCompat.getColor(context, R.color.white))
             holder.tvRating.backgroundTintList = ColorStateList.valueOf(ContextCompat.getColor(context, R.color.primary))
         } else {
-            holder.tvRating.backgroundTintList = ColorStateList.valueOf(Color.parseColor(botListModel[COLOR].toString()))
+            holder.tvRating.backgroundTintList = ColorStateList.valueOf(botListModel[COLOR].toString().toColorInt())
             holder.tvRating.setTextColor(ContextCompat.getColor(context, R.color.gray_modern))
         }
         holder.tvRating.setOnClickListener {
@@ -55,10 +55,6 @@ class FeedbackRatingScaleAdapter(
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val tvRating: CustomTextView
-
-        init {
-            tvRating = itemView.findViewById(R.id.tvRatingScale)
-        }
+        val tvRating: CustomTextView = itemView.findViewById(R.id.tvRatingScale)
     }
 }

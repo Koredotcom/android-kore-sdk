@@ -16,7 +16,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.BAR_CHART_DIRECTION_VERTICAL
 import com.kore.model.constants.BotResponseConstants.DIRECTION
@@ -27,6 +26,7 @@ import com.kore.model.constants.BotResponseConstants.VALUES
 import com.kore.model.constants.BotResponseConstants.X_AXIS
 import com.kore.ui.R
 import com.kore.ui.databinding.BarChartTemplateBinding
+import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.formatters.BarChartDataFormatter
 import com.kore.ui.views.CustomMarkerView
 

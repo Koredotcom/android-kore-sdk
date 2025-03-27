@@ -8,16 +8,24 @@ import android.widget.BaseAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSpinner
+import androidx.core.graphics.toColorInt
 import androidx.viewbinding.ViewBinding
 import com.google.gson.internal.LinkedTreeMap
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
+import com.kore.extensions.setRoundedCorner
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.ELEMENTS
 import com.kore.model.constants.BotResponseConstants.FORM_PLACE_HOLDER
+import com.kore.model.constants.BotResponseConstants.HEADING
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.LABEL
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.databinding.RowDropdownTemplateBinding
 import java.lang.reflect.AccessibleObject
@@ -54,7 +62,7 @@ class DropDownTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, true, true)
         val childBinding = RowDropdownTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
-            tvDropDownTitle.text = payload[LABEL] as String
+            tvDropDownTitle.text = (payload[LABEL] ?: payload[HEADING]).toString()
             commonBind()
         }
     }
@@ -72,6 +80,12 @@ class DropDownTemplateRow(
         spinner.isClickable = isLastItem
         spinner.isEnabled = isLastItem
         spinner.setSelection(selectedPosition)
+        val sharedPrefs = PreferenceRepositoryImpl()
+        val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+        val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+        submit.setRoundedCorner(6.dpToPx(root.context).toFloat())
+        submit.setBackgroundColor(bgColor)
+        submit.setTextColor(txtColor)
         submit.setOnClickListener {
             if (!isLastItem || selectedPosition <= 0) return@setOnClickListener
             if (elements[selectedPosition - 1][KEY_TITLE]?.equals(placeHolder) == false) {

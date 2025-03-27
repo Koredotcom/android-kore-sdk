@@ -1,21 +1,21 @@
 package com.kore.ai.botsdk.fragments
 
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.kore.ai.botsdk.databinding.CustomHeaderBinding
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
-import com.kore.extensions.dpToPx
 import com.kore.event.BotChatEvent
+import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.ui.R
@@ -40,7 +40,7 @@ class CustomHeaderFragment : BaseHeaderFragment() {
             val title = model.title?.name
             binding.tvBotTitle.text = if (!title.isNullOrEmpty()) title else SDKConfiguration.getBotConfigModel()?.botName
             binding.tvBotDesc.text = model.subTitle?.name
-            binding.root.setBackgroundColor(Color.parseColor(model.bgColor))
+            model.bgColor?.toColorInt()?.let { binding.root.setBackgroundColor(it) }
 
             if (model.icon != null) {
                 if (model.icon?.type == (BotResponseConstants.CUSTOM)) {
@@ -51,7 +51,7 @@ class CustomHeaderFragment : BaseHeaderFragment() {
                     binding.ivBotAvatar.layoutParams =
                         LinearLayout.LayoutParams((40.dpToPx(binding.root.context)), (40.dpToPx(binding.root.context)))
                 } else {
-                    binding.llBotAvatar.backgroundTintList = ColorStateList.valueOf(Color.parseColor(model.avatarBgColor))
+                    binding.llBotAvatar.backgroundTintList = model.avatarBgColor?.toColorInt()?.let { ColorStateList.valueOf(it) }
                     when (model.icon?.iconUrl) {
                         BotResponseConstants.ICON_1 -> binding.ivBotAvatar.setImageDrawable(
                             ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_1, context?.theme)
@@ -73,7 +73,7 @@ class CustomHeaderFragment : BaseHeaderFragment() {
             }
 
             model.buttons?.let {
-                val bgColorTint = ColorStateList.valueOf(Color.parseColor(model.iconsColor))
+                val bgColorTint = model.iconsColor?.toColorInt()?.let { it1 -> ColorStateList.valueOf(it1) }
                 binding.ivBotArrowBack.backgroundTintList = bgColorTint
             }
         }
