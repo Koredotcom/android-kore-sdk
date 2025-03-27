@@ -20,6 +20,7 @@ import com.kore.widgets.model.WidgetConfigModel
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Locale
+import java.util.Properties
 import java.util.TimeZone
 
 class MainActivity : AppCompatActivity() {
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity() {
 //        SDKConfig.setConnectionMode("Default")
         // To disable loading history when socket reconnected in case of socket disconnect and reconnect
 //        SDKConfig.setHistoryOnNetworkResume(false)
+        // To enable or disable update status bar color as per branding details
+//        SDKConfig.setIsUpdateStatusBarColor(false)
 
         binding.launchBotBtn.setOnClickListener {
             val intent = Intent(this, BotChatActivity::class.java)
@@ -133,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 //                identity = properties.getProperty("identity"),
 //                isWebHook = false,
 //                jwtServerUrl = properties.getProperty("jwtServerUrl"),
-//                enablePanel = true,
+//                enablePanel = false,
 //                jwtToken = properties.getProperty("jwtToken")
 //            )
 //        } catch (e: NotFoundException) {

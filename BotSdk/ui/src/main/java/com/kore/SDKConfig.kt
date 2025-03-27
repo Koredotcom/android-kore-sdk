@@ -19,6 +19,7 @@ object SDKConfig {
     private var customFooterFragment: BaseFooterFragment? = null
     private var isMinimized: Boolean = false
     private var historyOnNetworkResume = true
+    private var isUpdateStatusBarColor = false
 
     @JvmStatic
     fun initialize(botConfigModel: BotConfigModel) {
@@ -116,4 +117,14 @@ object SDKConfig {
 
     @JvmStatic
     fun getHistoryOnNetworkResume() = historyOnNetworkResume
+
+    @JvmStatic
+    fun setIsUpdateStatusBarColor(isUpdate: Boolean) {
+        isUpdateStatusBarColor = isUpdate
+    }
+
+    @JvmStatic
+    fun isUpdateStatusBarColor(): Boolean {
+        return isUpdateStatusBarColor
+    }
 }
