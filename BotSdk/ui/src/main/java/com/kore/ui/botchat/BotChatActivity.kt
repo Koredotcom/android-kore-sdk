@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
@@ -72,6 +73,7 @@ import com.kore.ui.utils.BundleConstants
 import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import org.webrtc.NetworkMonitor.isOnline
 import java.util.Calendar
+import androidx.core.graphics.toColorInt
 
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
     private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
@@ -111,8 +113,12 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         })
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(onDestroyReceiver, IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED)
+            registerReceiver(closeChatBotReceiver, IntentFilter(BundleConstants.CLOSE_CHAT_EVENT), RECEIVER_NOT_EXPORTED)
+            registerReceiver(minimizeChatBotReceiver, IntentFilter(BundleConstants.MINIMIZE_CHAT_EVENT), RECEIVER_NOT_EXPORTED)
         } else {
             registerReceiver(onDestroyReceiver, IntentFilter(BundleConstants.DESTROY_EVENT))
+            registerReceiver(closeChatBotReceiver, IntentFilter(BundleConstants.CLOSE_CHAT_EVENT))
+            registerReceiver(minimizeChatBotReceiver, IntentFilter(BundleConstants.MINIMIZE_CHAT_EVENT))
         }
         startService(Intent(this.applicationContext, ClosingService::class.java))
     }
@@ -130,7 +136,9 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onDestroy() {
         super.onDestroy()
-        botChatViewModel.onTerminate()
+        botChatViewModel.disconnectBot()
+        unregisterReceiver(closeChatBotReceiver)
+        unregisterReceiver(minimizeChatBotReceiver)
     }
 
     private fun addFragmentsToContainer(id: Int, fragment: Fragment) {
@@ -213,9 +221,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onBrandingDetails(header: BotActiveThemeModel?) {
         if (header?.botMessage == null && header?.brandingModel != null) {
+            header.brandingModel?.header?.bgColor?.let { updateStatusBarColor(it) }
             Handler(Looper.getMainLooper()).postDelayed({
 //                binding.clProgress.isVisible = false
-                if (!isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
+                if (!isMinimized() && !isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
                     isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
                         setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
@@ -416,6 +425,14 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         bottomSheet.showData(msgId, payload, this::onActionEvent, supportFragmentManager)
     }
 
+    private fun updateStatusBarColor(color: String) {
+        if (SDKConfig.isUpdateStatusBarColor()) {
+            val window = window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = color.toColorInt()
+        }
+    }
+
     fun showCloseAlert() {
         val dialogClickListener = DialogInterface.OnClickListener { dialog: DialogInterface?, which: Int ->
             val intent = Intent()
@@ -472,6 +489,35 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         override fun onReceive(context: Context, intent: Intent) {
             LogUtils.i("BotChatActivity", "onDestroyReceiver called")
             botChatViewModel.onTerminate()
+        }
+    }
+
+    private var closeChatBotReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            botChatViewModel.onMinimize(0)
+            botChatViewModel.disconnectBot()
+            finish()
+        }
+    }
+
+    private var minimizeChatBotReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            botChatViewModel.onMinimize(contentFragment.getAdapterCount())
+            SDKConfig.setIsMinimized(true)
+            botChatViewModel.disconnectBot()
+            val name = intent.getStringExtra("ActivityToLaunch")
+            val launchMode = intent.getIntExtra("LaunchMode", -1)
+            if (name != null) {
+                try {
+                    val className = Class.forName(name)
+                    val activityIntent = Intent(context, className)
+                    if (launchMode != -1) activityIntent.setFlags(launchMode)
+                    context.startActivity(activityIntent)
+                } catch (e: ClassNotFoundException) {
+                    throw RuntimeException(e)
+                }
+            }
+            finish()
         }
     }
 }

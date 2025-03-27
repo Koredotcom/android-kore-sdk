@@ -183,7 +183,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 when (state) {
                     ConnectionState.CONNECTED -> {
                         isFirstTime = false
-                        if(isReconnection) loadChatHistory(true)
+                        if (isReconnection) loadChatHistory(true)
                     }
 
                     else -> {}
@@ -377,7 +377,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     getView()?.onChatHistory(historyMessages, isReconnect)
                     historyOffset += response.data.first.size
                     moreHistory = response.data.second
-                    SDKConfig.setIsMinimized(false)
+//                    SDKConfig.setIsMinimized(false)
                     if (historyCount > 0)
                         preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
                 }
@@ -385,7 +385,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 else -> {
                     getView()?.onChatHistory(emptyList(), isReconnect)
                     LogUtils.e(LOG_TAG, "RtmUrlResponse error: $response")
-                    SDKConfig.setIsMinimized(false)
+//                    SDKConfig.setIsMinimized(false)
                 }
             }
         }
