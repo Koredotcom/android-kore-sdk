@@ -75,7 +75,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
             if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
 
             if (!StringUtils.isNullOrEmpty(btn.getPayload()) && isEnabled) {
-                composeFooterInterface.onSendClick(btn.getPayload(), true);
+                composeFooterInterface.onSendClick(btn.getTitle(), btn.getPayload(), true);
             }
         });
     }

@@ -241,6 +241,9 @@ public class BotChatViewModel extends ViewModel {
                     //This is the case Bot returning user sent message from another channel
                     BotRequest botRequest = gson.fromJson(payload, BotRequest.class);
                     if (botRequest != null && botRequest.getMessage() != null && !StringUtils.isNullOrEmpty(botRequest.getMessage().getBody())) {
+                        if (!StringUtils.isNullOrEmpty(botRequest.getMessage().getRenderMsg())) {
+                            botRequest.getMessage().setBody(botRequest.getMessage().getRenderMsg());
+                        }
                         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
                         chatView.updateContentListOnSend(botRequest);
                     } else {
@@ -306,7 +309,7 @@ public class BotChatViewModel extends ViewModel {
 
     public void addSentMessageToChat(String message) {
         //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);

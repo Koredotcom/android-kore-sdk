@@ -121,7 +121,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
                     } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
 
                         if (!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getPayload()))
-                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(), false);
+                            composeFooterInterface.onSendClick(_botListModel.getDefault_action().getTitle(), _botListModel.getDefault_action().getPayload(), false);
                         else if (!StringUtils.isNullOrEmpty(_botListModel.getDefault_action().getTitle()))
                             composeFooterInterface.onSendClick(_botListModel.getDefault_action().getTitle(), false);
                     }

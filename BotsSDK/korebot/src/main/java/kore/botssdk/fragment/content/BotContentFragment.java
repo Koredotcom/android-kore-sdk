@@ -440,7 +440,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                 } else {
                                     try {
                                         String message = msg.getComponents().get(0).getData().getText();
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
                                         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
                                         botPayLoad.setMessage(botMessage);
                                         BotInfoModel botInfo = new BotInfoModel(Client.bot_name, Client.bot_id, null);
@@ -516,7 +516,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                                 } else {
                                     try {
                                         String message = msg.getComponents().get(0).getData().getText();
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
                                         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
                                         botPayLoad.setMessage(botMessage);
                                         BotInfoModel botInfo = new BotInfoModel(Client.bot_name, Client.bot_id, null);

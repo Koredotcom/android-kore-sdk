@@ -106,7 +106,7 @@ public class BotClient {
         if (msg != null && !msg.isEmpty()) {
 
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg, "");
             customData.put("botToken", getAccessToken());
             botMessage.setCustomData(customData);
             botPayLoad.setMessage(botMessage);
@@ -135,7 +135,7 @@ public class BotClient {
 
         if (msg != null && !msg.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg, "");
 
             if (attachments != null && !attachments.isEmpty()) botMessage = new RestResponse.BotMessage(msg, attachments);
 
@@ -203,7 +203,7 @@ public class BotClient {
     public void sendReceipts(String eventName, String msgId)
     {
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage("", "");
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage("", "", "");
         customData.put("botToken",getAccessToken());
         botMessage.setCustomData(customData);
         botPayLoad.setMessage(botMessage);
@@ -228,7 +228,7 @@ public class BotClient {
 
     public void sendAgentCloseMessage(String msg, String botName, String botId) {
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg);
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(msg, "");
         customData.put("botToken",getAccessToken());
         botMessage.setCustomData(customData);
         botPayLoad.setMessage(botMessage);
@@ -251,7 +251,7 @@ public class BotClient {
 
         if (payLoad != null && !payLoad.isEmpty()) {
             RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad);
+            RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad, message);
 
             if (customData == null) customData = new RestResponse.BotCustomData();
 

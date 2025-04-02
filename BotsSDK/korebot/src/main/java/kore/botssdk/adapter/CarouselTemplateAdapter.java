@@ -149,7 +149,7 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             } else if (isEnabled && composeFooterInterface != null && botListDefaultModel != null) {
                 if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
                     String buttonPayload = botCarouselModel.getDefault_action().getPayload();
-                    composeFooterInterface.onSendClick(buttonPayload, false);
+                    composeFooterInterface.onSendClick(botCarouselModel.getDefault_action().getTitle(),buttonPayload, false);
                 } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
                     String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                     composeFooterInterface.onSendClick(buttonPayload, false);
@@ -167,7 +167,7 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             } else if (isEnabled && composeFooterInterface != null && botListDefaultModel != null) {
                 if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
                     String buttonPayload = botCarouselModel.getDefault_action().getPayload();
-                    composeFooterInterface.onSendClick(buttonPayload, false);
+                    composeFooterInterface.onSendClick(botCarouselModel.getDefault_action().getTitle(), buttonPayload, false);
                 } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
                     String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                     composeFooterInterface.onSendClick(buttonPayload, false);
