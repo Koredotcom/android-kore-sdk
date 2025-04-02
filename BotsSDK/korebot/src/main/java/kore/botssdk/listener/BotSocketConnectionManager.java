@@ -370,7 +370,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         else botClient.sendMessage(message);
 
         //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
@@ -397,12 +397,12 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void sendAttachmentMessage(String message, ArrayList<HashMap<String, String>> attachments) {
         stopTextToSpeech();
         if (message != null) {
-            if (attachments != null && attachments.size() > 0) botClient.sendMessage(message, attachments);
+            if (attachments != null && !attachments.isEmpty()) botClient.sendMessage(message, attachments);
             else botClient.sendMessage(message);
-        } else if (attachments != null && attachments.size() > 0) botClient.sendMessage(message, attachments);
+        } else if (attachments != null && !attachments.isEmpty()) botClient.sendMessage(message, attachments);
 
         //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
@@ -434,7 +434,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
 
         //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);

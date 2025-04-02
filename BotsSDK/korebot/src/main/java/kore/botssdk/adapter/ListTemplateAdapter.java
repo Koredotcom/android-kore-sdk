@@ -102,7 +102,7 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
                     if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
                         invokeGenericWebViewInterface.invokeGenericWebView(botListModel.getDefault_action().getUrl());
                     } else if (isEnabled && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
-                        composeFooterInterface.onSendClick(botListModel.getDefault_action().getPayload(), false);
+                        composeFooterInterface.onSendClick(botListModel.getDefault_action().getTitle(), botListModel.getDefault_action().getPayload(), false);
                     }
                 }
             }

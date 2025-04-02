@@ -82,7 +82,8 @@ public class HistoryRepository {
                                 } else {
                                     try {
                                         String message = msg.getComponents().get(0).getData().getText();
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+                                        message = (msg.getTags() != null && !msg.getTags().getAltText().isEmpty()) ? msg.getTags().getAltText().get(0).getValue() : message;
+                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
                                         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
                                         botPayLoad.setMessage(botMessage);
                                         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
@@ -158,7 +159,7 @@ public class HistoryRepository {
                                 } else {
                                     try {
                                         String message = msg.getComponents().get(0).getData().getText();
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
                                         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
                                         botPayLoad.setMessage(botMessage);
                                         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);

@@ -21,6 +21,15 @@ public class BotHistoryMessage {
     private Integer v;
     private String resourceid;
     private String lmodifiedBy;
+    private TagsModel tags;
+
+    public TagsModel getTags(){
+        return tags;
+    }
+
+    public void setTags(TagsModel model){
+        tags = model;
+    }
 
     public String getId() {
         return _id;

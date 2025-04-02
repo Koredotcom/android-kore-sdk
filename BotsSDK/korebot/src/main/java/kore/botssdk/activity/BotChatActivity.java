@@ -1387,7 +1387,7 @@ public class BotChatActivity extends BotAppCompactActivity implements ComposeFoo
 
     private void addSentMessageToChat(String message) {
         //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);

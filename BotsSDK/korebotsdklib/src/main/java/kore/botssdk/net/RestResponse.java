@@ -1,6 +1,8 @@
 package kore.botssdk.net;
 
 
+import androidx.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -89,6 +91,7 @@ public class RestResponse {
     }
 
     public static class BotMessage {
+        private String renderMsg;
         private String body;
         private BotCustomData customData;
 
@@ -112,8 +115,9 @@ public class RestResponse {
             return type;
         }
 
-        public BotMessage(String body) {
+        public BotMessage(String body, String renderMsg) {
             this.body = body;
+            this.renderMsg = renderMsg == null || renderMsg.isEmpty() ? null : renderMsg;
         }
 
         public BotMessage(String body, ArrayList<HashMap<String, String>> attachments) {
@@ -121,7 +125,8 @@ public class RestResponse {
             this.attachments = attachments;
         }
 
-        public BotMessage(String body, String type) {
+        public BotMessage(String body, String type, String renderMsg) {
+            this.renderMsg = renderMsg == null || renderMsg.isEmpty() ? null : renderMsg;
             this.body = body;
             this.type = type;
         }
@@ -136,6 +141,14 @@ public class RestResponse {
 
         public String getBody() {
             return body;
+        }
+
+        public String getRenderMsg() {
+            return renderMsg;
+        }
+
+        public void setRenderMsg(String renderMsg) {
+            this.renderMsg = renderMsg;
         }
 
         public BotCustomData getCustomData() {
