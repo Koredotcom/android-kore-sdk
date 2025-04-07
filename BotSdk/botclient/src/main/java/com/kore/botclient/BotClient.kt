@@ -255,7 +255,7 @@ class BotClient private constructor() {
                             val botAuthorizationResponse = result.data
                             botUserId = botAuthorizationResponse?.userInfo?.userId ?: ""
                             accessToken = botAuthorizationResponse?.authorization?.accessToken ?: ""
-                            listener?.onJwtTokenGenerated(accessToken)
+                            listener?.onAccessTokenGenerated(accessToken)
                             if (SDKConfiguration.getBotConfigModel()?.isWebHook == true) {
                                 getWebHookMeta(getJwtToken(), isReconnectionAttempt)
                                 return@withContext
@@ -426,7 +426,14 @@ class BotClient private constructor() {
     fun sendMessage(msg: String, payload: String?, attachments: List<Map<String, *>>? = null) {
         setMoreCustomData()
         val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return
-        BotClientHelper.createRequestPayload(msg, payload ?: msg, attachments, botCustomData, botInfoModel) { jsonPayload, botRequest ->
+        BotClientHelper.createRequestPayload(
+            msg,
+            payload ?: msg,
+            if (payload != null && msg.isNotEmpty()) msg else null,
+            attachments,
+            botCustomData,
+            botInfoModel
+        ) { jsonPayload, botRequest ->
             if (botConfigModel.isWebHook) {
                 sendWebHookMessage(botRequest, false, msg, payload, attachments)
                 return@createRequestPayload
@@ -535,7 +542,7 @@ class BotClient private constructor() {
     fun sendCloseOrMinimizeEvent(event: String, botName: String, botId: String) {
         if (!isConnected()) return
         botCustomData[BOT_TOKEN] = getAccessToken()
-        val botMessage = BotMessage("", null, botCustomData)
+        val botMessage = BotMessage("", null, null, botCustomData)
         botInfoModel = BotInfoModel(botName, botId, botCustomData)
         val meta = Meta(TimeZone.getDefault().id, Locale.getDefault().isO3Language)
         val botPayLoad = BotPayLoad(botMessage, meta = meta, event = event, botInfo = botInfoModel)
@@ -553,7 +560,7 @@ class BotClient private constructor() {
      * by sending messages from the pool.
      */
     fun sendReceipts(eventName: String?, msgId: String?) {
-        val botMessage = BotMessage("", null, botCustomData)
+        val botMessage = BotMessage("", null, null, botCustomData)
         botCustomData["botToken"] = getAccessToken()
         val configModel: BotConfigModel = SDKConfiguration.getBotConfigModel() ?: return
 

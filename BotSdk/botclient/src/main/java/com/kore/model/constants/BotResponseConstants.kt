@@ -272,6 +272,9 @@ object BotResponseConstants {
     const val RESET_BUTTONS = "resetButtons"
     const val CONFIRM = "confirm"
     const val BTN_TYPE = "btnType"
+    const val BACKGROUND_INVERTED = "backgroundInverted"
+    const val TEXT_INVERTED = "textInverted"
+    const val ALT_TEXT = "altText"
     var DATE_FORMAT = "dd/MM/yyyy"
     var TIME_FORMAT = 24
 }

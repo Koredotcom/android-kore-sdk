@@ -39,7 +39,9 @@ class ButtonTemplateRow(
 
             payload[BotResponseConstants.BUTTON_VARIATION].let {
                 when (payload[BotResponseConstants.BUTTON_VARIATION]) {
-                    BotResponseConstants.PLAIN -> {
+                    BotResponseConstants.PLAIN,
+                    BotResponseConstants.TEXT_INVERTED,
+                    BotResponseConstants.BACKGROUND_INVERTED -> {
                         root.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.HORIZONTAL, false)
                     }
 
@@ -58,7 +60,6 @@ class ButtonTemplateRow(
 
             if (payload[BotResponseConstants.FULL_WIDTH_] != null && payload[BotResponseConstants.FULL_WIDTH_] as Boolean) {
                 root.layoutManager = LinearLayoutManager(binding.root.context, LinearLayoutManager.VERTICAL, false)
-
             }
 
             if (payload[BotResponseConstants.BUTTON_STACKED] != null && payload[BotResponseConstants.BUTTON_STACKED] as Boolean) {
@@ -77,6 +78,6 @@ class ButtonTemplateRow(
 
     private fun RowButtonTemplateBinding.commonBind() {
         val items = (payload[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>)
-        root.adapter = BotButtonsTemplateAdapter(root.context, items, isLastItem, actionEvent)
+        root.adapter = BotButtonsTemplateAdapter(root.context, items, payload, isLastItem, actionEvent)
     }
 }
