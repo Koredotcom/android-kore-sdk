@@ -1,6 +1,7 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
@@ -20,18 +21,26 @@ import com.kore.ui.R
 class BotButtonsTemplateAdapter(
     private val context: Context,
     private val buttons: List<Map<String, *>>,
+    private val payload: Map<String, Any?>,
     private val isLastItem: Boolean,
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : RecyclerView.Adapter<BotButtonsTemplateAdapter.QuickReplyViewHolder>() {
-    private var splashColour: String
-    private var textColor: String
+    private var buttonBgColor: String
+    private var activeTextColor: String
+    private var invertBgColor: String
+    private var invertTextColor: String
 
     init {
         val sharedPreferences = PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
-        splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary))
-        textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white))
-        splashColour = sharedPreferences.getString(BotResponseConstants.BUTTON_ACTIVE_BG_COLOR, splashColour)!!
-        textColor = sharedPreferences.getString(BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, textColor)!!
+        buttonBgColor = "#efeffc"
+        activeTextColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white))
+        invertBgColor = "#3F51B5"
+        invertTextColor = activeTextColor
+        buttonBgColor = sharedPreferences.getString(BotResponseConstants.BUBBLE_LEFT_BG_COLOR, buttonBgColor)!!
+        activeTextColor = sharedPreferences.getString(BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, activeTextColor)!!
+
+        invertBgColor = sharedPreferences.getString(BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, invertBgColor)!!
+        invertTextColor = sharedPreferences.getString(BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, invertTextColor)!!
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
@@ -70,13 +79,29 @@ class BotButtonsTemplateAdapter(
                 e.printStackTrace()
             }
         }
+        val isFullWidth = payload[BotResponseConstants.FULL_WIDTH_] as Boolean
+        val isStackedButtons = payload[BotResponseConstants.BUTTON_STACKED] as Boolean
+        val variation = (payload[BotResponseConstants.BUTTON_VARIATION] as String?) ?: ""
+        val bgDrawable = holder.buttonTitle.background as GradientDrawable
+        bgDrawable.cornerRadius = 4.dpToPx(context).toFloat()
 
-        (holder.buttonTitle.background as GradientDrawable).setColor(splashColour.toColorInt())
-        (holder.buttonTitle.background as GradientDrawable).setStroke(
-            2.dpToPx(context),
-            splashColour.toColorInt()
-        )
-        holder.buttonTitle.setTextColor(textColor.toColorInt())
+        if (isFullWidth || isStackedButtons || variation == BotResponseConstants.PLAIN) {
+            bgDrawable.setStroke(1.dpToPx(context), buttonBgColor.toColorInt())
+            bgDrawable.setColor(Color.WHITE)
+            holder.buttonTitle.setTextColor(activeTextColor.toColorInt())
+        } else if (variation == BotResponseConstants.BACKGROUND_INVERTED) {
+            bgDrawable.setColor(invertBgColor.toColorInt())
+            bgDrawable.setStroke(1.dpToPx(context), invertBgColor.toColorInt())
+            holder.buttonTitle.setTextColor(invertTextColor.toColorInt())
+        } else {
+            holder.buttonTitle.setTextColor(activeTextColor.toColorInt())
+            bgDrawable.setColor(buttonBgColor.toColorInt())
+            bgDrawable.setStroke(1.dpToPx(context), buttonBgColor.toColorInt())
+        }
+        if (isFullWidth) {
+            holder.rootLayout.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+            holder.buttonTitle.layoutParams.width = LinearLayout.LayoutParams.MATCH_PARENT
+        }
     }
 
     override fun getItemId(position: Int): Long {
