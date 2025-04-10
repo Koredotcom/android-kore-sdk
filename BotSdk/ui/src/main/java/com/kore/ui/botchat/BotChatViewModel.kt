@@ -472,16 +472,6 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     private fun onBrandingDetails(brandingModel: BotBrandingModel?) {
         brandingModel?.let {
-            if (it.general.colors.useColorPaletteOnly == true) {
-                it.header.bgColor = it.general.colors.secondary
-                it.header.avatarBgColor = it.general.colors.primary
-                it.header.title?.color = it.general.colors.primary
-                it.header.subTitle?.color = it.general.colors.primary
-
-                it.footer.composeBar?.outlineColor = it.general.colors.primary
-                it.footer.composeBar?.inlineColor = it.general.colors.secondaryText
-            }
-
             if (it.body.timeStamp != null) {
                 BotResponseConstants.DATE_FORMAT = it.body.timeStamp!!.dateFormat.replace("mm", "MM")
                 BotResponseConstants.TIME_FORMAT = if (it.body.timeStamp!!.timeFormat.isNotEmpty()) it.body.timeStamp!!.timeFormat.toInt() else 12

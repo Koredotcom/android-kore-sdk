@@ -29,7 +29,7 @@ data class BrandingHeaderModel(
 
 fun BrandingHeaderModel.updateWith(configModel: BrandingHeaderModel): BrandingHeaderModel {
     return this.copy(
-        bgColor = configModel.bgColor?.ifEmpty { this.bgColor } ?: bgColor,
+        bgColor = "#ff0000",//configModel.bgColor?.ifEmpty { this.bgColor } ?: bgColor,
         size = configModel.size?.ifEmpty { this.size } ?: size,
         style = configModel.style?.ifEmpty { this.style } ?: style,
         iconsColor = configModel.iconsColor?.ifEmpty { this.iconsColor } ?: iconsColor,

@@ -13,7 +13,7 @@
   },
   "chat_bubble": {
     "style": "",
-    "primary_color": "#ffffff",
+    "primary_color": "",
     "secondary_color": ""
   },
   "welcome_screen": {
