@@ -6,12 +6,11 @@ data class PromotionalContentModel(
     @SerializedName("show")
     val show: Boolean?,
     @SerializedName("promotions")
-    val promotions: ArrayList<PromotionsModel>
+    val promotions: ArrayList<PromotionsModel> = ArrayList()
 )
 
-fun PromotionalContentModel.updateWith(configModel: PromotionalContentModel): PromotionalContentModel {
+fun PromotionalContentModel.updateWith(configModel: PromotionalContentModel?): PromotionalContentModel {
     return this.copy(
-        show = configModel.show ?: show,
-        promotions = promotions.ifEmpty { promotions }
+        show = configModel?.show ?: show,
     )
 }

@@ -14,11 +14,11 @@ data class BrandingQuickStartButtonActionModel(
     val title: String?,
 ) : Serializable
 
-fun BrandingQuickStartButtonActionModel.updateWith(configModel: BrandingQuickStartButtonActionModel): BrandingQuickStartButtonActionModel {
+fun BrandingQuickStartButtonActionModel.updateWith(configModel: BrandingQuickStartButtonActionModel?): BrandingQuickStartButtonActionModel {
     return this.copy(
-        type = configModel.type?.ifEmpty { this.type },
-        value = configModel.value?.ifEmpty { this.value },
-        icon = configModel.icon?.ifEmpty { this.icon },
-        title = configModel.title?.ifEmpty { this.title },
+        type = configModel?.type?.ifEmpty { this.type } ?: type,
+        value = configModel?.value?.ifEmpty { this.value } ?: value,
+        icon = configModel?.icon?.ifEmpty { this.icon } ?: icon,
+        title = configModel?.title?.ifEmpty { this.title } ?: title,
     )
 }

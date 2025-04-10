@@ -9,18 +9,22 @@ import android.widget.ImageView
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.kore.model.constants.BotResponseConstants
+import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
 import com.kore.network.api.responsemodels.branding.PromotionsModel
 import com.kore.ui.R
 
-class WelcomePromotionsAdapter(val context : Context, val arrPromotions : ArrayList<PromotionsModel>) :
-    BaseAdapter()
-{
+class WelcomePromotionsAdapter(val context: Context, private val promotions: ArrayList<PromotionsModel>) :
+    BaseAdapter() {
+    private var sendMessage: (message: String, payload: String) -> Unit = { _, _ -> }
+    private var loadUrl: (url: String) -> Unit = {}
+
     override fun getCount(): Int {
-        return arrPromotions.size
+        return promotions.size
     }
 
     override fun getItem(position: Int): Any {
-        return arrPromotions[position]
+        return promotions[position]
     }
 
     override fun getItemId(position: Int): Long {
@@ -39,22 +43,56 @@ class WelcomePromotionsAdapter(val context : Context, val arrPromotions : ArrayL
             vh = view.tag as ViewHolder
         }
 
-        val media = arrPromotions[position].banner
+        val media = promotions[position].banner
+        val promoItem = promotions[position]
 
         Glide.with(context)
             .load(media)
             .into(vh.ivPromotions)
             .onLoadFailed(ResourcesCompat.getDrawable(context.resources, R.drawable.ic_launcher_foreground, context.theme))
 
+        vh.itemView.setOnClickListener {
+            try {
+                val buttonActionModel: BrandingQuickStartButtonActionModel = promoItem.action
+                if (buttonActionModel.value?.isNotEmpty() == true) {
+                    val quickReplyPayload = buttonActionModel.value
+                    if (BotResponseConstants.BUTTON_TYPE_POSTBACK == buttonActionModel.type) {
+                        buttonActionModel.title?.let { it1 ->
+                            if (quickReplyPayload != null) sendMessage(it1, quickReplyPayload)
+                        }
+                    } else if (BotResponseConstants.BUTTON_TYPE_USER_INTENT == buttonActionModel.type) {
+                        loadUrl(BotResponseConstants.BUTTON_TYPE_USER_INTENT)
+                    } else if (BotResponseConstants.BUTTON_TYPE_TEXT == buttonActionModel.type) {
+                        buttonActionModel.title?.let { it1 ->
+                            if (quickReplyPayload != null) sendMessage(it1, quickReplyPayload)
+                        }
+                    } else if (BotResponseConstants.BUTTON_TYPE_WEB_URL == buttonActionModel.type
+                        || BotResponseConstants.BUTTON_TYPE_URL == buttonActionModel.type
+                    ) {
+                        if (quickReplyPayload != null) loadUrl(quickReplyPayload)
+                    } else {
+                        buttonActionModel.title?.let { it1 ->
+                            if (quickReplyPayload != null) sendMessage(it1, quickReplyPayload)
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
         return view
     }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
-    {
-        val ivPromotions : ImageView
+    fun setActionEvent(
+        sendMessage: (message: String, payload: String) -> Unit,
+        loadUrl: (url: String) -> Unit
+    ) {
+        this.sendMessage = sendMessage
+        this.loadUrl = loadUrl
+    }
 
-        init {
-            ivPromotions = itemView.findViewById(R.id.ivPromotionsBanner)
-        }
+    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val ivPromotions: ImageView = itemView.findViewById(R.id.ivPromotionsBanner)
     }
 }

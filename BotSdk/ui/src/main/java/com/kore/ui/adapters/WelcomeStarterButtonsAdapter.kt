@@ -12,13 +12,17 @@ import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActi
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonButtonsModel
 import com.kore.ui.R
 
-class WelcomeStarterButtonsAdapter (private val context: Context, private val type: String?) : RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder>() {
+class WelcomeStarterButtonsAdapter(private val context: Context, private val type: String?) :
+    RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder>() {
 
     private var quickReplyTemplateArrayList: ArrayList<BrandingQuickStartButtonButtonsModel>? = null
+    private var sendMessage: (message: String, payload: String) -> Unit = { _, _ -> }
+    private var loadUrl: (url: String) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
         val convertView: View = if (type.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true)) LayoutInflater.from(context)
-                .inflate(R.layout.welcome_quick_buttons_full, parent, false) else LayoutInflater.from(context).inflate(R.layout.welcome_quick_buttons, parent, false)
+            .inflate(R.layout.welcome_quick_buttons_full, parent, false) else LayoutInflater.from(context)
+            .inflate(R.layout.welcome_quick_buttons, parent, false)
         return QuickReplyViewHolder(convertView)
     }
 
@@ -26,30 +30,28 @@ class WelcomeStarterButtonsAdapter (private val context: Context, private val ty
         val quickReplyTemplate: BrandingQuickStartButtonButtonsModel = quickReplyTemplateArrayList!![position]
         holder.quickReplyTitle.text = quickReplyTemplate.title
         holder.quickReplyRoot.setOnClickListener {
-//            if (composeFooterInterface != null && invokeGenericWebViewInterface != null)
-//            {
             val quickReplyPayload: String
             try {
                 val buttonActionModel: BrandingQuickStartButtonActionModel = quickReplyTemplate.action
                 if (buttonActionModel.value?.isNotEmpty() == true) {
                     quickReplyPayload = buttonActionModel.value!!
-//                        if (BundleConstants.BUTTON_TYPE_POSTBACK == buttonActionModel.type) {
-//                            composeFooterInterface.onSendClick(quickReplyTemplate.title, quickReplyPayload, false)
-//                        } else if (BundleConstants.BUTTON_TYPE_USER_INTENT == buttonActionModel.type) {
-//                            invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT)
-//                        } else if (BundleConstants.BUTTON_TYPE_TEXT == buttonActionModel.type) {
-//                            composeFooterInterface.onSendClick(quickReplyTemplate.title, quickReplyPayload, false)
-//                        } else if (BundleConstants.BUTTON_TYPE_WEB_URL == buttonActionModel.type
-//                            || BundleConstants.BUTTON_TYPE_URL == buttonActionModel.type) {
-//                            invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload)
-//                        } else {
-//                            composeFooterInterface.onSendClick(quickReplyTemplate.title, quickReplyPayload, false)
-//                        }
+                    if (BotResponseConstants.BUTTON_TYPE_POSTBACK == buttonActionModel.type) {
+                        sendMessage(quickReplyTemplate.title, quickReplyPayload)
+                    } else if (BotResponseConstants.BUTTON_TYPE_USER_INTENT == buttonActionModel.type) {
+                        loadUrl(BotResponseConstants.BUTTON_TYPE_USER_INTENT)
+                    } else if (BotResponseConstants.BUTTON_TYPE_TEXT == buttonActionModel.type) {
+                        sendMessage(quickReplyTemplate.title, quickReplyPayload)
+                    } else if (BotResponseConstants.BUTTON_TYPE_WEB_URL == buttonActionModel.type
+                        || BotResponseConstants.BUTTON_TYPE_URL == buttonActionModel.type
+                    ) {
+                        loadUrl(quickReplyPayload)
+                    } else {
+                        sendMessage(quickReplyTemplate.title, quickReplyPayload)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-//            }
         }
     }
 
@@ -65,23 +67,16 @@ class WelcomeStarterButtonsAdapter (private val context: Context, private val ty
         this@WelcomeStarterButtonsAdapter.quickReplyTemplateArrayList = quickReplyTemplateArrayList
     }
 
-//    fun setComposeFooterInterface(composeFooterInterface: ComposeFooterInterface) {
-//        this.composeFooterInterface = composeFooterInterface
-//    }
-//
-//    fun setInvokeGenericWebViewInterface(invokeGenericWebViewInterface: InvokeGenericWebViewInterface) {
-//        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface
-//    }
-
-
-    class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val quickReplyTitle: TextView
-        val quickReplyRoot: RelativeLayout
-
-        init {
-            quickReplyTitle = view.findViewById<TextView>(R.id.quick_reply_item_text)
-            quickReplyRoot = view.findViewById<RelativeLayout>(R.id.quick_reply_item_root)
-        }
+    fun setActionEvent(
+        sendMessage: (message: String, payload: String) -> Unit,
+        loadUrl: (url: String) -> Unit
+    ) {
+        this.sendMessage = sendMessage
+        this.loadUrl = loadUrl
     }
 
+    class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val quickReplyTitle: TextView = view.findViewById(R.id.quick_reply_item_text)
+        val quickReplyRoot: RelativeLayout = view.findViewById(R.id.quick_reply_item_root)
+    }
 }

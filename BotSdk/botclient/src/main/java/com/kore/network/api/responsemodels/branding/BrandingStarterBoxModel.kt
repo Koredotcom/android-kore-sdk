@@ -12,24 +12,24 @@ data class BrandingStarterBoxModel(
     @SerializedName("sub_text")
     val subText: String = "",
     @SerializedName("start_conv_button")
-    val startConvButton: BrandingTitleModel,
+    val startConvButton: BrandingTitleModel?,
     @SerializedName("start_conv_text")
-    val startConvText: BrandingTitleModel,
+    val startConvText: BrandingTitleModel?,
     @SerializedName("quick_start_buttons")
-    val quickStartButtons: BrandingQuickStartButtons,
+    val quickStartButtons: BrandingQuickStartButtons?,
     @SerializedName("links")
     val links: BrandingStaticLinksModel? = null
 )
 
-fun BrandingStarterBoxModel.updateWith(configModel: BrandingStarterBoxModel): BrandingStarterBoxModel {
+fun BrandingStarterBoxModel.updateWith(configModel: BrandingStarterBoxModel?): BrandingStarterBoxModel {
     return this.copy(
-        show = configModel.show ?: show,
-        icon = icon.updateWith(configModel.icon),
-        title = title.ifEmpty { title },
-        subText = subText.ifEmpty { subText },
-        startConvButton = startConvButton.updateWith(configModel.startConvButton),
-        startConvText = startConvText.updateWith(configModel.startConvText),
-        quickStartButtons = quickStartButtons.updateWith(configModel.quickStartButtons),
-        links = links?.updateWith(configModel.links ?: links),
+        show = configModel?.show ?: show,
+        icon = icon.updateWith(configModel?.icon),
+        title = configModel?.title?.ifEmpty { title } ?: title,
+        subText = configModel?.subText?.ifEmpty { subText } ?: subText,
+        startConvButton = startConvButton?.updateWith(configModel?.startConvButton) ?: startConvButton,
+        startConvText = startConvText?.updateWith(configModel?.startConvText) ?: startConvText,
+        quickStartButtons = quickStartButtons?.updateWith(configModel?.quickStartButtons) ?: quickStartButtons,
+        links = links?.updateWith(configModel?.links) ?: links,
     )
 }

@@ -8,19 +8,18 @@ data class BrandingQuickStartButtons(
     @SerializedName("style")
     val style: String = "",
     @SerializedName("buttons")
-    val buttons: ArrayList<BrandingQuickStartButtonButtonsModel>,
+    val buttons: ArrayList<BrandingQuickStartButtonButtonsModel> = ArrayList(),
     @SerializedName("input")
     val input: String = "",
     @SerializedName("action")
-    val action: BrandingQuickStartButtonActionModel
+    val action: BrandingQuickStartButtonActionModel?
 )
 
-fun BrandingQuickStartButtons.updateWith(configModel: BrandingQuickStartButtons): BrandingQuickStartButtons {
+fun BrandingQuickStartButtons.updateWith(configModel: BrandingQuickStartButtons?): BrandingQuickStartButtons {
     return this.copy(
-        show = configModel.show ?: show,
+        show = configModel?.show ?: show,
         style = style.ifEmpty { style },
-        buttons = configModel.buttons.ifEmpty { buttons },
         input = input.ifEmpty { input },
-        action = action.updateWith(configModel.action)
+        action = action?.updateWith(configModel?.action) ?: action
     )
 }

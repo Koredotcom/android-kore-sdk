@@ -17,10 +17,10 @@ data class BrandingColorsModel(
 
 fun BrandingColorsModel.updateWith(configModel: BrandingColorsModel): BrandingColorsModel {
     return this.copy(
-        primary = configModel.primary?.ifEmpty { this.primary },
-        secondary = configModel.secondary?.ifEmpty { this.secondary },
-        primaryText = configModel.primaryText?.ifEmpty { this.primaryText },
-        secondaryText = configModel.secondaryText?.ifEmpty { this.secondaryText },
+        primary = configModel.primary?.ifEmpty { this.primary } ?: primary,
+        secondary = configModel.secondary?.ifEmpty { this.secondary } ?: secondary,
+        primaryText = configModel.primaryText?.ifEmpty { this.primaryText } ?: primaryText,
+        secondaryText = configModel.secondaryText?.ifEmpty { this.secondaryText } ?: secondaryText,
         useColorPaletteOnly = configModel.useColorPaletteOnly ?: this.useColorPaletteOnly,
     )
 }

@@ -6,12 +6,12 @@ data class BrandingStaticLinksModel(
     @SerializedName("show")
     val show: Boolean?,
     @SerializedName("layout")
-    val layout: String = ""
+    val layout: String?
 )
 
-fun BrandingStaticLinksModel.updateWith(configModel: BrandingStaticLinksModel): BrandingStaticLinksModel {
+fun BrandingStaticLinksModel.updateWith(configModel: BrandingStaticLinksModel?): BrandingStaticLinksModel {
     return this.copy(
-        show = configModel.show ?: show,
-        layout = layout.ifEmpty { layout }
+        show = configModel?.show ?: show,
+        layout = configModel?.layout?.ifEmpty { layout } ?: layout
     )
 }

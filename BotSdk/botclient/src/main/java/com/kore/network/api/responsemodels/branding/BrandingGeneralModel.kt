@@ -18,7 +18,7 @@ data class BrandingGeneralModel(
 fun BrandingGeneralModel.updateWith(configModel: BrandingGeneralModel): BrandingGeneralModel {
     return this.copy(
         botIcon = configModel.botIcon.ifEmpty { this.botIcon },
-        size = configModel.size?.ifEmpty { this.size },
+        size = configModel.size?.ifEmpty { this.size } ?: size,
         themeType = configModel.themeType.ifEmpty { this.themeType },
         widgetPanel = configModel.widgetPanel ?: this.widgetPanel,
         colors = colors.updateWith(configModel.colors),
