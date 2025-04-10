@@ -19,7 +19,6 @@ import com.kore.ui.botchat.BotChatActivity
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Locale
-import java.util.Properties
 import java.util.TimeZone
 
 class MainActivity : AppCompatActivity() {
@@ -79,44 +78,19 @@ class MainActivity : AppCompatActivity() {
         return Gson().fromJson(jsonText, BotBrandingModel::class.java)
     }
 
-//    private fun getBotConfigModel(): BotConfigModel? {
-//        try {
-//            return BotConfigModel(
-//                botName = "Please enter Bot name",
-//                botId = "Please enter botID",
-//                clientId = "Please enter  clientId",
-//                clientSecret = "Please enter clientSecret",
-//                botUrl = "Please enter botUrl",
-//                identity = "Please enter identity",
-//                isWebHook = false,
-//                jwtServerUrl = "Please enter jwtServerUrl",
-//                enablePanel = true,
-//                jwtToken = "Please enter jwtToken"
-//            )
-//        } catch (e: NotFoundException) {
-//            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
-//        } catch (e: IOException) {
-//            Log.e(LOG_TAG, "Failed to open config file.")
-//        }
-//        return null
-//    }
-
     private fun getBotConfigModel(): BotConfigModel? {
         try {
-            val rawResource = resources.openRawResource(R.raw.config)
-            val properties = Properties()
-            properties.load(rawResource)
             return BotConfigModel(
-                botName = properties.getProperty("botName"),
-                botId = properties.getProperty("botId"),
-                clientId = properties.getProperty("clientId"),
-                clientSecret = properties.getProperty("clientSecret"),
-                botUrl = properties.getProperty("botUrl"),
-                identity = properties.getProperty("identity"),
+                botName = "Please enter Bot name",
+                botId = "Please enter botID",
+                clientId = "Please enter  clientId",
+                clientSecret = "Please enter clientSecret",
+                botUrl = "Please enter botUrl",
+                identity = "Please enter identity",
                 isWebHook = false,
-                jwtServerUrl = properties.getProperty("jwtServerUrl"),
-                enablePanel = false,
-                jwtToken = properties.getProperty("jwtToken")
+                jwtServerUrl = "Please enter jwtServerUrl",
+                enablePanel = true,
+                jwtToken = "Please enter jwtToken"
             )
         } catch (e: NotFoundException) {
             Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
@@ -125,6 +99,31 @@ class MainActivity : AppCompatActivity() {
         }
         return null
     }
+
+//    private fun getBotConfigModel(): BotConfigModel? {
+//        try {
+//            val rawResource = resources.openRawResource(R.raw.config)
+//            val properties = Properties()
+//            properties.load(rawResource)
+//            return BotConfigModel(
+//                botName = properties.getProperty("botName"),
+//                botId = properties.getProperty("botId"),
+//                clientId = properties.getProperty("clientId"),
+//                clientSecret = properties.getProperty("clientSecret"),
+//                botUrl = properties.getProperty("botUrl"),
+//                identity = properties.getProperty("identity"),
+//                isWebHook = false,
+//                jwtServerUrl = properties.getProperty("jwtServerUrl"),
+//                enablePanel = false,
+//                jwtToken = properties.getProperty("jwtToken")
+//            )
+//        } catch (e: NotFoundException) {
+//            Log.e(LOG_TAG, "Unable to find the config file: " + e.message)
+//        } catch (e: IOException) {
+//            Log.e(LOG_TAG, "Failed to open config file.")
+//        }
+//        return null
+//    }
 //
     private fun getQueryParams(): HashMap<String, Any> {
         val queryParams = HashMap<String, Any>()
