@@ -65,10 +65,16 @@ class JwtRepositoryImpl : JwtRepository {
             .compact()
     }
 
-    override suspend fun getJwtToken(url: String, headers: HashMap<String, Any>?, body: HashMap<String, Any>): Result<JwtTokenResponse?> {
+    override suspend fun getJwtToken(url: String, clientId: String, clientSecret: String, identity: String): Result<JwtTokenResponse?> {
         return try {
+            val body: HashMap<String, Any> = HashMap()
+            body["clientId"] = clientId
+            body["clientSecret"] = clientSecret
+            body["identity"] = identity
+            body[KEY_AUD] = "https://idproxy.kore.com/authorize"
+            body[KEY_IS_ANONYMOUS] = false
             val jwtApi = ApiClient.getInstance().createService(JwtApi::class.java)
-            val response = jwtApi.getJwtToken(url, headers, body)
+            val response = jwtApi.getJwtToken(url + "users/sts", body)
             if (response.isSuccessful) {
                 Result.Success(response.body())
             } else {
