@@ -3,6 +3,7 @@ package com.kore.botclient
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -107,8 +108,6 @@ class BotClient private constructor() {
     private var isReconnectAttemptRequired = false
     private var reconnectAttemptCount = 1
     private val reconnectHandler = Handler(Looper.getMainLooper())
-    private var headers: HashMap<String, Any>? = null
-    private var bodyForJwt: HashMap<String, Any>? = null
 
     fun setListener(listener: BotConnectionListener) {
         this.listener = listener
@@ -144,11 +143,9 @@ class BotClient private constructor() {
         initiateConnection(!isFirstTime)
     }
 
-    fun connectToBot(context: Context, isFirstTime: Boolean, headers: HashMap<String, Any>? = null, body: HashMap<String, Any>? = null) {
+    fun connectToBot(context: Context, isFirstTime: Boolean) {
         this.context = context
         if (!init(isFirstTime)) return
-        this.headers = headers
-        bodyForJwt = body
         initiateConnection(!isFirstTime)
     }
 
@@ -192,38 +189,25 @@ class BotClient private constructor() {
             return
         }
         try {
-            if (headers == null) {
-                jwtToken = if (botConfigModel.isWebHook) {
-                    jwtRepository.generateJwtForAPI(botConfigModel.identity, botConfigModel.clientSecret, botConfigModel.clientId)
-                } else {
-                    jwtRepository.generateJwt(botConfigModel.identity, botConfigModel.clientSecret, botConfigModel.clientId)
-                }
-                createAccessTokenAndRtmUrl(isReconnectionAttempt) { rtmUrl, isReconnection -> connectToSocket(rtmUrl, isReconnection) }
-            } else {
-                MainScope().launch {
-                    withContext(Dispatchers.IO) {
-                        val result = jwtRepository.getJwtToken(
-                            botConfigModel.jwtServerUrl,
-                            headers,
-                            if (bodyForJwt.isNullOrEmpty()) botInfoMap else bodyForJwt!!
-                        )
-                        when (result) {
-                            is Result.Success -> {
-                                if (result.data?.jwt.isNullOrEmpty()) {
-                                    ToastUtils.showToast(context, "Jwt token is not created!")
-                                    return@withContext
-                                }
-                                result.data?.jwt?.let {
-                                    jwtToken = it
-                                    createAccessTokenAndRtmUrl(isReconnectionAttempt) { rtmUrl, isReconnection ->
-                                        connectToSocket(rtmUrl, isReconnection)
-                                    }
+            MainScope().launch {
+                withContext(Dispatchers.IO) {
+                    when (val result = jwtRepository.getJwtToken(botConfigModel.jwtServerUrl, botConfigModel.clientId, botConfigModel.clientSecret, botConfigModel.identity)) {
+                        is Result.Success -> {
+                            if (result.data?.jwt.isNullOrEmpty()) {
+                                ToastUtils.showToast(context, "Jwt token is not created!")
+                                return@withContext
+                            }
+                            result.data?.jwt?.let {
+                                jwtToken = it
+                                createAccessTokenAndRtmUrl(isReconnectionAttempt) { rtmUrl, isReconnection ->
+                                    connectToSocket(rtmUrl, isReconnection)
                                 }
                             }
+                        }
 
-                            else -> {
-                                onError(isReconnectionAttempt)
-                            }
+                        else -> {
+                            onError(isReconnectionAttempt)
+                            Log.e(LOG_TAG, "Jwt Token creation failed")
                         }
                     }
                 }
@@ -255,7 +239,7 @@ class BotClient private constructor() {
                             val botAuthorizationResponse = result.data
                             botUserId = botAuthorizationResponse?.userInfo?.userId ?: ""
                             accessToken = botAuthorizationResponse?.authorization?.accessToken ?: ""
-                            listener?.onJwtTokenGenerated(accessToken)
+                            listener?.onAccessTokenGenerated(accessToken)
                             if (SDKConfiguration.getBotConfigModel()?.isWebHook == true) {
                                 getWebHookMeta(getJwtToken(), isReconnectionAttempt)
                                 return@withContext
@@ -426,7 +410,14 @@ class BotClient private constructor() {
     fun sendMessage(msg: String, payload: String?, attachments: List<Map<String, *>>? = null) {
         setMoreCustomData()
         val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return
-        BotClientHelper.createRequestPayload(msg, payload ?: msg, attachments, botCustomData, botInfoModel) { jsonPayload, botRequest ->
+        BotClientHelper.createRequestPayload(
+            msg,
+            payload ?: msg,
+            if (payload != null && msg.isNotEmpty()) msg else null,
+            attachments,
+            botCustomData,
+            botInfoModel
+        ) { jsonPayload, botRequest ->
             if (botConfigModel.isWebHook) {
                 sendWebHookMessage(botRequest, false, msg, payload, attachments)
                 return@createRequestPayload
@@ -535,7 +526,7 @@ class BotClient private constructor() {
     fun sendCloseOrMinimizeEvent(event: String, botName: String, botId: String) {
         if (!isConnected()) return
         botCustomData[BOT_TOKEN] = getAccessToken()
-        val botMessage = BotMessage("", null, botCustomData)
+        val botMessage = BotMessage("", null, null, botCustomData)
         botInfoModel = BotInfoModel(botName, botId, botCustomData)
         val meta = Meta(TimeZone.getDefault().id, Locale.getDefault().isO3Language)
         val botPayLoad = BotPayLoad(botMessage, meta = meta, event = event, botInfo = botInfoModel)
@@ -553,7 +544,7 @@ class BotClient private constructor() {
      * by sending messages from the pool.
      */
     fun sendReceipts(eventName: String?, msgId: String?) {
-        val botMessage = BotMessage("", null, botCustomData)
+        val botMessage = BotMessage("", null, null, botCustomData)
         botCustomData["botToken"] = getAccessToken()
         val configModel: BotConfigModel = SDKConfiguration.getBotConfigModel() ?: return
 

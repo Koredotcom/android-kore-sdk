@@ -10,11 +10,11 @@ data class BotPayLoad(
     @SerializedName("botInfo")
     val botInfo: BotInfoModel? = null,
     @SerializedName("clientMessageId")
-    val clientMessageId: Int = System.currentTimeMillis().toInt(),
+    val clientMessageId: Long = System.currentTimeMillis(),
     @SerializedName("meta")
     val meta: Meta? = null,
     @SerializedName("id")
-    val id: Int = clientMessageId,
+    val id: Long = clientMessageId,
     @SerializedName("client")
     val client: String = "Android",
     @SerializedName("event")

@@ -110,9 +110,15 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         botClient.setListener(object : BotConnectionListener {
             override fun onBotResponse(response: String?) {
                 response?.let {
+                    if (response.contains("\"from\":\"self\"")) {
+                        val botRequest = BotClientHelper.processBotMessage(it)
+                        getView()?.addMessageToAdapter(botRequest)
+                        return
+                    }
                     if (it.contains(BotResponseConstants.KEY_BOT_RESPONSE)) {
-                        val botResponse = BotClientHelper.processBotResponse(Gson().fromJson(it, BotResponse::class.java))
-                        if (botResponse.message.isEmpty()) return
+                        val botResponse = BotClientHelper.processBotMessage(it)
+                        if (botResponse !is BotResponse || botResponse.message.isEmpty()) return
+
                         isAgentTransfer = botResponse.fromAgent
                         getView()?.showTypingIndicator(botResponse.icon)
                         getView()?.addMessageToAdapter(botResponse)
@@ -196,7 +202,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 getView()?.addMessageToAdapter(botRequest)
             }
 
-            override suspend fun onJwtTokenGenerated(token: String) {
+            override suspend fun onAccessTokenGenerated(token: String) {
                 this@BotChatViewModel.token = token
             }
 

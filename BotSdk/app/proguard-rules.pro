@@ -19,3 +19,40 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep all classes, fields, and methods in your library package
+-keep class com.kore.** { *; }
+
+# Prevent renaming of all classes in your library
+-keepnames class com.kore.**
+
+# Keep all annotations (useful if using reflection)
+-keepattributes *Annotation*
+
+-keep class io.crossbar.autobahn.** { *; }
+-keepnames class io.crossbar.autobahn.**
+
+-keep class io.jsonwebtoken.** { *; }
+-keepnames class io.jsonwebtoken.**
+
+# Keep Retrofit interfaces
+-keep interface * { @retrofit2.http.* <methods>; }
+
+# Keep Retrofit API model classes
+-keepclassmembers class * {
+    @retrofit2.http.* <methods>;
+}
+
+# Keep Retrofit Call Adapters
+-keep class retrofit2.** { *; }
+-keep class okhttp3.** { *; }
+-keep class okio.** { *; }
+
+# Keep classes that use Gson for serialization
+-keep class com.google.gson.** { *; }
+-keep class * extends com.google.gson.TypeAdapter { *; }
+
+# Keep Retrofit annotations
+-dontwarn retrofit2.**
+-dontwarn okhttp3.**
+-dontwarn okio.**
