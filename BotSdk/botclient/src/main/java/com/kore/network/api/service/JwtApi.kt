@@ -6,7 +6,6 @@ import com.kore.network.api.response.RtmUrlResponse
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
-import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Url
@@ -16,11 +15,7 @@ import retrofit2.http.Url
  */
 interface JwtApi {
     @POST
-    suspend fun getJwtToken(
-        @Url url: String,
-        @HeaderMap headers: HashMap<String, Any>?,
-        @Body body: HashMap<String, Any>
-    ): Response<JwtTokenResponse?>
+    suspend fun getJwtToken(@Url url: String, @Body body: HashMap<String, Any>): Response<JwtTokenResponse?>
 
     //Getting jwt grant
     @POST("/api/oAuth/token/jwtgrant")

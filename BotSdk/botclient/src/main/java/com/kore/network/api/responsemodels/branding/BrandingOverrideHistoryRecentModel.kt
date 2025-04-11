@@ -11,10 +11,10 @@ data class BrandingOverrideHistoryRecentModel(
     val isEnable: Boolean? = false,
 )
 
-fun BrandingOverrideHistoryRecentModel.updateWith(configModel: BrandingOverrideHistoryRecentModel): BrandingOverrideHistoryRecentModel {
+fun BrandingOverrideHistoryRecentModel.updateWith(configModel: BrandingOverrideHistoryRecentModel?): BrandingOverrideHistoryRecentModel {
     return this.copy(
-        isEnable = configModel.isEnable ?: isEnable,
-        batchSize = configModel.batchSize ?: batchSize,
-        loadingLabel = configModel.loadingLabel?.ifEmpty { loadingLabel }
+        isEnable = configModel?.isEnable ?: isEnable,
+        batchSize = configModel?.batchSize ?: batchSize,
+        loadingLabel = configModel?.loadingLabel?.ifEmpty { loadingLabel } ?: loadingLabel
     )
 }

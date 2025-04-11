@@ -2,8 +2,8 @@ package com.kore.model
 
 data class BotRequest(
     val message: BotMessage?,
-    private val botInfo: BotInfoModel?,
-    private val id: Long,
+    val botInfo: BotInfoModel?,
+    val id: Long,
     override val messageId: String = "",
     override val timeMillis: Long = 0,
     override val isSend: Boolean = true,
@@ -12,4 +12,8 @@ data class BotRequest(
     override val formattedTime: String = "",
     override val messageDate: String = "",
     private val resourceId: String? = "/bot.message"
-) : BaseBotMessage
+) : BaseBotMessage {
+    fun updateRenderMessage() {
+        message?.checkAndUpdateRenderMessage()
+    }
+}

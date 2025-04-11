@@ -9,6 +9,7 @@ import com.kore.common.model.BotConfigModel
 import com.kore.common.utils.DateUtils
 import com.kore.common.utils.DateUtils.formattedSentDateV6
 import com.kore.common.utils.DateUtils.isoFormatter
+import com.kore.model.BaseBotMessage
 import com.kore.model.BotInfoModel
 import com.kore.model.BotMessage
 import com.kore.model.BotPayLoad
@@ -36,13 +37,14 @@ class BotClientHelper {
         fun createRequestPayload(
             message: String,
             payload: String?,
+            renderMsg: String?,
             attachment: List<Map<String, *>>?,
             botCustomData: HashMap<String, Any?>,
             botInfoModel: BotInfoModel,
             onCreatePayload: (payload: String, botRequest: BotRequest) -> Unit
         ) {
             var botPayLoad = BotPayLoad()
-            var botMessage = BotMessage(payload ?: message, attachment)
+            var botMessage = BotMessage(payload ?: message, renderMsg, attachment)
             botMessage = botMessage.copy(customData = botCustomData)
             botPayLoad = botPayLoad.copy(message = botMessage, botInfo = botInfoModel)
 
@@ -96,7 +98,26 @@ class BotClientHelper {
             onCreatePayload(hashMap)
         }
 
-        fun processBotResponse(response: BotResponse): BotResponse {
+        fun processBotMessage(botMessage: String): BaseBotMessage =
+            if (botMessage.contains("\"from\":\"self\"")) {
+                processBotRequest(Gson().fromJson(botMessage, BotRequest::class.java))
+            } else {
+                processBotResponse(Gson().fromJson(botMessage, BotResponse::class.java))
+            }
+
+        private fun processBotRequest(request: BotRequest): BotRequest {
+            val botInfo = request.botInfo
+            request.updateRenderMessage()
+            return request.copy(
+                messageId = request.id.toString(),
+                createdOn = isoFormatter.format(request.id),
+                timeMillis = request.id,
+                messageDate = formattedSentDateV6(request.id),
+                formattedTime = getFormattedTime(request.id, botInfo?.botName?.ifEmpty { "" } ?: "")
+            )
+        }
+
+        private fun processBotResponse(response: BotResponse): BotResponse {
             val botInfo = response.botInfo
             val timeStamp = isoFormatter.parse(response.createdOn)?.time ?: 0L
             val botResponse = if (response.timeMillis == 0L) {
@@ -119,9 +140,9 @@ class BotClientHelper {
             var outerPayload: PayloadOuter? = null
             try {
                 outerPayload = if (msg.cInfo != null && msg.cInfo?.body != null && msg.cInfo?.body is String) {
-                    parseBotResponse(msg.cInfo?.body.toString(), object : TypeToken<PayloadOuter>() {}.type)
+                    getPayloadOuter(msg.cInfo?.body.toString(), object : TypeToken<PayloadOuter>() {}.type)
                 } else {
-                    parseBotResponseToBotResponse(msg, object : TypeToken<PayloadOuter>() {}.type)
+                    getPayloadOuter(msg, object : TypeToken<PayloadOuter>() {}.type)
                 }
             } catch (e: JsonSyntaxException) {
                 e.printStackTrace()
@@ -134,7 +155,7 @@ class BotClientHelper {
                     if (inner != null && inner.containsKey(KEY_TEMPLATE_TYPE)) {
                         val jsonOuter = Gson().toJson(outer)
                         try {
-                            outerPayload = parseBotResponse(jsonOuter, object : TypeToken<PayloadOuter>() {}.type)
+                            outerPayload = getPayloadOuter(jsonOuter, object : TypeToken<PayloadOuter>() {}.type)
                         } catch (e: JsonSyntaxException) {
                             e.printStackTrace()
                         }
@@ -150,7 +171,7 @@ class BotClientHelper {
             return botResponse
         }
 
-        private fun parseBotResponse(body: String?, type: Type): PayloadOuter? {
+        private fun getPayloadOuter(body: String?, type: Type): PayloadOuter? {
             if (body != null) {
                 val gson = GsonBuilder().create()
                 return gson.fromJson(body, type)
@@ -159,7 +180,7 @@ class BotClientHelper {
             return null
         }
 
-        private fun parseBotResponseToBotResponse(msg: BotResponseMessage, type: Type): PayloadOuter {
+        private fun getPayloadOuter(msg: BotResponseMessage, type: Type): PayloadOuter {
             val gson = GsonBuilder().create()
             return gson.fromJson(gson.toJson(msg.component?.payload), type)
         }

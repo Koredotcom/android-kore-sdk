@@ -30,5 +30,7 @@ data class BotHistoryMessage(
     @SerializedName("lmodifiedBy")
     var modifiedBy: String? = null,
     @SerializedName("channels")
-    var channels: List<Any>
+    var channels: List<Any>,
+    @SerializedName("tags")
+    var tags: Map<String, Any?> = emptyMap()
 )

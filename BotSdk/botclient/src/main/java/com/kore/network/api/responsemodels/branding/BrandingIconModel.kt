@@ -22,15 +22,15 @@ data class BrandingIconModel(
     val action: BrandingQuickStartButtonActionModel? = null
 ) : Serializable
 
-fun BrandingIconModel.updateWith(configModel: BrandingIconModel): BrandingIconModel {
+fun BrandingIconModel.updateWith(configModel: BrandingIconModel?): BrandingIconModel {
     return this.copy(
-        iconUrl = configModel.iconUrl.ifEmpty { this.iconUrl },
-        size = configModel.size.ifEmpty { this.size },
-        shape = configModel.shape.ifEmpty { this.shape },
-        type = configModel.type.ifEmpty { this.type },
-        show = configModel.show ?: this.show,
-        color = configModel.color.ifEmpty { this.color },
-        icon = configModel.icon.ifEmpty { this.icon },
-        action = this.action?.updateWith(configModel.action ?: this.action),
+        iconUrl = configModel?.iconUrl?.ifEmpty { this.iconUrl } ?: iconUrl,
+        size = configModel?.size?.ifEmpty { this.size } ?: size,
+        shape = configModel?.shape?.ifEmpty { this.shape } ?: shape,
+        type = configModel?.type?.ifEmpty { this.type } ?: type,
+        show = configModel?.show ?: this.show,
+        color = configModel?.color?.ifEmpty { this.color } ?: color,
+        icon = configModel?.icon?.ifEmpty { this.icon } ?: icon,
+        action = this.action?.updateWith(configModel?.action) ?: this.action,
     )
 }

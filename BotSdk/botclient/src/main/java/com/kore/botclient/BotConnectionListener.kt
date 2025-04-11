@@ -6,5 +6,6 @@ interface BotConnectionListener {
     fun onBotResponse(response: String?)
     fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean)
     fun onBotRequest(code: BotRequestState, botRequest: BotRequest)
-    suspend fun onJwtTokenGenerated(token: String)
+    fun onAccessTokenReady()
+    suspend fun onAccessTokenGenerated(token: String)
 }

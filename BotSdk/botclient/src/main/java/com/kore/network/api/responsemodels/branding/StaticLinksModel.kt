@@ -10,14 +10,13 @@ data class StaticLinksModel(
     @SerializedName("layout")
     val layout: String = "",
     @SerializedName("links")
-    val links: ArrayList<BrandingQuickStartButtonButtonsModel>
+    val links: ArrayList<BrandingQuickStartButtonButtonsModel> = ArrayList()
 )
 
-fun StaticLinksModel.updateWith(configModel: StaticLinksModel): StaticLinksModel {
+fun StaticLinksModel.updateWith(configModel: StaticLinksModel?): StaticLinksModel {
     return this.copy(
-        show = configModel.show ?: show,
-        type = type?.ifEmpty { type },
-        layout = layout.ifEmpty { layout },
-        links = links.ifEmpty { links }
+        show = configModel?.show ?: show,
+        type = configModel?.type?.ifEmpty { type } ?: type,
+        layout = configModel?.layout?.ifEmpty { layout } ?: layout,
     )
 }

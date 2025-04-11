@@ -13,11 +13,11 @@ data class BrandingBodyIconModel(
     val agentIcon: Boolean?,
 )
 
-fun BrandingBodyIconModel.updateWith(configModel: BrandingBodyIconModel): BrandingBodyIconModel {
+fun BrandingBodyIconModel.updateWith(configModel: BrandingBodyIconModel?): BrandingBodyIconModel {
     return this.copy(
-        show = configModel.show ?: show,
-        userIcon = configModel.userIcon ?: userIcon,
-        botIcon = configModel.botIcon ?: botIcon,
-        agentIcon = configModel.agentIcon ?: agentIcon,
+        show = configModel?.show ?: show,
+        userIcon = configModel?.userIcon ?: userIcon,
+        botIcon = configModel?.botIcon ?: botIcon,
+        agentIcon = configModel?.agentIcon ?: agentIcon,
     )
 }

@@ -3,6 +3,7 @@ package com.kore.botclient
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -62,29 +63,37 @@ class BotClient private constructor() {
         private var accessToken = ""
         private var jwtToken = ""
         private var userJwtToken = ""
-        private var userId = ""
+        private var botUserId = ""
         private var connectionState = ConnectionState.DISCONNECTED
         private val socketConnection: IWebSocket = WebSocketConnection()
         private var instance: BotClient? = null
         private var callEventMessage: HashMap<String, Any>? = null
 
+        @JvmStatic
         fun getJwtToken(): String = userJwtToken.ifEmpty { jwtToken }
 
+        @JvmStatic
         fun getAccessToken(): String = accessToken
 
-        fun getUserId(): String = userId
+        @JvmName("getBotUserId")
+        @JvmStatic
+        fun getUserId(): String = botUserId
 
+        @JvmStatic
         fun isConnected(): Boolean = socketConnection.isConnected
 
+        @JvmStatic
         fun getInstance(): BotClient {
             if (instance == null) instance = BotClient()
             return instance!!
         }
 
+        @JvmStatic
         fun setCallEventMessage(callEventMessage: HashMap<String, Any>) {
             this.callEventMessage = callEventMessage
         }
 
+        @JvmStatic
         fun getCallEventMessage(): HashMap<String, Any>? = callEventMessage
     }
 
@@ -99,8 +108,6 @@ class BotClient private constructor() {
     private var isReconnectAttemptRequired = false
     private var reconnectAttemptCount = 1
     private val reconnectHandler = Handler(Looper.getMainLooper())
-    private var headers: HashMap<String, Any>? = null
-    private var bodyForJwt: HashMap<String, Any>? = null
 
     fun setListener(listener: BotConnectionListener) {
         this.listener = listener
@@ -121,12 +128,12 @@ class BotClient private constructor() {
         }
         jwtToken = ""
         accessToken = ""
-        userId = ""
+        botUserId = ""
         handler.removeCallbacksAndMessages(null)
     }
 
     fun getUserId(): String {
-        return userId
+        return botUserId
     }
 
     fun connectToBot(context: Context, isFirstTime: Boolean, jwtToken: String) {
@@ -136,11 +143,9 @@ class BotClient private constructor() {
         initiateConnection(!isFirstTime)
     }
 
-    fun connectToBot(context: Context, isFirstTime: Boolean, headers: HashMap<String, Any>? = null, body: HashMap<String, Any>? = null) {
+    fun connectToBot(context: Context, isFirstTime: Boolean) {
         this.context = context
         if (!init(isFirstTime)) return
-        this.headers = headers
-        bodyForJwt = body
         initiateConnection(!isFirstTime)
     }
 
@@ -184,38 +189,25 @@ class BotClient private constructor() {
             return
         }
         try {
-            if (headers == null) {
-                jwtToken = if (botConfigModel.isWebHook) {
-                    jwtRepository.generateJwtForAPI(botConfigModel.identity, botConfigModel.clientSecret, botConfigModel.clientId)
-                } else {
-                    jwtRepository.generateJwt(botConfigModel.identity, botConfigModel.clientSecret, botConfigModel.clientId)
-                }
-                createAccessTokenAndRtmUrl(isReconnectionAttempt) { rtmUrl, isReconnection -> connectToSocket(rtmUrl, isReconnection) }
-            } else {
-                MainScope().launch {
-                    withContext(Dispatchers.IO) {
-                        val result = jwtRepository.getJwtToken(
-                            botConfigModel.jwtServerUrl,
-                            headers,
-                            if (bodyForJwt.isNullOrEmpty()) botInfoMap else bodyForJwt!!
-                        )
-                        when (result) {
-                            is Result.Success -> {
-                                if (result.data?.jwt.isNullOrEmpty()) {
-                                    ToastUtils.showToast(context, "Jwt token is not created!")
-                                    return@withContext
-                                }
-                                result.data?.jwt?.let {
-                                    jwtToken = it
-                                    createAccessTokenAndRtmUrl(isReconnectionAttempt) { rtmUrl, isReconnection ->
-                                        connectToSocket(rtmUrl, isReconnection)
-                                    }
+            MainScope().launch {
+                withContext(Dispatchers.IO) {
+                    when (val result = jwtRepository.getJwtToken(botConfigModel.jwtServerUrl, botConfigModel.clientId, botConfigModel.clientSecret, botConfigModel.identity)) {
+                        is Result.Success -> {
+                            if (result.data?.jwt.isNullOrEmpty()) {
+                                ToastUtils.showToast(context, "Jwt token is not created!")
+                                return@withContext
+                            }
+                            result.data?.jwt?.let {
+                                jwtToken = it
+                                createAccessTokenAndRtmUrl(isReconnectionAttempt) { rtmUrl, isReconnection ->
+                                    connectToSocket(rtmUrl, isReconnection)
                                 }
                             }
+                        }
 
-                            else -> {
-                                onError(isReconnectionAttempt)
-                            }
+                        else -> {
+                            onError(isReconnectionAttempt)
+                            Log.e(LOG_TAG, "Jwt Token creation failed")
                         }
                     }
                 }
@@ -245,9 +237,9 @@ class BotClient private constructor() {
                     when (val result = jwtRepository.getJwtGrant(request)) {
                         is Result.Success -> {
                             val botAuthorizationResponse = result.data
-                            userId = botAuthorizationResponse?.userInfo?.userId ?: ""
+                            botUserId = botAuthorizationResponse?.userInfo?.userId ?: ""
                             accessToken = botAuthorizationResponse?.authorization?.accessToken ?: ""
-                            listener?.onJwtTokenGenerated(accessToken)
+                            listener?.onAccessTokenGenerated(accessToken)
                             if (SDKConfiguration.getBotConfigModel()?.isWebHook == true) {
                                 getWebHookMeta(getJwtToken(), isReconnectionAttempt)
                                 return@withContext
@@ -293,6 +285,7 @@ class BotClient private constructor() {
     }
 
     private fun connectToSocket(url: String?, isReconnectionAttempt: Boolean) {
+        listener?.onAccessTokenReady()
         if (url != null) {
             var rtmUrl = url
             options?.let {
@@ -312,9 +305,9 @@ class BotClient private constructor() {
                         queryParams.append(value)
                     }
                 }
-                val connectionMode = SDKConfiguration.getConnectionMode()
+                val connectionMode = SDKConfiguration.getConnectionMode();
                 val socketUrl = if (isReconnectionAttempt) {
-                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else IS_RECONNECT_PARAM+CONNECTION_MODE_PARAM + queryParams
+                    rtmUrl + if (connectionMode.isNullOrEmpty()) IS_RECONNECT_PARAM else IS_RECONNECT_PARAM + CONNECTION_MODE_PARAM + queryParams
                 } else {
                     rtmUrl + if (!connectionMode.isNullOrEmpty()) connectionMode else "" + queryParams
                 }
@@ -334,7 +327,7 @@ class BotClient private constructor() {
                         override fun onClose(code: Int, reason: String?) {
                             accessToken = ""
                             jwtToken = ""
-                            userId = ""
+                            botUserId = ""
 
                             LogUtils.d(LOG_TAG, "Connection Lost...")
                             connectionState = ConnectionState.DISCONNECTED
@@ -417,7 +410,14 @@ class BotClient private constructor() {
     fun sendMessage(msg: String, payload: String?, attachments: List<Map<String, *>>? = null) {
         setMoreCustomData()
         val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return
-        BotClientHelper.createRequestPayload(msg, payload ?: msg, attachments, botCustomData, botInfoModel) { jsonPayload, botRequest ->
+        BotClientHelper.createRequestPayload(
+            msg,
+            payload ?: msg,
+            if (payload != null && msg.isNotEmpty()) msg else null,
+            attachments,
+            botCustomData,
+            botInfoModel
+        ) { jsonPayload, botRequest ->
             if (botConfigModel.isWebHook) {
                 sendWebHookMessage(botRequest, false, msg, payload, attachments)
                 return@createRequestPayload
@@ -526,7 +526,7 @@ class BotClient private constructor() {
     fun sendCloseOrMinimizeEvent(event: String, botName: String, botId: String) {
         if (!isConnected()) return
         botCustomData[BOT_TOKEN] = getAccessToken()
-        val botMessage = BotMessage("", null, botCustomData)
+        val botMessage = BotMessage("", null, null, botCustomData)
         botInfoModel = BotInfoModel(botName, botId, botCustomData)
         val meta = Meta(TimeZone.getDefault().id, Locale.getDefault().isO3Language)
         val botPayLoad = BotPayLoad(botMessage, meta = meta, event = event, botInfo = botInfoModel)
@@ -544,7 +544,7 @@ class BotClient private constructor() {
      * by sending messages from the pool.
      */
     fun sendReceipts(eventName: String?, msgId: String?) {
-        val botMessage = BotMessage("", null, botCustomData)
+        val botMessage = BotMessage("", null, null, botCustomData)
         botCustomData["botToken"] = getAccessToken()
         val configModel: BotConfigModel = SDKConfiguration.getBotConfigModel() ?: return
 

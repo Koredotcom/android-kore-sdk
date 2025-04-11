@@ -67,6 +67,8 @@ class ChatHistoryRepositoryImpl : ChatHistoryRepository {
                 for (index in messages.indices) {
                     val msg = messages[index]
                     val components = msg.components
+                    val altText: List<Map<String, Any>> = msg.tags[BotResponseConstants.ALT_TEXT] as List<Map<String, Any>>
+                    val renderMsg: String? = altText.firstOrNull()?.get(BotResponseConstants.VALUE) as String?
                     if (msg.type == BotResponseConstants.MESSAGE_TYPE_OUTGOING) {
                         val data = ((components[0][DATA] as Map<String, String>)[KEY_TEXT] ?: "").replace("&quot;", "\"")
                         if (data.isEmpty()) continue
@@ -81,7 +83,7 @@ class ChatHistoryRepositoryImpl : ChatHistoryRepository {
                     } else {
                         try {
                             val message = ((components[0][DATA] as Map<String, String>)[KEY_TEXT] ?: "").replace("&quot;", "\"")
-                            msgs = msgs + createBotRequest(msg.id ?: "", message, botId, botName, msg.createdOn!!)
+                            msgs = msgs + createBotRequest(msg.id ?: "", message, renderMsg, botId, botName, msg.createdOn!!)
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
@@ -92,8 +94,8 @@ class ChatHistoryRepositoryImpl : ChatHistoryRepository {
         return Result.Success(Pair(msgs, moreAvailable))
     }
 
-    private fun createBotRequest(msgId: String, message: String, botId: String, botName: String, createdOn: String): BotRequest {
-        val botMessage = BotMessage(message)
+    private fun createBotRequest(msgId: String, message: String, renderMsg: String?, botId: String, botName: String, createdOn: String): BotRequest {
+        val botMessage = BotMessage(if (!renderMsg.isNullOrEmpty()) renderMsg else message, renderMsg)
         val botInfo = BotInfoModel(botName, botId, null)
         val botPayLoad = BotPayLoad(message = botMessage, botInfo = botInfo)
         val gson = Gson()

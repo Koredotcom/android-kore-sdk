@@ -155,7 +155,6 @@ object BotResponseConstants {
     const val SMALL = "small"
     const val ROW_DATA = "rowData"
     const val RADIO = "radio"
-    const val IS_CHECKED = "isChecked"
     const val HEADER_OPTIONS = "headerOptions"
     const val CONTENT_TYPE = "contenttype"
     const val BORDER_COLOR = "borderColor"
@@ -196,6 +195,8 @@ object BotResponseConstants {
     const val HEADING = "heading"
     const val TEXT_MESSAGE = "text_message"
     const val LIMIT = "limit"
+    const val BUTTON_TYPE_TEXT: String = "text"
+    const val BUTTON_TYPE_USER_INTENT: String = "USERINTENT"
     const val BUTTON_TYPE_WEB_URL = "web_url"
     const val BUTTON_TYPE_URL = "url"
     const val BUTTON_TYPE_POSTBACK = "postback"
@@ -271,6 +272,11 @@ object BotResponseConstants {
     const val REENTER_PIN_TITLE = "reEnterPinTitle"
     const val WARNING_MESSAGE = "warningMessage"
     const val RESET_BUTTONS = "resetButtons"
+    const val CONFIRM = "confirm"
+    const val BTN_TYPE = "btnType"
+    const val BACKGROUND_INVERTED = "backgroundInverted"
+    const val TEXT_INVERTED = "textInverted"
+    const val ALT_TEXT = "altText"
     var DATE_FORMAT = "dd/MM/yyyy"
     var TIME_FORMAT = 24
 }

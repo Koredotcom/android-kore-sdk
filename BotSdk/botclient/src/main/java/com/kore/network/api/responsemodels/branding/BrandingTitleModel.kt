@@ -14,11 +14,11 @@ data class BrandingTitleModel(
     val img: String? = null
 ) : Serializable
 
-fun BrandingTitleModel.updateWith(configModel: BrandingTitleModel): BrandingTitleModel {
+fun BrandingTitleModel.updateWith(configModel: BrandingTitleModel?): BrandingTitleModel {
     return this.copy(
-        name = configModel.name?.ifEmpty { this.name },
-        color = configModel.color?.ifEmpty { this.color },
-        type = configModel.type?.ifEmpty { this.type },
-        img = configModel.img?.ifEmpty { this.img },
+        name = configModel?.name?.ifEmpty { this.name } ?: name,
+        color = configModel?.color?.ifEmpty { this.color } ?: color,
+        type = configModel?.type?.ifEmpty { this.type } ?: type,
+        img = configModel?.img?.ifEmpty { this.img } ?: img,
     )
 }
