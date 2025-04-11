@@ -9,9 +9,9 @@ data class BrandingBodyUserMessageModel(
     val color: String? = null
 )
 
-fun BrandingBodyUserMessageModel.updateWith(configModel: BrandingBodyUserMessageModel): BrandingBodyUserMessageModel {
+fun BrandingBodyUserMessageModel.updateWith(configModel: BrandingBodyUserMessageModel?): BrandingBodyUserMessageModel {
     return this.copy(
-        bgColor = configModel.bgColor?.ifEmpty { this.bgColor },
-        color = configModel.color?.ifEmpty { this.color },
+        bgColor = configModel?.bgColor?.ifEmpty { this.bgColor } ?: bgColor,
+        color = configModel?.color?.ifEmpty { this.color } ?: color,
     )
 }

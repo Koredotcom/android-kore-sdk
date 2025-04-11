@@ -195,6 +195,8 @@ object BotResponseConstants {
     const val HEADING = "heading"
     const val TEXT_MESSAGE = "text_message"
     const val LIMIT = "limit"
+    const val BUTTON_TYPE_TEXT: String = "text"
+    const val BUTTON_TYPE_USER_INTENT: String = "USERINTENT"
     const val BUTTON_TYPE_WEB_URL = "web_url"
     const val BUTTON_TYPE_URL = "url"
     const val BUTTON_TYPE_POSTBACK = "postback"

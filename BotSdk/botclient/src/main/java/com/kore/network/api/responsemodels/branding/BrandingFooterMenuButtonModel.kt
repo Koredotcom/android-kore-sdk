@@ -8,13 +8,12 @@ data class BrandingFooterMenuButtonModel(
     @SerializedName("icon")
     val icon: String? = null,
     @SerializedName("actions")
-    val actions: ArrayList<BrandingQuickStartButtonActionModel>,
+    val actions: ArrayList<BrandingQuickStartButtonActionModel> = ArrayList(),
 )
 
-fun BrandingFooterMenuButtonModel.updateWith(configModel: BrandingFooterMenuButtonModel): BrandingFooterMenuButtonModel {
+fun BrandingFooterMenuButtonModel.updateWith(configModel: BrandingFooterMenuButtonModel?): BrandingFooterMenuButtonModel {
     return this.copy(
-        show = configModel.show ?: show,
-        icon = configModel.icon?.ifEmpty { icon },
-        actions = configModel.actions.ifEmpty { this.actions }
+        show = configModel?.show ?: show,
+        icon = configModel?.icon?.ifEmpty { icon } ?: icon,
     )
 }

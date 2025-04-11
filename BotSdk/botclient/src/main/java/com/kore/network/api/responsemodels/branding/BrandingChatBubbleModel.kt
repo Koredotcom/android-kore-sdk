@@ -6,9 +6,9 @@ data class BrandingChatBubbleModel(
     @SerializedName("style")
     val style: String = "",
     @SerializedName("icon")
-    val icon: BrandingIconModel,
+    val icon: BrandingIconModel?,
     @SerializedName("minimise")
-    val minimise: BrandingMinimizeModel,
+    val minimise: BrandingMinimizeModel?,
     @SerializedName("sound")
     val sound: String = "",
     @SerializedName("alignment")
@@ -23,16 +23,16 @@ data class BrandingChatBubbleModel(
     val secondaryColor: String = "",
 )
 
-fun BrandingChatBubbleModel.updateWith(configModel: BrandingChatBubbleModel): BrandingChatBubbleModel {
+fun BrandingChatBubbleModel.updateWith(configModel: BrandingChatBubbleModel?): BrandingChatBubbleModel {
     return this.copy(
-        style = style.ifEmpty { style },
-        icon = icon.updateWith(configModel.icon),
-        minimise = minimise.updateWith(configModel.minimise),
-        sound = sound.ifEmpty { sound },
-        alignment = alignment.ifEmpty { alignment },
-        animation = animation.ifEmpty { animation },
-        expandAnimation = expandAnimation.ifEmpty { expandAnimation },
-        primaryColor = primaryColor.ifEmpty { primaryColor },
-        secondaryColor = secondaryColor.ifEmpty { secondaryColor }
+        style = configModel?.style?.ifEmpty { style } ?: style,
+        icon = icon?.updateWith(configModel?.icon) ?: icon,
+        minimise = minimise?.updateWith(configModel?.minimise) ?: minimise,
+        sound = configModel?.sound?.ifEmpty { sound } ?: sound,
+        alignment = configModel?.alignment?.ifEmpty { alignment } ?: alignment,
+        animation = configModel?.animation?.ifEmpty { animation } ?: animation,
+        expandAnimation = configModel?.expandAnimation?.ifEmpty { expandAnimation } ?: expandAnimation,
+        primaryColor = configModel?.primaryColor?.ifEmpty { primaryColor } ?: primaryColor,
+        secondaryColor = configModel?.secondaryColor?.ifEmpty { secondaryColor } ?: secondaryColor
     )
 }

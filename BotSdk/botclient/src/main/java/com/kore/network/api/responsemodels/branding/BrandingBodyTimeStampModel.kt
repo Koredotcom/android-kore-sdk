@@ -12,14 +12,14 @@ data class BrandingBodyTimeStampModel(
     @SerializedName("date_format") val dateFormat: String = "",
 )
 
-fun BrandingBodyTimeStampModel.updateWith(configModel: BrandingBodyTimeStampModel): BrandingBodyTimeStampModel {
+fun BrandingBodyTimeStampModel.updateWith(configModel: BrandingBodyTimeStampModel?): BrandingBodyTimeStampModel {
     return this.copy(
-        show = configModel.show ?: show,
-        showType = configModel.showType.ifEmpty { this.showType },
-        position = configModel.position.ifEmpty { this.position },
-        separator = configModel.separator.ifEmpty { this.separator },
-        color = configModel.color.ifEmpty { this.color },
-        timeFormat = configModel.timeFormat.ifEmpty { timeFormat },
-        dateFormat = configModel.dateFormat.ifEmpty { this.dateFormat },
+        show = configModel?.show ?: show,
+        showType = configModel?.showType?.ifEmpty { this.showType } ?: showType,
+        position = configModel?.position?.ifEmpty { this.position } ?: position,
+        separator = configModel?.separator?.ifEmpty { this.separator } ?: separator,
+        color = configModel?.color?.ifEmpty { this.color } ?: color,
+        timeFormat = configModel?.timeFormat?.ifEmpty { timeFormat } ?: timeFormat,
+        dateFormat = configModel?.dateFormat?.ifEmpty { this.dateFormat } ?: dateFormat,
     )
 }

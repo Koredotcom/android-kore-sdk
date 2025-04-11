@@ -15,12 +15,12 @@ data class BrandingFooterButtonsModel(
     val speaker: BrandingIconModel
 )
 
-fun BrandingFooterButtonsModel.updateWith(configModel: BrandingFooterButtonsModel): BrandingFooterButtonsModel {
+fun BrandingFooterButtonsModel.updateWith(configModel: BrandingFooterButtonsModel?): BrandingFooterButtonsModel {
     return this.copy(
-        menu = this.menu.updateWith(configModel.menu),
-        emoji = this.emoji.updateWith(configModel.emoji),
-        microphone = this.microphone.updateWith(configModel.microphone),
-        attachment = this.attachment.updateWith(configModel.attachment),
-        speaker = this.speaker.updateWith(configModel.speaker),
+        menu = this.menu.updateWith(configModel?.menu),
+        emoji = this.emoji.updateWith(configModel?.emoji),
+        microphone = this.microphone.updateWith(configModel?.microphone),
+        attachment = this.attachment.updateWith(configModel?.attachment),
+        speaker = this.speaker.updateWith(configModel?.speaker),
     )
 }

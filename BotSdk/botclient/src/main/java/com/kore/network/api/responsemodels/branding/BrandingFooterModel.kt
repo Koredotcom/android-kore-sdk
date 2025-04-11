@@ -19,10 +19,10 @@ data class BrandingFooterModel(
 
 fun BrandingFooterModel.updateWith(configModel: BrandingFooterModel): BrandingFooterModel {
     return this.copy(
-        bgColor = configModel.bgColor?.ifEmpty { this.bgColor },
-        style = configModel.style?.ifEmpty { this.style },
-        iconsColor = configModel.style?.ifEmpty { this.style },
-        layout = configModel.layout?.ifEmpty { this.layout },
-        buttons = this.buttons?.updateWith(configModel.buttons ?: this.buttons),
+        bgColor = configModel.bgColor?.ifEmpty { this.bgColor } ?: bgColor,
+        style = configModel.style?.ifEmpty { this.style } ?: style,
+        iconsColor = configModel.iconsColor?.ifEmpty { this.iconsColor } ?: iconsColor,
+        layout = configModel.layout?.ifEmpty { this.layout } ?: layout,
+        buttons = this.buttons?.updateWith(configModel.buttons) ?: this.buttons,
     )
 }

@@ -7,7 +7,7 @@ data class BrandingWelcomeModel(
     @SerializedName("show")
     val show: Boolean?,
     @SerializedName("layout")
-    val layout: String = "",
+    val layout: String?,
     @SerializedName("logo")
     val logo: BrandingWelcomeLogoModel,
     @SerializedName("title")
@@ -30,19 +30,19 @@ data class BrandingWelcomeModel(
     val staticLinks: StaticLinksModel
 ) : Serializable
 
-fun BrandingWelcomeModel.updateWith(configModel: BrandingWelcomeModel): BrandingWelcomeModel {
+fun BrandingWelcomeModel.updateWith(configModel: BrandingWelcomeModel?): BrandingWelcomeModel {
     return this.copy(
-        show = configModel.show ?: show,
-        layout = layout.ifEmpty { layout },
-        logo = logo.updateWith(configModel.logo),
-        title = title.updateWith(configModel.title),
-        subTitle = subTitle.updateWith(configModel.subTitle),
-        note = note.updateWith(configModel.note),
-        background = background.updateWith(configModel.background),
-        topFonts = topFonts.updateWith(configModel.topFonts),
-        bottomBackground = bottomBackground.updateWith(configModel.bottomBackground),
-        starterBox = starterBox.updateWith(configModel.starterBox),
-        promotionalContent = promotionalContent.updateWith(configModel.promotionalContent),
-        staticLinks = staticLinks.updateWith(configModel.staticLinks),
+        show = configModel?.show ?: show,
+        layout = configModel?.layout?.ifEmpty { layout } ?: layout,
+        logo = logo.updateWith(configModel?.logo),
+        title = title.updateWith(configModel?.title),
+        subTitle = subTitle.updateWith(configModel?.subTitle),
+        note = note.updateWith(configModel?.note),
+        background = background.updateWith(configModel?.background),
+        topFonts = topFonts.updateWith(configModel?.topFonts),
+        bottomBackground = bottomBackground.updateWith(configModel?.bottomBackground),
+        starterBox = starterBox.updateWith(configModel?.starterBox),
+        promotionalContent = promotionalContent.updateWith(configModel?.promotionalContent),
+        staticLinks = staticLinks.updateWith(configModel?.staticLinks),
     )
 }
