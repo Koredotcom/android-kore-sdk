@@ -227,6 +227,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 if (!isMinimized() && !isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
                     isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
+                        setActionEvent(this@BotChatActivity::onActionEvent)
                         setListener(object : WelcomeDialogFragment.WelcomeDialogListener {
                             override fun onUpdateUI() {
                                 binding.chatWindow.isVisible = true

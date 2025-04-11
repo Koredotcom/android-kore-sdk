@@ -11,11 +11,11 @@ data class BrandingOverrideHistoryModel(
     val paginatedScroll: BrandingOverrideHistoryRecentModel? = null
 )
 
-fun BrandingOverrideHistoryModel.updateWith(configModel: BrandingOverrideHistoryModel): BrandingOverrideHistoryModel {
+fun BrandingOverrideHistoryModel.updateWith(configModel: BrandingOverrideHistoryModel?): BrandingOverrideHistoryModel {
     return this.copy(
-        isEnable = configModel.isEnable ?: isEnable,
-        recent = recent?.updateWith(configModel.recent ?: recent),
-        paginatedScroll = paginatedScroll?.updateWith(configModel.paginatedScroll ?: paginatedScroll)
+        isEnable = configModel?.isEnable ?: isEnable,
+        recent = recent?.updateWith(configModel?.recent) ?: recent,
+        paginatedScroll = paginatedScroll?.updateWith(configModel?.paginatedScroll) ?: paginatedScroll
     )
 }
 

@@ -18,13 +18,13 @@ data class BrandingHeaderButtonsModel(
     val liveAgent: BrandingIconModel?
 ) : Serializable
 
-fun BrandingHeaderButtonsModel.updateWith(configModel: BrandingHeaderButtonsModel): BrandingHeaderButtonsModel {
+fun BrandingHeaderButtonsModel.updateWith(configModel: BrandingHeaderButtonsModel?): BrandingHeaderButtonsModel {
     return this.copy(
-        close = this.close?.updateWith(configModel.close ?: this.close),
-        minimise = this.minimise?.updateWith(configModel.minimise ?: this.minimise),
-        expand = this.expand?.updateWith(configModel.expand ?: this.expand),
-        reconnect = this.reconnect?.updateWith(configModel.reconnect ?: this.reconnect),
-        help = this.help?.updateWith(configModel.help ?: this.help),
-        liveAgent = this.liveAgent?.updateWith(configModel.liveAgent ?: this.liveAgent),
+        close = this.close?.updateWith(configModel?.close) ?: this.close,
+        minimise = this.minimise?.updateWith(configModel?.minimise) ?: this.minimise,
+        expand = this.expand?.updateWith(configModel?.expand) ?: this.expand,
+        reconnect = this.reconnect?.updateWith(configModel?.reconnect) ?: this.reconnect,
+        help = this.help?.updateWith(configModel?.help) ?: this.help,
+        liveAgent = this.liveAgent?.updateWith(configModel?.liveAgent) ?: this.liveAgent,
     )
 }

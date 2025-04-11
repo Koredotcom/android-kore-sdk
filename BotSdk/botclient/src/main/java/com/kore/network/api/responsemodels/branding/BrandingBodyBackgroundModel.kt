@@ -11,10 +11,10 @@ data class BrandingBodyBackgroundModel(
     val img: String? = null
 )
 
-fun BrandingBodyBackgroundModel.updateWith(configModel: BrandingBodyBackgroundModel): BrandingBodyBackgroundModel {
+fun BrandingBodyBackgroundModel.updateWith(configModel: BrandingBodyBackgroundModel?): BrandingBodyBackgroundModel {
     return this.copy(
-        type = configModel.type?.ifEmpty { this.type },
-        color = configModel.color?.ifEmpty { this.color },
-        img = configModel.img?.ifEmpty { this.img }
+        type = configModel?.type?.ifEmpty { this.type } ?: type,
+        color = configModel?.color?.ifEmpty { this.color } ?: type,
+        img = configModel?.img?.ifEmpty { this.img } ?: img
     )
 }

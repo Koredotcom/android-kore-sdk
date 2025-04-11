@@ -2,13 +2,13 @@ package com.kore.ui.botchat.dialog
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
@@ -21,6 +21,8 @@ import com.google.android.flexbox.FlexDirection.COLUMN
 import com.google.android.flexbox.FlexDirection.ROW
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
+import com.kore.common.event.UserActionEvent
+import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_CAROUSEL
@@ -41,6 +43,7 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
     WelcomeDialogView {
     private val welcomeDialogViewModel: WelcomeDialogViewModel by viewModels()
     private var listener: WelcomeDialogListener? = null
+    private var actionEvent: (event: UserActionEvent) -> Unit = {}
 
     override fun getLayoutID(): Int = R.layout.welcome_screen
 
@@ -52,7 +55,7 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
         super.onResume()
         dialog?.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         dialog?.window?.setGravity(Gravity.CENTER)
-        dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.WHITE))
+        dialog?.window?.setBackgroundDrawable(Color.WHITE.toDrawable())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -81,9 +84,9 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
 
         if (!botBrandingModel.welcomeScreen?.promotionalContent?.promotions.isNullOrEmpty()) {
             binding.lvPromotions.isVisible = true
-            binding.lvPromotions.adapter = WelcomePromotionsAdapter(
-                requireContext(), botBrandingModel.welcomeScreen?.promotionalContent?.promotions!!
-            )
+            val adapter = WelcomePromotionsAdapter(requireContext(), botBrandingModel.welcomeScreen?.promotionalContent?.promotions!!)
+            adapter.setActionEvent(this::sendMessage, this::loadUrl)
+            binding.lvPromotions.adapter = adapter
         }
 
         if (!botBrandingModel.welcomeScreen?.starterBox?.title.isNullOrEmpty()) {
@@ -136,6 +139,7 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
             binding.rvStarterButtons.layoutManager = layoutManager
             val adapter = WelcomeStarterButtonsAdapter(requireContext(), botBrandingModel.welcomeScreen?.starterBox?.quickStartButtons?.style)
             adapter.setWelcomeStarterButtonsArrayList(botBrandingModel.welcomeScreen?.starterBox?.quickStartButtons?.buttons!!)
+            adapter.setActionEvent(this::sendMessage, this::loadUrl)
             binding.rvStarterButtons.adapter = adapter
         }
 
@@ -146,15 +150,24 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
                 TEMPLATE_TYPE_CAROUSEL -> {
                     binding.hvpLinks.isVisible = true
                     binding.rvLinks.isVisible = false
-                    binding.hvpLinks.adapter = WelcomeStaticLinksAdapter(requireContext(), botBrandingModel.welcomeScreen?.staticLinks?.links!!)
+                    val bgColor =
+                        if (!botBrandingModel.general.colors.secondary.isNullOrEmpty() && botBrandingModel.general.colors.useColorPaletteOnly == true) {
+                            botBrandingModel.general.colors.secondary!!
+                        } else {
+                            "#a7b0be"
+                        }
+                    val adapter = WelcomeStaticLinksAdapter(requireContext(), botBrandingModel.welcomeScreen?.staticLinks?.links!!, bgColor)
+                    adapter.setActionEvent(this::sendMessage, this::loadUrl)
+                    binding.hvpLinks.adapter = adapter
                 }
 
                 else -> {
                     binding.hvpLinks.isVisible = false
                     binding.rvLinks.isVisible = true
                     binding.rvLinks.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-                    binding.rvLinks.adapter =
-                        WelcomeStaticLinksListAdapter(requireContext(), botBrandingModel.welcomeScreen?.staticLinks?.links!!)
+                    val adapter = WelcomeStaticLinksListAdapter(requireContext(), botBrandingModel.welcomeScreen?.staticLinks?.links!!)
+                    adapter.setActionEvent(this::sendMessage, this::loadUrl)
+                    binding.rvLinks.adapter = adapter
                 }
             }
         } else {
@@ -183,6 +196,19 @@ class WelcomeDialogFragment(private val botBrandingModel: BotBrandingModel) :
 
     fun setListener(listener: WelcomeDialogListener) {
         this.listener = listener
+    }
+
+    fun setActionEvent(actionEvent: (event: UserActionEvent) -> Unit) {
+        this.actionEvent = actionEvent
+    }
+
+    private fun sendMessage(message: String, payload: String) {
+        actionEvent(BotChatEvent.SendMessage(message, payload))
+        dismiss()
+    }
+
+    private fun loadUrl(url: String) {
+        actionEvent(BotChatEvent.UrlClick(url))
     }
 
     interface WelcomeDialogListener {

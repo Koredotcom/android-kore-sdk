@@ -7,8 +7,8 @@ data class BrandingWelcomeLogoModel(
     val logoUrl: String = ""
 )
 
-fun BrandingWelcomeLogoModel.updateWith(configModel: BrandingWelcomeLogoModel): BrandingWelcomeLogoModel {
+fun BrandingWelcomeLogoModel.updateWith(configModel: BrandingWelcomeLogoModel?): BrandingWelcomeLogoModel {
     return this.copy(
-        logoUrl = configModel.logoUrl.ifEmpty { logoUrl },
+        logoUrl = configModel?.logoUrl?.ifEmpty { logoUrl } ?: logoUrl,
     )
 }

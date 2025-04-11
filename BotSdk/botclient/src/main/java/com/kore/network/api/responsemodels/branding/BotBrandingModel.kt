@@ -25,8 +25,8 @@ fun BotBrandingModel.updateWith(configModel: BotBrandingModel): BotBrandingModel
         header = header.updateWith(configModel.header),
         footer = footer.updateWith(configModel.footer),
         body = body.updateWith(configModel.body),
-        chatBubble = chatBubble?.updateWith(configModel.chatBubble ?: chatBubble),
-        welcomeScreen = welcomeScreen?.updateWith(configModel.welcomeScreen ?: welcomeScreen),
-        overrideKoreConfig = overrideKoreConfig?.updateWith(configModel.overrideKoreConfig ?: overrideKoreConfig)
+        chatBubble = chatBubble?.updateWith(configModel.chatBubble) ?: chatBubble,
+        welcomeScreen = welcomeScreen?.updateWith(configModel.welcomeScreen) ?: welcomeScreen,
+        overrideKoreConfig = overrideKoreConfig?.updateWith(configModel.overrideKoreConfig) ?: overrideKoreConfig
     )
 }

@@ -39,12 +39,12 @@ fun BrandingBodyModel.updateWith(configModel: BrandingBodyModel): BrandingBodyMo
         primaryHoverColor = configModel.primaryHoverColor.ifEmpty { this.primaryHoverColor },
         primaryColor = configModel.primaryColor.ifEmpty { this.primaryColor },
         bubbleStyle = configModel.bubbleStyle.ifEmpty { this.bubbleStyle },
-        timeStamp = this.timeStamp?.updateWith(configModel.timeStamp ?: this.timeStamp),
-        bodyIconModel = this.bodyIconModel?.updateWith(configModel.bodyIconModel ?: this.bodyIconModel),
-        agentMessage = this.agentMessage?.updateWith(configModel.agentMessage ?: this.agentMessage),
-        botMessage = this.botMessage?.updateWith(configModel.botMessage ?: this.botMessage),
-        userMessage = this.userMessage?.updateWith(configModel.userMessage ?: this.userMessage),
+        timeStamp = this.timeStamp?.updateWith(configModel.timeStamp)?: this.timeStamp,
+        bodyIconModel = this.bodyIconModel?.updateWith(configModel.bodyIconModel)?: this.bodyIconModel,
+        agentMessage = this.agentMessage?.updateWith(configModel.agentMessage)?: this.agentMessage,
+        botMessage = this.botMessage?.updateWith(configModel.botMessage) ?: this.botMessage,
+        userMessage = this.userMessage?.updateWith(configModel.userMessage) ?: this.userMessage,
         font = this.font?.updateWith(configModel.font ?: this.font),
-        background = this.background?.updateWith(configModel.background ?: this.background),
+        background = this.background?.updateWith(configModel.background) ?: this.background,
     )
 }

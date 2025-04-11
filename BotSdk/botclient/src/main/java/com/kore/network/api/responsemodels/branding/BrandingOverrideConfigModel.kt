@@ -13,11 +13,11 @@ data class BrandingOverrideConfigModel(
     val history: BrandingOverrideHistoryModel? = null
 )
 
-fun BrandingOverrideConfigModel.updateWith(configModel: BrandingOverrideConfigModel): BrandingOverrideConfigModel {
+fun BrandingOverrideConfigModel.updateWith(configModel: BrandingOverrideConfigModel?): BrandingOverrideConfigModel {
     return this.copy(
-        isEnable = configModel.isEnable ?: isEnable,
-        emojiShortCut = configModel.emojiShortCut ?: emojiShortCut,
-        typingIndicatorTimeout = configModel.typingIndicatorTimeout ?: typingIndicatorTimeout,
-        history = history?.updateWith(configModel.history ?: history)
+        isEnable = configModel?.isEnable ?: isEnable,
+        emojiShortCut = configModel?.emojiShortCut ?: emojiShortCut,
+        typingIndicatorTimeout = configModel?.typingIndicatorTimeout ?: typingIndicatorTimeout,
+        history = history?.updateWith(configModel?.history) ?: history
     )
 }
