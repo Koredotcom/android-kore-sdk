@@ -111,8 +111,6 @@ The `SimpleListViewHolderProvider` class is the fundamental building block for r
 
 2.  **Class Definition:** Custom template provider class defination should be as follows.
 
-**Note**: Your class must have the constructor number and order of parms should be as follows only. Please don't change the order and add new params.
-
 ```java
     class DownloadLinkTemplateProvider : SimpleListViewHolderProvider<Binding>() {
         override fun inflateBinding(parent: ViewGroup, viewType: Int): Binding =
@@ -122,7 +120,7 @@ The `SimpleListViewHolderProvider` class is the fundamental building block for r
 
 ---
 
-## Sending Messages to the Bot from Custom Templates
+3. **Action Event** Send message to the Bot from Custom Templates
 
 To enable user interactions within your custom template to trigger sending a message back to the bot, utilize the `actionEvent`:
 

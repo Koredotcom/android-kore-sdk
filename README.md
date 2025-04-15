@@ -99,6 +99,7 @@ Create a New Application: Create a new Android Studio project.
 ```gradle
 implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_v3_11.0.4'
 ```
+
 **Configure Bot Credentials**: Implement the configuration steps mentioned in **Config-1** and **Config-2** within your application.
 
 **Navigate to Chat Window**: You can open the bot chat window using an Intent
@@ -109,7 +110,6 @@ startActivity(intent)
 ```
 
 **Custom Templates**: The SDK allows you to implement your own custom message templates without modifying the SDK code. Refer to the sample application for examples.
-
 
 ## Integrating BotSDK for Customizations
 
@@ -190,6 +190,7 @@ botClient.setListener(object : BotConnectionListener {
     }
 })
 ```
+
 ### Step 5: Connect to the Bot
 
 Use one of the following APIs to establish a connection with the bot:
@@ -233,6 +234,8 @@ botClient.disconnectBot()
 ### Step 8: Create Custom UI Templates and Chat Window
 
 The SDK provides predefined UI templates that you can use directly. However, you can also create your own custom templates or override existing ones to achieve a unique look and feel. Additionally, you can customize the entire chat window UI by creating custom Fragments that extend the SDK's base fragment classes. Refer to the sample application and document for detailed examples of UI customization.
+
+**Note**: Please refer the documents for [CustomTemplateInjection](https://github.com/Koredotcom/android-kore-sdk/blob/kotlin_botsdk/docs/CustomTemplateInjection.md) and [CustomFragmentInjection](https://github.com/Koredotcom/android-kore-sdk/blob/kotlin_botsdk/docs/CustomFragmentInjection.md) how to customize and inject to BotSdk.
 
 ## Enabling API-Based (Webhook Channel) Communication
 
