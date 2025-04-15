@@ -177,19 +177,21 @@ startActivity(intent);
    ```
 
 4. Customize templates or fragments:
-   ```java
-// To override existing template or add new template
+
+```java
+   // To override existing template or add new template
    SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
 
-// To show your custom content fragment instead of existing
+   // To show your custom content fragment instead of existing
    SDKConfig.addCustomContentFragment(new CustomContentFragment());
 
-// To show your custom footer fragment instead of existing
+   // To show your custom footer fragment instead of existing
    SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
 
-// To show your custom header fragment instead of existing
+   // To show your custom header fragment instead of existing
    SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
-   ```
+```
+**Note**: Please go through the readme documents for [CustomTemplateInjection](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomTemplateInjection.md) and [CustomFragmentInjection](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomFragmentInjection.md)
 
 ---
 
