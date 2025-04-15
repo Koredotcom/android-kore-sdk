@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
@@ -28,6 +29,7 @@ class GeneralWebViewActivity : AppCompatActivity() {
     lateinit var binding: GenericWebviewLayoutBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         binding = GenericWebviewLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)

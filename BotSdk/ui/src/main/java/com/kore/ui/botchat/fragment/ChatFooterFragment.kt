@@ -206,12 +206,8 @@ class ChatFooterFragment : BaseFooterFragment() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (s.isEmpty()) {
-//                binding.sendTv.isVisible = false
-//                binding.recAudioImg.isVisible = binding.mainContent.isVisible
                 enableSendButton(false)
-            } else if (!binding.sendTv.isVisible || s.isNotEmpty() && !binding.llSend.isVisible) {
-//                binding.sendTv.isVisible = true
-//                binding.recAudioImg.isVisible = false
+            } else if (s.isNotEmpty()) {
                 if ((SDKConfiguration.getBotConfigModel()?.isWebHook == true && NetworkUtils.isNetworkAvailable(requireContext())) || BotClient.isConnected()) {
                     enableSendButton(true)
                 }
@@ -228,7 +224,7 @@ class ChatFooterFragment : BaseFooterFragment() {
     override fun enableSendButton(enable: Boolean) {
         isEnabled = enable
         if (isAttachedToWindow) {
-            binding.llSend.isVisible = enable
+            binding.llSend.isVisible = enable && binding.edtTxtMessage.text.trim().isNotEmpty()
             binding.recAudioImg.isVisible = !enable
         }
     }
