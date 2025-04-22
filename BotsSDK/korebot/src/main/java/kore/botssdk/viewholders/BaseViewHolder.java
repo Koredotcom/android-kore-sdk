@@ -276,6 +276,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     protected void setResponseText(LinearLayoutCompat layoutBubble, String textualContent, String msgTime) {
+        if(layoutBubble == null) return;
         if (bubbleText == null) initBubbleText(layoutBubble, false);
         bubbleText.setVisibility(View.VISIBLE);
         bubbleText.setText("");

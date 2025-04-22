@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <View
+        android:id="@+id/vQuickReplies"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:background="@color/txtFontBlack" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rlQuickReplies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vQuickReplies"
+        android:layout_marginTop="@dimen/dimen_5dp" />
+
+</RelativeLayout>

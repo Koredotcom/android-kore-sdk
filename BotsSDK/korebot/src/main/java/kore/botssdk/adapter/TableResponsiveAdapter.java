@@ -1,11 +1,13 @@
 package kore.botssdk.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotTableDataModel;
+import kore.botssdk.net.SDKConfiguration;
 
 public class TableResponsiveAdapter extends RecyclerView.Adapter<TableResponsiveAdapter.ViewHolder> {
     private final LayoutInflater inflater;
@@ -37,10 +40,16 @@ public class TableResponsiveAdapter extends RecyclerView.Adapter<TableResponsive
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int i) {
-        BotTableDataModel model = getItem(i);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        BotTableDataModel model = getItem(position);
         List<String> values = model.getValues();
         if (values == null) return;
+
+        holder.rlTableResponsive.setBackgroundResource(0);
+
+        if((position % 2) == 0)
+            holder.rlTableResponsive.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+
         holder.tvTableSerial.setText(values.get(0));
         holder.tvTableTitle.setText(values.get(1));
 
@@ -75,6 +84,7 @@ public class TableResponsiveAdapter extends RecyclerView.Adapter<TableResponsive
         RecyclerView rvTableResponsive;
         LinearLayout llTableResponsive;
         ImageView ivTableResponsiveExpand;
+        RelativeLayout rlTableResponsive;
 
         public ViewHolder(@NonNull View view) {
             super(view);
@@ -83,6 +93,7 @@ public class TableResponsiveAdapter extends RecyclerView.Adapter<TableResponsive
             rvTableResponsive = view.findViewById(R.id.rvTableResponsive);
             llTableResponsive = view.findViewById(R.id.llTableResponsive);
             ivTableResponsiveExpand = view.findViewById(R.id.ivTableResponsiveExpand);
+            rlTableResponsive = view.findViewById(R.id.rlTableResponsive);
         }
     }
 }
