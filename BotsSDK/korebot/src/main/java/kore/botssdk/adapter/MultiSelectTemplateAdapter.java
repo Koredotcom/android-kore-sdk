@@ -59,19 +59,28 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
         if (item instanceof BotMultiSelectElementModel) {
             holder.textView.setTag(item);
             holder.textView.setText(((BotMultiSelectElementModel) item).getTitle());
-            holder.checkBox.setChecked(checkedItems.contains(item));
-            holder.checkBox.setOnCheckedChangeListener((v, isChecked) -> {
-                if (v.isPressed()) {
-                    if (isEnabled) {
-                        if (isChecked) {
-                            checkedItems.add(item);
-                        } else {
-                            checkedItems.remove(item);
-                        }
-                        if (listener != null) listener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
+
+            GradientDrawable gradientDrawable = (GradientDrawable) holder.checkBox.getBackground();
+            gradientDrawable.setColor(Color.parseColor("#ffffff"));
+            gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+            holder.checkBox.setTag(true);
+
+            if (checkedItems.contains(item)) {
+                gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                holder.checkBox.setTag(false);
+            }
+
+            holder.checkBox.setOnClickListener(v -> {
+                if (isEnabled) {
+                    if ((Boolean) holder.checkBox.getTag()) {
+                        checkedItems.add(item);
                     } else {
-                        ((CompoundButton) v).setChecked(!isChecked);
+                        checkedItems.remove(item);
                     }
+
+                    holder.checkBox.setTag(!((Boolean) holder.checkBox.getTag()));
+                    if (listener != null) listener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
                 }
             });
         } else {
@@ -87,7 +96,7 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
                     StringBuilder sb = new StringBuilder();
                     StringBuilder sbValue = new StringBuilder();
                     for (MultiSelectBase item1 : checkedItems) {
-                        if (!sb.toString().isEmpty()) sb.append(" ");
+                        if (!sb.toString().isEmpty()) sb.append(", ");
                         sb.append(((BotMultiSelectElementModel) item1).getTitle());
 
                         if (!sbValue.toString().isEmpty()) sbValue.append(",");
@@ -123,7 +132,7 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBox;
+        LinearLayout checkBox;
         TextView textView;
         RelativeLayout root_layout;
         LinearLayout root_layout_btn;

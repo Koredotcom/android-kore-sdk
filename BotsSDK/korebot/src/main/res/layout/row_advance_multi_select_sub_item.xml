@@ -6,16 +6,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/rounded_rect_advance_multi">
 
-    <!--    <androidx.appcompat.widget.AppCompatCheckBox-->
-    <!--        android:id="@+id/check_multi_item"-->
-    <!--        android:layout_width="@dimen/dimen_30dp"-->
-    <!--        android:layout_height="30dp"-->
-    <!--        android:layout_centerVertical="true"-->
-    <!--        android:layout_gravity="center_vertical"-->
-    <!--        android:button="@drawable/multi_checkbox_drawable"-->
-    <!--        android:gravity="center"-->
-    <!--        android:padding="10dp" />-->
-
     <LinearLayout
         android:id="@+id/check_multi_item"
         android:layout_width="@dimen/dimen_25dp"

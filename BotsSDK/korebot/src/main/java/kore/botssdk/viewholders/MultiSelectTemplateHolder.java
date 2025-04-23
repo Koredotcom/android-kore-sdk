@@ -1,9 +1,14 @@
 package kore.botssdk.viewholders;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -20,11 +25,12 @@ import kore.botssdk.models.BotMultiSelectElementModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MultiSelectBase;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 
 public class MultiSelectTemplateHolder extends BaseViewHolder {
     private final RecyclerView recyclerView;
-    private final CheckBox selectAll;
+    private final LinearLayout selectAll;
     private ArrayList<MultiSelectBase> checkedItems = new ArrayList<>();
     private ArrayList<BotMultiSelectElementModel> multiSelectElements = new ArrayList<>();
 
@@ -50,10 +56,8 @@ public class MultiSelectTemplateHolder extends BaseViewHolder {
         multiSelectElements = payloadInner.getMultiSelectModels();
         String msgId = ((BotResponse) baseBotMessage).getMessageId();
         ArrayList<MultiSelectBase> items = new ArrayList<>();
-        if (multiSelectElements != null && !multiSelectElements.isEmpty())
-            items.addAll(multiSelectElements);
-        if (payloadInner.getButtons() != null && payloadInner.getButtons().size() > 0)
-            items.addAll(payloadInner.getButtons());
+        if (multiSelectElements != null && !multiSelectElements.isEmpty()) items.addAll(multiSelectElements);
+        if (payloadInner.getButtons() != null && payloadInner.getButtons().size() > 0) items.addAll(payloadInner.getButtons());
         MultiSelectTemplateAdapter multiSelectTemplateAdapter = new MultiSelectTemplateAdapter(msgId, items, isLastItem());
         Map<String, Object> state = ((BotResponse) baseBotMessage).getContentState();
         if (state != null && state.containsKey(BotResponse.SELECTED_ITEM)) {
@@ -63,18 +67,26 @@ public class MultiSelectTemplateHolder extends BaseViewHolder {
         multiSelectTemplateAdapter.setListener(contentStateListener);
         multiSelectTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         recyclerView.setAdapter(multiSelectTemplateAdapter);
-        selectAll.setChecked(checkedItems.size() == payloadInner.getMultiSelectModels().size());
-        selectAll.setOnCheckedChangeListener((v, isChecked) -> {
-            if (v.isPressed()) {
-                if (isLastItem()) {
-                    checkedItems.removeAll(multiSelectElements);
-                    if (isChecked) {
-                        checkedItems.addAll(multiSelectElements);
-                    }
-                    if (contentStateListener != null) contentStateListener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
-                } else {
-                    ((CompoundButton) v).setChecked(!isChecked);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) selectAll.getBackground();
+        gradientDrawable.setColor(Color.parseColor("#ffffff"));
+        gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+        selectAll.setTag(true);
+
+        if (checkedItems.size() == payloadInner.getMultiSelectModels().size()) {
+            gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            selectAll.setTag(false);
+        }
+
+        selectAll.setOnClickListener(v -> {
+            if (isLastItem()) {
+                checkedItems.removeAll(multiSelectElements);
+                if ((Boolean) selectAll.getTag()) {
+                    checkedItems.addAll(multiSelectElements);
+                    selectAll.setTag(false);
                 }
+                if (contentStateListener != null) contentStateListener.onSaveState(msgId, checkedItems, BotResponse.SELECTED_ITEM);
             }
         });
     }

@@ -12,24 +12,30 @@
         android:background="@drawable/edit_btn_grey_bg"
         android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatCheckBox
+        <LinearLayout
             android:id="@+id/check_multi_item"
-            android:layout_width="@dimen/dimen_30dp"
-            android:layout_height="30dp"
-            android:layout_centerVertical="true"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"
-            android:button="@drawable/multi_checkbox_drawable"
-            android:gravity="center"
-            android:padding="10dp" />
+            android:layout_marginStart="@dimen/dimen_10dp"
+            android:background="@drawable/check_bg">
 
+            <ImageView
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp"
+                android:src="@drawable/check_icon" />
+
+        </LinearLayout>
 
         <kore.botssdk.view.CustomTextView
             android:id="@+id/text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/dimen_10dp"
             android:layout_marginTop="12dp"
             android:layout_marginBottom="@dimen/dimen_12dp"
             android:ellipsize="end"
