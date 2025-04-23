@@ -3,10 +3,11 @@ package kore.botssdk.adapter;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
 import kore.botssdk.models.AdvancedMultiSelectModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 
 @SuppressLint("UnknownNullness")
@@ -61,16 +63,21 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
             holder.rootLayout.setVisibility(View.GONE);
 
             if (multiSelectCollectionModels.size() > 1) holder.rootLayout.setVisibility(View.VISIBLE);
-            holder.checkSelectAll.setChecked(checkedItems.containsAll(multiSelectCollectionModels));
 
-            holder.checkSelectAll.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-                if (compoundButton.isPressed()) {
-                    if (!isEnabled) {
-                        holder.checkSelectAll.setChecked(!isChecked);
-                        return;
-                    }
-                    advanceMultiSelectListener.allItemsSelected(isChecked, multiSelectCollectionModels);
-                }
+            GradientDrawable gradientDrawable = (GradientDrawable)holder.checkSelectAll.getBackground();
+            gradientDrawable.setColor(Color.parseColor("#ffffff"));
+            gradientDrawable.setStroke( (int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+            holder.checkSelectAll.setTag(true);
+
+            if(checkedItems.containsAll(multiSelectCollectionModels)){
+                gradientDrawable.setStroke( (int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                holder.checkSelectAll.setTag(false);
+            }
+
+            holder.checkSelectAll.setOnClickListener( v -> {
+                advanceMultiSelectListener.allItemsSelected((Boolean) holder.checkSelectAll.getTag(), multiSelectCollectionModels);
+                holder.checkSelectAll.setTag(!((Boolean)holder.checkSelectAll.getTag()));
             });
         }
 
@@ -123,7 +130,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkSelectAll;
+        LinearLayout checkSelectAll;
         TextView tvMultiSelectTitle;
         RelativeLayout rootLayout;
         LinearLayout rootLayoutBtn;

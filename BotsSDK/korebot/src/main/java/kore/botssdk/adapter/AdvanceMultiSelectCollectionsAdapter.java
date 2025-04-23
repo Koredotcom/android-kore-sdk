@@ -4,11 +4,14 @@ package kore.botssdk.adapter;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 
@@ -99,17 +103,28 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
                     .into(holder.ivAdvMultiSelect);
         }
 
-        holder.checkBox.setChecked(checkedItems.contains(item));
+        GradientDrawable gradientDrawable = (GradientDrawable)holder.checkBox.getBackground();
+        gradientDrawable.setColor(Color.parseColor("#ffffff"));
+        gradientDrawable.setStroke( (int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
 
-        holder.checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (compoundButton.isPressed()) {
-                if (!isEnabled) {
-                    compoundButton.setChecked(!isChecked);
-                    return;
-                }
-                multiSelectListener.itemSelected(item);
-            }
+        if(checkedItems.contains(item)){
+            gradientDrawable.setStroke( (int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        }
+
+        holder.checkBox.setOnClickListener(v -> {
+            multiSelectListener.itemSelected(item);
         });
+
+//        holder.checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+//            if (compoundButton.isPressed()) {
+//                if (!isEnabled) {
+//                    compoundButton.setChecked(!isChecked);
+//                    return;
+//                }
+//                multiSelectListener.itemSelected(item);
+//            }
+//        });
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);
@@ -126,7 +141,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBox;
+        LinearLayout checkBox;
         TextView textView;
         ImageView ivAdvMultiSelect;
 
