@@ -1,5 +1,9 @@
 package kore.botssdk.viewholders;
 
+import static kore.botssdk.viewUtils.DimensionUtil.dp1;
+
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
@@ -7,12 +11,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.core.content.ContextCompat;
 
 import java.util.Map;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.net.SDKConfiguration;
 
 public class ClockTemplateHolder extends BaseViewHolder {
     private final String MERIDIAN_AM = "AM";
@@ -43,11 +49,15 @@ public class ClockTemplateHolder extends BaseViewHolder {
     @Override
     public void bind(BaseBotMessage baseBotMessage) {
         msgId = ((BotResponse) baseBotMessage).getMessageId();
+        ColorStateList thumbTintList = getThumbTint();
+        seekbarHours.setThumbTintList(thumbTintList);
+        seekbarMinutes.setThumbTintList(thumbTintList);
+
         setSeekbarListener(seekbarHours, seekbarMinutes);
         setSeekbarListener(seekbarMinutes, seekbarHours);
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
         String selectedTime = contentState != null ? (String) contentState.get(BotResponse.SELECTED_TIME) : itemView.getContext().getString(R.string.default_click_time);
-        if (!selectedTime.isEmpty()) {
+        if (selectedTime != null && !selectedTime.isEmpty()) {
             String[] currentTime = selectedTime.split(":");
             hoursText.setText(currentTime[0]);
             minutesText.setText(currentTime[1]);
@@ -65,6 +75,9 @@ public class ClockTemplateHolder extends BaseViewHolder {
             seekbarHours.setProgress(progress);
             seekbarMinutes.setProgress(Integer.parseInt(currentTime[1]));
         }
+        confirm.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        confirm.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+        setRoundedCorner(confirm, 4 * dp1);
         confirm.setOnClickListener(view -> {
             String msg = hoursText.getText() + ":" + minutesText.getText() + " " + amPm.getText();
             composeFooterInterface.onSendClick(msg, msg, false);
@@ -114,5 +127,24 @@ public class ClockTemplateHolder extends BaseViewHolder {
                 contentStateListener.onSaveState(msgId, selTime, BotResponse.SELECTED_TIME);
             }
         });
+    }
+
+    private ColorStateList getThumbTint() {
+        int defaultColor = Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor);
+        int pressedColor = ContextCompat.getColor(context, R.color.color_a7b0be);
+        int disableColor = ContextCompat.getColor(context, R.color.color_efefef);
+
+        int[][] states = new int[][]{
+                new int[]{android.R.attr.state_pressed},
+                new int[]{android.R.attr.state_enabled},
+                new int[]{-android.R.attr.state_enabled}
+        };
+        int[] colors = new int[]{
+                defaultColor,
+                pressedColor,
+                disableColor
+        };
+
+        return new ColorStateList(states, colors);
     }
 }

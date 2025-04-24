@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -26,8 +27,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -426,7 +429,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         this.contentStateListener = contentStateListener;
     }
 
-    protected void setRoundedCorner(View view, float radius) {
+    public static void setRoundedCorner(View view, float radius) {
         view.setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
@@ -435,5 +438,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             }
         });
         view.setClipToOutline(true);
+    }
+
+    public static Drawable getTintDrawable(Context context, String color, int drawable) {
+        Drawable buttonDrawable = AppCompatResources.getDrawable(context, drawable);
+        Drawable wrappedDrawable = DrawableCompat.wrap(buttonDrawable);
+        DrawableCompat.setTint(wrappedDrawable, Color.parseColor(color));
+        return wrappedDrawable;
     }
 }

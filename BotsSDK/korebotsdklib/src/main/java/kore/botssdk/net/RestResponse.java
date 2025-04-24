@@ -178,7 +178,7 @@ public class RestResponse {
         private BotMessage message;
         private String resourceid = "/bot.message";
         private BotInfoModel botInfo;
-        private int clientMessageId = (int) System.currentTimeMillis();
+        private double clientMessageId = System.currentTimeMillis();
         private Meta meta;
         private Object id = clientMessageId;
         private String client = "Android";
@@ -204,11 +204,11 @@ public class RestResponse {
             this.botInfo = botInfo;
         }
 
-        public int getClientMessageId() {
+        public double getClientMessageId() {
             return clientMessageId;
         }
 
-        public void setClientMessageId(int clientMessageId) {
+        public void setClientMessageId(long clientMessageId) {
             this.clientMessageId = clientMessageId;
         }
 

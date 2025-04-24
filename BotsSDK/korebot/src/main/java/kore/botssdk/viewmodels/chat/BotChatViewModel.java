@@ -32,7 +32,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.BotChatActivity;
+import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.listener.BaseSocketConnectionManager;
@@ -380,7 +380,7 @@ public class BotChatViewModel extends ViewModel {
             nBuilder.setSound(alarmSound);
         }
 
-        Intent intent = new Intent(context, BotChatActivity.class);
+        Intent intent = new Intent(context, NewBotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);

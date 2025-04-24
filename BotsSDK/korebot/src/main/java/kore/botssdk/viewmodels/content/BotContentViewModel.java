@@ -2,6 +2,7 @@ package kore.botssdk.viewmodels.content;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -11,6 +12,8 @@ import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -139,22 +142,24 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
     }
 
     public CalendarConstraints.Builder minRange(String startDate, String date, String format) {
+        format = format.replaceAll("YY", "yy");
         if (StringUtils.isNullOrEmpty(date) && StringUtils.isNullOrEmpty(startDate)) {
             CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
             constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
 
             return constraintsBuilderRange;
         } else if (!StringUtils.isNullOrEmpty(startDate) && !StringUtils.isNullOrEmpty(date)) {
-            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, format, 0));
-            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
-
-            ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
-            listValidators.add(dateValidatorMin);
-            listValidators.add(dateValidatorMax);
-
-            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
+            long startDateMillis = DateUtils.getDateFromFormat(startDate, format, 0);
+            long endDateMillis = DateUtils.getDateFromFormat(date, format, 1);
             CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-            constraintsBuilderRange.setValidator(validators);
+            constraintsBuilderRange.setStart(startDateMillis);
+            constraintsBuilderRange.setEnd(endDateMillis);
+            CalendarConstraints.DateValidator minValidator = DateValidatorPointForward.from(startDateMillis);
+            CalendarConstraints.DateValidator maxValidator = DateValidatorPointBackward.before(endDateMillis);
+            List<CalendarConstraints.DateValidator> validators = Arrays.asList(minValidator, maxValidator);
+            CalendarConstraints.DateValidator compositeValidator = CompositeDateValidator.allOf(validators);
+
+            constraintsBuilderRange.setValidator(compositeValidator);
 
             return constraintsBuilderRange;
         } else if (!StringUtils.isNullOrEmpty(startDate)) {

@@ -1,5 +1,7 @@
 package kore.botssdk.adapter;
 
+import static kore.botssdk.viewholders.BaseViewHolder.getTintDrawable;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AdvanceListRefreshEvent;
 import kore.botssdk.models.AdvanceOptionsModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 
@@ -99,7 +102,7 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
             holder.ivOptions.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_check_off));
 
             if (dataObj.isChecked())
-                holder.ivOptions.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_check_on));
+                holder.ivOptions.setBackground(getTintDrawable(holder.ivOptions.getContext(), SDKConfiguration.BubbleColors.quickReplyColor, R.drawable.ic_radio_checked));
         } else {
             holder.ivOptions.setBackground(ContextCompat.getDrawable(context, R.mipmap.multi_un_checked_checkbox));
 

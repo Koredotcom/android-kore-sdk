@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.google.android.material.datepicker.CalendarConstraints;
-import com.google.android.material.datepicker.CompositeDateValidator;
-import com.google.android.material.datepicker.DateValidatorPointBackward;
-import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.gson.Gson;
 
 import java.text.ParseException;
@@ -226,84 +220,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         quickReplyView.populateQuickReplyView(quickReplyTemplates);
     }
 
-    public void showCalendarIntoFooter(BotResponse botResponse) {
-        if (botResponse != null && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
-            ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
-            if (compModel != null) {
-                String compType = compModel.getType();
-                if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(compType)) {
-                    PayloadOuter payOuter = compModel.getPayload();
-                    PayloadInner payInner = payOuter.getPayload();
-                    if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
-                        builder.setTitleText(payInner.getTitle());
-                        builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
-                        builder.setCalendarConstraints(minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
-                        builder.setTheme(R.style.MyMaterialCalendarTheme);
-
-                        try {
-                            MaterialDatePicker<Long> picker = builder.build();
-                            picker.show(requireActivity().getSupportFragmentManager(), picker.toString());
-
-                            picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Long>() {
-                                @Override
-                                public void onPositiveButtonClick(Long selection) {
-                                    Calendar calendar = Calendar.getInstance();
-                                    calendar.setTimeInMillis(selection);
-                                    int stYear = calendar.get(Calendar.YEAR);
-                                    int stMonth = calendar.get(Calendar.MONTH);
-                                    int stDay = calendar.get(Calendar.DAY_OF_MONTH);
-
-                                    String formattedDate = ((stMonth + 1) > 9 ? (stMonth + 1) : "0" + (stMonth + 1)) + "-" + (stDay > 9 ? stDay : "0" + stDay) + "-" + stYear;
-
-                                    composeFooterInterface.onSendClick(formattedDate, false);
-                                }
-                            });
-                        } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE_RANGE.equalsIgnoreCase(payInner.getTemplate_type())) {
-                        initSettings();
-                        MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
-                        builder.setTitleText(payInner.getTitle());
-                        builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
-                        builder.setCalendarConstraints(minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
-                        builder.setTheme(R.style.MyMaterialCalendarTheme);
-
-                        try {
-                            MaterialDatePicker<Pair<Long, Long>> picker = builder.build();
-                            picker.show(requireActivity().getSupportFragmentManager(), picker.toString());
-                            picker.addOnPositiveButtonClickListener(new MaterialPickerOnPositiveButtonClickListener<Pair<Long, Long>>() {
-                                @Override
-                                public void onPositiveButtonClick(Pair<Long, Long> selection) {
-                                    Long startDate = selection.first;
-                                    Long endDate = selection.second;
-
-                                    Calendar cal = Calendar.getInstance();
-                                    cal.setTimeInMillis(startDate);
-                                    int strYear = cal.get(Calendar.YEAR);
-                                    int strMonth = cal.get(Calendar.MONTH);
-                                    int strDay = cal.get(Calendar.DAY_OF_MONTH);
-
-                                    cal.setTimeInMillis(endDate);
-                                    int endYear = cal.get(Calendar.YEAR);
-                                    int endMonth = cal.get(Calendar.MONTH);
-                                    int endDay = cal.get(Calendar.DAY_OF_MONTH);
-
-                                    String formatedDate = DateUtils.getMonthName(strMonth) + " " + strDay + DateUtils.getDayOfMonthSuffix(strDay) + ", " + strYear;
-                                    formatedDate = formatedDate + " to " + DateUtils.getMonthName(endMonth) + " " + endDay + DateUtils.getDayOfMonthSuffix(endDay) + ", " + endYear;
-                                    composeFooterInterface.onSendClick(formatedDate, false);
-                                }
-                            });
-                        } catch (IllegalArgumentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     private ArrayList<QuickReplyTemplate> getQuickReplies(BotResponse botResponse) {
 
         ArrayList<QuickReplyTemplate> quickReplyTemplates = null;
@@ -418,7 +334,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     if (rBody.isSuccessful() && history != null) {
                         List<BotHistoryMessage> messages = history.getMessages();
                         ArrayList<BaseBotMessage> msgs;
-                        if (messages != null && messages.size() > 0) {
+                        if (messages != null && !messages.isEmpty()) {
                             msgs = new ArrayList<>();
                             for (int index = 0; index < messages.size(); index++) {
                                 BotHistoryMessage msg = messages.get(index);
@@ -496,7 +412,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                     if (rBody.isSuccessful() && history != null) {
                         List<BotHistoryMessage> messages = history.getMessages();
                         ArrayList<BaseBotMessage> msgs;
-                        if (messages != null && messages.size() > 0) {
+                        if (messages != null && !messages.isEmpty()) {
                             msgs = new ArrayList<>();
                             for (int index = 0; index < messages.size(); index++) {
                                 BotHistoryMessage msg = messages.get(index);
@@ -576,101 +492,6 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
         Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         utc.clear();
         return utc;
-    }
-
-    /*
-      Limit selectable Date range
-    */
-    private CalendarConstraints.Builder minRange(String startDate, String date, String format) {
-
-        if (StringUtils.isNullOrEmpty(date) && StringUtils.isNullOrEmpty(startDate)) {
-            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-            constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
-
-            return constraintsBuilderRange;
-        } else if (!StringUtils.isNullOrEmpty(startDate) && !StringUtils.isNullOrEmpty(date)) {
-            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, format, 0));
-            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
-
-            ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
-            listValidators.add(dateValidatorMin);
-            listValidators.add(dateValidatorMax);
-
-            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
-            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-            constraintsBuilderRange.setValidator(validators);
-
-            return constraintsBuilderRange;
-        } else if (!StringUtils.isNullOrEmpty(startDate)) {
-            CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, format, 0));
-
-            ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
-            listValidators.add(dateValidatorMin);
-
-            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
-            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-            constraintsBuilderRange.setValidator(validators);
-
-            return constraintsBuilderRange;
-        } else if (!StringUtils.isNullOrEmpty(date)) {
-            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
-
-            ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
-            listValidators.add(dateValidatorMax);
-
-            CalendarConstraints.DateValidator validators = CompositeDateValidator.allOf(listValidators);
-            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-            constraintsBuilderRange.setValidator(validators);
-
-            return constraintsBuilderRange;
-        } else {
-            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-            constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
-
-            return constraintsBuilderRange;
-        }
-    }
-
-    static class RangeValidator implements CalendarConstraints.DateValidator {
-
-        final long minDate;
-        final long maxDate;
-
-        RangeValidator(Parcel parcel) {
-            minDate = parcel.readLong();
-            maxDate = parcel.readLong();
-        }
-
-        @Override
-        public boolean isValid(long date) {
-            return !(minDate > date || maxDate < date);
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeLong(minDate);
-            dest.writeLong(maxDate);
-        }
-
-        public static final Creator<RangeValidator> CREATOR = new Creator<RangeValidator>() {
-
-            @Override
-            public RangeValidator createFromParcel(Parcel parcel) {
-                return new RangeValidator(parcel);
-            }
-
-            @Override
-            public RangeValidator[] newArray(int size) {
-                return new RangeValidator[size];
-            }
-        };
-
-
     }
 
     public void loadChatHistory(final int _offset, final int limit) {
@@ -812,7 +633,7 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         offset = _offset + re.getOriginalSize();
                     }
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         int pos = 0;
                         ArrayList<BaseBotMessage> botResp = new ArrayList<>();
                         ArrayList<BaseBotMessage> currentList = botsChatAdapter.getBaseBotMessageArrayList();
@@ -882,11 +703,11 @@ public class BotContentFragment extends Fragment implements BotContentFragmentUp
                         offset = re.getOriginalSize();
                     }
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         addMessagesToBotChatAdapter(list, true);
                     }
 
-                    if (list != null && list.size() > 0) {
+                    if (list != null && !list.isEmpty()) {
                         addMessagesToBotChatAdapter(list, _offset == 0);
                     }
 

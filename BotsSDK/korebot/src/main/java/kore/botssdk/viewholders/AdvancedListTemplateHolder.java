@@ -36,8 +36,10 @@ public class AdvancedListTemplateHolder extends BaseViewHolder {
         TextView botListViewTitle = itemView.findViewById(R.id.botListViewTitle);
         TextView tvDescription = itemView.findViewById(R.id.tvDescription);
         ImageView ivSearch = itemView.findViewById(R.id.ivSearch);
+        ImageView ivFilter = itemView.findViewById(R.id.ivFilter);
 
         ivSearch.setVisibility(payloadInner.isSearchEnabled() ? VISIBLE : GONE);
+        ivFilter.setVisibility(payloadInner.isSortEnabled() ? VISIBLE : GONE);
         botCustomListViewButton.setVisibility(GONE);
         botListViewTitle.setVisibility(!StringUtils.isNullOrEmpty(payloadInner.getTitle()) ? VISIBLE : GONE);
         botListViewTitle.setText(payloadInner.getTitle());
@@ -58,7 +60,7 @@ public class AdvancedListTemplateHolder extends BaseViewHolder {
             botCustomListViewButton.setText(payloadInner.getSeeMoreTitle());
             botCustomListViewButton.setTextColor(itemView.getContext().getColor(R.color.bgBlueSignup));
         } else {
-            botCustomListViewButton.setVisibility(VISIBLE);
+            botCustomListViewButton.setVisibility(GONE);
         }
 
         botCustomListViewButton.setOnClickListener(v -> {

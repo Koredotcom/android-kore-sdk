@@ -28,12 +28,6 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
-            android:name=".activity.BotChatActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme"
-            android:windowSoftInputMode="adjustResize" />
-
-        <activity
             android:name=".activity.NewBotChatActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"

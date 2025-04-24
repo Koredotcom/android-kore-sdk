@@ -78,7 +78,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
                     ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
                     bottomSheetDialog.setIsFromFullView(false);
                     bottomSheetDialog.setSkillName("skillName", "trigger");
-                    bottomSheetDialog.setData(botListViewMoreDataModel);
+                    bottomSheetDialog.setData(payloadInner.getHeading() != null ? payloadInner.getHeading() : payloadInner.getText(), botListViewMoreDataModel);
                     bottomSheetDialog.setHeaderVisible(true);
                     if (isLastItem()) bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                     bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

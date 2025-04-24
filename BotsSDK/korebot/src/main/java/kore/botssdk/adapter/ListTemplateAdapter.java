@@ -1,10 +1,7 @@
 package kore.botssdk.adapter;
 
-import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
-
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.linkify.LinkifyPlugin;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -28,9 +27,6 @@ import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
-import kore.botssdk.utils.markdown.MarkdownTagHandler;
-import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.viewUtils.RoundedCornersTransform;
 
 public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapter.ViewHolder> {
@@ -68,13 +64,12 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
         if (!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
 
-            String textualContent = unescapeHtml4(botListModel.getSubtitle());
-            textualContent = StringUtils.unescapeHtml3(textualContent.trim());
-            textualContent = MarkdownUtil.processMarkDown(textualContent);
-            CharSequence sequence = HtmlCompat.fromHtml(textualContent.replace("\n", "<br />"), HtmlCompat.FROM_HTML_MODE_LEGACY, new MarkdownImageTagHandler(context, holder.botListItemSubtitle, textualContent), new MarkdownTagHandler());
-            SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+            Markwon markwon = Markwon.builder(holder.itemView.getContext())
+                    .usePlugin(HtmlPlugin.create())
+                    .usePlugin(LinkifyPlugin.create())
+                    .build();
 
-            holder.botListItemSubtitle.setText(strBuilder);
+            markwon.setMarkdown(holder.botListItemSubtitle, botListModel.getSubtitle());
         }
         if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
             holder.botListItemButton.setVisibility(View.GONE);
