@@ -1,8 +1,7 @@
 package kore.botssdk.adapter;
 
-import static android.view.Gravity.CENTER_VERTICAL;
-
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +40,7 @@ public class TableHeaderAdapter extends RecyclerView.Adapter<TableHeaderAdapter.
         List<String> item = getItem(position);
         if (item == null) return;
         holder.value.setText(item.get(0));
+        holder.value.setTypeface(holder.value.getTypeface(), Typeface.BOLD);
         holder.value.setGravity(Gravity.CENTER);
         if (item.size() > 1) {
             switch (item.get(1)) {

@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/ivOptions"
-        android:layout_width="@dimen/dimen_25dp"
-        android:layout_height="@dimen/dimen_25dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_margin="@dimen/dimen_7dp"
         android:background="@drawable/checkbox_drawable"
         android:contentDescription="@string/app_name" />

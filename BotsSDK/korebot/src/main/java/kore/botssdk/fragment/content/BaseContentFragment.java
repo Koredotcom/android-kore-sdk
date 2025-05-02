@@ -109,6 +109,7 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
                     if (payInner != null && BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type())) {
                         MaterialDatePicker.Builder<Long> builder = MaterialDatePicker.Builder.datePicker();
                         builder.setTitleText(payInner.getTitle());
+                        builder.setPositiveButtonText(getString(R.string.confirm));
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
                         builder.setCalendarConstraints(mContentViewModel.minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
@@ -116,7 +117,6 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
                         try {
                             MaterialDatePicker<Long> picker = builder.build();
                             picker.show(requireActivity().getSupportFragmentManager(), picker.toString());
-
                             picker.addOnPositiveButtonClickListener(selection -> {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTimeInMillis(selection);
@@ -124,7 +124,7 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
                                 int stMonth = calendar.get(Calendar.MONTH);
                                 int stDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                                String formattedDate = ((stMonth + 1) > 9 ? (stMonth + 1) : "0" + (stMonth + 1)) + "-" + (stDay > 9 ? stDay : "0" + stDay) + "-" + stYear;
+                                String formattedDate = ((stMonth + 1) > 9 ? (stMonth + 1) : "0" + (stMonth + 1)) + "/" + (stDay > 9 ? stDay : "0" + stDay) + "/" + stYear;
 
                                 composeFooterInterface.onSendClick(formattedDate, false);
                             });
@@ -135,6 +135,7 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
                         initSettings();
                         MaterialDatePicker.Builder<Pair<Long, Long>> builder = MaterialDatePicker.Builder.dateRangePicker();
                         builder.setTitleText(payInner.getTitle());
+                        builder.setPositiveButtonText(getString(R.string.confirm));
                         builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR);
                         builder.setCalendarConstraints(mContentViewModel.minRange(payInner.getStartDate(), payInner.getEndDate(), payInner.getFormat()).build());
                         builder.setTheme(R.style.MyMaterialCalendarTheme);
@@ -157,9 +158,10 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
                                 int endMonth = cal.get(Calendar.MONTH);
                                 int endDay = cal.get(Calendar.DAY_OF_MONTH);
 
-                                String formatedDate = DateUtils.getMonthName(strMonth) + " " + strDay + DateUtils.getDayOfMonthSuffix(strDay) + ", " + strYear;
-                                formatedDate = formatedDate + " to " + DateUtils.getMonthName(endMonth) + " " + endDay + DateUtils.getDayOfMonthSuffix(endDay) + ", " + endYear;
-                                composeFooterInterface.onSendClick(formatedDate, false);
+                                String formatedStartDate = ((strDay + 1) > 9 ? (strDay + 1) : "0" + (strDay + 1)) + "-" + ((strMonth + 1) > 9 ? (strMonth + 1) : "0" + (strMonth + 1)) + "-" + strYear;
+                                String formatedEndDate = ((endDay + 1) > 9 ? (endDay + 1) : "0" + (endDay + 1)) + "-" + ((endMonth + 1) > 9 ? (endMonth + 1) : "0" + (endMonth + 1)) + "-" + endYear;
+                                formatedStartDate = formatedStartDate + " to " + formatedEndDate;
+                                composeFooterInterface.onSendClick(formatedStartDate, false);
                             });
                         } catch (IllegalArgumentException e) {
                             e.printStackTrace();

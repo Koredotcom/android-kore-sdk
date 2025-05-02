@@ -67,6 +67,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     public AdvancedListAdapter(Context context, ListView parentListView) {
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
+        roundedCornersTransform.setRadius(10);
         this.parentListView = parentListView;
         popUpView = View.inflate(context, R.layout.advancelist_drop_down_popup, null);
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -266,12 +267,12 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         holder.botListItemRoot.setBackground(layerDrawable);
 
         if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.DEFAULT)) {
-            if (botListModel.getTextInformation() != null && botListModel.getTextInformation().size() > 0) {
+            if (botListModel.getTextInformation() != null && !botListModel.getTextInformation().isEmpty()) {
                 holder.lvDetails.setVisibility(View.VISIBLE);
                 holder.lvDetails.setAdapter(new AdvanceListdetailsAdapter(context, botListModel.getTextInformation()));
             }
 
-            if (botListModel.getButtons() != null && botListModel.getButtons().size() > 0) {
+            if (botListModel.getButtons() != null && !botListModel.getButtons().isEmpty()) {
                 int displayLimit = 0;
                 holder.rvDefaultButtons.setVisibility(View.VISIBLE);
                 holder.llButtonMore.setVisibility(GONE);
@@ -320,12 +321,12 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         } else if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.OPTIONS)) {
             AdvanceOptionsAdapter advanceOptionsAdapter = null;
 
-            if (botListModel.getOptionsData() != null && botListModel.getOptionsData().size() > 0) {
+            if (botListModel.getOptionsData() != null && !botListModel.getOptionsData().isEmpty()) {
                 holder.llOptions.setVisibility(View.VISIBLE);
                 holder.lvOptions.setAdapter(advanceOptionsAdapter = new AdvanceOptionsAdapter(context, botListModel.getOptionsData()));
             }
 
-            if (botListModel.getButtons() != null && botListModel.getButtons().size() > 0) {
+            if (botListModel.getButtons() != null && !botListModel.getButtons().isEmpty()) {
                 if (!StringUtils.isNullOrEmpty(botListModel.getButtonAligment())) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.gravity = Gravity.START;
@@ -343,13 +344,13 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 holder.rvOptionButtons.setAdapter(advanceListButtonAdapter);
             }
         } else if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.TABLE)) {
-            if (botListModel.getTableListData() != null && botListModel.getTableListData().size() > 0) {
+            if (botListModel.getTableListData() != null && !botListModel.getTableListData().isEmpty()) {
                 holder.lvTableList.setVisibility(View.VISIBLE);
                 holder.lvTableList.setAdapter(new AdvanceTableListOuterAdapter(context, botListModel.getTableListData()));
             }
         }
 
-        if (botListModel.getHeaderOptions() != null && botListModel.getHeaderOptions().size() > 0) {
+        if (botListModel.getHeaderOptions() != null && !botListModel.getHeaderOptions().isEmpty()) {
             holder.rlAction.setVisibility(View.VISIBLE);
 
             for (HeaderOptionsModel headerOptionsModel : botListModel.getHeaderOptions()) {
@@ -421,6 +422,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
                                     composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
                                 else {
+                                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
                                     botListModel.setCollapsed(!botListModel.isCollapsed());
                                     notifyDataSetChanged();
                                 }
@@ -513,6 +515,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
                                     composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
                                 else {
+                                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
                                     botListModel.setCollapsed(!botListModel.isCollapsed());
                                     notifyDataSetChanged();
                                 }
@@ -566,6 +569,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
             holder.ivAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
                     botListModel.setCollapsed(!botListModel.isCollapsed());
                     notifyDataSetChanged();
                 }

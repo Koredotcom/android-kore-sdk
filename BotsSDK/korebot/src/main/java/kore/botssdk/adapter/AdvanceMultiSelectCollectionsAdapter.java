@@ -4,11 +4,13 @@ package kore.botssdk.adapter;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,6 +23,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 
@@ -84,10 +87,12 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     }
 
     private void populateVIew(ViewHolder holder, int position) {
-        final AdvanceMultiSelectCollectionModel item = (AdvanceMultiSelectCollectionModel) getItem(position);
+        final AdvanceMultiSelectCollectionModel item = getItem(position);
         if (item == null) return;
-        holder.textView.setTag(item);
-        holder.textView.setText(item.getTitle());
+        holder.title.setTag(item);
+        holder.title.setText(item.getTitle());
+        holder.description.setVisibility(item.getDescription() != null ? View.VISIBLE : View.GONE);
+        holder.description.setText(item.getDescription());
 
         if (!StringUtils.isNullOrEmpty(item.getImage_url())) {
             holder.ivAdvMultiSelect.setVisibility(View.VISIBLE);
@@ -99,17 +104,28 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
                     .into(holder.ivAdvMultiSelect);
         }
 
-        holder.checkBox.setChecked(checkedItems.contains(item));
+        GradientDrawable gradientDrawable = (GradientDrawable) holder.checkBox.getBackground();
+        gradientDrawable.setColor(Color.parseColor("#ffffff"));
+        gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
 
-        holder.checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (compoundButton.isPressed()) {
-                if (!isEnabled) {
-                    compoundButton.setChecked(!isChecked);
-                    return;
-                }
-                multiSelectListener.itemSelected(item);
-            }
+        if (checkedItems.contains(item)) {
+            gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        }
+
+        holder.checkBox.setOnClickListener(v -> {
+            multiSelectListener.itemSelected(item);
         });
+
+//        holder.checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
+//            if (compoundButton.isPressed()) {
+//                if (!isEnabled) {
+//                    compoundButton.setChecked(!isChecked);
+//                    return;
+//                }
+//                multiSelectListener.itemSelected(item);
+//            }
+//        });
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);
@@ -126,18 +142,20 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBox;
-        TextView textView;
+        LinearLayout checkBox;
+        TextView title;
+        TextView description;
         ImageView ivAdvMultiSelect;
 
         public ViewHolder(@NonNull View convertView, int viewType) {
             super(convertView);
             if (viewType == MULTI_SELECT_ITEM) {
-                textView = convertView.findViewById(R.id.text_view);
+                title = convertView.findViewById(R.id.title);
+                description = convertView.findViewById(R.id.description);
                 checkBox = convertView.findViewById(R.id.check_multi_item);
                 ivAdvMultiSelect = convertView.findViewById(R.id.ivAdvMultiSelect);
             } else {
-                textView = convertView.findViewById(R.id.text_view_button);
+                title = convertView.findViewById(R.id.text_view_button);
             }
 
             KaFontUtils.applyCustomFont(convertView.getContext(), convertView);

@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.util.Base64;
 import android.view.LayoutInflater;
@@ -36,6 +38,7 @@ import kore.botssdk.listener.AdvanceButtonClickListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.Widget;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewUtils.RoundedCornersTransform;
@@ -74,10 +77,12 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
 
     @Override
     public void onBindViewHolder(@NonNull AdvanceListButtonAdapter.ButtonViewHolder holder, int i) {
-
         Widget.Button btn = buttons.get(i);
         holder.tv.setText(btn.getTitle());
         holder.ivBtnImage.setVisibility(GONE);
+        GradientDrawable gradientDrawable = (GradientDrawable) (holder.layoutDetails.getBackground() != null ? holder.layoutDetails : holder.buttonsLayout).getBackground();
+        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
         if (!StringUtils.isNullOrEmpty(btn.getIcon())) {
             holder.ivBtnImage.setVisibility(View.VISIBLE);
@@ -122,7 +127,7 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
                 advanceButtonClickListner.closeWindow();
         });
 
-        holder.layout_deails.setOnClickListener(view -> {
+        holder.layoutDetails.setOnClickListener(view -> {
 
             if (!StringUtils.isNullOrEmpty(btn.getBtnType())) {
                 if (btn.getBtnType().equalsIgnoreCase("confirm")) {
@@ -174,13 +179,15 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
         final TextView tv;
         final ImageView ivBtnImage;
-        final LinearLayout layout_deails;
+        final LinearLayout layoutDetails;
+        final LinearLayout buttonsLayout;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
             tv = itemView.findViewById(R.id.buttonTV);
             ivBtnImage = itemView.findViewById(R.id.ivBtnImage);
-            layout_deails = itemView.findViewById(R.id.layout_deails);
+            layoutDetails = itemView.findViewById(R.id.layout_deails);
+            buttonsLayout = itemView.findViewById(R.id.buttonsLayout);
         }
     }
 

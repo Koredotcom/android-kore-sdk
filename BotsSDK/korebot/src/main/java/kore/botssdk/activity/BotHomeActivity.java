@@ -99,7 +99,7 @@ public class BotHomeActivity extends BotAppCompactActivity implements ProviderIn
      * Launching BotchatActivity where user can interact with bot
      */
     void launchBotChatActivity() {
-        Intent intent = new Intent(getApplicationContext(), BotChatActivity.class);
+        Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);

@@ -46,6 +46,7 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getHeading(), baseBotMessage.getTimeStamp());
         msgId = ((BotResponse) baseBotMessage).getMessageId();
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
         if (contentState != null && contentState.containsKey(BotResponse.SELECTED_ITEM)) {
@@ -86,6 +87,7 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
             }
 
             tvViewMore.setOnClickListener(v -> {
+                if (!isLastItem()) return;
                 contentStateListener.onSaveState(msgId, true, BotResponse.IS_VIEW_MORE);
             });
 
@@ -94,7 +96,7 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
                 StringBuilder stringBuffer = new StringBuilder();
                 stringBuffer.append("Here are the selected items : ");
                 for (int i = 0; i < allCheckedItems.size(); i++) {
-                    stringBuffer.append(allCheckedItems.get(i).getValue());
+                    stringBuffer.append(allCheckedItems.get(i).getTitle());
 
                     if (i != allCheckedItems.size() - 1)
                         stringBuffer.append(",");

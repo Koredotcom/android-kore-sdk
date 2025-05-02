@@ -76,10 +76,11 @@
 
         <ImageView
             android:id="@+id/ivAction"
-            android:layout_width="@dimen/dimen_10dp"
-            android:layout_height="@dimen/dimen_10dp"
+            android:layout_width="@dimen/dimen_14dp"
+            android:layout_height="@dimen/dimen_14dp"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:contentDescription="@string/app_name"
+            android:padding="2dp"
             android:visibility="gone" />
 
     </LinearLayout>

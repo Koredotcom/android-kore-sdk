@@ -42,6 +42,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.StringUtils;
@@ -122,6 +123,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
         PayloadOuter payloadOuter = getPayloadOuter(baseBotMessage);
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        tvDownload.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
 
         switch (payloadOuter.getType()) {
             case BundleConstants.MEDIA_TYPE_IMAGE:

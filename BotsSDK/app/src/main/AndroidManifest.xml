@@ -19,8 +19,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="kore.botssdk.activity.BotChatActivity" />
-        <activity android:name="kore.botssdk.activity.GenericWebViewActivity" />
         <activity android:name=".FragmentActivity" />
 
     </application>

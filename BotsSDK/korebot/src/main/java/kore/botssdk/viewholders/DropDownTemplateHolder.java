@@ -1,18 +1,26 @@
 package kore.botssdk.viewholders;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.widget.ImageViewCompat;
 
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Method;
@@ -27,6 +35,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfiguration;
 
 public class DropDownTemplateHolder extends BaseViewHolder {
+    private final TextView tvDropDownHeading;
     private final TextView tvDropDownTitle;
     private final TextView tvSubmit;
     private final Spinner spinner;
@@ -43,6 +52,9 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         tvDropDownTitle = itemView.findViewById(R.id.tvDropDownTitle);
         tvSubmit = itemView.findViewById(R.id.submit);
         spinner = itemView.findViewById(R.id.spinner);
+        tvDropDownHeading = itemView.findViewById(R.id.tvDropDownHeading);
+        LinearLayoutCompat llSpinner = itemView.findViewById(R.id.llSpinner);
+        setRoundedCorner(llSpinner, 10);
 
         GradientDrawable gradientDrawable = (GradientDrawable) tvSubmit.getBackground();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
@@ -56,9 +68,11 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         if (payloadInner == null) return;
         msgId = ((BotResponse) baseBotMessage).getMessageId();
         tvDropDownTitle.setText(payloadInner.getLabel());
+        tvDropDownHeading.setVisibility(payloadInner.getHeading() != null ? VISIBLE : GONE);
+        tvDropDownHeading.setText(payloadInner.getHeading());
         placeHolder = payloadInner.getPlaceholder();
         List<DropDownElementsModel> elements = payloadInner.getDropDownElementsModels();
-        SpinnerAdapter dataAdapter = new SpinnerAdapter(itemView.getContext(), elements, spinner, isLastItem());
+        SpinnerAdapter dataAdapter = new SpinnerAdapter(itemView.getContext(), elements, spinner, isLastItem(), spinner.getSelectedItemPosition());
         spinner.setAdapter(dataAdapter);
         spinner.setPrompt(itemView.getContext().getString(R.string.select));
         spinner.setClickable(isLastItem());
@@ -72,7 +86,6 @@ public class DropDownTemplateHolder extends BaseViewHolder {
                 composeFooterInterface.onSendClick(elements.get(selectedIndex).getTitle(), false);
             }
         });
-
     }
 
     public class SpinnerAdapter extends BaseAdapter {
@@ -80,12 +93,16 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         private final List<DropDownElementsModel> elements;
         private final Spinner spinner;
         private final boolean isLastItem;
+        private final int selectedPosition;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
 
-        public SpinnerAdapter(Context context, List<DropDownElementsModel> elements, Spinner spinner, boolean isLastItem) {
+        public SpinnerAdapter(Context context, List<DropDownElementsModel> elements, Spinner spinner, boolean isLastItem, int selectedPosition) {
             this.inflater = LayoutInflater.from(context);
             this.elements = elements;
             this.spinner = spinner;
             this.isLastItem = isLastItem;
+            this.selectedPosition = selectedPosition;
         }
 
         @Override
@@ -110,11 +127,14 @@ public class DropDownTemplateHolder extends BaseViewHolder {
                 convertView = inflater.inflate(R.layout.drop_down_item_view, null);
                 holder = new ViewHolder();
                 holder.item = convertView.findViewById(R.id.item);
+                holder.llLayout = convertView.findViewById(R.id.bot_options_more);
+                holder.ivTick = convertView.findViewById(R.id.ivTick);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
+            holder.llLayout.setBackgroundColor(Color.WHITE);
+            holder.ivTick.setVisibility(GONE);
             holder.item.setText(elements.get(position).getTitle());
             holder.item.setOnClickListener(v -> {
                 hideSpinnerDropDown(spinner);
@@ -127,8 +147,27 @@ public class DropDownTemplateHolder extends BaseViewHolder {
             return convertView;
         }
 
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            LinearLayout view = (LinearLayout) super.getDropDownView(position, convertView, parent);
+            ImageView ivTick = view.findViewById(R.id.ivTick);
+
+            if ((selectedPosition == -1 && position == 0) || selectedPosition == position) {
+                view.setBackgroundColor(Color.parseColor(leftBgColor));
+                ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                ivTick.setImageTintList(colorStateList);
+                ivTick.setVisibility(VISIBLE);
+            } else {
+                view.setBackgroundColor(Color.WHITE);
+                ivTick.setVisibility(GONE);
+            }
+            return view;
+        }
+
         private class ViewHolder {
             TextView item;
+            LinearLayout llLayout;
+            ImageView ivTick;
         }
     }
 

@@ -29,6 +29,7 @@ import kore.botssdk.R;
 import kore.botssdk.adapter.BotListViewTemplateAdapter;
 import kore.botssdk.adapter.ListViewTemplateAdapter;
 import kore.botssdk.application.AppControl;
+import kore.botssdk.fileupload.utils.StringUtils;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
@@ -44,7 +45,9 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private TextView tvTab1;
     private TextView tvTab2;
+    private TextView tvOptionsTitle;
     private boolean isEnabled;
+    private String title;
 
     public String getSkillName() {
         return skillName;
@@ -65,6 +68,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         ListView lvMoreData = view.findViewById(R.id.lvMoreData);
         tvTab1 = view.findViewById(R.id.tvTab1);
         tvTab2 = view.findViewById(R.id.tvTab2);
+        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
         LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
         LinearLayout llTabHeader = view.findViewById(R.id.llTabHeader);
         LinearLayout llBottomLayout = view.findViewById(R.id.llBottomLayout);
@@ -97,6 +101,8 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
         botListTemplateAdapter.setBotListModelArrayList(model.getTab1());
         botListTemplateAdapter.notifyDataSetChanged();
+        tvOptionsTitle.setVisibility(!StringUtils.isNullOrEmpty(title) ? View.VISIBLE : View.GONE);
+        tvOptionsTitle.setText(title);
 
         llTabHeader.setVisibility(View.VISIBLE);
         if (!showHeader)
@@ -182,11 +188,13 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
     public void setIsFromFullView(boolean isFromFullView) {
     }
 
-    public void setData(BotListViewMoreDataModel taskTemplateModel) {
+    public void setData(String title, BotListViewMoreDataModel taskTemplateModel) {
+        this.title = title;
         model = taskTemplateModel;
     }
 
-    public void setData(BotListViewMoreDataModel taskTemplateModel, boolean isFromListMenu) {
+    public void setData(String title, BotListViewMoreDataModel taskTemplateModel, boolean isFromListMenu) {
+        this.title = title;
         model = taskTemplateModel;
     }
 

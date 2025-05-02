@@ -103,6 +103,7 @@
     <string name="get_started">Get Started</string>
     <string name="see_all_results">See all results</string>
     <string name="more">More</string>
+    <string name="more_">… More</string>
     <string name="download">Download</string>
     <string name="nodata">No Data</string>
     <string name="no_upcoming_meetings">No Upcoming Meetings</string>
@@ -179,7 +180,7 @@
     <string name="colon">:</string>
     <string name="default_click_time">12:00:AM</string>
     <string name="what_can_be_improved">What can be Improved ?</string>
-    <string name="select_all">Select all</string>
+    <string name="select_all">Select All</string>
     <string name="cancel">Cancel</string>
 
     <string name="attachment_upload_photo">Upload Photo</string>

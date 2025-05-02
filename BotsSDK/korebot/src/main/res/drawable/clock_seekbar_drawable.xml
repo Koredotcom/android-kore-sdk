@@ -2,7 +2,7 @@
     <!-- Non-progress part -->
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/greyHead" />
+            <solid android:color="@color/color_e4e5eb" />
         </shape>
     </item>
     <!-- Progress part -->
