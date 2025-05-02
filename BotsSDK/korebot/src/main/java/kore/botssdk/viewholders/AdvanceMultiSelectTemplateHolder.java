@@ -87,6 +87,7 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
             }
 
             tvViewMore.setOnClickListener(v -> {
+                if (!isLastItem()) return;
                 contentStateListener.onSaveState(msgId, true, BotResponse.IS_VIEW_MORE);
             });
 

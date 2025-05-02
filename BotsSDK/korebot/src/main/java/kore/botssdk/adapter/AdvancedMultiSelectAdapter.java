@@ -122,7 +122,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
 
     public void refresh() {
         visibleLimit = multiSelectModels.size();
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, visibleLimit);
     }
 
     public void setCheckedItems(ArrayList<AdvanceMultiSelectCollectionModel> checkedItems) {

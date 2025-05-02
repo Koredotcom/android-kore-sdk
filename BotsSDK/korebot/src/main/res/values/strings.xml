@@ -103,6 +103,7 @@
     <string name="get_started">Get Started</string>
     <string name="see_all_results">See all results</string>
     <string name="more">More</string>
+    <string name="more_">… More</string>
     <string name="download">Download</string>
     <string name="nodata">No Data</string>
     <string name="no_upcoming_meetings">No Upcoming Meetings</string>

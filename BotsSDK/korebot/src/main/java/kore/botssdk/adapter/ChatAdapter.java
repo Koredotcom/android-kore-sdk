@@ -231,7 +231,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                         case BotResponse.TEMPLATE_BENEFICIARY:
                             return TEMPLATE_BENEFICIARY;
                         case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE:
-                            return TEMPLATE_ADVANCE_MULTI_SELECT;
+                            return !payInner.getSliderView() ? TEMPLATE_ADVANCE_MULTI_SELECT : TEMPLATE_BUBBLE_RESPONSE;
                         case BotResponse.TEMPLATE_TYPE_RESULTS_LIST:
                             return TEMPLATE_RESULTS;
                         default:
