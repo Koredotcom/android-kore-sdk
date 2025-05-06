@@ -29,7 +29,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.repository.history.HistoryRepository;
-import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewmodels.content.BotContentViewModel;
 import kore.botssdk.viewmodels.content.BotContentViewModelFactory;
