@@ -147,7 +147,7 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
     }
 
     public CalendarConstraints.Builder minRange(String startDate, String date, String format) {
-        format = format.replaceAll("YY", "yy");
+        format = format.replaceAll("DD", "dd").replaceAll("YY", "yy");
         if (StringUtils.isNullOrEmpty(date) && StringUtils.isNullOrEmpty(startDate)) {
             CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
             constraintsBuilderRange.setValidator(DateValidatorPointForward.now());

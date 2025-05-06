@@ -32,18 +32,19 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_3dp"
-            android:background="@drawable/form_input_bg">
+            android:layout_marginTop="@dimen/dimen_3dp">
 
             <EditText
                 android:id="@+id/edtFormInput"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_30dp"
+                android:layout_height="40dp"
                 android:background="@null"
-                android:labelFor="@+id/edtFormInput"
                 android:inputType="textPassword"
-                android:textColorHint="@color/readReceiptGrey"
+                android:labelFor="@+id/edtFormInput"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
                 android:textColor="#404051"
+                android:textColorHint="@color/readReceiptGrey"
                 android:textSize="@dimen/text_size_normal" />
 
             <Button
@@ -54,7 +55,7 @@
                 android:layout_margin="@dimen/dimen_3dp"
                 android:background="@drawable/form_button_bg"
                 android:text="@string/ok"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
 
