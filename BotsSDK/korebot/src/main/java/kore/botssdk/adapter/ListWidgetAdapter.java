@@ -49,7 +49,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -143,11 +142,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
             holder.loginBtn.setOnClickListener(view -> {
                 if (mContext instanceof Activity) {
-                    if (loginModel != null) {
-                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                        intent.putExtra("url", loginModel.getUrl());
-                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                    if (loginModel != null && invokeGenericWebViewInterface != null) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(loginModel.getUrl());
                     }
                 } else {
                     Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
@@ -266,11 +262,8 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         holder.tvButtonParent.setVisibility(GONE);
                         holder.tvUrl.setVisibility(VISIBLE);
                         holder.tvUrl.setOnClickListener(v -> {
-                            if (model.getValue().getUrl().getLink() != null) {
-                                Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                                intent.putExtra("url", model.getValue().getUrl().getLink());
-                                intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-                                mContext.startActivity(intent);
+                            if (invokeGenericWebViewInterface != null && model.getValue().getUrl().getLink() != null) {
+                                invokeGenericWebViewInterface.invokeGenericWebView(model.getValue().getUrl().getLink());
                             }
                         });
 

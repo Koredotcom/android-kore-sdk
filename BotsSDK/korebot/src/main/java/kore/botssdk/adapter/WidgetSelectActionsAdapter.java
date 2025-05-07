@@ -33,6 +33,7 @@ import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.CancelEvent;
 import kore.botssdk.events.EntityEditEvent;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BaseChartModel;
 import kore.botssdk.models.BotResponse;
@@ -59,10 +60,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     private final String trigger;
     private final VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isFromListMenu = false;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public WidgetSelectActionsAdapter(Activity mainContext, WidgetActionSheetFragment widgetDialogActivity, Object model,
                                       boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper,
-                                      String skillName, String trigger,boolean isFromListMenu) {
+                                      String skillName, String trigger, boolean isFromListMenu) {
         this.widgetDialogActivity = widgetDialogActivity;
         this.model = model;
         this.skillName = skillName;
@@ -76,26 +78,20 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             this.actionList = ((Widget.Element) model).getActions();
         } else if (model instanceof WidgetListElementModel) {
             WidgetListElementModel elementModel = (WidgetListElementModel) model;
-            if(isFromListMenu)
+            if (isFromListMenu)
                 this.actionList = elementModel.getValue().getMenu();
             else
                 this.actionList = elementModel.getButtons();
-        }
-        else if(model instanceof WidgetListModel)
-        {
-            WidgetListModel listModel=(WidgetListModel)model;
-            this.actionList=listModel.getHeaderOptions().getMenu();
-        }
-        else if(model instanceof BaseChartModel)
-        {
-            BaseChartModel baseChartModel=(BaseChartModel)model;
-            this.actionList=baseChartModel.getHeaderOptions().getMenu();
-        }
-        else if(model instanceof PayloadInner)
-        {
-            PayloadInner payloadInner = (PayloadInner)model;
-            if(payloadInner.getHeaderOptions() instanceof HeaderOptionsModel)
-                this.actionList=((HeaderOptionsModel)payloadInner.getHeaderOptions()).getMenu();
+        } else if (model instanceof WidgetListModel) {
+            WidgetListModel listModel = (WidgetListModel) model;
+            this.actionList = listModel.getHeaderOptions().getMenu();
+        } else if (model instanceof BaseChartModel) {
+            BaseChartModel baseChartModel = (BaseChartModel) model;
+            this.actionList = baseChartModel.getHeaderOptions().getMenu();
+        } else if (model instanceof PayloadInner) {
+            PayloadInner payloadInner = (PayloadInner) model;
+            if (payloadInner.getHeaderOptions() instanceof HeaderOptionsModel)
+                this.actionList = ((HeaderOptionsModel) payloadInner.getHeaderOptions()).getMenu();
         }
         this.verticalListViewActionHelper = verticalListViewActionHelper;
         this.mainContext = mainContext;
@@ -107,6 +103,10 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     public WidgetCancelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(widgetDialogActivity.getContext()).inflate(R.layout.widget_cancel_laout, parent, false);
         return new WidgetCancelViewHolder(v);
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
 
@@ -254,7 +254,7 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         } else if (model instanceof WidgetListElementModel) {
             WidgetListElementModel elementModel2 = (WidgetListElementModel) model;
             Widget.Button button = null;
-            if(isFromListMenu)
+            if (isFromListMenu)
                 button = elementModel2.getValue().getMenu().get(position);
             else
                 button = elementModel2.getButtons().get(position);
@@ -267,14 +267,12 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
                     buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                 }
             });
-        }
-        else if(model instanceof WidgetListModel)
-        {
-            WidgetListModel wL=(WidgetListModel)model;
-          //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
+        } else if (model instanceof WidgetListModel) {
+            WidgetListModel wL = (WidgetListModel) model;
+            //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
             holder.tv_actions.setText(wL.getHeaderOptions().getMenu().get(position).getTitle());
             Widget.Button finalButton = wL.getHeaderOptions().getMenu().get(position);
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
@@ -282,14 +280,12 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
                     buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                 }
             });
 
-        }
-        else if(model instanceof BaseChartModel)
-        {
-            BaseChartModel ba=(BaseChartModel)model;
+        } else if (model instanceof BaseChartModel) {
+            BaseChartModel ba = (BaseChartModel) model;
             //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
             holder.tv_actions.setText(ba.getHeaderOptions().getMenu().get(position).getTitle());
             Widget.Button finalButton = ba.getHeaderOptions().getMenu().get(position);
@@ -298,23 +294,21 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
                     buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                 }
             });
-        }
-        else if(model instanceof PayloadInner)
-        {
-            PayloadInner ba= (PayloadInner)model;
-            if(ba.getHeaderOptions() instanceof HeaderOptionsModel)
-                holder.tv_actions.setText(((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().get(position).getTitle());
+        } else if (model instanceof PayloadInner) {
+            PayloadInner ba = (PayloadInner) model;
+            if (ba.getHeaderOptions() instanceof HeaderOptionsModel)
+                holder.tv_actions.setText(((HeaderOptionsModel) ba.getHeaderOptions()).getMenu().get(position).getTitle());
 
-            Widget.Button finalButton = ((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().get(position);
+            Widget.Button finalButton = ((HeaderOptionsModel) ba.getHeaderOptions()).getMenu().get(position);
             holder.tv_actions.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     (widgetDialogActivity).dismiss();
                     buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                 }
             });
         }
@@ -345,11 +339,8 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
     }
 
     public void buttonClick(Widget.Button button, boolean appendUtterance) {
-        if (button.getType() != null && button.getType().equalsIgnoreCase("url") && button.getUrl() != null) {
-            Intent intent = new Intent(mainContext, GenericWebViewActivity.class);
-            intent.putExtra("url", button.getUrl());
-            intent.putExtra("header", mainContext.getResources().getString(R.string.app_name));
-            mainContext.startActivity(intent);
+        if (button.getType() != null && button.getType().equalsIgnoreCase("url") && button.getUrl() != null && invokeGenericWebViewInterface != null) {
+            invokeGenericWebViewInterface.invokeGenericWebView(button.getUrl());
 
         } else {
             String utterance = button.getUtterance();
@@ -411,25 +402,20 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
         } else if (model instanceof Widget.Element) {
             return actionList != null ? ((Widget.Element) model).getActions().size() : 0;
         } else if (model instanceof WidgetListElementModel) {
-            if(!isFromListMenu)
+            if (!isFromListMenu)
                 return ((WidgetListElementModel) model).getButtons() != null ? ((WidgetListElementModel) model).getButtons().size() : 0;
             else
                 return ((WidgetListElementModel) model).getValue() != null && ((WidgetListElementModel) model).getValue().getMenu() != null ? ((WidgetListElementModel) model).getValue().getMenu().size() : 0;
-        }
-        else if(model instanceof BaseChartModel)
-        {
-            BaseChartModel ba=(BaseChartModel)model;
-            return actionList != null && ba.getHeaderOptions() != null && ba.getHeaderOptions().getMenu() != null ?ba.getHeaderOptions().getMenu().size():0;
-        }else if(model instanceof WidgetListModel)
-        {
-            WidgetListModel ba=(WidgetListModel)model;
-            return actionList != null && ba.getHeaderOptions() != null && ba.getHeaderOptions().getMenu() != null ?ba.getHeaderOptions().getMenu().size():0;
-        }
-        else if(model instanceof PayloadInner)
-        {
-            PayloadInner ba=(PayloadInner)model;
-            if(ba.getHeaderOptions() instanceof HeaderOptionsModel)
-                return actionList != null && ba.getHeaderOptions() != null && ((HeaderOptionsModel) ba.getHeaderOptions()).getMenu() != null ?((HeaderOptionsModel)ba.getHeaderOptions()).getMenu().size():0;
+        } else if (model instanceof BaseChartModel) {
+            BaseChartModel ba = (BaseChartModel) model;
+            return actionList != null && ba.getHeaderOptions() != null && ba.getHeaderOptions().getMenu() != null ? ba.getHeaderOptions().getMenu().size() : 0;
+        } else if (model instanceof WidgetListModel) {
+            WidgetListModel ba = (WidgetListModel) model;
+            return actionList != null && ba.getHeaderOptions() != null && ba.getHeaderOptions().getMenu() != null ? ba.getHeaderOptions().getMenu().size() : 0;
+        } else if (model instanceof PayloadInner) {
+            PayloadInner ba = (PayloadInner) model;
+            if (ba.getHeaderOptions() instanceof HeaderOptionsModel)
+                return actionList != null && ba.getHeaderOptions() != null && ((HeaderOptionsModel) ba.getHeaderOptions()).getMenu() != null ? ((HeaderOptionsModel) ba.getHeaderOptions()).getMenu().size() : 0;
         }
         return 0;
     }

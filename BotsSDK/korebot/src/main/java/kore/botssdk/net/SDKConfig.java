@@ -90,6 +90,10 @@ public class SDKConfig {
         }
     }
 
+    public static void setIsShowActionBar(boolean isShowActionBar) {
+        SDKConfiguration.setIsShowActionBar(isShowActionBar);
+    }
+
     public static void setIsShowIconTop(boolean isShow) {
         SDKConfiguration.OverrideKoreConfig.showIconTop = isShow;
     }

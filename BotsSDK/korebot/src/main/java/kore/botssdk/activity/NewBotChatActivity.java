@@ -1,5 +1,7 @@
 package kore.botssdk.activity;
 
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
 import static kore.botssdk.utils.BundleConstants.MINIMIZE_CHAT_BOT_EVENT;
 
@@ -27,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -81,6 +82,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
     boolean isAgentTransfer;
+    private String botName = SDKConfiguration.Client.bot_name;
     private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -250,6 +252,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     @Override
     public void onBrandingDetails(BrandingModel brandingModel) {
         if (brandingModel != null) {
+            botName = brandingModel.getBotName();
             if (botContentFragment != null)
                 botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetTextColor(), brandingModel.getBotName());
 
@@ -438,9 +441,9 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     @Override
     public void invokeGenericWebView(String url) {
         if (url != null && !url.isEmpty()) {
-            Intent intent = new Intent(getApplicationContext(), GenericWebViewActivity.class);
-            intent.putExtra("url", url);
-            intent.putExtra("header", getResources().getString(R.string.app_name));
+            Intent intent = new Intent(this, GenericWebViewActivity.class);
+            intent.putExtra(EXTRA_URL, url);
+            intent.putExtra(EXTRA_HEADER, !botName.isEmpty()? botName : SDKConfiguration.Client.bot_name);
             startActivity(intent);
         }
     }

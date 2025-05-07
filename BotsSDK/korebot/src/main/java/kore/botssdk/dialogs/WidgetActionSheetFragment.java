@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetSelectActionsAdapter;
+import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.VerticalListViewActionHelper;
 
 public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
@@ -28,6 +29,7 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
     private Object model;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isFromListMenu = false;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public String getSkillName() {
         return skillName;
@@ -40,6 +42,7 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
     private String skillName;
     private String trigger;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
@@ -52,7 +55,8 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
 
         WidgetSelectActionsAdapter adapter = new WidgetSelectActionsAdapter(getActivity(), this,
-                model, isFromFullView,verticalListViewActionHelper,skillName,trigger,isFromListMenu);
+                model, isFromFullView, verticalListViewActionHelper, skillName, trigger, isFromListMenu);
+        adapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         recycler_actions.setAdapter(adapter);
 
 
@@ -83,6 +87,10 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
         return dialog;
     }
 
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
     public void setisFromFullView(boolean isFromFullView) {
         this.isFromFullView = isFromFullView;
     }
@@ -91,12 +99,12 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
         model = taskTemplateModel;
     }
 
-    public void setData(Object taskTemplateModel, boolean isFromListMenu){
+    public void setData(Object taskTemplateModel, boolean isFromListMenu) {
         model = taskTemplateModel;
         this.isFromListMenu = isFromListMenu;
     }
 
     public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
+        this.verticalListViewActionHelper = verticalListViewActionHelper;
     }
 }

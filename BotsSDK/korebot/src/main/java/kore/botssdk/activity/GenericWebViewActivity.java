@@ -2,6 +2,8 @@ package kore.botssdk.activity;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ConsoleMessage;
@@ -26,9 +29,14 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
+import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Objects;
+import java.util.concurrent.Executors;
 
 import kore.botssdk.R;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 
 @SuppressLint({"SetJavaScriptEnabled", "UnKnownNullness"})
@@ -37,6 +45,9 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     private String url;
     private WebView webview;
     private ProgressBar mProgressBar;
+    private final Handler handler = new Handler(Objects.requireNonNull(Looper.myLooper()));
+    public static String EXTRA_URL = "url";
+    public static String EXTRA_HEADER = "header";
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
@@ -45,8 +56,8 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         setContentView(R.layout.generic_webview_layout);
         Bundle receivedBundle = getIntent().getExtras();
         if (receivedBundle != null) {
-            url = receivedBundle.getString("url");
-            actionbarTitle = receivedBundle.getString("header");
+            url = receivedBundle.getString(EXTRA_URL);
+            actionbarTitle = receivedBundle.getString(EXTRA_HEADER);
         }
 
         setUpActionBar();
@@ -64,6 +75,47 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.webview_toolbar_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            getOnBackPressedDispatcher().onBackPressed();
+        } else if (itemId == R.id.action_share) {
+            onShare();
+            return true;
+        } else if (itemId == R.id.action_download) {
+            onDownload();
+            return true;
+        } else if (itemId == R.id.action_copy_link) {
+            onCopyLink();
+            return true;
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (menu != null) {
+            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
+                try {
+                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                    m.setAccessible(true);
+                    m.invoke(menu, true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return super.onMenuOpened(featureId, menu);
     }
 
     protected void loadUrl() {
@@ -134,16 +186,16 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
             webview.loadUrl(url);
         }
         webview.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> {
-            downloadFile(GenericWebViewActivity.this, url, contentDisposition, mimeType);
+            downloadFile(url, contentDisposition, mimeType, false);
         });
     }
 
-    private void downloadFile(Context context, String url, String contentDisposition, String mimeType) {
+    private void downloadFile(String url, String contentDisposition, String mimeType, boolean isFromMenus) {
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
 
         String fileName = URLUtil.guessFileName(url, contentDisposition, mimeType);
         request.setTitle(fileName);
-        request.setDescription("Downloading file...");
+        request.setDescription(getString(R.string.downloading_file));
 
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
         request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
@@ -151,11 +203,50 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
         request.allowScanningByMediaScanner();
 
-        DownloadManager dm = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        DownloadManager dm = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
         dm.enqueue(request);
 
-        Toast.makeText(context, "Downloading file: \"" + fileName + "\". Please check in status bar!", Toast.LENGTH_LONG).show();
-        new Handler(Objects.requireNonNull(Looper.myLooper())).postDelayed(GenericWebViewActivity.this::finish, 1000);
+        Toast.makeText(this, getString(R.string.downloading_file_name, fileName), Toast.LENGTH_LONG).show();
+        if (!isFromMenus) {
+            handler.postDelayed(GenericWebViewActivity.this::finish, 1000);
+        }
+    }
+
+    private void onDownload() {
+        Toast.makeText(this, getString(R.string.downloading), Toast.LENGTH_LONG).show();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            try {
+                URL url = new URL(this.url);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("HEAD");
+                connection.connect();
+
+                String mimeType = connection.getContentType();
+                String contentDisposition = connection.getHeaderField("Content-Disposition");
+                connection.disconnect();
+
+                handler.post(() -> downloadFile(this.url, contentDisposition, mimeType, true));
+            } catch (Exception e) {
+                e.printStackTrace();
+                handler.post(() -> Toast.makeText(this, getString(R.string.downloading_failed), Toast.LENGTH_LONG).show());
+            }
+        });
+    }
+
+    private void onShare() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, url);
+        sendIntent.setType("text/plain");
+        Intent chooser = Intent.createChooser(sendIntent, "Share URL via");
+        startActivity(chooser);
+    }
+
+    private void onCopyLink() {
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("label", url);
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, getString(R.string.copy_to_clipboard), Toast.LENGTH_SHORT).show();
     }
 
     private void setUpActionBar() {
@@ -164,20 +255,14 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_arrow_back_black_24dp, getTheme()));
-            actionBar.setTitle(actionbarTitle);
+            if (SDKConfiguration.isIsShowActionBar()) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+                actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_arrow_back_black_24dp, getTheme()));
+                actionBar.setTitle(actionbarTitle);
+            } else {
+                actionBar.setTitle("");
+            }
         }
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        if (itemId == android.R.id.home) {
-            getOnBackPressedDispatcher().onBackPressed();
-        }
-
-        return true;
     }
 }
 
