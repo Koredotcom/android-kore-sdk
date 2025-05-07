@@ -2,6 +2,8 @@ package kore.botssdk.fragment.botchat;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 import static android.content.Context.RECEIVER_NOT_EXPORTED;
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
@@ -43,8 +45,8 @@ import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.footer.ComposeFooterFragment;
 import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.fragment.header.BotHeaderFragment;
-import kore.botssdk.listener.BotChatCloseListener;
 import kore.botssdk.listener.BaseSocketConnectionManager;
+import kore.botssdk.listener.BotChatCloseListener;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -80,6 +82,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     boolean isAgentTransfer;
     private BotChatFragmentListener fragmentListener;
     BotChatCloseListener activityCloseListener;
+    private String botName = SDKConfiguration.Client.bot_name;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -191,6 +194,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void onBrandingDetails(BrandingModel brandingModel) {
         if (brandingModel != null) {
+            botName = brandingModel.getBotName();
             if (botContentFragment != null)
                 botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetTextColor(), brandingModel.getBotName());
 
@@ -379,9 +383,9 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void invokeGenericWebView(String url) {
         if (url != null && !url.isEmpty()) {
-            Intent intent = new Intent(requireContext(), GenericWebViewActivity.class);
-            intent.putExtra("url", url);
-            intent.putExtra("header", getResources().getString(R.string.app_name));
+            Intent intent = new Intent(getContext(), GenericWebViewActivity.class);
+            intent.putExtra(EXTRA_URL, url);
+            intent.putExtra(EXTRA_HEADER, !botName.isEmpty() ? botName : SDKConfiguration.Client.bot_name);
             startActivity(intent);
         }
     }

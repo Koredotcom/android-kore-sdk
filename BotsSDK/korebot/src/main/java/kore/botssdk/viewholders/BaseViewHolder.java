@@ -279,7 +279,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     protected void setResponseText(LinearLayoutCompat layoutBubble, String textualContent, String msgTime) {
-        if(layoutBubble == null) return;
+        if (layoutBubble == null) return;
         if (bubbleText == null) initBubbleText(layoutBubble, false);
         bubbleText.setVisibility(View.VISIBLE);
         bubbleText.setText("");
@@ -381,10 +381,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
             public void onClick(@NonNull View view) {
-                Intent intent = new Intent(context, GenericWebViewActivity.class);
-                intent.putExtra("url", span.getURL());
-                intent.putExtra("header", context.getResources().getString(R.string.app_name));
-                context.startActivity(intent);
+                if (invokeGenericWebViewInterface != null)
+                    invokeGenericWebViewInterface.invokeGenericWebView(span.getURL());
             }
         };
         strBuilder.setSpan(clickable, start, end, flags);

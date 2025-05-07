@@ -189,6 +189,13 @@
     <string name="attachment_capture_photo">Capture Photo</string>
     <string name="attachment_capture_video">Capture Video</string>
     <string name="speak_out_the_bot_response_text">Speak out the bot response text</string>
+    <string name="share">Share</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="downloading">Downloading…</string>
+    <string name="downloading_file_name">Downloading file: \"%s\". Please check in status bar!</string>
+    <string name="copy_to_clipboard">Copied to clipboard</string>
+    <string name="downloading_file">Downloading file…</string>
+    <string name="downloading_failed">Downloading failed!</string>
 
     <string-array name="attachments_strings">
         <item>@string/attachment_capture_photo</item>

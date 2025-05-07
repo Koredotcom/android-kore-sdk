@@ -161,6 +161,7 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
                             bottomSheetDialog.setSkillName("skillName", "trigger");
                             bottomSheetDialog.setData(payloadInner, true);
                             bottomSheetDialog.setVerticalListViewActionHelper(null);
+                            bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                             bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
                         }
                     });
@@ -185,11 +186,8 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
                     tvButtonParent.setVisibility(GONE);
                     tvUrl.setVisibility(VISIBLE);
                     tvUrl.setOnClickListener(v -> {
-                        if (headerOptionsModel.getUrl().getLink() != null) {
-                            Intent intent = new Intent(itemView.getContext(), GenericWebViewActivity.class);
-                            intent.putExtra("url", headerOptionsModel.getUrl().getLink());
-                            intent.putExtra("header", itemView.getContext().getResources().getString(R.string.app_name));
-                            itemView.getContext().startActivity(intent);
+                        if (invokeGenericWebViewInterface != null && headerOptionsModel.getUrl().getLink() != null) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(headerOptionsModel.getUrl().getLink());
                         }
                     });
                     break;

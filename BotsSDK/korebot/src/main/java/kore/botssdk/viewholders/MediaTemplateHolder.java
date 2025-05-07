@@ -34,7 +34,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.activity.VideoFullScreenActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.VideoTimerEvent;
@@ -146,10 +145,8 @@ public class MediaTemplateHolder extends BaseViewHolder {
                             .error(R.drawable.ic_image_photo)
                             .into(new DrawableImageViewTarget(ivImage));
                     tvDownload.setOnClickListener(view -> {
-                        Intent intent = new Intent(view.getContext(), GenericWebViewActivity.class);
-                        intent.putExtra("url", payloadInner.getUrl());
-                        intent.putExtra("header", view.getContext().getResources().getString(R.string.app_name));
-                        view.getContext().startActivity(intent);
+                        if (invokeGenericWebViewInterface != null)
+                            invokeGenericWebViewInterface.invokeGenericWebView(payloadInner.getUrl());
                     });
                 }
                 break;

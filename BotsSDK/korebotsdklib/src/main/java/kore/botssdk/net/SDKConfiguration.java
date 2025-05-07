@@ -26,6 +26,7 @@ public class SDKConfiguration {
     private static final boolean APPLY_FONT_STYLE = true;
     protected static HashMap<String, View> hsh = new HashMap<>();
     protected static HashMap<String, Class<?>> hshViewHolders = new HashMap<>();
+    private static boolean isShowActionBar = true;
 
     public static boolean isApplyFontStyle() {
         return APPLY_FONT_STYLE;
@@ -162,6 +163,14 @@ public class SDKConfiguration {
         public static boolean showHamburgerMenu = false;
         public static boolean history_initial_call = false;
         public static boolean disable_action_bar = true;
+    }
+
+    public static boolean isIsShowActionBar() {
+        return isShowActionBar;
+    }
+
+    public static void setIsShowActionBar(boolean isShowActionBar) {
+        SDKConfiguration.isShowActionBar = isShowActionBar;
     }
 
     public static boolean isTimeStampsRequired() {
