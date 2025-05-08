@@ -1,14 +1,24 @@
 package com.kore.ui.row.botchat.advancemultiselect.category.subitem
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.extensions.dpToPx
+import com.kore.model.constants.BotResponseConstants.BUBBLE_LEFT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.DESCRIPTION
 import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants.IMAGE_URL
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.SELECTED_ITEM
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.databinding.RowAdvanceMultiSelectCategorySubitemBinding
 import com.kore.ui.row.botchat.advancemultiselect.category.AdvancedMultiSelectCategorySubItemRowType
@@ -22,6 +32,7 @@ class AdvanceMultiSelectCategorySubItemRow(
 ) : SimpleListRow() {
 
     override val type: SimpleListRowType = AdvancedMultiSelectCategorySubItemRowType.SubItem
+    private val preferenceRepository = PreferenceRepositoryImpl()
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is AdvanceMultiSelectCategorySubItemRow) return false
@@ -38,8 +49,10 @@ class AdvanceMultiSelectCategorySubItemRow(
     override fun <Binding : ViewBinding> bind(binding: Binding) {
         val childBinding = RowAdvanceMultiSelectCategorySubitemBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
-            val title = item[KEY_TITLE].toString()
-            textView.text = title
+            val titleText = item[KEY_TITLE].toString()
+            title.text = titleText
+            description.isVisible = item[DESCRIPTION] != null
+            description.text = item[DESCRIPTION].toString()
             val imageUrl = item[IMAGE_URL]
             ivAdvMultiSelect.isVisible = !imageUrl.isNullOrEmpty()
             imageUrl?.let {
@@ -55,18 +68,21 @@ class AdvanceMultiSelectCategorySubItemRow(
     }
 
     private fun RowAdvanceMultiSelectCategorySubitemBinding.commonBind() {
-        checkBox.isChecked = selectedItems.contains(item)
-        checkBox.setOnCheckedChangeListener { checkBox, isChecked ->
-            if (checkBox.isPressed) {
-                if (!isLastItem) {
-                    checkBox.isChecked = !isChecked
-                    return@setOnCheckedChangeListener
-                }
-                val items: ArrayList<Map<String, String>> = selectedItems.clone() as ArrayList<Map<String, String>>
-                if (isChecked) items.add(item) else items.remove(item)
-
-                onSaveState(id, items, SELECTED_ITEM)
+        llCheck.isSelected = selectedItems.contains(item)
+        val checkedDrawable: GradientDrawable = llCheck.background as GradientDrawable
+        val checkedColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR).toColorInt()
+        val uncheckedColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_LEFT_BG_COLOR).toColorInt()
+        checkedDrawable.setColor(if (llCheck.isSelected) checkedColor else Color.WHITE)
+        checkedDrawable.setStroke(1.dpToPx(root.context), if (llCheck.isSelected) checkedColor else uncheckedColor)
+        llCheck.setOnClickListener {
+            if (!isLastItem) {
+                return@setOnClickListener
             }
+            llCheck.isSelected = !llCheck.isSelected
+            val items: ArrayList<Map<String, String>> = selectedItems.clone() as ArrayList<Map<String, String>>
+            if (llCheck.isSelected) items.add(item) else items.remove(item)
+
+            onSaveState(id, items, SELECTED_ITEM)
         }
     }
 }

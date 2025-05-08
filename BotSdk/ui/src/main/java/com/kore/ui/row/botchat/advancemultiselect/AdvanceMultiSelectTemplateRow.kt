@@ -87,7 +87,7 @@ class AdvanceMultiSelectTemplateRow(
             stringBuilder.append("Here are the selected items : ")
             selectedItems.mapIndexed { index, item ->
                 stringBuilder.append(item[BotResponseConstants.VALUE])
-                if (index < selectedItems.size - 1) stringBuilder.append(" ")
+                if (index < selectedItems.size - 1) stringBuilder.append(",")
             }
             actionEvent(BotChatEvent.SendMessage(stringBuilder.toString(), stringBuilder.toString()))
         }

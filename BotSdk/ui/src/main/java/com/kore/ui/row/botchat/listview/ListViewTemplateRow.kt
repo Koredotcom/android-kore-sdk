@@ -1,21 +1,26 @@
 package com.kore.ui.row.botchat.listview
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.graphics.Paint
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants.ELEMENTS
+import com.kore.model.constants.BotResponseConstants.HEADING
 import com.kore.model.constants.BotResponseConstants.KEY_BUTTONS
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.MORE_COUNT
 import com.kore.model.constants.BotResponseConstants.MORE_DATA
 import com.kore.model.constants.BotResponseConstants.SEE_MORE
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.bottomsheet.ShowMoreListBottomSheet
 import com.kore.ui.bottomsheet.ViewMoreListBottomSheet
 import com.kore.ui.databinding.RowListviewTemplateBinding
@@ -46,10 +51,15 @@ class ListViewTemplateRow(
     override fun getChangePayload(otherRow: SimpleListRow): Any = true
 
     override fun <Binding : ViewBinding> bind(binding: Binding) {
-        showOrHideIcon(binding, binding.root.context, iconUrl,  isShow = false, isTemplate = true)
+        showOrHideIcon(binding, binding.root.context, iconUrl, isShow = false, isTemplate = true)
         val childBinding = RowListviewTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
+        val sharedPreferences = binding.root.context.getSharedPreferences(THEME_NAME, MODE_PRIVATE)!!
+        val rightBgColor = sharedPreferences.getString(BUBBLE_RIGHT_BG_COLOR, "#ffffff")!!
         childBinding.apply {
+            title.isVisible = payload[HEADING] != null
+            title.text = payload[HEADING].toString()
             showMore.paintFlags = Paint.UNDERLINE_TEXT_FLAG
+            showMore.setTextColor(rightBgColor.toColorInt())
             list.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
             list.adapter = SimpleListAdapter(ListViewTemplateItemRowType.entries)
             (payload[KEY_BUTTONS] as List<Map<String, String>>?)?.get(0)?.get(KEY_TITLE)?.let { showMore.text = it }
@@ -68,11 +78,11 @@ class ListViewTemplateRow(
             val manager = (this@ListViewTemplateRow.context as FragmentActivity).supportFragmentManager
             if (!(payload[KEY_BUTTONS] as List<Map<String, String>>?).isNullOrEmpty()) {
                 ShowMoreListBottomSheet().apply {
-                    showData(true, payload[MORE_DATA] as Map<String, Any>, isLastItem, manager, actionEvent)
+                    showData(true, payload[HEADING] as String?, payload[MORE_DATA] as Map<String, Any>, isLastItem, manager, actionEvent)
                 }
             } else {
                 ViewMoreListBottomSheet().apply {
-                    showData(false, payload[ELEMENTS] as List<Map<String, Any>>, manager)
+                    showData(false, payload[HEADING] as String?, payload[ELEMENTS] as List<Map<String, Any>>, manager)
                 }
             }
         }
@@ -84,11 +94,11 @@ class ListViewTemplateRow(
         return if (moreCount != null && moreCount > 0) {
             var rows = emptyList<SimpleListRow>()
             for (i in 0 until moreCount.toInt()) {
-                rows = rows + ListViewTemplateItemRow(elements[i], isLastItem, actionEvent)
+                rows = rows + ListViewTemplateItemRow(elements[i], isLastItem, null, actionEvent)
             }
             rows
         } else {
-            elements.map { element -> ListViewTemplateItemRow(element, isLastItem, actionEvent) }
+            elements.map { element -> ListViewTemplateItemRow(element, isLastItem, null, actionEvent) }
         }
     }
 }

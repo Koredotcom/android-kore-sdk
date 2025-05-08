@@ -1,19 +1,24 @@
 package com.kore.ui.row.botchat
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.graphics.toColorInt
+import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.google.gson.internal.LinkedTreeMap
 import com.kore.common.event.UserActionEvent
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
-import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
 import com.kore.extensions.setRoundedCorner
@@ -28,6 +33,7 @@ import com.kore.model.constants.BotResponseConstants.LABEL
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.databinding.RowDropdownTemplateBinding
+import com.kore.ui.row.SimpleListRow
 import java.lang.reflect.AccessibleObject
 
 class DropDownTemplateRow(
@@ -74,6 +80,8 @@ class DropDownTemplateRow(
     private fun RowDropdownTemplateBinding.commonBind() {
         placeHolder = if (payload[FORM_PLACE_HOLDER] != null) payload[FORM_PLACE_HOLDER] as String else root.context.getString(R.string.select)
         this@DropDownTemplateRow.spinner = this.spinner
+        tvDropDownHeading.isVisible = payload[HEADING] != null
+        tvDropDownHeading.setText(payload[HEADING].toString())
         val dataAdapter = SpinnerAdapter(root.context)
         spinner.adapter = dataAdapter
         spinner.prompt = root.context.getString(R.string.select)
@@ -96,6 +104,9 @@ class DropDownTemplateRow(
 
     inner class SpinnerAdapter(context: Context) :
         BaseAdapter() {
+        private var sharedPreferences: SharedPreferences = context.getSharedPreferences(BotResponseConstants.THEME_NAME, Context.MODE_PRIVATE)
+        private var leftBgColor: String = sharedPreferences.getString(BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#FFFFFF")!!
+        private var rightBgColor: String = sharedPreferences.getString(BUBBLE_RIGHT_BG_COLOR, "#FFFFFF")!!
         private var inflater: LayoutInflater = LayoutInflater.from(context)
 
         override fun getCount(): Int {
@@ -117,14 +128,17 @@ class DropDownTemplateRow(
                 convertView = inflater.inflate(R.layout.drop_down_item_view, null)
                 holder = ViewHolder()
                 holder.item = convertView.findViewById(R.id.item)
+                holder.ivTick = convertView.findViewById(R.id.ivTick)
                 convertView.tag = holder
             } else {
                 holder = convertView.tag as ViewHolder
             }
+            holder.ivTick.isVisible = false
             val item = getItem(position)
             holder.item.text = if (item is String) item else (item as Map<String, String>)[KEY_TITLE]
             holder.item.setOnClickListener {
                 if (isLastItem) {
+                    spinner.setSelection(position)
                     onDropDownSelection(id, position, BotResponseConstants.SELECTED_ITEM)
                 }
                 hideSpinnerDropDown(spinner)
@@ -133,8 +147,25 @@ class DropDownTemplateRow(
             return convertView!!
         }
 
+        override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup?): View {
+            val view = super.getDropDownView(position, convertView, parent) as LinearLayout
+            val ivTick = view.findViewById<ImageView>(R.id.ivTick)
+
+            if ((selectedPosition == -1 && position == 0) || selectedPosition == position) {
+                view.setBackgroundColor(leftBgColor.toColorInt())
+                val colorStateList = ColorStateList.valueOf(rightBgColor.toColorInt())
+                ivTick.imageTintList = colorStateList
+                ivTick.isVisible = true
+            } else {
+                view.setBackgroundColor(Color.WHITE)
+                ivTick.isVisible = false
+            }
+            return view
+        }
+
         inner class ViewHolder {
             lateinit var item: TextView
+            lateinit var ivTick: ImageView
         }
     }
 

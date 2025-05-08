@@ -70,8 +70,7 @@ class TableListTemplateSubItemRow(
             imageMap?.get(IMAGE_SRC).let {
                 val radiusPx = ((imageMap?.get(RADIUS) as? Double)?.toInt()?.dpToPx(binding.root.context) ?: 10.dpToPx(binding.root.context)).toFloat()
                 image.setRoundedCorner(radiusPx)
-                Glide.with(binding.root.context).load(it).error(com.kore.botclient.R.drawable.ic_launcher)
-                    .into<DrawableImageViewTarget>(DrawableImageViewTarget(image))
+                Glide.with(binding.root.context).load(it).into<DrawableImageViewTarget>(DrawableImageViewTarget(image))
             }
 
             (textMap?.get(KEY_TITLE) ?: titleUrlMap?.get(KEY_TITLE))?.let {

@@ -10,7 +10,7 @@ import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.adapters.AdvancedListAdapter
 import com.kore.ui.databinding.AdvancelistViewBinding
 
-class AdvanceTemplateRow(
+class AdvancedListTemplateRow(
     private val id: String,
     private val payload: HashMap<String, Any>,
     private val iconUrl: String?,
@@ -20,13 +20,13 @@ class AdvanceTemplateRow(
     override val type: SimpleListRowType = BotChatRowType.getRowType(BotChatRowType.ROW_ADVANCE_PROVIDER)
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
-        if (otherRow !is AdvanceTemplateRow) return false
+        if (otherRow !is AdvancedListTemplateRow) return false
         return otherRow.id == id
     }
 
 
     override fun areContentsTheSame(otherRow: SimpleListRow): Boolean {
-        if (otherRow !is AdvanceTemplateRow) return false
+        if (otherRow !is AdvancedListTemplateRow) return false
         return otherRow.payload == payload && otherRow.isLastItem == isLastItem
     }
 

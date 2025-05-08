@@ -323,4 +323,12 @@
     <string name="resend_otp">Resend OTP</string>
     <string name="answered_by_ai">Answered by AI</string>
     <string name="source_item">%s. %s</string>
+
+    <string name="share">Share</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="downloading">Downloading…</string>
+    <string name="downloading_file_name">Downloading file: \“%s\”. Please check in status bar!</string>
+    <string name="copy_to_clipboard">Copied to clipboard</string>
+    <string name="downloading_file">Downloading file…</string>
+    <string name="downloading_failed">Downloading failed!</string>
 </resources>

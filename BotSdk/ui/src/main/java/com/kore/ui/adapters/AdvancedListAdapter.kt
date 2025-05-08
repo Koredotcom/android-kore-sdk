@@ -250,13 +250,8 @@ class AdvancedListAdapter(
                             )
 
                             holder.rvDefaultButtons.adapter = advanceListButtonAdapter
-
+                            holder.llButtonMore.isVisible = displayLimit != 0
                             if (displayLimit != 0) {
-                                val tempBtn = mutableListOf<Map<String, *>>()
-                                for (i in displayLimit - 1 until buttons.size) {
-                                    tempBtn.add(buttons[i])
-                                }
-                                holder.llButtonMore.visibility = View.VISIBLE
                                 btnPopUpView.minimumWidth = 250.dpToPx(context)
                                 val recyclerView: RecyclerView = btnPopUpView.findViewById(R.id.rvDropDown)
                                 val ivDropDownCLose: ImageView = btnPopUpView.findViewById(R.id.ivDropDownCLose)
@@ -265,7 +260,7 @@ class AdvancedListAdapter(
                                     context, when (!alignment.isNullOrEmpty()) {
                                         true -> alignment[BotResponseConstants.BUTTONS_ALIGNMENT] as String
                                         else -> BotResponseConstants.FULL_WIDTH
-                                    }, tempBtn, tempBtn.size, isLastItem, actionEvent
+                                    }, buttons, buttons.size, isLastItem, actionEvent
                                 )
                                 recyclerView.adapter = advanceButtonAdapter
                                 ivDropDownCLose.setOnClickListener { btnPopUpWindow.dismiss() }
@@ -273,7 +268,8 @@ class AdvancedListAdapter(
                             holder.llButtonMore.setOnClickListener { btnPopUpWindow.showAsDropDown(holder.llButtonMore, -15, -350) }
 
                             val sharedPrefs = PreferenceRepositoryImpl()
-                            val txtColor = sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
+                            val txtColor =
+                                sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
                             holder.buttonMore.setTextColor(txtColor.toColorInt())
                         }
                     }

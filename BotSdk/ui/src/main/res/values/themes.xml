@@ -61,6 +61,7 @@
     <style name="HeaderToggleTitle" parent="@style/Widget.MaterialComponents.MaterialCalendar.HeaderTitle">
         <item name="autoSizeMaxTextSize">12dp</item>
         <item name="autoSizeMinTextSize">10dp</item>
+        <item name="textAllCaps">false</item>
     </style>
 
     <declare-styleable name="LoadingDots"><attr format="boolean" name="LoadingDots_auto_play"/><attr format="color" name="LoadingDots_dots_color"/><attr format="integer" name="LoadingDots_dots_count"/><attr format="dimension" name="LoadingDots_dots_size"/><attr format="dimension" name="LoadingDots_dots_space"/><attr format="integer" name="LoadingDots_loop_duration"/><attr format="integer" name="LoadingDots_loop_start_delay"/><attr format="integer" name="LoadingDots_jump_duration"/><attr format="dimension" name="LoadingDots_jump_height"/></declare-styleable>

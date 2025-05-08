@@ -46,7 +46,7 @@
                 android:orientation="vertical"
                 android:paddingBottom="10dp">
 
-                <com.kore.ui.textview.CustomTextView
+                <com.kore.ui.textview.CustomTextViewBold
                     android:id="@+id/txtTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -1,6 +1,9 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,9 +16,9 @@ import com.kore.common.event.UserActionEvent
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
-import com.kore.model.constants.BotResponseConstants
 import com.kore.extensions.getDotMessage
 import com.kore.extensions.setRoundedCorner
+import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
 import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
@@ -52,6 +55,7 @@ class FormListAdapter(
             val context = holder.btnFieldButton.context
             val bgColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
             val txtColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+            holder.edtFormInput.background = createEditTextBackground(bgColor, "#A7A9BE".toColorInt())
             holder.btnFieldButton.setRoundedCorner(6.dpToPx(context).toFloat())
             holder.btnFieldButton.setBackgroundColor(bgColor)
             holder.btnFieldButton.setTextColor(txtColor)
@@ -65,6 +69,30 @@ class FormListAdapter(
                     )
                 }
             }
+        }
+    }
+
+    private fun createEditTextBackground(focusedColor: Int, unfocusedColor: Int): StateListDrawable {
+        // Focused drawable
+        val focusedDrawable = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 6f
+            setStroke(2, focusedColor)
+            setColor(Color.WHITE)
+        }
+
+        // Unfocused drawable
+        val unfocusedDrawable = GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 6f
+            setStroke(2, unfocusedColor)
+            setColor(Color.WHITE)
+        }
+
+        // Selector
+        return StateListDrawable().apply {
+            addState(intArrayOf(android.R.attr.state_focused), focusedDrawable)
+            addState(intArrayOf(), unfocusedDrawable)
         }
     }
 

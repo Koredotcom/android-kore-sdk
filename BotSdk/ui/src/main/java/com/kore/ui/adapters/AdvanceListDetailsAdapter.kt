@@ -40,14 +40,8 @@ class AdvanceListDetailsAdapter(
         }
     }
 
-
     class DetailsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var tvBtnText: TextView
-        var ivListBtnIcon: ImageView
-
-        init {
-            tvBtnText = view.findViewById(R.id.tvBtnText)
-            ivListBtnIcon = view.findViewById(R.id.ivListBtnIcon)
-        }
+        var tvBtnText: TextView = view.findViewById(R.id.tvBtnText)
+        var ivListBtnIcon: ImageView = view.findViewById(R.id.ivListBtnIcon)
     }
 }
