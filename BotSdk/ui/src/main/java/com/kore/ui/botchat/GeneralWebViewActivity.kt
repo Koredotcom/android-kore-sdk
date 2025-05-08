@@ -1,22 +1,41 @@
 package com.kore.ui.botchat
 
+import android.app.DownloadManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
+import android.os.Looper
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.Window
+import android.webkit.URLUtil
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import com.kore.common.SDKConfiguration
 import com.kore.ui.R
+import com.kore.ui.audiocodes.webrtcclient.general.Log
 import com.kore.ui.databinding.GenericWebviewLayoutBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.net.HttpURLConnection
+import java.net.URL
 
 class GeneralWebViewActivity : AppCompatActivity() {
     companion object {
@@ -24,10 +43,12 @@ class GeneralWebViewActivity : AppCompatActivity() {
         const val EXTRA_HEADER = "header"
     }
 
-    val title: String = ""
-    lateinit var binding: GenericWebviewLayoutBinding
+    private var webUrl: String = ""
+    private lateinit var binding: GenericWebviewLayoutBinding
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         binding = GenericWebviewLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -86,7 +107,14 @@ class GeneralWebViewActivity : AppCompatActivity() {
         }
 
         setUpActionBar(intent.extras?.getString(EXTRA_HEADER))
-        intent.extras?.getString(EXTRA_URL)?.let { binding.webView.loadUrl(it) }
+        intent.extras?.getString(EXTRA_URL)?.let {
+            webUrl = it
+            binding.webView.loadUrl(it)
+        }
+
+        binding.webView.setDownloadListener { url: String, _: String, contentDisposition: String, mimeType: String, _: Long ->
+            downloadFile(url, contentDisposition, mimeType, false)
+        }
 
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -99,11 +127,40 @@ class GeneralWebViewActivity : AppCompatActivity() {
         })
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.webview_toolbar_menu, menu)
+        return true
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val itemId = item.itemId
         if (item.itemId == android.R.id.home) {
             onBackPressedDispatcher.onBackPressed()
+        } else if (itemId == R.id.action_share) {
+            onShare()
+            return true
+        } else if (itemId == R.id.action_download) {
+            onDownload()
+            return true
+        } else if (itemId == R.id.action_copy_link) {
+            onCopyLink()
+            return true
         }
-        return super.onOptionsItemSelected(item)
+
+        return true
+    }
+
+    override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
+        if (menu.javaClass.simpleName == "MenuBuilder") {
+            try {
+                val m = menu.javaClass.getDeclaredMethod("setOptionalIconsVisible", java.lang.Boolean.TYPE)
+                m.isAccessible = true
+                m.invoke(menu, true)
+            } catch (e: java.lang.Exception) {
+                e.printStackTrace()
+            }
+        }
+        return super.onMenuOpened(featureId, menu)
     }
 
     private fun setUpActionBar(title: String?) {
@@ -113,12 +170,78 @@ class GeneralWebViewActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
             val actionBar = supportActionBar
             if (actionBar != null) {
-                actionBar.setDisplayHomeAsUpEnabled(true)
-                actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(resources, R.drawable.back_arrow, theme))
+                if (SDKConfiguration.isIsShowActionBar()) {
+                    actionBar.setDisplayHomeAsUpEnabled(true)
+                    actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(resources, R.drawable.back_arrow, theme))
 
-                title.let { actionBar.title = title }
-                    .runCatching { actionBar.title = ContextCompat.getString(this@GeneralWebViewActivity, R.string.app_name) }
+                    title.let { actionBar.title = title }
+                        .runCatching { actionBar.title = ContextCompat.getString(this@GeneralWebViewActivity, R.string.app_name) }
+                } else {
+                    actionBar.setTitle("")
+                }
             }
         }
+    }
+
+    private fun downloadFile(url: String, contentDisposition: String?, mimeType: String?, isFromMenus: Boolean) {
+        val request = DownloadManager.Request(url.toUri())
+
+        val fileName = URLUtil.guessFileName(url, contentDisposition, mimeType)
+        request.setTitle(fileName)
+        request.setDescription(getString(R.string.downloading_file))
+
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName)
+
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+        request.allowScanningByMediaScanner()
+
+        val dm = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
+        dm.enqueue(request)
+
+        Toast.makeText(this, getString(R.string.downloading_file_name, fileName), Toast.LENGTH_LONG).show()
+        if (!isFromMenus) {
+            handler.postDelayed(this::finish, 1000)
+        }
+    }
+
+    private fun onDownload() {
+        Toast.makeText(this, getString(R.string.downloading), Toast.LENGTH_LONG).show()
+        lifecycleScope.launch {
+            val (mimeType, contentDisposition) = withContext(Dispatchers.IO) {
+                try {
+                    Log.e("Called", this@GeneralWebViewActivity.webUrl)
+                    val url = URL(this@GeneralWebViewActivity.webUrl)
+                    val connection = url.openConnection() as HttpURLConnection
+                    connection.requestMethod = "HEAD"
+                    connection.connect()
+
+                    val mimeType = connection.contentType
+                    val contentDisposition = connection.getHeaderField("Content-Disposition")
+                    connection.disconnect()
+                    mimeType to contentDisposition
+                } catch (e: java.lang.Exception) {
+                    e.printStackTrace()
+                    null to null
+                }
+            }
+            downloadFile(this@GeneralWebViewActivity.webUrl, contentDisposition, mimeType, true)
+        }
+    }
+
+    private fun onShare() {
+        val sendIntent = Intent()
+        sendIntent.setAction(Intent.ACTION_SEND)
+        sendIntent.putExtra(Intent.EXTRA_TEXT, webUrl)
+        sendIntent.setType("text/plain")
+        val chooser = Intent.createChooser(sendIntent, "Share URL via")
+        startActivity(chooser)
+    }
+
+    private fun onCopyLink() {
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+        val clip = ClipData.newPlainText("label", webUrl)
+        clipboard.setPrimaryClip(clip)
+        Toast.makeText(this, getString(R.string.copy_to_clipboard), Toast.LENGTH_SHORT).show()
     }
 }

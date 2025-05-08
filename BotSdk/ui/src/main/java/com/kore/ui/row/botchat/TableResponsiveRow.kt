@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.core.graphics.toColorInt
+import androidx.core.graphics.toColorLong
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -52,9 +53,16 @@ class TableResponsiveRow(
                 BotResponseConstants.BUBBLE_LEFT_BG_COLOR,
                 "#efeffc"
             ).toColorInt()
+            val txtColor = sharedPrefs.getStringValue(
+                rvTableView.context,
+                BotResponseConstants.THEME_NAME,
+                BotResponseConstants.BUBBLE_RIGHT_BG_COLOR,
+                "#ffffff"
+            ).toColorInt()
             rvTableView.setBackgroundColor(bgColor)
             rvTableView.setRoundedCorner(4.dpToPx(root.context).toFloat())
 
+            tvShowMore.setTextColor(txtColor)
             tvShowMore.setOnClickListener { showTableViewDialog(root.context, columns, rows) }
             rvTableView.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
             rvTableView.adapter = TableResponsiveAdapter(root.context, rows, columns)

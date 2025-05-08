@@ -27,6 +27,8 @@ object MarkdownUtil {
             MarkdownConstant.ORDER_LIST_ITEM_FORMAT, MarkdownConstant.ORDER_LIST_CONTAINER_FORMAT
         )
         text = markDownHeading(text)
+        text = markDownEscapeQuote(text)
+        text = markDownRemovingParagraph(text)
         return text
     }
 
@@ -397,5 +399,26 @@ object MarkdownUtil {
     private fun validateArray(array: Any?) {
         requireNotNull(array) { "The Array must not be null" }
         require(Array.getLength(array) != 0) { "Array cannot be empty." }
+    }
+
+    /**
+     * Convert escape quote ``` to empty
+     */
+    private fun markDownEscapeQuote(text: String): String {
+        var text = text
+        text = text.replace(" ```".toRegex(), "\n")
+        text = text.replace("```".toRegex(), "")
+
+        return text
+    }
+
+    /**
+     * Convert escape quote ``` to empty
+     */
+    private fun markDownRemovingParagraph(text: String): String {
+        var text = text
+        text = text.replace("<p>".toRegex(), "")
+        text = text.replace("</p>".toRegex(), "")
+        return text
     }
 }

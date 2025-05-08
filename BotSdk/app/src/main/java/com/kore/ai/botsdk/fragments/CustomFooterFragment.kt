@@ -218,7 +218,7 @@ class CustomFooterFragment : BaseFooterFragment() {
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (s.isEmpty()) {
                 enableSendButton(false)
-            } else if (!binding.sendTv.isVisible || s.isNotEmpty() && !binding.llSend.isVisible) {
+            } else if (s.isNotEmpty()) {
                 if ((SDKConfiguration.getBotConfigModel()?.isWebHook == true && NetworkUtils.isNetworkAvailable(requireContext())) || BotClient.isConnected()) {
                     enableSendButton(true)
                 }
@@ -235,7 +235,7 @@ class CustomFooterFragment : BaseFooterFragment() {
     override fun enableSendButton(enable: Boolean) {
         isEnabled = enable
         if (isAttachedToWindow) {
-            binding.llSend.isVisible = enable
+            binding.llSend.isVisible = enable && binding.edtTxtMessage.text.trim().isNotEmpty()
             binding.recAudioImg.isVisible = !enable
         }
     }

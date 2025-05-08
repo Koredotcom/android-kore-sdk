@@ -1,6 +1,7 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -34,6 +35,11 @@ class ListWidgetAdapter(
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : RecyclerView.Adapter<ListWidgetAdapter.ListWidgetHolder>() {
 
+    private val popUpView: View = View.inflate(context, R.layout.advancelist_drop_down_popup, null)
+    private val popupWindow = PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true)
+    private val popupRvButtons: RecyclerView = popUpView.findViewById(R.id.rvDropDown)
+    private val ivDropDownClose: ImageView = popUpView.findViewById(R.id.ivDropDownCLose)
+
     class ListWidgetHolder(view: View, context: Context) : RecyclerView.ViewHolder(view) {
         var txtTitle: TextView = itemView.findViewById(R.id.txtTitle)
         var txtSubTitle: TextView = itemView.findViewById(R.id.txtSubtitle)
@@ -63,20 +69,8 @@ class ListWidgetAdapter(
 
     override fun onBindViewHolder(holder: ListWidgetHolder, position: Int) {
         val listTemplateModel: MutableMap<String, Any> = arrListWidgetTemplateModels[position] as MutableMap<String, Any>
+        holder.divider.isVisible = position != arrListWidgetTemplateModels.size - 1
         holder.imgUpDown.isVisible = false
-
-        val popUpView = View.inflate(context, R.layout.advancelist_drop_down_popup, null)
-        val popupWindow = PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true)
-        val rvPopBtns: RecyclerView = popUpView.findViewById(R.id.rvDropDown)
-        val ivDropDownCLose: ImageView = popUpView.findViewById(R.id.ivDropDownCLose)
-        rvPopBtns.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.transparant_image_div)!!)
-        rvPopBtns.removeItemDecoration(divider)
-        rvPopBtns.addItemDecoration(divider)
-        popUpView.minimumWidth = (180.dpToPx(context))
-        ivDropDownCLose.setOnClickListener { popupWindow.dismiss() }
-
         if (listTemplateModel[BotResponseConstants.KEY_TITLE] != null) {
             holder.txtTitle.text = listTemplateModel[BotResponseConstants.KEY_TITLE] as String
             holder.sharedPreferences.getString(BUTTON_ACTIVE_TXT_COLOR, "#000000")?.toColorInt()?.let {
@@ -126,10 +120,8 @@ class ListWidgetAdapter(
                     holder.tvUrl.isVisible = false
                     holder.tvButtonParent.isVisible = false
 
-                    holder.imgMenu.setOnClickListener {
-                        val menu = value[BotResponseConstants.MENU] as List<Map<String, *>>
-                        rvPopBtns.adapter = ListWidgetButtonAdapter(context, menu, menu.size, "", popupWindow, isLastItem, actionEvent)
-                        popupWindow.showAsDropDown(holder.imgMenu, -400, 0)
+                    holder.imgMenu.setOnClickListener { view ->
+                        showMenuPopup(view, value[BotResponseConstants.MENU] as List<Map<String, *>>)
                     }
                 }
 
@@ -196,13 +188,12 @@ class ListWidgetAdapter(
             holder.rvButtonsList.layoutManager = LinearLayoutManager(
                 context, if (style == BotResponseConstants.FIT_TO_WIDTH) LinearLayoutManager.VERTICAL else LinearLayoutManager.HORIZONTAL, false
             )
-            holder.rvButtonsList.adapter = ListWidgetButtonAdapter(context, btns, limit, style, null, isLastItem, actionEvent)
+            holder.rvButtonsList.adapter = ListWidgetButtonAdapter(context, btns, limit, style, null, isLastItem, false, actionEvent)
             val sharedPrefs = PreferenceRepositoryImpl()
             val txtColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
             holder.tvButtonMore.setTextColor(txtColor)
-            holder.llMoreButton.setOnClickListener {
-                rvPopBtns.adapter = ListWidgetButtonAdapter(context, btns, btns.size, style, popupWindow, isLastItem, actionEvent)
-                popupWindow.showAsDropDown(holder.llMoreButton)
+            holder.llMoreButton.setOnClickListener { view ->
+                showMenuPopup(view, btns)
             }
 
         } else {
@@ -215,6 +206,36 @@ class ListWidgetAdapter(
             holder.rvDetails.adapter =
                 ListWidgetDetailsAdapter(context, listTemplateModel[BotResponseConstants.DETAILS] as List<Map<String, *>>, actionEvent)
         } else holder.rvDetails.isVisible = false
+    }
 
+    private fun showMenuPopup(anchorView: View, buttons: List<Map<String, *>>) {
+        val divider = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+        divider.setDrawable(ContextCompat.getDrawable(context, R.drawable.transparant_image_div)!!)
+        popupRvButtons.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        popupRvButtons.removeItemDecoration(divider)
+        popupRvButtons.addItemDecoration(divider)
+        popUpView.minimumWidth = (200.dpToPx(context))
+        ivDropDownClose.setOnClickListener { popupWindow.dismiss() }
+        popupRvButtons.adapter = ListWidgetButtonAdapter(context, buttons, buttons.size, "", popupWindow, isLastItem, true, actionEvent)
+        val location = IntArray(2)
+        anchorView.getLocationOnScreen(location)
+        val anchorY = location[1]
+
+        // Get screen height
+        val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+
+        // Measure the popup content
+        popUpView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+        val popupHeight: Int = popUpView.measuredHeight
+
+        val showAbove = (screenHeight - anchorY - anchorView.height) < popupHeight
+
+        if (showAbove) {
+            // Show above the anchor
+            popupWindow.showAsDropDown(anchorView, 0, -anchorView.height - popupHeight)
+        } else {
+            // Show below the anchor
+            popupWindow.showAsDropDown(anchorView)
+        }
     }
 }

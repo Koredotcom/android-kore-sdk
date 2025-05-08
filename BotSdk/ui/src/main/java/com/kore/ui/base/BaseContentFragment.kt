@@ -16,7 +16,7 @@ abstract class BaseContentFragment : Fragment(), QuickRepliesClickListener {
 
     abstract fun showTypingIndicator(icon: String?, enable: Boolean)
 
-    abstract fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?)
+    abstract fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean)
 
     abstract fun hideQuickReplies()
 

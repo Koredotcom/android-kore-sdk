@@ -2,6 +2,7 @@ package com.kore.ui.base
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Window
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
@@ -16,6 +17,7 @@ abstract class BaseActivity<B : ViewDataBinding, N : BaseView, V : BaseViewModel
     abstract fun getViewModel(): V
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.inflate(LayoutInflater.from(this@BaseActivity), getLayoutID(), null, false)
         this.mViewModel = getViewModel()

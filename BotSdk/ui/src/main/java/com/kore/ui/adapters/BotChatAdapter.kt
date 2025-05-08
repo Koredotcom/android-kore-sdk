@@ -30,7 +30,7 @@ import com.kore.model.constants.BotResponseConstants.TEXT_MESSAGE
 import com.kore.ui.R
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
-import com.kore.ui.row.botchat.AdvanceTemplateRow
+import com.kore.ui.row.botchat.AdvancedListTemplateRow
 import com.kore.ui.row.botchat.AnswerTemplateRow
 import com.kore.ui.row.botchat.BarChartTemplateRow
 import com.kore.ui.row.botchat.BotChatRowType
@@ -271,7 +271,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                                 )
                                             }
                                             rows =
-                                                rows + AdvanceTemplateRow(baseBotMsg.messageId, innerMap, iconUrl, isLastItem, actionEvent)
+                                                rows + AdvancedListTemplateRow(baseBotMsg.messageId, innerMap, iconUrl, isLastItem, actionEvent)
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_MINI_TABLE -> {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rlTableResponsive"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -46,6 +47,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/dimen_10dp"
         android:contentDescription="@string/table_view_expand_icon"
-        android:src="@drawable/right_arrow_iconn" />
+        android:src="@drawable/right_arrow_iconn"
+        app:tint="@color/black" />
 
 </RelativeLayout>
