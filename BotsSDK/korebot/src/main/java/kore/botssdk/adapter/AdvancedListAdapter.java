@@ -6,12 +6,14 @@ import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.text.SpannableStringBuilder;
 import android.util.Base64;
 import android.view.Gravity;
@@ -44,6 +46,7 @@ import kore.botssdk.models.AdvanceOptionsModel;
 import kore.botssdk.models.AdvancedListModel;
 import kore.botssdk.models.HeaderOptionsModel;
 import kore.botssdk.models.Widget;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
@@ -131,7 +134,9 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
     private void populateVIew(ViewHolder holder, int position) {
         AdvancedListModel botListModel = getItem(position);
-
+        holder.buttonMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        VectorDrawable drawable= (VectorDrawable) holder.ivBtnImage.getBackground();
+        drawable.setTintList(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
         if (!StringUtils.isNullOrEmpty(botListModel.getIcon())) {
             holder.ivDescription.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
@@ -636,7 +641,9 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         holder.ivDescription = view.findViewById(R.id.ivDescription);
         holder.rlTitle = view.findViewById(R.id.rlTitle);
         holder.llButtonMore = view.findViewById(R.id.llButtonMore);
+        holder.buttonMore = view.findViewById(R.id.buttonTV);
         holder.llChildViews = view.findViewById(R.id.llChildViews);
+        holder.ivBtnImage = view.findViewById(R.id.ivBtnImage);
         view.setTag(holder);
     }
 
@@ -667,10 +674,11 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
     static class ViewHolder {
         RelativeLayout botListItemRoot, rlDropDown, rlTitle, llChildViews;
-        ImageView /*botListItemImage,*/ ivAction, ivDropDownAction, ivDescription;
+        ImageView /*botListItemImage,*/ ivAction, ivDropDownAction, ivDescription, ivBtnImage;
         TextView botListItemTitle, tvAction;
         TextView botListItemSubtitle;
         Button botListItemButton;
+        TextView buttonMore;
         RecyclerView rvDefaultButtons;
         RecyclerView rvOptionButtons;
         AutoExpandListView lvDetails, lvOptions, lvTableList;

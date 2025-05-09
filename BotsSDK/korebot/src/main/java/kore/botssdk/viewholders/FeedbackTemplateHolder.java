@@ -8,6 +8,7 @@ import static kore.botssdk.models.BotResponse.VIEW_THUMBS_UP_DOWN;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
     private final ImageView icon4;
     private final ImageView icon5;
     private final RatingBar rbFeedback;
+    private final LinearLayout llRbFeedback;
     private final LinearLayoutCompat emojis;
     private final RelativeLayout rlViewNPS;
     private final RecyclerView rvRatingScale;
@@ -67,6 +69,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         KaFontUtils.applyCustomFont(itemView.getContext(), itemView);
         tvFeedbackTemplateTitle = itemView.findViewById(R.id.tv_feedback_template_title);
         rbFeedback = itemView.findViewById(R.id.rbFeedback);
+        llRbFeedback = itemView.findViewById(R.id.llRbFeedback);
         emojis = itemView.findViewById(R.id.emojis);
         rlViewNPS = itemView.findViewById(R.id.rlViewNPS);
         thumbsUpDown = itemView.findViewById(R.id.thumbs_up_down);
@@ -87,7 +90,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         tvFeedbackTemplateTitle.setText(payloadInner.getText());
         String viewType = payloadInner.getView();
         emojis.setVisibility(viewType.equals(VIEW_CSAT) ? View.VISIBLE : View.GONE);
-        rbFeedback.setVisibility(viewType.equals(VIEW_STAR) ? View.VISIBLE : View.GONE);
+        llRbFeedback.setVisibility(viewType.equals(VIEW_STAR) ? View.VISIBLE : View.GONE);
         rlViewNPS.setVisibility(viewType.equals(VIEW_NPS) ? View.VISIBLE : View.GONE);
         thumbsUpDown.setVisibility(viewType.equals(VIEW_THUMBS_UP_DOWN) && !payloadInner.getThumpsUpDownArrays().isEmpty() ? View.VISIBLE : View.GONE);
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();

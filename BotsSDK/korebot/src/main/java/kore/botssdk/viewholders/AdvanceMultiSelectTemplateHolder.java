@@ -93,16 +93,20 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
 
             tvAdvanceDone.setOnClickListener(v -> {
                 if (!isLastItem()) return;
-                StringBuilder stringBuffer = new StringBuilder();
-                stringBuffer.append("Here are the selected items : ");
+                StringBuilder values = new StringBuilder();
+                StringBuilder titles = new StringBuilder();
+                titles.append("Here are the selected items : ");
+                values.append("Here are the selected items : ");
                 for (int i = 0; i < allCheckedItems.size(); i++) {
-                    stringBuffer.append(allCheckedItems.get(i).getTitle());
-
-                    if (i != allCheckedItems.size() - 1)
-                        stringBuffer.append(",");
+                    titles.append(allCheckedItems.get(i).getTitle());
+                    values.append(allCheckedItems.get(i).getValue());
+                    if (i != allCheckedItems.size() - 1) {
+                        titles.append(", ");
+                        values.append(", ");
+                    }
                 }
 
-                composeFooterInterface.onSendClick(stringBuffer.toString(), stringBuffer.toString(), true);
+                composeFooterInterface.onSendClick(titles.toString(), values.toString(), true);
             });
 
         } else {

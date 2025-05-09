@@ -93,16 +93,17 @@ public class MultiSelectTemplateAdapter extends RecyclerView.Adapter<MultiSelect
             holder.textView.setText(((BotButtonModel) item).getTitle());
             holder.textView.setOnClickListener(v -> {
                 if (composeFooterInterface != null && isEnabled && !checkedItems.isEmpty()) {
-                    StringBuilder sb = new StringBuilder();
-                    StringBuilder sbValue = new StringBuilder();
-                    for (MultiSelectBase item1 : checkedItems) {
-                        if (!sb.toString().isEmpty()) sb.append(", ");
-                        sb.append(((BotMultiSelectElementModel) item1).getTitle());
-
-                        if (!sbValue.toString().isEmpty()) sbValue.append(",");
-                        sbValue.append(((BotMultiSelectElementModel) item1).getValue());
+                    StringBuilder titles = new StringBuilder();
+                    StringBuilder values = new StringBuilder();
+                    for (int i = 0; i < checkedItems.size(); i++) {
+                        titles.append(((BotMultiSelectElementModel)checkedItems.get(i)).getTitle());
+                        values.append(((BotMultiSelectElementModel)checkedItems.get(i)).getValue());
+                        if (i != checkedItems.size() - 1) {
+                            titles.append(" ");
+                            values.append(", ");
+                        }
                     }
-                    composeFooterInterface.onSendClick(sb.toString(), sbValue.toString(), false);
+                    composeFooterInterface.onSendClick(titles.toString(), values.toString(), false);
                 }
             });
         }
