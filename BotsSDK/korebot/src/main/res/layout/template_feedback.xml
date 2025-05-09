@@ -66,15 +66,27 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <androidx.appcompat.widget.AppCompatRatingBar
-        android:id="@+id/rbFeedback"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/llRbFeedback"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numStars="5"
-        android:stepSize="1"
-        android:theme="@style/RatingBar"
+        android:layout_marginHorizontal="5dp"
+        android:layout_marginVertical="10dp"
+        android:background="@drawable/bg_rounded_rect_feedback"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingVertical="10dp"
         android:visibility="gone"
-        tools:visibility="visible" />
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatRatingBar
+            android:id="@+id/rbFeedback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="1"
+            android:theme="@style/RatingBar" />
+    </LinearLayout>
 
     <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvGlad"

@@ -80,9 +80,9 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
         Widget.Button btn = buttons.get(i);
         holder.tv.setText(btn.getTitle());
         holder.ivBtnImage.setVisibility(GONE);
-        GradientDrawable gradientDrawable = (GradientDrawable) (holder.layoutDetails.getBackground() != null ? holder.layoutDetails : holder.buttonsLayout).getBackground();
-        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
-        holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+//        GradientDrawable gradientDrawable = (GradientDrawable) (holder.layoutDetails.getBackground() != null ? holder.layoutDetails : holder.buttonsLayout).getBackground();
+//        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
 
         if (!StringUtils.isNullOrEmpty(btn.getIcon())) {
             holder.ivBtnImage.setVisibility(View.VISIBLE);
