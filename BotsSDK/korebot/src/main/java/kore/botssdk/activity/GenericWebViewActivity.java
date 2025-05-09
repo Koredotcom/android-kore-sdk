@@ -36,7 +36,7 @@ import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import kore.botssdk.R;
-import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.utils.StringUtils;
 
 @SuppressLint({"SetJavaScriptEnabled", "UnKnownNullness"})
@@ -255,7 +255,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         ActionBar actionBar = getSupportActionBar();
 
         if (actionBar != null) {
-            if (SDKConfiguration.isIsShowActionBar()) {
+            if (SDKConfig.isIsShowActionBar()) {
                 actionBar.setDisplayHomeAsUpEnabled(true);
                 actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_arrow_back_black_24dp, getTheme()));
                 actionBar.setTitle(actionbarTitle);
