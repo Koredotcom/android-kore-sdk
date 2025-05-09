@@ -22,6 +22,7 @@ public class SDKConfig {
     private static BaseHeaderFragment customHeaderFragment = null;
     private static boolean isShowHeader = true;
     private static boolean isUpdateStatusBarColor = false;
+    private static boolean isShowActionBar = true;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
@@ -90,8 +91,12 @@ public class SDKConfig {
         }
     }
 
-    public static void setIsShowActionBar(boolean isShowActionBar) {
-        SDKConfiguration.setIsShowActionBar(isShowActionBar);
+    public static boolean isIsShowActionBar() {
+        return isShowActionBar;
+    }
+
+    public static void setIsShowActionBar(boolean isShow) {
+        isShowActionBar = isShow;
     }
 
     public static void setIsShowIconTop(boolean isShow) {
