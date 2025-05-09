@@ -26,10 +26,10 @@ This repository also includes a sample application that you can customize based 
 **Screenshots for reference:**
 
 ![Enable webclient](https://github.com/user-attachments/assets/4d2263a2-bf8a-4a02-8b60-5a8b4c8da643)
-*Enable Web/Mobile Client Channel*
+_Enable Web/Mobile Client Channel_
 
 ![Credentials](https://github.com/user-attachments/assets/0824b163-f08e-42fc-954a-b46a5f8d5ecb)
-*Obtain Client ID and Client Secret*
+_Obtain Client ID and Client Secret_
 
 ---
 
@@ -45,6 +45,7 @@ This repository also includes a sample application that you can customize based 
    include ':korebot', ':korebotsdklib'
    ```
 3. Add dependencies in `build.gradle`:
+
    ```groovy
    implementation(project(':korebot')) {
        exclude module: 'support-v4'
@@ -93,6 +94,9 @@ SDKConfig.setIsShowIconTop(true);
 
 // Flag to show or hide time stamp of each conversation message
 SDKConfig.setIsTimeStampsRequired(true);
+
+// Flag to show or hide action bar in GenericWebviewActivity
+SDKConfig.setIsShowActionBar(true);
 
 // Flag to show or hide attachments icon in footer fragment
 SDKConfiguration.OverrideKoreConfig.showAttachment = true;
@@ -160,6 +164,7 @@ startActivity(intent);
 ### With UI
 
 1. Add this dependency:
+
    ```groovy
    implementation 'com.github.Koredotcom:android-kore-sdk:0.0.5'
    ```
@@ -167,6 +172,7 @@ startActivity(intent);
 2. Initialize the bot using the configuration method described in **Setup Bot Configuration with UI**.
 
 3. Launch chat window:
+
    ```java
    Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
    Bundle bundle = new Bundle();
@@ -191,6 +197,7 @@ startActivity(intent);
    // To show your custom header fragment instead of existing
    SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
 ```
+
 **Note**: Please go through the readme documents for [CustomTemplateInjection](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomTemplateInjection.md) and [CustomFragmentInjection](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomFragmentInjection.md)
 
 ---
@@ -198,11 +205,13 @@ startActivity(intent);
 ### Without UI (Headless Bot)
 
 1. Add JitPack to `project/build.gradle`:
+
    ```groovy
    maven { url 'https://www.jitpack.io' }
    ```
 
 2. Add the SDK in `app/build.gradle`:
+
    ```groovy
    implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:0.0.5'
    ```
