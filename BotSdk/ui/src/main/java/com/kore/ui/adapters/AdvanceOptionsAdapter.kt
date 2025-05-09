@@ -18,6 +18,7 @@ import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
+import androidx.core.graphics.toColorInt
 
 class AdvanceOptionsAdapter(
     val context: Context,
@@ -82,7 +83,7 @@ class AdvanceOptionsAdapter(
     private fun getTintDrawable(context: Context, color: String, drawable: Int): Drawable {
         val buttonDrawable = AppCompatResources.getDrawable(context, drawable)
         val wrappedDrawable = DrawableCompat.wrap(buttonDrawable!!)
-        DrawableCompat.setTint(wrappedDrawable, Color.parseColor(color))
+        DrawableCompat.setTint(wrappedDrawable, color.toColorInt())
         return wrappedDrawable
     }
 }

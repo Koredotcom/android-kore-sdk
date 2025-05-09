@@ -10,7 +10,6 @@ object SDKConfiguration {
     private var customData: HashMap<String, Any>? = null
     private var botBrandingModel: BotBrandingModel? = null
     private var socketConnectionMode: String? = null
-    private var isShowActionBar = true
 
     object OverrideKoreConfig {
         var isEmojiShortcutEnable: Boolean = true
@@ -75,12 +74,4 @@ object SDKConfiguration {
 
     @JvmStatic
     fun getConnectionMode(): String? = socketConnectionMode
-
-    @JvmStatic
-    fun isIsShowActionBar(): Boolean = isShowActionBar
-
-    @JvmStatic
-    fun setIsShowActionBar(isShow: Boolean) {
-        isShowActionBar = isShow
-    }
 }

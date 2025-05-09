@@ -31,6 +31,7 @@ import com.kore.model.constants.BotResponseConstants.HEADING
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.model.constants.BotResponseConstants.LABEL
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
+import com.kore.model.constants.BotResponseConstants.VALUE
 import com.kore.ui.R
 import com.kore.ui.databinding.RowDropdownTemplateBinding
 import com.kore.ui.row.SimpleListRow
@@ -97,7 +98,7 @@ class DropDownTemplateRow(
         submit.setOnClickListener {
             if (!isLastItem || selectedPosition <= 0) return@setOnClickListener
             if (elements[selectedPosition - 1][KEY_TITLE]?.equals(placeHolder) == false) {
-                actionEvent(BotChatEvent.SendMessage(elements[selectedPosition - 1][KEY_TITLE]!!))
+                actionEvent(BotChatEvent.SendMessage(elements[selectedPosition - 1][KEY_TITLE]!!, elements[selectedPosition - 1][VALUE]!!))
             }
         }
     }

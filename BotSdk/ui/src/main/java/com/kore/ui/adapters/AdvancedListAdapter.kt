@@ -397,6 +397,7 @@ class AdvancedListAdapter(
                                                 if (!isLastItem) return@setOnClickListener
                                                 actionEvent(BotChatEvent.SendMessage(listElementButtonPayload, listElementButtonPayload))
                                             } else {
+                                                holder.ivAction.rotation = (if (cardTemplateModel[IS_COLLAPSED] as Boolean) 0 else 90).toFloat()
                                                 cardTemplateModel[IS_COLLAPSED] = !(cardTemplateModel[IS_COLLAPSED] as Boolean)
                                                 holder.llChildViews.isVisible = cardTemplateModel[IS_COLLAPSED] as Boolean
                                             }
@@ -484,6 +485,7 @@ class AdvancedListAdapter(
                 }
 
                 holder.ivAction.setOnClickListener {
+                    holder.ivAction.rotation = (if (cardTemplateModel[IS_COLLAPSED] as Boolean) 0 else 90).toFloat()
                     cardTemplateModel[IS_COLLAPSED] = !(cardTemplateModel[IS_COLLAPSED] as Boolean)
                     holder.llChildViews.isVisible = cardTemplateModel[IS_COLLAPSED] as Boolean
                 }
@@ -520,6 +522,7 @@ class AdvancedListAdapter(
                             if (!isLastItem) return@setOnClickListener
                             actionEvent(BotChatEvent.SendMessage(listElementButtonPayload, listElementButtonPayload))
                         } else {
+                            holder.ivAction.rotation = (if (cardTemplateModel[IS_COLLAPSED] as Boolean) 0 else 90).toFloat()
                             cardTemplateModel[IS_COLLAPSED] = !(cardTemplateModel[IS_COLLAPSED] as Boolean)
                             holder.llChildViews.isVisible = cardTemplateModel[IS_COLLAPSED] as Boolean
                         }

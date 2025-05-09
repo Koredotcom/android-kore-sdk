@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.kore.common.event.UserActionEvent
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
@@ -43,6 +44,9 @@ class CarouselTemplateAdapter(
             val sharedPrefs = PreferenceRepositoryImpl()
             val bgColor = sharedPrefs.getStringValue(holder.hashTagsView.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
             holder.hashTagsView.setTextColor(bgColor)
+            holder.hashTagsView.setOnClickListener {
+                actionEvent(BotChatEvent.UrlClick(btn[BotResponseConstants.URL] as String))
+            }
         }
 
         holder.carouselItemTitle.text = buttonMap[BotResponseConstants.KEY_TITLE] as String

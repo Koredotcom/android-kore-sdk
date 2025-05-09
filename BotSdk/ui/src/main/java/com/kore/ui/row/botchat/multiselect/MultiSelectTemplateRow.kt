@@ -98,7 +98,7 @@ class MultiSelectTemplateRow(
                 stringValues.append(item[BotResponseConstants.VALUE])
                 stringKeys.append(item[BotResponseConstants.KEY_TITLE])
                 if (index < selectedItems.size - 1) {
-                    stringValues.append(" ")
+                    stringValues.append(",")
                     stringKeys.append(" ")
                 }
             }

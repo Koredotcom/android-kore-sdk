@@ -27,6 +27,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
+import com.kore.SDKConfig
 import com.kore.common.SDKConfiguration
 import com.kore.ui.R
 import com.kore.ui.audiocodes.webrtcclient.general.Log
@@ -170,7 +171,7 @@ class GeneralWebViewActivity : AppCompatActivity() {
             setSupportActionBar(toolbar)
             val actionBar = supportActionBar
             if (actionBar != null) {
-                if (SDKConfiguration.isIsShowActionBar()) {
+                if (SDKConfig.isIsShowActionBar()) {
                     actionBar.setDisplayHomeAsUpEnabled(true)
                     actionBar.setHomeAsUpIndicator(ResourcesCompat.getDrawable(resources, R.drawable.back_arrow, theme))
 
