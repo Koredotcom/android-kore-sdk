@@ -36,7 +36,7 @@
             android:textSize="14sp"
             tools:text="@string/title" />
 
-        <com.kore.ui.textview.CustomTextViewBold
+        <com.kore.ui.textview.CustomTextView
             android:id="@+id/tv_sub_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,11 +46,12 @@
             android:maxLines="1"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:textColor="@color/footer_color_dark_grey"
+            android:textColor="@color/left_bubble_text_color"
             android:textSize="12sp"
             android:textStyle="bold"
             android:visibility="gone"
-            tools:text="@string/subtitle" />
+            tools:text="@string/subtitle"
+            tools:visibility="visible" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.kore.ui.textview.CustomTextViewBold

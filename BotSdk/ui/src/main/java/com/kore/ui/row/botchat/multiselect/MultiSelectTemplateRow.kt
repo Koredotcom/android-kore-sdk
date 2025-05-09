@@ -1,5 +1,7 @@
 package com.kore.ui.row.botchat.multiselect
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
 import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
@@ -11,6 +13,7 @@ import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
 import com.kore.extensions.setRoundedCorner
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_LEFT_BG_COLOR
 import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
 import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
@@ -31,6 +34,7 @@ class MultiSelectTemplateRow(
 ) : SimpleListRow() {
 
     override val type: SimpleListRowType = BotChatRowType.getRowType(BotChatRowType.ROW_MULTI_SELECT_PROVIDER)
+    private val preferenceRepository = PreferenceRepositoryImpl()
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is MultiSelectTemplateRow) return false
@@ -67,21 +71,24 @@ class MultiSelectTemplateRow(
     }
 
     private fun RowMultiSelectBinding.commonBind() {
-        done.isVisible = isLastItem && !selectedItems.isNullOrEmpty()
+        done.isVisible = isLastItem && selectedItems.isNotEmpty()
         val adapter = list.adapter as SimpleListAdapter
         adapter.submitList(createRows())
-        selectAll.isChecked = selectedItems.containsAll(elements)
-        selectAll.setOnCheckedChangeListener { checkBox, isChecked ->
-            if (checkBox.isPressed) {
-                if (!isLastItem) {
-                    checkBox.isChecked = !isChecked
-                    return@setOnCheckedChangeListener
-                }
-                val items: ArrayList<Map<String, String>> = selectedItems.clone() as ArrayList<Map<String, String>>
-                items.removeAll(elements)
-                if (isChecked) items.addAll(elements)
-                onSaveState(id, items, BotResponseConstants.SELECTED_ITEM)
+        llCheck.isSelected = selectedItems.containsAll(elements)
+        val checkedDrawable: GradientDrawable = llCheck.background as GradientDrawable
+        val checkedColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR).toColorInt()
+        val uncheckedColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_LEFT_BG_COLOR).toColorInt()
+        checkedDrawable.setColor(if (llCheck.isSelected) checkedColor else Color.WHITE)
+        checkedDrawable.setStroke(1.dpToPx(root.context), if (llCheck.isSelected) checkedColor else uncheckedColor)
+        llCheck.setOnClickListener {
+            if (!isLastItem) {
+                return@setOnClickListener
             }
+            llCheck.isSelected = !llCheck.isSelected
+            val items: ArrayList<Map<String, String>> = selectedItems.clone() as ArrayList<Map<String, String>>
+            items.removeAll(elements)
+            if (llCheck.isSelected) items.addAll(elements)
+            onSaveState(id, items, BotResponseConstants.SELECTED_ITEM)
         }
         done.setOnClickListener {
             if (selectedItems.isEmpty()) return@setOnClickListener
@@ -91,7 +98,7 @@ class MultiSelectTemplateRow(
                 stringValues.append(item[BotResponseConstants.VALUE])
                 stringKeys.append(item[BotResponseConstants.KEY_TITLE])
                 if (index < selectedItems.size - 1) {
-                    stringValues.append(" ")
+                    stringValues.append(",")
                     stringKeys.append(" ")
                 }
             }
@@ -101,13 +108,7 @@ class MultiSelectTemplateRow(
 
     private fun createRows(): List<SimpleListRow> {
         return elements.map { item ->
-            MultiSelectTemplateItemRow(
-                id,
-                item,
-                selectedItems,
-                isLastItem,
-                onSaveState,
-            )
+            MultiSelectTemplateItemRow(id, item, selectedItems, isLastItem, onSaveState)
         }
     }
 }

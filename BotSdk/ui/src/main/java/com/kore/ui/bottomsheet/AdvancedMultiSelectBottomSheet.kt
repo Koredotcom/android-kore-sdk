@@ -73,13 +73,19 @@ class AdvancedMultiSelectBottomSheet : BottomSheetDialogFragment() {
             }
             done.setOnClickListener {
                 if (selectedItems.isEmpty()) return@setOnClickListener
-                val stringBuilder = StringBuilder()
-                stringBuilder.append("Here are the selected items : ")
+                val titles = StringBuilder()
+                val values = StringBuilder()
+                titles.append("Here are the selected items : ")
+                values.append("Here are the selected items : ")
                 selectedItems.mapIndexed { index, item ->
-                    stringBuilder.append(item[BotResponseConstants.VALUE])
-                    if (index < selectedItems.size - 1) stringBuilder.append(" ")
+                    titles.append(item[BotResponseConstants.KEY_TITLE])
+                    values.append(item[BotResponseConstants.VALUE])
+                    if (index < selectedItems.size - 1) {
+                        titles.append(", ")
+                        values.append(", ")
+                    }
                 }
-                actionEvent(BotChatEvent.SendMessage(stringBuilder.toString(), stringBuilder.toString()))
+                actionEvent(BotChatEvent.SendMessage(titles.toString(), values.toString()))
                 bottomSheetDialog?.dismiss()
             }
 

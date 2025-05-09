@@ -1,8 +1,13 @@
 package com.kore.ui.row.botchat
 
+import android.R
+import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
@@ -31,6 +36,8 @@ class ClockTemplateRow(
         const val MERIDIAN_PM = "PM"
     }
 
+    private val preferenceRepository = PreferenceRepositoryImpl()
+
     override val type: SimpleListRowType = BotChatRowType.getRowType(ROW_CLOCK_PROVIDER)
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is ClockTemplateRow) return false
@@ -48,12 +55,14 @@ class ClockTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, isShow = false, isTemplate = true)
         val childBinding = RowClockTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
-            val sharedPrefs = PreferenceRepositoryImpl()
-            val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
-            val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
+            val bgColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            val txtColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
             confirm.setRoundedCorner(6.dpToPx(root.context).toFloat())
             confirm.setBackgroundColor(bgColor)
             confirm.setTextColor(txtColor)
+            val thumbTintList: ColorStateList = getThumbTint(root.context)
+            seekbarHours.thumbTintList = thumbTintList
+            seekbarMinutes.thumbTintList = thumbTintList
             commonBind()
         }
     }
@@ -126,5 +135,24 @@ class ClockTemplateRow(
                 )
             }
         })
+    }
+
+    private fun getThumbTint(context: Context): ColorStateList {
+        val defaultColor = preferenceRepository.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#ffffff").toColorInt()
+        val pressedColor = ContextCompat.getColor(context, com.kore.ui.R.color.color_a7b0be)
+        val disableColor = ContextCompat.getColor(context, com.kore.ui.R.color.color_efefef)
+
+        val states = arrayOf(
+            intArrayOf(R.attr.state_pressed),
+            intArrayOf(R.attr.state_enabled),
+            intArrayOf(-R.attr.state_enabled)
+        )
+        val colors = intArrayOf(
+            defaultColor,
+            pressedColor,
+            disableColor
+        )
+
+        return ColorStateList(states, colors)
     }
 }

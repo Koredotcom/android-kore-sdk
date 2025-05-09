@@ -14,6 +14,23 @@
         android:background="@drawable/theme1_left_bubble_bg"
         android:orientation="vertical">
 
+        <com.kore.ui.textview.CustomTextViewBold
+            android:id="@+id/tvDropDownHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginTop="12dp"
+            android:ellipsize="end"
+            android:gravity="center_vertical|left"
+            android:maxLines="1"
+            android:minWidth="300dp"
+            android:minHeight="25dp"
+            android:tag="medium"
+            android:textColor="#404051"
+            android:textSize="15sp"
+            tools:ignore="RtlHardcoded"
+            tools:text="Hello" />
+
         <com.kore.ui.textview.CustomTextView
             android:id="@+id/tvDropDownTitle"
             android:layout_width="match_parent"

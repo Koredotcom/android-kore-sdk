@@ -8,7 +8,7 @@ sealed class BotChatEvent : UserActionEvent {
     class UrlClick(val url: String, val header: String = "") : BotChatEvent()
     class PhoneNumberClick(val phoneNumber: String) : BotChatEvent()
     class OnDropDownItemClicked(val selectedItem: String) : BotChatEvent()
-    object ShowAttachmentOptions : BotChatEvent()
-    object OnBackPressed : BotChatEvent()
+    data object ShowAttachmentOptions : BotChatEvent()
+    data object OnBackPressed : BotChatEvent()
     class DownloadLink(val msgId: String, val url: String, val fileName: String?) : BotChatEvent()
 }

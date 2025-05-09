@@ -29,6 +29,7 @@ import com.kore.SDKConfig
 import com.kore.SDKConfig.isMinimized
 import com.kore.botclient.BotClient
 import com.kore.botclient.ConnectionState
+import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
 import com.kore.event.BotChatEvent
@@ -58,7 +59,6 @@ import com.kore.ui.base.BaseContentFragment
 import com.kore.ui.base.BaseFooterFragment
 import com.kore.ui.base.BaseFragment
 import com.kore.ui.base.BaseHeaderFragment
-import com.kore.ui.botchat.dialog.WelcomeDialogFragment
 import com.kore.ui.botchat.fragment.ChatContentFragment
 import com.kore.ui.botchat.fragment.ChatFooterFragment
 import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
@@ -195,7 +195,13 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
             }
 
             is BotChatEvent.SendAttachments -> botChatViewModel.sendAttachment(event.message, event.attachments)
-            is BotChatEvent.UrlClick -> openWebView(event.url, event.header.ifEmpty { getString(R.string.app_name) })
+            is BotChatEvent.UrlClick -> {
+                val header = event.header.ifEmpty {
+                    if (SDKConfiguration.getBotConfigModel() != null) SDKConfiguration.getBotConfigModel()?.botName!! else getString(R.string.app_name)
+                }
+                openWebView(event.url, header)
+            }
+
             is BotChatEvent.PhoneNumberClick -> {}
             is BotChatEvent.OnDropDownItemClicked -> footerFragment.setMessage(event.selectedItem)
             is BotChatEvent.ShowAttachmentOptions -> footerFragment.showAttachmentActionSheet()
@@ -345,8 +351,13 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
             cal.timeInMillis = MaterialDatePicker.todayInUtcMilliseconds()
             val builder = MaterialDatePicker.Builder.datePicker()
             builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
+            builder.setPositiveButtonText(getString(R.string.confirm))
             builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
-            builder.setCalendarConstraints(botChatViewModel.minRange(cal.timeInMillis).build())
+            builder.setCalendarConstraints(
+                botChatViewModel.limitRange(
+                    (payload[START_DATE] as String?) ?: "", (payload[END_DATE] as String?) ?: "", (payload[FORMAT] as String?) ?: ""
+                ).build()
+            )
             builder.setTheme(R.style.MyMaterialCalendarTheme)
             try {
                 val picker = builder.build()
@@ -358,6 +369,7 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         } else {
             val builder = MaterialDatePicker.Builder.dateRangePicker()
             builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
+            builder.setPositiveButtonText(getString(R.string.confirm))
             builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
             builder.setCalendarConstraints(
                 botChatViewModel.limitRange(
@@ -379,8 +391,8 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.showTypingIndicator(icon, true)
     }
 
-    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?) {
-        contentFragment.showQuickReplies(quickReplies, type)
+    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {
+        contentFragment.showQuickReplies(quickReplies, type, isStacked)
     }
 
     override fun getAdapterLastItems(): BaseBotMessage? {

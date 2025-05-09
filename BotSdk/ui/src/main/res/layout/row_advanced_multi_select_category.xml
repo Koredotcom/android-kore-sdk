@@ -32,23 +32,31 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/select_all"
-            android:layout_width="@dimen/dimen_30dp"
-            android:layout_height="30dp"
+        <LinearLayout
+            android:id="@+id/ll_check"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
             android:layout_centerVertical="true"
-            android:button="@drawable/selector_multi_select"
-            android:gravity="center"
-            android:padding="10dp" />
+            android:background="@drawable/check_bg">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp"
+                android:src="@drawable/ic_check" />
+        </LinearLayout>
 
         <com.kore.ui.textview.CustomTextView
             android:id="@+id/text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="@dimen/dimen_12dp"
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:layout_marginBottom="@dimen/dimen_12dp"
-            android:layout_toEndOf="@+id/select_all"
+            android:layout_toEndOf="@+id/ll_check"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:maxLines="1"

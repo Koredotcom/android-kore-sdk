@@ -136,7 +136,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             providers[ROW_LINE_CHART_PROVIDER] = LineChartTemplateProvider()
             providers[ROW_IMAGE_PROVIDER] = ImageTemplateProvider()
             providers[ROW_CARD_PROVIDER] = CardTemplateProvider()
-            providers[ROW_ADVANCE_PROVIDER] = AdvanceTemplateProvider()
+            providers[ROW_ADVANCE_PROVIDER] = AdvancedListTemplateProvider()
             providers[ROW_VIDEO_PROVIDER] = VideoTemplateProvider()
             providers[ROW_TABLE_PROVIDER] = TableTemplateProvider()
             providers[ROW_TABLE_RESPONSIVE_PROVIDER] = TableResponsiveProvider()

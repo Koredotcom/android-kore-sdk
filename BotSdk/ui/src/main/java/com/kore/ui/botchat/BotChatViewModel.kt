@@ -9,6 +9,9 @@ import android.widget.Toast
 import androidx.core.util.Pair
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.CalendarConstraints.DateValidator
+import com.google.android.material.datepicker.CompositeDateValidator
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.gson.Gson
 import com.kore.SDKConfig
@@ -22,6 +25,7 @@ import com.kore.common.Result
 import com.kore.common.SDKConfiguration
 import com.kore.common.SDKConfiguration.OverrideKoreConfig.historyBatchSize
 import com.kore.common.SDKConfiguration.getBotConfigModel
+import com.kore.common.utils.DateUtils
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
 import com.kore.common.utils.ToastUtils
@@ -34,13 +38,13 @@ import com.kore.data.repository.dynamicurl.DynamicUrlRepository
 import com.kore.data.repository.dynamicurl.DynamicUrlRepositoryImpl
 import com.kore.data.repository.preference.PreferenceRepository
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
-import com.kore.extensions.stringToDate
 import com.kore.helper.SpeechSynthesizerHelper
 import com.kore.model.BotEventResponse
 import com.kore.model.BotRequest
 import com.kore.model.BotResponse
 import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUTTON_STACKED
 import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_ADVANCED_MULTI_SELECT
@@ -137,7 +141,8 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                                             TEMPLATE_TYPE_QUICK_REPLIES -> {
                                                 getView()?.showQuickReplies(
                                                     innerMap[TEMPLATE_TYPE_QUICK_REPLIES] as List<Map<String, *>>,
-                                                    if (innerMap[TYPE] != null) innerMap[TYPE] as String else ""
+                                                    if (innerMap[TYPE] != null) innerMap[TYPE] as String else "",
+                                                    innerMap[BUTTON_STACKED] as Boolean? == true
                                                 )
                                             }
 
@@ -408,32 +413,40 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     fun limitRange(startDate: String, endDate: String, format: String): CalendarConstraints.Builder {
         val constraintsBuilderRange = CalendarConstraints.Builder()
-        val calendarStart = Calendar.getInstance()
-        val calendarEnd = Calendar.getInstance()
+        val dateFormat = format.replace("DD", "dd").replace("YY", "yy")
+        if (dateFormat.isEmpty()) {
+            constraintsBuilderRange.setValidator(DateValidatorPointForward.now())
+            return constraintsBuilderRange
+        }
+        if (startDate.isNotEmpty() && endDate.isNotEmpty()) {
+            val startDateMillis: Long = DateUtils.getDateFromFormat(startDate, dateFormat, 0)
+            val endDateMillis: Long = DateUtils.getDateFromFormat(endDate, dateFormat, 1)
+            constraintsBuilderRange.setStart(startDateMillis)
+            constraintsBuilderRange.setEnd(endDateMillis)
+            val minValidator: DateValidator = DateValidatorPointForward.from(startDateMillis)
+            val maxValidator: DateValidator = DateValidatorPointBackward.before(endDateMillis)
+            val validators = listOf(minValidator, maxValidator)
+            val compositeValidator = CompositeDateValidator.allOf(validators)
+            constraintsBuilderRange.setValidator(compositeValidator)
+        } else if (startDate.isNotEmpty()) {
+            val dateValidatorMin: DateValidator = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, dateFormat, 0))
 
-        val dateFormat = format.replace("DD", "dd").replace("YYYY", "yyyy")
-        if (dateFormat.isNotEmpty() && (startDate.isNotEmpty() || endDate.isNotEmpty())) {
-            if (startDate.isNotEmpty()) calendarStart.time = startDate.stringToDate(dateFormat)!!
-            if (endDate.isNotEmpty()) calendarEnd.time = endDate.stringToDate(dateFormat)!!
-            val minDate = calendarStart.timeInMillis
-            val maxDate = calendarEnd.timeInMillis
-            if (startDate.isNotEmpty() || endDate.isNotEmpty()) {
-                constraintsBuilderRange.setStart(minDate)
-                constraintsBuilderRange.setEnd(maxDate)
-                constraintsBuilderRange.setValidator(RangeValidator(minDate, maxDate))
-            }
+            val listValidators = java.util.ArrayList<DateValidator>()
+            listValidators.add(dateValidatorMin)
+
+            val validators = CompositeDateValidator.allOf(listValidators)
+            constraintsBuilderRange.setValidator(validators)
+        } else if (endDate.isNotEmpty()) {
+            val dateValidatorMax: DateValidator = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(endDate, dateFormat, 1))
+
+            val listValidators = java.util.ArrayList<DateValidator>()
+            listValidators.add(dateValidatorMax)
+
+            val validators = CompositeDateValidator.allOf(listValidators)
+            constraintsBuilderRange.setValidator(validators)
         } else {
             constraintsBuilderRange.setValidator(RangeValidator(null, null))
         }
-        return constraintsBuilderRange
-    }
-
-    fun minRange(date: Long): CalendarConstraints.Builder {
-        val constraintsBuilderRange = CalendarConstraints.Builder()
-
-        if (date > 0) constraintsBuilderRange.setStart(date)
-
-        constraintsBuilderRange.setValidator(DateValidatorPointForward.now())
         return constraintsBuilderRange
     }
 
@@ -450,11 +463,10 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         val endMonth = cal[Calendar.MONTH] + 1
         val endDay = cal[Calendar.DAY_OF_MONTH]
         val formattedDate: StringBuilder = java.lang.StringBuilder()
-        formattedDate.append((if (strMonth > 9) strMonth else "0$strMonth")).append("-")
-            .append(if (strDay > 9) strDay else "0$strDay").append("-").append(strYear)
-            .append(" to ").append((if (endMonth > 9) endMonth else "0$endMonth"))
-            .append("-").append((if (endDay > 9) endDay else "0$endDay")).append("-")
-            .append(endYear)
+        formattedDate.append((if ((strDay + 1) > 9) (strDay + 1) else "0" + (strDay + 1)).toString()).append("-")
+            .append(if ((strMonth + 1) > 9) (strMonth + 1) else "0" + (strMonth + 1)).append("-").append(strYear).append(" to ")
+            .append(if ((endDay + 1) > 9) (endDay + 1) else "0" + (endDay + 1)).append("-")
+            .append(if ((endMonth + 1) > 9) (endMonth + 1) else "0" + (endMonth + 1)).append("-").append(endYear)
 
         sendMessage(formattedDate.toString(), formattedDate.toString())
     }
@@ -466,7 +478,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         val stMonth = calendar[Calendar.MONTH] + 1
         val stDay = calendar[Calendar.DAY_OF_MONTH]
         val formattedDate =
-            ((if (stMonth > 9) stMonth else "0$stMonth").toString() + "-" + (if (stDay > 9) stDay else "0$stDay") + "-" + stYear)
+            (if ((stMonth + 1) > 9) (stMonth + 1) else "0" + (stMonth + 1)).toString() + "/" + (if (stDay > 9) stDay else "0$stDay") + "/" + stYear
         sendMessage(formattedDate, formattedDate)
     }
 

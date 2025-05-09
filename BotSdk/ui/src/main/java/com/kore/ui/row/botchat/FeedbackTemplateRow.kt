@@ -60,7 +60,7 @@ class FeedbackTemplateRow(
             tvFeedbackTemplateTitle.text = payload[KEY_TEXT].toString()
             val viewType = payload[VIEW]
             emojis.root.isVisible = viewType == VIEW_CSAT
-            rbFeedback.isVisible = viewType == VIEW_STAR
+            llRbFeedback.isVisible = viewType == VIEW_STAR
             rlViewNPS.isVisible = viewType == VIEW_NPS
             thumbsUpDown.isVisible = viewType == VIEW_THUMBS_UP_DOWN
             commonBind()

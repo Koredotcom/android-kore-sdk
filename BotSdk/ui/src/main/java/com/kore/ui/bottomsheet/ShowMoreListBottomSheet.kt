@@ -1,3 +1,4 @@
+
 package com.kore.ui.bottomsheet
 
 import android.app.Dialog
@@ -33,6 +34,7 @@ class ShowMoreListBottomSheet : BottomSheetDialogFragment() {
     private var bottomSheetDialog: BottomSheetDialog? = null
     private lateinit var data: Map<String, Any>
     private var isLastItem: Boolean = false
+    private var title: String? = null
     private lateinit var actionEvent: (event: UserActionEvent) -> Unit
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -43,6 +45,8 @@ class ShowMoreListBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
+            tvOptionsTitle.isVisible = title != null
+            tvOptionsTitle.text = title
             rvMoreData.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
             val adapter = SimpleListAdapter(ListViewTemplateItemRowType.entries)
             rvMoreData.adapter = adapter
@@ -83,11 +87,13 @@ class ShowMoreListBottomSheet : BottomSheetDialogFragment() {
 
     fun showData(
         isShowHeader: Boolean,
+        title: String?,
         data: Map<String, Any>,
         isLastItem: Boolean,
         manager: FragmentManager,
         actionEvent: (event: UserActionEvent) -> Unit
     ) {
+        this.title = title
         this.data = data
         this.isLastItem = isLastItem
         this.actionEvent = actionEvent
@@ -97,7 +103,7 @@ class ShowMoreListBottomSheet : BottomSheetDialogFragment() {
 
     private fun createRows(tabName: String): List<SimpleListRow> {
         val elements = data[tabName] as List<Map<String, Any>>
-        return elements.map { element -> ListViewTemplateItemRow(element, isLastItem, actionEvent) }
+        return elements.map { element -> ListViewTemplateItemRow(element, isLastItem, bottomSheetDialog, actionEvent) }
     }
 
     override fun onDestroyView() {

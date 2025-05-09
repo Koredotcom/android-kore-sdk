@@ -12,9 +12,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.google.gson.internal.LinkedTreeMap
 import com.kore.common.SDKConfiguration
-import com.kore.ui.base.BaseView
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.NetworkUtils
 import com.kore.event.BotChatEvent
@@ -25,6 +27,7 @@ import com.kore.ui.R
 import com.kore.ui.adapters.BotChatAdapter
 import com.kore.ui.adapters.QuickRepliesTemplateAdapter
 import com.kore.ui.base.BaseContentFragment
+import com.kore.ui.base.BaseView
 import com.kore.ui.botchat.BotChatView
 import com.kore.ui.databinding.BotContentLayoutBinding
 import com.kore.ui.row.botchat.BotChatItemDecoration
@@ -88,10 +91,22 @@ class ChatContentFragment : BaseContentFragment() {
         }
     }
 
-    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?) {
+    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {
         if (quickReplies != null) {
             binding.quickReplyView.isVisible = true
-            binding.quickReplyView.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            if (isStacked) {
+                val layoutManager = FlexboxLayoutManager(binding.root.context)
+                layoutManager.justifyContent = JustifyContent.FLEX_START
+                layoutManager.flexDirection = FlexDirection.ROW
+                binding.quickReplyView.layoutManager = layoutManager
+            } else {
+                binding.quickReplyView.layoutManager = LinearLayoutManager(
+                    requireActivity(),
+                    if (type.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true))
+                        LinearLayoutManager.VERTICAL else LinearLayoutManager.HORIZONTAL,
+                    false
+                )
+            }
             binding.quickReplyView.adapter = QuickRepliesTemplateAdapter(requireActivity(), type, quickReplies, this)
         }
     }

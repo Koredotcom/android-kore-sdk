@@ -19,7 +19,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -74,6 +73,7 @@ import com.kore.ui.utils.BundleConstants
 import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import org.webrtc.NetworkMonitor.isOnline
 import java.util.Calendar
+import androidx.core.graphics.toColorInt
 
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
     private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
@@ -357,8 +357,13 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             cal.timeInMillis = MaterialDatePicker.todayInUtcMilliseconds()
             val builder = MaterialDatePicker.Builder.datePicker()
             builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
+            builder.setPositiveButtonText(getString(R.string.confirm))
             builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
-            builder.setCalendarConstraints(botChatViewModel.minRange(cal.timeInMillis).build())
+            builder.setCalendarConstraints(
+                botChatViewModel.limitRange(
+                    (payload[START_DATE] as String?) ?: "", (payload[END_DATE] as String?) ?: "", (payload[FORMAT] as String?) ?: ""
+                ).build()
+            )
             builder.setTheme(R.style.MyMaterialCalendarTheme)
             try {
                 val picker = builder.build()
@@ -370,6 +375,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         } else {
             val builder = MaterialDatePicker.Builder.dateRangePicker()
             builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
+            builder.setPositiveButtonText(getString(R.string.confirm))
             builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
             builder.setCalendarConstraints(
                 botChatViewModel.limitRange(
@@ -381,6 +387,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 val picker = builder.build()
                 picker.show(supportFragmentManager, picker.toString())
                 picker.addOnPositiveButtonClickListener { selection -> botChatViewModel.onRangeDatePicked(selection) }
+                picker.addOnNegativeButtonClickListener { picker.dismiss() }
             } catch (e: java.lang.IllegalArgumentException) {
                 e.printStackTrace()
             }
@@ -391,8 +398,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.showTypingIndicator(icon, true)
     }
 
-    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?) {
-        contentFragment.showQuickReplies(quickReplies, type)
+    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {
+        contentFragment.showQuickReplies(quickReplies, type, isStacked)
     }
 
     override fun getAdapterLastItems(): BaseBotMessage? {

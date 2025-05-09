@@ -2,15 +2,23 @@ package com.kore.ui.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
+import androidx.core.graphics.toColorInt
 
 class AdvanceOptionsAdapter(
     val context: Context,
@@ -19,6 +27,7 @@ class AdvanceOptionsAdapter(
 ) : RecyclerView.Adapter<OptionsViewHolder>() {
 
     private var selectedItems: List<Int> = emptyList()
+    private val preferenceRepository = PreferenceRepositoryImpl()
 
     fun getSelectedItems(): List<Int> = selectedItems
 
@@ -46,7 +55,8 @@ class AdvanceOptionsAdapter(
                 BotResponseConstants.RADIO -> {
                     holder.ivOptions.background = ContextCompat.getDrawable(context, R.drawable.radio_uncheck)
                     if (selectedItems.contains(position)) {
-                        holder.ivOptions.background = ContextCompat.getDrawable(context, R.drawable.radio_check)
+                        val color = preferenceRepository.getStringValue(holder.itemView.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#ffffff")
+                        holder.ivOptions.background = getTintDrawable(holder.ivOptions.context, color, R.drawable.radio_check)
                     }
                 }
 
@@ -61,13 +71,20 @@ class AdvanceOptionsAdapter(
                 if (!isLastItem) return@setOnClickListener
                 if (option[BotResponseConstants.TYPE] == BotResponseConstants.RADIO) {
                     selectedItems = emptyList()
-                    selectedItems += (position + 1)
+                    selectedItems += (position)
                 } else {
-                    selectedItems += (position + 1)
+                    selectedItems += (position)
                 }
                 notifyDataSetChanged()
             }
         }
+    }
+
+    private fun getTintDrawable(context: Context, color: String, drawable: Int): Drawable {
+        val buttonDrawable = AppCompatResources.getDrawable(context, drawable)
+        val wrappedDrawable = DrawableCompat.wrap(buttonDrawable!!)
+        DrawableCompat.setTint(wrappedDrawable, color.toColorInt())
+        return wrappedDrawable
     }
 }
 

@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kore.common.event.UserActionEvent
 import com.kore.event.BotChatEvent
 import com.kore.event.BotChatEvent.SendMessage
@@ -18,6 +19,7 @@ import com.kore.model.constants.BotResponseConstants.POSTBACK
 import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.model.constants.BotResponseConstants.URL
 import com.kore.model.constants.BotResponseConstants.VALUE
+import com.kore.ui.bottomsheet.ShowMoreListBottomSheet
 import com.kore.ui.databinding.RowListviewTemplateItemBinding
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.listview.ListViewTemplateItemRowType
@@ -27,6 +29,7 @@ import com.squareup.picasso.Picasso
 class ListViewTemplateItemRow(
     private val item: Map<String, Any>,
     private val isLastItem: Boolean,
+    private val bottomSheet: BottomSheetDialog?,
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : SimpleListRow() {
     override val type: SimpleListRowType = ListViewTemplateItemRowType.Item
@@ -71,6 +74,7 @@ class ListViewTemplateItemRow(
                         defaultAction[KEY_TITLE]?.let { actionEvent(SendMessage(it)) }
                     }
                 }
+                bottomSheet?.dismiss()
             }
         }
     }

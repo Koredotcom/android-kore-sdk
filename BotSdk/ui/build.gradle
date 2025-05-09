@@ -72,6 +72,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect"
     implementation 'org.apache.commons:commons-lang3:3.3.2'
 
+    implementation 'io.noties.markwon:core:4.6.2'
+    implementation 'io.noties.markwon:linkify:4.6.2'
+    implementation 'io.noties.markwon:html:4.6.2'
+
     implementation project(path: ':botclient')
 
     testImplementation 'junit:junit:4.13.2'

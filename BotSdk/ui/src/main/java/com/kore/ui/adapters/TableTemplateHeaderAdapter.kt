@@ -1,6 +1,7 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,7 @@ class TableTemplateHeaderAdapter(
     private val listItems: List<List<String>>
 ) : RecyclerView.Adapter<TableTemplateHeaderAdapter.TableViewHolder>() {
     class TableViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val tvChildValue: TextView
-
-        init {
-            tvChildValue = view.findViewById(R.id.tvTableValue)
-        }
+        val tvChildValue: TextView = view.findViewById(R.id.tvTableValue)
     }
 
     override fun onCreateViewHolder(
@@ -37,6 +34,7 @@ class TableTemplateHeaderAdapter(
     override fun onBindViewHolder(holder: TableViewHolder, position: Int) {
         val value = listItems[position]
         holder.tvChildValue.text = value[0]
+        holder.tvChildValue.setTypeface(holder.tvChildValue.typeface, Typeface.BOLD)
         holder.tvChildValue.gravity = Gravity.START or Gravity.CENTER_VERTICAL
 
         if (value.size > 1) {

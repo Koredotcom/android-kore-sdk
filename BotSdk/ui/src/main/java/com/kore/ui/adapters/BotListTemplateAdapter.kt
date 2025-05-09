@@ -1,7 +1,6 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import android.text.SpannableStringBuilder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,6 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.text.HtmlCompat
-import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,14 +15,12 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.kore.common.event.UserActionEvent
 import com.kore.event.BotChatEvent
-import com.kore.markdown.MarkdownImageTagHandler
-import com.kore.markdown.MarkdownTagHandler
-import com.kore.markdown.MarkdownUtil
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.ui.R
-import org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3
-import org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4
+import io.noties.markwon.Markwon
+import io.noties.markwon.html.HtmlPlugin
+import io.noties.markwon.linkify.LinkifyPlugin
 
 class BotListTemplateAdapter(
     private val context: Context,
@@ -83,12 +78,12 @@ class BotListTemplateAdapter(
 
         holder.botItemSubtitle.isVisible = subTitle.isNotEmpty()
 
-        var textualContent = unescapeHtml4(subTitle)
-        textualContent = unescapeHtml3(textualContent.trim { it <= ' ' })
-        textualContent = MarkdownUtil.processMarkDown(textualContent)
-        val sequence: CharSequence = textualContent.replace("\n", "<br />")
-            .parseAsHtml(HtmlCompat.FROM_HTML_MODE_LEGACY, MarkdownImageTagHandler(context, holder.botItemSubtitle, textualContent), MarkdownTagHandler())
-        holder.botItemSubtitle.text = SpannableStringBuilder(sequence)
+        val markwon = Markwon.builder(holder.itemView.context)
+            .usePlugin(HtmlPlugin.create())
+            .usePlugin(LinkifyPlugin.create())
+            .build()
+
+        markwon.setMarkdown(holder.botItemSubtitle, subTitle)
 
         if (listElementsMap[BotResponseConstants.KEY_BUTTONS] != null) {
             holder.botItemButton.isVisible = true
