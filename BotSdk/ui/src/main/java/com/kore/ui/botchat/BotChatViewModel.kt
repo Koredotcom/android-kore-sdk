@@ -6,13 +6,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.core.util.Pair
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.CalendarConstraints.DateValidator
-import com.google.android.material.datepicker.CompositeDateValidator
-import com.google.android.material.datepicker.DateValidatorPointBackward
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.SDKConfig.isMinimized
@@ -22,10 +16,7 @@ import com.kore.botclient.BotRequestState
 import com.kore.botclient.ConnectionState
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
-import com.kore.common.SDKConfiguration
-import com.kore.common.SDKConfiguration.OverrideKoreConfig.historyBatchSize
 import com.kore.common.SDKConfiguration.getBotConfigModel
-import com.kore.common.utils.DateUtils
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
 import com.kore.common.utils.ToastUtils
@@ -59,11 +50,9 @@ import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.R
 import com.kore.ui.base.BaseViewModel
 import com.kore.ui.utils.BundleConstants
-import com.kore.validator.RangeValidator
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -74,8 +63,8 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     private var isFirstTime = true
-    private var historyOffset = 0
-    private var moreHistory = true
+//    private var historyOffset = 0
+//    private var moreHistory = true
     private lateinit var token: String
     private var isAgentTransfer = false
     private var isActivityResumed = false
@@ -126,7 +115,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                         isAgentTransfer = botResponse.fromAgent
                         getView()?.showTypingIndicator(botResponse.icon)
                         getView()?.addMessageToAdapter(botResponse)
-                        historyOffset += 1
+//                        historyOffset += 1
                         val lastItem = getView()?.getAdapterLastItems() as BotResponse
 
                         when (val body = lastItem.message[0].cInfo?.body) {
@@ -194,7 +183,8 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 when (state) {
                     ConnectionState.CONNECTED -> {
                         isFirstTime = false
-                        if (isReconnection) loadChatHistory(true)
+                        if (isReconnection) getView()?.onLoadHistory(true)
+//                        if (isReconnection) loadChatHistory(true)
                     }
 
                     else -> {}
@@ -203,7 +193,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
             override fun onBotRequest(code: BotRequestState, botRequest: BotRequest) {
                 LogUtils.d(LOG_TAG, "$code")
-                historyOffset += 1
+//                historyOffset += 1
                 getView()?.addMessageToAdapter(botRequest)
             }
 
@@ -341,146 +331,148 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 is Result.Success -> {
                     onBrandingDetails(response.data?.brandingModel)
                     getView()?.onBrandingDetails(response.data)
-                    loadChatHistory(false)
+                    getView()?.onLoadHistory(false)
+//                    loadChatHistory(false)
                 }
 
                 else -> {
                     getView()?.onBrandingDetails(null)
                     LogUtils.e(LOG_TAG, "BrandingDetails Response error: $response")
-                    loadChatHistory(false)
+                    getView()?.onLoadHistory(false)
+//                    loadChatHistory(false)
                 }
             }
         }
     }
 
-    fun fetchChatHistory(isReconnect: Boolean) {
-        if (!moreHistory) {
-            getView()?.onChatHistory(emptyList(), isReconnect)
-            return
-        }
-        viewModelScope.launch {
-            val botConfigModel = getBotConfigModel()
+//    fun fetchChatHistory(isReconnect: Boolean) {
+//        if (!moreHistory) {
+//            getView()?.onChatHistory(emptyList(), isReconnect)
+//            return
+//        }
+//        viewModelScope.launch {
+//            val botConfigModel = getBotConfigModel()
+//
+//            if (!NetworkUtils.isNetworkAvailable(context)) {
+//                getView()?.onChatHistory(emptyList(), isReconnect)
+//                Toast.makeText(context, context.getString(R.string.no_network), Toast.LENGTH_SHORT).show()
+//                return@launch
+//            }
+//            if (botConfigModel == null) {
+//                getView()?.onChatHistory(emptyList(), isReconnect)
+//                Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
+//                return@launch
+//            }
+//            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, historyBatchSize)
+//            when (val response =
+//                chatHistoryRepository.getChatHistory(
+//                    context,
+//                    if (botConfigModel.isWebHook) BotClient.getJwtToken() else BotClient.getAccessToken(),
+//                    botConfigModel.botId,
+//                    botConfigModel.botName,
+//                    historyOffset,
+//                    if (historyCount > 10 || historyCount == 0) historyBatchSize else historyCount,
+//                    botConfigModel.isWebHook
+//                )) {
+//                is Result.Success -> {
+//                    var historyMessages = response.data.first
+//                    if (isReconnect && !isMinimized()) historyMessages = historyMessages.filterIsInstance<BotResponse>()
+//                    getView()?.onChatHistory(historyMessages, isReconnect)
+//                    historyOffset += response.data.first.size
+//                    moreHistory = response.data.second
+////                    SDKConfig.setIsMinimized(false)
+//                    if (historyCount > 0)
+//                        preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
+//                }
+//
+//                else -> {
+//                    getView()?.onChatHistory(emptyList(), isReconnect)
+//                    LogUtils.e(LOG_TAG, "RtmUrlResponse error: $response")
+////                    SDKConfig.setIsMinimized(false)
+//                }
+//            }
+//        }
+//    }
+//
+//    internal fun loadChatHistory(isReconnect: Boolean) {
+//        if ((isReconnect && SDKConfig.getHistoryOnNetworkResume()) || (!isReconnect && SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
+//            historyOffset = 0
+//            moreHistory = true
+//            getView()?.onLoadingHistory()
+//            fetchChatHistory(true)
+//        }
+//    }
 
-            if (!NetworkUtils.isNetworkAvailable(context)) {
-                getView()?.onChatHistory(emptyList(), isReconnect)
-                Toast.makeText(context, context.getString(R.string.no_network), Toast.LENGTH_SHORT).show()
-                return@launch
-            }
-            if (botConfigModel == null) {
-                getView()?.onChatHistory(emptyList(), isReconnect)
-                Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
-                return@launch
-            }
-            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, historyBatchSize)
-            when (val response =
-                chatHistoryRepository.getChatHistory(
-                    context,
-                    if (botConfigModel.isWebHook) BotClient.getJwtToken() else BotClient.getAccessToken(),
-                    botConfigModel.botId,
-                    botConfigModel.botName,
-                    historyOffset,
-                    if (historyCount > 10 || historyCount == 0) historyBatchSize else historyCount,
-                    botConfigModel.isWebHook
-                )) {
-                is Result.Success -> {
-                    var historyMessages = response.data.first
-                    if (isReconnect && !isMinimized()) historyMessages = historyMessages.filterIsInstance<BotResponse>()
-                    getView()?.onChatHistory(historyMessages, isReconnect)
-                    historyOffset += response.data.first.size
-                    moreHistory = response.data.second
-//                    SDKConfig.setIsMinimized(false)
-                    if (historyCount > 0)
-                        preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
-                }
-
-                else -> {
-                    getView()?.onChatHistory(emptyList(), isReconnect)
-                    LogUtils.e(LOG_TAG, "RtmUrlResponse error: $response")
-//                    SDKConfig.setIsMinimized(false)
-                }
-            }
-        }
-    }
-
-    internal fun loadChatHistory(isReconnect: Boolean) {
-        if ((isReconnect && SDKConfig.getHistoryOnNetworkResume()) || (!isReconnect && SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
-            historyOffset = 0
-            moreHistory = true
-            getView()?.onLoadingHistory()
-            fetchChatHistory(true)
-        }
-    }
-
-    fun limitRange(startDate: String, endDate: String, format: String): CalendarConstraints.Builder {
-        val constraintsBuilderRange = CalendarConstraints.Builder()
-        val dateFormat = format.replace("DD", "dd").replace("YY", "yy")
-        if (dateFormat.isEmpty()) {
-            constraintsBuilderRange.setValidator(DateValidatorPointForward.now())
-            return constraintsBuilderRange
-        }
-        if (startDate.isNotEmpty() && endDate.isNotEmpty()) {
-            val startDateMillis: Long = DateUtils.getDateFromFormat(startDate, dateFormat, 0)
-            val endDateMillis: Long = DateUtils.getDateFromFormat(endDate, dateFormat, 1)
-            constraintsBuilderRange.setStart(startDateMillis)
-            constraintsBuilderRange.setEnd(endDateMillis)
-            val minValidator: DateValidator = DateValidatorPointForward.from(startDateMillis)
-            val maxValidator: DateValidator = DateValidatorPointBackward.before(endDateMillis)
-            val validators = listOf(minValidator, maxValidator)
-            val compositeValidator = CompositeDateValidator.allOf(validators)
-            constraintsBuilderRange.setValidator(compositeValidator)
-        } else if (startDate.isNotEmpty()) {
-            val dateValidatorMin: DateValidator = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, dateFormat, 0))
-
-            val listValidators = java.util.ArrayList<DateValidator>()
-            listValidators.add(dateValidatorMin)
-
-            val validators = CompositeDateValidator.allOf(listValidators)
-            constraintsBuilderRange.setValidator(validators)
-        } else if (endDate.isNotEmpty()) {
-            val dateValidatorMax: DateValidator = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(endDate, dateFormat, 1))
-
-            val listValidators = java.util.ArrayList<DateValidator>()
-            listValidators.add(dateValidatorMax)
-
-            val validators = CompositeDateValidator.allOf(listValidators)
-            constraintsBuilderRange.setValidator(validators)
-        } else {
-            constraintsBuilderRange.setValidator(RangeValidator(null, null))
-        }
-        return constraintsBuilderRange
-    }
-
-    fun onRangeDatePicked(selection: Pair<Long, Long>) {
-        val startDate = selection.first
-        val endDate = selection.second
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = startDate
-        val strYear = cal[Calendar.YEAR]
-        val strMonth = cal[Calendar.MONTH] + 1
-        val strDay = cal[Calendar.DAY_OF_MONTH]
-        cal.timeInMillis = endDate
-        val endYear = cal[Calendar.YEAR]
-        val endMonth = cal[Calendar.MONTH] + 1
-        val endDay = cal[Calendar.DAY_OF_MONTH]
-        val formattedDate: StringBuilder = java.lang.StringBuilder()
-        formattedDate.append((if ((strDay + 1) > 9) (strDay + 1) else "0" + (strDay + 1)).toString()).append("-")
-            .append(if ((strMonth + 1) > 9) (strMonth + 1) else "0" + (strMonth + 1)).append("-").append(strYear).append(" to ")
-            .append(if ((endDay + 1) > 9) (endDay + 1) else "0" + (endDay + 1)).append("-")
-            .append(if ((endMonth + 1) > 9) (endMonth + 1) else "0" + (endMonth + 1)).append("-").append(endYear)
-
-        sendMessage(formattedDate.toString(), formattedDate.toString())
-    }
-
-    fun onDatePicked(selection: Long) {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = selection
-        val stYear = calendar[Calendar.YEAR]
-        val stMonth = calendar[Calendar.MONTH] + 1
-        val stDay = calendar[Calendar.DAY_OF_MONTH]
-        val formattedDate =
-            (if ((stMonth + 1) > 9) (stMonth + 1) else "0" + (stMonth + 1)).toString() + "/" + (if (stDay > 9) stDay else "0$stDay") + "/" + stYear
-        sendMessage(formattedDate, formattedDate)
-    }
+//    fun limitRange(startDate: String, endDate: String, format: String): CalendarConstraints.Builder {
+//        val constraintsBuilderRange = CalendarConstraints.Builder()
+//        val dateFormat = format.replace("DD", "dd").replace("YY", "yy")
+//        if (dateFormat.isEmpty()) {
+//            constraintsBuilderRange.setValidator(DateValidatorPointForward.now())
+//            return constraintsBuilderRange
+//        }
+//        if (startDate.isNotEmpty() && endDate.isNotEmpty()) {
+//            val startDateMillis: Long = DateUtils.getDateFromFormat(startDate, dateFormat, 0)
+//            val endDateMillis: Long = DateUtils.getDateFromFormat(endDate, dateFormat, 1)
+//            constraintsBuilderRange.setStart(startDateMillis)
+//            constraintsBuilderRange.setEnd(endDateMillis)
+//            val minValidator: DateValidator = DateValidatorPointForward.from(startDateMillis)
+//            val maxValidator: DateValidator = DateValidatorPointBackward.before(endDateMillis)
+//            val validators = listOf(minValidator, maxValidator)
+//            val compositeValidator = CompositeDateValidator.allOf(validators)
+//            constraintsBuilderRange.setValidator(compositeValidator)
+//        } else if (startDate.isNotEmpty()) {
+//            val dateValidatorMin: DateValidator = DateValidatorPointForward.from(DateUtils.getDateFromFormat(startDate, dateFormat, 0))
+//
+//            val listValidators = java.util.ArrayList<DateValidator>()
+//            listValidators.add(dateValidatorMin)
+//
+//            val validators = CompositeDateValidator.allOf(listValidators)
+//            constraintsBuilderRange.setValidator(validators)
+//        } else if (endDate.isNotEmpty()) {
+//            val dateValidatorMax: DateValidator = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(endDate, dateFormat, 1))
+//
+//            val listValidators = java.util.ArrayList<DateValidator>()
+//            listValidators.add(dateValidatorMax)
+//
+//            val validators = CompositeDateValidator.allOf(listValidators)
+//            constraintsBuilderRange.setValidator(validators)
+//        } else {
+//            constraintsBuilderRange.setValidator(RangeValidator(null, null))
+//        }
+//        return constraintsBuilderRange
+//    }
+//
+//    fun onRangeDatePicked(selection: Pair<Long, Long>) {
+//        val startDate = selection.first
+//        val endDate = selection.second
+//        val cal = Calendar.getInstance()
+//        cal.timeInMillis = startDate
+//        val strYear = cal[Calendar.YEAR]
+//        val strMonth = cal[Calendar.MONTH] + 1
+//        val strDay = cal[Calendar.DAY_OF_MONTH]
+//        cal.timeInMillis = endDate
+//        val endYear = cal[Calendar.YEAR]
+//        val endMonth = cal[Calendar.MONTH] + 1
+//        val endDay = cal[Calendar.DAY_OF_MONTH]
+//        val formattedDate: StringBuilder = java.lang.StringBuilder()
+//        formattedDate.append((if ((strDay + 1) > 9) (strDay + 1) else "0" + (strDay + 1)).toString()).append("-")
+//            .append(if ((strMonth + 1) > 9) (strMonth + 1) else "0" + (strMonth + 1)).append("-").append(strYear).append(" to ")
+//            .append(if ((endDay + 1) > 9) (endDay + 1) else "0" + (endDay + 1)).append("-")
+//            .append(if ((endMonth + 1) > 9) (endMonth + 1) else "0" + (endMonth + 1)).append("-").append(endYear)
+//
+//        sendMessage(formattedDate.toString(), formattedDate.toString())
+//    }
+//
+//    fun onDatePicked(selection: Long) {
+//        val calendar = Calendar.getInstance()
+//        calendar.timeInMillis = selection
+//        val stYear = calendar[Calendar.YEAR]
+//        val stMonth = calendar[Calendar.MONTH] + 1
+//        val stDay = calendar[Calendar.DAY_OF_MONTH]
+//        val formattedDate =
+//            (if ((stMonth + 1) > 9) (stMonth + 1) else "0" + (stMonth + 1)).toString() + "/" + (if (stDay > 9) stDay else "0$stDay") + "/" + stYear
+//        sendMessage(formattedDate, formattedDate)
+//    }
 
     private fun onBrandingDetails(brandingModel: BotBrandingModel?) {
         brandingModel?.let {

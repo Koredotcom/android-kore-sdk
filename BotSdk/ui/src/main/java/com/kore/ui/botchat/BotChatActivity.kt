@@ -19,11 +19,11 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.SDKConfig.isMinimized
@@ -35,11 +35,8 @@ import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
 import com.kore.model.constants.BotResponseConstants
-import com.kore.model.constants.BotResponseConstants.END_DATE
-import com.kore.model.constants.BotResponseConstants.FORMAT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
-import com.kore.model.constants.BotResponseConstants.START_DATE
 import com.kore.network.api.responsemodels.branding.BotActiveThemeModel
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.services.ClosingService
@@ -72,8 +69,6 @@ import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
 import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import org.webrtc.NetworkMonitor.isOnline
-import java.util.Calendar
-import androidx.core.graphics.toColorInt
 
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
     private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
@@ -99,7 +94,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        contentFragment.setView(this)
         binding.viewModel = botChatViewModel
         botChatViewModel.init(this)
         val networkRequest = NetworkRequest.Builder().build()
@@ -301,10 +295,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.onFileDownloadProgress(msgId, progress, downloadedBytes)
     }
 
-    override fun onSwipeRefresh() {
-        botChatViewModel.fetchChatHistory(false)
-    }
-
     private fun showAlertDialog(eventModel: HashMap<String, Any>) {
         alertDialog = Dialog(this@BotChatActivity)
         val dialogBinding: IncomingCallLayoutBinding = DataBindingUtil.inflate(layoutInflater, R.layout.incoming_call_layout, null, false)
@@ -352,46 +342,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun showCalenderTemplate(payload: HashMap<String, Any>) {
-        if (BotResponseConstants.TEMPLATE_TYPE_DATE == payload[BotResponseConstants.KEY_TEMPLATE_TYPE]) {
-            val cal = Calendar.getInstance()
-            cal.timeInMillis = MaterialDatePicker.todayInUtcMilliseconds()
-            val builder = MaterialDatePicker.Builder.datePicker()
-            builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
-            builder.setPositiveButtonText(getString(R.string.confirm))
-            builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
-            builder.setCalendarConstraints(
-                botChatViewModel.limitRange(
-                    (payload[START_DATE] as String?) ?: "", (payload[END_DATE] as String?) ?: "", (payload[FORMAT] as String?) ?: ""
-                ).build()
-            )
-            builder.setTheme(R.style.MyMaterialCalendarTheme)
-            try {
-                val picker = builder.build()
-                picker.show(supportFragmentManager, picker.toString())
-                picker.addOnPositiveButtonClickListener { selection -> botChatViewModel.onDatePicked(selection) }
-            } catch (e: IllegalArgumentException) {
-                e.printStackTrace()
-            }
-        } else {
-            val builder = MaterialDatePicker.Builder.dateRangePicker()
-            builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
-            builder.setPositiveButtonText(getString(R.string.confirm))
-            builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
-            builder.setCalendarConstraints(
-                botChatViewModel.limitRange(
-                    (payload[START_DATE] as String?) ?: "", (payload[END_DATE] as String?) ?: "", (payload[FORMAT] as String?) ?: ""
-                ).build()
-            )
-            builder.setTheme(R.style.MyMaterialCalendarTheme)
-            try {
-                val picker = builder.build()
-                picker.show(supportFragmentManager, picker.toString())
-                picker.addOnPositiveButtonClickListener { selection -> botChatViewModel.onRangeDatePicked(selection) }
-                picker.addOnNegativeButtonClickListener { picker.dismiss() }
-            } catch (e: java.lang.IllegalArgumentException) {
-                e.printStackTrace()
-            }
-        }
+        contentFragment.showCalenderTemplate(payload)
     }
 
     override fun showTypingIndicator(icon: String?) {
@@ -410,12 +361,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.hideQuickReplies()
     }
 
-    override fun onLoadingHistory() {
-        contentFragment.onLoadingHistory()
-    }
-
-    override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
-        contentFragment.addMessagesToAdapter(list, !isMinimized(), isReconnection)
+    override fun onLoadHistory(isReconnect: Boolean) {
+        contentFragment.onLoadHistory(isReconnect)
     }
 
     override fun showOtpBottomSheet(payload: HashMap<String, Any>) {

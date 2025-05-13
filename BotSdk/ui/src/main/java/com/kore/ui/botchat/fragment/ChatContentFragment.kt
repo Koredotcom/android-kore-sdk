@@ -16,6 +16,7 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.google.gson.internal.LinkedTreeMap
+import com.kore.SDKConfig.isMinimized
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.NetworkUtils
@@ -27,8 +28,6 @@ import com.kore.ui.R
 import com.kore.ui.adapters.BotChatAdapter
 import com.kore.ui.adapters.QuickRepliesTemplateAdapter
 import com.kore.ui.base.BaseContentFragment
-import com.kore.ui.base.BaseView
-import com.kore.ui.botchat.BotChatView
 import com.kore.ui.databinding.BotContentLayoutBinding
 import com.kore.ui.row.botchat.BotChatItemDecoration
 import com.kore.ui.row.botchat.BotChatRowType
@@ -36,7 +35,6 @@ import com.kore.ui.row.botchat.BotChatRowType
 class ChatContentFragment : BaseContentFragment() {
     private lateinit var binding: BotContentLayoutBinding
     private lateinit var chatAdapter: BotChatAdapter
-    private var view: BotChatView? = null
     private lateinit var actionEvent: (event: BotChatEvent) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,12 +58,13 @@ class ChatContentFragment : BaseContentFragment() {
                 binding.swipeContainerChat.isRefreshing = false
                 return@setOnRefreshListener
             }
-            this.view?.onSwipeRefresh()
+//            this.view?.onSwipeRefresh()
+            contentViewModel.fetchChatHistory(false)
         }
     }
 
-    override fun setView(view: BaseView) {
-        this.view = view as BotChatView
+    override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
+        addMessagesToAdapter(list, !isMinimized(), isReconnection)
     }
 
     override fun onFileDownloadProgress(msgId: String, progress: Int, downloadBytes: Int) {
@@ -120,6 +119,7 @@ class ChatContentFragment : BaseContentFragment() {
         if (messages.isEmpty()) return
         chatAdapter.submitList(chatAdapter.addAndCreateRows(messages, isHistory, isReconnection))
         binding.chatContentList.postDelayed({
+            contentViewModel.setHistoryOffset(chatAdapter.itemCount)
             if (!isHistory && chatAdapter.itemCount > 0) {
                 binding.chatContentList.verticalSmoothScrollTo(chatAdapter.itemCount - 1, LinearSmoothScroller.SNAP_TO_START)
             }
@@ -129,6 +129,10 @@ class ChatContentFragment : BaseContentFragment() {
 
     override fun onLoadingHistory() {
         binding.swipeContainerChat.isRefreshing = true
+    }
+
+    override fun onLoadHistory(isReconnect: Boolean) {
+        contentViewModel.loadChatHistory(isReconnect)
     }
 
     override fun getAdapterCount(): Int = chatAdapter.itemCount

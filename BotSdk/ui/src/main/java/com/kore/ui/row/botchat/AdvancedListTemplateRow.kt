@@ -5,10 +5,11 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListRow
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.IS_SORT_ENABLED
 import com.kore.ui.adapters.AdvancedListAdapter
 import com.kore.ui.databinding.AdvancelistViewBinding
+import com.kore.ui.row.SimpleListRow
 
 class AdvancedListTemplateRow(
     private val id: String,
@@ -24,7 +25,6 @@ class AdvancedListTemplateRow(
         return otherRow.id == id
     }
 
-
     override fun areContentsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is AdvancedListTemplateRow) return false
         return otherRow.payload == payload && otherRow.isLastItem == isLastItem
@@ -36,6 +36,8 @@ class AdvancedListTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, isShow = false, isTemplate = true)
         val childBinding = AdvancelistViewBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
+            ivSearch.isVisible = payload[BotResponseConstants.IS_SEARCH_ENABLED] as Boolean
+            ivFilter.isVisible = payload[IS_SORT_ENABLED] as Boolean
             advanceRecyclerView.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
 
             if (payload[BotResponseConstants.KEY_TITLE] != null) {

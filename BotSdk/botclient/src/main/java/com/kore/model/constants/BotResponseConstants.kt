@@ -277,6 +277,8 @@ object BotResponseConstants {
     const val BACKGROUND_INVERTED = "backgroundInverted"
     const val TEXT_INVERTED = "textInverted"
     const val ALT_TEXT = "altText"
+    const val IS_SORT_ENABLED = "isSortEnabled"
+    const val IS_SEARCH_ENABLED = "isSearchEnabled"
     var DATE_FORMAT = "dd/MM/yyyy"
     var TIME_FORMAT = 24
 }
