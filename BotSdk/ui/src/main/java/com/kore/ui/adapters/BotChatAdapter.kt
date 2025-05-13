@@ -87,13 +87,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
             if (!isReconnection) {
                 messages + baseBotMessages
             } else {
-                var latestChatMsg: BotResponse? = null
-                for (botMessage in messages.reversed()) {
-                    if (botMessage is BotResponse) {
-                        latestChatMsg = botMessage
-                        break
-                    }
-                }
+                val latestChatMsg: BaseBotMessage? = if (messages.isNotEmpty()) messages.last() else null
                 if (latestChatMsg != null) {
                     for (historyItem in baseBotMessages) {
                         if (historyItem.timeMillis > latestChatMsg.timeMillis) {
