@@ -45,8 +45,8 @@ This component enables the customization of the main chat content area within th
 2.  **Override Mandatory Functions:** Implement the following methods according to your custom requirements:
 
     ```kotlin
-        override fun setView(view: BaseView) {
-            this.view = view as BotChatView
+        override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
+            addMessagesToAdapter(list, !isMinimized(), isReconnection)
         }
 
         override fun onFileDownloadProgress(msgId: String, progress: Int, downloadBytes: Int) {
@@ -80,6 +80,10 @@ This component enables the customization of the main chat content area within th
 
         override fun onLoadingHistory() {
             binding.swipeContainerChat.isRefreshing = true
+        }
+
+        override fun onLoadHistory(isReconnect: Boolean) {
+            contentViewModel.loadChatHistory(isReconnect)
         }
 
         override fun getAdapterCount(): Int = chatAdapter.itemCount
