@@ -47,6 +47,8 @@ class ChatHeaderThreeFragment : BaseHeaderFragment() {
             val title = model.title?.name
             binding.tvBotTitle.text = if (!title.isNullOrEmpty()) title else SDKConfiguration.getBotConfigModel()?.botName
             binding.tvBotDesc.text = model.subTitle?.name
+            model.title?.color?.toColorInt()?.let { binding.tvBotTitle.setTextColor(it) }
+            model.subTitle?.color?.toColorInt()?.let { binding.tvBotDesc.setTextColor(it) }
             model.bgColor?.toColorInt()?.let { binding.root.setBackgroundColor(it) }
 
             if (model.icon != null) {
