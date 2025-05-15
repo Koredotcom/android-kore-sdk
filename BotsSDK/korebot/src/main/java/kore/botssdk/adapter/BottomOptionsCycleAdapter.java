@@ -36,7 +36,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utility;
 
-public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOptionsCycleAdapter.ViewHolder>{
+public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOptionsCycleAdapter.ViewHolder> {
     private final String LOG_TAG = OptionsActionSheetFragment.class.getSimpleName();
     List<BotOptionModel> model;
     private ComposeFooterInterface composeFooterInterface;
@@ -44,14 +44,16 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
     private Context context;
     private SharedPreferences sharedPreferences;
     private float dp1;
+
     public BottomOptionsCycleAdapter(@NonNull List<BotOptionModel> model) {
         this.model = model;
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.bottom_options_item, parent, false);
+        View listItem = layoutInflater.inflate(R.layout.bottom_options_item, parent, false);
         sharedPreferences = parent.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         dp1 = Utility.convertDpToPixel(context, 1);
         return new ViewHolder(listItem);
@@ -62,28 +64,23 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         BotOptionModel botListModel = model.get(position);
         holder.bottom_option_image.setVisibility(View.GONE);
 
-        if(sharedPreferences != null)
-        {
+        if (sharedPreferences != null) {
             GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.rounded_rect_feedback, context.getTheme());
-            if(rightDrawable != null)
-            {
+            if (rightDrawable != null) {
                 rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-                rightDrawable.setStroke((int)(1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
+                rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
                 holder.bot_list_item_root.setBackground(rightDrawable);
             }
 
             holder.bottom_option_name.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
         }
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getIcon()))
-        {
-            try
-            {
+        if (!StringUtils.isNullOrEmpty(botListModel.getIcon())) {
+            try {
                 holder.bottom_option_image.setVisibility(VISIBLE);
                 String imageData;
                 imageData = botListModel.getIcon();
-                if (imageData.contains(","))
-                {
+                if (imageData.contains(",")) {
                     imageData = imageData.substring(imageData.indexOf(",") + 1);
                     byte[] decodedString = Base64.decode(imageData.getBytes(), Base64.DEFAULT);
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -101,7 +98,7 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
             @Override
             public void onClick(View v) {
 
-                if(bottomSheetDialog != null)
+                if (bottomSheetDialog != null)
                     bottomSheetDialog.dismiss();
 
                 sendMessageText(model.get(holder.getBindingAdapterPosition()).getPostback().getTitle(), model.get(holder.getBindingAdapterPosition()).getPostback().getValue());
@@ -118,8 +115,7 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         this.composeFooterInterface = composeFooterInterface;
     }
 
-    public void setContext(@NonNull Context context)
-    {
+    public void setContext(@NonNull Context context) {
         this.context = context;
     }
 

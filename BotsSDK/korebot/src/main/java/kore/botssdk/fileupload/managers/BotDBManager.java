@@ -33,7 +33,7 @@ public class BotDBManager {
 
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return new CloneNotSupportedException("Clone not supported");
+        throw new CloneNotSupportedException("Cloning of this object is not supported.");
     }
 
     public Map<String, FileUploadInfo> getFileUploadInfoMap() {

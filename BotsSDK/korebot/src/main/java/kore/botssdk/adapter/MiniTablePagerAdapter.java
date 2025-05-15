@@ -39,10 +39,10 @@ public class MiniTablePagerAdapter extends RecyclerView.Adapter<MiniTablePagerAd
         holder.rvHeader.setClipToPadding(false);
         holder.rvContent.setClipToPadding(false);
 
-        GradientDrawable gradientDrawable = (GradientDrawable) holder.rvHeader.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) holder.rvHeader.getBackground().mutate();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
 
-        GradientDrawable gradientPDrawable = (GradientDrawable) holder.llRoot.getBackground();
+        GradientDrawable gradientPDrawable = (GradientDrawable) holder.llRoot.getBackground().mutate();
         gradientPDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
 
         new PagerSnapHelper().attachToRecyclerView(holder.rvHeader);

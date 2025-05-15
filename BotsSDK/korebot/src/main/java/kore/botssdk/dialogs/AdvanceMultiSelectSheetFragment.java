@@ -66,7 +66,7 @@ public class AdvanceMultiSelectSheetFragment extends BottomSheetDialogFragment i
         tvAdvanceDone = view.findViewById(R.id.done);
         ArrayList<AdvancedMultiSelectModel> models = payloadInner.getAdvancedMultiSelectModels();
 
-        GradientDrawable gradientDrawable = (GradientDrawable) tvAdvanceDone.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) tvAdvanceDone.getBackground().mutate();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         tvAdvanceDone.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
@@ -163,7 +163,7 @@ public class AdvanceMultiSelectSheetFragment extends BottomSheetDialogFragment i
         }
 
         advancedMultiSelectAdapter.setCheckedItems(allCheckedItems);
-        recyclerView.setAdapter(advancedMultiSelectAdapter);
+        advancedMultiSelectAdapter.notifyDataSetChanged();
         tvAdvanceDone.setVisibility(!allCheckedItems.isEmpty() ? VISIBLE : GONE);
     }
 
@@ -174,7 +174,7 @@ public class AdvanceMultiSelectSheetFragment extends BottomSheetDialogFragment i
             allCheckedItems.addAll(checkedItems);
         }
         advancedMultiSelectAdapter.setCheckedItems(allCheckedItems);
-        recyclerView.setAdapter(advancedMultiSelectAdapter);
+        advancedMultiSelectAdapter.notifyDataSetChanged();
         tvAdvanceDone.setVisibility(!allCheckedItems.isEmpty() ? VISIBLE : GONE);
     }
 }

@@ -48,7 +48,7 @@ public class FormTemplateHolder extends BaseViewHolder {
         tvFormTemplateTitle = itemView.findViewById(R.id.tvform_template_title);
         btFieldButton = itemView.findViewById(R.id.btfieldButton);
 
-        GradientDrawable gradientDrawable = (GradientDrawable) btFieldButton.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) btFieldButton.getBackground().mutate();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         btFieldButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));

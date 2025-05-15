@@ -56,7 +56,7 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         LinearLayoutCompat llSpinner = itemView.findViewById(R.id.llSpinner);
         setRoundedCorner(llSpinner, 10);
 
-        GradientDrawable gradientDrawable = (GradientDrawable) tvSubmit.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) tvSubmit.getBackground().mutate();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         tvSubmit.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));

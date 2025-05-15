@@ -185,7 +185,7 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                         ImageView ivDropDownCLose = popUpView.findViewById(R.id.ivDropDownCLose);
 
                         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptions.getDropdownOptions(), BundleConstants.FULL_WIDTH, CardTemplateAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptions.getDropdownOptions(), BundleConstants.FULL_WIDTH, CardTemplateAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                         recyclerView.setAdapter(advanceListButtonAdapter);
                         ivDropDownCLose.setOnClickListener(view -> popupWindow.dismiss());
 
@@ -223,7 +223,6 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                     if (cardTemplateButtonModel.getButtonStyles() != null) {
                         GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_btn_bg);
                         if (rightDrawable != null) {
-
                             if (!StringUtils.isNullOrEmpty(cardTemplateButtonModel.getButtonStyles().getBackground_color()))
                                 rightDrawable.setColor(Color.parseColor(cardTemplateButtonModel.getButtonStyles().getBackground_color()));
                             else
@@ -246,7 +245,6 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
             if (cardTemplateModel.getCardStyles() != null) {
                 GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_top_bg);
                 if (rightDrawable != null) {
-
                     if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardStyles().getBorderLeft())) {
                         String[] border = cardTemplateModel.getCardStyles().getBorderLeft().split(" ");
 
@@ -326,7 +324,6 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
             GradientDrawable rightDrawable = (GradientDrawable) ContextCompat.getDrawable(context, R.drawable.card_template_bg);
             if (cardTemplateModel.getCardContentStyles() != null) {
                 if (rightDrawable != null) {
-
                     if (!StringUtils.isNullOrEmpty(cardTemplateModel.getCardContentStyles().getBackground_color()))
                         rightDrawable.setColor(Color.parseColor(cardTemplateModel.getCardContentStyles().getBackground_color()));
                     else

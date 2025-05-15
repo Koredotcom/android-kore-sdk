@@ -395,6 +395,12 @@ public class KoreComponentModel implements Parcelable {
         }
     }
 
+    @Override
+    public int hashCode() {
+        assert false : "hashCode not designed";
+        return 42;
+    }
+
     public boolean isShowLoader() {
         return showLoader;
     }

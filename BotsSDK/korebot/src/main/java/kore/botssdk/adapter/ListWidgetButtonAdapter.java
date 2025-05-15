@@ -97,18 +97,21 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
             }
         }
 
-        holder.tv.setOnClickListener(v -> {
+        ((ViewGroup) holder.tv.getParent()).setOnClickListener(v -> {
             if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
             if (popupWindow != null && popupWindow.isShowing()) popupWindow.dismiss();
 
             if (invokeGenericWebViewInterface != null) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(btn.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(btn.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
+                    return;
                 }
-            } else if (composeFooterInterface != null && isEnabled) {
-                composeFooterInterface.onSendClick(btn.getTitle(), btn.getPayload(), true);
+            }
+            if (composeFooterInterface != null && isEnabled) {
+                composeFooterInterface.onSendClick(btn.getTitle(), btn.getPayload(), false);
             }
         });
     }

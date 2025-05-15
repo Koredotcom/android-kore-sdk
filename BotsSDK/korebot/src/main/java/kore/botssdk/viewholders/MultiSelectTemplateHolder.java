@@ -68,7 +68,7 @@ public class MultiSelectTemplateHolder extends BaseViewHolder {
         multiSelectTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         recyclerView.setAdapter(multiSelectTemplateAdapter);
 
-        GradientDrawable gradientDrawable = (GradientDrawable) selectAll.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) selectAll.getBackground().mutate();
         gradientDrawable.setColor(Color.parseColor("#ffffff"));
         gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
         selectAll.setTag(true);

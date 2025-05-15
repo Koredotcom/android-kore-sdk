@@ -15,7 +15,7 @@ import kore.botssdk.models.BrandingModel;
 /**
  * This class is for defining properties
  */
-@SuppressLint("UnknownNullness")
+@SuppressLint({"UnknownNullness", "HardcodedPassword"})
 public class SDKConfiguration {
 
     public static final String APP_REQ_COLOR = "#3942f6"; // KORA COLOR "#3942f6" // BMC COLOR 2f91e5

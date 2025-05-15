@@ -79,7 +79,7 @@ public class ButtonLinkAdapter extends RecyclerView.Adapter<ButtonLinkAdapter.De
         View convertView = View.inflate(context, R.layout.button_link_template_cell, null);
         DeepLinkViewHolder viewHolder = new DeepLinkViewHolder(convertView);
 
-        GradientDrawable gradientDrawable = (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable)convertView.findViewById(R.id.quick_reply_view).getBackground().mutate();
         gradientDrawable.setStroke(2 * dp1, Color.parseColor(fillColor));
         gradientDrawable.setColor(Color.parseColor(fillColor));
         gradientDrawable.setSize(ViewGroup.LayoutParams.WRAP_CONTENT, (dp1 > 2 ? 40 : 53) * dp1);

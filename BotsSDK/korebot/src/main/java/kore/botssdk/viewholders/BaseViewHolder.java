@@ -38,6 +38,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.google.gson.Gson;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -439,7 +440,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public static Drawable getTintDrawable(Context context, String color, int drawable) {
-        Drawable buttonDrawable = AppCompatResources.getDrawable(context, drawable);
+        Drawable buttonDrawable = Objects.requireNonNull(AppCompatResources.getDrawable(context, drawable)).mutate();
         Drawable wrappedDrawable = DrawableCompat.wrap(buttonDrawable);
         DrawableCompat.setTint(wrappedDrawable, Color.parseColor(color));
         return wrappedDrawable;

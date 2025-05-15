@@ -48,13 +48,12 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
     private TextView tvOptionsTitle;
     private boolean isEnabled;
     private String title;
+    private BottomSheetDialog bottomSheetDialog;
+    private boolean showHeader = false;
 
     public String getSkillName() {
         return skillName;
     }
-
-    private BottomSheetDialog bottomSheetDialog;
-    private boolean showHeader = false;
 
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
@@ -79,7 +78,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
         BotListViewTemplateAdapter botListTemplateAdapter;
         if (lvMoreData.getAdapter() == null) {
-            botListTemplateAdapter = new BotListViewTemplateAdapter(requireActivity(), lvMoreData, 0);
+            botListTemplateAdapter = new BotListViewTemplateAdapter(requireActivity(), lvMoreData, 0, bottomSheetDialog);
             lvMoreData.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
@@ -88,13 +87,13 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         }
 
         tvTab1.setText(ContextCompat.getString(requireActivity(), R.string.tab1));
-        GradientDrawable gDrawable = (GradientDrawable) tvTab1.getBackground();
+        GradientDrawable gDrawable = (GradientDrawable) tvTab1.getBackground().mutate();
         gDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         gDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         tvTab1.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
         tvTab2.setText(ContextCompat.getString(requireActivity(), R.string.tab2));
-        GradientDrawable ungDrawable = (GradientDrawable) tvTab2.getBackground();
+        GradientDrawable ungDrawable = (GradientDrawable) tvTab2.getBackground().mutate();
         ungDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
         ungDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
         tvTab2.setTextColor(ContextCompat.getColor(requireActivity(), R.color.txtFontBlack));
@@ -110,13 +109,13 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
         tvTab1.setOnClickListener(v -> {
             tvTab1.setText(ContextCompat.getString(requireActivity(), R.string.tab1));
-            GradientDrawable gradientDrawable = (GradientDrawable) tvTab1.getBackground();
+            GradientDrawable gradientDrawable = (GradientDrawable) tvTab1.getBackground().mutate();
             gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
             gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
             tvTab1.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
             tvTab2.setText(ContextCompat.getString(requireActivity(), R.string.tab2));
-            GradientDrawable unGradientDrawable = (GradientDrawable) tvTab2.getBackground();
+            GradientDrawable unGradientDrawable = (GradientDrawable) tvTab2.getBackground().mutate();
             unGradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
             unGradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
             tvTab2.setTextColor(ContextCompat.getColor(requireActivity(), R.color.txtFontBlack));
@@ -126,14 +125,14 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
 
         tvTab2.setOnClickListener(v -> {
             tvTab2.setText(ContextCompat.getString(requireActivity(), R.string.tab2));
-            GradientDrawable gradientDrawable = (GradientDrawable) tvTab2.getBackground();
+            GradientDrawable gradientDrawable = (GradientDrawable) tvTab2.getBackground().mutate();
             gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
             gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
             tvTab2.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
 
 
             tvTab1.setText(ContextCompat.getString(requireActivity(), R.string.tab1));
-            GradientDrawable unGradientDrawable = (GradientDrawable) tvTab1.getBackground();
+            GradientDrawable unGradientDrawable = (GradientDrawable) tvTab1.getBackground().mutate();
             unGradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
             unGradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.whiteColor));
             tvTab1.setTextColor(ContextCompat.getColor(requireActivity(), R.color.txtFontBlack));
