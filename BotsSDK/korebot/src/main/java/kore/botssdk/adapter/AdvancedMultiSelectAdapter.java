@@ -64,7 +64,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
 
             if (multiSelectCollectionModels.size() > 1) holder.rootLayout.setVisibility(View.VISIBLE);
 
-            GradientDrawable gradientDrawable = (GradientDrawable)holder.checkSelectAll.getBackground();
+            GradientDrawable gradientDrawable = (GradientDrawable)holder.checkSelectAll.getBackground().mutate();
             gradientDrawable.setColor(Color.parseColor("#ffffff"));
             gradientDrawable.setStroke( (int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
             holder.checkSelectAll.setTag(true);

@@ -40,7 +40,7 @@ import retrofit2.Response;
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
-@SuppressLint("UnknownNullness")
+@SuppressLint({"UnknownNullness", "PasswordManagement"})
 public final class SocketWrapper {
     private final String LOG_TAG = "SocketWrapper";
     static SocketWrapper pKorePresenceInstance;

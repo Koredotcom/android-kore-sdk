@@ -1,10 +1,14 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -36,14 +41,14 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     private final RoundedCornersTransform roundedCornersTransform;
     final ListView parentListView;
     private final int count;
-    private final SharedPreferences sharedPreferences;
+    private BottomSheetDialog bottomSheetDialog;
 
-    public BotListViewTemplateAdapter(Context context, ListView parentListView, int count) {
+    public BotListViewTemplateAdapter(Context context, ListView parentListView, int count, BottomSheetDialog bottomSheetDialog) {
         this.context = context;
         this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
         this.count = count;
-        this.sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        this.bottomSheetDialog = bottomSheetDialog;
     }
 
     @Override
@@ -112,6 +117,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         }
 
         holder.botListItemRoot.setOnClickListener(v -> {
+            if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
             if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                 int position1 = parentListView.getPositionForView(v);
                 BotListModel _botListModel = getItem(position1);
@@ -128,7 +134,6 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
                 }
             }
         });
-
     }
 
     public void setBotListModelArrayList(ArrayList<BotListModel> botListModelArrayList) {
@@ -152,6 +157,10 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
         holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
         holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
         holder.bot_list_item_cost = view.findViewById(R.id.bot_list_item_cost);
+
+        SharedPreferences pref = holder.botListItemRoot.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+        GradientDrawable drawable = (GradientDrawable) holder.botListItemRoot.getBackground().mutate();
+        drawable.setStroke(2, Color.parseColor(pref.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff")));
 
         view.setTag(holder);
     }

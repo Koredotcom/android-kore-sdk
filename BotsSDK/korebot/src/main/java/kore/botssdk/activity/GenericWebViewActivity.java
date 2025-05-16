@@ -29,7 +29,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
-import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Objects;
@@ -100,22 +99,6 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         }
 
         return true;
-    }
-
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        if (menu != null) {
-            if (menu.getClass().getSimpleName().equals("MenuBuilder")) {
-                try {
-                    Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-                    m.setAccessible(true);
-                    m.invoke(menu, true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        return super.onMenuOpened(featureId, menu);
     }
 
     protected void loadUrl() {

@@ -49,7 +49,7 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
         if (carouselButtonModel == null) return;
         KaFontUtils.applyCustomFont(holder.button.getContext(), holder.itemView);
 
-        GradientDrawable gradientDrawable = (GradientDrawable)holder.button.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable)holder.button.getBackground().mutate();
         gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         holder.button.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
@@ -59,8 +59,10 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
             if (invokeGenericWebViewInterface != null) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(carouselButtonModel.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(carouselButtonModel.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(carouselButtonModel.getType())) {
                     invokeGenericWebViewInterface.handleUserActions(carouselButtonModel.getAction(), carouselButtonModel.getCustomData());
+                    return;
                 }
             }
             if (isEnabled && composeFooterInterface != null) {

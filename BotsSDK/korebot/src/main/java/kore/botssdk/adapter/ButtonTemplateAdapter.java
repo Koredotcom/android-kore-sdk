@@ -63,12 +63,16 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
             if (invokeGenericWebViewInterface != null) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonTemplate.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonTemplate.getType())) {
                     invokeGenericWebViewInterface.handleUserActions(buttonTemplate.getAction(), buttonTemplate.getCustomData());
+                    return;
                 }
-            } else if (composeFooterInterface != null && isEnabled) {
+            }
+            if (composeFooterInterface != null && isEnabled) {
                 String title = buttonTemplate.getTitle();
                 String payload = buttonTemplate.getPayload();
                 composeFooterInterface.onSendClick(title, payload, false);

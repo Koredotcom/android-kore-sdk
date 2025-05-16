@@ -1,9 +1,13 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +41,7 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
     private final int size;
 
     public ListViewTemplateAdapter(Context context, List<BotListModel> botListModels, boolean isEnabled, int size) {
-        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, MODE_PRIVATE);
         this.botListModels = botListModels;
         this.isEnabled = isEnabled;
         this.size = size;
@@ -113,6 +117,10 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
             botListItemTitle = view.findViewById(R.id.bot_list_item_title);
             botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
             botListItemCost = view.findViewById(R.id.bot_list_item_cost);
+
+            SharedPreferences pref = botListItemRoot.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+            GradientDrawable drawable = (GradientDrawable) botListItemRoot.getBackground().mutate();
+            drawable.setStroke(2, Color.parseColor(pref.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff")));
         }
     }
 

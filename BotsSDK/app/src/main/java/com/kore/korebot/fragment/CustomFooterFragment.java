@@ -204,7 +204,7 @@ public class CustomFooterFragment extends BaseFooterFragment {
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#ffffff");
         String LeftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#ffffff");
         String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#0078cd");
-        GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.theme1_right_bubble_bg, requireActivity().getTheme());
+        GradientDrawable rightDrawable = (GradientDrawable) Objects.requireNonNull(ResourcesCompat.getDrawable(requireActivity().getResources(), R.drawable.theme1_right_bubble_bg, requireActivity().getTheme())).mutate();
 
         if (rightDrawable != null) {
             rightDrawable.setColor(Color.parseColor(rightBgColor));

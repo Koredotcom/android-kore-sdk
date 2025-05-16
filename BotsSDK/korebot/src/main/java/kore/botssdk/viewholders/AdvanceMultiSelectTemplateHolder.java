@@ -61,7 +61,7 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
         TextView tvAdvanceDone = itemView.findViewById(R.id.tvAdvanceDone);
         ArrayList<AdvancedMultiSelectModel> models = payloadInner.getAdvancedMultiSelectModels();
 
-        GradientDrawable gradientDrawable = (GradientDrawable) tvAdvanceDone.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) tvAdvanceDone.getBackground().mutate();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         tvAdvanceDone.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));

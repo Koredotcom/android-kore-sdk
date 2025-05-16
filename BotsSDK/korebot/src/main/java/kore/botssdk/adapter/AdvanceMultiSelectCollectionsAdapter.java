@@ -1,9 +1,12 @@
 
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +27,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
@@ -104,7 +109,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
                     .into(holder.ivAdvMultiSelect);
         }
 
-        GradientDrawable gradientDrawable = (GradientDrawable) holder.checkBox.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) holder.checkBox.getBackground().mutate();
         gradientDrawable.setColor(Color.parseColor("#ffffff"));
         gradientDrawable.setStroke((int) dp1, Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
 
@@ -116,16 +121,6 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
         holder.checkBox.setOnClickListener(v -> {
             multiSelectListener.itemSelected(item);
         });
-
-//        holder.checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-//            if (compoundButton.isPressed()) {
-//                if (!isEnabled) {
-//                    compoundButton.setChecked(!isChecked);
-//                    return;
-//                }
-//                multiSelectListener.itemSelected(item);
-//            }
-//        });
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);
@@ -146,6 +141,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
         TextView title;
         TextView description;
         ImageView ivAdvMultiSelect;
+        RelativeLayout rootLayout;
 
         public ViewHolder(@NonNull View convertView, int viewType) {
             super(convertView);
@@ -154,8 +150,15 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
                 description = convertView.findViewById(R.id.description);
                 checkBox = convertView.findViewById(R.id.check_multi_item);
                 ivAdvMultiSelect = convertView.findViewById(R.id.ivAdvMultiSelect);
+                rootLayout = convertView.findViewById(R.id.root_layout);
             } else {
                 title = convertView.findViewById(R.id.text_view_button);
+            }
+
+            if (rootLayout != null && rootLayout.getBackground() != null) {
+                SharedPreferences pref = rootLayout.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+                GradientDrawable drawable = (GradientDrawable) rootLayout.getBackground().mutate();
+                drawable.setStroke(2, Color.parseColor(pref.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff")));
             }
 
             KaFontUtils.applyCustomFont(convertView.getContext(), convertView);

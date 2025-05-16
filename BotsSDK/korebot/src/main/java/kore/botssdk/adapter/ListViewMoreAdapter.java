@@ -29,7 +29,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewUtils.RoundedCornersTransform;
 
-public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapter.ViewHolder>{
+public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapter.ViewHolder> {
     private final ArrayList<BotListModel> model;
     final RoundedCornersTransform roundedCornersTransform;
     private SharedPreferences sharedPreferences;
@@ -40,15 +40,15 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
         this.roundedCornersTransform = new RoundedCornersTransform();
 
     }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View listItem= layoutInflater.inflate(R.layout.bot_listview_template_item_layout, parent, false);
+        View listItem = layoutInflater.inflate(R.layout.bot_listview_template_item_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(listItem);
         sharedPreferences = parent.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(parent.getContext().getResources(), R.drawable.rounded_rect_feedback, parent.getContext().getTheme());
-
         return viewHolder;
     }
 
@@ -57,16 +57,15 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
         BotListModel botListModel = model.get(position);
         holder.botListItemImage.setVisibility(View.GONE);
 
-        if(rightDrawable != null && sharedPreferences != null)
-        {
+        if (rightDrawable != null && sharedPreferences != null) {
             rightDrawable.setColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, "#ffffff")));
-            rightDrawable.setStroke((int) (1*dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
+            rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.WIDGET_BORDER_COLOR, SDKConfiguration.BubbleColors.rightBubbleUnSelected)));
             holder.botListItemRoot.setBackground(rightDrawable);
 
             holder.botListItemTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
+        if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
             Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
         }
@@ -76,16 +75,16 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         holder.bot_list_item_cost.setText(botListModel.getValue());
 
-        if(botListModel.getColor() != null)
+        if (botListModel.getColor() != null)
             holder.bot_list_item_cost.setTextColor(Color.parseColor(botListModel.getColor()));
 
         holder.bot_list_item_cost.setTypeface(null, Typeface.BOLD);
 
-        if(!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
+        if (!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getSubtitle());
 
-            if(sharedPreferences != null)
+            if (sharedPreferences != null)
                 holder.botListItemSubtitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#505968")));
         }
     }

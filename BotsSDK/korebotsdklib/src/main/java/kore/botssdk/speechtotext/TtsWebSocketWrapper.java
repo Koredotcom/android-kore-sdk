@@ -37,25 +37,23 @@ public class TtsWebSocketWrapper {
 
     /**
      * To prevent cloning
-     *
      */
     @Override
     protected Object clone() throws CloneNotSupportedException {
-        return new CloneNotSupportedException("Clone not supported");
+        throw new CloneNotSupportedException("Clone not supported");
     }
 
     /**
      * To connect the user presence
-     *
      */
     public void connect(SocketConnectionListener _mListener) {
-        if(mConnection.isConnected()) return;
+        if (mConnection.isConnected()) return;
         this.socketConnectionListener = _mListener;
 
         String url = SDKConfiguration.Server.TTS_WS_URL;
-        LogUtils.d(LOG_TAG,"The url is "+ url);
+        LogUtils.d(LOG_TAG, "The url is " + url);
         try {
-            mConnection.connect(url, new  WebSocketConnectionHandler() {
+            mConnection.connect(url, new WebSocketConnectionHandler() {
                 @Override
                 public void onOpen() {
                     if (socketConnectionListener != null) {
@@ -84,22 +82,21 @@ public class TtsWebSocketWrapper {
     }
 
     /**
-     *
      * @param msg
      * @return
      */
-    public boolean sendMessage(String msg,String bearer) {
+    public boolean sendMessage(String msg, String bearer) {
         if (mConnection.isConnected()) {
-            HashMap<String,String> body = new HashMap<>();
-            body.put("message",msg);
-            body.put("user",SDKConfiguration.Client.bot_name);
-            body.put("authorization",bearer);
+            HashMap<String, String> body = new HashMap<>();
+            body.put("message", msg);
+            body.put("user", SDKConfiguration.Client.bot_name);
+            body.put("authorization", bearer);
             Gson gson = new Gson();
             String jsonPayload = gson.toJson(body);
             mConnection.sendMessage(jsonPayload);
             return true;
         } else {
-           connect(socketConnectionListener);
+            connect(socketConnectionListener);
             LogUtils.e(LOG_TAG, "Connection is not present. Reconnecting...");
             return false;
         }

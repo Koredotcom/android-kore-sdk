@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,6 +38,7 @@ import kore.botssdk.events.AdvanceListRefreshEvent;
 import kore.botssdk.listener.AdvanceButtonClickListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.Widget;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
@@ -55,15 +57,19 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     private final ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int count;
+    private boolean isOptions = false;
+    private final SharedPreferences sharedPreferences;
 
-    public AdvanceListButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String type, AdvanceButtonClickListner advanceButtonClickListner, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+    public AdvanceListButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String type, AdvanceButtonClickListner advanceButtonClickListner, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface, boolean isOptions) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
         mContext = context;
         this.type = type;
+        this.isOptions = isOptions;
         this.advanceButtonClickListner = advanceButtonClickListner;
         this.composeFooterInterface = composeFooterInterface;
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+        sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -76,13 +82,28 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdvanceListButtonAdapter.ButtonViewHolder holder, int i) {
-        Widget.Button btn = buttons.get(i);
+    public void onBindViewHolder(@NonNull AdvanceListButtonAdapter.ButtonViewHolder holder, int position) {
+        Widget.Button btn = buttons.get(position);
         holder.tv.setText(btn.getTitle());
         holder.ivBtnImage.setVisibility(GONE);
-//        GradientDrawable gradientDrawable = (GradientDrawable) (holder.layoutDetails.getBackground() != null ? holder.layoutDetails : holder.buttonsLayout).getBackground();
-//        gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
-        holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        if (isOptions) {
+            GradientDrawable gradientDrawable = (GradientDrawable) (holder.layoutDetails.getBackground() != null ? holder.layoutDetails : holder.buttonsLayout).getBackground().mutate();
+            if (position % 2 == 0) {
+                gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                gradientDrawable.setStroke(1, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+                holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+            } else {
+                String bgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
+                String txtColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
+                gradientDrawable.setColor(Color.WHITE);
+                gradientDrawable.setStroke(2, Color.parseColor(bgColor));
+                holder.tv.setTextColor(Color.parseColor(txtColor));
+            }
+        } else {
+            holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+            ViewGroup parent = (ViewGroup) holder.tv.getParent();
+            parent.setBackgroundResource(R.drawable.list_button_background);
+        }
 
         if (!StringUtils.isNullOrEmpty(btn.getIcon())) {
             holder.ivBtnImage.setVisibility(View.VISIBLE);

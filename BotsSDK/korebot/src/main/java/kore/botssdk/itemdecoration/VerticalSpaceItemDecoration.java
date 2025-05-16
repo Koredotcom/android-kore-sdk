@@ -5,6 +5,8 @@ import android.view.View;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Objects;
+
 public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
     private final int verticalSpaceHeight;
 
@@ -14,6 +16,8 @@ public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-        outRect.bottom = verticalSpaceHeight;
+        int position = parent.getChildAdapterPosition(view);
+        int count = Objects.requireNonNull(parent.getAdapter()).getItemCount();
+        if (position != count - 1) outRect.bottom = verticalSpaceHeight;
     }
 }

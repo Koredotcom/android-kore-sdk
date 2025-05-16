@@ -48,9 +48,11 @@ public class ButtonLinkTemplateHolder extends BaseViewHolder {
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
         GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_left_bubble_bg, context.getTheme());
-        leftDrawable.setColor(Color.parseColor(leftBgColor));
-        leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
-        tvButtonLinkTitle.setBackground(leftDrawable);
+        if (leftDrawable != null) {
+            leftDrawable.setColor(Color.parseColor(leftBgColor));
+            leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
+            tvButtonLinkTitle.setBackground(leftDrawable);
+        }
     }
 
     @Override

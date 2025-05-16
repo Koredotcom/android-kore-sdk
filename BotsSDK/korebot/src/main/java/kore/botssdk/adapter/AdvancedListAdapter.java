@@ -135,7 +135,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     private void populateVIew(ViewHolder holder, int position) {
         AdvancedListModel botListModel = getItem(position);
         holder.buttonMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
-        VectorDrawable drawable= (VectorDrawable) holder.ivBtnImage.getBackground();
+        VectorDrawable drawable = (VectorDrawable) holder.ivBtnImage.getBackground();
         drawable.setTintList(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
         if (!StringUtils.isNullOrEmpty(botListModel.getIcon())) {
             holder.ivDescription.setVisibility(View.VISIBLE);
@@ -253,9 +253,9 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 String[] color = botListModel.getElementStyles().getBorder().split(" ");
 
                 if (layerDrawable != null) {
-                    GradientDrawable backgroundColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_bottom_stroke);
+                    GradientDrawable backgroundColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_bottom_stroke).mutate();
                     backgroundColor.setColor(Color.parseColor(color[1]));
-                    GradientDrawable bagColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_navbar_background);
+                    GradientDrawable bagColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_navbar_background).mutate();
 
                     if (!StringUtils.isNullOrEmpty(botListModel.getElementStyles().getBorderRadius())) {
                         String radius = botListModel.getElementStyles().getBorderRadius().replaceAll("[^0-9]", "");
@@ -283,7 +283,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 holder.llButtonMore.setVisibility(GONE);
 
                 holder.rvDefaultButtons.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), botListModel.getButtonsLayout() != null && !StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), botListModel.getButtonsLayout() != null && !StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                 if (botListModel.getButtonsLayout() != null &&
                         botListModel.getButtonsLayout().getDisplayLimit() != null) {
                     displayLimit = botListModel.getButtonsLayout().getDisplayLimit().getCount();
@@ -305,7 +305,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     ImageView ivDropDownCLose = btnsPopUpView.findViewById(R.id.ivDropDownCLose);
 
                     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                    AdvanceListButtonAdapter advanceButtonAdapter = new AdvanceListButtonAdapter(context, tempBtns, BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                    AdvanceListButtonAdapter advanceButtonAdapter = new AdvanceListButtonAdapter(context, tempBtns, BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                     recyclerView.setAdapter(advanceButtonAdapter);
 
                     ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
@@ -344,7 +344,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
                 holder.rvOptionButtons.setVisibility(View.VISIBLE);
                 holder.rvOptionButtons.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, true);
                 advanceListButtonAdapter.setListAdapter(advanceOptionsAdapter);
                 holder.rvOptionButtons.setAdapter(advanceListButtonAdapter);
             }
@@ -390,29 +390,27 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setMovementMethod(null);
 
                         if (headerOptionsModel.getButtonStyles() != null) {
-                            GradientDrawable gradientDrawable = (GradientDrawable) holder.tvAction.getBackground();
-                            if (gradientDrawable != null) {
-                                gradientDrawable.setCornerRadius(3 * dp1);
-                                if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorderColor())) {
-                                    if (!headerOptionsModel.getButtonStyles().getBorderColor().contains("#"))
-                                        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBorderColor()));
-                                    else
-                                        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(headerOptionsModel.getButtonStyles().getBorderColor()));
-                                } else if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorder())) {
-                                    String[] border = headerOptionsModel.getButtonStyles().getBorder().split("#");
-                                    if (border.length > 0)
-                                        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + border[1]));
-                                } else
-                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#224741fa"));
+                            GradientDrawable gradientDrawable = (GradientDrawable) holder.tvAction.getBackground().mutate();
+                            gradientDrawable.setCornerRadius(3 * dp1);
+                            if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorderColor())) {
+                                if (!headerOptionsModel.getButtonStyles().getBorderColor().contains("#"))
+                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBorderColor()));
+                                else
+                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(headerOptionsModel.getButtonStyles().getBorderColor()));
+                            } else if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorder())) {
+                                String[] border = headerOptionsModel.getButtonStyles().getBorder().split("#");
+                                if (border.length > 0)
+                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + border[1]));
+                            } else
+                                gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#224741fa"));
 
-                                if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBackground())) {
-                                    if (!headerOptionsModel.getButtonStyles().getBackground().contains("#"))
-                                        gradientDrawable.setColor(Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBackground()));
-                                    else
-                                        gradientDrawable.setColor(Color.parseColor(headerOptionsModel.getButtonStyles().getBackground()));
-                                } else {
-                                    gradientDrawable.setColor(Color.parseColor("#224741fa"));
-                                }
+                            if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBackground())) {
+                                if (!headerOptionsModel.getButtonStyles().getBackground().contains("#"))
+                                    gradientDrawable.setColor(Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBackground()));
+                                else
+                                    gradientDrawable.setColor(Color.parseColor(headerOptionsModel.getButtonStyles().getBackground()));
+                            } else {
+                                gradientDrawable.setColor(Color.parseColor("#224741fa"));
                             }
 
                             if (headerOptionsModel.getButtonStyles() != null && headerOptionsModel.getButtonStyles().getColor() != null)
@@ -445,7 +443,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setText(strBuilder);
                         holder.tvAction.setMovementMethod(null);
 
-                        GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground();
+                        GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground().mutate();
                         gradientDrawable.setStroke(0, null);
 
                         if (headerOptionsModel.getStyles() != null && headerOptionsModel.getStyles().getColor() != null) {
@@ -485,7 +483,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setMovementMethod(null);
 
                         if (headerOptionsModel.getButtonStyles() != null) {
-                            GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground();
+                            GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground().mutate();
                             gradientDrawable.setCornerRadius(3 * dp1);
                             if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorderColor())) {
                                 if (!headerOptionsModel.getButtonStyles().getBorderColor().contains("#"))
@@ -534,7 +532,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         RecyclerView recyclerView = popUpView.findViewById(R.id.rvDropDown);
                         ImageView ivDropDownCLose = popUpView.findViewById(R.id.ivDropDownCLose);
                         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptionsModel.getDropdownOptions(), BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptionsModel.getDropdownOptions(), BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                         recyclerView.setAdapter(advanceListButtonAdapter);
 
                         ivDropDownCLose.setOnClickListener(new View.OnClickListener() {

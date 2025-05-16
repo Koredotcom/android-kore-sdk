@@ -39,7 +39,7 @@ public class RadioOptionsTemplateHolder extends BaseViewHolder {
         list = itemView.findViewById(R.id.list);
         confirm = itemView.findViewById(R.id.confirm);
 
-        GradientDrawable gradientDrawable = (GradientDrawable) confirm.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) confirm.getBackground().mutate();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         confirm.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));

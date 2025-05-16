@@ -79,10 +79,10 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
             rowValues.add(model.getValues());
         }
 
-        GradientDrawable gradientDrawable = (GradientDrawable) rvTableViewHeader.getBackground();
+        GradientDrawable gradientDrawable = (GradientDrawable) rvTableViewHeader.getBackground().mutate();
         gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
 
-        GradientDrawable gradientDDrawable = (GradientDrawable) rlRootView.getBackground();
+        GradientDrawable gradientDDrawable = (GradientDrawable) rlRootView.getBackground().mutate();
         gradientDDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
 
         rvTableView.setAdapter(new TableRowAdapter(context, rowValues, cols, isLastItem()));
