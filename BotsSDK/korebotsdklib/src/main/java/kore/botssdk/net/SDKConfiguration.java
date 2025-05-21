@@ -32,6 +32,7 @@ public class SDKConfiguration {
     }
 
     //JWTServer related configurations
+    @SuppressLint({"HardcodedPassword", "emptyPassword"})
     public static class JWTServer {
         public static void setJwtServerUrl(String jwtServerUrl) {
             JWT_SERVER_URL = jwtServerUrl;
@@ -51,6 +52,7 @@ public class SDKConfiguration {
     }
 
     //Server related configurations
+    @SuppressLint("HardcodedPassword")
     public static class Server {
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
@@ -76,6 +78,7 @@ public class SDKConfiguration {
         }
     }
 
+    @SuppressLint("HardcodedPassword")
     public static class Client {
 
         public static void setClient_id(String client_id) {
@@ -112,6 +115,7 @@ public class SDKConfiguration {
         public static boolean isWebHook = false;
     }
 
+    @SuppressLint("HardcodedPassword")
     public static class BubbleColors {
         public static boolean enableLocalBranding = false;
         public static BrandingModel localBranding;
@@ -147,6 +151,7 @@ public class SDKConfiguration {
         public static String quickBorderColor = "#000000";
     }
 
+    @SuppressLint("HardcodedPassword")
     public static class OverrideKoreConfig {
         public static boolean isEmojiShortcutEnable = true;
         public static int typing_indicator_timeout = 10000;

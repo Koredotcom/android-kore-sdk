@@ -146,7 +146,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             }
 
             msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
-            msgTimeView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
+//            msgTimeView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
         }
     }
 
@@ -154,7 +154,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         TextView timeStampView = itemView.findViewById(R.id.time_stamp);
         timeStampView.setVisibility(timeStamp != null && !timeStamp.isEmpty() ? View.VISIBLE : View.GONE);
         timeStampView.setText(timeStamp);
-        timeStampView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
+//        timeStampView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#B0B0B0")));
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {

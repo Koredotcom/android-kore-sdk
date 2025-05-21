@@ -47,8 +47,9 @@ public class TableResponsiveAdapter extends RecyclerView.Adapter<TableResponsive
 
         holder.rlTableResponsive.setBackgroundResource(0);
 
-        if((position % 2) == 0)
-            holder.rlTableResponsive.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+        if ((position % 2) == 0)
+            holder.rlTableResponsive.setBackgroundColor(Color.TRANSPARENT);
+        else holder.rlTableResponsive.setBackgroundColor(Color.WHITE);
 
         holder.tvTableSerial.setText(values.get(0));
         holder.tvTableTitle.setText(values.get(1));

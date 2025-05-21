@@ -20,7 +20,7 @@ public class BotApplication extends Application implements ProviderInstaller.Pro
 
     @Override
     public void onProviderInstalled() {
-        Log.e("BotApplication", "Installer is Available or installed");
+        Log.d("BotApplication", "Installer is Available or installed");
     }
 
     /**

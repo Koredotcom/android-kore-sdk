@@ -49,11 +49,15 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
             if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()) &&
                     !BotResponse.TEMPLATE_TYPE_DATE_RANGE.equalsIgnoreCase(payInner.getTemplate_type()))
                 message = payInner.getText();
-            else if (!StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
-                message = payInner.getText_message();
-        } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type()))
+        } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
+            message = payInner.getText_message();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTitle()))
+            message = payInner.getTitle();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getHeading()))
+            message = payInner.getHeading();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type())) {
             message = payInner.getTemplate_type();
-        else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText()) && payOuter.getType() != null) {
+        } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText()) && payOuter.getType() != null) {
             message = payOuter.getType();
         }
         if (!isError) {

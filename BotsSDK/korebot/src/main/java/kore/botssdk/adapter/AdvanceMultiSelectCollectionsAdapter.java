@@ -94,7 +94,6 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     private void populateVIew(ViewHolder holder, int position) {
         final AdvanceMultiSelectCollectionModel item = getItem(position);
         if (item == null) return;
-        holder.title.setTag(item);
         holder.title.setText(item.getTitle());
         holder.description.setVisibility(item.getDescription() != null ? View.VISIBLE : View.GONE);
         holder.description.setText(item.getDescription());

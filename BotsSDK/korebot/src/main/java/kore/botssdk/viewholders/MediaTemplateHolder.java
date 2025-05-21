@@ -43,6 +43,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.DownloadUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.StringUtils;
 
@@ -145,8 +146,9 @@ public class MediaTemplateHolder extends BaseViewHolder {
                             .error(R.drawable.ic_image_photo)
                             .into(new DrawableImageViewTarget(ivImage));
                     tvDownload.setOnClickListener(view -> {
-                        if (invokeGenericWebViewInterface != null)
-                            invokeGenericWebViewInterface.invokeGenericWebView(payloadInner.getUrl());
+                        DownloadUtils.downloadFile(view.getContext(), payloadInner.getUrl(), null);
+//                        if (invokeGenericWebViewInterface != null)
+//                            invokeGenericWebViewInterface.invokeGenericWebView(payloadInner.getUrl());
                     });
                 }
                 break;
@@ -213,11 +215,13 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 tvTheme1.setOnClickListener(v -> {
                     popupWindow.dismiss();
-                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
+//                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
                     if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
-                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getAudioUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
                     else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
                 });
 
                 break;
@@ -295,11 +299,13 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 tvTheme1.setOnClickListener(v -> {
                     popupWindow.dismiss();
-                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
+//                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
                     if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getVideoUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
                     else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
                 });
                 break;
         }
