@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rlTableResponsive"
     android:layout_width="match_parent"
@@ -20,6 +21,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_15dp"
             android:layout_weight="1"
+            android:textColor="@color/left_bubble_text_color"
             tools:text="@string/send" />
 
         <kore.botssdk.view.CustomTextView
@@ -27,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/left_bubble_text_color"
             tools:text="@string/send" />
     </LinearLayout>
 
@@ -47,5 +50,7 @@
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/dimen_10dp"
-        android:src="@drawable/right_arrow_iconn" />
+        android:padding="4dp"
+        android:src="@drawable/right_arrow_iconn"
+        app:tint="@color/black" />
 </RelativeLayout>

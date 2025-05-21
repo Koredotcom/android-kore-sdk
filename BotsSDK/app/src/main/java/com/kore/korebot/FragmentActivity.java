@@ -24,6 +24,7 @@ import kore.botssdk.utils.LangUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.NetworkUtility;
 
+@SuppressLint("HardcodedPassword")
 public class FragmentActivity extends AppCompatActivity implements BotChatCloseListener {
     BotChatFragment botChatFragment;
 

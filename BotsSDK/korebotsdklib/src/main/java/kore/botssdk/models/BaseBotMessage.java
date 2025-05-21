@@ -80,11 +80,12 @@ public abstract class BaseBotMessage {
     }
 
     public String prepareTimeStamp(long milliSecs) {
-        if (this instanceof BotRequest) {
-            return (DateUtils.getTimeInAmPm(milliSecs) + ", " + DateUtils.formattedSentDateV6(milliSecs)) + "<medium><b>" + " You" + "</b></medium>";
-        } else {
-            return "<medium><b>" + SDKConfiguration.Client.bot_name + "</b></medium>" + " " + DateUtils.getTimeInAmPm(milliSecs) + ", " +
-                    DateUtils.formattedSentDateV6(milliSecs);
-        }
+        return DateUtils.getDateEEMMMDDYYYYHhMmSs(milliSecs);
+//        if (this instanceof BotRequest) {
+//            return (DateUtils.getTimeInAmPm(milliSecs) + ", " + DateUtils.formattedSentDateV6(milliSecs)) + "<medium><b>" + " You" + "</b></medium>";
+//        } else {
+//            return "<medium><b>" + SDKConfiguration.Client.bot_name + "</b></medium>" + " " + DateUtils.getTimeInAmPm(milliSecs) + ", " +
+//                    DateUtils.formattedSentDateV6(milliSecs);
+//        }
     }
 }

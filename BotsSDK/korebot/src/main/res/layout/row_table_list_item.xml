@@ -8,38 +8,27 @@
     android:orientation="vertical"
     android:padding="2dp">
 
-    <LinearLayout
+    <kore.botssdk.view.CustomTextViewBold
+        android:id="@+id/bot_list_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/readReceiptLightGrey"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="4dp"
-        android:paddingVertical="@dimen/dimen_15dp">
+        android:maxLines="1"
+        android:textColor="@color/left_bubble_text_color"
+        android:textSize="@dimen/text_size_sub_header" />
 
-        <kore.botssdk.view.CustomTextView
-            android:id="@+id/bot_list_item_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:maxLines="1"
-            android:textColor="@color/left_bubble_text_color"
-            android:textSize="@dimen/text_size_sub_header" />
-
-        <kore.botssdk.view.CustomTextView
-            android:id="@+id/bot_list_item_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:maxLines="1"
-            android:textColor="@color/left_bubble_text_color"
-            android:textSize="@dimen/text_size_sub_header" />
-    </LinearLayout>
+    <kore.botssdk.view.CustomTextView
+        android:id="@+id/bot_list_item_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:maxLines="1"
+        android:textColor="@color/left_bubble_text_color"
+        android:textSize="14sp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/botTableListView"
         android:layout_width="match_parent"
-        android:nestedScrollingEnabled="false"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:nestedScrollingEnabled="false" />
 </LinearLayout>

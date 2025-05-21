@@ -192,7 +192,7 @@
     <string name="share">Share</string>
     <string name="copy_link">Copy Link</string>
     <string name="downloading">Downloading…</string>
-    <string name="downloading_file_name">Downloading file: \"%s\". Please check in status bar!</string>
+    <string name="downloading_file_name">Downloading to: \"/Downloads/KoreMedia/%s\". Please check in status bar!</string>
     <string name="copy_to_clipboard">Copied to clipboard</string>
     <string name="downloading_file">Downloading file…</string>
     <string name="downloading_failed">Downloading failed!</string>

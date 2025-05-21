@@ -12,25 +12,24 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_rect_no_padding"
         android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvTableView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            android:padding="2dp" />
 
         <kore.botssdk.view.CustomTextViewSemiBold
             android:id="@+id/tvShowMore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:gravity="center"
-            android:paddingHorizontal="20dp"
+            android:paddingHorizontal="6dp"
             android:paddingVertical="10dp"
             android:text="@string/show_more"
-            android:textColor="@color/bgBlueSignupOld"
+            android:textColor="@color/left_bubble_text_color"
             android:textSize="@dimen/text_size_sub_header" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

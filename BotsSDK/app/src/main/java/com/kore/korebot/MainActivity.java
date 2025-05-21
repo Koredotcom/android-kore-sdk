@@ -35,6 +35,7 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.LangUtils;
 import kore.botssdk.utils.LogUtils;
 
+@SuppressLint("HardcodedPassword")
 public class MainActivity extends AppCompatActivity {
     String botId, clientSecret, botName, serverUrl;
     String jwtToken, clientId, identity, brandingUrl, jwtServerUrl;
@@ -206,8 +207,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private BrandingModel getLocalBrandingModel()
-    {
+    private BrandingModel getLocalBrandingModel() {
         BrandingModel brandingModel = new BrandingModel();
         brandingModel.setBotchatBgColor("#F3F5F8");
         brandingModel.setBotchatTextColor("#202124");

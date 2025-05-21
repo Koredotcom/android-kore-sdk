@@ -232,6 +232,10 @@ public class DateUtils {
         return dateWeekDayTime5.format(startdate) + calendar_list_format_2.format(startdate).toLowerCase() + " to " + calendar_list_format_2.format(enddate).toLowerCase();
     }
 
+    public static String getDateEEMMMDDYYYYHhMmSs(long millis) {
+        return dateWeekDayTime.format(millis);
+    }
+
     public static String getDateWithTime(long lastModified) {
 
         String date = dateWeekMsgTime.format(lastModified);

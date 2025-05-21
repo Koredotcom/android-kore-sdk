@@ -31,7 +31,6 @@ import androidx.core.content.res.ResourcesCompat;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import kore.botssdk.R;
@@ -44,7 +43,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     private String url;
     private WebView webview;
     private ProgressBar mProgressBar;
-    private final Handler handler = new Handler(Objects.requireNonNull(Looper.myLooper()));
+    private final Handler handler = new Handler(Looper.getMainLooper());
     public static String EXTRA_URL = "url";
     public static String EXTRA_HEADER = "header";
 
