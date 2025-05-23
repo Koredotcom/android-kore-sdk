@@ -13,20 +13,20 @@ import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonButt
 import com.kore.ui.R
 
 class WelcomeStarterButtonsAdapter(private val context: Context, private val type: String?) :
-    RecyclerView.Adapter<WelcomeStarterButtonsAdapter.QuickReplyViewHolder>() {
+    RecyclerView.Adapter<WelcomeStarterButtonsAdapter.StarterButtonViewHolder>() {
 
     private var quickReplyTemplateArrayList: ArrayList<BrandingQuickStartButtonButtonsModel>? = null
     private var sendMessage: (message: String, payload: String) -> Unit = { _, _ -> }
     private var loadUrl: (url: String) -> Unit = {}
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StarterButtonViewHolder {
         val convertView: View = if (type.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true)) LayoutInflater.from(context)
             .inflate(R.layout.welcome_quick_buttons_full, parent, false) else LayoutInflater.from(context)
             .inflate(R.layout.welcome_quick_buttons, parent, false)
-        return QuickReplyViewHolder(convertView)
+        return StarterButtonViewHolder(convertView)
     }
 
-    override fun onBindViewHolder(holder: QuickReplyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: StarterButtonViewHolder, position: Int) {
         val quickReplyTemplate: BrandingQuickStartButtonButtonsModel = quickReplyTemplateArrayList!![position]
         holder.quickReplyTitle.text = quickReplyTemplate.title
         holder.quickReplyRoot.setOnClickListener {
@@ -75,7 +75,7 @@ class WelcomeStarterButtonsAdapter(private val context: Context, private val typ
         this.loadUrl = loadUrl
     }
 
-    class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class StarterButtonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val quickReplyTitle: TextView = view.findViewById(R.id.quick_reply_item_text)
         val quickReplyRoot: RelativeLayout = view.findViewById(R.id.quick_reply_item_root)
     }

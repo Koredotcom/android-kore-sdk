@@ -13,16 +13,16 @@ import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonButt
 import com.kore.ui.R
 
 class WelcomeStaticLinksListAdapter(val context: Context, private val arrStaticLinks: ArrayList<BrandingQuickStartButtonButtonsModel>) :
-    RecyclerView.Adapter<WelcomeStaticLinksListAdapter.QuickReplyViewHolder>() {
+    RecyclerView.Adapter<WelcomeStaticLinksListAdapter.StaticLinkViewHolder>() {
     private var sendMessage: (message: String, payload: String) -> Unit = { _, _ -> }
     private var loadUrl: (url: String) -> Unit = {}
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StaticLinkViewHolder {
         val convertView: View = LayoutInflater.from(context).inflate(R.layout.welcome_static_links, parent, false)
-        return QuickReplyViewHolder(convertView)
+        return StaticLinkViewHolder(convertView)
     }
 
-    override fun onBindViewHolder(holder: QuickReplyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: StaticLinkViewHolder, position: Int) {
         val quickReplyTemplate: BrandingQuickStartButtonButtonsModel = arrStaticLinks[position]
         holder.quickReplyTitle.text = quickReplyTemplate.title
         holder.quickReplyDesc.text = quickReplyTemplate.description
@@ -60,7 +60,7 @@ class WelcomeStaticLinksListAdapter(val context: Context, private val arrStaticL
         this.loadUrl = loadUrl
     }
 
-    class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class StaticLinkViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val quickReplyRoot: LinearLayout = view.findViewById(R.id.quick_reply_item_root)
         val quickReplyTitle: TextView = view.findViewById(R.id.link_title)
         val quickReplyDesc: TextView = view.findViewById(R.id.link_desc)

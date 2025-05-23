@@ -26,13 +26,13 @@ class AdvanceOptionsAdapter(
     private val isLastItem: Boolean,
 ) : RecyclerView.Adapter<OptionsViewHolder>() {
 
-    private var selectedItems: List<Int> = emptyList()
+    private var selectedItems: ArrayList<Int> = ArrayList()
     private val preferenceRepository = PreferenceRepositoryImpl()
 
     fun getSelectedItems(): List<Int> = selectedItems
 
     fun clearSelectedItems() {
-        selectedItems = emptyList()
+        selectedItems.clear()
         notifyDataSetChanged()
     }
 
@@ -70,10 +70,11 @@ class AdvanceOptionsAdapter(
             holder.ivOptions.setOnClickListener {
                 if (!isLastItem) return@setOnClickListener
                 if (option[BotResponseConstants.TYPE] == BotResponseConstants.RADIO) {
-                    selectedItems = emptyList()
-                    selectedItems += (position)
+                    selectedItems.clear()
+                    selectedItems.add(position)
                 } else {
-                    selectedItems += (position)
+                    if (selectedItems.contains(position)) selectedItems.remove(position)
+                    else selectedItems.add(position)
                 }
                 notifyDataSetChanged()
             }

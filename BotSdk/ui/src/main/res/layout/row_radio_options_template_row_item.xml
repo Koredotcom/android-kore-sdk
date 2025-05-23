@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginBottom="6dp"
-        android:textColor="@color/footer_color_dark_grey"
+        android:textColor="@color/kora_grey"
         android:textSize="12sp"
         tools:text="description" />
 </androidx.appcompat.widget.LinearLayoutCompat>

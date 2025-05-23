@@ -1,6 +1,8 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,9 +25,11 @@ class AdvanceListButtonAdapter(
     private val buttons: List<Map<String, *>>,
     private val count: Int,
     private val isLastItem: Boolean,
+    private val isOptions: Boolean,
     val actionEvent: (event: BotChatEvent) -> Unit
 ) : RecyclerView.Adapter<ButtonViewHolder>() {
     private var advancedOptionsAdapter: AdvanceOptionsAdapter? = null
+    private val sharedPreferences = PreferenceRepositoryImpl()
 
     fun setAdvancedOptionsAdapter(advancedOptionsAdapter: AdvanceOptionsAdapter?) {
         this.advancedOptionsAdapter = advancedOptionsAdapter
@@ -61,15 +65,36 @@ class AdvanceListButtonAdapter(
                 holder.ivBtnImage.visibility = View.GONE
             }
         }
-        val sharedPrefs = PreferenceRepositoryImpl()
-        val txtColor = sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
-        holder.buttonTV.setTextColor(txtColor.toColorInt())
+//        val txtColor = sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
+//        holder.buttonTV.setTextColor(txtColor.toColorInt())
+        if (isOptions) {
+            val gradientDrawable = (holder.buttonTV.parent as ViewGroup).background.mutate() as GradientDrawable
+            if (position % 2 == 0) {
+                val bgColor: String = sharedPreferences.getStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#ffffff")
+                val txtColor: String = sharedPreferences.getStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#000000")
+                gradientDrawable.setColor(bgColor.toColorInt())
+                gradientDrawable.setStroke(1, bgColor.toColorInt())
+                holder.buttonTV.setTextColor(txtColor.toColorInt())
+            } else {
+                val bgColor: String = sharedPreferences.getStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#ffffff")
+                val txtColor: String = sharedPreferences.getStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, "#000000")
+                gradientDrawable.setColor(Color.WHITE)
+                gradientDrawable.setStroke(2, bgColor.toColorInt())
+                holder.buttonTV.setTextColor(txtColor.toColorInt())
+            }
+        } else {
+            val txtColor: String = sharedPreferences.getStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
+            holder.buttonTV.setTextColor(txtColor.toColorInt())
+//            val parent = holder.tv.getParent() as ViewGroup
+//            parent.setBackgroundResource(R.drawable.list_button_background)
+        }
         holder.buttonTV.setOnClickListener {
             advancedOptionsAdapter?.let {
                 if (button[BotResponseConstants.BTN_TYPE] != null) {
                     if (!isLastItem) return@setOnClickListener
                     if (button[BotResponseConstants.BTN_TYPE] == BotResponseConstants.CONFIRM) {
-                        actionEvent(BotChatEvent.SendMessage("Confirm: ${it.getSelectedItems().joinToString(",")}"))
+                        if (it.getSelectedItems().isNotEmpty())
+                            actionEvent(BotChatEvent.SendMessage("Confirm: ${it.getSelectedItems().joinToString(",")}"))
                     } else {
                         it.clearSelectedItems()
                     }

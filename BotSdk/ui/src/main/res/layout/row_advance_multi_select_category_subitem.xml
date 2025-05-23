@@ -38,7 +38,7 @@
         android:layout_toEndOf="@+id/ivAdvMultiSelect"
         android:orientation="vertical">
 
-        <com.kore.ui.textview.CustomTextView
+        <com.kore.ui.textview.CustomTextViewBold
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
             android:maxLines="1"
             android:tag="medium"
             android:text="@string/hello"
-            android:textColor="@color/greyHead"
+            android:textColor="#404051"
             android:textSize="12sp" />
     </LinearLayout>
 </RelativeLayout>

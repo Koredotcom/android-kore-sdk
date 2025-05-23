@@ -31,6 +31,7 @@ import com.kore.ui.base.BaseContentFragment
 import com.kore.ui.databinding.BotContentLayoutBinding
 import com.kore.ui.row.botchat.BotChatItemDecoration
 import com.kore.ui.row.botchat.BotChatRowType
+import com.kore.ui.row.botchat.TimeStampTemplateRow
 
 class ChatContentFragment : BaseContentFragment() {
     private lateinit var binding: BotContentLayoutBinding
@@ -117,9 +118,11 @@ class ChatContentFragment : BaseContentFragment() {
     override fun addMessagesToAdapter(messages: List<BaseBotMessage>, isHistory: Boolean, isReconnection: Boolean) {
         binding.swipeContainerChat.isRefreshing = false
         if (messages.isEmpty()) return
-        chatAdapter.submitList(chatAdapter.addAndCreateRows(messages, isHistory, isReconnection))
+        val rows = chatAdapter.addAndCreateRows(messages, isHistory, isReconnection)
+        chatAdapter.submitList(rows)
         binding.chatContentList.postDelayed({
-            contentViewModel.setHistoryOffset(chatAdapter.itemCount)
+            val history = rows.filter { it !is TimeStampTemplateRow }
+            contentViewModel.setHistoryOffset(history.size)
             if (!isHistory && chatAdapter.itemCount > 0) {
                 binding.chatContentList.verticalSmoothScrollTo(chatAdapter.itemCount - 1, LinearSmoothScroller.SNAP_TO_START)
             }

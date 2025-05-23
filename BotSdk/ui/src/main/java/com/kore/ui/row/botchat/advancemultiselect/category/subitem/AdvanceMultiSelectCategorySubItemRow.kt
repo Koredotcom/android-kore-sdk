@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
+import androidx.core.graphics.toColorLong
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -49,6 +50,9 @@ class AdvanceMultiSelectCategorySubItemRow(
     override fun <Binding : ViewBinding> bind(binding: Binding) {
         val childBinding = RowAdvanceMultiSelectCategorySubitemBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
+            val bgColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_LEFT_BG_COLOR).toColorInt()
+            val drawable = rootLayout.background as GradientDrawable
+            drawable.setStroke(2, bgColor)
             val titleText = item[KEY_TITLE].toString()
             title.text = titleText
             description.isVisible = item[DESCRIPTION] != null

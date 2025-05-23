@@ -11,10 +11,13 @@
 
     <TextView
         android:id="@+id/tvShowMore"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/rvTableView"
         android:gravity="center_vertical"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="10dp"
         android:text="@string/show_more"
-        android:textColor="@color/bgBlueSignupOld" />
+        android:textColor="@color/black"
+        android:textSize="16sp" />
 </RelativeLayout>

@@ -285,6 +285,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                     ACManager.getInstance().terminate()
                     if (alertDialog?.isShowing == true) alertDialog?.dismiss()
                     val intent = Intent(CallActivity.ACTION_CALL_TERMINATED)
+                    intent.setPackage(packageName)
                     sendBroadcast(intent)
                 }
             }

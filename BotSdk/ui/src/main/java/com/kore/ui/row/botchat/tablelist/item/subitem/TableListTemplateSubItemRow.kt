@@ -64,7 +64,6 @@ class TableListTemplateSubItemRow(
             val valueMap = item[VALUE] as Map<String, Any>?
             val valueUrlMap = valueMap?.get(URL) as Map<String, String>?
             val layoutMap = valueMap?.get(LAYOUT) as Map<String, String>?
-            val defaultActionMap = item[BotResponseConstants.DEFAULT_ACTION] as Map<String, String>?
 
             image.isVisible = imageMap?.containsKey(IMAGE_SRC) == true
             imageMap?.get(IMAGE_SRC).let {
@@ -106,14 +105,6 @@ class TableListTemplateSubItemRow(
             }
 
             item[KEY_BG_COLOR]?.let { root.setBackgroundColor(it.toString().toColorInt()) }
-
-            root.setOnClickListener {
-                when (defaultActionMap?.get(TYPE)) {
-                    POSTBACK -> actionEvent(SendMessage(defaultActionMap[KEY_TITLE].toString(), defaultActionMap[PAYLOAD].toString()))
-                    URL -> actionEvent(BotChatEvent.UrlClick(defaultActionMap[URL].toString()))
-                    else -> actionEvent(BotChatEvent.UrlClick(titleUrlMap?.get(LINK).toString()))
-                }
-            }
             commonBind()
         }
     }
@@ -123,6 +114,15 @@ class TableListTemplateSubItemRow(
     }
 
     private fun RowTableListTemplateSubItemBinding.commonBind() {
-        root.isClickable = isLastItem
+        root.setOnClickListener {
+            val titleMap = item[KEY_TITLE] as Map<String, Any>?
+            val titleUrlMap = titleMap?.get(URL) as Map<String, String>?
+            val defaultActionMap = item[BotResponseConstants.DEFAULT_ACTION] as Map<String, String>?
+            when (defaultActionMap?.get(TYPE)) {
+                POSTBACK -> if (isLastItem) actionEvent(SendMessage(defaultActionMap[KEY_TITLE].toString(), defaultActionMap[PAYLOAD].toString()))
+                URL -> actionEvent(BotChatEvent.UrlClick(defaultActionMap[URL].toString()))
+                else -> actionEvent(BotChatEvent.UrlClick(titleUrlMap?.get(LINK).toString()))
+            }
+        }
     }
 }

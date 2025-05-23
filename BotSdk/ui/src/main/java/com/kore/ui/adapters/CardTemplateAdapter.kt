@@ -137,6 +137,7 @@ class CardTemplateAdapter(
                         headerOptions[BotResponseConstants.DROP_DOWN_OPTIONS] as List<Map<String, *>>,
                         0,
                         isLastItem,
+                        false,
                         actionEvent
                     )
                     recyclerView.adapter = advanceListButtonAdapter
