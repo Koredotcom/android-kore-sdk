@@ -41,10 +41,10 @@ class QuickRepliesTemplateAdapter(
         val quickReplyTemplate = quickReplies[position]
         val sharedPrefs = PreferenceRepositoryImpl()
         val bgColor = sharedPrefs.getStringValue(
-            holder.quickReplyView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#efeffc"
+            holder.quickReplyView.context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#ffffff"
         ).toColorInt()
         val textColor = sharedPrefs.getStringValue(
-            holder.quickReplyView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#3F51B5"
+            holder.quickReplyView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5"
         ).toColorInt()
         holder.quickReplyView.setRoundedCorner(4.dpToPx(holder.itemView.context).toFloat())
         holder.quickReplyView.setBackgroundColor(bgColor)

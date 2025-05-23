@@ -58,6 +58,8 @@ class MultiSelectTemplateItemRow(
         val uncheckedColor = preferenceRepository.getStringValue(root.context, THEME_NAME, BUBBLE_LEFT_BG_COLOR).toColorInt()
         checkedDrawable.setColor(if (llCheck.isSelected) checkedColor else Color.WHITE)
         checkedDrawable.setStroke(1.dpToPx(root.context), if (llCheck.isSelected) checkedColor else uncheckedColor)
+        val drawable = root.background.mutate() as GradientDrawable
+        drawable.setStroke(2, uncheckedColor)
         llCheck.setOnClickListener {
             if (!isLastItem) {
                 return@setOnClickListener

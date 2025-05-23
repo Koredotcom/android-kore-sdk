@@ -24,7 +24,7 @@ class BotButtonsTemplateAdapter(
     private val payload: Map<String, Any?>,
     private val isLastItem: Boolean,
     private val actionEvent: (event: UserActionEvent) -> Unit
-) : RecyclerView.Adapter<BotButtonsTemplateAdapter.QuickReplyViewHolder>() {
+) : RecyclerView.Adapter<BotButtonsTemplateAdapter.BotButtonViewHolder>() {
     private var buttonBgColor: String
     private var activeTextColor: String
     private var invertBgColor: String
@@ -43,12 +43,12 @@ class BotButtonsTemplateAdapter(
         invertTextColor = sharedPreferences.getString(BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, invertTextColor)!!
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BotButtonViewHolder {
         val convertView: View = LayoutInflater.from(context).inflate(R.layout.row_button_template_cell, parent, false)
-        return QuickReplyViewHolder(convertView)
+        return BotButtonViewHolder(convertView)
     }
 
-    override fun onBindViewHolder(holder: QuickReplyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BotButtonViewHolder, position: Int) {
         val buttonMap: Map<String, *> = buttons[position]
         holder.buttonTitle.text = buttonMap[BotResponseConstants.KEY_TITLE] as String
         holder.rootLayout.setOnClickListener {
@@ -112,7 +112,7 @@ class BotButtonsTemplateAdapter(
         return buttons.size
     }
 
-    class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class BotButtonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val buttonTitle: TextView = view.findViewById(R.id.button_title)
         val rootLayout: LinearLayout = view.findViewById(R.id.root_layout)
     }

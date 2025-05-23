@@ -3,7 +3,6 @@ package com.kore.ui.row.botchat
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -15,6 +14,7 @@ import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -35,8 +35,8 @@ import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.databinding.ImageTemplateViewBinding
 import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.DownloadUtils
 import com.kore.ui.utils.MediaUtils
-import androidx.core.net.toUri
 
 class ImageTemplateRow(
     private val id: String,
@@ -80,10 +80,10 @@ class ImageTemplateRow(
                         .into<DrawableImageViewTarget>(DrawableImageViewTarget(ivImage))
                     download.setRoundedCorner(8f)
                     download.setOnClickListener {
-                        val imageUrl = payload[BotResponseConstants.URL]
-                        imageUrl?.let {
-                            if (imageUrl.toString().isNotEmpty()) actionEvent(BotChatEvent.UrlClick(imageUrl.toString()))
-                        }
+                        val imageUrl = payload[BotResponseConstants.URL] as String?
+                        if (!imageUrl.isNullOrEmpty())
+                            DownloadUtils.downloadFile(download.context, imageUrl, null)
+                        //actionEvent(BotChatEvent.UrlClick(imageUrl.toString()))
                     }
                 }
 
@@ -183,7 +183,8 @@ class ImageTemplateRow(
             popupWindow.dismiss()
             MediaUtils.setupAppDir(context, MediaConstants.MEDIA_TYPE_AUDIO)
             if (!url.isNullOrEmpty()) {
-                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
+                DownloadUtils.downloadFile(tvTheme1.context, url, null)
+//                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
             }
         }
 

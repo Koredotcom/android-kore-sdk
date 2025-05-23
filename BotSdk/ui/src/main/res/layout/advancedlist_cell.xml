@@ -54,7 +54,7 @@
             android:ellipsize="end"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:textColor="@color/footer_color_dark_grey"
+            android:textColor="@color/left_bubble_text_color"
             android:textSize="@dimen/text_size_small"
             android:visibility="gone" />
 

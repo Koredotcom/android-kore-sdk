@@ -5,6 +5,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -73,16 +74,14 @@ class GeneralWebViewActivity : AppCompatActivity() {
 
             override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
                 super.onPageStarted(view, url, favicon)
-
                 binding.mProgress.isVisible = true
-                binding.webView.visibility = View.INVISIBLE
+                binding.pleaseWait.isVisible = true
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-
                 binding.mProgress.isVisible = false
-                binding.webView.isVisible = true
+                binding.pleaseWait.isVisible = false
             }
 
             override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
@@ -108,6 +107,7 @@ class GeneralWebViewActivity : AppCompatActivity() {
         }
 
         setUpActionBar(intent.extras?.getString(EXTRA_HEADER))
+        binding.webView.setBackgroundColor(Color.WHITE)
         intent.extras?.getString(EXTRA_URL)?.let {
             webUrl = it
             binding.webView.loadUrl(it)

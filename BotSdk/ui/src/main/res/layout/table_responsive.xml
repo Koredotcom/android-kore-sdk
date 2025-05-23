@@ -14,20 +14,22 @@
         android:orientation="horizontal"
         android:padding="@dimen/dimen_7dp">
 
-        <TextView
+        <com.kore.ui.textview.CustomTextView
             android:id="@+id/tvTableSerial"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_15dp"
             android:layout_weight="1"
-            android:text="@string/send" />
+            android:text="@string/send"
+            android:textColor="@color/left_bubble_text_color" />
 
-        <TextView
+        <com.kore.ui.textview.CustomTextView
             android:id="@+id/tvTableTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/send" />
+            android:text="@string/send"
+            android:textColor="@color/left_bubble_text_color" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -47,6 +49,7 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/dimen_10dp"
         android:contentDescription="@string/table_view_expand_icon"
+        android:padding="4dp"
         android:src="@drawable/right_arrow_iconn"
         app:tint="@color/black" />
 

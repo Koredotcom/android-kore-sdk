@@ -18,6 +18,7 @@ class ClosingService : Service() {
         // Handle application closing
 
         val intent = Intent(BundleConstants.DESTROY_EVENT)
+        intent.setPackage(packageName)
         sendBroadcast(intent)
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
