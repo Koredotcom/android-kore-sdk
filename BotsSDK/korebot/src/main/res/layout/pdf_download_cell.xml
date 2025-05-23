@@ -8,36 +8,29 @@
     android:orientation="horizontal"
     android:padding="@dimen/dimen_15dp">
 
-
     <ImageView
         android:id="@+id/iv_pdf_image"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginRight="5dp"
+        android:layout_marginEnd="5dp"
         android:clickable="false"
+        android:importantForAccessibility="no"
         android:minWidth="60dp"
         android:minHeight="60dp"
         android:scaleType="centerCrop"
         android:src="@drawable/download"
-        android:visibility="visible"
-        android:importantForAccessibility="no" />
-
+        android:visibility="visible" />
 
     <kore.botssdk.view.CustomTextView
         android:id="@+id/tv_pdf_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/dimen_10dp"
-        android:layout_marginRight="@dimen/dimen_5dp"
-        android:layout_toRightOf="@id/bot_list_item_image"
+        android:layout_marginStart="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
         android:clickable="false"
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/title"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_normal" />
-
-
 </LinearLayout>

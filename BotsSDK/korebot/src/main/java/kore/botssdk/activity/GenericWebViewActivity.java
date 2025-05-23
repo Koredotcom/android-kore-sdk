@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -22,6 +23,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
@@ -42,6 +44,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     private String actionbarTitle;
     private String url;
     private WebView webview;
+    private TextView tvPleaseWait;
     private ProgressBar mProgressBar;
     private final Handler handler = new Handler(Looper.getMainLooper());
     public static String EXTRA_URL = "url";
@@ -60,8 +63,10 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
         setUpActionBar();
         webview = findViewById(R.id.webView);
+        tvPleaseWait = findViewById(R.id.please_wait);
         mProgressBar = findViewById(R.id.mProgress);
         loadUrl();
+        webview.setBackgroundColor(Color.WHITE);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -141,14 +146,16 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                 public void onPageStarted(WebView view, String url, Bitmap favicon) {
                     super.onPageStarted(view, url, favicon);
                     mProgressBar.setVisibility(ProgressBar.VISIBLE);
-                    webview.setVisibility(View.INVISIBLE);
+                    tvPleaseWait.setVisibility(View.VISIBLE);
+//                    webview.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
                     mProgressBar.setVisibility(ProgressBar.GONE);
-                    webview.setVisibility(View.VISIBLE);
+                    tvPleaseWait.setVisibility(View.GONE);
+//                    webview.setVisibility(View.VISIBLE);
                 }
             });
             webview.setWebChromeClient(new WebChromeClient() {

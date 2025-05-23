@@ -28,6 +28,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 
@@ -168,12 +169,11 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
 
         mViewModel.connectToBot(sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
         } else {
-            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT));
         }
@@ -443,7 +443,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (url != null && !url.isEmpty()) {
             Intent intent = new Intent(this, GenericWebViewActivity.class);
             intent.putExtra(EXTRA_URL, url);
-            intent.putExtra(EXTRA_HEADER, !botName.isEmpty()? botName : SDKConfiguration.Client.bot_name);
+            intent.putExtra(EXTRA_HEADER, !botName.isEmpty() ? botName : SDKConfiguration.Client.bot_name);
             startActivity(intent);
         }
     }
