@@ -24,6 +24,7 @@ public class ClosingService extends Service {
 
         // Handle application closing
         Intent intent = new Intent(BundleConstants.DESTROY_EVENT);
+        intent.setPackage(getPackageName());
         sendBroadcast(intent);
 
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
