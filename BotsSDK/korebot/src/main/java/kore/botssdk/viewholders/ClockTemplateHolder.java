@@ -13,6 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.core.content.ContextCompat;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 import java.util.Map;
 
 import kore.botssdk.R;
@@ -29,6 +32,7 @@ public class ClockTemplateHolder extends BaseViewHolder {
     private final TextView minutesText;
     private final TextView amPm;
     private final TextView confirm;
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat("hh:mm:a", Locale.ENGLISH);
 
     private String msgId;
 
@@ -56,7 +60,7 @@ public class ClockTemplateHolder extends BaseViewHolder {
         setSeekbarListener(seekbarHours, seekbarMinutes);
         setSeekbarListener(seekbarMinutes, seekbarHours);
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
-        String selectedTime = contentState != null ? (String) contentState.get(BotResponse.SELECTED_TIME) : itemView.getContext().getString(R.string.default_click_time);
+        String selectedTime = contentState != null ? (String) contentState.get(BotResponse.SELECTED_TIME) : TIME_FORMAT.format(Calendar.getInstance().getTime());
         if (selectedTime != null && !selectedTime.isEmpty()) {
             String[] currentTime = selectedTime.split(":");
             hoursText.setText(currentTime[0]);

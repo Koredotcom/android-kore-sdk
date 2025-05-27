@@ -2,7 +2,6 @@ package kore.botssdk.viewmodels.content;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -146,16 +145,14 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
             repository.getWebHookHistoryRequest(_offset, limit, jwt).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
     }
 
-    public CalendarConstraints.Builder minRange(String startDate, String date, String format) {
+    public CalendarConstraints.Builder minRange(String startDate, String endDate, String format) {
+        if (StringUtils.isNullOrEmpty(format)) {
+            return new CalendarConstraints.Builder();
+        }
         format = format.replaceAll("DD", "dd").replaceAll("YY", "yy");
-        if (StringUtils.isNullOrEmpty(date) && StringUtils.isNullOrEmpty(startDate)) {
-            CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
-            constraintsBuilderRange.setValidator(DateValidatorPointForward.now());
-
-            return constraintsBuilderRange;
-        } else if (!StringUtils.isNullOrEmpty(startDate) && !StringUtils.isNullOrEmpty(date)) {
+        if (!StringUtils.isNullOrEmpty(startDate) && !StringUtils.isNullOrEmpty(endDate)) {
             long startDateMillis = DateUtils.getDateFromFormat(startDate, format, 0);
-            long endDateMillis = DateUtils.getDateFromFormat(date, format, 1);
+            long endDateMillis = DateUtils.getDateFromFormat(endDate, format, 1);
             CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
             constraintsBuilderRange.setStart(startDateMillis);
             constraintsBuilderRange.setEnd(endDateMillis);
@@ -178,8 +175,8 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
             constraintsBuilderRange.setValidator(validators);
 
             return constraintsBuilderRange;
-        } else if (!StringUtils.isNullOrEmpty(date)) {
-            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(date, format, 1));
+        } else if (!StringUtils.isNullOrEmpty(endDate)) {
+            CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(DateUtils.getDateFromFormat(endDate, format, 1));
 
             ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<CalendarConstraints.DateValidator>();
             listValidators.add(dateValidatorMax);

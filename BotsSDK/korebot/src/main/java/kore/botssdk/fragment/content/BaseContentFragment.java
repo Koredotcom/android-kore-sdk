@@ -12,8 +12,10 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import kore.botssdk.R;
@@ -119,11 +121,18 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
                             picker.addOnPositiveButtonClickListener(selection -> {
                                 Calendar calendar = Calendar.getInstance();
                                 calendar.setTimeInMillis(selection);
-                                int stYear = calendar.get(Calendar.YEAR);
-                                int stMonth = calendar.get(Calendar.MONTH);
-                                int stDay = calendar.get(Calendar.DAY_OF_MONTH);
 
-                                String formattedDate = ((stMonth + 1) > 9 ? (stMonth + 1) : "0" + (stMonth + 1)) + "/" + (stDay > 9 ? stDay : "0" + stDay) + "/" + stYear;
+                                String formattedDate;
+                                if (payInner.getFormat() != null && !payInner.getFormat().isEmpty()) {
+                                    String dateFormat = payInner.getFormat().replaceAll("DD", "dd").replaceAll("YY", "yy");
+                                    SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+                                    formattedDate = formatter.format(calendar.getTime());
+                                } else {
+                                    int stYear = calendar.get(Calendar.YEAR);
+                                    int stMonth = calendar.get(Calendar.MONTH);
+                                    int stDay = calendar.get(Calendar.DAY_OF_MONTH);
+                                    formattedDate = ((stMonth + 1) > 9 ? (stMonth + 1) : "0" + (stMonth + 1)) + "/" + (stDay > 9 ? stDay : "0" + stDay) + "/" + stYear;
+                                }
 
                                 composeFooterInterface.onSendClick(formattedDate, false);
                             });
@@ -147,18 +156,32 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
                                 Long endDate = selection.second;
 
                                 Calendar cal = Calendar.getInstance();
-                                cal.setTimeInMillis(startDate);
-                                int strYear = cal.get(Calendar.YEAR);
-                                int strMonth = cal.get(Calendar.MONTH);
-                                int strDay = cal.get(Calendar.DAY_OF_MONTH);
 
-                                cal.setTimeInMillis(endDate);
-                                int endYear = cal.get(Calendar.YEAR);
-                                int endMonth = cal.get(Calendar.MONTH);
-                                int endDay = cal.get(Calendar.DAY_OF_MONTH);
+                                String formatedStartDate;
+                                String formatedEndDate;
+                                if (payInner.getFormat() != null && !payInner.getFormat().isEmpty()) {
+                                    String dateFormat = payInner.getFormat().replaceAll("DD", "dd").replaceAll("YY", "yy");
+                                    SimpleDateFormat formatter = new SimpleDateFormat(dateFormat, Locale.ENGLISH);
+                                    cal.setTimeInMillis(startDate);
+                                    formatedStartDate = formatter.format(cal.getTime());
+                                    cal.setTimeInMillis(endDate);
+                                    formatedEndDate = formatter.format(cal.getTime());
+                                } else {
+                                    cal.setTimeInMillis(startDate);
+                                    int strYear = cal.get(Calendar.YEAR);
+                                    int strMonth = cal.get(Calendar.MONTH);
+                                    int strDay = cal.get(Calendar.DAY_OF_MONTH);
 
-                                String formatedStartDate = ((strDay + 1) > 9 ? (strDay + 1) : "0" + (strDay + 1)) + "-" + ((strMonth + 1) > 9 ? (strMonth + 1) : "0" + (strMonth + 1)) + "-" + strYear;
-                                String formatedEndDate = ((endDay + 1) > 9 ? (endDay + 1) : "0" + (endDay + 1)) + "-" + ((endMonth + 1) > 9 ? (endMonth + 1) : "0" + (endMonth + 1)) + "-" + endYear;
+                                    cal.setTimeInMillis(endDate);
+                                    int endYear = cal.get(Calendar.YEAR);
+                                    int endMonth = cal.get(Calendar.MONTH);
+                                    int endDay = cal.get(Calendar.DAY_OF_MONTH);
+
+                                    formatedStartDate = ((strDay + 1) > 9 ? (strDay + 1) : "0" + (strDay + 1)) + "-" + ((strMonth + 1) > 9 ? (strMonth + 1) : "0" + (strMonth + 1)) + "-" + strYear;
+                                    formatedEndDate = ((endDay + 1) > 9 ? (endDay + 1) : "0" + (endDay + 1)) + "-" + ((endMonth + 1) > 9 ? (endMonth + 1) : "0" + (endMonth + 1)) + "-" + endYear;
+                                }
+//                                String formatedStartDate = ((strDay + 1) > 9 ? (strDay + 1) : "0" + (strDay + 1)) + "-" + ((strMonth + 1) > 9 ? (strMonth + 1) : "0" + (strMonth + 1)) + "-" + strYear;
+//                                String formatedEndDate = ((endDay + 1) > 9 ? (endDay + 1) : "0" + (endDay + 1)) + "-" + ((endMonth + 1) > 9 ? (endMonth + 1) : "0" + (endMonth + 1)) + "-" + endYear;
                                 formatedStartDate = formatedStartDate + " to " + formatedEndDate;
                                 composeFooterInterface.onSendClick(formatedStartDate, false);
                             });
