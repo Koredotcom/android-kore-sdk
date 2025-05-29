@@ -3,7 +3,6 @@ package com.kore.ui.botchat.fragment
 import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.Toast
-import androidx.core.util.Pair
 import androidx.lifecycle.viewModelScope
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.CalendarConstraints.DateValidator
@@ -29,7 +28,6 @@ import com.kore.ui.R
 import com.kore.ui.base.BaseViewModel
 import com.kore.validator.RangeValidator
 import kotlinx.coroutines.launch
-import java.util.Calendar
 
 @SuppressLint("StaticFieldLeak")
 class BotContentViewModel : BaseViewModel<BotContentView>() {
@@ -111,11 +109,10 @@ class BotContentViewModel : BaseViewModel<BotContentView>() {
 
     fun limitRange(startDate: String, endDate: String, format: String): CalendarConstraints.Builder {
         val constraintsBuilderRange = CalendarConstraints.Builder()
-        val dateFormat = format.replace("DD", "dd").replace("YY", "yy")
-        if (dateFormat.isEmpty()) {
-            constraintsBuilderRange.setValidator(DateValidatorPointForward.now())
+        if (format.isEmpty()) {
             return constraintsBuilderRange
         }
+        val dateFormat = format.replace("DD", "dd").replace("YY", "yy")
         if (startDate.isNotEmpty() && endDate.isNotEmpty()) {
             val startDateMillis: Long = DateUtils.getDateFromFormat(startDate, dateFormat, 0)
             val endDateMillis: Long = DateUtils.getDateFromFormat(endDate, dateFormat, 1)
@@ -143,40 +140,12 @@ class BotContentViewModel : BaseViewModel<BotContentView>() {
             val validators = CompositeDateValidator.allOf(listValidators)
             constraintsBuilderRange.setValidator(validators)
         } else {
-            constraintsBuilderRange.setValidator(RangeValidator(null, null))
+            // Nothing to do
         }
         return constraintsBuilderRange
     }
 
-    fun onRangeDatePicked(selection: Pair<Long, Long>) {
-        val startDate = selection.first
-        val endDate = selection.second
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = startDate
-        val strYear = cal[Calendar.YEAR]
-        val strMonth = cal[Calendar.MONTH] + 1
-        val strDay = cal[Calendar.DAY_OF_MONTH]
-        cal.timeInMillis = endDate
-        val endYear = cal[Calendar.YEAR]
-        val endMonth = cal[Calendar.MONTH] + 1
-        val endDay = cal[Calendar.DAY_OF_MONTH]
-        val formattedDate: StringBuilder = java.lang.StringBuilder()
-        formattedDate.append((if ((strDay + 1) > 9) (strDay + 1) else "0" + (strDay + 1)).toString()).append("-")
-            .append(if ((strMonth + 1) > 9) (strMonth + 1) else "0" + (strMonth + 1)).append("-").append(strYear).append(" to ")
-            .append(if ((endDay + 1) > 9) (endDay + 1) else "0" + (endDay + 1)).append("-")
-            .append(if ((endMonth + 1) > 9) (endMonth + 1) else "0" + (endMonth + 1)).append("-").append(endYear)
-
-        BotClient.getInstance().sendMessage(formattedDate.toString(), formattedDate.toString())
-    }
-
-    fun onDatePicked(selection: Long) {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = selection
-        val stYear = calendar[Calendar.YEAR]
-        val stMonth = calendar[Calendar.MONTH] + 1
-        val stDay = calendar[Calendar.DAY_OF_MONTH]
-        val formattedDate =
-            (if ((stMonth + 1) > 9) (stMonth + 1) else "0" + (stMonth + 1)).toString() + "/" + (if (stDay > 9) stDay else "0$stDay") + "/" + stYear
-        BotClient.getInstance().sendMessage(formattedDate, formattedDate)
+    fun onDatePicked(selectedDate: String) {
+        BotClient.getInstance().sendMessage(selectedDate, selectedDate)
     }
 }

@@ -19,6 +19,7 @@ import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.KEY_TITLE
 import com.kore.ui.R
 import io.noties.markwon.Markwon
+import io.noties.markwon.ext.strikethrough.StrikethroughPlugin
 import io.noties.markwon.html.HtmlPlugin
 import io.noties.markwon.linkify.LinkifyPlugin
 
@@ -79,6 +80,7 @@ class BotListTemplateAdapter(
         holder.botItemSubtitle.isVisible = subTitle.isNotEmpty()
 
         val markwon = Markwon.builder(holder.itemView.context)
+            .usePlugin(StrikethroughPlugin.create())
             .usePlugin(HtmlPlugin.create())
             .usePlugin(LinkifyPlugin.create())
             .build()

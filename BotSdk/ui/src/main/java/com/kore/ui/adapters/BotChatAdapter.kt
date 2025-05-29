@@ -65,6 +65,9 @@ import com.kore.ui.row.botchat.multiselect.MultiSelectTemplateRow
 import com.kore.ui.row.botchat.radiooptions.RadioOptionsTemplateRow
 import com.kore.ui.row.botchat.tablelist.TableListTemplateRow
 import com.kore.ui.row.listener.ChatContentStateListener
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class BotChatAdapter(private val context: Context, types: List<SimpleListRow.SimpleListRowType>) : SimpleListAdapter(types),
     ChatContentStateListener {
@@ -376,7 +379,10 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                                 msgId,
                                                 iconUrl,
                                                 isLastItem,
-                                                innerMap[SELECTED_TIME] as String? ?: context.getString(R.string.default_click_time),
+                                                innerMap[SELECTED_TIME] as String? ?: SimpleDateFormat(
+                                                    "hh:mm:a",
+                                                    Locale.ENGLISH
+                                                ).format(Calendar.getInstance().time),
                                                 this::onSaveState,
                                                 actionEvent
                                             )
