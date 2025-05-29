@@ -28,7 +28,7 @@ This repository also includes a sample application that you can customize based 
 ![Enable webclient](https://github.com/user-attachments/assets/4d2263a2-bf8a-4a02-8b60-5a8b4c8da643)
 _Enable Web/Mobile Client Channel_
 
-![Credentials](https://github.com/user-attachments/assets/0824b163-f08e-42fc-954a-b46a5f8d5ecb)
+![Credentials](https://github.com/user-attachments/assets/26932a3e-71a4-48fd-9917-7f6ede3b6749)
 _Obtain Client ID and Client Secret_
 
 ---

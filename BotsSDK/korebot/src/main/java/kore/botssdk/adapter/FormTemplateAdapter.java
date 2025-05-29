@@ -3,6 +3,7 @@ package kore.botssdk.adapter;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +46,10 @@ public class FormTemplateAdapter extends RecyclerView.Adapter<FormTemplateAdapte
         else
             holder.btnFieldButton.setText(R.string.ok);
 
-        String str = item.getLabel() + " : ";
+        String str = item.getLabel();
+        if (item.getType().equals("password")) {
+            holder.edtFormInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
         holder.tvFormFieldTitle.setText(str);
         holder.edtFormInput.setHint(item.getPlaceHolder());
         holder.edtFormInput.setBackground(createEditTextBackground(SDKConfiguration.BubbleColors.quickReplyColor, "#A7A9BE"));
