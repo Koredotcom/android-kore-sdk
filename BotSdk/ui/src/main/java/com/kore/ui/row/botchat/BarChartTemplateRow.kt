@@ -16,6 +16,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.utils.ColorTemplate.rgb
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.BAR_CHART_DIRECTION_VERTICAL
 import com.kore.model.constants.BotResponseConstants.DIRECTION
@@ -41,6 +42,7 @@ class BarChartTemplateRow(
         private const val BAR_STACKED = 0
         private const val BAR_VERTICAL = 1
         private const val BAR_HORIZONTAL = 2
+        private val COLORS= intArrayOf(rgb("#5BC8C4"), rgb("#4A9AF2"), rgb("#e74c3c"), rgb("#3498db"))
     }
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
@@ -119,7 +121,7 @@ class BarChartTemplateRow(
                 } else {
                     for (k in 0 until size) {
                         dataSet[k] = BarDataSet(yValues[k], elements[k][KEY_TITLE] as String?)
-                        dataSet[k]!!.color = MATERIAL_COLORS[k % 4]
+                        dataSet[k]!!.color = COLORS[k % 4]
                         barDataSets.add(dataSet[k])
                     }
                 }
@@ -189,7 +191,7 @@ class BarChartTemplateRow(
     private fun getColors(stackSize: Int): IntArray {
         // have as many colors as stack-values per entry
         val colors = IntArray(stackSize)
-        System.arraycopy(MATERIAL_COLORS, 0, colors, 0, colors.size)
+        System.arraycopy(COLORS, 0, colors, 0, colors.size)
         return colors
     }
 

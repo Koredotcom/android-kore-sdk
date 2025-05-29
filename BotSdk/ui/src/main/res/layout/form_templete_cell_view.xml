@@ -30,7 +30,6 @@
         android:layout_marginTop="@dimen/dimen_10dp"
         android:autofillHints=""
         android:hint="@string/hello"
-        android:inputType="textPassword"
         android:paddingHorizontal="10dp"
         android:paddingVertical="4dp"
         android:textColor="#404051"

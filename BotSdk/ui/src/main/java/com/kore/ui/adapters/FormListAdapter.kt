@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -43,7 +44,9 @@ class FormListAdapter(
         val form = arrFormTemplateModels[position]
         holder.tvFormFieldTitle.text = form[BotResponseConstants.FORM_LABEL] as String
         holder.edtFormInput.hint = form[BotResponseConstants.FORM_PLACE_HOLDER] as String
-
+        if (form[BotResponseConstants.TYPE] == "password") {
+            holder.edtFormInput.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
         if (form[BotResponseConstants.FORM_FIELD_BUTTON] != null) {
             val fieldButton = form[BotResponseConstants.FORM_FIELD_BUTTON] as Map<*, *>
             holder.btnFieldButton.isVisible = true
@@ -61,9 +64,10 @@ class FormListAdapter(
             holder.btnFieldButton.setTextColor(txtColor)
             holder.btnFieldButton.setOnClickListener {
                 if (isLastItem) {
+                    val input = holder.edtFormInput.text.toString()
                     actionEvent(
                         BotChatEvent.SendMessage(
-                            holder.edtFormInput.text.toString().getDotMessage(),
+                            if (form[BotResponseConstants.TYPE] == "password") input.getDotMessage() else input,
                             holder.edtFormInput.text.toString()
                         )
                     )
