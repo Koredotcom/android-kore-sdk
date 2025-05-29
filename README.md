@@ -28,9 +28,10 @@ Before you begin, ensure you have the following:
 
 **Action**: Add your bot to the Web/Mobile Client channel.
 
-**Obtain SDK App Credentials**: Create a new SDK app or use an existing one to retrieve the Client ID and Client Secret.
+**Obtain SDK Bot Credentials**: Create a new SDK app or use an existing one to retrieve the Client ID and Client Secret.
 
-![Bot credentials](https://github.com/user-attachments/assets/d22ce9c1-850a-480c-b3d7-f8687e26a33c)
+![Bot credentials](https://github.com/user-attachments/assets/26932a3e-71a4-48fd-9917-7f6ede3b6749)
+
 
 ## Instructions
 
