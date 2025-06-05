@@ -9,6 +9,6 @@ data class BotConfigModel(
     val identity: String,
     val isWebHook: Boolean,
     val jwtServerUrl: String,
-    val enablePanel: Boolean,
-    val jwtToken: String
+    val jwtToken: String,
+    val enablePanel: Boolean = false,
 )

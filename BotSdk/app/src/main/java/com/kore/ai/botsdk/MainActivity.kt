@@ -19,6 +19,7 @@ import com.kore.ui.botchat.BotChatActivity
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.Locale
+import java.util.Properties
 import java.util.TimeZone
 
 class MainActivity : AppCompatActivity() {
@@ -89,7 +90,6 @@ class MainActivity : AppCompatActivity() {
                 identity = "Please enter identity",
                 isWebHook = false,
                 jwtServerUrl = "Please enter jwtServerUrl",
-                enablePanel = true,
                 jwtToken = "Please enter jwtToken"
             )
         } catch (e: NotFoundException) {
@@ -114,7 +114,6 @@ class MainActivity : AppCompatActivity() {
 //                identity = properties.getProperty("identity"),
 //                isWebHook = false,
 //                jwtServerUrl = properties.getProperty("jwtServerUrl"),
-//                enablePanel = false,
 //                jwtToken = properties.getProperty("jwtToken")
 //            )
 //        } catch (e: NotFoundException) {
