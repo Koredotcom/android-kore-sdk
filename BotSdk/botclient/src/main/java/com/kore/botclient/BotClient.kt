@@ -239,7 +239,6 @@ class BotClient private constructor() {
                             val botAuthorizationResponse = result.data
                             botUserId = botAuthorizationResponse?.userInfo?.userId ?: ""
                             accessToken = botAuthorizationResponse?.authorization?.accessToken ?: ""
-                            listener?.onAccessTokenGenerated(accessToken)
                             if (SDKConfiguration.getBotConfigModel()?.isWebHook == true) {
                                 getWebHookMeta(getJwtToken(), isReconnectionAttempt)
                                 return@withContext
@@ -285,7 +284,7 @@ class BotClient private constructor() {
     }
 
     private fun connectToSocket(url: String?, isReconnectionAttempt: Boolean) {
-        listener?.onAccessTokenReady()
+        listener?.onAccessTokenGenerated(accessToken)
         if (url != null) {
             var rtmUrl = url
             options?.let {

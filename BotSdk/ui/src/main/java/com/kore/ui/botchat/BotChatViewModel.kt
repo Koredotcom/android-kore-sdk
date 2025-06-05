@@ -65,7 +65,6 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     private var isFirstTime = true
 //    private var historyOffset = 0
 //    private var moreHistory = true
-    private lateinit var token: String
     private var isAgentTransfer = false
     private var isActivityResumed = false
     private lateinit var context: Context
@@ -196,11 +195,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 getView()?.addMessageToAdapter(botRequest)
             }
 
-            override suspend fun onAccessTokenGenerated(token: String) {
-                this@BotChatViewModel.token = token
-            }
-
-            override fun onAccessTokenReady() {
+            override fun onAccessTokenGenerated(token: String) {
                 viewModelScope.launch {
                     getBrandingDetails(token)
                 }
