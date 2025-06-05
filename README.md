@@ -1,6 +1,6 @@
 ## Kore SDK for Android
 
-Kore offers a suite of platform-specific SDKs, including this Android SDK, designed to streamline the integration of Kore Bots' chat capabilities into your custom applications. These SDKs provide convenient client libraries, allowing you to embed our Kore chat widget with just a few lines of code. This empowers your end-users to interact with your applications using natural language.
+Kore offers a suite of platform-specific SDKs, including this Android SDK, designed to streamline the integration of Kore Bot's chat capabilities into your custom applications. These SDKs provide convenient client libraries, allowing you to embed our Kore chat widget with just a few lines of code. This empowers your end-users to interact with your applications using natural language.
 
 ## Kore Android SDK for Developers
 
@@ -13,14 +13,16 @@ This repository contains the Kore SDK for Android, enabling seamless communicati
 Before you begin, ensure you have the following:
 
 **JWT Generation Service**: A service capable of generating JSON Web Tokens (JWTs). This service will be used by an injected assertion function to establish a connection with the Bot.
+
 **SDK App Credentials**: Client ID and Client Secret for your SDK application.
+
 **Access to Kore Bots Platform**: You need to be logged into the Kore Bots platform.
 
 ### Bot Channel Configuration
 
 **Navigate to Bot Builder**: Once logged in, go to the Bot builder section.
 
-**Select Your Bot**: Find and click on the specific bot you want to integrate.
+**Select Your App**: Find and click on the specific bot you want to integrate.
 
 **Enable Web/Mobile Client Channel**: Enable the Web / Mobile Client channel for your bot as illustrated below:
 
@@ -161,11 +163,11 @@ botClient.connectToBot(context = context, isFirstTime = true) // Connect using t
 ```
 
 ```kotlin
-val headers = HashMap<String, Any>()
-val body = HashMap<String, Any>()
-// Populate headers and body for your custom JWT token URL
+// Connect by using BotSDK generated jwtToken 
+botClient.connecToBot(context = context, isFirstTime = true)
 
-botClient.connecToBot(context = context, isFirstTime = true, jwtToken = "your_jwt_token") // Connect using a pre-generated JWT token.
+// Connect using a pre-generated JWT token.
+botClient.connectToBot(context = context, isFirstTime = true, jwtToken = "your_jwt_token")
 ```
 
 ### Step 6: Send Messages to the Bot
