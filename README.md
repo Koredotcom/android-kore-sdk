@@ -1,224 +1,209 @@
-## Kore SDK
-Kore offers Bots SDKs as a set of platform-specific client libraries that provide a quick and convenient way to integrate Kore Bots chat capability into custom applications.
+## Kore SDK for Android
 
-With just a few lines of code, you can embed our Kore chat widget into your applications to enable end-users to interact with your applications using Natural Language.
+Kore offers a suite of platform-specific SDKs, including this Android SDK, designed to streamline the integration of Kore Bots' chat capabilities into your custom applications. These SDKs provide convenient client libraries, allowing you to embed our Kore chat widget with just a few lines of code. This empowers your end-users to interact with your applications using natural language.
 
-## Kore Android SDK for developers
+## Kore Android SDK for Developers
 
-Kore SDK for Android enables you to talk to Kore bots over a web socket. This repo also comes with the code for sample applications that developers can modify according to their Bot configuration.
+This repository contains the Kore SDK for Android, enabling seamless communication with Kore Bots over a WebSocket connection. Additionally, it includes sample applications that developers can readily adapt based on their specific Bot configurations.
 
-# Setting up
+## Setting Up
 
-## Prerequisites
- Service to generate JWT (JSON Web Tokens)- this service will be used in the assertion function injected to obtain the connection.
- SDK app credentials 
- Login to the Bots platform
-Navigate to the Bot builder
-Search and click on the bot 
-Enable *Web / Mobile Client* channel against the bot as shown in the screen below.
-		Add bot to Web/Mobile Client  channel
-create new or use existing SDK app to obtain client id and client secret Obtain Client id and Client secret
+### Prerequisites
+
+Before you begin, ensure you have the following:
+
+**JWT Generation Service**: A service capable of generating JSON Web Tokens (JWTs). This service will be used by an injected assertion function to establish a connection with the Bot.
+**SDK App Credentials**: Client ID and Client Secret for your SDK application.
+**Access to Kore Bots Platform**: You need to be logged into the Kore Bots platform.
+
+### Bot Channel Configuration
+
+**Navigate to Bot Builder**: Once logged in, go to the Bot builder section.
+
+**Select Your Bot**: Find and click on the specific bot you want to integrate.
+
+**Enable Web/Mobile Client Channel**: Enable the Web / Mobile Client channel for your bot as illustrated below:
+
+![Enable Web client channel](https://github.com/user-attachments/assets/37c52043-ed94-48a8-af07-2feadb3e532c)
+
+**Action**: Add your bot to the Web/Mobile Client channel.
+
+**Obtain SDK Bot Credentials**: Create a new SDK app or use an existing one to retrieve the Client ID and Client Secret.
+
+![Bot credentials](https://github.com/user-attachments/assets/26932a3e-71a4-48fd-9917-7f6ede3b6749)
+
 
 ## Instructions
 
-# Configuration changes
-Kore is providing botclient library to communicate with the bot and ui to display content.
-"BotClient" with "ui" -> Which can be used to communicate with the bot and can utilize the predefined templates, activities, fragments.
+### Configuration Changes
 
-Create your own app and add the dependency(**implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_ui_v3_11.0.2'**) for botclient and create following classes in your app module.
+The Kore SDK for Android provides the botclient library for communicating with your bot and the ui libraries for displaying content and interactive elements. You can leverage the predefined templates, activities and fragments provided by these libraries.
 
-Following are the steps needed to follow to integrate the libraries.
-To use these libraries we must configure the bot credentials as follows.
+To integrate the SDK, create your own Android application and add the following dependency to your app module's build.gradle file:
 
-#### Config-1:
-```
-    val botConfigModel = BotConfigModel(
-        "<botname>",
-        "<bot_id>",
-        "<bot_client_id>",
-        "<bot_client_secret>",
-        "<bot_base_url>",
-        "<identity>",  -> Identity should be **unique for each device**. Don't use "UUID.randomUUID().toString()". It's better to use your device id. If we use the same identity for multiple devices then we will face the session contamination issue.
-        <isWebHook -> true/false>, -> if You want to use webhook then put "true" otherwise "false".
-        "<jwt_token_url>", -> Jwt token generation url(If you want to use your own jwt token url).
-        false
-    )
-
- SDKConfig.initialize(botConfigModel)
-
+```gradle
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_11.2.0'
 ```
 
-# Running the Demo app
-*	Create a new application.
-*	Add library dependency in your gradle file as follows.
-*	Do the configuration as mentioned above.
-  
-### steps to follow for demo app
+#### Configuration - 1 (Bot Client Initialization):
 
-**1**. Add below snippet in project/build.gradle
-```
- maven { url 'https://www.jitpack.io' }
-```
-**2**. Add below snippet in app/build.gradle under dependencies
-```
-implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_ui_v3_11.0.2'
-```
-**3**. You can initialize the bot by providing the bot config like mentioned in **Config-1**
+Configure the core bot connection details using the BotConfigModel and initialize the SDK:
 
-**4**. You can navigate to the bot chat window through Intent as below snippet
-```
-BotChatRowType.prepareDefaultRowTypes() // This should trigger before calling following statement
-
-Intent intent = new Intent(getApplicationContext(), BotchatActivity.class);
-startActivity(intent);
-```
-**5**. You can have your customized templates without touching the SDK code. Please check the sample app.
-
-
-### How to integrate BotSdk through gradle implementation to customize
-
-### Step-1: Add below snippet in project/build.gradle
-```   
-maven { url 'https://www.jitpack.io' }
-```
-### Step-2: Add below snippet in app/build.gradle under dependencies
-```
-implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_ui_v3_11.0.2'
-```
-### Step-3: You can change the bot config and widget config like below
-```
+```kotlin
+import com.kore.koreandroidsdk.configuration.BotConfigModel
+import com.kore.koreandroidsdk.configuration.SDKConfig
 
 val botConfigModel = BotConfigModel(
-        "SDK Demo",
-        "st-f59fda8f-e42c-5c6a-bc55-3395c109862a",
-        "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6",
-        "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=",
-        "https://platform.kore.ai/",
-        "123456789078643234567",
-        false,
-        "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts",
-        false
-    )
+    "<botname>",                     // Name of your bot
+    "<bot_id>",                      // Unique ID of your bot
+    "<bot_client_id>",               // Client ID of your SDK app
+    "<bot_client_secret>",           // Client Secret of your SDK app
+    "<bot_base_url>",                // Base URL of the Kore.ai platform (e.g., "[https://platform.kore.ai/](https://platform.kore.ai/)")
+    "<identity>",                    // Unique identifier for each device. **Crucially, do not use UUID.randomUUID().toString()**. Use a device-specific ID to avoid session contamination across multiple devices.
+    <isWebHook -> true/false>,       // Set to `true` if you intend to use webhook-based communication; otherwise, `false`.
+    "<jwt_token_url>"               // Optional: URL for your custom JWT token generation service.
+)
 
- SDKConfig.initialize(botConfigModel)
-
+SDKConfig.initialize(botConfigModel)
 ```
 
-### Step-4: You can initialize and Set the callback listener for BotClient class.
+## Running the Demo App
 
+You can quickly test the SDK by running the provided demo application. Follow these steps:
+
+Create a New Application: Create a new Android Studio project.
+
+**Add Library Dependency**: Add the SDK dependency to your app's build.gradle file as shown below:
+
+```gradle
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_11.2.0'
 ```
+
+**Configure Bot Credentials**: Implement the configuration steps mentioned in **Config-1** within your application.
+
+**Navigate to Chat Window**: You can open the bot chat window using an Intent
+
+```kotlin
+val intent = Intent(this, BotChatActivity::class.java)
+startActivity(intent)
+```
+
+**Custom Templates**: The SDK allows you to implement your own custom message templates without modifying the SDK code. Refer to the sample application for examples.
+
+## Integrating BotSDK for Customizations
+
+Here's how to integrate the BotSDK using Gradle to enable UI customizations:
+
+### Step 1: Add JitPack Repository to Project-Level `build.gradle`
+
+```gradle
+maven { url '[https://www.jitpack.io](https://www.jitpack.io)' }
+```
+
+### Step 2: Add SDK Dependency to App-Level build.gradle
+
+```gradle
+implementation 'com.github.Koredotcom.android-kore-sdk:kotlin_11.2.0'
+```
+
+### Step 3: Configure Bot credentials
+Modify the `BotConfigModel` with your bot's specific credentials and URLs:
+
+```kotlin
+import com.kore.koreandroidsdk.configuration.BotConfigModel
+import com.kore.koreandroidsdk.configuration.SDKConfig
+
+val botConfigModel = BotConfigModel(
+    "SDK Demo",
+    "st-f59fda8f-e42c-5c6a-bc55-3395c109862a",
+    "cs-8fa81912-0b49-544a-848e-1ce84e7d2df6",
+    "DnY4BIXBR0Ytmvdb3yI3Lvfri/iDc/UOsxY2tChs7SY=",
+    "[https://platform.kore.ai/](https://platform.kore.ai/)",
+    "123456789078643234567",
+    false,
+    "[https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts](https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts)",
+    false
+)
+
+SDKConfig.initialize(botConfigModel)
+```
+
+### Step 4: Initialize and Set BotClient Listener
+Get an instance of the `BotClient` and set a listener to handle bot responses, connection state changes, and other events:
+
+```kotlin
 private val botClient: BotClient = BotClient.getInstance()
 
 botClient.setListener(object : BotConnectionListener {
-	
-		// This will trigger when received a response bot.
     override fun onBotResponse(response: String?) {
-		}
-		
-		// This will trigger when bot connection state is changed.
-		override fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean) {
-		}
-		
-		// This will trigger once request(utterance) is sent to Bot.
-		override fun onBotRequest(code: BotRequestState, botRequest: BotRequest) {
-		}
-		
-		// This will trigger when a JWT token is created.
-		override suspend fun onJwtTokenGenerated(token: String) {
-		}
+        // Handle bot response here
+    }
+
+    override fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean) {
+        // Handle bot connection state changes
+    }
+
+    override fun onBotRequest(code: BotRequestState, botRequest: BotRequest) {
+        // Handle when a request is sent to the bot
+    }
+
+    override suspend fun onAccessTokenGenerated(token: String) {
+        // Handle the generated access token
+    }
+})
 ```
 
-### Step-5: Connect to Bot using the following apis.
+### Step 5: Connect to the Bot
 
-```
-botClient.connectToBot(isFirstTime: Boolean) -> This api is to connect bot using default jwt token generation mechanism.
-```
-```
-botClient.connectToBot(isFirstTime: Boolean, headers: HashMap<String, Any>, body: HashMap<String, Any>) -> This api is to connect bot using own Jwt token generation url. Important note is here "headers" must not be null.
-```
-```
-botClient.connecToBot(isFirstTime: Boolean, jwtToken: String) -> This api is to connect bot using its own Jwt token which is created separately.
+Use one of the following APIs to establish a connection with the bot:
+
+```kotlin
+botClient.connectToBot(context = context, isFirstTime = true) // Connect using the default JWT token generation.
 ```
 
-### Step-6 Send a message to Bot.
+```kotlin
+val headers = HashMap<String, Any>()
+val body = HashMap<String, Any>()
+// Populate headers and body for your custom JWT token URL
 
-```
-botClient.sendMessage(msg: String, payload: String?)
-
-msg -> Message to display in the chat ui.
-payload -> message to send to the bot.
-```
-
-If "msg" and "payload" are same then pass "msg" param as string and "payload" as null.
-
-Following Api is to send the message with attachments.
-
- ```
-botClient.sendAttachmentMessage(msg: String, attachments: List<Map<String, *>>?)
-
-msg -> Message to display in the chat ui.
-attachments -> List of attachment file names which are uploaded to server.
+botClient.connecToBot(context = context, isFirstTime = true, jwtToken = "your_jwt_token") // Connect using a pre-generated JWT token.
 ```
 
-### Step-7: Disconnect the bot:
-Invoke to disconnect previous socket connection upon closing Activity/Fragment or upon destroying view based on requirement.
+### Step 6: Send Messages to the Bot
+
+Use the following APIs to send text or attachment messages to the bot:
+
+```kotlin
+botClient.sendMessage(msg = "Hello Bot", payload = null) // Send a text message where the display and payload are the same.
+botClient.sendMessage(msg = "Show me details", payload = "get_details") // Send a text message with a different display and payload.
 ```
+
+```kotlin
+val attachments = listOf<Map<String, *>>(
+    mapOf("name" to "document.pdf") // Example attachment
+)
+botClient.sendMessage(msg = "Attached file", payload = null, attachments = attachments) // Send a message with attachments.
+```
+
+### Step 7: Disconnect from the Bot
+
+Call this method to close the WebSocket connection when your Activity or Fragment is being closed or destroyed:
+
+```kotlin
 botClient.disconnectBot()
 ```
 
-### Step-8: Create user own custom templates and chat window UI:
-Kore is providing predefined templates. You can use these templates as is or you can override existing templates and/or can add new templates. 
-Please refer the sample app for creating your own templates(new templates or override existingtemplates)
-You can customize the Chat window UI by creating custom Fragments by extending our base fragment classes respectively.
-Please refer the sample app for customizing chat window UI.
+### Step 8: Create Custom UI Templates and Chat Window
 
-### Step-9:
-Please create the RowType class as follows and add rows to the recycler view.
+The SDK provides predefined UI templates that you can use directly. However, you can also create your own custom templates or override existing ones to achieve a unique look and feel. Additionally, you can customize the entire chat window UI by creating custom Fragments that extend the SDK's base fragment classes. Refer to the sample application and document for detailed examples of UI customization.
 
-**1**. If you want to use the existing BotChatAdapter then the following is the code snippet.
+**Note**: Please refer the documents for [CustomTemplateInjection](https://github.com/Koredotcom/android-kore-sdk/blob/kotlin_botsdk_ui/docs/CustomTemplateInjection.md) and [CustomFragmentInjection](https://github.com/Koredotcom/android-kore-sdk/blob/kotlin_botsdk_ui/docs/CustomFragmentInjection.md) how to customize and inject to BotSdk.
 
-Ex: 
-```
-val chatAdapter = BotChatAdapter(requireActivity(),BotChatRowType.getAllRowTypes())
-chatAdapter.setActionEvent(actionEvent)
+## Enabling API-Based (Webhook Channel) Communication
 
-recyclerView.adapter = chatAdapter
-chatAdapter.submitList(chatAdapter.addAndCreateRows(messages, isHistory))
+**Enable Webhook**: Set isWebhook = true in the BotConfigModel during bot configuration (**Config-1**).
+**Follow Integration Steps**: Implement **Config-1** and **Step 1** through **Step 8** as described above.
 
-messages -> list of messages(Bot request and responses)
-isHistory -> If the “messages” is a list of chat history then it should be true otherwise false.
+## License
 
-```
-**2**. If you would like to use your own RowType class then following is the code snippet.
-
-You have to create your own Row class and Provider class or you can use predefined row and provider classes and use the following steps.
-```
-enum class MyRowType(
-   override val provider: SimpleListViewHolderProvider<*>
-) : SimpleListRow.SimpleListRowType {
-   Item(MyTemplateItemProvider()),
-   Details(DetailsProvider());
-}
-
-val chatAdapter = SimpleListAdapter(MyRowType.values().asList())
-
-recyclerView.adapter = chatAdapter
-val rows = createRows(messages)
-chatAdapter.submitList(rows)
-
-private fun createRows(messages: List<BaseBotMessage>): List<SimpleListRow>{
-   return messages.map{ it ->
-     if(it.type == “abc”) MyTemplateItemRow(it,.....)
-     else DetailsRow(it,.....)
-   }
-}
-```
-### How to enable API based (webhook channel) message communication
-----
-1. Enable the webhook channel by setting **isWebhook = true** in **Config-1** in bot configuration.
-	
-2. Follow Config-1 and Step-1 to Step-9.
-
-### License
 Copyright © Kore, Inc. MIT License; see LICENSE for further details.
-
