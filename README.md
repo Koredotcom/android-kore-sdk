@@ -121,8 +121,7 @@ val botConfigModel = BotConfigModel(
     "[https://platform.kore.ai/](https://platform.kore.ai/)",
     "123456789078643234567",
     false,
-    "[https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts](https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts)",
-    false
+    "[https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts](https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts)"
 )
 
 SDKConfig.initialize(botConfigModel)
