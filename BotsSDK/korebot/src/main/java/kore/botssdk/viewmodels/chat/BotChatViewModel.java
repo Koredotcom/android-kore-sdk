@@ -180,7 +180,7 @@ public class BotChatViewModel extends ViewModel {
             if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
 
             try {
-                long timeMillis = botResponse.getTimeInMillis(botResponse.getCreatedOn(), true);
+                long timeMillis = botResponse.getTimestamp() == 0L ? botResponse.getTimeInMillis(botResponse.getCreatedOn(), true) : botResponse.getTimestamp();
                 botResponse.setCreatedInMillis(timeMillis);
                 botResponse.setFormattedDate(DateUtils.formattedSentDateV6(timeMillis));
                 botResponse.setTimeStamp(botResponse.prepareTimeStamp(timeMillis));
@@ -189,7 +189,7 @@ public class BotChatViewModel extends ViewModel {
             }
 
             if (botClient != null && enable_ack_delivery)
-                botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
+                botClient.sendMsgAcknowledgement(botResponse.getTimestamp() + "", botResponse.getKey());
 
             LogUtils.d(LOG_TAG, payload);
             isAgentTransfer = botResponse.isFromAgent();
