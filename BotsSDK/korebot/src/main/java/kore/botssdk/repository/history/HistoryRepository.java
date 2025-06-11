@@ -92,7 +92,7 @@ public class HistoryRepository {
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         try {
@@ -168,7 +168,7 @@ public class HistoryRepository {
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         msgs.add(botRequest);

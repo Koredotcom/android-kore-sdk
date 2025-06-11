@@ -119,7 +119,7 @@ public class BotResponse extends BaseBotMessage {
     private BotInfoModel botInfo;
     private ArrayList<BotResponseMessage> message;
     private String icon;
-    private String timestamp;
+    private long timestamp;
     private String key;
 
     private boolean fromAgent = false;
@@ -132,7 +132,7 @@ public class BotResponse extends BaseBotMessage {
         return fromAgent;
     }
 
-    public String getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 

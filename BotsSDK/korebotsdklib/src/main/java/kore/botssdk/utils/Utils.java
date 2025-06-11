@@ -307,7 +307,7 @@ public class Utils {
     private static boolean isGreaterThanFifteenMins(String time) {
         long timeStampMillis = 0;
         try {
-            timeStampMillis = DateUtils.isoFormatter.parse(time).getTime() + TimeZone.getDefault().getRawOffset();
+            timeStampMillis = DateUtils.isoFormatter.parse(time).getTime() + TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
             return (System.currentTimeMillis() - timeStampMillis) > (1000 * 60 * 15);
         } catch (ParseException e) {
             e.printStackTrace();
