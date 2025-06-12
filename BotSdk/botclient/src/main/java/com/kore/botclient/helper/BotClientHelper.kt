@@ -119,7 +119,7 @@ class BotClientHelper {
 
         private fun processBotResponse(response: BotResponse): BotResponse {
             val botInfo = response.botInfo
-            val timeStamp = isoFormatter.parse(response.createdOn)?.time ?: 0L
+            val timeStamp = (isoFormatter.parse(response.createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset + TimeZone.getDefault().dstSavings
             val botResponse = if (response.timeMillis == 0L) {
                 response.copy(
                     createdOn = response.createdOn,
