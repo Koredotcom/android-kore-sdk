@@ -1,12 +1,16 @@
 package kore.botssdk.activity;
 
 import static android.view.View.VISIBLE;
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 import static kore.botssdk.models.BotResponse.HEADER_SIZE_COMPACT;
 import static kore.botssdk.models.BotResponse.HEADER_SIZE_LARGE;
 import static kore.botssdk.net.SDKConfig.getCustomContentFragment;
 import static kore.botssdk.net.SDKConfig.getCustomFooterFragment;
 import static kore.botssdk.net.SDKConfig.isMinimized;
 import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST;
+import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
+import static kore.botssdk.utils.BundleConstants.MINIMIZE_CHAT_BOT_EVENT;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.Manifest;
@@ -18,10 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -34,53 +35,36 @@ import android.os.Messenger;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.gson.Gson;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
 import kore.botssdk.R;
-import kore.botssdk.adapter.PromotionsAdapter;
-import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
-import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
-import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
+import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fileupload.core.KoreWorker;
@@ -93,6 +77,7 @@ import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.fragment.header.ChatHeaderOneFragment;
 import kore.botssdk.fragment.header.ChatHeaderThreeFragment;
 import kore.botssdk.fragment.header.ChatHeaderTwoFragment;
+import kore.botssdk.fragment.welcome.WelcomeScreenFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -100,32 +85,26 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotBrandingModel;
-import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingHeaderModel;
-import kore.botssdk.models.BrandingWelcomeModel;
 import kore.botssdk.models.EventModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
-import kore.botssdk.net.RestResponse;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.ClosingService;
-import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.ToastUtils;
-import kore.botssdk.view.AutoExpandListView;
-import kore.botssdk.view.HeightAdjustableViewPager;
 import kore.botssdk.view.viewUtils.DimensionUtil;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 import kore.botssdk.viewmodels.chat.BotChatViewModel;
 import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
@@ -135,20 +114,56 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     private ProgressBar taskProgressBar;
     private String jwt;
     private Handler actionBarTitleUpdateHandler;
-    BotClient botClient;
+    private BotClient botClient;
     private BaseContentFragment botContentFragment;
-    BaseFooterFragment composeFooterFragment;
+    private BaseFooterFragment composeFooterFragment;
     private TTSSynthesizer ttsSynthesizer;
     private final Gson gson = new Gson();
     private RelativeLayout rlChatWindow;
-    SharedPreferences sharedPreferences;
-    final Handler messageHandler = new Handler();
+    private SharedPreferences sharedPreferences;
+    private final Handler messageHandler = new Handler();
     private String fileUrl;
     private Dialog progressBar, welcomeDialog;
     boolean isAgentTransfer = false;
     private Dialog alertDialog;
     private BotChatViewModel viewModel;
-
+    private boolean isWelcomeVisible = false;
+    private String botName = SDKConfiguration.Client.bot_name;
+    private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Objects.equals(intent.getAction(), MINIMIZE_CHAT_BOT_EVENT)) {
+                if (sharedPreferences != null) {
+                    SDKConfig.setIsMinimized(true);
+                    BotSocketConnectionManager.killInstance();
+                    String name = intent.getStringExtra("ActivityToLaunch");
+                    int launchMode = intent.getIntExtra("LaunchMode", -1);
+                    if (name != null) {
+                        try {
+                            Class className = Class.forName(name);
+                            Intent activityIntent = new Intent(context, className);
+                            if (launchMode != -1)
+                                activityIntent.setFlags(launchMode);
+                            context.startActivity(activityIntent);
+                        } catch (ClassNotFoundException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    finish();
+                }
+            }
+        }
+    };
+    private final BroadcastReceiver closeBotChatReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Objects.equals(intent.getAction(), CLOSE_CHAT_BOT_EVENT)) {
+                if (botClient != null) BotSocketConnectionManager.killInstance();
+                SDKConfig.setIsMinimized(false);
+                finish();
+            }
+        }
+    };
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -178,50 +193,26 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         findViews();
         getBundleInfo();
 
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isOnline()) {
+                    showCloseAlert();
+                }
+            }
+        });
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED);
+            registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
+            registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
         } else {
-            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
+            registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
+            registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT));
         }
 
         viewModel.connectToBot(isMinimized());
         startService(new Intent(getApplicationContext(), ClosingService.class));
-    }
-
-    void showCloseAlert() {
-        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-            switch (which) {
-                case DialogInterface.BUTTON_POSITIVE:
-                    if (sharedPreferences != null) {
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        SDKConfig.setIsMinimized(true);
-                        editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
-                        editor.apply();
-                        BotSocketConnectionManager.killInstance();
-                        finish();
-                    }
-                    break;
-                case DialogInterface.BUTTON_NEGATIVE:
-                    if (sharedPreferences != null) {
-                        if (botClient != null)
-                            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        SDKConfig.setIsMinimized(false);
-                        editor.putInt(BotResponse.HISTORY_COUNT, 0);
-                        editor.apply();
-                        BotSocketConnectionManager.killInstance();
-                        finish();
-                    }
-                    break;
-                case DialogInterface.BUTTON_NEUTRAL:
-                    dialog.dismiss();
-                    break;
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
-        builder.setMessage(R.string.app_name).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
     }
 
     @Override
@@ -289,15 +280,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         setupTextToSpeech();
         KoreEventCenter.register(this);
         attachFragments();
-
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (isOnline()) {
-                    showCloseAlert();
-                }
-            }
-        });
     }
 
     @Override
@@ -394,6 +376,14 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         super.onPause();
     }
 
+    private void changeStatusBarColor(String color) {
+        if (SDKConfig.isUpdateStatusBarColor()) {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(Color.parseColor(color));
+        }
+    }
+
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
         if (!StringUtils.isNullOrEmpty(message)) {
@@ -401,7 +391,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
-                addSentMessageToChat(message);
+                viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, null);
                 BotSocketConnectionManager.getInstance().stopTextToSpeech();
             }
@@ -411,12 +401,22 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
         closeWelcomeDialog();
+        botContentFragment.showTypingStatus();
         if (!SDKConfiguration.Client.isWebHook) {
-            BotSocketConnectionManager.getInstance().sendPayload(message, StringUtils.isNullOrEmpty(payload) ? payload : "");
+            if (payload != null) {
+                BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+            } else {
+                BotSocketConnectionManager.getInstance().sendMessage(message, "");
+            }
         } else {
             BotSocketConnectionManager.getInstance().stopTextToSpeech();
-            addSentMessageToChat(message);
-            viewModel.sendWebHookMessage(jwt, false, StringUtils.isNullOrEmpty(payload) ? message : payload, null);
+            if (payload != null) {
+                viewModel.addSentMessageToChat(message);
+                viewModel.sendWebHookMessage(jwt, false, payload, null);
+            } else {
+                viewModel.addSentMessageToChat(message);
+                viewModel.sendWebHookMessage(jwt, false, message, null);
+            }
         }
     }
 
@@ -425,7 +425,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         if (attachments != null && !attachments.isEmpty()) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
-                addSentMessageToChat(message);
+                viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, attachments);
             }
         }
@@ -446,8 +446,10 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     @Override
     public void addMessageToAdapter(BotResponse botResponse) {
         botContentFragment.addMessageToBotChatAdapter(botResponse);
+        viewModel.textToSpeech(botResponse, composeFooterFragment.isTTSEnabled());
         botContentFragment.setQuickRepliesIntoFooter(botResponse);
         botContentFragment.showCalendarIntoFooter(botResponse);
+        showTemplateBottomSheet(botResponse);
     }
 
     @Override
@@ -459,33 +461,29 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     }
 
     @Override
-    public void onBrandingDetails(BotBrandingModel botOptionsModel, boolean isWelcomeVisible) {
-        if (botOptionsModel != null) {
-            viewModel.onBrandingDetails(botOptionsModel);
-
-            if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                botOptionsModel.getHeader().setBg_color(botOptionsModel.getGeneral().getColors().getSecondary());
-                botOptionsModel.getFooter().setBg_color(botOptionsModel.getGeneral().getColors().getSecondary());
-                botOptionsModel.getFooter().getCompose_bar().setOutline_color(botOptionsModel.getGeneral().getColors().getPrimary());
-                botOptionsModel.getFooter().getCompose_bar().setInline_color(botOptionsModel.getGeneral().getColors().getSecondary_text());
-                botOptionsModel.getHeader().getTitle().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
-                botOptionsModel.getHeader().setAvatar_bg_color(botOptionsModel.getGeneral().getColors().getPrimary());
-                botOptionsModel.getHeader().getSub_title().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
+    public void onBrandingDetails(BotBrandingModel botBrandingModel) {
+        if (botBrandingModel != null) {
+            botName = botBrandingModel.getHeader().getTitle().getName();
+            if (botBrandingModel.getHeader() != null)
+                changeStatusBarColor(botBrandingModel.getHeader().getBg_color());
+            if (!isWelcomeVisible && botBrandingModel.getWelcome_screen() != null && botBrandingModel.getWelcome_screen().isShow()) {
+                isWelcomeVisible = true;
+                WelcomeScreenFragment fragment = new WelcomeScreenFragment();
+                fragment.setBotBrandingModel(botBrandingModel);
+                fragment.setComposeFooterInterface(this);
+                fragment.setInvokeGenericWebViewInterface(this);
+                fragment.show(getSupportFragmentManager(), fragment.getClass().getName());
             }
-
-            if (botOptionsModel.getWelcome_screen() != null && isWelcomeVisible) {
-                if (botOptionsModel.getWelcome_screen().isShow()) showWelcomeDialog(botOptionsModel);
-            }
-            else rlChatWindow.setVisibility(VISIBLE);
+            rlChatWindow.setVisibility(VISIBLE);
 
             if (composeFooterFragment != null) {
-                composeFooterFragment.setBotBrandingModel(botOptionsModel);
+                composeFooterFragment.setBotBrandingModel(botBrandingModel);
             }
 
             if (botContentFragment != null) {
-                botContentFragment.setBotBrandingModel(botOptionsModel);
+                botContentFragment.setBotBrandingModel(botBrandingModel);
             }
-            BrandingHeaderModel header = botOptionsModel.getHeader();
+            BrandingHeaderModel header = botBrandingModel.getHeader();
             if (header != null) {
                 BaseHeaderFragment customHeaderFragment = SDKConfig.getCustomHeaderFragment(header.getSize());
                 switch (header.getSize()) {
@@ -538,9 +536,9 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     @Override
     public void invokeGenericWebView(String url) {
         if (url != null && !url.isEmpty()) {
-            Intent intent = new Intent(getApplicationContext(), GenericWebViewActivity.class);
-            intent.putExtra("url", url);
-            intent.putExtra("header", getResources().getString(R.string.app_name));
+            Intent intent = new Intent(this, GenericWebViewActivity.class);
+            intent.putExtra(EXTRA_URL, url);
+            intent.putExtra(EXTRA_HEADER, !botName.isEmpty() ? botName : SDKConfiguration.Client.bot_name);
             startActivity(intent);
         }
     }
@@ -550,13 +548,37 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     }
 
     @Override
-    public void loadChatHistory(int _offset, int limit) {
-        botContentFragment.loadChatHistory(_offset, limit);
+    public void loadOnConnectionHistory(boolean isReconnect) {
+        if (botContentFragment != null && isReconnect) {
+            if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
+                botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+            else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
+                botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
+            else if (SDKConfiguration.Client.history_on_network_resume)
+                botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+        } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
+            botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+        }
     }
 
-    @Override
-    public void loadReconnectionChatHistory(int _offset, int limit) {
-        botContentFragment.loadReconnectionChatHistory(_offset, limit);
+    private void showTemplateBottomSheet(BotResponse botResponse) {
+        if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+            return;
+        }
+        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
+        switch (payloadInner.getTemplate_type()) {
+            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
+                if (payloadInner.getSliderView()) {
+                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
+                    fragment.setData(payloadInner);
+                    fragment.setComposeFooterInterface(this);
+                    fragment.show(getSupportFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
+                }
+            }
+        }
     }
 
     @Override
@@ -584,6 +606,49 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             viewModel.sendReadReceipts();
 
         super.onResume();
+    }
+
+    void showCloseAlert() {
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE:
+                    if (sharedPreferences != null) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        SDKConfig.setIsMinimized(true);
+                        editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
+
+                        Intent intent = new Intent();
+                        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    if (sharedPreferences != null) {
+                        if (botClient != null)
+                            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        SDKConfig.setIsMinimized(false);
+                        editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
+                        Intent intent = new Intent();
+                        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                    break;
+                case DialogInterface.BUTTON_NEUTRAL:
+                    dialog.dismiss();
+                    break;
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
+        builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
     }
 
     @Override
@@ -706,21 +771,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         return "";
     }
 
-    private void addSentMessageToChat(String message) {
-        //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        botPayLoad.setMessage(botMessage);
-        BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
-        botPayLoad.setBotInfo(botInfo);
-        Gson gson = new Gson();
-        String jsonPayload = gson.toJson(botPayLoad);
-
-        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        updateContentListOnSend(botRequest);
-    }
-
     void showProgressDialogue() {
         progressBar = new Dialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.progress_bar_dialog, null);
@@ -729,243 +779,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         progressBar.setCancelable(false);
         progressBar.setCanceledOnTouchOutside(false);
         progressBar.show();
-    }
-
-    void showWelcomeDialog(BotBrandingModel botOptionsModel) {
-        RelativeLayout llHeaderLayout = null;
-        LinearLayout llOuterHeader, llStartConversation, llBottomPower, llStarterLogo;
-        AutoExpandListView lvPromotions;
-        ConstraintLayout clStarter;
-        ScrollView svWelcome;
-        ImageView ivStarterLogo;
-
-        welcomeDialog = new Dialog(this, R.style.MyDialogTheme);
-        View view = LayoutInflater.from(this).inflate(R.layout.welcome_screen, null);
-        llOuterHeader = view.findViewById(R.id.llOuterHeader);
-        llStartConversation = view.findViewById(R.id.llStartConversation);
-        lvPromotions = view.findViewById(R.id.lvPromotions);
-        clStarter = view.findViewById(R.id.clStarter);
-        llBottomPower = view.findViewById(R.id.llBottomPower);
-        svWelcome = view.findViewById(R.id.svWelcome);
-        llStarterLogo = view.findViewById(R.id.llStarterLogo);
-        ivStarterLogo = view.findViewById(R.id.ivStarterLogo);
-
-        welcomeDialog.setContentView(view);
-        Objects.requireNonNull(welcomeDialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        welcomeDialog.setCancelable(false);
-        welcomeDialog.setCanceledOnTouchOutside(false);
-
-        llStartConversation.setOnClickListener(v -> closeWelcomeDialog());
-
-        if (botOptionsModel != null && botOptionsModel.getWelcome_screen() != null) {
-            BrandingWelcomeModel welcomeModel = botOptionsModel.getWelcome_screen();
-
-            if (!StringUtils.isNullOrEmpty(welcomeModel.getLayout())) {
-                if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE)) {
-                    llHeaderLayout = (RelativeLayout) View.inflate(BotChatActivity.this, R.layout.welcome_header_2, null);
-                } else if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_MEDIUM)) {
-                    llHeaderLayout = (RelativeLayout) View.inflate(BotChatActivity.this, R.layout.welcome_header_3, null);
-                } else llHeaderLayout = (RelativeLayout) View.inflate(BotChatActivity.this, R.layout.welcome_header, null);
-            }
-
-            if (llHeaderLayout != null) {
-                RelativeLayout rlHeader = llHeaderLayout.findViewById(R.id.rlHeader);
-                TextView tvWelcomeHeader = llHeaderLayout.findViewById(R.id.tvWelcomeHeader);
-                TextView tvWelcomeTitle = llHeaderLayout.findViewById(R.id.tvWelcomeTitle);
-                TextView tvWelcomeDescription = llHeaderLayout.findViewById(R.id.tvWelcomeDescription);
-                ImageView ivWelcomeLogo = llHeaderLayout.findViewById(R.id.ivWelcomeLogo);
-                ConstraintLayout llInnerHeader = llHeaderLayout.findViewById(R.id.llInnerHeader);
-
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getTitle().getName())) {
-                    tvWelcomeHeader.setText(welcomeModel.getTitle().getName());
-                }
-
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getSub_title().getName()))
-                    tvWelcomeTitle.setText(welcomeModel.getSub_title().getName());
-
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getNote().getName()))
-                    tvWelcomeDescription.setText(welcomeModel.getNote().getName());
-
-                if (welcomeModel.getBackground() != null) {
-                    if (!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getType())) {
-                        if (welcomeModel.getBackground().getType().equalsIgnoreCase(BundleUtils.COLOR)) {
-                            llInnerHeader.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(welcomeModel.getBackground().getColor())));
-                        } else if (!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getImg())) {
-                            Glide.with(BotChatActivity.this).load(welcomeModel.getBackground().getImg()).into(new CustomTarget<Drawable>() {
-                                @Override
-                                public void onResourceReady(@androidx.annotation.NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    llInnerHeader.setBackground(null);
-                                    rlHeader.setBackground(resource);
-                                }
-
-                                @Override
-                                public void onLoadCleared(@Nullable Drawable placeholder) {
-                                }
-                            });
-                        }
-                    }
-                }
-
-                if (welcomeModel.getLogo() != null && !StringUtils.isNullOrEmpty(welcomeModel.getLogo().getLogo_url())) {
-                    Picasso.get().load(welcomeModel.getLogo().getLogo_url()).transform(new RoundedCornersTransform()).into(ivWelcomeLogo);
-                }
-
-                if (botOptionsModel.getHeader() != null && botOptionsModel.getHeader().getIcon() != null) {
-                    if (botOptionsModel.getHeader().getIcon().getType().equalsIgnoreCase(BundleUtils.CUSTOM)) {
-                        llStarterLogo.setBackgroundResource(0);
-                        Picasso.get().load(botOptionsModel.getHeader().getIcon().getIcon_url()).transform(new RoundedCornersTransform()).into(ivStarterLogo);
-                        ivStarterLogo.setLayoutParams(new LinearLayout.LayoutParams((int) (40 * dp1), (int) (40 * dp1)));
-                    } else {
-                        switch (botOptionsModel.getHeader().getIcon().getIcon_url()) {
-                            case "icon-1":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_1, getTheme()));
-                                break;
-                            case "icon-2":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_2, getTheme()));
-                                break;
-                            case "icon-3":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_3, getTheme()));
-                                break;
-                            case "icon-4":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_4, getTheme()));
-                                break;
-                        }
-                    }
-                }
-
-                if (welcomeModel.getTop_fonts() != null) {
-                    tvWelcomeHeader.setTextColor(Color.parseColor(welcomeModel.getTop_fonts().getColor()));
-                    tvWelcomeTitle.setTextColor(Color.parseColor(welcomeModel.getTop_fonts().getColor()));
-                    tvWelcomeDescription.setTextColor(Color.parseColor(welcomeModel.getTop_fonts().getColor()));
-                    ivStarterLogo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(welcomeModel.getTop_fonts().getColor())));
-                }
-
-                if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                    tvWelcomeHeader.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                    tvWelcomeTitle.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                    tvWelcomeDescription.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                    llStarterLogo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary())));
-                    ivStarterLogo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text())));
-                    llInnerHeader.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary())));
-
-                    if (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()))
-                        svWelcome.setBackgroundColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary()));
-                }
-
-                if (welcomeModel.getBottom_background() != null && !StringUtils.isNullOrEmpty(welcomeModel.getBottom_background().getColor())) {
-                    llBottomPower.setBackgroundColor(Color.parseColor(welcomeModel.getBottom_background().getColor()));
-                }
-            }
-
-            RecyclerView rvStarterButtons = view.findViewById(R.id.rvStarterButtons);
-            HeightAdjustableViewPager hvpLinks = view.findViewById(R.id.hvpLinks);
-            RecyclerView rvLinks = view.findViewById(R.id.rvLinks);
-            TextView tvStarterTitle = view.findViewById(R.id.tvStarterTitle);
-            TextView tvStarterDesc = view.findViewById(R.id.tvStarterDesc);
-            TextView tvStartConversation = view.findViewById(R.id.tvStartConversation);
-            RelativeLayout rlLinks = view.findViewById(R.id.rlLinks);
-
-            rvLinks.setLayoutManager(new LinearLayoutManager(BotChatActivity.this, LinearLayoutManager.VERTICAL, false));
-
-            llOuterHeader.addView(llHeaderLayout);
-
-            if (welcomeModel.getStarter_box() != null) {
-                if (welcomeModel.getStarter_box().isShow()) {
-                    clStarter.setVisibility(View.VISIBLE);
-
-                    if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getTitle())) {
-                        tvStarterTitle.setVisibility(View.VISIBLE);
-
-                        tvStarterTitle.setText(welcomeModel.getStarter_box().getTitle());
-                        tvStartConversation.setText(welcomeModel.getStarter_box().getTitle());
-                    }
-
-                    if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getSub_text())) {
-                        tvStarterDesc.setVisibility(View.VISIBLE);
-                        tvStarterDesc.setText(welcomeModel.getStarter_box().getSub_text());
-                    }
-
-                    if (welcomeModel.getStarter_box().getStart_conv_button() != null) {
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_button().getColor())) {
-                            StateListDrawable gradientDrawable = (StateListDrawable) llStartConversation.getBackground();
-                            gradientDrawable.setTint(Color.parseColor(welcomeModel.getStarter_box().getStart_conv_button().getColor()));
-                            if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                                gradientDrawable.setTint(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary()));
-                            }
-
-                            llStartConversation.setBackground(gradientDrawable);
-                        }
-                    }
-
-                    if (welcomeModel.getStarter_box().getStart_conv_text() != null) {
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_text().getColor())) {
-                            tvStartConversation.setTextColor(Color.parseColor(welcomeModel.getStarter_box().getStart_conv_text().getColor()));
-
-                            if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly() && !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary_text())) {
-                                tvStartConversation.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                            }
-                        }
-                    }
-
-                    if (welcomeModel.getStarter_box().getQuick_start_buttons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons().size() > 0) {
-                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(BotChatActivity.this);
-
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle())) {
-                            if (welcomeModel.getStarter_box().getQuick_start_buttons().getStyle().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST)) {
-                                layoutManager.setFlexDirection(FlexDirection.COLUMN);
-                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                                rvStarterButtons.setLayoutManager(layoutManager);
-
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(BotChatActivity.this, BotResponse.TEMPLATE_TYPE_LIST, !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
-                                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                                rvStarterButtons.setAdapter(quickRepliesAdapter);
-                            } else {
-                                layoutManager.setFlexDirection(FlexDirection.ROW);
-                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                                rvStarterButtons.setLayoutManager(layoutManager);
-
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(BotChatActivity.this, BotResponse.TEMPLATE_TYPE_CAROUSEL, (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
-                                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                                quickRepliesAdapter.setComposeFooterInterface(BotChatActivity.this);
-                                quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatActivity.this);
-                                rvStarterButtons.setAdapter(quickRepliesAdapter);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (welcomeModel.getPromotional_content().getPromotions() != null && welcomeModel.getPromotional_content().isShow() && welcomeModel.getPromotional_content().getPromotions().size() > 0) {
-                lvPromotions.setVisibility(VISIBLE);
-                lvPromotions.setAdapter(new PromotionsAdapter(BotChatActivity.this, welcomeModel.getPromotional_content().getPromotions()));
-            }
-
-            if (welcomeModel.getStatic_links() != null) {
-                if (welcomeModel.getStarter_box().isShow()) {
-                    if (welcomeModel.getStatic_links().getLinks() != null && !welcomeModel.getStatic_links().getLinks().isEmpty()) {
-                        rlLinks.setVisibility(View.VISIBLE);
-
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
-                            hvpLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(BotChatActivity.this, welcomeModel.getStatic_links().getLinks(), (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
-                            quickRepliesAdapter.setComposeFooterInterface(BotChatActivity.this);
-                            quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatActivity.this);
-                            hvpLinks.setAdapter(quickRepliesAdapter);
-                        } else {
-                            rvLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinkListAdapter welcomeStaticLinkListAdapter = new WelcomeStaticLinkListAdapter(BotChatActivity.this, rvLinks);
-                            welcomeStaticLinkListAdapter.setWelcomeStaticLinksArrayList(welcomeModel.getStatic_links().getLinks());
-                            welcomeStaticLinkListAdapter.setComposeFooterInterface(BotChatActivity.this);
-                            welcomeStaticLinkListAdapter.setInvokeGenericWebViewInterface(BotChatActivity.this);
-                            rvLinks.setAdapter(welcomeStaticLinkListAdapter);
-                        }
-                    } else rlLinks.setVisibility(View.GONE);
-                }
-            }
-        }
-
-        welcomeDialog.show();
-        rlChatWindow.setVisibility(VISIBLE);
     }
 
     void closeWelcomeDialog() {
@@ -1001,7 +814,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         tvCallAccept.setOnClickListener(v -> {
             if (eventModel.getMessage() != null) {
                 eventModel.getMessage().setType("call_agent_webrtc_accepted");
-                botClient.sendMessage(gson.toJsonTree(eventModel.getMessage()));
+                botClient.sendMessage(gson.toJson(eventModel.getMessage()));
 
                 AppUtils.setEventModel(eventModel);
                 AppUtils.setBotClient(botClient);
@@ -1054,18 +867,15 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
     @Override
     public void getBrandingDetails() {
-    }
-
-    @Override
-    public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
+        viewModel.getBrandingDetails();
     }
 
     @Override
     public void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation) {
         if (!SDKConfiguration.Client.isWebHook) {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         } else {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         }
     }
 }

@@ -55,7 +55,7 @@ public abstract class BaseBotMessage {
 
     private long getTimeInMillis(String timeStamp, boolean timezoneModifiedRequired) throws ParseException {
         if (timeStamp == null || timeStamp.isEmpty()) return System.currentTimeMillis();
-        return isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() : 0);
+        return isoFormatter.parse(timeStamp).getTime() + ((timezoneModifiedRequired) ? TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings() : 0);
 
     }
 

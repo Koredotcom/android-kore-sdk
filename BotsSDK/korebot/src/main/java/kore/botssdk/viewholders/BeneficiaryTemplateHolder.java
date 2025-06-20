@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotBeneficiaryTemplateAdapter;
 import kore.botssdk.dialogs.ListActionSheetFragment;
-import kore.botssdk.listener.ListClickableListner;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBeneficiaryModel;
 import kore.botssdk.models.BotButtonModel;
@@ -32,8 +31,7 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.view.AutoExpandListView;
 
-public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListClickableListner {
-
+public class BeneficiaryTemplateHolder extends BaseViewHolder {
     private final AutoExpandListView autoExpandListView;
     private final TextView botCustomListViewButton;
     private final LinearLayout botCustomListRoot;
@@ -76,7 +74,7 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
         if (botListViewMoreDataModel != null)
             LogUtils.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
-        if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
+        if (botListModelArrayList != null && !botListModelArrayList.isEmpty()) {
             this.payloadInner = payloadInner;
             itemView.setAlpha((payloadInner.isIs_end() ? 0.4f : 1.0f));
 
@@ -89,19 +87,18 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
             autoExpandListView.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            botListTemplateAdapter.setListClickableInterface(BeneficiaryTemplateHolder.this);
             botListTemplateAdapter.setBotListModelArrayList(botListModelArrayList);
             botListTemplateAdapter.setListClickable(payloadInner.isIs_end());
             botListTemplateAdapter.notifyDataSetChanged();
 
             botCustomListRoot.setVisibility(VISIBLE);
-            if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
+            if (botButtonModelArrayList != null && !botButtonModelArrayList.isEmpty()) {
                 botCustomListViewButton.setText(Html.fromHtml(botButtonModelArrayList.get(0).getTitle()));
                 botCustomListViewButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                        bottomSheetDialog.setisFromFullView(false);
+                        bottomSheetDialog.setIsFromFullView(false);
                         bottomSheetDialog.setSkillName("skillName", "trigger");
 //                        bottomSheetDialog.setData(botListModelArrayList);
                         bottomSheetDialog.setHeaderVisible(true);
@@ -124,11 +121,5 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
             botCustomListRoot.setVisibility(GONE);
             botCustomListViewButton.setVisibility(GONE);
         }
-    }
-
-    @Override
-    public void listClicked(boolean isListClicked) {
-        if (payloadInner != null)
-            payloadInner.setIs_end(true);
     }
 }

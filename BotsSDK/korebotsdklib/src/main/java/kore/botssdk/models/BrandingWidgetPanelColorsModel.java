@@ -1,6 +1,6 @@
 package kore.botssdk.models;
 
-public class BrandingWidgetPanelColorsModel {
+class BrandingWidgetPanelColorsModel {
     private String bg_color;
     private String color;
     private String sel_bg_color;

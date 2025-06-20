@@ -1,16 +1,18 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_TEXT_COLOR;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,7 +24,6 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotCaourselButtonModel;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaFontUtils;
@@ -33,9 +34,11 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final LayoutInflater layoutInflater;
+    private final SharedPreferences prefs;
 
     public CarouselItemButtonAdapter(Context context) {
         layoutInflater = LayoutInflater.from(context);
+        prefs = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE);
     }
 
     @NonNull
@@ -49,20 +52,21 @@ public class CarouselItemButtonAdapter extends RecyclerView.Adapter<CarouselItem
         BotCaourselButtonModel carouselButtonModel = getItem(position);
         if (carouselButtonModel == null) return;
         KaFontUtils.applyCustomFont(holder.button.getContext(), holder.itemView);
+
+        GradientDrawable gradientDrawable = (GradientDrawable)holder.button.getBackground().mutate();
+        gradientDrawable.setColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        holder.button.setTextColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_TEXT_COLOR, "#ffffff")));
+
         holder.button.setText(carouselButtonModel.getTitle());
-
-        holder.button.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
-
-        GradientDrawable leftDrawable = (GradientDrawable) holder.button.getBackground();
-        leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
-        leftDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
-
         holder.button.setOnClickListener(view -> {
             if (invokeGenericWebViewInterface != null) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(carouselButtonModel.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(carouselButtonModel.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(carouselButtonModel.getType())) {
                     invokeGenericWebViewInterface.handleUserActions(carouselButtonModel.getAction(), carouselButtonModel.getCustomData());
+                    return;
                 }
             }
             if (isEnabled && composeFooterInterface != null) {

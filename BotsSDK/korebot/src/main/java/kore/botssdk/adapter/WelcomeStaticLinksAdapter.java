@@ -12,22 +12,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.fileupload.utils.StringUtils;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.BrandingQuickStartButtonActionModel;
 import kore.botssdk.models.BrandingQuickStartButtonButtonsModel;
+import kore.botssdk.utils.BundleConstants;
 
 public class WelcomeStaticLinksAdapter extends PagerAdapter {
-    private ArrayList<BrandingQuickStartButtonButtonsModel> arrBrandingQuickButtons;
-    final Context context;
-    ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    String bgColor;
+    private final ArrayList<BrandingQuickStartButtonButtonsModel> arrBrandingQuickButtons;
+    private final Context context;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final String bgColor;
+    private DialogFragment dialogFragment;
 
     public WelcomeStaticLinksAdapter(@NonNull Context context, @NonNull ArrayList<BrandingQuickStartButtonButtonsModel> quickReplyTemplateArrayList, String bgColor) {
         this.context = context;
@@ -41,6 +47,10 @@ public class WelcomeStaticLinksAdapter extends PagerAdapter {
 
     public void setInvokeGenericWebViewInterface(@NonNull InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
+    public void setDialogFragment(DialogFragment dialogFragment) {
+        this.dialogFragment = dialogFragment;
     }
 
     @Override
@@ -62,6 +72,28 @@ public class WelcomeStaticLinksAdapter extends PagerAdapter {
         staticViewHolder.link_title.setText(quickReplyTemplate.getTitle());
         staticViewHolder.link_desc.setText(quickReplyTemplate.getDescription());
         container.addView(carouselItemLayout);
+
+        staticViewHolder.itemView.setOnClickListener((v) -> {
+            BrandingQuickStartButtonActionModel action = quickReplyTemplate.getAction();
+            if (!StringUtils.isNullOrEmpty(action.getValue())) {
+                if (action.getValue() == null) return;
+                if (composeFooterInterface != null && BundleConstants.BUTTON_TYPE_POSTBACK.equals(action.getType())) {
+                    composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), action.getValue(), false);
+                    if (dialogFragment != null) dialogFragment.dismiss();
+                } else if (invokeGenericWebViewInterface != null && BundleConstants.BUTTON_TYPE_USER_INTENT.equals(action.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(action.getValue());
+                } else if (composeFooterInterface != null && BundleConstants.BUTTON_TYPE_TEXT.equals(action.getType())) {
+                    composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), action.getValue(), false);
+                    if (dialogFragment != null) dialogFragment.dismiss();
+                } else if (invokeGenericWebViewInterface != null && BundleConstants.BUTTON_TYPE_WEB_URL.equals(action.getType()) || BundleConstants.BUTTON_TYPE_URL.equals(action.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(action.getValue());
+                } else if (composeFooterInterface != null) {
+                    composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), action.getValue(), false);
+                    if (dialogFragment != null) dialogFragment.dismiss();
+                }
+            }
+        });
+
         return carouselItemLayout;
     }
 

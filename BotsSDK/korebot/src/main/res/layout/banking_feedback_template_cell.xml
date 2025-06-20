@@ -8,18 +8,17 @@
 
     <androidx.appcompat.widget.AppCompatCheckBox
         android:id="@+id/rbSelect"
+        style="@android:style/Widget.DeviceDefault.Light.CompoundButton.RadioButton"
         android:layout_width="@dimen/dimen_40dp"
         android:layout_height="@dimen/dimen_40dp"
-        android:src="@drawable/ic_check_off"
-        style="@android:style/Widget.DeviceDefault.Light.CompoundButton.RadioButton"/>
-
+        android:src="@mipmap/checkbox_off" />
 
     <kore.botssdk.view.CustomTextView
         android:id="@+id/tvExperience"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Option"
+        android:text="@string/option"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_normal" />
 </LinearLayout>

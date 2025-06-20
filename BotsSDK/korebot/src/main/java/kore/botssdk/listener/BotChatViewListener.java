@@ -13,7 +13,7 @@ public interface BotChatViewListener extends BaseView {
 
     void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection);
 
-    void onBrandingDetails(BotBrandingModel brandingModel, boolean isWelcomeVisible);
+    void onBrandingDetails(BotBrandingModel brandingModel);
 
     void updateContentListOnSend(BotRequest botRequest);
 
@@ -32,12 +32,10 @@ public interface BotChatViewListener extends BaseView {
     void showReconnectionStopped();
 
     void getBrandingDetails();
-    void addAttachmentToAdapter(HashMap<String, String> attachmentKey);
     void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation);
 
     void showAlertDialog(EventModel eventModel);
 
     void hideAlertDialog();
-    void loadReconnectionChatHistory(final int _offset, final int limit);
-    void loadChatHistory(final int _offset, final int limit);
+    void loadOnConnectionHistory(boolean isReconnect);
 }

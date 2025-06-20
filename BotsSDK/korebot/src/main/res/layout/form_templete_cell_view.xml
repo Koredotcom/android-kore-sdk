@@ -13,48 +13,48 @@
         android:layout_marginBottom="@dimen/dimen_12dp"
         android:orientation="vertical">
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvFormFieldTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginTop="12dp"
             android:ellipsize="end"
-            android:gravity="center_vertical|left"
+            android:gravity="center_vertical|start"
             android:maxLines="1"
             android:minWidth="300dp"
             android:minHeight="25dp"
             android:tag="medium"
-            android:text="Hello"
+            android:text="@string/hello"
             android:textColor="#404051"
-            android:textSize="15dp" />
+            android:textSize="15sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_3dp"
-            android:background="@drawable/form_input_bg">
+            android:layout_marginTop="@dimen/dimen_3dp">
 
             <EditText
                 android:id="@+id/edtFormInput"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_30dp"
+                android:layout_height="40dp"
                 android:background="@null"
-                android:inputType="textPassword"
-                android:textColorHint="@color/readReceiptGrey"
+                android:labelFor="@+id/edtFormInput"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
                 android:textColor="#404051"
+                android:textColorHint="@color/readReceiptGrey"
                 android:textSize="@dimen/text_size_normal" />
 
             <Button
                 android:id="@+id/btfieldButton"
                 android:layout_width="@dimen/carousel_view_button_height_individual"
                 android:layout_height="@dimen/dimen_28dp"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_margin="@dimen/dimen_3dp"
                 android:background="@drawable/form_button_bg"
-                android:text="Ok"
-                android:visibility="gone"/>
+                android:text="@string/ok"
+                android:visibility="gone" />
         </RelativeLayout>
     </LinearLayout>
-
 </RelativeLayout>

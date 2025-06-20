@@ -17,6 +17,7 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import kore.botssdk.listener.BotContentFragmentUpdate;
+import kore.botssdk.models.AlternateTextModel;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotHistory;
 import kore.botssdk.models.BotHistoryMessage;
@@ -36,11 +37,11 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 @SuppressWarnings("UnKnownNullness")
-public class HistoryRepository
-{
+public class HistoryRepository {
     BotContentFragmentUpdate botContentFragmentUpdate;
     Context context;
     Gson gson = new Gson();
+
     public HistoryRepository(Context context, BotContentFragmentUpdate botContentFragmentUpdate) {
         this.botContentFragmentUpdate = botContentFragmentUpdate;
         this.context = context;
@@ -60,10 +61,12 @@ public class HistoryRepository
                     if (rBody.isSuccessful() && history != null) {
                         List<BotHistoryMessage> messages = history.getMessages();
                         ArrayList<BaseBotMessage> msgs;
-                        if (messages != null && messages.size() > 0) {
+                        if (messages != null && !messages.isEmpty()) {
                             msgs = new ArrayList<>();
                             for (int index = 0; index < messages.size(); index++) {
                                 BotHistoryMessage msg = messages.get(index);
+                                List<AlternateTextModel> altText = msg.getTags().getAltText();
+                                String renderMsg = altText != null && !altText.isEmpty() ? altText.get(0).getValue() : null;
                                 if (msg.getType().equals(BotResponse.MESSAGE_TYPE_OUTGOING)) {
                                     List<Component> components = msg.getComponents();
                                     String data = components.get(0).getData().getText();
@@ -82,7 +85,7 @@ public class HistoryRepository
                                 } else {
                                     try {
                                         String message = msg.getComponents().get(0).getData().getText();
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, renderMsg);
                                         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
                                         botPayLoad.setMessage(botMessage);
                                         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
@@ -91,7 +94,7 @@ public class HistoryRepository
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         try {
@@ -158,7 +161,7 @@ public class HistoryRepository
                                 } else {
                                     try {
                                         String message = msg.getComponents().get(0).getData().getText();
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
+                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
                                         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
                                         botPayLoad.setMessage(botMessage);
                                         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
@@ -167,7 +170,7 @@ public class HistoryRepository
                                         String jsonPayload = gson.toJson(botPayLoad);
 
                                         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset();
+                                        long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
                                         msgs.add(botRequest);

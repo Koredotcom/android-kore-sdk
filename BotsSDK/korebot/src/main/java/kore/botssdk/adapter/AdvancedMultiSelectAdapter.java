@@ -1,31 +1,30 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponse.BUBBLE_LEFT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.RippleDrawable;
-import android.graphics.drawable.VectorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
+import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
 import kore.botssdk.models.AdvancedMultiSelectModel;
@@ -40,8 +39,8 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
     private int visibleLimit = 1;
     private ArrayList<AdvanceMultiSelectCollectionModel> checkedItems = new ArrayList<>();
     private AdvanceMultiSelectListener advanceMultiSelectListener;
-
     private boolean isEnabled;
+    private SharedPreferences prefs;
 
     public void setEnabled(boolean enabled) {
         isEnabled = enabled;
@@ -50,6 +49,9 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (prefs == null) {
+            prefs = parent.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+        }
         int layoutId = viewType == MULTI_SELECT_ITEM ? R.layout.row_advanced_multi_select_item : R.layout.multiselect_button;
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false), viewType);
     }
@@ -69,16 +71,21 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
             holder.rootLayout.setVisibility(View.GONE);
 
             if (multiSelectCollectionModels.size() > 1) holder.rootLayout.setVisibility(View.VISIBLE);
-            holder.checkSelectAll.setChecked(checkedItems.containsAll(multiSelectCollectionModels));
 
-            holder.checkSelectAll.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-                if (compoundButton.isPressed()) {
-                    if (!isEnabled) {
-                        holder.checkSelectAll.setChecked(!isChecked);
-                        return;
-                    }
-                    advanceMultiSelectListener.allItemsSelected(isChecked, multiSelectCollectionModels);
-                }
+            GradientDrawable gradientDrawable = (GradientDrawable) holder.checkSelectAll.getBackground().mutate();
+            gradientDrawable.setColor(Color.parseColor("#ffffff"));
+            gradientDrawable.setStroke((int) dp1, Color.parseColor(prefs.getString(BUBBLE_LEFT_BG_COLOR, "#ffffff")));
+            holder.checkSelectAll.setTag(true);
+
+            if (checkedItems.containsAll(multiSelectCollectionModels)) {
+                gradientDrawable.setStroke((int) dp1, Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+                gradientDrawable.setColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+                holder.checkSelectAll.setTag(false);
+            }
+
+            holder.checkSelectAll.setOnClickListener(v -> {
+                advanceMultiSelectListener.allItemsSelected((Boolean) holder.checkSelectAll.getTag(), multiSelectCollectionModels);
+                holder.checkSelectAll.setTag(!((Boolean) holder.checkSelectAll.getTag()));
             });
         }
 
@@ -123,7 +130,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
 
     public void refresh() {
         visibleLimit = multiSelectModels.size();
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, visibleLimit);
     }
 
     public void setCheckedItems(ArrayList<AdvanceMultiSelectCollectionModel> checkedItems) {
@@ -131,7 +138,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkSelectAll;
+        LinearLayout checkSelectAll;
         TextView tvMultiSelectTitle;
         RelativeLayout rootLayout;
         LinearLayout rootLayoutBtn;
@@ -144,6 +151,7 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
                 tvMultiSelectTitle = itemView.findViewById(R.id.tvMultiSelectTitle);
                 advMultiSelectList = itemView.findViewById(R.id.adv_multi_select_list);
                 advMultiSelectList.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
+                advMultiSelectList.addItemDecoration(new VerticalSpaceItemDecoration(10 * (int) dp1));
                 rootLayout = itemView.findViewById(R.id.root_layout);
             } else {
                 rootLayoutBtn = itemView.findViewById(R.id.root_layout);

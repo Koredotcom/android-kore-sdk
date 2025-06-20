@@ -27,7 +27,7 @@ import kore.botssdk.utils.BundleConstants;
 public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAdapter.ViewHolder> {
     private ArrayList<BotButtonModel> buttons;
     private String splashColour;
-    private String disabledColour;
+    String textColor;
     private boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -38,10 +38,10 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         splashColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.colorPrimary));
-        disabledColour = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.meetingsDisabled));
+        textColor = "#" + Integer.toHexString(ContextCompat.getColor(context, R.color.white));
 
         splashColour = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, splashColour);
-        disabledColour = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, disabledColour);
+        textColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, textColor);
     }
 
     @NonNull
@@ -54,23 +54,28 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotButtonModel buttonTemplate = getItem(position);
         if (buttonTemplate == null) return;
-        ((GradientDrawable) holder.button.getBackground()).setStroke((int) (2 * dp1), isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
-        holder.button.setTextColor(isEnabled ? Color.parseColor(splashColour) : Color.parseColor(disabledColour));
+        ((GradientDrawable) holder.button.getBackground()).setStroke((int) (2 * dp1), Color.parseColor(splashColour));
+        ((GradientDrawable) holder.button.getBackground()).setColor(Color.parseColor(splashColour));
+        holder.button.setTextColor(Color.parseColor(textColor));
         holder.button.setText(buttonTemplate.getTitle());
 
         holder.button.setOnClickListener(v -> {
-            if (composeFooterInterface != null && invokeGenericWebViewInterface != null && isEnabled) {
+            if (invokeGenericWebViewInterface != null) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonTemplate.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(buttonTemplate.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonTemplate.getType())) {
                     invokeGenericWebViewInterface.handleUserActions(buttonTemplate.getAction(), buttonTemplate.getCustomData());
-                } else {
-                    String title = buttonTemplate.getTitle();
-                    String payload = buttonTemplate.getPayload();
-                    composeFooterInterface.onSendClick(title, payload, false);
+                    return;
                 }
+            }
+            if (composeFooterInterface != null && isEnabled) {
+                String title = buttonTemplate.getTitle();
+                String payload = buttonTemplate.getPayload();
+                composeFooterInterface.onSendClick(title, payload, false);
             }
         });
     }

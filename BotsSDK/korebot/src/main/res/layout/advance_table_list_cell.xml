@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical"
-    android:layout_margin="@dimen/dimen_7dp">
+    android:layout_margin="@dimen/dimen_7dp"
+    android:gravity="center_vertical">
 
     <ImageView
         android:id="@+id/bot_list_item_image"
@@ -19,7 +19,7 @@
         android:scaleType="centerCrop"
         android:visibility="gone" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/bot_list_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
         android:textColor="@color/left_bubble_text_color"
         android:textSize="@dimen/text_size_normal" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/bot_list_item_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -40,9 +40,7 @@
         android:ellipsize="end"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
-        android:textColor="@color/footer_color_dark_grey"
+        android:textColor="@color/left_bubble_text_color"
         android:textSize="@dimen/text_size_small"
         android:visibility="gone" />
-
-
 </RelativeLayout>

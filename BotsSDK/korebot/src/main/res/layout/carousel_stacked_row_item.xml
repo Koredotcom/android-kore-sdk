@@ -9,7 +9,6 @@
     card_view:cardUseCompatPadding="true">
 
     <FrameLayout
-        android:id="@+id/cardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/rectangle_4dpradius" />
@@ -35,10 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/carousel_item_title"
             android:maxLines="3"
-            android:padding="@dimen/dimen_10dp"
+            android:paddingHorizontal="10dp"
             android:tag="regular"
             android:text="@string/app_name"
-            android:textColor="@color/color_8b93a0"
+            android:textColor="@color/kora_grey"
             android:textSize="14sp" />
 
         <kore.botssdk.view.CustomTextView
@@ -73,10 +72,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/dimen_10dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp"
             android:divider="@color/white"
             android:dividerHeight="1dp"
-            android:nestedScrollingEnabled="false"
             android:visibility="visible" />
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

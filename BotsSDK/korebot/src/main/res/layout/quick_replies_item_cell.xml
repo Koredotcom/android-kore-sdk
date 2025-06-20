@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginRight="@dimen/dimen_5dp"
+        android:layout_marginEnd="@dimen/dimen_5dp"
         android:background="@drawable/theme_1_button_bg"
         android:descendantFocusability="beforeDescendants"
         android:orientation="horizontal"
@@ -28,9 +28,10 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="5dp"
             android:background="@drawable/round_rect_image"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:importantForAccessibility="no" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/quick_reply_item_text"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -38,7 +39,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:singleLine="true"
-            android:text="Hello"
+            android:text="@string/hello"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/text_size_sub_header"
             android:textStyle="bold" />

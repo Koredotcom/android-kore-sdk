@@ -1,7 +1,12 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
+import static kore.botssdk.viewholders.BaseViewHolder.getTintDrawable;
+
 import android.content.Context;
-import android.view.LayoutInflater;
+import android.content.SharedPreferences;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,9 +14,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-
-import com.kore.ai.widgetsdk.utils.KaFontUtils;
 
 import java.util.ArrayList;
 
@@ -19,17 +23,19 @@ import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AdvanceListRefreshEvent;
 import kore.botssdk.models.AdvanceOptionsModel;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 
 public class AdvanceOptionsAdapter extends BaseAdapter {
     private final Context context;
-    private ArrayList<AdvanceOptionsModel> contentModels = null;
-    private final LayoutInflater layoutInflater;
+    private final ArrayList<AdvanceOptionsModel> contentModels;
+    private SharedPreferences prefs;
 
-    protected AdvanceOptionsAdapter(Context context, ArrayList<AdvanceOptionsModel> contentModels) {
+    protected AdvanceOptionsAdapter(@NonNull Context context, @NonNull ArrayList<AdvanceOptionsModel> contentModels) {
         this.context = context;
         this.contentModels = contentModels;
-        this.layoutInflater = LayoutInflater.from(context);
+        prefs = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE);
         KoreEventCenter.register(this);
     }
 
@@ -50,17 +56,17 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        AdvanceOptionsAdapter.DetailsViewHolder holder;
+        DetailsViewHolder holder;
         if (convertView == null) {
             convertView = View.inflate(context, R.layout.advance_options_view, null);
             KaFontUtils.applyCustomFont(context, convertView);
-            holder = new AdvanceOptionsAdapter.DetailsViewHolder();
+            holder = new DetailsViewHolder();
             holder.tvBtnText = convertView.findViewById(R.id.tvBtnText);
             holder.ivOptions = convertView.findViewById(R.id.ivOptions);
             holder.llOptions = convertView.findViewById(R.id.llOptions);
             convertView.setTag(holder);
         } else {
-            holder = (AdvanceOptionsAdapter.DetailsViewHolder) convertView.getTag();
+            holder = (DetailsViewHolder) convertView.getTag();
         }
 
         populateData(holder, position);
@@ -68,7 +74,7 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private void populateData(AdvanceOptionsAdapter.DetailsViewHolder holder, int position) {
+    private void populateData(DetailsViewHolder holder, int position) {
         AdvanceOptionsModel dataObj = (AdvanceOptionsModel) getItem(position);
         holder.tvBtnText.setText(dataObj.getLabel());
         holder.ivOptions.setVisibility(View.VISIBLE);
@@ -102,7 +108,7 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
             holder.ivOptions.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_check_off));
 
             if (dataObj.isChecked())
-                holder.ivOptions.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_check_on));
+                holder.ivOptions.setBackground(getTintDrawable(holder.ivOptions.getContext(), prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5"), R.drawable.ic_radio_checked));
         } else {
             holder.ivOptions.setBackground(ContextCompat.getDrawable(context, R.mipmap.multi_un_checked_checkbox));
 
@@ -112,6 +118,7 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
         }
     }
 
+    @NonNull
     public ArrayList<AdvanceOptionsModel> getData() {
         return contentModels;
     }
@@ -128,14 +135,14 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
-    public void onEvent(AdvanceListRefreshEvent advanceListRefreshEvent) {
+    public void onEvent(@NonNull AdvanceListRefreshEvent advanceListRefreshEvent) {
         LogUtils.e("Testing", advanceListRefreshEvent.getPayLoad());
         notifyDataSetChanged();
     }
 
-    private static class DetailsViewHolder {
-        private TextView tvBtnText;
-        private ImageView ivOptions;
-        private LinearLayout llOptions;
+    static class DetailsViewHolder {
+        TextView tvBtnText;
+        ImageView ivOptions;
+        LinearLayout llOptions;
     }
 }

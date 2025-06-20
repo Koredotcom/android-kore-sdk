@@ -1,6 +1,8 @@
 package kore.botssdk.fragment;
 
 import static android.view.View.VISIBLE;
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
+import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 import static kore.botssdk.models.BotResponse.HEADER_SIZE_COMPACT;
 import static kore.botssdk.models.BotResponse.HEADER_SIZE_LARGE;
 import static kore.botssdk.net.SDKConfig.getCustomContentFragment;
@@ -18,14 +20,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.StateListDrawable;
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkCapabilities;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,52 +30,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.transition.Transition;
-import com.google.android.flexbox.FlexDirection;
-import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.flexbox.JustifyContent;
 import com.google.gson.Gson;
 import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
 import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
-import kore.botssdk.adapter.PromotionsAdapter;
-import kore.botssdk.adapter.WelcomeStarterButtonsAdapter;
-import kore.botssdk.adapter.WelcomeStaticLinkListAdapter;
-import kore.botssdk.adapter.WelcomeStaticLinksAdapter;
 import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
+import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fileupload.core.KoreWorker;
@@ -94,6 +71,7 @@ import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.fragment.header.ChatHeaderOneFragment;
 import kore.botssdk.fragment.header.ChatHeaderThreeFragment;
 import kore.botssdk.fragment.header.ChatHeaderTwoFragment;
+import kore.botssdk.fragment.welcome.WelcomeScreenFragment;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -101,31 +79,25 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotBrandingModel;
-import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingHeaderModel;
-import kore.botssdk.models.BrandingWelcomeModel;
 import kore.botssdk.models.EventModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
-import kore.botssdk.net.RestResponse;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.ClosingService;
-import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.ToastUtils;
-import kore.botssdk.view.AutoExpandListView;
-import kore.botssdk.view.HeightAdjustableViewPager;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 import kore.botssdk.viewmodels.chat.BotChatViewModel;
 import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
@@ -151,6 +123,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     private Dialog alertDialog;
     private BotChatViewModel viewModel;
     private BotChatFragmentListener fragmentListener;
+    private boolean isWelcomeVisible = true;
+    private String botName = SDKConfiguration.Client.bot_name;
 
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
@@ -166,6 +140,10 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         }
     };
 
+    public void setIsShowWelComeScreen(boolean isShow) {
+        isWelcomeVisible = !isShow;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -178,11 +156,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         findViews(view);
         getBundleInfo();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            requireContext().registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), Context.RECEIVER_NOT_EXPORTED);
-        } else {
-            requireContext().registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
-        }
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
 
         viewModel.connectToBot(isMinimized());
         requireContext().startService(new Intent(requireContext(), ClosingService.class));
@@ -357,7 +331,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
-                addSentMessageToChat(message);
+                viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, null);
                 BotSocketConnectionManager.getInstance().stopTextToSpeech();
             }
@@ -371,7 +345,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             BotSocketConnectionManager.getInstance().sendPayload(message, StringUtils.isNullOrEmpty(payload) ? payload : "");
         } else {
             BotSocketConnectionManager.getInstance().stopTextToSpeech();
-            addSentMessageToChat(message);
+            viewModel.addSentMessageToChat(message);
             viewModel.sendWebHookMessage(jwt, false, StringUtils.isNullOrEmpty(payload) ? message : payload, null);
         }
     }
@@ -381,7 +355,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         if (attachments != null && !attachments.isEmpty()) {
             if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
-                addSentMessageToChat(message);
+                viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, attachments);
             }
         }
@@ -402,8 +376,10 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void addMessageToAdapter(BotResponse botResponse) {
         botContentFragment.addMessageToBotChatAdapter(botResponse);
+        viewModel.textToSpeech(botResponse, composeFooterFragment.isTTSEnabled());
         botContentFragment.setQuickRepliesIntoFooter(botResponse);
         botContentFragment.showCalendarIntoFooter(botResponse);
+        showTemplateBottomSheet(botResponse);
     }
 
     @Override
@@ -415,21 +391,27 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     @Override
-    public void onBrandingDetails(BotBrandingModel botOptionsModel, boolean isWelcomeVisible) {
-        if (botOptionsModel != null) {
-            viewModel.onBrandingDetails(botOptionsModel);
-            if (botOptionsModel.getWelcome_screen() != null && isWelcomeVisible) {
-                if (botOptionsModel.getWelcome_screen().isShow()) showWelcomeDialog(botOptionsModel);
+    public void onBrandingDetails(BotBrandingModel botBrandingModel) {
+        if (botBrandingModel != null) {
+            botName = botBrandingModel.getHeader().getTitle().getName();
+            if (!isWelcomeVisible && botBrandingModel.getWelcome_screen() != null && botBrandingModel.getWelcome_screen().isShow()) {
+                isWelcomeVisible = true;
+                WelcomeScreenFragment fragment = new WelcomeScreenFragment();
+                fragment.setBotBrandingModel(botBrandingModel);
+                fragment.setComposeFooterInterface(this);
+                fragment.setInvokeGenericWebViewInterface(this);
+                fragment.show(getChildFragmentManager(), fragment.getClass().getName());
             }
+            rlChatWindow.setVisibility(VISIBLE);
 
             if (composeFooterFragment != null) {
-                composeFooterFragment.setBotBrandingModel(botOptionsModel);
+                composeFooterFragment.setBotBrandingModel(botBrandingModel);
             }
 
             if (botContentFragment != null) {
-                botContentFragment.setBotBrandingModel(botOptionsModel);
+                botContentFragment.setBotBrandingModel(botBrandingModel);
             }
-            BrandingHeaderModel header = botOptionsModel.getHeader();
+            BrandingHeaderModel header = botBrandingModel.getHeader();
             if (header != null) {
                 BaseHeaderFragment customHeaderFragment = SDKConfig.getCustomHeaderFragment(header.getSize());
                 switch (header.getSize()) {
@@ -483,8 +465,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     public void invokeGenericWebView(String url) {
         if (url != null && !url.isEmpty()) {
             Intent intent = new Intent(requireContext(), GenericWebViewActivity.class);
-            intent.putExtra("url", url);
-            intent.putExtra("header", getResources().getString(R.string.app_name));
+            intent.putExtra(EXTRA_URL, url);
+            intent.putExtra(EXTRA_HEADER, !botName.isEmpty() ? botName : SDKConfiguration.Client.bot_name);
             startActivity(intent);
         }
     }
@@ -494,13 +476,37 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     @Override
-    public void loadChatHistory(int _offset, int limit) {
-        botContentFragment.loadChatHistory(_offset, limit);
+    public void loadOnConnectionHistory(boolean isReconnect) {
+        if (botContentFragment != null && isReconnect) {
+            if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
+                botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+            else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
+                botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
+            else if (SDKConfiguration.Client.history_on_network_resume)
+                botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+        } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
+            botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+        }
     }
 
-    @Override
-    public void loadReconnectionChatHistory(int _offset, int limit) {
-        botContentFragment.loadReconnectionChatHistory(_offset, limit);
+    private void showTemplateBottomSheet(BotResponse botResponse) {
+        if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+            return;
+        }
+        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
+        switch (payloadInner.getTemplate_type()) {
+            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
+                if (payloadInner.getSliderView()) {
+                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
+                    fragment.setData(payloadInner);
+                    fragment.setComposeFooterInterface(this);
+                    fragment.show(getChildFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
+                }
+            }
+        }
     }
 
     @Override
@@ -546,15 +552,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         } catch (IllegalArgumentException exception) {
             exception.printStackTrace();
         }
-    }
-
-    @SuppressLint("MissingPermission")
-    protected boolean isOnline() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) requireActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        Network nw = connectivityManager.getActiveNetwork();
-        if (nw == null) return false;
-        NetworkCapabilities actNw = connectivityManager.getNetworkCapabilities(nw);
-        return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
     private void attachFragments() {
@@ -649,21 +646,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         return "";
     }
 
-    private void addSentMessageToChat(String message) {
-        //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message);
-        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        botPayLoad.setMessage(botMessage);
-        BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
-        botPayLoad.setBotInfo(botInfo);
-        Gson gson = new Gson();
-        String jsonPayload = gson.toJson(botPayLoad);
-
-        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
-        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        updateContentListOnSend(botRequest);
-    }
-
     void showProgressDialogue() {
         progressBar = new Dialog(requireContext());
         View view = LayoutInflater.from(requireContext()).inflate(R.layout.progress_bar_dialog, null);
@@ -672,243 +654,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         progressBar.setCancelable(false);
         progressBar.setCanceledOnTouchOutside(false);
         progressBar.show();
-    }
-
-    void showWelcomeDialog(BotBrandingModel botOptionsModel) {
-        RelativeLayout llHeaderLayout = null;
-        LinearLayout llOuterHeader, llStartConversation, llBottomPower, llStarterLogo;
-        AutoExpandListView lvPromotions;
-        ConstraintLayout clStarter;
-        ScrollView svWelcome;
-        ImageView ivStarterLogo;
-
-        welcomeDialog = new Dialog(requireContext(), R.style.MyDialogTheme);
-        View view = LayoutInflater.from(requireContext()).inflate(R.layout.welcome_screen, null);
-        llOuterHeader = view.findViewById(R.id.llOuterHeader);
-        llStartConversation = view.findViewById(R.id.llStartConversation);
-        lvPromotions = view.findViewById(R.id.lvPromotions);
-        clStarter = view.findViewById(R.id.clStarter);
-        llBottomPower = view.findViewById(R.id.llBottomPower);
-        svWelcome = view.findViewById(R.id.svWelcome);
-        llStarterLogo = view.findViewById(R.id.llStarterLogo);
-        ivStarterLogo = view.findViewById(R.id.ivStarterLogo);
-
-        welcomeDialog.setContentView(view);
-        Objects.requireNonNull(welcomeDialog.getWindow()).setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        welcomeDialog.setCancelable(false);
-        welcomeDialog.setCanceledOnTouchOutside(false);
-
-        llStartConversation.setOnClickListener(v -> closeWelcomeDialog());
-
-        if (botOptionsModel != null && botOptionsModel.getWelcome_screen() != null) {
-            BrandingWelcomeModel welcomeModel = botOptionsModel.getWelcome_screen();
-
-            if (!StringUtils.isNullOrEmpty(welcomeModel.getLayout())) {
-                if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_LARGE)) {
-                    llHeaderLayout = (RelativeLayout) View.inflate(requireContext(), R.layout.welcome_header_2, null);
-                } else if (welcomeModel.getLayout().equalsIgnoreCase(BundleUtils.LAYOUT_MEDIUM)) {
-                    llHeaderLayout = (RelativeLayout) View.inflate(requireContext(), R.layout.welcome_header_3, null);
-                } else llHeaderLayout = (RelativeLayout) View.inflate(requireContext(), R.layout.welcome_header, null);
-            }
-
-            if (llHeaderLayout != null) {
-                RelativeLayout rlHeader = llHeaderLayout.findViewById(R.id.rlHeader);
-                TextView tvWelcomeHeader = llHeaderLayout.findViewById(R.id.tvWelcomeHeader);
-                TextView tvWelcomeTitle = llHeaderLayout.findViewById(R.id.tvWelcomeTitle);
-                TextView tvWelcomeDescription = llHeaderLayout.findViewById(R.id.tvWelcomeDescription);
-                ImageView ivWelcomeLogo = llHeaderLayout.findViewById(R.id.ivWelcomeLogo);
-                ConstraintLayout llInnerHeader = llHeaderLayout.findViewById(R.id.llInnerHeader);
-
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getTitle().getName())) {
-                    tvWelcomeHeader.setText(welcomeModel.getTitle().getName());
-                }
-
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getSub_title().getName()))
-                    tvWelcomeTitle.setText(welcomeModel.getSub_title().getName());
-
-                if (!StringUtils.isNullOrEmpty(welcomeModel.getNote().getName()))
-                    tvWelcomeDescription.setText(welcomeModel.getNote().getName());
-
-                if (welcomeModel.getBackground() != null) {
-                    if (!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getType())) {
-                        if (welcomeModel.getBackground().getType().equalsIgnoreCase(BundleUtils.COLOR)) {
-                            llInnerHeader.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(welcomeModel.getBackground().getColor())));
-                        } else if (!StringUtils.isNullOrEmpty(welcomeModel.getBackground().getImg())) {
-                            Glide.with(requireContext()).load(welcomeModel.getBackground().getImg()).into(new CustomTarget<Drawable>() {
-                                @Override
-                                public void onResourceReady(@androidx.annotation.NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
-                                    llInnerHeader.setBackground(null);
-                                    rlHeader.setBackground(resource);
-                                }
-
-                                @Override
-                                public void onLoadCleared(@Nullable Drawable placeholder) {
-                                }
-                            });
-                        }
-                    }
-                }
-
-                if (welcomeModel.getLogo() != null && !StringUtils.isNullOrEmpty(welcomeModel.getLogo().getLogo_url())) {
-                    Picasso.get().load(welcomeModel.getLogo().getLogo_url()).transform(new RoundedCornersTransform()).into(ivWelcomeLogo);
-                }
-
-                if (botOptionsModel.getHeader() != null && botOptionsModel.getHeader().getIcon() != null) {
-                    if (botOptionsModel.getHeader().getIcon().getType().equalsIgnoreCase(BundleUtils.CUSTOM)) {
-                        llStarterLogo.setBackgroundResource(0);
-                        Picasso.get().load(botOptionsModel.getHeader().getIcon().getIcon_url()).transform(new RoundedCornersTransform()).into(ivStarterLogo);
-                        ivStarterLogo.setLayoutParams(new LinearLayout.LayoutParams((int) (40 * dp1), (int) (40 * dp1)));
-                    } else {
-                        switch (botOptionsModel.getHeader().getIcon().getIcon_url()) {
-                            case "icon-1":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_1, requireContext().getTheme()));
-                                break;
-                            case "icon-2":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_2, requireContext().getTheme()));
-                                break;
-                            case "icon-3":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_3, requireContext().getTheme()));
-                                break;
-                            case "icon-4":
-                                ivStarterLogo.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_4, requireContext().getTheme()));
-                                break;
-                        }
-                    }
-                }
-
-                if (welcomeModel.getTop_fonts() != null) {
-                    tvWelcomeHeader.setTextColor(Color.parseColor(welcomeModel.getTop_fonts().getColor()));
-                    tvWelcomeTitle.setTextColor(Color.parseColor(welcomeModel.getTop_fonts().getColor()));
-                    tvWelcomeDescription.setTextColor(Color.parseColor(welcomeModel.getTop_fonts().getColor()));
-                    ivStarterLogo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(welcomeModel.getTop_fonts().getColor())));
-                }
-
-                if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                    tvWelcomeHeader.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                    tvWelcomeTitle.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                    tvWelcomeDescription.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                    llStarterLogo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary())));
-                    ivStarterLogo.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text())));
-                    llInnerHeader.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary())));
-
-                    if (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()))
-                        svWelcome.setBackgroundColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary()));
-                }
-
-                if (welcomeModel.getBottom_background() != null && !StringUtils.isNullOrEmpty(welcomeModel.getBottom_background().getColor())) {
-                    llBottomPower.setBackgroundColor(Color.parseColor(welcomeModel.getBottom_background().getColor()));
-                }
-            }
-
-            RecyclerView rvStarterButtons = view.findViewById(R.id.rvStarterButtons);
-            HeightAdjustableViewPager hvpLinks = view.findViewById(R.id.hvpLinks);
-            RecyclerView rvLinks = view.findViewById(R.id.rvLinks);
-            TextView tvStarterTitle = view.findViewById(R.id.tvStarterTitle);
-            TextView tvStarterDesc = view.findViewById(R.id.tvStarterDesc);
-            TextView tvStartConversation = view.findViewById(R.id.tvStartConversation);
-            RelativeLayout rlLinks = view.findViewById(R.id.rlLinks);
-
-            rvLinks.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
-
-            llOuterHeader.addView(llHeaderLayout);
-
-            if (welcomeModel.getStarter_box() != null) {
-                if (welcomeModel.getStarter_box().isShow()) {
-                    clStarter.setVisibility(View.VISIBLE);
-
-                    if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getTitle())) {
-                        tvStarterTitle.setVisibility(View.VISIBLE);
-
-                        tvStarterTitle.setText(welcomeModel.getStarter_box().getTitle());
-                        tvStartConversation.setText(welcomeModel.getStarter_box().getTitle());
-                    }
-
-                    if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getSub_text())) {
-                        tvStarterDesc.setVisibility(View.VISIBLE);
-                        tvStarterDesc.setText(welcomeModel.getStarter_box().getSub_text());
-                    }
-
-                    if (welcomeModel.getStarter_box().getStart_conv_button() != null) {
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_button().getColor())) {
-                            StateListDrawable gradientDrawable = (StateListDrawable) llStartConversation.getBackground();
-                            gradientDrawable.setTint(Color.parseColor(welcomeModel.getStarter_box().getStart_conv_button().getColor()));
-                            if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                                gradientDrawable.setTint(Color.parseColor(botOptionsModel.getGeneral().getColors().getPrimary()));
-                            }
-
-                            llStartConversation.setBackground(gradientDrawable);
-                        }
-                    }
-
-                    if (welcomeModel.getStarter_box().getStart_conv_text() != null) {
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getStart_conv_text().getColor())) {
-                            tvStartConversation.setTextColor(Color.parseColor(welcomeModel.getStarter_box().getStart_conv_text().getColor()));
-
-                            if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly() && !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary_text())) {
-                                tvStartConversation.setTextColor(Color.parseColor(botOptionsModel.getGeneral().getColors().getSecondary_text()));
-                            }
-                        }
-                    }
-
-                    if (welcomeModel.getStarter_box().getQuick_start_buttons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons() != null && welcomeModel.getStarter_box().getQuick_start_buttons().getButtons().size() > 0) {
-                        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(requireContext());
-
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStarter_box().getQuick_start_buttons().getStyle())) {
-                            if (welcomeModel.getStarter_box().getQuick_start_buttons().getStyle().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_LIST)) {
-                                layoutManager.setFlexDirection(FlexDirection.COLUMN);
-                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                                rvStarterButtons.setLayoutManager(layoutManager);
-
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireContext(), BotResponse.TEMPLATE_TYPE_LIST, !StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
-                                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                                rvStarterButtons.setAdapter(quickRepliesAdapter);
-                            } else {
-                                layoutManager.setFlexDirection(FlexDirection.ROW);
-                                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                                rvStarterButtons.setLayoutManager(layoutManager);
-
-                                WelcomeStarterButtonsAdapter quickRepliesAdapter = new WelcomeStarterButtonsAdapter(requireContext(), BotResponse.TEMPLATE_TYPE_CAROUSEL, (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
-                                quickRepliesAdapter.setWelcomeStarterButtonsArrayList(welcomeModel.getStarter_box().getQuick_start_buttons().getButtons());
-                                quickRepliesAdapter.setComposeFooterInterface(BotChatFragment.this);
-                                quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatFragment.this);
-                                rvStarterButtons.setAdapter(quickRepliesAdapter);
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (welcomeModel.getPromotional_content().getPromotions() != null && welcomeModel.getPromotional_content().isShow() && welcomeModel.getPromotional_content().getPromotions().size() > 0) {
-                lvPromotions.setVisibility(VISIBLE);
-                lvPromotions.setAdapter(new PromotionsAdapter(requireContext(), welcomeModel.getPromotional_content().getPromotions()));
-            }
-
-            if (welcomeModel.getStatic_links() != null) {
-                if (welcomeModel.getStarter_box().isShow()) {
-                    if (welcomeModel.getStatic_links().getLinks() != null && !welcomeModel.getStatic_links().getLinks().isEmpty()) {
-                        rlLinks.setVisibility(View.VISIBLE);
-
-                        if (!StringUtils.isNullOrEmpty(welcomeModel.getStatic_links().getLayout()) && welcomeModel.getStatic_links().getLayout().equalsIgnoreCase(BotResponse.TEMPLATE_TYPE_CAROUSEL)) {
-                            hvpLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinksAdapter quickRepliesAdapter = new WelcomeStaticLinksAdapter(requireContext(), welcomeModel.getStatic_links().getLinks(), (!StringUtils.isNullOrEmpty(botOptionsModel.getGeneral().getColors().getSecondary()) && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) ? botOptionsModel.getGeneral().getColors().getSecondary() : "#a7b0be");
-                            quickRepliesAdapter.setComposeFooterInterface(BotChatFragment.this);
-                            quickRepliesAdapter.setInvokeGenericWebViewInterface(BotChatFragment.this);
-                            hvpLinks.setAdapter(quickRepliesAdapter);
-                        } else {
-                            rvLinks.setVisibility(View.VISIBLE);
-                            WelcomeStaticLinkListAdapter welcomeStaticLinkListAdapter = new WelcomeStaticLinkListAdapter(requireContext(), rvLinks);
-                            welcomeStaticLinkListAdapter.setWelcomeStaticLinksArrayList(welcomeModel.getStatic_links().getLinks());
-                            welcomeStaticLinkListAdapter.setComposeFooterInterface(BotChatFragment.this);
-                            welcomeStaticLinkListAdapter.setInvokeGenericWebViewInterface(BotChatFragment.this);
-                            rvLinks.setAdapter(welcomeStaticLinkListAdapter);
-                        }
-                    } else rlLinks.setVisibility(View.GONE);
-                }
-            }
-        }
-
-        welcomeDialog.show();
-        rlChatWindow.setVisibility(VISIBLE);
     }
 
     void closeWelcomeDialog() {
@@ -944,7 +689,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         tvCallAccept.setOnClickListener(v -> {
             if (eventModel.getMessage() != null) {
                 eventModel.getMessage().setType("call_agent_webrtc_accepted");
-                botClient.sendMessage(gson.toJsonTree(eventModel.getMessage()));
+                botClient.sendMessage(gson.toJson(eventModel.getMessage()));
 
                 AppUtils.setEventModel(eventModel);
                 AppUtils.setBotClient(botClient);
@@ -998,18 +743,15 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
     @Override
     public void getBrandingDetails() {
-    }
-
-    @Override
-    public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
+        viewModel.getBrandingDetails();
     }
 
     @Override
     public void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation) {
         if (!SDKConfiguration.Client.isWebHook) {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(requireContext()).getAccessToken(), SocketWrapper.getInstance(requireContext()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireContext(), BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(requireContext()).getAccessToken(), SocketWrapper.getInstance(requireContext()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireContext(), BitmapUtils.obtainMediaTypeOfExtn(extn), (SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         } else {
-            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(requireContext()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireContext(), BitmapUtils.obtainMediaTypeOfExtn(extn), (!SDKConfiguration.Client.isWebHook ? SDKConfiguration.Server.SERVER_URL : SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
+            KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(requireContext()).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), requireContext(), BitmapUtils.obtainMediaTypeOfExtn(extn), (SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         }
     }
 

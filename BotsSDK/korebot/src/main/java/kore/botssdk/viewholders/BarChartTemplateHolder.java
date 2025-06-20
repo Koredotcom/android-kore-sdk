@@ -2,6 +2,7 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.models.BotResponsePayLoadText.BAR_CHART_DIRECTION_VERTICAL;
 
+import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,6 +40,9 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
     private final int BAR_HORIZONTAL = 2;
     private final BarChart barChart;
     private final HorizontalBarChart horizontalBarChart;
+    public static final int[] COLORS = {
+            Color.parseColor("#5BC8C4"), Color.parseColor("#4A9AF2"), Color.parseColor("#e74c3c"), Color.parseColor("#3498db")
+    };
 
     public static BarChartTemplateHolder getInstance(ViewGroup parent) {
         return new BarChartTemplateHolder(createView(R.layout.template_bar_chart, parent));
@@ -117,7 +121,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         int barType = payloadInner.isStacked() ? BAR_STACKED : payloadInner.getDirection().equals(BAR_CHART_DIRECTION_VERTICAL) ? BAR_VERTICAL : BAR_HORIZONTAL;
         barChart.setVisibility(barType != BAR_HORIZONTAL ? View.VISIBLE : View.GONE);
         horizontalBarChart.setVisibility(barType == BAR_HORIZONTAL ? View.VISIBLE : View.GONE);
@@ -172,7 +176,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
             } else {
                 for (int k = 0; k < size; k++) {
                     dataSet[k] = new BarDataSet(yValues[k], payloadInner.getBarChartDataModels().get(k).getTitle());
-                    dataSet[k].setColor(MATERIAL_COLORS[k % 4]);
+                    dataSet[k].setColor(COLORS[k % 4]);
                     barDataSets.add(dataSet[k]);
                 }
             }
@@ -236,7 +240,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
     private int[] getColors(int stackSize) {
         // have as many colors as stack-values per entry
         int[] colors = new int[stackSize];
-        System.arraycopy(MATERIAL_COLORS, 0, colors, 0, colors.length);
+        System.arraycopy(COLORS, 0, colors, 0, colors.length);
         return colors;
     }
 

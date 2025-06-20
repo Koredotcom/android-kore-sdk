@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import java.util.ArrayList;
-
-import kore.botssdk.R;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
@@ -21,6 +18,10 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+
+import java.util.ArrayList;
+
+import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotPieChartElementModel;
 import kore.botssdk.models.PayloadInner;
@@ -112,7 +113,7 @@ public class PieChartTemplateHolder extends BaseViewHolder {
         pieChart.setMarkerView(mv);
 
         // entry label styling
-        pieChart.setEntryLabelColor(Color.WHITE);
+        pieChart.setEntryLabelColor(Color.BLACK);
         pieChart.setEntryLabelTextSize(12f);
     }
 
@@ -140,7 +141,7 @@ public class PieChartTemplateHolder extends BaseViewHolder {
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
         data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(Color.BLACK);
 
         pieChart.setData(data);
         pieChart.highlightValues(null);

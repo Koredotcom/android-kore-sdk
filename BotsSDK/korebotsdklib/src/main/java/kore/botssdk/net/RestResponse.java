@@ -15,7 +15,6 @@ import kore.botssdk.models.User;
  */
 @SuppressWarnings("UnKnownNullness")
 public class RestResponse {
-
     public static class LoginResponse extends User {
         public String status;
     }
@@ -91,6 +90,7 @@ public class RestResponse {
     }
 
     public static class BotMessage {
+        private String renderMsg;
         private Object body;
         private BotCustomData customData;
 
@@ -104,7 +104,6 @@ public class RestResponse {
 
         private HashMap<String, Object> params;
         private ArrayList<HashMap<String, String>> attachments = new ArrayList<>();
-
         private String type;
 
         public void setType(String type) {
@@ -117,10 +116,12 @@ public class RestResponse {
 
         public BotMessage(Object body) {
             this.body = body;
+            renderMsg = "";
         }
 
-        public BotMessage(String body) {
+        public BotMessage(String body, String renderMsg) {
             this.body = body;
+            this.renderMsg = renderMsg == null || renderMsg.isEmpty() ? null : renderMsg;
         }
 
         public BotMessage(String body, ArrayList<HashMap<String, String>> attachments) {
@@ -128,7 +129,8 @@ public class RestResponse {
             this.attachments = attachments;
         }
 
-        public BotMessage(String body, String type) {
+        public BotMessage(String body, String type, String renderMsg) {
+            this.renderMsg = renderMsg == null || renderMsg.isEmpty() ? null : renderMsg;
             this.body = body;
             this.type = type;
         }
@@ -143,6 +145,14 @@ public class RestResponse {
 
         public Object getBody() {
             return body;
+        }
+
+        public String getRenderMsg() {
+            return renderMsg;
+        }
+
+        public void setRenderMsg(String renderMsg) {
+            this.renderMsg = renderMsg;
         }
 
         public BotCustomData getCustomData() {
@@ -172,11 +182,23 @@ public class RestResponse {
         private BotMessage message;
         private String resourceid = "/bot.message";
         private BotInfoModel botInfo;
-        private int clientMessageId = (int) System.currentTimeMillis();
+        private double clientMessageId = System.currentTimeMillis();
         private Meta meta;
         private Object id = clientMessageId;
         private String client = "Android";
         private String event;
+
+        public void setEvent(String event) {
+            this.event = event;
+        }
+
+        public String getEvent() {
+            return event;
+        }
+
+        public void setMsgId(String msgId) {
+            this.id = msgId;
+        }
 
         public void setMessage(BotMessage message) {
             this.message = message;
@@ -186,15 +208,11 @@ public class RestResponse {
             this.botInfo = botInfo;
         }
 
-        public void setEvent(String event) {
-            this.event = event;
-        }
-
-        public int getClientMessageId() {
+        public double getClientMessageId() {
             return clientMessageId;
         }
 
-        public void setClientMessageId(int clientMessageId) {
+        public void setClientMessageId(long clientMessageId) {
             this.clientMessageId = clientMessageId;
         }
 
@@ -226,20 +244,16 @@ public class RestResponse {
             return message;
         }
 
-        public String getResourceId() {
+        public String getResourceid() {
             return resourceid;
+        }
+
+        public void setResourceid(String resourceid) {
+            this.resourceid = resourceid;
         }
 
         public BotInfoModel getBotInfo() {
             return botInfo;
-        }
-
-        public void setResourceId(String resourceId) {
-            this.resourceid = resourceId;
-        }
-
-        public void setMsgId(String msgId) {
-            this.id = msgId;
         }
     }
 

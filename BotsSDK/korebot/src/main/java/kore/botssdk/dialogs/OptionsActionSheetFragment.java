@@ -64,7 +64,7 @@ public class OptionsActionSheetFragment extends BottomSheetDialogFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.list_bottom_sheet, container, false);
+        View view = inflater.inflate(R.layout.options_action_bottom_sheet, container, false);
         TextView tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
         TextView tvMenuTitle = view.findViewById(R.id.tvMenuTitle);
         LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);

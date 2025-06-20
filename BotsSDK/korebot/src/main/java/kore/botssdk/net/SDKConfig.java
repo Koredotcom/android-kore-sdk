@@ -15,6 +15,8 @@ public class SDKConfig {
     private static final HashMap<String, BaseHeaderFragment> customHeaders = new HashMap<>();
     private static BaseFooterFragment customFooterFragment = null;
     private static BaseContentFragment customContentFragment = null;
+    private static boolean isShowActionBar = true;
+    private static boolean isUpdateStatusBarColor = false;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
@@ -104,5 +106,21 @@ public class SDKConfig {
 
     public static void setCustomData(RestResponse.BotCustomData customData) {
         SDKConfiguration.Server.customData = customData;
+    }
+
+    public static boolean isIsShowActionBar() {
+        return isShowActionBar;
+    }
+
+    public static void setIsShowActionBar(boolean isShow) {
+        isShowActionBar = isShow;
+    }
+
+    public static void setIsUpdateStatusBarColor(boolean isUpdate) {
+        isUpdateStatusBarColor = isUpdate;
+    }
+
+    public static boolean isUpdateStatusBarColor() {
+        return isUpdateStatusBarColor;
     }
 }

@@ -1,7 +1,10 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
@@ -13,7 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -24,7 +26,7 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListModel;
-import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
@@ -33,11 +35,13 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final boolean isEnabled;
+    private final SharedPreferences sharedPreferences;
     private final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
     private final List<BotListModel> botListModels;
     private final int size;
 
-    public ListViewTemplateAdapter(List<BotListModel> botListModels, boolean isEnabled, int size) {
+    public ListViewTemplateAdapter(Context context, List<BotListModel> botListModels, boolean isEnabled, int size) {
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, MODE_PRIVATE);
         this.botListModels = botListModels;
         this.isEnabled = isEnabled;
         this.size = size;
@@ -55,24 +59,17 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
         if (botListModel == null) return;
         holder.botListItemImage.setVisibility(View.GONE);
 
-        GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(holder.botListItemRoot.getContext().getResources(), R.drawable.multi_select_list_bg, holder.botListItemRoot.getContext().getTheme());
-        if (rightDrawable != null)
-            rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
-        holder.botListItemRoot.setBackground(rightDrawable);
-
-
         if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
             Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
-        } else holder.botListItemImage.setVisibility(View.INVISIBLE);
+        }
 
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         holder.botListItemCost.setText(botListModel.getValue());
 
-        if (botListModel.getColor() != null)
-            holder.botListItemCost.setTextColor(Color.parseColor(botListModel.getColor()));
+        if (botListModel.getColor() != null) holder.botListItemCost.setTextColor(Color.parseColor(botListModel.getColor()));
 
         holder.botListItemCost.setTypeface(null, Typeface.BOLD);
 
@@ -120,6 +117,10 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
             botListItemTitle = view.findViewById(R.id.bot_list_item_title);
             botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
             botListItemCost = view.findViewById(R.id.bot_list_item_cost);
+
+            SharedPreferences pref = botListItemRoot.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+            GradientDrawable drawable = (GradientDrawable) botListItemRoot.getBackground().mutate();
+            drawable.setStroke(2, Color.parseColor(pref.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff")));
         }
     }
 

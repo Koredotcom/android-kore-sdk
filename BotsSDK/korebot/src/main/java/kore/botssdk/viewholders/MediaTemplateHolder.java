@@ -4,9 +4,10 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
@@ -33,23 +34,23 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.activity.VideoFullScreenActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.VideoTimerEvent;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.KaMediaUtils;
-import kore.botssdk.utils.KaPermissionsHelper;
+import kore.botssdk.utils.DownloadUtils;
 import kore.botssdk.utils.StringUtils;
 
 public class MediaTemplateHolder extends BaseViewHolder {
     private final ImageView ivImage;
     private final TextView tvDownload;
     private final TextView tvAudioVideoTiming;
+    private SharedPreferences sharedPreferences;
     private final VideoView vvAttachment;
     private final ImageView ivPlayPauseIcon;
     private double currentPos, totalDuration;
@@ -64,6 +65,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
     private final PopupWindow popupWindow;
     private final TextView tvTheme1;
     private final TextView tvVideoTitle;
+    private String rightBgColor;
 
     public static MediaTemplateHolder getInstance(ViewGroup parent) {
         return new MediaTemplateHolder(createView(R.layout.template_media, parent));
@@ -90,9 +92,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
         tvVideoTitle = view.findViewById(R.id.tvVideoTitle);
         setRoundedCorner(tvDownload, 8f);
 
-        GradientDrawable leftDrawable = (GradientDrawable) llAttachment.getBackground();
-        leftDrawable.setStroke((int)(1*dp1), Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
-
         View popUpView = LayoutInflater.from(view.getContext()).inflate(R.layout.theme_change_layout, null);
         tvTheme1 = popUpView.findViewById(R.id.tvTheme1);
         TextView tvTheme2 = popUpView.findViewById(R.id.tvTheme2);
@@ -104,6 +103,16 @@ public class MediaTemplateHolder extends BaseViewHolder {
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
 
         KoreEventCenter.register(this);
+        sharedPreferences = getSharedPreferences(view.getContext());
+        String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff");
+        rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#3F51B5");
+        GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(view.getContext().getResources(), R.drawable.theme1_left_bubble_bg, view.getContext().getTheme());
+
+        if (leftDrawable != null) {
+            leftDrawable.setColor(Color.parseColor(leftBgColor));
+            leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
+            llAttachment.setBackground(leftDrawable);
+        }
 
         ivVideoMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivVideoMore, -20, 0));
         ivAudioMore.setOnClickListener(v -> popupWindow.showAsDropDown(ivAudioMore, -20, 0));
@@ -115,6 +124,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
         PayloadOuter payloadOuter = getPayloadOuter(baseBotMessage);
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        tvDownload.setTextColor(Color.parseColor(rightBgColor));
 
         switch (payloadOuter.getType()) {
             case BundleConstants.MEDIA_TYPE_IMAGE:
@@ -131,17 +141,15 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
                     tvDownload.setVisibility(VISIBLE);
-                    tvDownload.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
                     Glide.with(itemView.getContext())
                             .load(payloadInner.getUrl())
                             .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                             .error(R.drawable.ic_image_photo)
                             .into(new DrawableImageViewTarget(ivImage));
                     tvDownload.setOnClickListener(view -> {
-                        Intent intent = new Intent(view.getContext(), GenericWebViewActivity.class);
-                        intent.putExtra("url", payloadInner.getUrl());
-                        intent.putExtra("header", view.getContext().getResources().getString(R.string.app_name));
-                        view.getContext().startActivity(intent);
+                        DownloadUtils.downloadFile(view.getContext(), payloadInner.getUrl(), null);
+//                        if (invokeGenericWebViewInterface != null)
+//                            invokeGenericWebViewInterface.invokeGenericWebView(payloadInner.getUrl());
                     });
                 }
                 break;
@@ -208,18 +216,13 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 tvTheme1.setOnClickListener(v -> {
                     popupWindow.dismiss();
-                    if (checkForPermissionAccessAndRequest()) {
-                        KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
-                    } else if (composeFooterInterface != null) {
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getAudioUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
-                    }
+//                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_AUDIO);
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getAudioUrl()))
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getAudioUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getAudioUrl());
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
                 });
 
                 break;
@@ -297,21 +300,21 @@ public class MediaTemplateHolder extends BaseViewHolder {
 
                 tvTheme1.setOnClickListener(v -> {
                     popupWindow.dismiss();
-                    if (checkForPermissionAccessAndRequest()) {
-                        KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
-                    } else if (composeFooterInterface != null) {
-                        if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getVideoUrl());
-                        else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                            composeFooterInterface.externalReadWritePermission(payloadInner.getUrl());
-                    }
+//                    KaMediaUtils.setupAppDir(itemView.getContext(), BundleConstants.MEDIA_TYPE_VIDEO);
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getVideoUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getVideoUrl());
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        DownloadUtils.downloadFile(itemView.getContext(), payloadInner.getUrl(), null);
+//                        KaMediaUtils.saveFileFromUrlToKorePath(itemView.getContext(), payloadInner.getUrl());
                 });
                 break;
         }
+    }
+
+    private SharedPreferences getSharedPreferences(Context context) {
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences;
     }
 
     private void hideToolBar() {
@@ -377,11 +380,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
             }
         });
     }
-
-    private boolean checkForPermissionAccessAndRequest() {
-        return KaPermissionsHelper.hasPermission(itemView.getContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
-    }
-
 
     // display video progress
     public void setAudioProgress() {

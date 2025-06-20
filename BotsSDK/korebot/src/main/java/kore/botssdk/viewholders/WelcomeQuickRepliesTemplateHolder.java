@@ -40,7 +40,7 @@ public class WelcomeQuickRepliesTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         ArrayList<QuickReplyTemplate> quickReplyTemplates = payloadInner.getQuick_replies();
         StaggeredGridLayoutManager staggeredGridLayoutManager;
 

@@ -7,6 +7,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -21,9 +22,10 @@ import kore.botssdk.utils.StringUtils;
 
 public class WelcomeStaticLinkListAdapter extends RecyclerView.Adapter<WelcomeStaticLinkListAdapter.StaticViewHolder> {
     private ArrayList<BrandingQuickStartButtonButtonsModel> quickReplyTemplateArrayList;
-    final Context context;
-    ComposeFooterInterface composeFooterInterface;
-    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final Context context;
+    private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private DialogFragment dialogFragment;
 
     public WelcomeStaticLinkListAdapter(Context context, RecyclerView parentRecyclerView) {
         this.context = context;
@@ -45,31 +47,30 @@ public class WelcomeStaticLinkListAdapter extends RecyclerView.Adapter<WelcomeSt
         staticViewHolder.quick_reply_view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(composeFooterInterface != null && invokeGenericWebViewInterface != null)
-                {
+                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
                     String quickReplyPayload;
-                    try
-                    {
+                    try {
                         BrandingQuickStartButtonActionModel buttonActionModel = quickReplyTemplate.getAction();
-                        if(!StringUtils.isNullOrEmpty(buttonActionModel.getValue()))
-                        {
+                        if (!StringUtils.isNullOrEmpty(buttonActionModel.getValue())) {
                             quickReplyPayload = buttonActionModel.getValue();
 
                             if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(buttonActionModel.getType())) {
-                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
-                            } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonActionModel.getType())){
+                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
+                                if (dialogFragment != null) dialogFragment.dismiss();
+                            } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonActionModel.getType())) {
                                 invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
-                            }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(buttonActionModel.getType())){
-                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),quickReplyPayload,false);
-                            }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())
-                                    || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonActionModel.getType())){
+                            } else if (BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(buttonActionModel.getType())) {
+                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
+                                if (dialogFragment != null) dialogFragment.dismiss();
+                            } else if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())
+                                    || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonActionModel.getType())) {
                                 invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
-                            }else{
-                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
+                            } else {
+                                if (dialogFragment != null) dialogFragment.dismiss();
+                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
                             }
                         }
-                    }catch (Exception e)
-                    {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -90,6 +91,10 @@ public class WelcomeStaticLinkListAdapter extends RecyclerView.Adapter<WelcomeSt
         } else {
             return quickReplyTemplateArrayList.size();
         }
+    }
+
+    public void setDialogFragment(DialogFragment dialogFragment) {
+        this.dialogFragment = dialogFragment;
     }
 
     public void setWelcomeStaticLinksArrayList(ArrayList<BrandingQuickStartButtonButtonsModel> quickReplyTemplateArrayList) {

@@ -1,11 +1,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_deails"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvborder"
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -27,7 +28,8 @@
             android:layout_height="50dp"
             android:layout_gravity="top"
             android:layout_marginTop="5dp"
-            android:layout_marginEnd="10dp" />
+            android:layout_marginEnd="10dp"
+            android:importantForAccessibility="no" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -46,7 +48,7 @@
                 android:orientation="vertical"
                 android:paddingBottom="10dp">
 
-                <TextView
+                <kore.botssdk.view.CustomTextViewBold
                     android:id="@+id/txtTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -57,7 +59,7 @@
                     android:textColor="#485260"
                     android:textSize="16sp" />
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/txtSubtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -67,7 +69,6 @@
                     android:textColor="#485260"
                     android:textSize="14sp" />
             </LinearLayout>
-
 
             <RelativeLayout
                 android:id="@+id/view_out"
@@ -83,25 +84,27 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
+                    android:focusable="true"
+                    android:importantForAccessibility="no"
                     android:minWidth="24dp"
                     android:minHeight="24dp"
                     android:padding="5dp"
-                    android:visibility="gone"
-                    android:focusable="true" />
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/icon_image"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="true"
+                    android:focusable="true"
+                    android:importantForAccessibility="no"
                     android:minWidth="24dp"
                     android:minHeight="24dp"
                     android:padding="5dp"
                     android:src="@mipmap/ic_more_vert_black_24dp"
                     android:textColor="@color/color_7a799a"
                     android:textSize="18sp"
-                    android:visibility="gone"
-                    android:focusable="true" />
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/tv_values_layout"
@@ -116,7 +119,7 @@
                     android:paddingEnd="5dp"
                     android:visibility="gone">
 
-                    <TextView
+                    <kore.botssdk.view.CustomTextView
                         android:id="@+id/tv_button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -127,11 +130,10 @@
                         android:maxLines="1"
                         android:singleLine="true"
                         android:textColor="#4741fa"
-                        android:textSize="14sp"
-                        android:textIsSelectable="true" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tv_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -141,13 +143,12 @@
                     android:maxWidth="80dp"
                     android:maxLines="1"
                     android:paddingEnd="5dp"
-                    android:paddingStart="@dimen/dimen_0"
                     android:singleLine="true"
                     android:textColor="@color/black"
                     android:textSize="14sp"
                     android:visibility="gone" />
 
-                <TextView
+                <kore.botssdk.view.CustomTextView
                     android:id="@+id/tv_url"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -169,9 +170,9 @@
         android:id="@+id/alDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dividerHeight="@dimen/dimen_0"
         android:divider="@color/white"
-        android:visibility="gone"/>
+        android:dividerHeight="@dimen/dimen_0"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -188,12 +189,11 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_gravity="end|bottom"
-            android:contentDescription="@string/arrow_to_expand"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="5dp"
+            android:importantForAccessibility="no"
             app:srcCompat="@drawable/ic_arrow_drop_up_24px" />
     </LinearLayout>
-
 
     <net.cachapa.expandablelayout.ExpandableLayout
         android:id="@+id/button_layout"
@@ -204,12 +204,31 @@
         app:el_expanded="true"
         app:el_parallax="0.5">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/buttonsList"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginBottom="10dp" />
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/buttonsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginBottom="6dp"
+                android:nestedScrollingEnabled="false" />
+
+            <kore.botssdk.view.CustomTextView
+                android:id="@+id/viewMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="8dp"
+                android:paddingBottom="10dp"
+                android:text="@string/more_"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
     </net.cachapa.expandablelayout.ExpandableLayout>
 
     <View

@@ -39,7 +39,7 @@ public class TableListTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         ArrayList<BotTableListModel> botListModelArrayList = payloadInner.getTableListElements();
         TableListTemplateAdapter botListTemplateAdapter;
         botListTemplateAdapter = new TableListTemplateAdapter(botListModelArrayList, isLastItem());

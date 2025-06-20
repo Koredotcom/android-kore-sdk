@@ -35,9 +35,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.ListWidgetAdapter;
-import kore.botssdk.dialogs.ListWidgetActionSheetFragment;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
@@ -50,7 +48,7 @@ import kore.botssdk.utils.StringUtils;
 public class ListWidgetTemplateHolder extends BaseViewHolder {
     private final RecyclerView botCustomListView;
     private ListWidgetAdapter listWidgetAdapter = null;
-    private final TextView botCustomListViewButton;
+    //    private final TextView botCustomListViewButton;
     private PayloadInner payloadInner;
     private final ImageView iconImageLoad;
     private final TextView tvText;
@@ -74,7 +72,7 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
 
         botCustomListView = itemView.findViewById(R.id.botCustomListView);
         botCustomListView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-        botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
+//        botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
         iconImageLoad = itemView.findViewById(R.id.icon_image_load);
         tvButton = itemView.findViewById(R.id.tv_button);
         tvText = itemView.findViewById(R.id.tv_text);
@@ -84,20 +82,20 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
         widgetHeader = itemView.findViewById(R.id.meeting_header);
         meetingDesc = itemView.findViewById(R.id.meeting_desc);
 
-        botCustomListViewButton.setOnClickListener(view -> {
-            ListWidgetActionSheetFragment bottomSheetDialog = new ListWidgetActionSheetFragment();
-            bottomSheetDialog.setIsFromFullView(false);
-            bottomSheetDialog.setSkillName("skillName", "trigger");
-
-            if (!StringUtils.isNullOrEmpty(payloadInner.getTitle()))
-                bottomSheetDialog.setData(payloadInner.getTitle(), payloadInner.getWidgetListElements());
-            else
-                bottomSheetDialog.setData(payloadInner.getWidgetListElements(), true);
-
-            bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
-            bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
-        });
+//        botCustomListViewButton.setOnClickListener(view -> {
+//            ListWidgetActionSheetFragment bottomSheetDialog = new ListWidgetActionSheetFragment();
+//            bottomSheetDialog.setisFromFullView(false);
+//            bottomSheetDialog.setSkillName("skillName", "trigger");
+//
+//            if (!StringUtils.isNullOrEmpty(payloadInner.getTitle()))
+//                bottomSheetDialog.setData(payloadInner.getTitle(), payloadInner.getWidgetlistElements());
+//            else
+//                bottomSheetDialog.setData(payloadInner.getWidgetlistElements(), true);
+//
+//            bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
+//            bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+//            bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
+//        });
 
         listWidgetAdapter = new ListWidgetAdapter(itemView.getContext(), "");
     }
@@ -106,7 +104,7 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         if (!StringUtils.isNullOrEmpty(payloadInner.getTitle())) {
             widgetHeader.setVisibility(VISIBLE);
             widgetHeader.setText(payloadInner.getTitle());
@@ -157,12 +155,13 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
                     tvUrl.setVisibility(GONE);
 
                     imgMenu.setOnClickListener(v -> {
-                        if (payloadInner.getHeaderOptions() != null && headerOptionsModel.getMenu() != null && headerOptionsModel.getMenu().size() > 0) {
+                        if (payloadInner.getHeaderOptions() != null && headerOptionsModel.getMenu() != null && !headerOptionsModel.getMenu().isEmpty()) {
                             WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
                             bottomSheetDialog.setisFromFullView(false);
                             bottomSheetDialog.setSkillName("skillName", "trigger");
                             bottomSheetDialog.setData(payloadInner, true);
                             bottomSheetDialog.setVerticalListViewActionHelper(null);
+                            bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
                             bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
                         }
                     });
@@ -187,11 +186,8 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
                     tvButtonParent.setVisibility(GONE);
                     tvUrl.setVisibility(VISIBLE);
                     tvUrl.setOnClickListener(v -> {
-                        if (headerOptionsModel.getUrl().getLink() != null) {
-                            Intent intent = new Intent(itemView.getContext(), GenericWebViewActivity.class);
-                            intent.putExtra("url", headerOptionsModel.getUrl().getLink());
-                            intent.putExtra("header", itemView.getContext().getResources().getString(R.string.app_name));
-                            itemView.getContext().startActivity(intent);
+                        if (invokeGenericWebViewInterface != null && headerOptionsModel.getUrl().getLink() != null) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(headerOptionsModel.getUrl().getLink());
                         }
                     });
                     break;
@@ -210,15 +206,15 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
             }
         }
         listWidgetAdapter.setIsEnabled(isLastItem());
-        if (payloadInner.getWidgetListElements() != null && payloadInner.getWidgetListElements().size() > 0 && !payloadInner.getTemplate_type().equals("loginURL")) {
-            if (payloadInner.getWidgetListElements() != null && payloadInner.getWidgetListElements().size() > 3) {
-                botCustomListViewButton.setVisibility(View.VISIBLE);
-            }
+        if (payloadInner.getWidgetListElements() != null && !payloadInner.getWidgetListElements().isEmpty() && !payloadInner.getTemplate_type().equals("loginURL")) {
+//            if (payloadInner.getWidgetlistElements().size() > 3) {
+//                botCustomListViewButton.setVisibility(View.VISIBLE);
+//            }
 
             listWidgetAdapter.setWidgetData(payloadInner.getWidgetListElements());
             listWidgetAdapter.setComposeFooterInterface(composeFooterInterface);
             listWidgetAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-            listWidgetAdapter.setPreviewLength(3);
+            listWidgetAdapter.setPreviewLength(payloadInner.getWidgetListElements().size());
             botCustomListView.setAdapter(listWidgetAdapter);
         } else {
             listWidgetAdapter.setData(null);

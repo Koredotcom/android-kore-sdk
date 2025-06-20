@@ -56,25 +56,24 @@
                     android:contentDescription="@string/app_name"
                     android:scaleType="centerCrop"
                     android:visibility="visible" />
-
             </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/llTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_marginStart="@dimen/dimen_10dp"
-                android:layout_toEndOf="@id/rlImage">
+                android:layout_toEndOf="@id/rlImage"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <kore.botssdk.view.CustomTextViewBold
                     android:id="@+id/bot_list_item_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:clickable="false"
                     android:ellipsize="end"
-                    android:layout_weight="1"
                     android:maxLines="1"
                     android:textColor="@color/txtFontBlack"
                     android:textSize="@dimen/text_size_normal" />
@@ -88,15 +87,15 @@
                     android:maxLines="1"
                     android:textColor="@color/greyHead"
                     android:textSize="@dimen/text_size_small"
-                    android:visibility="visible"/>
+                    android:visibility="visible" />
 
                 <ImageView
                     android:id="@+id/ivheaderExtra"
                     android:layout_width="@dimen/dimen_12dp"
                     android:layout_height="@dimen/dimen_12dp"
-                    android:clickable="false"
-                    android:background="@drawable/ic_more_vert_black_24dp"
                     android:layout_marginStart="@dimen/dimen_5dp"
+                    android:background="@drawable/ic_more_vert_black_24dp"
+                    android:clickable="false"
                     android:contentDescription="@string/app_name"
                     android:visibility="gone" />
 
@@ -125,9 +124,10 @@
             android:layout_margin="@dimen/dimen_10dp"
             android:divider="@color/transparent"
             android:dividerHeight="@dimen/dimen_7dp"
+            android:nestedScrollingEnabled="false"
             android:visibility="visible" />
 
-        <TextView
+        <kore.botssdk.view.CustomTextView
             android:id="@+id/tvCardButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,7 +141,5 @@
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_normal"
             android:visibility="gone" />
-
     </LinearLayout>
-
 </LinearLayout>

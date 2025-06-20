@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/botCustomListViewButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -28,7 +28,7 @@
         android:textColor="@android:color/holo_blue_dark"
         android:visibility="gone" />
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/workBenchListViewButton"
         android:layout_width="match_parent"
         android:layout_height="60dp"

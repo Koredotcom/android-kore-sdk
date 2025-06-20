@@ -1,8 +1,7 @@
 package kore.botssdk.adapter;
 
-import static android.view.Gravity.CENTER_VERTICAL;
-
 import android.content.Context;
+import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,7 @@ import kore.botssdk.R;
 public class TableHeaderAdapter extends RecyclerView.Adapter<TableHeaderAdapter.ViewHolder> {
 
     private final String RIGHT = "right";
-    private final String CENTER = "center";
+    private final String LEFT = "left";
     private final List<List<String>> tableItems;
     private boolean isEnabled;
     private final LayoutInflater layoutInflater;
@@ -41,11 +40,12 @@ public class TableHeaderAdapter extends RecyclerView.Adapter<TableHeaderAdapter.
         List<String> item = getItem(position);
         if (item == null) return;
         holder.value.setText(item.get(0));
-        holder.value.setGravity(Gravity.START | CENTER_VERTICAL);
+        holder.value.setTypeface(holder.value.getTypeface(), Typeface.BOLD);
+        holder.value.setGravity(Gravity.CENTER);
         if (item.size() > 1) {
             switch (item.get(1)) {
-                case CENTER:
-                    holder.value.setGravity(Gravity.CENTER);
+                case LEFT:
+                    holder.value.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
                     break;
                 case RIGHT:
                     holder.value.setGravity(Gravity.END | Gravity.CENTER_VERTICAL);

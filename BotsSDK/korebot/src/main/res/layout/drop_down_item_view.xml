@@ -4,12 +4,15 @@
     android:id="@+id/bot_options_more"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <kore.botssdk.view.CustomTextView
         android:id="@+id/item"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="45dp"
+        android:layout_marginEnd="6dp"
+        android:layout_weight="1"
         android:ellipsize="end"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/dimen_10dp"
@@ -18,6 +21,14 @@
         android:textColor="@color/black"
         android:textSize="18sp"
         tools:ignore="RtlSymmetry" />
+
+    <ImageView
+        android:id="@+id/ivTick"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="16dp"
+        android:importantForAccessibility="no"
+        android:src="@drawable/check_icon" />
 </LinearLayout>
 
 

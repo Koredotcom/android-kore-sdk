@@ -29,22 +29,20 @@ import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableListAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
     private final ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons;
-    private final Context mContext;
 
-    public AdvanceTableListAdapter(Context context, ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons) {
+    public AdvanceTableListAdapter(@NonNull Context context, @NonNull ArrayList<AdvanceListTableModel.AdvanceTableRowDataModel> buttons) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
-        mContext = context;
     }
 
     @NonNull
     @Override
-    public AdvanceTableListAdapter.ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         return new ButtonViewHolder(inflater.inflate(R.layout.advance_table_list_cell, viewGroup, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AdvanceTableListAdapter.ButtonViewHolder holder, int i) {
+    public void onBindViewHolder(@NonNull ButtonViewHolder holder, int i) {
 
         AdvanceListTableModel.AdvanceTableRowDataModel btn = buttons.get(i);
         holder.botListItemTitle.setText(btn.getTitle());
@@ -53,7 +51,6 @@ public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableLi
         {
             holder.botListItemImage.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
-//            layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
             layoutParams.setMargins(0, 0, 10, 0);
 
             if(!StringUtils.isNullOrEmpty(btn.getIconSize()))
@@ -106,9 +103,9 @@ public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableLi
     }
 
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private final TextView botListItemTitle;
-        private final TextView botListItemSubtitle;
-        private final ImageView botListItemImage;
+        final TextView botListItemTitle;
+        final TextView botListItemSubtitle;
+        final ImageView botListItemImage;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);

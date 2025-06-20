@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<WelcomeSt
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     String type, bgColor;
+    private DialogFragment dialogFragment;
 
     public WelcomeStarterButtonsAdapter(Context context, String type, String bgColor) {
         this.context = context;
@@ -63,17 +65,19 @@ public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<WelcomeSt
                         BrandingQuickStartButtonActionModel buttonActionModel = quickReplyTemplate.getAction();
                         if (!StringUtils.isNullOrEmpty(buttonActionModel.getValue())) {
                             quickReplyPayload = buttonActionModel.getValue();
-
                             if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(buttonActionModel.getType())) {
                                 composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
+                                if (dialogFragment != null) dialogFragment.dismiss();
                             } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonActionModel.getType())) {
                                 invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
                             } else if (BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(buttonActionModel.getType())) {
                                 composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
+                                if (dialogFragment != null) dialogFragment.dismiss();
                             } else if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())
                                     || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonActionModel.getType())) {
                                 invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
                             } else {
+                                if (dialogFragment != null) dialogFragment.dismiss();
                                 composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
                             }
                         }
@@ -98,6 +102,10 @@ public class WelcomeStarterButtonsAdapter extends RecyclerView.Adapter<WelcomeSt
         } else {
             return quickReplyTemplateArrayList.size();
         }
+    }
+
+    public void setDialogFragment(DialogFragment dialogFragment) {
+        this.dialogFragment = dialogFragment;
     }
 
     public void setWelcomeStarterButtonsArrayList(ArrayList<BrandingQuickStartButtonButtonsModel> quickReplyTemplateArrayList) {

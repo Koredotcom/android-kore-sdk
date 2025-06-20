@@ -1,5 +1,9 @@
 package kore.botssdk.viewholders;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_TEXT_COLOR;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
@@ -22,15 +26,18 @@ import kore.botssdk.adapter.FormTemplateAdapter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.ToastUtils;
 
 public class FormTemplateHolder extends BaseViewHolder {
-    final RecyclerView recyclerView;
-    final TextView tvFormTemplateTitle;
-    final TextView btFieldButton;
-    final String leftTextColor;
-    LinearLayout llFormRoot;
+    private final RecyclerView recyclerView;
+    private final TextView tvFormTemplateTitle;
+    private final TextView btFieldButton;
+    private final String leftTextColor;
+    final LinearLayout llFormRoot;
+    private SharedPreferences prefs;
 
     public static FormTemplateHolder getInstance(ViewGroup parent) {
         return new FormTemplateHolder(createView(R.layout.template_form, parent));
@@ -38,23 +45,23 @@ public class FormTemplateHolder extends BaseViewHolder {
 
     private FormTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
-
+        prefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+        llFormRoot = itemView.findViewById(R.id.llFormRoot);
         recyclerView = itemView.findViewById(R.id.multi_select_list);
         recyclerView.setVerticalScrollBarEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
         KaFontUtils.applyCustomFont(itemView.getContext(), itemView);
         tvFormTemplateTitle = itemView.findViewById(R.id.tvform_template_title);
         btFieldButton = itemView.findViewById(R.id.btfieldButton);
-        llFormRoot = itemView.findViewById(R.id.llFormRoot);
 
-        SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        GradientDrawable gradientDrawable = (GradientDrawable) btFieldButton.getBackground().mutate();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        gradientDrawable.setColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        btFieldButton.setTextColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_TEXT_COLOR, "#ffffff")));
+
+        SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
         String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#EBEBEB");
-        String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#EBEBEB");
-        String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#EBEBEB");
         leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
-
-        btFieldButton.setBackgroundColor(Color.parseColor(rightBgColor));
-        btFieldButton.setTextColor(Color.parseColor(rightTextColor));
 
         GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(
                 itemView.getContext().getResources(),
@@ -82,8 +89,7 @@ public class FormTemplateHolder extends BaseViewHolder {
         }
 
         if (payloadInner.getFieldButton() != null)
-            if (!StringUtils.isNullOrEmpty(payloadInner.getFieldButton().getTitle()))
-                btFieldButton.setText(payloadInner.getFieldButton().getTitle());
+            btFieldButton.setText(payloadInner.getFieldButton().getTitle());
 
         btFieldButton.setOnClickListener(view -> {
             if (composeFooterInterface != null && isLastItem()) {
@@ -94,7 +100,11 @@ public class FormTemplateHolder extends BaseViewHolder {
                     EditText et = view.findViewById(R.id.edtFormInput);
                     sb.append(et.getText().toString());
                 }
-                composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(), false);
+
+                if (StringUtils.isNotEmpty(sb.toString()))
+                    composeFooterInterface.onSendClick(getDotMessage(sb.toString()), sb.toString(), false);
+                else
+                    ToastUtils.showToast(context, "Text should not be empty.");
             }
         });
     }

@@ -2,22 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/form_input_bg"
+    android:orientation="vertical"
     android:padding="@dimen/dimen_10dp">
 
-    <TextView
+    <kore.botssdk.view.CustomTextView
         android:id="@+id/tvButton"
         android:layout_width="80dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="@dimen/dimen_10dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
         android:ellipsize="end"
         android:fontFamily="@font/latoregular"
-        android:maxWidth="300dp"
         android:gravity="center"
+        android:maxWidth="300dp"
         android:maxLines="1"
         android:singleLine="true"
-        android:text="Confirm"
+        android:text="@string/confirm"
         android:textSize="14sp" />
 
 </LinearLayout>

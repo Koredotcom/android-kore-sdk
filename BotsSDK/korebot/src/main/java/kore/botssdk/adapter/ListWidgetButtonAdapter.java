@@ -1,75 +1,114 @@
 package kore.botssdk.adapter;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.Widget;
-import kore.botssdk.utils.StringUtils;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.viewholders.BaseViewHolder;
 
 public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
     private final ArrayList<Widget.Button> buttons;
-    private final Context mContext;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private String skillName;
-    private final String trigger;
     private BottomSheetDialog bottomSheetDialog;
-
+    private PopupWindow popupWindow;
+    int displayLimit = -1;
     private boolean isEnabled = true;
+    private int type;
+    private boolean isMenus = false;
 
-    public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String trigger) {
+    public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, boolean isMenus) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
-        mContext = context;
-        this.trigger = trigger;
+        this.isMenus = isMenus;
     }
 
     @NonNull
     @Override
     public ButtonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        if (type == 1) {
+            return new ButtonViewHolder(inflater.inflate(R.layout.advance_button_fullwidth, viewGroup, false));
+        }
         return new ButtonViewHolder(inflater.inflate(R.layout.widget_button_list_item, viewGroup, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ButtonViewHolder holder, int i) {
-
         Widget.Button btn = buttons.get(i);
         holder.tv.setText(btn.getTitle());
+        holder.tv.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        Drawable errorDrawable = BaseViewHolder.getTintDrawable(holder.tv.getContext(), SDKConfiguration.BubbleColors.quickReplyColor, R.drawable.check_icon);
+        holder.image.setVisibility(isMenus ? GONE : VISIBLE);
+        if (!isMenus) {
+            if (btn.getImage() != null && btn.getImage().getImage_type().equals(BotResponse.COMPONENT_TYPE_IMAGE) && !btn.getImage().getImage_src().isEmpty()) {
+                Glide.with(holder.itemView.getContext())
+                        .load(btn.getImage().getUrl() != null ? btn.getImage().getUrl() : btn.getImage().getImage_src())
+                        .error(errorDrawable)
+                        .apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
+                        .into(holder.image);
+            } else {
+                holder.image.setImageDrawable(errorDrawable);
+            }
+        }
 
-        holder.tv.setOnClickListener(v -> {
+        ((ViewGroup) holder.tv.getParent()).setOnClickListener(v -> {
             if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
+            if (popupWindow != null && popupWindow.isShowing()) popupWindow.dismiss();
 
-            if (!StringUtils.isNullOrEmpty(btn.getPayload()) && isEnabled) {
-                composeFooterInterface.onSendClick(btn.getPayload(), true);
+            if (invokeGenericWebViewInterface != null) {
+                if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(btn.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
+                    return;
+                } else if (BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(btn.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(btn.getUrl());
+                    return;
+                }
+            }
+            if (composeFooterInterface != null && isEnabled) {
+                composeFooterInterface.onSendClick(btn.getTitle(), btn.getPayload(), false);
             }
         });
+    }
+
+    public void setDisplayLimit(int displayLimit) {
+        this.displayLimit = displayLimit;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
@@ -88,16 +127,17 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         this.bottomSheetDialog = bottomSheetDialog;
     }
 
+    public void setPopupWindow(PopupWindow popupWindow) {
+        this.popupWindow = popupWindow;
+    }
+
     @Override
     public int getItemCount() {
-        return buttons != null ? buttons.size() : 0;
-        /*if(buttons != null){
-            if(buttons.size()<3)
-                buttons.size();
-            else return 3;
+        if (buttons != null) {
+            return (displayLimit > -1 && buttons.size() > displayLimit) ? displayLimit : buttons.size();
         }
-            return 0;
-*/
+
+        return 0;
     }
 
     boolean isFullView;
@@ -106,48 +146,14 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         this.isFullView = isFullView;
     }
 
-    public class ButtonViewHolder extends RecyclerView.ViewHolder {
-        private final TextView tv;
-//        private LinearLayout ll;
+    public static class ButtonViewHolder extends RecyclerView.ViewHolder {
+        final TextView tv;
+        final ImageView image;
 
         public ButtonViewHolder(@NonNull View itemView) {
             super(itemView);
             tv = itemView.findViewById(R.id.buttonTV);
-//            ll = itemView.findViewById(R.id.buttonsLayout);
-
-        }
-    }
-
-
-    public void buttonAction(String utterance, boolean appendUtterance) {
-        if (utterance != null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))) {
-            if (utterance.startsWith("tel:")) {
-                launchDialer(mContext, utterance);
-            } else if (utterance.startsWith("mailto:")) {
-                showEmailIntent((Activity) mContext, utterance.split(":")[1]);
-            }
-            return;
-        }
-        EntityEditEvent event = new EntityEditEvent();
-        StringBuffer msg = new StringBuffer();
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("refresh", Boolean.TRUE);
-        if (appendUtterance && trigger != null)
-            msg = msg.append(trigger).append(" ");
-        msg.append(utterance);
-        event.setMessage(msg.toString());
-        event.setPayLoad(new Gson().toJson(hashMap));
-        event.setScrollUpNeeded(true);
-        KoreEventCenter.post(event);
-
-        try {
-
-
-            if (isFullView) {
-                ((Activity) mContext).finish();
-            }
-        } catch (Exception e) {
-
+            image = itemView.findViewById(R.id.ivBtnImage);
         }
     }
 
@@ -159,9 +165,9 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
         this.skillName = skillName;
     }
 
-    public static void showEmailIntent(Activity activity, String recepientEmail) {
+    public static void showEmailIntent(Activity activity, String recipientEmail) {
         Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
+        emailIntent.setData(Uri.parse("mailto:" + recipientEmail));
         emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
 
         try {
@@ -170,33 +176,5 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
             Toast.makeText(activity, "Error while launching email intent!", Toast.LENGTH_SHORT).show();
         }
     }
-
-    @SuppressLint("MissingPermission")
-    public static void launchDialer(Context context, String url) {
-        try {
-            Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
-            intent.setData(Uri.parse(url));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NO_HISTORY
-                    | Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public static boolean hasPermission(Context context, String... permission) {
-        boolean shouldShowRequestPermissionRationale = true;
-        int permissionLength = permission.length;
-        for (int i = 0; i < permissionLength; i++) {
-            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                    ActivityCompat.checkSelfPermission(context, permission[i]) == PackageManager.PERMISSION_GRANTED;
-        }
-        return shouldShowRequestPermissionRationale;
-    }
-
-
 }
 

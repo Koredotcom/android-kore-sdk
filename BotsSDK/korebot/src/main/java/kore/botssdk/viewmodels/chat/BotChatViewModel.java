@@ -51,7 +51,7 @@ import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.models.AgentInfoModel;
-import kore.botssdk.models.BotBrandingModel;
+import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -63,6 +63,7 @@ import kore.botssdk.models.EventMessageModel;
 import kore.botssdk.models.EventModel;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
+import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.pushnotification.PushNotificationRegister;
 import kore.botssdk.repository.branding.BrandingRepository;
@@ -74,7 +75,6 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotChatViewModel extends ViewModel {
@@ -110,8 +110,8 @@ public class BotChatViewModel extends ViewModel {
         isActivityResumed = isResumed;
     }
 
-    public void getBrandingDetails(String botId, String botToken, boolean isReconnection) {
-        repository.getBrandingDetails(botId, botToken, isReconnection);
+    public void getBrandingDetails() {
+        repository.getBrandingDetails(SDKConfiguration.Client.bot_id, botClient.getAccessToken());
     }
 
     public void connectToBot(boolean isReconnect) {
@@ -133,17 +133,6 @@ public class BotChatViewModel extends ViewModel {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
-
-                if (isReconnection) {
-                    if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size) {
-                        chatView.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
-                    } else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0) {
-                        chatView.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
-                    } else if (SDKConfiguration.Client.history_on_network_resume) {
-                        chatView.loadReconnectionChatHistory(0, 10);
-                    }
-                }
-
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
                     isReconnectionStopped = true;
@@ -151,6 +140,7 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
 
+            chatView.loadOnConnectionHistory(isReconnection);
             new PushNotificationRegister().registerPushNotification(context, botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(context));
             chatView.updateTitleBar(state);
         }
@@ -168,10 +158,8 @@ public class BotChatViewModel extends ViewModel {
 
         @Override
         public void onStartCompleted(boolean isReconnection) {
-            getBrandingDetails(SDKConfiguration.Client.bot_id, SocketWrapper.getInstance(context).getAccessToken(), isReconnection);
+            getBrandingDetails();
         }
-
-
     };
 
     public void sendReadReceipts() {
@@ -374,6 +362,21 @@ public class BotChatViewModel extends ViewModel {
         return uniqueID;
     }
 
+    public void addSentMessageToChat(String message) {
+        //Update the bot content list with the send message
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+        botPayLoad.setMessage(botMessage);
+        BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
+        botPayLoad.setBotInfo(botInfo);
+        Gson gson = new Gson();
+        String jsonPayload = gson.toJson(botPayLoad);
+
+        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+        botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
+        sListener.onMessage(new SocketDataTransferModel(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
+    }
+
     public void textToSpeech(BotResponse botResponse, boolean isTTSEnabled) {
         if (isTTSEnabled && botResponse.getMessage() != null && !botResponse.getMessage().isEmpty()) {
             String botResponseTextualFormat = "";
@@ -518,75 +521,6 @@ public class BotChatViewModel extends ViewModel {
 
     public void sendImage(String filePath, String fileName, String filePathThumbnail) {
         new SaveCapturedImageTask(filePath, fileName, filePathThumbnail).executeAsync();
-    }
-
-    public void onBrandingDetails(BotBrandingModel botOptionsModel) {
-        if (botOptionsModel != null) {
-            setButtonBranding(botOptionsModel);
-
-            if (botOptionsModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getChat_bubble().getStyle())) {
-                sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getChat_bubble().getStyle()).apply();
-            }
-
-            if (botOptionsModel.getBody() != null && !StringUtils.isNullOrEmpty(botOptionsModel.getBody().getBubble_style())) {
-                sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botOptionsModel.getBody().getBubble_style()).apply();
-            }
-
-            if (botOptionsModel.getGeneral() != null && botOptionsModel.getGeneral().getColors() != null && botOptionsModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                botOptionsModel.getHeader().setBg_color(botOptionsModel.getGeneral().getColors().getSecondary());
-                botOptionsModel.getFooter().setBg_color(botOptionsModel.getGeneral().getColors().getSecondary());
-                botOptionsModel.getFooter().getCompose_bar().setOutline_color(botOptionsModel.getGeneral().getColors().getPrimary());
-                botOptionsModel.getFooter().getCompose_bar().setInline_color(botOptionsModel.getGeneral().getColors().getSecondary_text());
-                botOptionsModel.getHeader().getTitle().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
-                botOptionsModel.getHeader().getSub_title().setColor(botOptionsModel.getGeneral().getColors().getPrimary());
-            }
-
-            if (botOptionsModel.getOverride_kore_config() != null && botOptionsModel.getOverride_kore_config().isEnable()) {
-                SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = botOptionsModel.getOverride_kore_config().isEmoji_short_cut();
-                SDKConfiguration.OverrideKoreConfig.typing_indicator_timeout = botOptionsModel.getOverride_kore_config().getTyping_indicator_timeout();
-                if (botOptionsModel.getOverride_kore_config().getHistory() != null) {
-                    SDKConfiguration.OverrideKoreConfig.history_enable = botOptionsModel.getOverride_kore_config().getHistory().isEnable();
-                    if (botOptionsModel.getOverride_kore_config().getHistory().getRecent() != null)
-                        SDKConfiguration.OverrideKoreConfig.history_batch_size = botOptionsModel.getOverride_kore_config().getHistory().getRecent().getBatch_size();
-                    if (botOptionsModel.getOverride_kore_config().getHistory().getPaginated_scroll() != null) {
-                        SDKConfiguration.OverrideKoreConfig.paginated_scroll_enable = botOptionsModel.getOverride_kore_config().getHistory().getPaginated_scroll().isEnable();
-                        SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size = botOptionsModel.getOverride_kore_config().getHistory().getPaginated_scroll().getBatch_size();
-                        SDKConfiguration.OverrideKoreConfig.paginated_scroll_loading_label = botOptionsModel.getOverride_kore_config().getHistory().getPaginated_scroll().getLoading_label();
-                    }
-                }
-            }
-        }
-    }
-
-    private void setButtonBranding(BotBrandingModel brandingModel) {
-        if (brandingModel != null) {
-            SharedPreferences.Editor editor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-
-            if (brandingModel.getBody() != null && brandingModel.getBody().getBot_message() != null) {
-                editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingModel.getBody().getBot_message().getBg_color());
-                editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, brandingModel.getBody().getBot_message().getColor());
-            }
-
-            if (brandingModel.getBody() != null && brandingModel.getBody().getUser_message() != null) {
-                editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingModel.getBody().getUser_message().getBg_color());
-                editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingModel.getBody().getUser_message().getColor());
-            }
-
-            if (brandingModel.getGeneral() != null && brandingModel.getGeneral().getColors() != null && brandingModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                editor.putString(BotResponse.BUTTON_ACTIVE_BG_COLOR, brandingModel.getGeneral().getColors().getPrimary());
-                editor.putString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, brandingModel.getGeneral().getColors().getPrimary_text());
-                editor.putString(BotResponse.BUTTON_INACTIVE_BG_COLOR, brandingModel.getGeneral().getColors().getSecondary());
-                editor.putString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, brandingModel.getGeneral().getColors().getSecondary_text());
-                SDKConfiguration.BubbleColors.quickReplyColor = brandingModel.getGeneral().getColors().getSecondary();
-                SDKConfiguration.BubbleColors.quickReplyTextColor = brandingModel.getGeneral().getColors().getPrimary();
-                SDKConfiguration.BubbleColors.quickBorderColor = brandingModel.getGeneral().getColors().getSecondary_text();
-                editor.putString(BotResponse.BUBBLE_LEFT_BG_COLOR, brandingModel.getGeneral().getColors().getSecondary());
-                editor.putString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, brandingModel.getGeneral().getColors().getPrimary_text());
-                editor.putString(BotResponse.BUBBLE_RIGHT_BG_COLOR, brandingModel.getGeneral().getColors().getPrimary());
-                editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, brandingModel.getGeneral().getColors().getSecondary_text());
-            }
-            editor.apply();
-        }
     }
 
     protected class SaveCapturedImageTask extends AsyncTaskExecutor<String> {

@@ -1,6 +1,7 @@
 package kore.botssdk.viewholders;
 
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
+
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;

@@ -1,5 +1,6 @@
 package kore.botssdk.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BotHistoryMessage {
@@ -17,6 +18,7 @@ public class BotHistoryMessage {
     private Integer v;
     private String resourceid;
     private String lmodifiedBy;
+    private TagsModel tags;
 
     public String getId() {
         return _id;
@@ -128,5 +130,13 @@ public class BotHistoryMessage {
 
     public void setLmodifiedBy(String lmodifiedBy) {
         this.lmodifiedBy = lmodifiedBy;
+    }
+
+    public TagsModel getTags() {
+        return tags;
+    }
+
+    public void setTags(TagsModel tags) {
+        this.tags = tags;
     }
 }

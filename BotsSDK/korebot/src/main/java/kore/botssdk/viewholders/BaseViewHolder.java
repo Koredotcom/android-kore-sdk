@@ -4,11 +4,11 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -26,22 +26,22 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
-import com.emojione.tools.Client;
 import com.google.gson.Gson;
 
-import java.io.IOException;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
@@ -56,6 +56,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.EmojiUtils;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -64,20 +65,22 @@ import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.LinkifyTextView;
 
+@SuppressWarnings("UnKnownNullness")
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public static final int[] MATERIAL_COLORS = {
             Color.parseColor("#4A9AF2"), Color.parseColor("#5BC8C4"), Color.parseColor("#e74c3c"), Color.parseColor("#3498db")
     };
     public static final int HOLO_BLUE = Color.rgb(51, 181, 229);
-    private final Context context;
+    final Context context;
     private final String REGEX_CHAR = "%%.*?%%";
-    private final Gson gson = new Gson();
+    final Gson gson = new Gson();
     private boolean isLastItem = true;
-    private LinkifyTextView bubbleText;
+    LinkifyTextView bubbleText;
 
     protected ComposeFooterInterface composeFooterInterface;
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     protected ChatContentStateListener contentStateListener;
+    SharedPreferences sharedPreferences;
 
     protected static View createView(int layoutId, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -91,6 +94,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public BaseViewHolder(@NonNull View itemView, Context context) {
         super(itemView);
         this.context = context;
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         TextView timeStamp = itemView.findViewById(R.id.time_stamp);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) timeStamp.getLayoutParams();
         if (this instanceof RequestTextTemplateHolder) {
@@ -112,31 +116,35 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public void setBotIcon(String iconUrl) {
         ImageView botIcon = itemView.findViewById(R.id.bot_icon);
         if (botIcon != null) {
-            boolean isShowIcon = SDKConfiguration.BubbleColors.showIcon && iconUrl != null;
-            botIcon.setVisibility(isShowIcon ? View.VISIBLE : View.GONE);
-            if (isShowIcon) {
-                Glide.with(context).load(iconUrl).error(R.mipmap.ic_launcher).into(new DrawableImageViewTarget(botIcon));
+            botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon ? View.VISIBLE : View.GONE);
+            if (SDKConfiguration.BubbleColors.showIcon) {
+                if (StringUtils.isNotEmpty(iconUrl))
+                    Glide.with(context).load(iconUrl).error(R.mipmap.ic_launcher).into(new DrawableImageViewTarget(botIcon));
+                else
+                    botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.mipmap.ic_launcher, context.getTheme()));
             }
 
-            if(SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.OverrideKoreConfig.showIconTop) {
+            if (SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.OverrideKoreConfig.showIconTop) {
                 LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
-                params.topMargin = (int) (17 * dp1);
+                params.topMargin = (int) (21 * dp1);
             }
         }
     }
 
-    public void setMsgTime(String msgTime, boolean isBotRequest) {
+    public void setMsgTime(String msgTime, boolean isBotRequest, int viewType) {
         TextView msgTimeView = itemView.findViewById(R.id.msg_time);
-        msgTimeView.setVisibility(SDKConfiguration.isTimeStampsRequired() ? View.VISIBLE : View.GONE);
-        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams)msgTimeView.getLayoutParams();
+        msgTimeView.setVisibility((SDKConfiguration.isTimeStampsRequired() && viewType < 2) ? View.VISIBLE : View.GONE);
+        LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) msgTimeView.getLayoutParams();
 
         if (SDKConfiguration.isTimeStampsRequired()) {
             LinearLayoutCompat contentLayout = itemView.findViewById(R.id.contentLayout);
             if (isBotRequest) {
                 contentLayout.setGravity(Gravity.END);
-                params.rightMargin = (int)(5 * dp1);
+                params.rightMargin = (int) (5 * dp1);
             }
+
             msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
+            msgTimeView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
         }
     }
 
@@ -144,6 +152,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         TextView timeStampView = itemView.findViewById(R.id.time_stamp);
         timeStampView.setVisibility(timeStamp != null && !timeStamp.isEmpty() ? View.VISIBLE : View.GONE);
         timeStampView.setText(timeStamp);
+        timeStampView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -168,7 +177,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         return compModel;
     }
 
-    private String getRemovedEntityEditString(String _str) {
+    String getRemovedEntityEditString(String _str) {
         String str = _str.replaceAll(REGEX_CHAR, "");
         str = str.replaceAll("\\s{2,}", " ");
         return str;
@@ -205,7 +214,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         String leftTextColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#000000");
         String rightBgColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9");
         String rightTextColor = sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, "#000000");
-        String bubble_style = sharedPreferences.getString(BundleConstants.BUBBLE_STYLE, "rounded");
+        String bubble_style = sharedPreferences.getString(BotResponse.BUBBLE_STYLE, "rounded");
 
         //1st & 2nd - topLeft, 3rd & 4th - topRight, 5th & 6th - bottomRight 7th & 8th - bottomLeft
         float[] roundedRadii = {16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1, 16 * dp1};
@@ -223,7 +232,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 params.bottomMargin = ChatAdapterItemDecoration.commonVerticalMargin * 2;
             }
             Typeface regular = KaFontUtils.getCustomTypeface("regular", context);
-
 
             GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_left_bubble_bg, context.getTheme());
 
@@ -269,11 +277,14 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    protected void setResponseText(LinearLayoutCompat layoutBubble, String textualContent) {
+    protected void setResponseText(LinearLayoutCompat layoutBubble, String textualContent, String msgTime) {
+        if (layoutBubble == null) return;
         if (bubbleText == null) initBubbleText(layoutBubble, false);
         bubbleText.setVisibility(View.VISIBLE);
         bubbleText.setText("");
         if (textualContent != null && !textualContent.isEmpty()) {
+            if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable)
+                textualContent = EmojiUtils.replaceEmoticonsWithEmojis(textualContent);
             textualContent = unescapeHtml4(textualContent.trim());
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             textualContent = MarkdownUtil.processMarkDown(textualContent);
@@ -351,63 +362,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
             if (isPencilSpanClick && !isLastItem()) {
                 bubbleText.setText(getRemovedEntityEditString(strBuilder.toString()));
-            } else {
-                String REGEX_SMILEY = ":)";
-                String REGEX_THUMBS_UP = ":thumbsup";
-                String REGEX_SAD = ":(";
-                String regex = "";
-                String start = "";
-                String end = "";
-
-                if (strBuilder.toString().contains(REGEX_SMILEY)) {
-                    regex = REGEX_SMILEY;
-                    start = ":";
-                    end = ")";
-                } else if (strBuilder.toString().contains(REGEX_THUMBS_UP)) {
-                    regex = REGEX_SMILEY;
-                    start = ":";
-                    end = "p";
-                } else if (strBuilder.toString().contains(REGEX_SAD)) {
-                    regex = REGEX_SMILEY;
-                    start = ":";
-                    end = "(";
-                }
-                if (!regex.isEmpty()) {
-                    bubbleText.setText(strBuilder);
-
-                    Client client = new Client(context);
-                    client.setAscii(true);              // convert ascii smileys? =)
-                    client.setShortcodes(true);         // convert shortcodes? :joy:
-                    client.setGreedyMatch(true);        // true enables less strict unicode matching
-                    client.setRiskyMatchAscii(true);
-
-                    SpannableStringBuilder finalStrBuilder1 = strBuilder;
-                    String finalStart = start;
-                    String finalEnd = end;
-                    client.shortnameToImage(regex, (int) (20 * dp1), new com.emojione.tools.Callback() {
-                        @Override
-                        public void onFailure(IOException e) {
-                            bubbleText.setText(e.getMessage());
-                        }
-
-                        @Override
-                        public void onSuccess(final SpannableStringBuilder ssb) {
-                            int startIndex = finalStrBuilder1.toString().indexOf(finalStart);
-                            int endIndex = finalStrBuilder1.toString().indexOf(finalEnd, startIndex);
-
-                            if (startIndex != -1 && endIndex != -1) finalStrBuilder1.delete(startIndex, endIndex + 1);
-
-                            finalStrBuilder1.append(ssb);
-                            bubbleText.setText(finalStrBuilder1);
-                        }
-                    });
-                } else {
-                    bubbleText.setText(strBuilder);
-                }
             }
 
+            bubbleText.setText(strBuilder);
             bubbleText.setMovementMethod(LinkMovementMethod.getInstance());
             bubbleText.setVisibility(View.VISIBLE);
+            setMsgTime(msgTime, false, 0);
         } else {
             bubbleText.setText("");
             bubbleText.setVisibility(View.GONE);
@@ -420,10 +380,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         int flags = strBuilder.getSpanFlags(span);
         ClickableSpan clickable = new ClickableSpan() {
             public void onClick(@NonNull View view) {
-                Intent intent = new Intent(context, GenericWebViewActivity.class);
-                intent.putExtra("url", span.getURL());
-                intent.putExtra("header", context.getResources().getString(R.string.app_name));
-                context.startActivity(intent);
+                if (invokeGenericWebViewInterface != null)
+                    invokeGenericWebViewInterface.invokeGenericWebView(span.getURL());
             }
         };
         strBuilder.setSpan(clickable, start, end, flags);
@@ -468,7 +426,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         this.contentStateListener = contentStateListener;
     }
 
-    protected void setRoundedCorner(View view, float radius) {
+    public static void setRoundedCorner(View view, float radius) {
         view.setOutlineProvider(new ViewOutlineProvider() {
             @Override
             public void getOutline(View view, Outline outline) {
@@ -477,5 +435,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             }
         });
         view.setClipToOutline(true);
+    }
+
+    public static Drawable getTintDrawable(Context context, String color, int drawable) {
+        Drawable buttonDrawable = Objects.requireNonNull(AppCompatResources.getDrawable(context, drawable)).mutate();
+        Drawable wrappedDrawable = DrawableCompat.wrap(buttonDrawable);
+        DrawableCompat.setTint(wrappedDrawable, Color.parseColor(color));
+        return wrappedDrawable;
     }
 }

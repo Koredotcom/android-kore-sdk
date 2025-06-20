@@ -5,9 +5,11 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,12 +53,13 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         List<BotTableDataModel> rows = payloadInner.getTable_elements_data();
         List<List<String>> columns = payloadInner.getColumns();
-        if (rows == null || columns == null) return;
+        tvShowMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+        rvTableView.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+        setRoundedCorner(rvTableView, 4 * dp1);
 
-        tvShowMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
         tvShowMore.setOnClickListener(view -> showTableViewDialog(view.getContext(), columns, rows));
         rvTableView.setAdapter(new TableResponsiveAdapter(itemView.getContext(), rows, columns));
     }
@@ -66,6 +69,7 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         dialog.setContentView(R.layout.table_dialog_view);
         RecyclerView rvTableView = dialog.findViewById(R.id.rvTableView);
         RecyclerView rvTableViewHeader = dialog.findViewById(R.id.rvTableViewHeader);
+        RelativeLayout rlRootView = dialog.findViewById(R.id.rlRootView);
         ImageView ivCancel = dialog.findViewById(R.id.ivCancel);
 
         ivCancel.setOnClickListener(view -> dialog.dismiss());
@@ -76,6 +80,13 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         for (BotTableDataModel model : values) {
             rowValues.add(model.getValues());
         }
+
+        GradientDrawable gradientDrawable = (GradientDrawable) rvTableViewHeader.getBackground().mutate();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+
+        GradientDrawable gradientDDrawable = (GradientDrawable) rlRootView.getBackground().mutate();
+        gradientDDrawable.setStroke((int) (1 * dp1), Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
+
         rvTableView.setAdapter(new TableRowAdapter(context, rowValues, cols, isLastItem()));
         rvTableViewHeader.setLayoutManager(new GridLayoutManager(context, cols.size()));
         rvTableViewHeader.setAdapter(new TableHeaderAdapter(context, cols, isLastItem()));

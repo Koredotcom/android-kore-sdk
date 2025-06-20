@@ -31,23 +31,27 @@
         android:orientation="horizontal"
         android:visibility="gone">
 
-        <androidx.appcompat.widget.AppCompatCheckBox
+        <LinearLayout
             android:id="@+id/check_select_all"
-            android:layout_width="@dimen/dimen_30dp"
-            android:layout_height="30dp"
+            android:layout_width="@dimen/dimen_25dp"
+            android:layout_height="@dimen/dimen_25dp"
             android:layout_centerVertical="true"
-            android:button="@drawable/multi_checkbox_drawable"
-            android:buttonTintMode="multiply"
-            android:gravity="center"
-            android:padding="10dp" />
+            android:background="@drawable/check_bg">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_25dp"
+                android:layout_height="@dimen/dimen_25dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:padding="@dimen/dimen_5dp"
+                android:src="@drawable/check_icon" />
+        </LinearLayout>
 
         <kore.botssdk.view.CustomTextView
             android:id="@+id/text_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dimen_12dp"
-            android:layout_marginEnd="@dimen/dimen_10dp"
-            android:layout_marginBottom="@dimen/dimen_12dp"
+            android:layout_margin="@dimen/dimen_10dp"
             android:layout_toEndOf="@+id/check_select_all"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
@@ -57,7 +61,6 @@
             android:text="@string/select_all"
             android:textColor="@color/kora_grey"
             android:textSize="@dimen/text_size_normal" />
-
     </RelativeLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -66,6 +69,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_10dp"
         android:layout_marginEnd="@dimen/dimen_10dp"
+        android:divider="@color/white"
+        android:dividerHeight="@dimen/dimen_10dp"
         android:visibility="visible" />
 
     <RelativeLayout

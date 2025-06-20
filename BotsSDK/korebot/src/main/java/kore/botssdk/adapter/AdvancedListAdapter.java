@@ -1,20 +1,25 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.view.View.GONE;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
+import android.graphics.drawable.VectorDrawable;
 import android.text.SpannableStringBuilder;
 import android.util.Base64;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,8 +47,10 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.AdvanceOptionsModel;
 import kore.botssdk.models.AdvancedListModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.HeaderOptionsModel;
 import kore.botssdk.models.Widget;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
@@ -52,22 +59,24 @@ import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
+@SuppressLint("UnknownNullness")
 public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonClickListner {
     private ArrayList<AdvancedListModel> botListModelArrayList = new ArrayList<>();
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final LayoutInflater ownLayoutInflator;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final Context context;
     private final RoundedCornersTransform roundedCornersTransform;
-    private final ListView parentListView;
+    final ListView parentListView;
     private int count;
-    private final PopupWindow popupWindow, btnsPopUpWindow;
+    final PopupWindow popupWindow, btnsPopUpWindow;
     private final View popUpView, btnsPopUpView;
+    private final SharedPreferences prefs;
 
     public AdvancedListAdapter(Context context, ListView parentListView) {
-        this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
+        prefs = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE);
         this.roundedCornersTransform = new RoundedCornersTransform();
+        roundedCornersTransform.setRadius(10);
         this.parentListView = parentListView;
         popUpView = View.inflate(context, R.layout.advancelist_drop_down_popup, null);
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -131,9 +140,11 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
     private void populateVIew(ViewHolder holder, int position) {
         AdvancedListModel botListModel = getItem(position);
-
+        holder.buttonMore.setTextColor(Color.parseColor(prefs.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        VectorDrawable drawable = (VectorDrawable) holder.ivBtnImage.getBackground();
+        drawable.setTintList(ColorStateList.valueOf(Color.parseColor(prefs.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#3F51B5"))));
         if (!StringUtils.isNullOrEmpty(botListModel.getIcon())) {
-            holder.botListItemImage.setVisibility(View.VISIBLE);
+            holder.ivDescription.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
             layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
             layoutParams.setMargins(0, 0, 10, 0);
@@ -148,7 +159,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 }
             }
 
-            holder.botListItemImage.setLayoutParams(layoutParams);
+            holder.ivDescription.setLayoutParams(layoutParams);
 
             try {
                 String imageData;
@@ -157,12 +168,12 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     imageData = imageData.substring(imageData.indexOf(",") + 1);
                     byte[] decodedString = Base64.decode(imageData.getBytes(), Base64.DEFAULT);
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                    holder.botListItemImage.setImageBitmap(decodedByte);
+                    holder.ivDescription.setImageBitmap(decodedByte);
                 } else {
-                    Picasso.get().load(botListModel.getIcon()).transform(roundedCornersTransform).into(holder.botListItemImage);
+                    Picasso.get().load(botListModel.getIcon()).transform(roundedCornersTransform).into(holder.ivDescription);
                 }
             } catch (Exception e) {
-                holder.botListItemImage.setVisibility(GONE);
+                holder.ivDescription.setVisibility(GONE);
             }
         }
 
@@ -184,7 +195,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
             holder.botListItemSubtitle.setText(botListModel.getDescription());
 
-            if (botListModel.getDescriptionStyles() != null && !StringUtils.isNullOrEmpty(botListModel.getDescriptionStyles().getColor()))
+            if (botListModel.getDescriptionStyles() != null && botListModel.getDescriptionStyles().getColor() != null)
                 holder.botListItemSubtitle.setTextColor(Color.parseColor(botListModel.getDescriptionStyles().getColor()));
         }
 
@@ -205,17 +216,10 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 holder.ivDescription.setVisibility(GONE);
             }
 
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.ivDescription.getLayoutParams();
-            RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) holder.botListItemTitle.getLayoutParams();
-            RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) holder.botListItemSubtitle.getLayoutParams();
-
-            params.addRule(RelativeLayout.CENTER_VERTICAL);
-            params.addRule(RelativeLayout.ALIGN_PARENT_START);
-            params1.addRule(RelativeLayout.END_OF, R.id.ivDescription);
-            params2.addRule(RelativeLayout.END_OF, R.id.ivDescription);
-            params2.addRule(RelativeLayout.BELOW, R.id.bot_list_item_title);
-
             if (!StringUtils.isNullOrEmpty(botListModel.getDescriptionIconAlignment())) {
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) holder.ivDescription.getLayoutParams();
+                RelativeLayout.LayoutParams params1 = (RelativeLayout.LayoutParams) holder.botListItemTitle.getLayoutParams();
+                RelativeLayout.LayoutParams params2 = (RelativeLayout.LayoutParams) holder.botListItemSubtitle.getLayoutParams();
 
                 if (botListModel.getDescriptionIconAlignment().equalsIgnoreCase("right")) {
                     params.addRule(RelativeLayout.CENTER_VERTICAL);
@@ -229,11 +233,11 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     params2.addRule(RelativeLayout.RIGHT_OF, R.id.ivDescription);
                     params2.addRule(RelativeLayout.BELOW, R.id.bot_list_item_title);
                 }
-            }
 
-            holder.botListItemSubtitle.setLayoutParams(params2);
-            holder.ivDescription.setLayoutParams(params);
-            holder.botListItemTitle.setLayoutParams(params1);
+                holder.botListItemSubtitle.setLayoutParams(params2);
+                holder.ivDescription.setLayoutParams(params);
+                holder.botListItemTitle.setLayoutParams(params1);
+            }
         }
 
         LayerDrawable layerDrawable = (LayerDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.advanced_cell_bg, context.getTheme());
@@ -255,9 +259,9 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 String[] color = botListModel.getElementStyles().getBorder().split(" ");
 
                 if (layerDrawable != null) {
-                    GradientDrawable backgroundColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_bottom_stroke);
+                    GradientDrawable backgroundColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_bottom_stroke).mutate();
                     backgroundColor.setColor(Color.parseColor(color[1]));
-                    GradientDrawable bagColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_navbar_background);
+                    GradientDrawable bagColor = (GradientDrawable) layerDrawable.findDrawableByLayerId(R.id.item_navbar_background).mutate();
 
                     if (!StringUtils.isNullOrEmpty(botListModel.getElementStyles().getBorderRadius())) {
                         String radius = botListModel.getElementStyles().getBorderRadius().replaceAll("[^0-9]", "");
@@ -274,24 +278,22 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         holder.botListItemRoot.setBackground(layerDrawable);
 
         if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.DEFAULT)) {
-            if (botListModel.getTextInformation() != null && botListModel.getTextInformation().size() > 0) {
+            if (botListModel.getTextInformation() != null && !botListModel.getTextInformation().isEmpty()) {
                 holder.lvDetails.setVisibility(View.VISIBLE);
                 holder.lvDetails.setAdapter(new AdvanceListdetailsAdapter(context, botListModel.getTextInformation()));
             }
 
-            if (botListModel.getButtons() != null && botListModel.getButtons().size() > 0) {
+            if (botListModel.getButtons() != null && !botListModel.getButtons().isEmpty()) {
                 int displayLimit = 0;
                 holder.rvDefaultButtons.setVisibility(View.VISIBLE);
                 holder.llButtonMore.setVisibility(GONE);
-                holder.rvDefaultButtons.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
+                holder.rvDefaultButtons.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), botListModel.getButtonsLayout() != null && !StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                 if (botListModel.getButtonsLayout() != null &&
                         botListModel.getButtonsLayout().getDisplayLimit() != null) {
-                    advanceListButtonAdapter.setType(!StringUtils.isNullOrEmpty(botListModel.getButtonsLayout().getButtonAligment()) ? botListModel.getButtonsLayout().getButtonAligment() : BundleConstants.DEFAULT);
                     displayLimit = botListModel.getButtonsLayout().getDisplayLimit().getCount();
                 }
-
                 advanceListButtonAdapter.setDisplayLimit(displayLimit);
                 holder.rvDefaultButtons.setAdapter(advanceListButtonAdapter);
 
@@ -309,8 +311,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     ImageView ivDropDownCLose = btnsPopUpView.findViewById(R.id.ivDropDownCLose);
 
                     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                    AdvanceListButtonAdapter advanceButtonAdapter = new AdvanceListButtonAdapter(context, tempBtns, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
-                    advanceButtonAdapter.setType(BundleConstants.FULL_WIDTH);
+                    AdvanceListButtonAdapter advanceButtonAdapter = new AdvanceListButtonAdapter(context, tempBtns, BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                     recyclerView.setAdapter(advanceButtonAdapter);
 
                     ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
@@ -331,12 +332,12 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         } else if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.OPTIONS)) {
             AdvanceOptionsAdapter advanceOptionsAdapter = null;
 
-            if (botListModel.getOptionsData() != null && botListModel.getOptionsData().size() > 0) {
+            if (botListModel.getOptionsData() != null && !botListModel.getOptionsData().isEmpty()) {
                 holder.llOptions.setVisibility(View.VISIBLE);
                 holder.lvOptions.setAdapter(advanceOptionsAdapter = new AdvanceOptionsAdapter(context, botListModel.getOptionsData()));
             }
 
-            if (botListModel.getButtons() != null && botListModel.getButtons().size() > 0) {
+            if (botListModel.getButtons() != null && !botListModel.getButtons().isEmpty()) {
                 if (!StringUtils.isNullOrEmpty(botListModel.getButtonAligment())) {
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     params.gravity = Gravity.START;
@@ -349,19 +350,18 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
                 holder.rvOptionButtons.setVisibility(View.VISIBLE);
                 holder.rvOptionButtons.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
-                advanceListButtonAdapter.setType(BundleConstants.DEFAULT);
+                AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, botListModel.getButtons(), BundleConstants.DEFAULT, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, true);
                 advanceListButtonAdapter.setListAdapter(advanceOptionsAdapter);
                 holder.rvOptionButtons.setAdapter(advanceListButtonAdapter);
             }
         } else if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.TABLE)) {
-            if (botListModel.getTableListData() != null && botListModel.getTableListData().size() > 0) {
+            if (botListModel.getTableListData() != null && !botListModel.getTableListData().isEmpty()) {
                 holder.lvTableList.setVisibility(View.VISIBLE);
                 holder.lvTableList.setAdapter(new AdvanceTableListOuterAdapter(context, botListModel.getTableListData()));
             }
         }
 
-        if (botListModel.getHeaderOptions() != null && botListModel.getHeaderOptions().size() > 0) {
+        if (botListModel.getHeaderOptions() != null && !botListModel.getHeaderOptions().isEmpty()) {
             holder.rlAction.setVisibility(View.VISIBLE);
 
             for (HeaderOptionsModel headerOptionsModel : botListModel.getHeaderOptions()) {
@@ -396,32 +396,30 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setMovementMethod(null);
 
                         if (headerOptionsModel.getButtonStyles() != null) {
-                            GradientDrawable gradientDrawable = (GradientDrawable) holder.tvAction.getBackground();
-                            if (gradientDrawable != null) {
-                                gradientDrawable.setCornerRadius(3 * dp1);
-                                if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorderColor())) {
-                                    if (!headerOptionsModel.getButtonStyles().getBorderColor().contains("#"))
-                                        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBorderColor()));
-                                    else
-                                        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(headerOptionsModel.getButtonStyles().getBorderColor()));
-                                } else if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorder())) {
-                                    String[] border = headerOptionsModel.getButtonStyles().getBorder().split("#");
-                                    if (border.length > 0)
-                                        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + border[1]));
-                                } else
-                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#224741fa"));
+                            GradientDrawable gradientDrawable = (GradientDrawable) holder.tvAction.getBackground().mutate();
+                            gradientDrawable.setCornerRadius(3 * dp1);
+                            if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorderColor())) {
+                                if (!headerOptionsModel.getButtonStyles().getBorderColor().contains("#"))
+                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBorderColor()));
+                                else
+                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(headerOptionsModel.getButtonStyles().getBorderColor()));
+                            } else if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorder())) {
+                                String[] border = headerOptionsModel.getButtonStyles().getBorder().split("#");
+                                if (border.length > 0)
+                                    gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#" + border[1]));
+                            } else
+                                gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor("#224741fa"));
 
-                                if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBackground())) {
-                                    if (!headerOptionsModel.getButtonStyles().getBackground().contains("#"))
-                                        gradientDrawable.setColor(Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBackground()));
-                                    else
-                                        gradientDrawable.setColor(Color.parseColor(headerOptionsModel.getButtonStyles().getBackground()));
-                                } else {
-                                    gradientDrawable.setColor(Color.parseColor("#224741fa"));
-                                }
+                            if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBackground())) {
+                                if (!headerOptionsModel.getButtonStyles().getBackground().contains("#"))
+                                    gradientDrawable.setColor(Color.parseColor("#" + headerOptionsModel.getButtonStyles().getBackground()));
+                                else
+                                    gradientDrawable.setColor(Color.parseColor(headerOptionsModel.getButtonStyles().getBackground()));
+                            } else {
+                                gradientDrawable.setColor(Color.parseColor("#224741fa"));
                             }
 
-                            if (headerOptionsModel.getButtonStyles() != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getColor()))
+                            if (headerOptionsModel.getButtonStyles() != null && headerOptionsModel.getButtonStyles().getColor() != null)
                                 holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
                         }
 
@@ -433,6 +431,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
                                     composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
                                 else {
+                                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
                                     botListModel.setCollapsed(!botListModel.isCollapsed());
                                     notifyDataSetChanged();
                                 }
@@ -450,10 +449,10 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setText(strBuilder);
                         holder.tvAction.setMovementMethod(null);
 
-                        GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground();
+                        GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground().mutate();
                         gradientDrawable.setStroke(0, null);
 
-                        if (headerOptionsModel.getStyles() != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getStyles().getColor())) {
+                        if (headerOptionsModel.getStyles() != null && headerOptionsModel.getStyles().getColor() != null) {
                             holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getStyles().getColor()));
                         }
 
@@ -490,7 +489,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setMovementMethod(null);
 
                         if (headerOptionsModel.getButtonStyles() != null) {
-                            GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground();
+                            GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.findViewById(R.id.tvAction).getBackground().mutate();
                             gradientDrawable.setCornerRadius(3 * dp1);
                             if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getBorderColor())) {
                                 if (!headerOptionsModel.getButtonStyles().getBorderColor().contains("#"))
@@ -513,7 +512,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 gradientDrawable.setColor(Color.parseColor("#224741fa"));
                             }
 
-                            if (!StringUtils.isNullOrEmpty(headerOptionsModel.getButtonStyles().getColor()))
+                            if (headerOptionsModel.getButtonStyles() != null && headerOptionsModel.getButtonStyles().getColor() != null)
                                 holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getButtonStyles().getColor()));
                         }
 
@@ -525,6 +524,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
                                     composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
                                 else {
+                                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
                                     botListModel.setCollapsed(!botListModel.isCollapsed());
                                     notifyDataSetChanged();
                                 }
@@ -538,8 +538,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         RecyclerView recyclerView = popUpView.findViewById(R.id.rvDropDown);
                         ImageView ivDropDownCLose = popUpView.findViewById(R.id.ivDropDownCLose);
                         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptionsModel.getDropdownOptions(), AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface);
-                        advanceListButtonAdapter.setType(BundleConstants.FULL_WIDTH);
+                        AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptionsModel.getDropdownOptions(), BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                         recyclerView.setAdapter(advanceListButtonAdapter);
 
                         ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
@@ -567,7 +566,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         holder.tvAction.setMovementMethod(null);
                         holder.tvAction.setBackground(null);
 
-                        if (headerOptionsModel.getStyles() != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getStyles().getColor())) {
+                        if (headerOptionsModel.getStyles() != null && headerOptionsModel.getStyles().getColor() != null) {
                             holder.tvAction.setTextColor(Color.parseColor(headerOptionsModel.getStyles().getColor()));
                         }
 
@@ -579,6 +578,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
             holder.ivAction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
                     botListModel.setCollapsed(!botListModel.isCollapsed());
                     notifyDataSetChanged();
                 }
@@ -627,7 +627,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     private void initializeViewHolder(View view) {
         ViewHolder holder = new ViewHolder();
         holder.botListItemRoot = view.findViewById(R.id.bot_list_item_root);
-        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
+//        holder.botListItemImage = view.findViewById(R.id.bot_list_item_image);
         holder.botListItemTitle = view.findViewById(R.id.bot_list_item_title);
         holder.botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
         holder.botListItemButton = view.findViewById(R.id.bot_list_item_button);
@@ -645,7 +645,9 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         holder.ivDescription = view.findViewById(R.id.ivDescription);
         holder.rlTitle = view.findViewById(R.id.rlTitle);
         holder.llButtonMore = view.findViewById(R.id.llButtonMore);
+        holder.buttonMore = view.findViewById(R.id.buttonTV);
         holder.llChildViews = view.findViewById(R.id.llChildViews);
+        holder.ivBtnImage = view.findViewById(R.id.ivBtnImage);
         view.setTag(holder);
     }
 
@@ -674,13 +676,15 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
             btnsPopUpWindow.dismiss();
     }
 
-    private static class ViewHolder {
+    static class ViewHolder {
         RelativeLayout botListItemRoot, rlDropDown, rlTitle, llChildViews;
-        ImageView botListItemImage, ivAction, ivDropDownAction, ivDescription;
+        ImageView /*botListItemImage,*/ ivAction, ivDropDownAction, ivDescription, ivBtnImage;
         TextView botListItemTitle, tvAction;
         TextView botListItemSubtitle;
         Button botListItemButton;
-        RecyclerView rvDropDownButtons, rvDefaultButtons, rvOptionButtons;
+        TextView buttonMore;
+        RecyclerView rvDefaultButtons;
+        RecyclerView rvOptionButtons;
         AutoExpandListView lvDetails, lvOptions, lvTableList;
         LinearLayout llOptions, llButtonMore, rlAction;
     }

@@ -302,5 +302,17 @@
     <string name="thumbs_up_image">thumbs up image</string>
     <string name="shopping_theme">Shopping theme</string>
     <string name="logo_theme">Logo theme</string>
+    <string name="share">Share</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="downloading">Downloading…</string>
+    <string name="downloading_file_name">Downloading to: \"/Downloads/KoreMedia/%s\". Please check in status bar!</string>
+    <string name="copy_to_clipboard">Copied to clipboard</string>
+    <string name="downloading_file">Downloading file…</string>
+    <string name="downloading_failed">Downloading failed!</string>
+    <string name="option">Option</string>
+    <string name="more_">… More</string>
+    <string name="suggested_faq">Suggested FAQ</string>
+    <string name="hi_shan_i_am_here_to_answer_n_your_questions_about_credit_card">Hi Shan, I am here to answer\n your questions about credit card.</string>
+    <string name="kevin_peterson">Kevin Peterson</string>
 
 </resources>

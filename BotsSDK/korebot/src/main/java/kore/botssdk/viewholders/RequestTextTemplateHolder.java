@@ -16,6 +16,8 @@ import kore.botssdk.R;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.EmojiUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
@@ -45,6 +47,8 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
         bubbleText.setText("");
         Context context = bubbleText.getContext();
         if (textualContent != null && !textualContent.isEmpty()) {
+            if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable)
+                textualContent = EmojiUtils.replaceEmoticonsWithEmojis(textualContent);
             textualContent = unescapeHtml4(textualContent.trim());
             textualContent = StringUtils.unescapeHtml3(textualContent.trim());
             CharSequence sequence = HtmlCompat.fromHtml(
@@ -63,6 +67,8 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
             bubbleText.setText(strBuilder);
             bubbleText.setMovementMethod(null);
             bubbleText.setVisibility(View.VISIBLE);
+
+            itemView.setOnClickListener(v -> composeFooterInterface.copyMessageToComposer(strBuilder.toString(), true));
         } else {
             bubbleText.setText("");
             bubbleText.setVisibility(View.GONE);

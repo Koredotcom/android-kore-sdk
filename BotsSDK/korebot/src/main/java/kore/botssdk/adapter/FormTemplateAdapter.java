@@ -1,6 +1,14 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
+
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.StateListDrawable;
+import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +28,7 @@ import kore.botssdk.utils.StringUtils;
 public class FormTemplateAdapter extends RecyclerView.Adapter<FormTemplateAdapter.ViewHolder> {
     private final List<BotFormTemplateModel> list;
     private final String textColor;
+    private SharedPreferences prefs;
 
     public FormTemplateAdapter(List<BotFormTemplateModel> list, String textColor) {
         this.list = list;
@@ -29,6 +38,8 @@ public class FormTemplateAdapter extends RecyclerView.Adapter<FormTemplateAdapte
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (prefs == null)
+            prefs = parent.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.form_templete_cell_view, parent, false));
     }
 
@@ -42,9 +53,13 @@ public class FormTemplateAdapter extends RecyclerView.Adapter<FormTemplateAdapte
         else
             holder.btnFieldButton.setText(R.string.ok);
 
-        String str = item.getLabel() + " : ";
+        String str = item.getLabel();
+        if (item.getType().equals("password")) {
+            holder.edtFormInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
         holder.tvFormFieldTitle.setText(str);
         holder.edtFormInput.setHint(item.getPlaceHolder());
+        holder.edtFormInput.setBackground(createEditTextBackground(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5"), "#A7A9BE"));
 
         if (!StringUtils.isNullOrEmpty(textColor)) {
             holder.tvFormFieldTitle.setTextColor(Color.parseColor(textColor));
@@ -58,6 +73,29 @@ public class FormTemplateAdapter extends RecyclerView.Adapter<FormTemplateAdapte
 
     private BotFormTemplateModel getItem(int position) {
         return list != null ? list.get(position) : null;
+    }
+
+    public static StateListDrawable createEditTextBackground(String focusedColor, String unfocusedColor) {
+        // Focused state drawable
+        GradientDrawable focusedDrawable = new GradientDrawable();
+        focusedDrawable.setShape(GradientDrawable.RECTANGLE);
+        focusedDrawable.setCornerRadius(6f); // adjust corner radius as needed
+        focusedDrawable.setStroke(2, Color.parseColor(focusedColor)); // stroke width and color
+        focusedDrawable.setColor(Color.WHITE); // background color
+
+        // Unfocused state drawable
+        GradientDrawable unfocusedDrawable = new GradientDrawable();
+        unfocusedDrawable.setShape(GradientDrawable.RECTANGLE);
+        unfocusedDrawable.setCornerRadius(6f);
+        unfocusedDrawable.setStroke(2, Color.parseColor(unfocusedColor));
+        unfocusedDrawable.setColor(Color.WHITE);
+
+        // State list drawable
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[]{android.R.attr.state_focused}, focusedDrawable);
+        states.addState(new int[]{}, unfocusedDrawable); // default state
+
+        return states;
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

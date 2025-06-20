@@ -37,7 +37,6 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
 public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
-
     private View view;
     private boolean isFromFullView;
     private ArrayList<BotListModel> model;
@@ -84,7 +83,7 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
         this.dp1 = (int) DimensionUtil.dp1;
         BotListViewTemplateAdapter botListTemplateAdapter;
         if (lvMoreData.getAdapter() == null) {
-            botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, model.size());
+            botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, model.size(), bottomSheetDialog);
             lvMoreData.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

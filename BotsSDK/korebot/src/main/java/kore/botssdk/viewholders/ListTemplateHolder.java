@@ -2,7 +2,6 @@ package kore.botssdk.viewholders;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -21,7 +20,6 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.PayloadInner;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 
 public class ListTemplateHolder extends BaseViewHolder {
@@ -39,19 +37,19 @@ public class ListTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         RecyclerView recyclerView = itemView.findViewById(R.id.botCustomListView);
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
-        botCustomListViewButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         ArrayList<BotListModel> listElements = payloadInner.getListElements();
         ArrayList<BotButtonModel> buttons = payloadInner.getButtons();
         recyclerView.setLayoutManager(new LinearLayoutManager(itemView.getContext()));
-        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int) (10 * dp1)));
-        ListTemplateAdapter botListTemplateAdapter = new ListTemplateAdapter(listElements, isLastItem());
+        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration((int) (1*dp1)));
+        ListTemplateAdapter botListTemplateAdapter;
+        botListTemplateAdapter = new ListTemplateAdapter(itemView.getContext(), listElements, isLastItem());
         recyclerView.setAdapter(botListTemplateAdapter);
         botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        if (buttons != null && buttons.size() > 0) {
+        if (buttons != null && !buttons.isEmpty()) {
             botCustomListViewButton.setText(buttons.get(0).getTitle());
             botCustomListViewButton.setOnClickListener(v -> {
                 BotButtonModel botButtonModel = buttons.get(0);

@@ -1,9 +1,16 @@
 package kore.botssdk.viewholders;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_TEXT_COLOR;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,9 +36,12 @@ import kore.botssdk.net.SDKConfiguration;
 public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements AdvanceMultiSelectListener {
     private ArrayList<AdvanceMultiSelectCollectionModel> allCheckedItems = new ArrayList<>();
     private String msgId = "";
+    private SharedPreferences prefs;
 
     public AdvanceMultiSelectTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
+        if (prefs == null)
+            prefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
     }
 
     public static AdvanceMultiSelectTemplateHolder getInstance(ViewGroup parent) {
@@ -42,6 +52,7 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getHeading(), baseBotMessage.getTimeStamp());
         msgId = ((BotResponse) baseBotMessage).getMessageId();
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
         if (contentState != null && contentState.containsKey(BotResponse.SELECTED_ITEM)) {
@@ -55,9 +66,11 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
         TextView tvViewMore = itemView.findViewById(R.id.tvViewMore);
         TextView tvAdvanceDone = itemView.findViewById(R.id.tvAdvanceDone);
         ArrayList<AdvancedMultiSelectModel> models = payloadInner.getAdvancedMultiSelectModels();
-        tvAdvanceDone.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
-        tvViewMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
-        tvAdvanceDone.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
+
+        GradientDrawable gradientDrawable = (GradientDrawable) tvAdvanceDone.getBackground().mutate();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        gradientDrawable.setColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        tvAdvanceDone.setTextColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_TEXT_COLOR, "#ffffff")));
 
         if (models != null && !models.isEmpty()) {
             multiSelectLayout.setVisibility(VISIBLE);
@@ -80,21 +93,26 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
             }
 
             tvViewMore.setOnClickListener(v -> {
+                if (!isLastItem()) return;
                 contentStateListener.onSaveState(msgId, true, BotResponse.IS_VIEW_MORE);
             });
 
             tvAdvanceDone.setOnClickListener(v -> {
                 if (!isLastItem()) return;
-                StringBuilder stringBuffer = new StringBuilder();
-                stringBuffer.append("Here are the selected items : ");
+                StringBuilder values = new StringBuilder();
+                StringBuilder titles = new StringBuilder();
+                titles.append("Here are the selected items : ");
+                values.append("Here are the selected items : ");
                 for (int i = 0; i < allCheckedItems.size(); i++) {
-                    stringBuffer.append(allCheckedItems.get(i).getValue());
-
-                    if (i != allCheckedItems.size() - 1)
-                        stringBuffer.append(",");
+                    titles.append(allCheckedItems.get(i).getTitle());
+                    values.append(allCheckedItems.get(i).getValue());
+                    if (i != allCheckedItems.size() - 1) {
+                        titles.append(", ");
+                        values.append(", ");
+                    }
                 }
 
-                composeFooterInterface.onSendClick(stringBuffer.toString(), stringBuffer.toString(), true);
+                composeFooterInterface.onSendClick(titles.toString(), values.toString(), true);
             });
 
         } else {

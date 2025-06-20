@@ -1,9 +1,13 @@
 package kore.botssdk.viewholders;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
+import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
+
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.Html;
 import android.view.View;
@@ -27,11 +31,14 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.LogUtils;
+import kore.botssdk.utils.SharedPreferenceUtils;
 
 public class ListViewTemplateHolder extends BaseViewHolder {
+    private SharedPreferences prefs;
     public static ListViewTemplateHolder getInstance(ViewGroup parent) {
         return new ListViewTemplateHolder(createView(R.layout.template_list_view, parent));
     }
@@ -40,6 +47,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         super(itemView, itemView.getContext());
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
         initBubbleText(layoutBubble, false);
+        prefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
     }
 
     @Override
@@ -54,27 +62,30 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         Context context = itemView.getContext();
         RecyclerView recyclerView = itemView.findViewById(R.id.botCustomListView);
         TextView botCustomListViewButton = itemView.findViewById(R.id.botCustomListViewButton);
+        TextView title = itemView.findViewById(R.id.title);
         ViewGroup botCustomListRoot = itemView.findViewById(R.id.botCustomListRoot);
-        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText());
+        setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(10));
-        if (listElements != null && listElements.size() > 0) {
+        String heading = payloadInner.getHeading();
+        title.setText(heading);
+        title.setVisibility(heading != null && !heading.isEmpty() ? VISIBLE : GONE);
+        if (listElements != null && !listElements.isEmpty()) {
             int size = moreCount != 0 && listElements.size() > moreCount ? moreCount : listElements.size();
-            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(listElements, isLastItem(), size);
+            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(context, listElements, isLastItem(), size);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             recyclerView.setAdapter(botListTemplateAdapter);
             if (isLastItem()) botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-
-            if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
-                botCustomListViewButton.setText(botButtonModelArrayList.get(0).getTitle());
-                botCustomListViewButton.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
+            if (botButtonModelArrayList != null && !botButtonModelArrayList.isEmpty()) {
+                botCustomListViewButton.setTextColor(Color.parseColor(prefs.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#ffffff")));
+                botCustomListViewButton.setText(Html.fromHtml("<u>" + botButtonModelArrayList.get(0).getTitle() + "</u>"));
                 botCustomListViewButton.setOnClickListener(v -> {
                     ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                    bottomSheetDialog.setisFromFullView(false);
+                    bottomSheetDialog.setIsFromFullView(false);
                     bottomSheetDialog.setSkillName("skillName", "trigger");
-                    bottomSheetDialog.setData(botListViewMoreDataModel);
+                    bottomSheetDialog.setData(payloadInner.getHeading() != null ? payloadInner.getHeading() : payloadInner.getText(), botListViewMoreDataModel);
                     bottomSheetDialog.setHeaderVisible(true);
                     if (isLastItem()) bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                     bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

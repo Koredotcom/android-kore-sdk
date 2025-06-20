@@ -1,16 +1,13 @@
 package kore.botssdk.adapter;
 
-import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
-
-import android.content.res.ColorStateList;
-import android.graphics.Color;
+import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,26 +17,30 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import io.noties.markwon.Markwon;
+import io.noties.markwon.html.HtmlPlugin;
+import io.noties.markwon.linkify.LinkifyPlugin;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapter.ViewHolder> {
-    private ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private final boolean isEnabled;
-    private final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
-    private final List<BotListModel> botListModels;
+    ComposeFooterInterface composeFooterInterface;
+    InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    final boolean isEnabled;
+    final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
+    final List<BotListModel> botListModels;
+    Context context;
 
-    public ListTemplateAdapter(List<BotListModel> botListModels, boolean isEnabled) {
+    public ListTemplateAdapter(Context context, List<BotListModel> botListModels, boolean isEnabled) {
         this.botListModels = botListModels;
         this.isEnabled = isEnabled;
+        this.context = context;
     }
 
     @NonNull
@@ -57,15 +58,18 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
             Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
         }
 
-        GradientDrawable gradientDrawable = (GradientDrawable) holder.botListItemRoot.getBackground();
-        gradientDrawable.setStroke((int) (1*dp1), ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
-
         holder.botListItemTitle.setTag(botListModel);
         holder.botListItemTitle.setText(botListModel.getTitle());
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         if (!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-            holder.botListItemSubtitle.setText(botListModel.getSubtitle());
+
+            Markwon markwon = Markwon.builder(holder.itemView.getContext())
+                    .usePlugin(HtmlPlugin.create())
+                    .usePlugin(LinkifyPlugin.create())
+                    .build();
+
+            markwon.setMarkdown(holder.botListItemSubtitle, botListModel.getSubtitle());
         }
         if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
             holder.botListItemButton.setVisibility(View.GONE);
@@ -87,23 +91,13 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
                 }
             });
         }
-
-        if (botListModel.getDefault_action() != null) {
-            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
-                holder.botListAction.setVisibility(View.VISIBLE);
-                holder.botListAction.setText(botListModel.getDefault_action().getUrl());
-                holder.botListAction.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
-            }
-        }
-
         holder.botListItemRoot.setOnClickListener(v -> {
             if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                BotListModel _botListModel = getItem(position);
-                if (_botListModel != null && _botListModel.getDefault_action() != null) {
-                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(_botListModel.getDefault_action().getUrl());
-                    } else if (isEnabled && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getDefault_action().getType())) {
-                        composeFooterInterface.onSendClick(_botListModel.getDefault_action().getPayload(), false);
+                if (botListModel.getDefault_action() != null) {
+                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(botListModel.getDefault_action().getUrl());
+                    } else if (isEnabled && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListModel.getDefault_action().getType())) {
+                        composeFooterInterface.onSendClick(botListModel.getDefault_action().getTitle(), botListModel.getDefault_action().getPayload(), false);
                     }
                 }
             }
@@ -120,12 +114,11 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {
-        RelativeLayout botListItemRoot;
+        LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;
         TextView botListItemSubtitle;
-        TextView botListItemButton;
-        TextView botListAction;
+        Button botListItemButton;
 
         public ViewHolder(@NonNull View view) {
             super(view);
@@ -134,7 +127,6 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
             botListItemTitle = view.findViewById(R.id.bot_list_item_title);
             botListItemSubtitle = view.findViewById(R.id.bot_list_item_subtitle);
             botListItemButton = view.findViewById(R.id.bot_list_item_button);
-            botListAction = view.findViewById(R.id.bot_list_action);
         }
     }
 

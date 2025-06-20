@@ -1,8 +1,15 @@
 package kore.botssdk.viewholders;
 
+import static android.content.Context.MODE_PRIVATE;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_TEXT_COLOR;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -10,6 +17,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -29,13 +38,14 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfiguration;
 
 public class DropDownTemplateHolder extends BaseViewHolder {
+    private final TextView tvDropDownHeading;
     private final TextView tvDropDownTitle;
     private final TextView tvSubmit;
     private final Spinner spinner;
     private String placeHolder;
     private String msgId;
     private int selectedIndex;
-    LinearLayoutCompat llSpinner;
+    private final SharedPreferences prefs;
 
     public static DropDownTemplateHolder getInstance(ViewGroup parent) {
         return new DropDownTemplateHolder(createView(R.layout.template_dropdown, parent));
@@ -43,10 +53,18 @@ public class DropDownTemplateHolder extends BaseViewHolder {
 
     private DropDownTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
+        prefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
         tvDropDownTitle = itemView.findViewById(R.id.tvDropDownTitle);
         tvSubmit = itemView.findViewById(R.id.submit);
         spinner = itemView.findViewById(R.id.spinner);
-        llSpinner = itemView.findViewById(R.id.llSpinner);
+        tvDropDownHeading = itemView.findViewById(R.id.tvDropDownHeading);
+        LinearLayoutCompat llSpinner = itemView.findViewById(R.id.llSpinner);
+        setRoundedCorner(llSpinner, 10);
+
+        GradientDrawable gradientDrawable = (GradientDrawable) tvSubmit.getBackground().mutate();
+        gradientDrawable.setStroke((int) (1 * dp1), Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        gradientDrawable.setColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        tvSubmit.setTextColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_TEXT_COLOR, "#ffffff")));
     }
 
     @Override
@@ -55,9 +73,11 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         if (payloadInner == null) return;
         msgId = ((BotResponse) baseBotMessage).getMessageId();
         tvDropDownTitle.setText(payloadInner.getLabel());
+        tvDropDownHeading.setVisibility(payloadInner.getHeading() != null ? VISIBLE : GONE);
+        tvDropDownHeading.setText(payloadInner.getHeading());
         placeHolder = payloadInner.getPlaceholder();
         List<DropDownElementsModel> elements = payloadInner.getDropDownElementsModels();
-        SpinnerAdapter dataAdapter = new SpinnerAdapter(itemView.getContext(), elements, spinner, isLastItem());
+        SpinnerAdapter dataAdapter = new SpinnerAdapter(itemView.getContext(), elements, spinner, isLastItem(), spinner.getSelectedItemPosition());
         spinner.setAdapter(dataAdapter);
         spinner.setPrompt(itemView.getContext().getString(R.string.select));
         spinner.setClickable(isLastItem());
@@ -65,21 +85,12 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
         selectedIndex = contentState != null && contentState.containsKey(BotResponse.SELECTED_ITEM) ? (int) contentState.get(BotResponse.SELECTED_ITEM) : -1;
         spinner.setSelection(selectedIndex);
-
-        GradientDrawable gradientDrawable = (GradientDrawable) llSpinner.getBackground();
-        gradientDrawable.setStroke((int) (1*dp1), ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor)));
-        gradientDrawable.setColor(ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor)));
-
-        tvSubmit.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
-        tvSubmit.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickBorderColor));
-
         tvSubmit.setOnClickListener(view -> {
             if (!isLastItem()) return;
             if (selectedIndex != -1 && !elements.get(selectedIndex).getTitle().equals(placeHolder)) {
-                composeFooterInterface.copyMessageToComposer(elements.get(selectedIndex).getTitle(), false);
+                composeFooterInterface.onSendClick(elements.get(selectedIndex).getTitle(), elements.get(selectedIndex).getValue(), false);
             }
         });
-
     }
 
     public class SpinnerAdapter extends BaseAdapter {
@@ -87,12 +98,16 @@ public class DropDownTemplateHolder extends BaseViewHolder {
         private final List<DropDownElementsModel> elements;
         private final Spinner spinner;
         private final boolean isLastItem;
+        private final int selectedPosition;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+        String leftBgColor = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
 
-        public SpinnerAdapter(Context context, List<DropDownElementsModel> elements, Spinner spinner, boolean isLastItem) {
+        public SpinnerAdapter(Context context, List<DropDownElementsModel> elements, Spinner spinner, boolean isLastItem, int selectedPosition) {
             this.inflater = LayoutInflater.from(context);
             this.elements = elements;
             this.spinner = spinner;
             this.isLastItem = isLastItem;
+            this.selectedPosition = selectedPosition;
         }
 
         @Override
@@ -117,11 +132,14 @@ public class DropDownTemplateHolder extends BaseViewHolder {
                 convertView = inflater.inflate(R.layout.drop_down_item_view, null);
                 holder = new ViewHolder();
                 holder.item = convertView.findViewById(R.id.item);
+                holder.llLayout = convertView.findViewById(R.id.bot_options_more);
+                holder.ivTick = convertView.findViewById(R.id.ivTick);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
+            holder.llLayout.setBackgroundColor(Color.WHITE);
+            holder.ivTick.setVisibility(GONE);
             holder.item.setText(elements.get(position).getTitle());
             holder.item.setOnClickListener(v -> {
                 hideSpinnerDropDown(spinner);
@@ -134,8 +152,27 @@ public class DropDownTemplateHolder extends BaseViewHolder {
             return convertView;
         }
 
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            LinearLayout view = (LinearLayout) super.getDropDownView(position, convertView, parent);
+            ImageView ivTick = view.findViewById(R.id.ivTick);
+
+            if ((selectedPosition == -1 && position == 0) || selectedPosition == position) {
+                view.setBackgroundColor(Color.parseColor(leftBgColor));
+                ColorStateList colorStateList = ColorStateList.valueOf(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+                ivTick.setImageTintList(colorStateList);
+                ivTick.setVisibility(VISIBLE);
+            } else {
+                view.setBackgroundColor(Color.WHITE);
+                ivTick.setVisibility(GONE);
+            }
+            return view;
+        }
+
         private class ViewHolder {
             TextView item;
+            LinearLayout llLayout;
+            ImageView ivTick;
         }
     }
 

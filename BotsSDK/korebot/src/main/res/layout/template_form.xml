@@ -33,8 +33,9 @@
         android:layout_height="@dimen/dimen_40dp"
         android:layout_margin="@dimen/dimen_3dp"
         android:layout_weight="0"
-        android:background="@drawable/form_button_bg"
+        android:background="@drawable/theme_1_button_bg"
         android:gravity="center"
         android:text="@string/ok"
+        android:textColor="@color/white"
         android:textStyle="bold" />
 </LinearLayout>

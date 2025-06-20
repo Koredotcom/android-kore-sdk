@@ -39,7 +39,6 @@ public class ContactCardItemAdapter extends RecyclerView.Adapter<ContactCardItem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ContactTemplateModel botListModel = getItem(position);
-        if (botListModel == null) return;
         if (!StringUtils.isNullOrEmpty(botListModel.getUserIcon())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
             Picasso.get().load("https://hs.sbcounty.gov/cn/Photo%20Gallery/_w/Sample%20Picture%20-%20Koala_jpg.jpg").transform(roundedCornersTransform).into(holder.botListItemImage);

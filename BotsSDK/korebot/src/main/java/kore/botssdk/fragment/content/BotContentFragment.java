@@ -53,20 +53,22 @@ public class BotContentFragment extends BaseContentFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = View.inflate(requireActivity(), R.layout.bot_content_layout, null);
+        BotContentViewModelFactory factory = new BotContentViewModelFactory(requireActivity(), BotContentFragment.this);
+        mContentViewModel = new ViewModelProvider(this, factory).get(BotContentViewModel.class);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         findViews(view);
         initializeBotTypingStatus(view, mChannelIconURL);
         setupAdapter();
-
-        BotContentViewModelFactory factory = new BotContentViewModelFactory(requireActivity(), BotContentFragment.this);
-        mContentViewModel = new ViewModelProvider(this, factory).get(BotContentViewModel.class);
-
-        return view;
     }
 
     private void findViews(View view) {
         botsBubblesListView = view.findViewById(R.id.chatContentListView);
         TextView headerView = view.findViewById(R.id.filesSectionHeader);
-        swipeRefreshLayout = view.findViewById(R.id.swipeContainerChat);
         quickReplyView = view.findViewById(R.id.quick_reply_view);
         rlBody = view.findViewById(R.id.rlBody);
 
@@ -86,6 +88,17 @@ public class BotContentFragment extends BaseContentFragment {
 
     @Override
     public void setBotBrandingModel(BotBrandingModel botBrandingModel) {
+        if (SDKConfiguration.OverrideKoreConfig.paginated_scroll_enable) {
+            swipeRefreshLayout.setEnabled(true);
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                if (botsChatAdapter != null)
+                    loadChatHistory(botsChatAdapter.getItemCount(), SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
+                else loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
+            });
+        } else {
+            swipeRefreshLayout.setEnabled(false);
+            swipeRefreshLayout.setRefreshing(false);
+        }
         if (botBrandingModel != null) {
             if (botBrandingModel.getBody() != null) {
                 BrandingBodyModel bodyModel = botBrandingModel.getBody();

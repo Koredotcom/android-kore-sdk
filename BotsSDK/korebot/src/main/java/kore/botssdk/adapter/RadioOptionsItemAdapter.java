@@ -1,5 +1,9 @@
 package kore.botssdk.adapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatRadioButton;
+import androidx.core.widget.CompoundButtonCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -15,6 +20,7 @@ import kore.botssdk.R;
 import kore.botssdk.listener.ChatContentStateListener;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.RadioOptionModel;
+import kore.botssdk.net.SDKConfiguration;
 
 public class RadioOptionsItemAdapter extends RecyclerView.Adapter<RadioOptionsItemAdapter.ViewHolder> {
     private AppCompatRadioButton rbItem;
@@ -47,6 +53,7 @@ public class RadioOptionsItemAdapter extends RecyclerView.Adapter<RadioOptionsIt
         RadioOptionModel item = getItem(position);
         if (item == null) return;
         rbItem.setText(item.getTitle());
+        setTintColor(rbItem);
         value.setText(item.getValue());
         rbItem.setChecked(selectedItem != -1 && selectedItem == position);
         rbItem.setOnCheckedChangeListener((compoundButton, isChecked) -> {
@@ -70,9 +77,29 @@ public class RadioOptionsItemAdapter extends RecyclerView.Adapter<RadioOptionsIt
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
         }
+    }
+
+    private void setTintColor(AppCompatRadioButton radioButton) {
+        SharedPreferences sharedPreferences = rbItem.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        String colorUnchecked = sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#FFFFFF");
+        String colorChecked = SDKConfiguration.BubbleColors.quickReplyColor;
+
+        ColorStateList tintList = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{-android.R.attr.state_checked}
+                },
+                new int[]{
+                        Color.parseColor(colorChecked),
+                        Color.parseColor(colorUnchecked)
+                }
+        );
+
+        CompoundButtonCompat.setButtonTintList(radioButton, tintList);
+        radioButton.getButtonDrawable().setTintList(tintList);
+        radioButton.invalidate();
     }
 }

@@ -8,16 +8,18 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.graphics.Shader;
 
 import com.squareup.picasso.Transformation;
 
 
 public class RoundedCornersTransform implements Transformation {
-    public void setR(float r) {
-        this.r = r;
+    public void setRadius(float radius) {
+        this.radius = radius;
     }
 
-    private float r = 0;
+    private float radius = 0;
+
     @Override
     public Bitmap transform(Bitmap source) {
         try {
@@ -26,26 +28,35 @@ public class RoundedCornersTransform implements Transformation {
             int x = (source.getWidth() - size) / 2;
             int y = (source.getHeight() - size) / 2;
 
+            // Crop the image to a square
             Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
             if (squaredBitmap != source) {
                 source.recycle();
             }
+
+            // Ensure the config is valid
             Bitmap.Config config = source.getConfig() != null ? source.getConfig() : Bitmap.Config.ARGB_8888;
 
+            // Create the output bitmap
             Bitmap bitmap = Bitmap.createBitmap(size, size, config);
 
+            // Set up canvas and paint
             Canvas canvas = new Canvas(bitmap);
             Paint paint = new Paint();
-            BitmapShader shader = new BitmapShader(squaredBitmap, BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
-            paint.setShader(shader);
             paint.setAntiAlias(true);
-            if (r == 0) {
-                r = size / 8f;
-            }
-            canvas.drawRoundRect(new RectF(0, 0, source.getWidth(), source.getHeight()), r, r, paint);
+
+            // Create the shader
+            BitmapShader shader = new BitmapShader(squaredBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            paint.setShader(shader);
+
+            // Corner radius
+            radius = size / 8f; // Or set a fixed value like 10f
+            canvas.drawRoundRect(new RectF(0f, 0f, size, size), radius, radius, paint);
+
+            // Clean up
             squaredBitmap.recycle();
             return bitmap;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;

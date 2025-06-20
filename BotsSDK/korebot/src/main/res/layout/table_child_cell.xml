@@ -8,5 +8,6 @@
     android:gravity="center"
     android:singleLine="true"
     android:text="@string/app_name"
+    android:textColor="@color/left_bubble_text_color"
     android:textIsSelectable="true"
     android:textSize="@dimen/text_size_small" />

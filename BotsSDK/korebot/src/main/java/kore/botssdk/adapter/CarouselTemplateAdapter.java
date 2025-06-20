@@ -1,8 +1,15 @@
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_TEXT_COLOR;
+import static kore.botssdk.models.BotResponse.THEME_NAME;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
@@ -45,11 +52,13 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final LayoutInflater layoutInflater;
+    private final SharedPreferences prefs;
 
     private String type;
 
     public CarouselTemplateAdapter(Context context) {
         layoutInflater = LayoutInflater.from(context);
+        prefs = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE);
     }
 
     @NonNull
@@ -67,14 +76,14 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
         if (!StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
             holder.carouselItemSubTitle.setText(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? botCarouselModel.getSubtitle() : Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
             holder.carouselItemSubTitle.setMaxLines(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? Integer.MAX_VALUE : 3);
-            holder.carouselItemSubTitle.setVisibility(View.VISIBLE);
+            holder.carouselItemSubTitle.setVisibility(VISIBLE);
         } else {
             holder.carouselItemSubTitle.setVisibility(GONE);
         }
         try {
             if (botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty()) {
                 Picasso.get().load(botCarouselModel.getImage_url()).into(holder.carouselItemImage);
-                holder.carouselItemImage.setVisibility(View.VISIBLE);
+                holder.carouselItemImage.setVisibility(VISIBLE);
             } else {
                 holder.carouselItemImage.setVisibility(GONE);
             }
@@ -91,13 +100,6 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             botCarouselItemButtonAdapter.populateData(botCarouselModel.getButtons(), isEnabled);
         }
 
-        if(botCarouselModel.getDefault_action() != null) {
-            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botCarouselModel.getDefault_action().getType())) {
-                holder.carouselAction.setVisibility(View.VISIBLE);
-                holder.carouselAction.setText(botCarouselModel.getDefault_action().getUrl());
-                holder.carouselAction.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyTextColor));
-            }
-        }
         String price = Utils.isNullOrEmpty(botCarouselModel.getPrice()) ? "" : botCarouselModel.getPrice();
         String cost_price = Utils.isNullOrEmpty(botCarouselModel.getCost_price()) ? "" : botCarouselModel.getCost_price();
 
@@ -109,42 +111,77 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
         StrikethroughSpan strikethroughSpan = new StrikethroughSpan();
 
         // Apply the strike through text to the span
-        ssBuilder.setSpan(
-                strikethroughSpan, // Span to add
+        ssBuilder.setSpan(strikethroughSpan, // Span to add
                 text.indexOf(price), // Start of the span (inclusive)
                 text.indexOf(price) + price.length(), // End of the span (exclusive)
                 Spanned.SPAN_EXCLUSIVE_EXCLUSIVE // Do not extend the span when text add later
         );
 
         if (!Utils.isNullOrEmpty(botCarouselModel.getPrice()) || !Utils.isNullOrEmpty(botCarouselModel.getCost_price())) {
-            holder.carouselOfferPrice_FL.setVisibility(View.VISIBLE);
-            if (!Utils.isNullOrEmpty(botCarouselModel.getCost_price()))
-                holder.carousel_item_offer.setText(ssBuilder);
-            else
-                holder.carousel_item_offer.setText(text);
+            holder.carouselOfferPrice_FL.setVisibility(VISIBLE);
+            if (!Utils.isNullOrEmpty(botCarouselModel.getCost_price())) holder.carousel_item_offer.setText(ssBuilder);
+            else holder.carousel_item_offer.setText(text);
         } else {
             holder.carouselOfferPrice_FL.setVisibility(View.GONE);
         }
 
         if (!Utils.isNullOrEmpty(botCarouselModel.getSaved_price())) {
-            holder.carouselSavedPrice_FL.setVisibility(View.VISIBLE);
+            holder.carouselSavedPrice_FL.setVisibility(VISIBLE);
             holder.carousel_item_save_price.setText(botCarouselModel.getSaved_price());
         } else {
             holder.carouselSavedPrice_FL.setVisibility(View.GONE);
         }
 
+        BotListDefaultModel botDefaultModel = botCarouselModel.getDefault_action();
+        if (botDefaultModel != null) {
+            holder.carouselItemDefaultAction.setVisibility(VISIBLE);
+            holder.carouselItemDefaultAction.setTextColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+
+            if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botDefaultModel.getType())) {
+                holder.carouselItemDefaultAction.setText(botDefaultModel.getUrl());
+            } else if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botDefaultModel.getType())) {
+                holder.carouselItemDefaultAction.setText(botCarouselModel.getDefault_action().getPayload());
+            } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botDefaultModel.getType())) {
+                holder.carouselItemDefaultAction.setText(botCarouselModel.getDefault_action().getPayload());
+            }
+        }
+
+        holder.carouselItemDefaultAction.setOnClickListener(v -> {
+            BotListDefaultModel botListDefaultModel = botCarouselModel.getDefault_action();
+            if (invokeGenericWebViewInterface != null && botListDefaultModel != null) {
+                if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(botListDefaultModel.getUrl());
+                    return;
+                } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    invokeGenericWebViewInterface.handleUserActions(botListDefaultModel.getAction(), botListDefaultModel.getCustomData());
+                    return;
+                }
+            }
+            if (isEnabled && composeFooterInterface != null && botListDefaultModel != null) {
+                if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                    composeFooterInterface.onSendClick(botCarouselModel.getDefault_action().getTitle(), buttonPayload, false);
+                } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
+                    String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                    composeFooterInterface.onSendClick(buttonPayload, false);
+                }
+            }
+        });
         holder.carouselItemRoot.setOnClickListener(v -> {
             BotListDefaultModel botListDefaultModel = botCarouselModel.getDefault_action();
             if (invokeGenericWebViewInterface != null && botListDefaultModel != null) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListDefaultModel.getType())) {
                     invokeGenericWebViewInterface.invokeGenericWebView(botListDefaultModel.getUrl());
+                    return;
                 } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botListDefaultModel.getType())) {
                     invokeGenericWebViewInterface.handleUserActions(botListDefaultModel.getAction(), botListDefaultModel.getCustomData());
+                    return;
                 }
-            } else if (isEnabled && composeFooterInterface != null && botListDefaultModel != null) {
+            }
+            if (isEnabled && composeFooterInterface != null && botListDefaultModel != null) {
                 if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
                     String buttonPayload = botCarouselModel.getDefault_action().getPayload();
-                    composeFooterInterface.onSendClick(buttonPayload, false);
+                    composeFooterInterface.onSendClick(botCarouselModel.getDefault_action().getTitle(), buttonPayload, false);
                 } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
                     String buttonPayload = botCarouselModel.getDefault_action().getPayload();
                     composeFooterInterface.onSendClick(buttonPayload, false);
@@ -152,6 +189,7 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             }
         });
 
+        holder.koraItems.setVisibility(View.GONE);
     }
 
     private BotCarouselModel getItem(int position) {
@@ -179,16 +217,20 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public ImageView carouselItemImage;
-        public TextView carouselItemTitle;
-        public TextView carouselAction;
-        public TextView carouselItemSubTitle;
-        public RecyclerView buttons;
-        public CardView carouselItemRoot;
-        public FrameLayout carouselOfferPrice_FL;
-        public FrameLayout carouselSavedPrice_FL;
-        public TextView carousel_item_offer;
-        public TextView carousel_item_save_price;
+        ImageView carouselItemImage;
+        TextView carouselItemTitle;
+        TextView carouselItemSubTitle;
+        TextView carouselItemDefaultAction;
+        TextView hashTagsView;
+        TextView knowledgeType;
+        TextView knowledgeMode;
+        RelativeLayout koraItems;
+        RecyclerView buttons;
+        CardView carouselItemRoot;
+        FrameLayout carouselOfferPrice_FL;
+        FrameLayout carouselSavedPrice_FL;
+        TextView carousel_item_offer;
+        TextView carousel_item_save_price;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -196,8 +238,12 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
             carouselItemImage = itemView.findViewById(R.id.carousel_item_image);
             carouselItemTitle = itemView.findViewById(R.id.carousel_item_title);
             carouselItemSubTitle = itemView.findViewById(R.id.carousel_item_subtitle);
-            carouselAction = itemView.findViewById(R.id.carouselAction);
+            carouselItemDefaultAction = itemView.findViewById(R.id.carousel_item_default_action);
             buttons = itemView.findViewById(R.id.carousel_button_listview);
+            hashTagsView = itemView.findViewById(R.id.hash_tags_view);
+            knowledgeType = itemView.findViewById(R.id.knowledge_type);
+            knowledgeMode = itemView.findViewById(R.id.knowledge_mode);
+            koraItems = itemView.findViewById(R.id.kora_items);
             carouselOfferPrice_FL = itemView.findViewById(R.id.offer_price_fl);
             carouselSavedPrice_FL = itemView.findViewById(R.id.saved_price_fl);
             carousel_item_offer = itemView.findViewById(R.id.carousel_item_offer);

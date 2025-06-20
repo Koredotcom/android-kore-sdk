@@ -1,9 +1,13 @@
 package kore.botssdk.models;
 
-public class ButtonsLayoutModel
-{
+public class ButtonsLayoutModel {
     private String buttonAligment;
     private DisplayLimit displayLimit;
+    private String style;
+
+    public String getStyle() {
+        return style;
+    }
 
     public String getButtonAligment() {
         return buttonAligment;
@@ -13,8 +17,7 @@ public class ButtonsLayoutModel
         return displayLimit;
     }
 
-    public class DisplayLimit
-    {
+    public class DisplayLimit {
         private int count;
 
         public int getCount() {

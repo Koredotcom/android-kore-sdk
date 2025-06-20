@@ -2,6 +2,7 @@ package kore.botssdk.viewholders;
 
 import static android.view.View.GONE;
 
+import android.graphics.Rect;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -18,7 +19,6 @@ import com.squareup.picasso.Picasso;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.AgentQuickOptionsTemplateAdapter;
-import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
@@ -82,6 +82,21 @@ public class AgentTransferTemplateHolder extends BaseViewHolder {
                 ivAgentImage.setVisibility(View.VISIBLE);
                 Picasso.get().load(payloadInner.getImage_url()).transform(circleTransform).into(ivAgentImage);
             }
+        }
+    }
+
+    public static class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
+
+        private final int verticalSpaceHeight;
+
+        public VerticalSpaceItemDecoration(int verticalSpaceHeight) {
+            this.verticalSpaceHeight = verticalSpaceHeight;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, @NonNull View view, @NonNull RecyclerView parent,
+                                   @NonNull RecyclerView.State state) {
+            outRect.bottom = verticalSpaceHeight;
         }
     }
 }

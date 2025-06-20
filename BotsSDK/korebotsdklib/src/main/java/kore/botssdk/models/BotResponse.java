@@ -8,6 +8,7 @@ import java.util.Map;
  */
 @SuppressWarnings("UnKnownNullness")
 public class BotResponse extends BaseBotMessage {
+    public static final String BUBBLE_STYLE = "BUBBLE_STYLE";
     public static final String TEMPLATE_TYPE_BUTTON = "button";
     public static final String TEMPLATE_TYPE_LIST = "list";
     public static final String TEMPLATE_TYPE_PIE_CHART = "piechart";
@@ -69,6 +70,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String STACKED = "stacked";
     public static final String TABLE_VIEW_RESPONSIVE = "responsive";
     public static final String IS_VIEW_MORE = "is_view_more";
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
 
     //widgets
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";

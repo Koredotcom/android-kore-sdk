@@ -2,7 +2,6 @@ package kore.botssdk.adapter;
 
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,17 +45,15 @@ public class TableListTemplateAdapter extends RecyclerView.Adapter<TableListTemp
             holder.botListItemTitle.setTag(botTableListModel);
             holder.botListItemTitle.setVisibility(View.VISIBLE);
             holder.botListItemTitle.setText(botTableListModel.getSectionHeader());
-            holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         }
 
         if (!StringUtils.isNullOrEmpty(botTableListModel.getSectionHeaderDesc())) {
             holder.botListItemDesc.setTag(botTableListModel);
             holder.botListItemDesc.setVisibility(View.VISIBLE);
             holder.botListItemDesc.setText(botTableListModel.getSectionHeaderDesc());
-            holder.botListItemDesc.setTypeface(null, Typeface.BOLD);
         }
 
-        if (botTableListModel.getRowItems() != null && botTableListModel.getRowItems().size() > 0) {
+        if (botTableListModel.getRowItems() != null && !botTableListModel.getRowItems().isEmpty()) {
             TableListInnerAdapter botTableListInnerAdapter = new TableListInnerAdapter(botTableListModel.getRowItems(), isEnabled);
             botTableListInnerAdapter.setComposeFooterInterface(composeFooterInterface);
             botTableListInnerAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

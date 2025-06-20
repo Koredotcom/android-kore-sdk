@@ -1,6 +1,5 @@
 package kore.botssdk.adapter;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -21,8 +20,7 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.FeedbackRatingModel;
 import kore.botssdk.view.CustomTextView;
 
-@SuppressLint("UnknownNullness")
-public class FeedbackRatingScaleAdapter extends RecyclerView.Adapter<FeedbackRatingScaleAdapter.ViewHolder>{
+public class FeedbackRatingScaleAdapter extends RecyclerView.Adapter<FeedbackRatingScaleAdapter.ViewHolder> {
     private final List<FeedbackRatingModel> items;
     private final boolean isEnabled;
     private int selectedPos = -1;

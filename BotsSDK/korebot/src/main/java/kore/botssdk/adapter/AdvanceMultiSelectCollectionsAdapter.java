@@ -1,20 +1,24 @@
+
 package kore.botssdk.adapter;
 
+import static android.content.Context.MODE_PRIVATE;
+import static kore.botssdk.models.BotResponse.BUBBLE_LEFT_BG_COLOR;
+import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
+import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.annotation.SuppressLint;
-import android.content.res.ColorStateList;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import androidx.annotation.GravityInt;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 import kore.botssdk.R;
 import kore.botssdk.listener.AdvanceMultiSelectListener;
 import kore.botssdk.models.AdvanceMultiSelectCollectionModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
@@ -46,6 +51,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     }
 
     private boolean isEnabled;
+    private SharedPreferences prefs;
 
     public AdvanceMultiSelectCollectionsAdapter(ArrayList<AdvanceMultiSelectCollectionModel> multiSelectModels) {
         this.multiSelectModels = multiSelectModels;
@@ -54,8 +60,11 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (prefs == null) {
+            prefs = parent.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+        }
         int layoutId = viewType == MULTI_SELECT_ITEM ? R.layout.row_advance_multi_select_sub_item : R.layout.multiselect_button;
-        return new AdvanceMultiSelectCollectionsAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false), viewType);
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false), viewType);
     }
 
     @Override
@@ -89,10 +98,11 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     }
 
     private void populateVIew(ViewHolder holder, int position) {
-        final AdvanceMultiSelectCollectionModel item = (AdvanceMultiSelectCollectionModel) getItem(position);
+        final AdvanceMultiSelectCollectionModel item = getItem(position);
         if (item == null) return;
-        holder.textView.setTag(item);
-        holder.textView.setText(item.getTitle());
+        holder.title.setText(item.getTitle());
+        holder.description.setVisibility(item.getDescription() != null ? View.VISIBLE : View.GONE);
+        holder.description.setText(item.getDescription());
 
         if (!StringUtils.isNullOrEmpty(item.getImage_url())) {
             holder.ivAdvMultiSelect.setVisibility(View.VISIBLE);
@@ -104,21 +114,18 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
                     .into(holder.ivAdvMultiSelect);
         }
 
-        holder.checkBox.setChecked(checkedItems.contains(item));
+        GradientDrawable gradientDrawable = (GradientDrawable) holder.checkBox.getBackground().mutate();
+        gradientDrawable.setColor(Color.parseColor("#ffffff"));
+        gradientDrawable.setStroke((int) dp1, Color.parseColor(prefs.getString(BUBBLE_LEFT_BG_COLOR, "#000000")));
 
-        holder.checkBox.setOnCheckedChangeListener((compoundButton, isChecked) -> {
-            if (compoundButton.isPressed()) {
-                if (!isEnabled) {
-                    compoundButton.setChecked(!isChecked);
-                    return;
-                }
-                multiSelectListener.itemSelected(item);
-            }
+        if (checkedItems.contains(item)) {
+            gradientDrawable.setStroke((int) dp1, Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+            gradientDrawable.setColor(Color.parseColor(prefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5")));
+        }
+
+        holder.checkBox.setOnClickListener(v -> {
+            multiSelectListener.itemSelected(item);
         });
-
-        GradientDrawable gradientDrawable = (GradientDrawable) holder.root_layout.getBackground();
-        gradientDrawable.setStroke((int) (1*dp1), ColorStateList.valueOf(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor)));
-
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);
@@ -135,20 +142,28 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        CheckBox checkBox;
-        TextView textView;
+        LinearLayout checkBox;
+        TextView title;
+        TextView description;
         ImageView ivAdvMultiSelect;
-        RelativeLayout root_layout;
+        RelativeLayout rootLayout;
 
         public ViewHolder(@NonNull View convertView, int viewType) {
             super(convertView);
             if (viewType == MULTI_SELECT_ITEM) {
-                root_layout = convertView.findViewById(R.id.root_layout);
-                textView = convertView.findViewById(R.id.text_view);
+                title = convertView.findViewById(R.id.title);
+                description = convertView.findViewById(R.id.description);
                 checkBox = convertView.findViewById(R.id.check_multi_item);
                 ivAdvMultiSelect = convertView.findViewById(R.id.ivAdvMultiSelect);
+                rootLayout = convertView.findViewById(R.id.root_layout);
             } else {
-                textView = convertView.findViewById(R.id.text_view_button);
+                title = convertView.findViewById(R.id.text_view_button);
+            }
+
+            if (rootLayout != null && rootLayout.getBackground() != null) {
+                SharedPreferences pref = rootLayout.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+                GradientDrawable drawable = (GradientDrawable) rootLayout.getBackground().mutate();
+                drawable.setStroke(2, Color.parseColor(pref.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#ffffff")));
             }
 
             KaFontUtils.applyCustomFont(convertView.getContext(), convertView);

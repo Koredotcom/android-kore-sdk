@@ -1,6 +1,5 @@
 package kore.botssdk.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,10 +14,8 @@ import kore.botssdk.R;
 import kore.botssdk.listener.FeedbackExperienceUpdateListner;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.Utility;
 
-public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingFeedbackButtonsAdapter.ViewHolder>
-{
+public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingFeedbackButtonsAdapter.ViewHolder> {
     private final ArrayList<BotButtonModel> botButtonModels;
     final FeedbackExperienceUpdateListner feedbackExperienceUpdateListner;
     private final boolean isEnabled;
@@ -31,20 +28,18 @@ public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingF
 
     @NonNull
     @Override
-    public BankingFeedbackButtonsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-    {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View listItem = layoutInflater.inflate(R.layout.banking_feedback_button_cell, parent, false);
         return new ViewHolder(listItem);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BankingFeedbackButtonsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BotButtonModel botListModel = botButtonModels.get(position);
         holder.tvButton.setText(botListModel.getLabel());
 
-        if(holder.tvButton.getText().toString().equalsIgnoreCase(BundleConstants.BUTTON_TYPE_CONFIRM) && isEnabled)
-        {
+        if (holder.tvButton.getText().toString().equalsIgnoreCase(BundleConstants.BUTTON_TYPE_CONFIRM) && isEnabled) {
             holder.tvButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
