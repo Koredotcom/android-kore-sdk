@@ -1,27 +1,29 @@
 package com.kore.korebot;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.gson.Gson;
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
-import java.io.IOException;
+import java.io.BufferedReader;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionRequest;
+import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
@@ -40,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
         SDKConfig.setQueryParams(getQueryParams());
         SDKConfig.setCustomData(getCustomData());
+//        SDKConfig.setBotBrandingConfigModel(getConfigBrandingModel(this));
 //        SDKConfig.setCustomContentFragment(new CustomContentFragment());
 //        SDKConfig.setCustomFooterFragment(new CustomFooterFragment());
 //        SDKConfig.setCustomHeaderFragment(BotResponse.HEADER_SIZE_COMPACT, new CustomHeaderFragment());
@@ -48,28 +51,28 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = getConfigValue("clientId");
+        String clientId = "Please enter client ID";//getConfigValue("clientId");
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = getConfigValue("clientSecret");
+        String clientSecret = "Please enter client secret";//getConfigValue("clientSecret");
 
         //Set botId, This value is mandatory
-        String botId = getConfigValue("botId");
+        String botId = "Please enter bot ID";//getConfigValue("botId");
 
         //Set identity, This value is mandatory
-        String identity = getConfigValue("identity");
+        String identity = "Please enter identity";//getConfigValue("identity");
 
         //Set botName, This value is mandatory
-        String botName = getConfigValue("botName");
+        String botName = "Please enter bot name";//getConfigValue("botName");
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = getConfigValue("serverUrl");
+        String serverUrl = "Please enter server url";//getConfigValue("serverUrl");
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = getConfigValue("brandingUrl");
+        String brandingUrl = "Please enter branding url";//getConfigValue("brandingUrl");
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = getConfigValue("jwtServerUrl");
+        String jwtServerUrl = "Please enter Jwt server url";//getConfigValue("jwtServerUrl");
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -120,6 +123,27 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         PermissionManager.getInstance().requestAllPermissions(MainActivity.this, permissionRequest);
+    }
+
+    BotBrandingModel getConfigBrandingModel(Context context) {
+        try {
+            InputStream inputStream = context.getResources().openRawResource(R.raw.config_branding_details);
+            InputStreamReader reader = new InputStreamReader(inputStream);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+
+            StringBuilder jsonText = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                jsonText.append(line);
+            }
+
+            reader.close();
+
+            return new Gson().fromJson(jsonText.toString(), BotBrandingModel.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -190,18 +214,18 @@ public class MainActivity extends AppCompatActivity {
         return customData;
     }
 
-    public String getConfigValue(String name) {
-        try {
-            InputStream rawResource = getResources().openRawResource(R.raw.config);
-            Properties properties = new Properties();
-            properties.load(rawResource);
-            return properties.getProperty(name);
-        } catch (Resources.NotFoundException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
-        }
-
-        return null;
-    }
+//    public String getConfigValue(String name) {
+//        try {
+//            InputStream rawResource = getResources().openRawResource(R.raw.config);
+//            Properties properties = new Properties();
+//            properties.load(rawResource);
+//            return properties.getProperty(name);
+//        } catch (Resources.NotFoundException e) {
+//            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
+//        } catch (IOException e) {
+//            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
+//        }
+//
+//        return null;
+//    }
 }

@@ -2,6 +2,8 @@ package kore.botssdk.models;
 
 import java.io.Serializable;
 
+import kore.botssdk.utils.StringUtils;
+
 public class BrandingBodyModel implements Serializable {
     private BrandingBodyBackgroundModel background;
     private BrandingBodyFontModel font;
@@ -16,6 +18,24 @@ public class BrandingBodyModel implements Serializable {
     private String secondaryColor;
     private String secondaryHoverColor;
     private String img;
+
+    public BrandingBodyModel updateWith(BrandingBodyModel configModel) {
+        bubble_style = !StringUtils.isNullOrEmpty(configModel.bubble_style) ? configModel.bubble_style : bubble_style;
+        primaryColor = !StringUtils.isNullOrEmpty(configModel.primaryColor) ? configModel.primaryColor : primaryColor;
+        primaryHoverColor = !StringUtils.isNullOrEmpty(configModel.primaryHoverColor) ? configModel.primaryHoverColor : primaryHoverColor;
+        secondaryColor = !StringUtils.isNullOrEmpty(configModel.secondaryColor) ? configModel.secondaryColor : secondaryColor;
+        secondaryHoverColor = !StringUtils.isNullOrEmpty(configModel.secondaryHoverColor) ? configModel.secondaryHoverColor : secondaryHoverColor;
+        img = !StringUtils.isNullOrEmpty(configModel.img) ? configModel.img : img;
+
+        background = background != null && configModel.background != null ? background.updateWith(configModel.background) : background;
+        font = font != null && configModel.font != null ? font.updateWith(configModel.font) : font;
+        user_message = user_message != null && configModel.user_message != null ? user_message.updateWith(configModel.user_message) : user_message;
+        bot_message = bot_message != null && configModel.bot_message != null ? bot_message.updateWith(configModel.bot_message) : bot_message;
+        agent_message = agent_message != null && configModel.agent_message != null ? agent_message.updateWith(configModel.agent_message) : agent_message;
+        time_stamp = time_stamp != null && configModel.time_stamp != null ? time_stamp.updateWith(configModel.time_stamp) : time_stamp;
+        bodyIconModel = bodyIconModel != null && configModel.bodyIconModel != null ? bodyIconModel.updateWith(configModel.bodyIconModel) : bodyIconModel;
+        return this;
+    }
 
     public String getImg() {
         return img;

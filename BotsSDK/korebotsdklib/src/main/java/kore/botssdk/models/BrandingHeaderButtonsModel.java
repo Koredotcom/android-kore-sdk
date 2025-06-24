@@ -10,6 +10,16 @@ public class BrandingHeaderButtonsModel implements Serializable {
     private BrandingIconModel help;
     private BrandingIconModel live_agent;
 
+    public BrandingHeaderButtonsModel updateWith(BrandingHeaderButtonsModel configModel) {
+        close = configModel.close != null && close != null ? close.updateWith(configModel.close) : close;
+        minimise = configModel.minimise != null && minimise != null ? minimise.updateWith(configModel.minimise) : minimise;
+        expand = configModel.expand != null && expand != null ? expand.updateWith(configModel.expand) : expand;
+        reconnect = configModel.reconnect != null && reconnect != null ? reconnect.updateWith(configModel.reconnect) : reconnect;
+        help = configModel.help != null && help != null ? help.updateWith(configModel.help) : help;
+        live_agent = configModel.live_agent != null && live_agent != null ? live_agent.updateWith(configModel.live_agent) : live_agent;
+        return this;
+    }
+
     public BrandingIconModel getClose() {
         return close;
     }

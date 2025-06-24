@@ -2,8 +2,10 @@ package kore.botssdk.models;
 
 import java.io.Serializable;
 
+import kore.botssdk.utils.StringUtils;
+
 public class BrandingStarterBoxModel implements Serializable {
-    private boolean show;
+    private Boolean show;
     private BrandingIconModel icon;
     private String title;
     private String sub_text;
@@ -11,6 +13,18 @@ public class BrandingStarterBoxModel implements Serializable {
     private BrandingTitleModel start_conv_text;
     private BrandingQuickStartButtons quick_start_buttons;
     private BrandingStaticLinksModel links;
+
+    public BrandingStarterBoxModel updateWith(BrandingStarterBoxModel configModel) {
+        show = configModel.show != null ? configModel.show : show;
+        title = !StringUtils.isNullOrEmpty(configModel.title) ? configModel.title : title;
+        sub_text = !StringUtils.isNullOrEmpty(configModel.sub_text) ? configModel.sub_text : sub_text;
+        icon = icon != null && configModel.icon != null ? icon.updateWith(configModel.icon) : icon;
+        start_conv_button = start_conv_button != null && configModel.start_conv_button != null ? start_conv_button.updateWith(configModel.start_conv_button) : start_conv_button;
+        start_conv_text = start_conv_text != null && configModel.start_conv_text != null ? start_conv_text.updateWith(configModel.start_conv_text) : start_conv_text;
+        quick_start_buttons = quick_start_buttons != null && configModel.quick_start_buttons != null ? quick_start_buttons.updateWith(configModel.quick_start_buttons) : quick_start_buttons;
+        links = links != null && configModel.links != null ? links.updateWith(configModel.links) : links;
+        return this;
+    }
 
     public BrandingIconModel getIcon() {
         return icon;
@@ -73,6 +87,6 @@ public class BrandingStarterBoxModel implements Serializable {
     }
 
     public boolean isShow() {
-        return show;
+        return show != null ? show : false;
     }
 }

@@ -2,14 +2,24 @@ package kore.botssdk.models;
 
 import java.io.Serializable;
 
+import kore.botssdk.utils.StringUtils;
+
 public class BrandingBodyIconModel implements Serializable {
-    private boolean show;
-    private boolean user_icon;
-    private boolean bot_icon;
-    private boolean agent_icon;
+    private Boolean show;
+    private Boolean user_icon;
+    private Boolean bot_icon;
+    private Boolean agent_icon;
+
+    public BrandingBodyIconModel updateWith(BrandingBodyIconModel configModel) {
+        show = configModel.show != null ? configModel.show : show;
+        user_icon = configModel.user_icon != null ? configModel.user_icon : user_icon;
+        bot_icon = configModel.bot_icon != null ? configModel.bot_icon : bot_icon;
+        agent_icon = configModel.agent_icon != null ? configModel.agent_icon : agent_icon;
+        return this;
+    }
 
     public boolean isShow() {
-        return show;
+        return show != null ? show : false;
     }
 
     public boolean isAgent_icon() {

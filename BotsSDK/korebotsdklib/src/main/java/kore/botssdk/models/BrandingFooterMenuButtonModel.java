@@ -3,10 +3,19 @@ package kore.botssdk.models;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import kore.botssdk.utils.StringUtils;
+
 public class BrandingFooterMenuButtonModel implements Serializable {
-    private boolean show;
+    private Boolean show;
     private String icon;
     private ArrayList<BrandingQuickStartButtonActionModel> actions;
+
+    public BrandingFooterMenuButtonModel updateWith(BrandingFooterMenuButtonModel configModel) {
+        show = configModel.show != null ? configModel.show : show;
+        icon = !StringUtils.isNullOrEmpty(configModel.icon) ? configModel.icon : icon;
+        actions = configModel.actions != null && !configModel.actions.isEmpty() ? configModel.actions : actions;
+        return this;
+    }
 
     public String getIcon() {
         return icon;
@@ -17,7 +26,7 @@ public class BrandingFooterMenuButtonModel implements Serializable {
     }
 
     public boolean isShow() {
-        return show;
+        return show != null ? show : false;
     }
 
     public void setIcon(String icon) {

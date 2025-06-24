@@ -31,11 +31,11 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.StringUtils;
 
 public class ChatHeaderTwoFragment extends BaseHeaderFragment {
-    private BrandingHeaderModel brandingModel;
+    private BrandingHeaderModel brandingHeaderModel;
 
     @Override
     public void setBrandingDetails(BrandingHeaderModel brandingModel) {
-        this.brandingModel = brandingModel;
+        this.brandingHeaderModel = brandingModel;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,17 +49,24 @@ public class ChatHeaderTwoFragment extends BaseHeaderFragment {
         ImageView ivBotClose = view.findViewById(R.id.ivBotClose);
         ImageView ivBotArrowBack = view.findViewById(R.id.ivBotArrowBack);
 
-        if (brandingModel != null) {
-            String title = brandingModel.getTitle() != null ? brandingModel.getTitle().getName() : null;
+        if (brandingHeaderModel != null) {
+            String title = brandingHeaderModel.getTitle() != null ? brandingHeaderModel.getTitle().getName() : null;
             tvBotTitle.setText(!TextUtils.isEmpty(title) ? title : SDKConfiguration.Client.bot_name);
-            tvBotDesc.setText(brandingModel.getSub_title() != null ? brandingModel.getSub_title().getName() : null);
-            view.setBackgroundColor(Color.parseColor(brandingModel.getBg_color()));
+            tvBotDesc.setText(brandingHeaderModel.getSub_title() != null ? brandingHeaderModel.getSub_title().getName() : null);
+            view.setBackgroundColor(Color.parseColor(brandingHeaderModel.getBg_color()));
 
-            if (brandingModel.getIcon() != null) {
-                if (BundleUtils.CUSTOM.equals(brandingModel.getIcon().getType())) {
+            if (brandingHeaderModel.getTitle() != null && !StringUtils.isNullOrEmpty(brandingHeaderModel.getTitle().getColor())) {
+                tvBotTitle.setTextColor(Color.parseColor(brandingHeaderModel.getTitle().getColor()));
+            }
+            if (brandingHeaderModel.getSub_title() != null && !StringUtils.isNullOrEmpty(brandingHeaderModel.getSub_title().getColor())) {
+                tvBotDesc.setTextColor(Color.parseColor(brandingHeaderModel.getSub_title().getColor()));
+            }
+
+            if (brandingHeaderModel.getIcon() != null) {
+                if (BundleUtils.CUSTOM.equals(brandingHeaderModel.getIcon().getType())) {
                     llBotAvatar.setBackgroundResource(0);
                     Glide.with(requireActivity())
-                            .load(brandingModel.getIcon().getIcon_url())
+                            .load(brandingHeaderModel.getIcon().getIcon_url())
                             .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                             .into(ivBotAvatar)
                             .onLoadFailed(ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_launcher, requireContext().getTheme()));
@@ -67,10 +74,10 @@ public class ChatHeaderTwoFragment extends BaseHeaderFragment {
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) (40 * dp1), (int) (40 * dp1));
                     ivBotAvatar.setLayoutParams(layoutParams);
                 } else {
-                    if (!StringUtils.isNullOrEmpty(brandingModel.getAvatar_bg_color()))
-                        llBotAvatar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(brandingModel.getAvatar_bg_color())));
+                    if (!StringUtils.isNullOrEmpty(brandingHeaderModel.getAvatar_bg_color()))
+                        llBotAvatar.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(brandingHeaderModel.getAvatar_bg_color())));
 
-                    switch (brandingModel.getIcon().getIcon_url()) {
+                    switch (brandingHeaderModel.getIcon().getIcon_url()) {
                         case BotResponse.ICON_1:
                             ivBotAvatar.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_icon_1, requireContext().getTheme()));
                             break;
@@ -87,9 +94,9 @@ public class ChatHeaderTwoFragment extends BaseHeaderFragment {
                 }
             }
 
-            if (brandingModel.getButtons() != null) {
-                BrandingHeaderButtonsModel buttons = brandingModel.getButtons();
-                ColorStateList bgColorTint = ColorStateList.valueOf(Color.parseColor(brandingModel.getIcons_color()));
+            if (brandingHeaderModel.getButtons() != null) {
+                BrandingHeaderButtonsModel buttons = brandingHeaderModel.getButtons();
+                ColorStateList bgColorTint = ColorStateList.valueOf(Color.parseColor(brandingHeaderModel.getIcons_color()));
                 ivBotArrowBack.setBackgroundTintList(bgColorTint);
 
                 ivBotHelp.setVisibility(buttons.getHelp() != null && buttons.getHelp().isShow() ? View.VISIBLE : View.GONE);

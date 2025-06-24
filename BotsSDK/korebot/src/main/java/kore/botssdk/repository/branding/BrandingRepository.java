@@ -16,6 +16,7 @@ import kore.botssdk.models.BotActiveThemeModel;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.BrandingRestBuilder;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.LogUtils;
@@ -78,21 +79,25 @@ public class BrandingRepository {
 
     private void onBrandingDetails(BotBrandingModel botBrandingModel) {
         if (botBrandingModel != null) {
+            BotBrandingModel configModel = SDKConfig.getBotBrandingConfigModel() != null ? SDKConfig.getBotBrandingConfigModel() : botBrandingModel;
+
+            if (configModel.getGeneral() != null && configModel.getGeneral().getColors() != null && configModel.getGeneral().getColors().isUseColorPaletteOnly()) {
+                configModel.getHeader().setBg_color(configModel.getGeneral().getColors().getSecondary());
+                configModel.getFooter().setBg_color(configModel.getGeneral().getColors().getSecondary());
+                configModel.getFooter().getCompose_bar().setOutline_color(configModel.getGeneral().getColors().getPrimary());
+                configModel.getFooter().getCompose_bar().setInline_color(configModel.getGeneral().getColors().getSecondary_text());
+                configModel.getHeader().getTitle().setColor(configModel.getGeneral().getColors().getPrimary());
+                configModel.getHeader().getSub_title().setColor(configModel.getGeneral().getColors().getPrimary());
+            }
+
+            botBrandingModel = botBrandingModel.updateWith(configModel);
+
             if (botBrandingModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botBrandingModel.getChat_bubble().getStyle())) {
                 sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botBrandingModel.getChat_bubble().getStyle()).apply();
             }
 
             if (botBrandingModel.getBody() != null && !StringUtils.isNullOrEmpty(botBrandingModel.getBody().getBubble_style())) {
                 sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botBrandingModel.getBody().getBubble_style()).apply();
-            }
-
-            if (botBrandingModel.getGeneral() != null && botBrandingModel.getGeneral().getColors() != null && botBrandingModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                botBrandingModel.getHeader().setBg_color(botBrandingModel.getGeneral().getColors().getSecondary());
-                botBrandingModel.getFooter().setBg_color(botBrandingModel.getGeneral().getColors().getSecondary());
-                botBrandingModel.getFooter().getCompose_bar().setOutline_color(botBrandingModel.getGeneral().getColors().getPrimary());
-                botBrandingModel.getFooter().getCompose_bar().setInline_color(botBrandingModel.getGeneral().getColors().getSecondary_text());
-                botBrandingModel.getHeader().getTitle().setColor(botBrandingModel.getGeneral().getColors().getPrimary());
-                botBrandingModel.getHeader().getSub_title().setColor(botBrandingModel.getGeneral().getColors().getPrimary());
             }
 
             if (botBrandingModel.getOverride_kore_config() != null && botBrandingModel.getOverride_kore_config().isEnable()) {
@@ -134,15 +139,6 @@ public class BrandingRepository {
                 editor.putString(BotResponse.BUBBLE_RIGHT_TEXT_COLOR, botBrandingModel.getGeneral().getColors().getSecondary_text());
             }
             editor.apply();
-            if (botBrandingModel.getGeneral() != null && botBrandingModel.getGeneral().getColors() != null && botBrandingModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                botBrandingModel.getHeader().setBg_color(botBrandingModel.getGeneral().getColors().getSecondary());
-                botBrandingModel.getFooter().setBg_color(botBrandingModel.getGeneral().getColors().getSecondary());
-                botBrandingModel.getFooter().getCompose_bar().setOutline_color(botBrandingModel.getGeneral().getColors().getPrimary());
-                botBrandingModel.getFooter().getCompose_bar().setInline_color(botBrandingModel.getGeneral().getColors().getSecondary_text());
-                botBrandingModel.getHeader().getTitle().setColor(botBrandingModel.getGeneral().getColors().getPrimary());
-                botBrandingModel.getHeader().setAvatar_bg_color(botBrandingModel.getGeneral().getColors().getPrimary());
-                botBrandingModel.getHeader().getSub_title().setColor(botBrandingModel.getGeneral().getColors().getPrimary());
-            }
         }
         botChatView.onBrandingDetails(botBrandingModel);
     }

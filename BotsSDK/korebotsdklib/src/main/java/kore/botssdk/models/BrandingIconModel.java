@@ -2,15 +2,29 @@ package kore.botssdk.models;
 
 import java.io.Serializable;
 
+import kore.botssdk.utils.StringUtils;
+
 public class BrandingIconModel implements Serializable {
     private String icon_url;
     private String size;
     private String shape;
-    private boolean show;
+    private Boolean show;
     private String color;
     private String icon;
     private String type;
     private BrandingQuickStartButtonActionModel action;
+
+    public BrandingIconModel updateWith(BrandingIconModel configModel) {
+        icon_url = !StringUtils.isNullOrEmpty(configModel.icon_url) ? configModel.icon_url : icon_url;
+        size = !StringUtils.isNullOrEmpty(configModel.size) ? configModel.size : size;
+        shape = !StringUtils.isNullOrEmpty(configModel.shape) ? configModel.shape : shape;
+        show = configModel.show != null ? configModel.show : show;
+        color = !StringUtils.isNullOrEmpty(configModel.color) ? configModel.color : color;
+        icon = !StringUtils.isNullOrEmpty(configModel.icon) ? configModel.icon : icon;
+        type = !StringUtils.isNullOrEmpty(configModel.type) ? configModel.type : type;
+        action = configModel.action != null && action != null ? action.updateWith(configModel.action) : action;
+        return this;
+    }
 
     public void setAction(BrandingQuickStartButtonActionModel action) {
         this.action = action;
@@ -37,7 +51,7 @@ public class BrandingIconModel implements Serializable {
     }
 
     public boolean isShow() {
-        return show;
+        return show != null ? show : false;
     }
 
     public void setShow(boolean show) {

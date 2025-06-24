@@ -1,10 +1,17 @@
 package kore.botssdk.models;
 
 public class BrandingOverrideConfigModel {
-    private boolean enable;
-    private boolean emoji_short_cut;
+    private Boolean enable;
+    private Boolean emoji_short_cut;
     private int typing_indicator_timeout;
     private BrandingOverrideHistoryModel history;
+
+    public BrandingOverrideConfigModel updateWith(BrandingOverrideConfigModel configModel) {
+        enable = configModel.enable != null ? configModel.enable : enable;
+        emoji_short_cut = configModel.emoji_short_cut != null ? configModel.emoji_short_cut : emoji_short_cut;
+        history = history != null && configModel.history != null ? history.updateWith(configModel.history) : history;
+        return this;
+    }
 
     public BrandingOverrideHistoryModel getHistory() {
         return history;
@@ -15,10 +22,10 @@ public class BrandingOverrideConfigModel {
     }
 
     public boolean isEnable() {
-        return enable;
+        return enable != null ? enable : false;
     }
 
     public boolean isEmoji_short_cut() {
-        return emoji_short_cut;
+        return emoji_short_cut != null ? emoji_short_cut : false;
     }
 }

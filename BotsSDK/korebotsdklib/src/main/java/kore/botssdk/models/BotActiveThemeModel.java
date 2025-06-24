@@ -1,9 +1,9 @@
 package kore.botssdk.models;
 
 import android.annotation.SuppressLint;
+
 @SuppressLint("UnknownNullness")
-public class BotActiveThemeModel
-{
+public class BotActiveThemeModel {
     String _id;
     String streamId;
     boolean activeTheme;
@@ -16,6 +16,11 @@ public class BotActiveThemeModel
     String state;
     String themeName;
     BotBrandingModel v3;
+
+    public BotActiveThemeModel updateWithV3Model(BotBrandingModel configModel) {
+        v3 = v3.updateWith(configModel);
+        return this;
+    }
 
     public BotBrandingModel getV3() {
         return v3;

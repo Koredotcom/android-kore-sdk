@@ -9,6 +9,7 @@ import java.util.HashMap;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.header.BaseHeaderFragment;
+import kore.botssdk.models.BotBrandingModel;
 
 public class SDKConfig {
     private static boolean isMinimized = false;
@@ -17,6 +18,7 @@ public class SDKConfig {
     private static BaseContentFragment customContentFragment = null;
     private static boolean isShowActionBar = true;
     private static boolean isUpdateStatusBarColor = false;
+    private static BotBrandingModel botBrandingModel;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
@@ -122,5 +124,13 @@ public class SDKConfig {
 
     public static boolean isUpdateStatusBarColor() {
         return isUpdateStatusBarColor;
+    }
+
+    public static BotBrandingModel getBotBrandingConfigModel() {
+        return botBrandingModel;
+    }
+
+    public static void setBotBrandingConfigModel(BotBrandingModel botBrandingModel) {
+        SDKConfig.botBrandingModel = botBrandingModel;
     }
 }
