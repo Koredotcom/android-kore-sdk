@@ -37,7 +37,6 @@ public class FormTemplateHolder extends BaseViewHolder {
     private final TextView btFieldButton;
     private final String leftTextColor;
     final LinearLayout llFormRoot;
-    private SharedPreferences prefs;
 
     public static FormTemplateHolder getInstance(ViewGroup parent) {
         return new FormTemplateHolder(createView(R.layout.template_form, parent));
@@ -45,7 +44,7 @@ public class FormTemplateHolder extends BaseViewHolder {
 
     private FormTemplateHolder(@NonNull View itemView) {
         super(itemView, itemView.getContext());
-        prefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+        SharedPreferences prefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
         llFormRoot = itemView.findViewById(R.id.llFormRoot);
         recyclerView = itemView.findViewById(R.id.multi_select_list);
         recyclerView.setVerticalScrollBarEnabled(false);
@@ -107,13 +106,5 @@ public class FormTemplateHolder extends BaseViewHolder {
                     ToastUtils.showToast(context, "Text should not be empty.");
             }
         });
-    }
-
-    String getDotMessage(String strPassword) {
-        StringBuilder strDots = new StringBuilder();
-        for (int i = 0; i < strPassword.length(); i++) {
-            strDots.append("•");
-        }
-        return strDots.toString();
     }
 }

@@ -314,5 +314,10 @@
     <string name="suggested_faq">Suggested FAQ</string>
     <string name="hi_shan_i_am_here_to_answer_n_your_questions_about_credit_card">Hi Shan, I am here to answer\n your questions about credit card.</string>
     <string name="kevin_peterson">Kevin Peterson</string>
+    <string name="didnt_get_a_code">Didn\'t get a code?</string>
+    <string name="resend_otp">Resend OTP</string>
+    <string name="reset_pin">Reset Pin</string>
+    <string name="answered_by_ai">Answered by AI</string>
+    <string name="source_item">%s. %s</string>
 
 </resources>

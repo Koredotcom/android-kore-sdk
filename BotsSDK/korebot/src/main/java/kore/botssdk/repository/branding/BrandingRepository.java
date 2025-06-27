@@ -92,6 +92,13 @@ public class BrandingRepository {
 
             botBrandingModel = botBrandingModel.updateWith(configModel);
 
+            if (botBrandingModel.getBody() != null && botBrandingModel.getBody().getTime_stamp() != null) {
+                String timeFormat = botBrandingModel.getBody().getTime_stamp().getTimeFormat();
+                String dateFormat = botBrandingModel.getBody().getTime_stamp().getDateFormat();
+                BotResponse.TIME_FORMAT = !StringUtils.isNullOrEmpty(timeFormat) ? Integer.parseInt(timeFormat) : 12;
+                BotResponse.DATE_FORMAT = !StringUtils.isNullOrEmpty(dateFormat) ? dateFormat : BotResponse.DATE_FORMAT;
+            }
+
             if (botBrandingModel.getChat_bubble() != null && !StringUtils.isNullOrEmpty(botBrandingModel.getChat_bubble().getStyle())) {
                 sharedPreferences.edit().putString(BundleConstants.BUBBLE_STYLE, botBrandingModel.getChat_bubble().getStyle()).apply();
             }

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root_layout"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <kore.botssdk.view.CustomTextView
-        android:id="@+id/text_view"
+    <kore.botssdk.view.CustomTextViewBold
+        android:id="@+id/button_title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_12dp"
-        android:background="@drawable/theme_1_button_bg"
+        android:background="@drawable/round_rect"
         android:ellipsize="end"
         android:gravity="center"
-        android:maxLines="2"
-        android:minHeight="35dp"
+        android:maxLines="1"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="5dp"
         android:tag="medium"
-        android:text="@string/hi"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/text_size_normal"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_size_normal" />
 </LinearLayout>

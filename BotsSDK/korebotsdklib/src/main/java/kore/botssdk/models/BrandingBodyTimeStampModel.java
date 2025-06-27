@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 import kore.botssdk.utils.StringUtils;
@@ -10,6 +12,8 @@ public class BrandingBodyTimeStampModel implements Serializable {
     private String position;
     private String separator;
     private String color;
+    @SerializedName("time_format") private String timeFormat = "12";
+    @SerializedName("date_format") private String dateFormat = "";
 
     public BrandingBodyTimeStampModel updateWith(BrandingBodyTimeStampModel configModel) {
         show = configModel.show != null ? configModel.show : show;
@@ -58,5 +62,13 @@ public class BrandingBodyTimeStampModel implements Serializable {
 
     public void setShow_type(String show_type) {
         this.show_type = show_type;
+    }
+
+    public String getTimeFormat() {
+        return timeFormat;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
     }
 }

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.Format;
 import java.text.ParseException;
@@ -104,7 +103,7 @@ public class DateUtils {
     }
 
     public static String getTimeInAmPm(long dateInMs) {
-        return date24Time.format(new Date(dateInMs));
+        return BotResponse.TIME_FORMAT == 12 ? dateTime.format(new Date(dateInMs)) : date24Time.format(new Date(dateInMs));
     }
 
     /**

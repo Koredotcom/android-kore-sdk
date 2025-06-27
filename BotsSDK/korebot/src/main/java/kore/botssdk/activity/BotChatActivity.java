@@ -65,6 +65,8 @@ import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
+import kore.botssdk.dialogs.OtpValidationTemplateBottomSheet;
+import kore.botssdk.dialogs.ResetPinTemplateBottomSheet;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fileupload.core.KoreWorker;
@@ -569,13 +571,25 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             return;
         }
         PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
-        switch (payloadInner.getTemplate_type()) {
-            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
-                if (payloadInner.getSliderView()) {
+        if (payloadInner.getSliderView()) {
+            switch (payloadInner.getTemplate_type()) {
+                case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
                     AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
                     fragment.setData(payloadInner);
                     fragment.setComposeFooterInterface(this);
                     fragment.show(getSupportFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
+                }
+                case BotResponse.TEMPLATE_TYPE_OTP_VALIDATION -> {
+                    OtpValidationTemplateBottomSheet fragment = new OtpValidationTemplateBottomSheet();
+                    fragment.setData(payloadInner);
+                    fragment.setComposeFooterInterface(this);
+                    fragment.show(getSupportFragmentManager(), OtpValidationTemplateBottomSheet.class.getName());
+                }
+                case BotResponse.TEMPLATE_TYPE_RESET_PIN -> {
+                    ResetPinTemplateBottomSheet fragment = new ResetPinTemplateBottomSheet();
+                    fragment.setData(payloadInner);
+                    fragment.setComposeFooterInterface(this);
+                    fragment.show(getSupportFragmentManager(), ResetPinTemplateBottomSheet.class.getName());
                 }
             }
         }

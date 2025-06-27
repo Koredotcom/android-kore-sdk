@@ -60,6 +60,11 @@ public class BotResponse extends BaseBotMessage {
     public static final String TEMPLATE_BENEFICIARY = "beneficiaryTemplate";
     public static final String CARD_TEMPLATE = "cardTemplate";
     public static final String ADVANCED_MULTI_SELECT_TEMPLATE = "advanced_multi_select";
+    public static final String TEMPLATE_TYPE_ARTICLE = "articleTemplate";
+    public static final String TEMPLATE_TYPE_OTP_VALIDATION = "otpValidationTemplate";
+    public static final String TEMPLATE_TYPE_RESET_PIN = "resetPinTemplate";
+    public static final String TEMPLATE_TYPE_ANSWER = "answerTemplate";
+
     public static final String AGENT_INFO_KEY = "agentInfo";
     public static final String EVENT = "EVENT";
     public static final String HISTORY_COUNT = "HISTORY_COUNT";
@@ -70,7 +75,8 @@ public class BotResponse extends BaseBotMessage {
     public static final String STACKED = "stacked";
     public static final String TABLE_VIEW_RESPONSIVE = "responsive";
     public static final String IS_VIEW_MORE = "is_view_more";
-    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    public static String DATE_FORMAT = "dd/MM/yyyy";
+    public static int TIME_FORMAT = 24;
 
     //widgets
     public static final String TEMPLATE_TYPE_CAL_EVENTS_WIDGET = "calendar_events_widget";
@@ -98,6 +104,10 @@ public class BotResponse extends BaseBotMessage {
     public static final String ICON_4 = "icon-4";
     public static final String HEADER_SIZE_COMPACT = "compact";
     public static final String HEADER_SIZE_LARGE = "large";
+    public static final String PLAIN = "plain";
+    public static final String BACKGROUND_INVERTED = "backgroundInverted";
+    public static final String STACKED_BUTTONS = "stackedButtons";
+    public static final String TEXT_INVERTED = "textInverted";
 
     private String type;
     private BotInfoModel botInfo;

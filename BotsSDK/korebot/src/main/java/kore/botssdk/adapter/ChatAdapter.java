@@ -29,6 +29,8 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewholders.AdvanceMultiSelectTemplateHolder;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
 import kore.botssdk.viewholders.AgentTransferTemplateHolder;
+import kore.botssdk.viewholders.AnswerTemplateHolder;
+import kore.botssdk.viewholders.ArticleTemplateHolder;
 import kore.botssdk.viewholders.BankingFeedbackTemplateHolder;
 import kore.botssdk.viewholders.BarChartTemplateHolder;
 import kore.botssdk.viewholders.BaseViewHolder;
@@ -50,10 +52,12 @@ import kore.botssdk.viewholders.ListWidgetTemplateHolder;
 import kore.botssdk.viewholders.MediaTemplateHolder;
 import kore.botssdk.viewholders.MiniTableTemplateHolder;
 import kore.botssdk.viewholders.MultiSelectTemplateHolder;
+import kore.botssdk.viewholders.OtpValidationTemplateHolder;
 import kore.botssdk.viewholders.PdfTemplateHolder;
 import kore.botssdk.viewholders.PieChartTemplateHolder;
 import kore.botssdk.viewholders.RadioOptionsTemplateHolder;
 import kore.botssdk.viewholders.RequestTextTemplateHolder;
+import kore.botssdk.viewholders.ResetPinTemplateHolder;
 import kore.botssdk.viewholders.ResponseTextTemplateHolder;
 import kore.botssdk.viewholders.ResultsTemplateHolder;
 import kore.botssdk.viewholders.TableListTemplateHolder;
@@ -125,6 +129,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public static final int TEMPLATE_MULTI_SELECT = 30;
     public static final int TEMPLATE_ADVANCE_MULTI_SELECT = 31;
     public static final int TEMPLATE_RESULTS = 32;
+    public static final int TEMPLATE_ARTICLE = 33;
+    public static final int TEMPLATE_OTP_VALIDATION = 34;
+    public static final int TEMPLATE_RESET_PIN = 35;
+    public static final int TEMPLATE_ANSWER = 36;
 
     private final HashMap<Integer, String> customTemplates = new HashMap<>();
 
@@ -233,6 +241,14 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                             return !payInner.getSliderView() ? TEMPLATE_ADVANCE_MULTI_SELECT : TEMPLATE_BUBBLE_RESPONSE;
                         case BotResponse.TEMPLATE_TYPE_RESULTS_LIST:
                             return TEMPLATE_RESULTS;
+                        case BotResponse.TEMPLATE_TYPE_ARTICLE:
+                            return TEMPLATE_ARTICLE;
+                        case BotResponse.TEMPLATE_TYPE_OTP_VALIDATION:
+                            return !payInner.getSliderView() ? TEMPLATE_OTP_VALIDATION : TEMPLATE_BUBBLE_RESPONSE;
+                        case BotResponse.TEMPLATE_TYPE_RESET_PIN:
+                            return !payInner.getSliderView() ? TEMPLATE_RESET_PIN : TEMPLATE_BUBBLE_RESPONSE;
+                        case BotResponse.TEMPLATE_TYPE_ANSWER:
+                            return TEMPLATE_ANSWER;
                         default:
                             return TEMPLATE_BUBBLE_RESPONSE;
                     }
@@ -338,6 +354,10 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             case TEMPLATE_MULTI_SELECT -> MultiSelectTemplateHolder.getInstance(parent);
             case TEMPLATE_ADVANCE_MULTI_SELECT -> AdvanceMultiSelectTemplateHolder.getInstance(parent);
             case TEMPLATE_RESULTS -> ResultsTemplateHolder.getInstance(parent);
+            case TEMPLATE_ARTICLE -> ArticleTemplateHolder.getInstance(parent);
+            case TEMPLATE_OTP_VALIDATION -> OtpValidationTemplateHolder.getInstance(parent);
+            case TEMPLATE_RESET_PIN -> ResetPinTemplateHolder.getInstance(parent);
+            case TEMPLATE_ANSWER -> AnswerTemplateHolder.getInstance(parent);
             default -> ResponseTextTemplateHolder.getInstance(parent);
         };
     }

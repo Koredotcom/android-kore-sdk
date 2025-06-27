@@ -443,4 +443,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         DrawableCompat.setTint(wrappedDrawable, Color.parseColor(color));
         return wrappedDrawable;
     }
+
+    public static String getDotMessage(String strPassword) {
+        StringBuilder strDots = new StringBuilder();
+        for (int i = 0; i < strPassword.length(); i++) {
+            strDots.append("•");
+        }
+        return strDots.toString();
+    }
 }

@@ -3,6 +3,7 @@ package kore.botssdk.models;
 import android.annotation.SuppressLint;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -17,6 +18,7 @@ public class PayloadInner {
 
     public PayloadInner() {
     }
+
     static final Gson gson = new Gson();
 
     List<List<String>> columns = null;
@@ -42,6 +44,7 @@ public class PayloadInner {
     ArrayList<WidgetListElementModel> widgetlistElements;
     ArrayList<DropDownElementsModel> dropDownElementsModels;
     ArrayList<AdvancedMultiSelectModel> advancedMultiSelectModels;
+    ArrayList<ArticleModel> articleModels;
     ArrayList<String> headers;
     ArrayList<BotBarChartDataModel> barChartDataModels;
     ArrayList<QuickReplyTemplate> pickerTemplateModels;
@@ -95,6 +98,19 @@ public class PayloadInner {
     String startDate;
     String carousel_type;
     String messageTodisplay;
+    private ArrayList<OtpButtonModel> otpButtons;
+    private ArrayList<OtpButtonModel> resetButtons;
+    private String mobileNumber;
+    private int pinLength;
+    private boolean fullWidth;
+    private boolean stackedButtons;
+    private String variation;
+    private String enterPinTitle;
+    private String reEnterPinTitle;
+    private String warningMessage;
+    private String answer;
+    @SerializedName("answer_payload")
+    private AnswerPayloadModel answerPayload;
 
     public void setTemplate_type(String template_type) {
         this.template_type = template_type;
@@ -304,6 +320,10 @@ public class PayloadInner {
         return dropDownElementsModels;
     }
 
+    public ArrayList<ArticleModel> getArticleModels() {
+        return articleModels;
+    }
+
     public void setView(String view) {
         this.view = view;
     }
@@ -406,6 +426,54 @@ public class PayloadInner {
 
     public BotListViewMoreDataModel getMoreData() {
         return moreData;
+    }
+
+    public int getPinLength() {
+        return pinLength;
+    }
+
+    public String getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public ArrayList<OtpButtonModel> getOtpButtons() {
+        return otpButtons;
+    }
+
+    public ArrayList<OtpButtonModel> getResetButtons() {
+        return resetButtons;
+    }
+
+    public boolean isFullWidth() {
+        return fullWidth;
+    }
+
+    public boolean isStackedButtons() {
+        return stackedButtons;
+    }
+
+    public String getVariation() {
+        return variation;
+    }
+
+    public String getEnterPinTitle() {
+        return enterPinTitle;
+    }
+
+    public String getReEnterPinTitle() {
+        return reEnterPinTitle;
+    }
+
+    public String getWarningMessage() {
+        return warningMessage;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public AnswerPayloadModel getAnswerPayload() {
+        return answerPayload;
     }
 
     public ArrayList<ContactTemplateModel> getContactCardModel() {
@@ -520,6 +588,10 @@ public class PayloadInner {
                         Type listType = new TypeToken<ArrayList<AdvancedMultiSelectModel>>() {
                         }.getType();
                         advancedMultiSelectModels = gson.fromJson(elementsAsString, listType);
+                    } else if (BotResponse.TEMPLATE_TYPE_ARTICLE.equals(template_type)) {
+                        Type listType = new TypeToken<ArrayList<ArticleModel>>() {
+                        }.getType();
+                        articleModels = gson.fromJson(elementsAsString, listType);
                     }
                 }
             }
