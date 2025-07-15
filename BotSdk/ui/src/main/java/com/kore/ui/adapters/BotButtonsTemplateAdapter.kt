@@ -79,8 +79,8 @@ class BotButtonsTemplateAdapter(
                 e.printStackTrace()
             }
         }
-        val isFullWidth = payload[BotResponseConstants.FULL_WIDTH_] as Boolean
-        val isStackedButtons = payload[BotResponseConstants.BUTTON_STACKED] as Boolean
+        val isFullWidth = payload[BotResponseConstants.FULL_WIDTH_] as Boolean? ?: false
+        val isStackedButtons = payload[BotResponseConstants.BUTTON_STACKED] as Boolean? ?: false
         val variation = (payload[BotResponseConstants.BUTTON_VARIATION] as String?) ?: ""
         val bgDrawable = holder.buttonTitle.background as GradientDrawable
         bgDrawable.cornerRadius = 4.dpToPx(context).toFloat()
@@ -93,6 +93,10 @@ class BotButtonsTemplateAdapter(
             bgDrawable.setColor(invertBgColor.toColorInt())
             bgDrawable.setStroke(1.dpToPx(context), invertBgColor.toColorInt())
             holder.buttonTitle.setTextColor(invertTextColor.toColorInt())
+        } else if (variation == BotResponseConstants.TEXT_INVERTED) {
+            holder.buttonTitle.setTextColor(invertBgColor.toColorInt())
+            bgDrawable.setColor(buttonBgColor.toColorInt())
+            bgDrawable.setStroke(1.dpToPx(context), buttonBgColor.toColorInt())
         } else {
             holder.buttonTitle.setTextColor(activeTextColor.toColorInt())
             bgDrawable.setColor(buttonBgColor.toColorInt())

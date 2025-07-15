@@ -11,9 +11,9 @@
     android:paddingRight="@dimen/dimen_12dp"
     android:paddingBottom="@dimen/dimen_3dp">
 
-    <TextView
+    <com.kore.ui.textview.CustomTextViewBold
         android:id="@+id/bot_list_item_title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="false"
         android:ellipsize="end"
@@ -22,9 +22,9 @@
         android:textColor="@color/left_bubble_text_color"
         android:textSize="14sp" />
 
-    <TextView
+    <com.kore.ui.textview.CustomTextView
         android:id="@+id/bot_list_item_subtitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/bot_list_item_title"
         android:clickable="false"
@@ -33,7 +33,7 @@
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:text="@string/subtitle"
-        android:textColor="@color/footer_color_dark_grey"
+        android:textColor="@color/left_bubble_text_color"
         android:textSize="11sp"
         android:visibility="gone"
         tools:visibility="visible" />
@@ -83,7 +83,6 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginEnd="5dp"
-            android:background="#ff0000"
             android:clickable="false"
             android:padding="4dp"
             android:visibility="gone"

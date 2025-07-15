@@ -1,5 +1,6 @@
 package com.kore.ui.base
 
+import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.Rect
 import android.os.Bundle
@@ -34,6 +35,10 @@ abstract class BaseDialogFragment<B : ViewDataBinding, N : BaseView, V : BaseVie
         mViewModel?.setView(this as N?)
         this.binding.lifecycleOwner = this
         return binding.root
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return super.onCreateDialog(savedInstanceState)
     }
 
     @CallSuper
