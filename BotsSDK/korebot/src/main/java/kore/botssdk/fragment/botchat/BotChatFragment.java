@@ -38,6 +38,7 @@ import java.util.Objects;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.bot.BotClient;
+import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.content.NewBotContentFragment;
@@ -55,6 +56,7 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.FormActionTemplate;
+import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.SDKConfig;
@@ -178,6 +180,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void addMessageToAdapter(BotResponse baseBotMessage) {
         botContentFragment.addMessageToBotChatAdapter(baseBotMessage);
+        showTemplateBottomSheet(baseBotMessage);
         mViewModel.textToSpeech(baseBotMessage, baseFooterFragment.isTTSEnabled());
         botContentFragment.setQuickRepliesIntoFooter(baseBotMessage);
         botContentFragment.showCalendarIntoFooter(baseBotMessage);
@@ -459,6 +462,26 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
+    }
+
+    private void showTemplateBottomSheet(BotResponse botResponse) {
+        if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+            return;
+        }
+        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
+        switch (payloadInner.getTemplate_type()) {
+            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
+                if (payloadInner.getSliderView()) {
+                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
+                    fragment.setData(payloadInner);
+                    fragment.setComposeFooterInterface(this);
+                    fragment.show(getChildFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
+                }
+            }
+        }
     }
 
     @Override
