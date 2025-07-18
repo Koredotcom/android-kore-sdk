@@ -1,64 +1,62 @@
 # Kore.ai Android SDK
 
-Kore.ai provides platform-specific SDKs to help developers quickly integrate chatbot capabilities into custom applications.  
-With just a few lines of code, you can embed the Kore.ai chat widget and enable natural language interactions with your users.
+Kore.ai offers SDKs tailored for specific platforms to help developers quickly embed chatbot functionality into their custom applications.  
+With minimal coding, you can integrate the Kore.ai chat widget and enable users to interact naturally via conversational UI.
 
 ---
 
 ## Overview
 
-The **Kore.ai Android SDK** enables seamless communication with Kore.ai bots over WebSocket.  
-This repository also includes a sample application that you can customize based on your bot configuration.
+The **Kore.ai Android SDK** facilitates smooth communication with Kore.ai bots using WebSocket.  
+This repository also contains a sample application that you can modify to fit your bot configuration needs.
 
 ---
 
 ## Getting Started
 
-### Prerequisites
+### Requirements
 
-- A service to generate JWT tokens (used in the SDK’s authentication flow).
+- A service for generating JWT tokens (used for authentication).
 - Bot SDK credentials:
-  - Log in to the Kore.ai Bots platform.
-  - Navigate to your bot in the **Bot Builder**.
+  - Log into the Kore.ai Bots platform.
+  - Go to your bot project in the **Bot Builder**.
   - Enable the **Web/Mobile Client** channel.
-  - Create or use an existing SDK app to retrieve your **Client ID** and **Client Secret**.
+  - Create or select an SDK app to get your **Client ID** and **Client Secret**.
 
-**Screenshots for reference:**
+**Reference Images:**
 
-![Enable webclient](https://github.com/user-attachments/assets/4d2263a2-bf8a-4a02-8b60-5a8b4c8da643)
-_Enable Web/Mobile Client Channel_
+![Enable webclient](https://github.com/user-attachments/assets/4d2263a2-bf8a-4a02-8b60-5a8b4c8da643)  
+_Enabling Web/Mobile Client Channel_
 
-![Credentials](https://github.com/user-attachments/assets/26932a3e-71a4-48fd-9917-7f6ede3b6749)
-_Obtain Client ID and Client Secret_
+![Credentials](https://github.com/user-attachments/assets/26932a3e-71a4-48fd-9917-7f6ede3b6749)  
+_Retrieving Client ID and Secret_
 
 ---
 
-## Integration Options
+## Integration Methods
 
-### 1. Integrate with UI
+### 1. Integration with UI
 
-#### Setup
+#### Setup Steps
 
-1. Copy the `korebot` and `korebotsdklib` modules into your application.
-2. Add them to `settings.gradle`:
+1. Copy `korebot` and `korebotsdklib` modules into your project.
+2. Update `settings.gradle`:
    ```groovy
    include ':korebot', ':korebotsdklib'
    ```
 3. Add dependencies in `build.gradle`:
-
    ```groovy
    implementation(project(':korebot')) {
        exclude module: 'support-v4'
    }
-
    implementation(project(':korebotsdklib')) {
        exclude module: 'support-v4'
    }
    ```
 
-#### Bot Configuration
+#### Bot Initialization
 
-In your Application:
+Inside your application:
 
 ```java
 SDKConfig.initialize(
@@ -79,36 +77,27 @@ Optional configurations:
 ```java
 // To set custom data if you required
 SDKConfig.setCustomData(getCustomData());
-
 // To set query params if you required
 SDKConfig.setQueryParams(getQueryParams());
-
 // Flag to use the Webhook instead of socket then make it "true"
 SDKConfig.isWebHook(false);
-
 // Flag to show or hide icon for the bot chat conversation
 SDKConfig.setIsShowIcon(true);
-
 // Flag to show chat conversation icon at the top the view
 SDKConfig.setIsShowIconTop(true);
-
 // Flag to show or hide time stamp of each conversation message
 SDKConfig.setIsTimeStampsRequired(true);
-
 // Flag to show or hide action bar in GenericWebviewActivity
 SDKConfig.setIsShowActionBar(true);
-
 // Flag to show or hide attachments icon in footer fragment
 SDKConfiguration.OverrideKoreConfig.showAttachment = true;
-
 // Flag to show or hide Speech to text(ASR) icon in footer fragment
 SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
-
-Flag to show or hide Text to speech icon in footer fragment
+// Flag to show or hide Text to speech icon in footer fragment
 SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
 ```
 
-To launch the chat activity:
+To open the chat window:
 
 ```java
 Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
@@ -119,60 +108,56 @@ intent.putExtras(bundle);
 startActivity(intent);
 ```
 
-**Sample App with UI Integration:**  
-🔗 [Kore.ai Android SDK Sample](https://github.com/Koredotcom/android-kore-sdk/tree/master/BotsSDK)
+📘 **Sample App with UI:**  
+[Kore.ai Android SDK Sample](https://github.com/Koredotcom/android-kore-sdk/tree/master/BotsSDK)
 
 ---
 
-### 2. Integrate Without UI
+### 2. Headless Integration (Without UI)
 
-#### Setup
+#### Setup Steps
 
-1. Copy only the `korebotsdklib` module into your project.
-2. Add it to `settings.gradle`:
+1. Only include the `korebotsdklib` module in your project.
+2. Add this to `settings.gradle`:
    ```groovy
    include ':korebotsdklib'
    ```
-3. Add the module in `build.gradle`:
+3. Add dependency in `build.gradle`:
    ```groovy
    implementation(project(':korebotsdklib')) {
        exclude module: 'support-v4'
    }
    ```
 
-#### Bot Client Integration
+#### Bot Integration
 
-1. Implement `SocketConnectionListener` in your class.
-2. Initialize the bot:
+1. Implement the `SocketConnectionListener` interface.
+2. Connect the bot:
    ```java
    BotClient botClient = new BotClient(this);
    botClient.connectAsAnonymousUser(jwt, botName, botId, this);
    ```
-3. Send messages to the bot:
+3. Send messages:
    ```java
    botClient.sendMessage("Hello Bot");
    botClient.sendMessage("Hello Bot", attachmentsList);
    ```
 
-**Sample App without UI:**  
-🔗 [Headless SDK Sample](https://github.com/DocsInternal-Kore/korebot-sdk-lib/tree/master)
+📘 **Sample App without UI:**  
+[Headless SDK Sample](https://github.com/DocsInternal-Kore/korebot-sdk-lib/tree/master)
 
 ---
 
-## Gradle Integration
+## Gradle Integration Guide
 
 ### With UI
 
-1. Add this dependency:
-
+1. Add the dependency:
    ```groovy
-   implementation 'com.github.Koredotcom:android-kore-sdk:0.0.5'
+   implementation 'com.github.Koredotcom:android-kore-sdk:10.14.2'
    ```
-
-2. Initialize the bot using the configuration method described in **Setup Bot Configuration with UI**.
-
+2. Configure the SDK as described above.
 3. Launch chat window:
-
    ```java
    Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
    Bundle bundle = new Bundle();
@@ -181,46 +166,39 @@ startActivity(intent);
    intent.putExtras(bundle);
    startActivity(intent);
    ```
-
 4. Customize templates or fragments:
 
 ```java
-   // To override existing template or add new template
-   SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
-
-   // To show your custom content fragment instead of existing
-   SDKConfig.addCustomContentFragment(new CustomContentFragment());
-
-   // To show your custom footer fragment instead of existing
-   SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
-
-   // To show your custom header fragment instead of existing
-   SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
+// To override existing template or add new template
+SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
+// To show your custom content fragment instead of existing
+SDKConfig.addCustomContentFragment(new CustomContentFragment());
+// To show your custom footer fragment instead of existing
+SDKConfig.addCustomFooterFragment(new CustomFooterFragment());
+// To show your custom header fragment instead of existing
+SDKConfig.addCustomHeaderFragment(new CustomHeaderFragment());
 ```
 
-**Note**: Please go through the readme documents for [CustomTemplateInjection](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomTemplateInjection.md) and [CustomFragmentInjection](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomFragmentInjection.md)
+🔗 See [CustomTemplateInjection Guide](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomTemplateInjection.md)  
+🔗 See [CustomFragmentInjection Guide](https://github.com/SudheerJa-Kore/android-kore-sdk/blob/master/docs/CustomFragmentInjection.md)
 
 ---
 
-### Without UI (Headless Bot)
+### Without UI
 
 1. Add JitPack to `project/build.gradle`:
-
    ```groovy
    maven { url 'https://www.jitpack.io' }
    ```
-
-2. Add the SDK in `app/build.gradle`:
-
+2. Add dependency in `app/build.gradle`:
    ```groovy
-   implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:0.0.5'
+   implementation 'com.github.Koredotcom.android-kore-sdk:korebotsdklib:10.14.2'
    ```
-
-3. Setup the bot using the instructions under **Setup Bot Configuration**.
+3. Configure your bot as described previously.
 
 ---
 
-## Additional Features
+## Extra Features
 
 ### Push Notifications
 
@@ -239,9 +217,9 @@ registrar.unsubscribePushNotification(context, accessToken);
 
 ---
 
-### Disconnect
+### Disconnect from Bot
 
-Call this to close the bot session:
+To terminate the bot session:
 
 ```java
 botClient.disconnect();
@@ -249,9 +227,9 @@ botClient.disconnect();
 
 ---
 
-### Webhook Mode
+### Using Webhook Mode
 
-To use API-based (Webhook) communication instead of WebSocket:
+Switch to API/Webhook-based communication:
 
 ```java
 SDKConfig.isWebHook(true);
