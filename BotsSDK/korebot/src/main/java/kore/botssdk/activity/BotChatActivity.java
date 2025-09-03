@@ -859,7 +859,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
                 }
 
                 if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(BotChatActivity.this)) {
-                    Toast.makeText(BotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show();
+                    BotChatActivity.this.runOnUiThread(() -> Toast.makeText(BotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show());
                 } else {
                     ACManager.getInstance().callNumber(sipUser, isVideoCall);
                 }
