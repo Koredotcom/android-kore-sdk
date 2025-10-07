@@ -46,9 +46,7 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
         }
         payInner = payOuter.getPayload();
         if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
-            if (!BotResponse.TEMPLATE_TYPE_DATE.equalsIgnoreCase(payInner.getTemplate_type()) &&
-                    !BotResponse.TEMPLATE_TYPE_DATE_RANGE.equalsIgnoreCase(payInner.getTemplate_type()))
-                message = payInner.getText();
+            message = payInner.getText();
         } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
             message = payInner.getText_message();
         else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTitle()))
