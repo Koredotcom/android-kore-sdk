@@ -32,10 +32,10 @@ public class Speech {
     private static Speech instance = null;
     protected static String GOOGLE_APP_PACKAGE = "com.google.android.googlequicksearchbox";
 
-    private Context mContext;
+    private final Context mContext;
 
-    private TextToSpeechEngine textToSpeechEngine;
-    private SpeechRecognitionEngine speechRecognitionEngine;
+    private final TextToSpeechEngine textToSpeechEngine;
+    private final SpeechRecognitionEngine speechRecognitionEngine;
 
     private Speech(final Context context, final String callingPackage, TextToSpeech.OnInitListener onInitListener, SpeechRecognitionEngine speechRecognitionEngine, TextToSpeechEngine textToSpeechEngine) {
         mContext = context;

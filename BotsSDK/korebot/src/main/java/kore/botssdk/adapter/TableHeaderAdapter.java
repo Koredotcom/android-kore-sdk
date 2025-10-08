@@ -20,7 +20,7 @@ public class TableHeaderAdapter extends RecyclerView.Adapter<TableHeaderAdapter.
     private final String RIGHT = "right";
     private final String LEFT = "left";
     private final List<List<String>> tableItems;
-    private boolean isEnabled;
+    private final boolean isEnabled;
     private final LayoutInflater layoutInflater;
 
     public TableHeaderAdapter(Context context, List<List<String>> tableItems, boolean isEnabled) {

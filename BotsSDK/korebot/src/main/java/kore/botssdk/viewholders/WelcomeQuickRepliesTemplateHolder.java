@@ -51,7 +51,7 @@ public class WelcomeQuickRepliesTemplateHolder extends BaseViewHolder {
 
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
-        QuickRepliesTemplateAdapter quickRepliesAdapter = null;
+        QuickRepliesTemplateAdapter quickRepliesAdapter;
         if (recyclerView.getAdapter() == null) {
             quickRepliesAdapter = new QuickRepliesTemplateAdapter(itemView.getContext(), recyclerView, isLastItem());
             quickRepliesAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

@@ -91,7 +91,7 @@ public class FormTemplateAdapter extends RecyclerView.Adapter<FormTemplateAdapte
         return states;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         Button btnFieldButton;
         TextView tvFormFieldTitle;
         EditText edtFormInput;

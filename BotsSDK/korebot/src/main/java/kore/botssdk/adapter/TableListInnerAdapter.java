@@ -143,7 +143,7 @@ public class TableListInnerAdapter extends RecyclerView.Adapter<TableListInnerAd
         return botTableListModels != null ? botTableListModels.get(position) : null;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

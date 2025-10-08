@@ -25,61 +25,38 @@ import kore.botssdk.adapter.ListWidgetAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.WidgetListElementModel;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewUtils.DimensionUtil;
 
 public class ListWidgetActionSheetFragment extends BottomSheetDialogFragment {
 
-    private View view;
-    private boolean isFromFullView;
     private ArrayList<WidgetListElementModel> model;
-    private VerticalListViewActionHelper verticalListViewActionHelper;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private boolean isFromListMenu = false;
-    private int dp1;
-    private LinearLayout llCloseBottomSheet;
-    public String getSkillName() {
-        return skillName;
-    }
     private BottomSheetDialog bottomSheetDialog;
-    private final boolean showHeader = true;
-    private int count;
-    private RecyclerView rvViewMore;
-    private TextView tvOptionsTitle;
     private String title;
-    private ListWidgetAdapter botListTemplateAdapter;
-    private View divider;
 
-    public void setSkillName(String skillName, String trigger) {
-        this.skillName = skillName;
-        this.trigger = trigger;
-    }
-
-    private String skillName;
-    private String trigger;
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.list_view_more_sheet, container,false);
-        llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
-        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
-        rvViewMore = view.findViewById(R.id.rvMoreData);
-        divider = view.findViewById(R.id.divider);
+        View view = inflater.inflate(R.layout.list_view_more_sheet, container, false);
+        LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
+        TextView tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
+        RecyclerView rvViewMore = view.findViewById(R.id.rvMoreData);
+        View divider = view.findViewById(R.id.divider);
         rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         tvOptionsTitle.setVisibility(View.VISIBLE);
         rvViewMore.setVisibility(View.VISIBLE);
         divider.setVisibility(View.VISIBLE);
-        this.dp1 = (int) DimensionUtil.dp1;
+        int dp1 = (int) DimensionUtil.dp1;
 
 
         if(model != null)
         {
-            botListTemplateAdapter = new ListWidgetAdapter(getActivity(), "");
+            ListWidgetAdapter botListTemplateAdapter = new ListWidgetAdapter(getActivity(), "");
             rvViewMore.setAdapter(botListTemplateAdapter);
             botListTemplateAdapter.setData(model);
             botListTemplateAdapter.setPreviewLength(model.size());
@@ -135,21 +112,8 @@ public class ListWidgetActionSheetFragment extends BottomSheetDialogFragment {
         return bottomSheetDialog;
     }
 
-    public void setisFromFullView(boolean isFromFullView) {
-        this.isFromFullView = isFromFullView;
-    }
-
     public void setData(String title, ArrayList<WidgetListElementModel> botListModelArrayList) {
         this.model = botListModelArrayList;
         this.title = title;
-    }
-
-    public void setData(ArrayList<WidgetListElementModel> botListModelArrayList, boolean isFromListMenu){
-        model = botListModelArrayList;
-        this.isFromListMenu = isFromListMenu;
-    }
-
-    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
 }

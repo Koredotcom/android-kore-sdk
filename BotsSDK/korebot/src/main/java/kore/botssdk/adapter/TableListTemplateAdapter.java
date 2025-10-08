@@ -70,7 +70,7 @@ public class TableListTemplateAdapter extends RecyclerView.Adapter<TableListTemp
         return botTableListModels != null ? botTableListModels.get(position) : null;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView botListItemTitle;
         TextView botListItemDesc;
         RecyclerView recyclerView;

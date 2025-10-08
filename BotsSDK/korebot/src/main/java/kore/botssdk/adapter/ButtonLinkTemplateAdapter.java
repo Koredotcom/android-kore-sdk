@@ -49,7 +49,7 @@ public class ButtonLinkTemplateAdapter extends RecyclerView.Adapter<ButtonLinkTe
             if (composeFooterInterface != null && invokeGenericWebViewInterface != null && isEnabled) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
 
-                    if (!StringUtils.isNullOrEmpty(buttonTemplate.getUrl()) /*&& checkedPosition == -1*/) {
+                    if (!StringUtils.isNullOrEmpty(buttonTemplate.getUrl())) {
                         if (buttonTemplate.isSamePageNavigation())
                             composeFooterInterface.onDeepLinkClicked(buttonTemplate.getUrl());
                         else

@@ -196,7 +196,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         BrandingRestBuilder.setContext(NewBotChatActivity.this);
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        //Add Bot Content Fragment
+        //Adding Bot Content Fragment
         BaseContentFragment customContentFragment = SDKConfig.getCustomContentFragment();
         botContentFragment = customContentFragment != null ? customContentFragment : new NewBotContentFragment();
         botContentFragment.setArguments(getIntent().getExtras());
@@ -204,7 +204,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         botContentFragment.setInvokeGenericWebViewInterface(this);
         fragmentTransaction.add(R.id.chatLayoutContentContainer, botContentFragment).commit();
 
-        //Add Bot Compose Footer Fragment
+        //Adding Bot Compose Footer Fragment
         fragmentTransaction = getSupportFragmentManager().beginTransaction();
         BaseFooterFragment customFooterFragment = SDKConfig.getCustomFooterFragment();
         baseFooterFragment = customFooterFragment != null ? customFooterFragment : new ComposeFooterFragment();
@@ -358,7 +358,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     }
 
     @Override
-    public void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation) {
+    public void uploadBulkFile(String fileName, String filePath, String extension, String filePathThumbnail, String orientation) {
     }
 
     @Override
@@ -418,20 +418,8 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     }
 
     @Override
-    public void onFormActionButtonClicked(FormActionTemplate fTemplate) {
-    }
-
-    @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
         baseFooterFragment.setComposeText(text);
-    }
-
-    @Override
-    public void sendImage(String fP, String fN, String fPT) {
-    }
-
-    @Override
-    public void externalReadWritePermission(String fileUrl) {
     }
 
     @Override

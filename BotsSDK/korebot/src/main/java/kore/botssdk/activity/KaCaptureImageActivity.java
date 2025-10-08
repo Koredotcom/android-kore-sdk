@@ -67,9 +67,8 @@ import kore.botssdk.utils.StringUtils;
 
 @SuppressLint("UnknownNullness")
 public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreMedia, ActivityResultCallback<ActivityResult> {
-
     public static final int THUMBNAIL_WIDTH = 320;
-    public static final int THUMNAIL_HEIGHT = 240;
+    public static final int THUMBNAIL_HEIGHT = 240;
     public static final String THUMBNAIL_FILE_PATH = "filePathThumbnail";
     private static Uri cameraMediaUri;
     private String imagePickType = null;
@@ -186,7 +185,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 captureActivityResultLauncher.launch(captureIntent);
 
             } else if (CHOOSE_TYPE_CAPTURE_VIDEO.equals(mediaPickType)) {
-                // in case picture is choosen from gallery
+                // in case picture is chosen from gallery
                 //use standard intent to pick an image from gallery
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
@@ -205,7 +204,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 captureVideoActivityResultLauncher.launch(intent);
 
             } else if (CHOOSE_TYPE_IMAGE_PICK.equals(mediaPickType)) {
-                // in case picture is choosen from gallery
+                // in case picture is chosen from gallery
                 //use standard intent to pick an image from gallery
                 Intent photoPickerIntent = new Intent(Intent.ACTION_GET_CONTENT);
                 photoPickerIntent.setType("image/*");
@@ -501,44 +500,6 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
         finish();
     }
 
-    protected class FetchImageDataAndCrop extends AsyncTaskExecutor<String> {
-        private final Uri selectedImage;
-        private String imageUrl;
-
-        public FetchImageDataAndCrop(Uri selectedImage) {
-            this.selectedImage = selectedImage;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            showProgress("", false);
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void doInBackground(String... strings) {
-            imageUrl = getPath(KaCaptureImageActivity.this, selectedImage);
-        }
-
-        @Override
-        protected void onPostExecute() {
-            if (StringUtils.isNullOrEmpty(imageUrl)) {
-                imageUrl = !(imageUrl.contains("file://")) ? "file://" + imageUrl : imageUrl;
-            } else {
-                Toast.makeText(KaCaptureImageActivity.this, "image fetch failed", Toast.LENGTH_LONG).show();
-                finish();
-            }
-
-            dismissProgress();
-        }
-
-        @Override
-        protected void onCancelled() {
-            // update UI on task cancelled
-            showToast("Unable to attach!");
-        }
-    }
-
     void finishAndCancelOperation() {
         if (resultIntent == null) resultIntent = new Intent();
         resultIntent.putExtra("action", "IMAGE_CANCEL");
@@ -716,7 +677,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             target_H = (target_W * original_H) / original_W;
             LogUtils.d(LOG_TAG, "createImageThumbnail() :: calculated thumbnail height for landscape mode" + target_H + "and width is" + target_W);
         } else {
-            target_H = THUMNAIL_HEIGHT;
+            target_H = THUMBNAIL_HEIGHT;
             target_W = (target_H * original_W) / original_H;
             LogUtils.d(LOG_TAG, "createImageThumbnail() :: calculated thumbnail width for portrait mode: width " + target_W + "and height " + target_H);
         }

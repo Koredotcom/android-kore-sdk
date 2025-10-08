@@ -20,13 +20,7 @@ public interface ComposeFooterInterface {
 
     void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance);
 
-    void onFormActionButtonClicked(FormActionTemplate fTemplate);
-
     void copyMessageToComposer(String text, boolean isForOnboard);
-
-    void sendImage(String fP, String fN, String fPT);
-
-    void externalReadWritePermission(String fileUrl);
 
     void onDeepLinkClicked(String url);
 }

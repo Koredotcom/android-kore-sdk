@@ -208,7 +208,7 @@ public class CardTemplateAdapter extends RecyclerView.Adapter<CardTemplateAdapte
                 holder.rvDescription.setAdapter(new CardTemplateListAdapter(context, cardTemplateModel.getCardDescription()));
             }
 
-            if (cardTemplateModel.getButtons() != null && cardTemplateModel.getButtons().size() > 0) {
+            if (cardTemplateModel.getButtons() != null && !cardTemplateModel.getButtons().isEmpty()) {
                 if (cardTemplateModel.getButtons().size() == 1) {
                     CardTemplateButtonModel cardTemplateButtonModel = cardTemplateModel.getButtons().get(0);
 

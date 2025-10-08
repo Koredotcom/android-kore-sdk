@@ -36,13 +36,11 @@ public class KaFontUtils {
 
     public static void applyCustomFont(Context context, View root) {
         if(SDKConfiguration.isApplyFontStyle()) {
-            if (root instanceof ViewGroup) {
-                ViewGroup viewGroup = (ViewGroup) root;
+            if (root instanceof ViewGroup viewGroup) {
                 for (int count = 0; count <= viewGroup.getChildCount(); count++) {
                     applyCustomFont(context, viewGroup.getChildAt(count));
                 }
-            } else if (root instanceof TextView) {
-                TextView myView = (TextView) root;
+            } else if (root instanceof TextView myView) {
                 setCustomFont(myView, context);
             }
         }

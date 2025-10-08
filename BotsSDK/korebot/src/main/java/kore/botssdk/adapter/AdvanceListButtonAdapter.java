@@ -2,19 +2,13 @@ package kore.botssdk.adapter;
 
 import static android.view.View.GONE;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.net.Uri;
 import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,10 +16,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -33,8 +25,6 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 import kore.botssdk.R;
-import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.events.AdvanceListRefreshEvent;
 import kore.botssdk.listener.AdvanceButtonClickListner;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -49,7 +39,6 @@ import kore.botssdk.viewUtils.RoundedCornersTransform;
 public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListButtonAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
     private final ArrayList<Widget.Button> buttons;
-    private final Context mContext;
     private String skillName;
     private final String type;
     private final AdvanceButtonClickListner advanceButtonClickListner;
@@ -57,19 +46,18 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
     private final ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private int count;
-    private boolean isOptions = false;
+    private final boolean isOptions;
     private final SharedPreferences sharedPreferences;
 
     public AdvanceListButtonAdapter(Context context, ArrayList<Widget.Button> buttons, String type, AdvanceButtonClickListner advanceButtonClickListner, ComposeFooterInterface composeFooterInterface, InvokeGenericWebViewInterface invokeGenericWebViewInterface, boolean isOptions) {
         this.buttons = buttons;
         this.inflater = LayoutInflater.from(context);
-        mContext = context;
         this.type = type;
         this.isOptions = isOptions;
         this.advanceButtonClickListner = advanceButtonClickListner;
         this.composeFooterInterface = composeFooterInterface;
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-        sharedPreferences = mContext.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
     }
 
     @NonNull
@@ -191,12 +179,6 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
         this.count = count;
     }
 
-    boolean isFullView;
-
-    public void setIsFromFullView(boolean isFullView) {
-        this.isFullView = isFullView;
-    }
-
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
         final TextView tv;
         final ImageView ivBtnImage;
@@ -216,61 +198,11 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
         this.advanceOptionsAdapter = listAdapter;
     }
 
-    public void buttonAction(String utterance, boolean appendUtterance) {
-        if (utterance != null && (utterance.startsWith("tel:") || utterance.startsWith("mailto:"))) {
-            if (utterance.startsWith("tel:")) {
-                launchDialer(mContext, utterance);
-            } else if (utterance.startsWith("mailto:")) {
-                showEmailIntent((Activity) mContext, utterance.split(":")[1]);
-            }
-            return;
-        }
-        AdvanceListRefreshEvent event = new AdvanceListRefreshEvent();
-        event.setPayLoad(utterance);
-        KoreEventCenter.post(event);
-    }
-
     public String getSkillName() {
         return skillName;
     }
 
     public void setSkillName(String skillName) {
         this.skillName = skillName;
-    }
-
-    public void showEmailIntent(Activity activity, String recepientEmail) {
-        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
-        emailIntent.setData(Uri.parse("mailto:" + recepientEmail));
-        emailIntent.putExtra(Intent.EXTRA_SUBJECT, "");
-
-        try {
-            activity.startActivity(emailIntent);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(activity, "Error while launching email intent!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @SuppressLint("MissingPermission")
-    public void launchDialer(Context context, String url) {
-        try {
-            Intent intent = new Intent(hasPermission(context, Manifest.permission.CALL_PHONE) ? Intent.ACTION_CALL : Intent.ACTION_DIAL);
-            intent.setData(Uri.parse(url));
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_SINGLE_TOP
-                    | Intent.FLAG_ACTIVITY_CLEAR_TOP
-                    | Intent.FLAG_ACTIVITY_NO_HISTORY);
-            context.startActivity(intent);
-        } catch (Exception e) {
-            Toast.makeText(context, "Invalid url!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    public boolean hasPermission(Context context, String... permission) {
-        boolean shouldShowRequestPermissionRationale = true;
-        for (String s : permission) {
-            shouldShowRequestPermissionRationale = shouldShowRequestPermissionRationale &&
-                    ActivityCompat.checkSelfPermission(context, s) == PackageManager.PERMISSION_GRANTED;
-        }
-        return shouldShowRequestPermissionRationale;
     }
 }

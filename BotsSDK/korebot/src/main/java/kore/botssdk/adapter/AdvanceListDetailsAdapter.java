@@ -24,12 +24,12 @@ import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewUtils.RoundedCornersTransform;
 
-public class AdvanceListdetailsAdapter extends BaseAdapter
+public class AdvanceListDetailsAdapter extends BaseAdapter
 {
     private final Context context;
     private final ArrayList<Widget.Button> contentModels;
 
-    protected AdvanceListdetailsAdapter(@NonNull Context context, @NonNull ArrayList<Widget.Button> contentModels)
+    public AdvanceListDetailsAdapter(@NonNull Context context, @NonNull ArrayList<Widget.Button> contentModels)
     {
         this.context = context;
         this.contentModels = contentModels;

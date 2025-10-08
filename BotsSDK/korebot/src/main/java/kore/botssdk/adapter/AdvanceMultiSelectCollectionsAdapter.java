@@ -117,9 +117,7 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
             gradientDrawable.setColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         }
 
-        holder.checkBox.setOnClickListener(v -> {
-            multiSelectListener.itemSelected(item);
-        });
+        holder.checkBox.setOnClickListener(v -> multiSelectListener.itemSelected(item));
         if (!isEnabled) {
             holder.checkBox.setClickable(false);
             holder.checkBox.setEnabled(false);

@@ -61,28 +61,28 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "PLEASE_ENTER_CLIENT_ID";
+        String clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+        String clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
 
         //Set botId, This value is mandatory
-        String botId = "PLEASE_ENTER_BOT_ID";
+        String botId = "st-b9889c46-218c-58f7-838f-73ae9203488c";
 
         //Set identity, This value is mandatory
         String identity = "PLEASE_ENTER_IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = "PLEASE_ENTER_BOT_NAME";
+        String botName = "Kore.ai Bot";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "PLEASE_ENTER_SERVER_URL";
+        String serverUrl = "https://bots.kore.ai";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
+        String brandingUrl = "https://bots.kore.ai";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
+        String jwtServerUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setLocalBranding(false, getLocalBrandingModel());
 
         // Flag to set status bar color as header background color
-        SDKConfig.setIsUpdateStatusBarColor(true);
+        SDKConfig.setIsUpdateStatusBarColor(false);
 
         //Method to reset the bot connection and start a new session by overriding the previous state
         // SDKConfig.disconnectBotSession(MainActivity.this);
@@ -195,17 +195,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Permission needed to send push notifications", Toast.LENGTH_SHORT).show();
                 }
             });
-
-    private void askNotificationPermission() {
-        // This is only necessary for API level >= 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                // FCM SDK (and your app) can post notifications.
-                requestPermissionLauncher.launch(POST_NOTIFICATIONS);
-            }
-        }
-    }
 
     private BrandingModel getLocalBrandingModel() {
         BrandingModel brandingModel = new BrandingModel();

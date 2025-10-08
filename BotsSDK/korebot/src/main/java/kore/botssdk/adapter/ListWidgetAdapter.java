@@ -157,26 +157,19 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         } else {
 
             final ListWidgetAdapter.ViewHolder holder = (ListWidgetAdapter.ViewHolder) holderData;
-            final WidgetListElementModel model = items.get(position);
+            final WidgetListElementModel model = items.get(holderData.getBindingAdapterPosition());
             holder.viewMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
 
             if (StringUtils.isNullOrEmpty(model.getTitle())) {
                 holder.txtTitle.setVisibility(GONE);
             } else {
                 holder.txtTitle.setText(model.getTitle().trim());
-//                if (sharedPreferences != null) {
-//                    holder.txtTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
-//                }
             }
 
             if (StringUtils.isNullOrEmpty(model.getSubtitle())) {
                 holder.txtSubTitle.setVisibility(GONE);
             } else {
                 holder.txtSubTitle.setText(model.getSubtitle().trim());
-
-//                if (sharedPreferences != null) {
-//                    holder.txtSubTitle.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
-//                }
             }
 
 
@@ -216,7 +209,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         holder.tvButtonParent.setVisibility(VISIBLE);
 
                         holder.tvButton.setOnClickListener(v -> buttonAction(model.getValue().getButton(), TextUtils.isEmpty(Constants.SKILL_SELECTION) || !StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
-                        String btnTitle = "";
+                        String btnTitle;
                         if (model.getValue().getButton() != null && model.getValue().getButton().getTitle() != null)
                             btnTitle = model.getValue().getButton().getTitle();
                         else btnTitle = model.getValue().getText();
@@ -230,12 +223,6 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         holder.imgMenu.bringToFront();
                         holder.imgMenu.setOnClickListener(v -> {
                             if (model.getValue() != null && model.getValue().getMenu() != null && !model.getValue().getMenu().isEmpty()) {
-//                                WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
-//                                bottomSheetDialog.setisFromFullView(false);
-//                                bottomSheetDialog.setSkillName(skillName, trigger);
-//                                bottomSheetDialog.setData(model, true);
-//                                bottomSheetDialog.setVerticalListViewActionHelper(verticalListViewActionHelper);
-//                                bottomSheetDialog.show(((FragmentActivity) mContext).getSupportFragmentManager(), "add_tags");
                                 showMenuPopup(holder.imgMenu, model.getValue().getMenu());
                             }
                         });
@@ -276,7 +263,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         holder.tvUrl.setVisibility(GONE);
                         if (model.getValue().getImage() != null && !StringUtils.isNullOrEmpty(model.getValue().getImage().getImage_src())) {
                             Picasso.get().load(model.getValue().getImage().getImage_src()).into(holder.icon_image_load);
-                            holder.icon_image_load.setOnClickListener(v -> defaultAction(model.getValue().getImage().getUtterance() != null ? model.getValue().getImage().getUtterance() : model.getValue().getImage().getPayload() != null ? model.getValue().getImage().getPayload() : "", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) || (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))));
+                            holder.icon_image_load.setOnClickListener(v -> defaultAction(model.getValue().getImage().getUtterance() != null ? model.getValue().getImage().getUtterance() : model.getValue().getImage().getPayload() != null ? model.getValue().getImage().getPayload() : "", TextUtils.isEmpty(Constants.SKILL_SELECTION) || !StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                         }
                         break;
                 }
@@ -295,9 +282,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     if (buttonsLayoutModel != null) {
                         int displayCount = buttonsLayoutModel.getDisplayLimit().getCount();
                         holder.viewMore.setVisibility(displayCount > 0 && displayCount < model.getButtons().size() ? VISIBLE : GONE);
-                        holder.viewMore.setOnClickListener(view -> {
-                            showMenuPopup(holder.viewMore, model.getButtons());
-                        });
+                        holder.viewMore.setOnClickListener(view -> showMenuPopup(holder.viewMore, model.getButtons()));
                         buttonRecyclerAdapter.setDisplayLimit(displayCount);
                         if (buttonsLayoutModel.getStyle().equalsIgnoreCase(BundleConstants.FIT_TO_WIDTH)) {
                             buttonRecyclerAdapter.setType(1);
@@ -334,7 +319,7 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     defaultAction(model.getDefault_action().getPayload(), TextUtils.isEmpty(Constants.SKILL_SELECTION) || !StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION));
                 }
             });
-            holder.divider.setVisibility(position == items.size() - 1 ? View.GONE : VISIBLE);
+            holder.divider.setVisibility(holderData.getBindingAdapterPosition() == items.size() - 1 ? View.GONE : VISIBLE);
         }
     }
 

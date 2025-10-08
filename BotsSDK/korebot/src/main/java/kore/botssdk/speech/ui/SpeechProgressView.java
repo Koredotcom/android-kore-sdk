@@ -25,7 +25,7 @@ public class SpeechProgressView extends View {
     private static final int ROTATION_RADIUS_DP = 10;
     private static final int IDLE_FLOATING_AMPLITUDE_DP = 3;
 
-    private static final int[] DEFAULT_BARS_HEIGHT_DP =  {10, 20, 30, 20, 10};;
+    private static final int[] DEFAULT_BARS_HEIGHT_DP =  {10, 20, 30, 20, 10};
 
     private static final float MDPI_DENSITY = 1.5f;
 

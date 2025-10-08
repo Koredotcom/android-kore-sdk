@@ -53,13 +53,9 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
 
         SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
-        String quickWidgetColor = SDKConfiguration.BubbleColors.quickReplyColor;
-        String quickReplyFontColor = SDKConfiguration.BubbleColors.quickReplyTextColor;
         String fillColor = SDKConfiguration.BubbleColors.quickReplyColor;
 
         fillColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_BG_COLOR, fillColor);
-        quickWidgetColor = sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, quickWidgetColor);
-        quickReplyFontColor = sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_TXT_COLOR, quickReplyFontColor);
 
         botCustomListViewButton.setTextColor(Color.parseColor(fillColor));
     }
@@ -76,7 +72,7 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
         if (botListViewMoreDataModel != null)
             LogUtils.e("More Data", botListViewMoreDataModel.getTab1().toString());
 
-        if (botListModelArrayList != null && botListModelArrayList.size() > 0) {
+        if (botListModelArrayList != null && !botListModelArrayList.isEmpty()) {
             this.payloadInner = payloadInner;
             itemView.setAlpha((payloadInner.isIs_end() ? 0.4f : 1.0f));
 
@@ -95,14 +91,12 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder implements ListCli
             botListTemplateAdapter.notifyDataSetChanged();
 
             botCustomListRoot.setVisibility(VISIBLE);
-            if (botButtonModelArrayList != null && botButtonModelArrayList.size() > 0) {
+            if (botButtonModelArrayList != null && !botButtonModelArrayList.isEmpty()) {
                 botCustomListViewButton.setText(Html.fromHtml(botButtonModelArrayList.get(0).getTitle()));
                 botCustomListViewButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                        bottomSheetDialog.setIsFromFullView(false);
-                        bottomSheetDialog.setSkillName("skillName", "trigger");
 //                        bottomSheetDialog.setData(botListModelArrayList);
                         bottomSheetDialog.setHeaderVisible(true);
                         bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);

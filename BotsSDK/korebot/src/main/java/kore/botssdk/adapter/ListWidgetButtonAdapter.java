@@ -3,18 +3,13 @@ package kore.botssdk.adapter;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,30 +19,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.google.gson.Gson;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.event.KoreEventCenter;
-import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.Widget;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewholders.BaseViewHolder;
 
 public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder> {
@@ -61,7 +48,7 @@ public class ListWidgetButtonAdapter extends RecyclerView.Adapter<ListWidgetButt
     int displayLimit = -1;
     private boolean isEnabled = true;
     private int type;
-    private boolean isMenus = false;
+    private final boolean isMenus;
 
     public ListWidgetButtonAdapter(Context context, ArrayList<Widget.Button> buttons, boolean isMenus) {
         this.buttons = buttons;

@@ -22,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 
 import java.net.UnknownHostException;
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotData;
@@ -32,14 +33,10 @@ import kore.botssdk.view.SyncingDialog;
 
 
 public abstract class KaAppCompatActivity extends AppCompatActivity {
-
     private final String TAG = "KoreAppCompatActivity";
     AlertDialog alertDialog;
-
     protected final String LOG_TAG = getClass().getSimpleName();
-
     private ProgressDialog mProgressDialog;
-//    private ProgressDialog mLoader;
     private SyncingDialog mLoader;
     protected Toolbar toolbar;
     protected int DP1;
@@ -86,7 +83,7 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
         }*/
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(ResourcesCompat.getDrawable(getResources(),R.drawable.ic_arrow_back_black_24dp, getTheme()));
     }
 
@@ -116,8 +113,6 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
         super.onResume();
     }
 
-
-
     @Override
     protected void onPause() {
         super.onPause();
@@ -131,15 +126,12 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
 
     protected void showProgress(String msg, boolean isCancelable) {
         if (mProgressDialog != null && mProgressDialog.isShowing() || isDestroyed()) {
-//            dismissProgress();
             return;
         }
 
         mProgressDialog = ProgressDialog.show(this, getResources().getString(R.string.app_name), msg);
         mProgressDialog.setCancelable(isCancelable);
         mProgressDialog.setContentView(R.layout.ka_progress_indicator);
-    //   ((TextView)mProgressDialog.findViewById(R.id.title)).setText(TextUtils.isEmpty(msg)? "please wait" : msg);
-//        mProgressDialog.show();
     }
 
     protected void dismissProgress() {
@@ -150,14 +142,12 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
             mProgressDialog.dismiss();
             mProgressDialog = null;
         }
-
     }
 
     protected void showLoader() {
         if(mLoader == null)
             mLoader = new SyncingDialog(this);
-        if (mLoader != null && mLoader.isShowing() || isDestroyed()) {
-//            dismissProgress();
+        if (mLoader.isShowing() || isDestroyed()) {
             return;
         }
 
@@ -237,14 +227,11 @@ public abstract class KaAppCompatActivity extends AppCompatActivity {
 
     private final Gson gson = new Gson();
     private String getHeader(String code) {
-        switch (code.trim()) {
-            case "QuestionAlreadyExist":
-                return "Duplicate Question";
-            case "InvalidQuestion":
-                return "Trigger question is too generic";
-            default:
-                return getResources().getString(R.string.app_name);
-        }
+        return switch (code.trim()) {
+            case "QuestionAlreadyExist" -> "Duplicate Question";
+            case "InvalidQuestion" -> "Trigger question is too generic";
+            default -> getResources().getString(R.string.app_name);
+        };
     }
     protected void showAlert(String msg,String code,boolean finish) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);

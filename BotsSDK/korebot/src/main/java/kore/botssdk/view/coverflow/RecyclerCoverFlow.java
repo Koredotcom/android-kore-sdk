@@ -125,12 +125,12 @@ public class RecyclerCoverFlow extends RecyclerView {
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        return isScrollable ? super.onTouchEvent(e) : false;
+        return isScrollable && super.onTouchEvent(e);
     }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent e) {
-        return isScrollable ? super.onInterceptTouchEvent(e) : false;
+        return isScrollable && super.onInterceptTouchEvent(e);
     }
 
     @Override
@@ -141,13 +141,8 @@ public class RecyclerCoverFlow extends RecyclerView {
                 getParent().requestDisallowInterceptTouchEvent(true);
                 break;
             case MotionEvent.ACTION_MOVE:
-                if ((ev.getX() > mDownX && getCoverFlowLayout().getCenterPosition() == 0) ||
-                        (ev.getX() < mDownX && getCoverFlowLayout().getCenterPosition() ==
-                                getCoverFlowLayout().getItemCount() - 1)) {
-                    getParent().requestDisallowInterceptTouchEvent(false);
-                } else {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                }
+                getParent().requestDisallowInterceptTouchEvent((!(ev.getX() > mDownX) || getCoverFlowLayout().getCenterPosition() != 0) &&
+                        (!(ev.getX() < mDownX) || getCoverFlowLayout().getCenterPosition() != getCoverFlowLayout().getItemCount() - 1));
                 break;
         }
         return super.dispatchTouchEvent(ev);

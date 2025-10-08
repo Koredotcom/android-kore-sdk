@@ -41,7 +41,7 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     private final RoundedCornersTransform roundedCornersTransform;
     final ListView parentListView;
     private final int count;
-    private BottomSheetDialog bottomSheetDialog;
+    private final BottomSheetDialog bottomSheetDialog;
 
     public BotListViewTemplateAdapter(Context context, ListView parentListView, int count, BottomSheetDialog bottomSheetDialog) {
         this.context = context;

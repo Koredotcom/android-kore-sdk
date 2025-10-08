@@ -9,7 +9,7 @@ import android.speech.SpeechRecognizer;
  */
 public class SpeechRecognitionException extends Exception {
 
-    private int code;
+    private final int code;
 
     public SpeechRecognitionException(int code) {
         super(getMessage(code));

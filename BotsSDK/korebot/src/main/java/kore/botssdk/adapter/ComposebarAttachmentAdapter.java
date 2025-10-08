@@ -80,7 +80,7 @@ public class ComposebarAttachmentAdapter extends RecyclerView.Adapter<Composebar
     }
 
 
-    static class ImageAttachView extends RecyclerView.ViewHolder {
+    public static class ImageAttachView extends RecyclerView.ViewHolder {
         final View close_icon;
         final ImageView attach_view;
 

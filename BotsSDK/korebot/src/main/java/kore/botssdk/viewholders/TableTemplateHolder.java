@@ -56,7 +56,7 @@ public class TableTemplateHolder extends BaseViewHolder {
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
 
         rvTableViewHeader.setLayoutManager(new GridLayoutManager(itemView.getContext(), payloadInner.getColumns().size()));
-        rvTableViewHeader.setAdapter(new TableTemplateHeaderAdapter(itemView.getContext(), payloadInner.getColumns(), isLastItem()));
+        rvTableViewHeader.setAdapter(new TableTemplateHeaderAdapter(itemView.getContext(), payloadInner.getColumns()));
         List<MiniTableModel> lists = new ArrayList<>();
         int size = ((ArrayList<?>) payloadInner.getElements()).size();
         for (int j = 0; j < size; j++) {
@@ -67,7 +67,7 @@ public class TableTemplateHolder extends BaseViewHolder {
 
         List<MiniTableModel> dataList = lists.size() > LIMIT ? lists.subList(0, LIMIT) : lists;
         rvTableView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.VERTICAL, false));
-        rvTableView.setAdapter(new TableTemplateAdapter(itemView.getContext(), payloadInner.getColumns(), dataList, isLastItem()));
+        rvTableView.setAdapter(new TableTemplateAdapter(itemView.getContext(), payloadInner.getColumns(), dataList));
 
         botTableShowMoreButton.setVisibility(lists.size() > LIMIT ? View.VISIBLE : View.GONE);
         botTableShowMoreButton.setOnClickListener(v -> showTableViewDialog(itemView.getContext(), payloadInner.getColumns(), lists));
@@ -90,8 +90,8 @@ public class TableTemplateHolder extends BaseViewHolder {
         rvHeader.setLayoutManager(new GridLayoutManager(context, headersList.size()));
         rvTableData.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
 
-        rvHeader.setAdapter(new TableTemplateHeaderAdapter(context, headersList, isLastItem()));
-        rvTableData.setAdapter(new TableTemplateAdapter(context, headersList, dataList, isLastItem()));
+        rvHeader.setAdapter(new TableTemplateHeaderAdapter(context, headersList));
+        rvTableData.setAdapter(new TableTemplateAdapter(context, headersList, dataList));
 
         ivDialogClose.setOnClickListener(v -> dialog.dismiss());
         dialog.show();

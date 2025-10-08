@@ -28,9 +28,7 @@ public class CustomMarkerView extends MarkerView {
     // content (user-interface)
     @Override
     public void refreshContent(Entry e, Highlight highlight) {
-        if (e instanceof CandleEntry) {
-
-            CandleEntry ce = (CandleEntry) e;
+        if (e instanceof CandleEntry ce) {
 
             tvContent.setText(Utils.formatNumber(ce.getHigh(), 0, true));
         } else {

@@ -111,13 +111,13 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
 
     }
 
-    private void postAction(int position,boolean append_uttrance) {
+    private void postAction(int position,boolean append_utterance) {
         HashMap<String, ArrayList<String>> hashMap = new HashMap<>();
         ArrayList<String> list = new ArrayList<>(1);
         list.add(model.getData().getEventId());
         hashMap.put("ids", list);
         KoreEventCenter.post(new DismissBaseSheet());
-        KoreEventCenter.post(new CancelEvent((append_uttrance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0,true));
+        KoreEventCenter.post(new CancelEvent((append_utterance?Constants.SKILL_UTTERANCE:"")+actionList.get(position).getUtterance(), new Gson().toJson(hashMap), 0,true));
         (widgetDialogActivity).dismiss();
         if (mainContext != null && isFromFullView) {
             mainContext.finish();
@@ -129,7 +129,7 @@ public class WidgetCancelActionsAdapter extends RecyclerView.Adapter<WidgetCance
         return actionList != null ? actionList.size() : 0;
     }
 
-    static class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
+    public static class WidgetCancelViewHolder extends RecyclerView.ViewHolder {
         final TextView tv_actions;
 
         public WidgetCancelViewHolder(@NonNull View itemView) {

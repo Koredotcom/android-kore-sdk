@@ -27,7 +27,6 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotListViewMoreDataModel;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.LogUtils;
@@ -65,7 +64,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         title.setVisibility(heading != null && !heading.isEmpty() ? VISIBLE : GONE);
         if (listElements != null && !listElements.isEmpty()) {
             int size = moreCount != 0 && listElements.size() > moreCount ? moreCount : listElements.size();
-            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(context, listElements, isLastItem(), size);
+            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(listElements, isLastItem(), size);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             recyclerView.setAdapter(botListTemplateAdapter);
@@ -76,8 +75,6 @@ public class ListViewTemplateHolder extends BaseViewHolder {
                 botCustomListViewButton.setText(Html.fromHtml("<u>" + botButtonModelArrayList.get(0).getTitle() + "</u>"));
                 botCustomListViewButton.setOnClickListener(v -> {
                     ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                    bottomSheetDialog.setIsFromFullView(false);
-                    bottomSheetDialog.setSkillName("skillName", "trigger");
                     bottomSheetDialog.setData(payloadInner.getHeading() != null ? payloadInner.getHeading() : payloadInner.getText(), botListViewMoreDataModel);
                     bottomSheetDialog.setHeaderVisible(true);
                     if (isLastItem()) bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
@@ -94,8 +91,6 @@ public class ListViewTemplateHolder extends BaseViewHolder {
 
                 botCustomListViewButton.setOnClickListener(v -> {
                     ListMoreActionSheetFragment bottomSheetDialog = new ListMoreActionSheetFragment();
-                    bottomSheetDialog.setisFromFullView(false);
-                    bottomSheetDialog.setSkillName("skillName", "trigger");
                     bottomSheetDialog.setData(payloadInner.getText(), listElements);
                     if (isLastItem()) bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                     bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

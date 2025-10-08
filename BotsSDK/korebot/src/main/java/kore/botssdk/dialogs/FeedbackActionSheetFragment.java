@@ -28,7 +28,6 @@ import kore.botssdk.R;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
@@ -36,51 +35,34 @@ import kore.botssdk.viewUtils.DimensionUtil;
 
 public class FeedbackActionSheetFragment extends BottomSheetDialogFragment implements View.OnClickListener{
 
-    private View view;
-    private VerticalListViewActionHelper verticalListViewActionHelper;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private boolean isFromListMenu = false;
     private int dp1;
-    private LinearLayout llCloseBottomSheet, llFeedbackComment;
-    public String getSkillName() {
-        return skillName;
-    }
+    private LinearLayout llFeedbackComment;
     private BottomSheetDialog bottomSheetDialog;
-    private TextView tvfeedback_template_title;
     private ImageView icon_1, icon_2, icon_3, icon_4, icon_5;
-    private RatingBar rbFeedback;
-    private LinearLayout emojis;
-    private LinearLayout multiSelectLayout;
     private PayloadInner payloadInner;
     private EditText etFeedbackComment;
-    private TextView tvFeedbackSubmit, tvCommentTitle, tvGlad;
+    private TextView tvCommentTitle;
+    private TextView tvGlad;
     private int position;
     private BottomSheetBehavior bottomSheetBehavior;
     private RelativeLayout rlCommentBox;
 
-    public void setSkillName(String skillName, String trigger) {
-        this.skillName = skillName;
-        this.trigger = trigger;
-    }
-
-    private String skillName;
-    private String trigger;
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.feedback_template_view, container,false);
+        View view = inflater.inflate(R.layout.feedback_template_view, container, false);
         this.dp1 = (int) DimensionUtil.dp1;
-        multiSelectLayout = view.findViewById(R.id.multiSelectLayout);
-        tvfeedback_template_title = view.findViewById(R.id.tvfeedback_template_title);
-        rbFeedback = view.findViewById(R.id.rbFeedback);
-        emojis = view.findViewById(R.id.emojis);
-        llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
+        TextView feedback_template_title = view.findViewById(R.id.tvfeedback_template_title);
+        RatingBar rbFeedback = view.findViewById(R.id.rbFeedback);
+        LinearLayout emojis = view.findViewById(R.id.emojis);
+        LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
         llFeedbackComment = view.findViewById(R.id.llFeedbackComment);
         etFeedbackComment = view.findViewById(R.id.etFeedbackComment);
-        tvFeedbackSubmit = view.findViewById(R.id.tvFeedbackSubmit);
+        TextView tvFeedbackSubmit = view.findViewById(R.id.tvFeedbackSubmit);
         tvCommentTitle = view.findViewById(R.id.tvCommentTitle);
         tvGlad = view.findViewById(R.id.tvGlad);
         rlCommentBox = view.findViewById(R.id.rlCommentBox);
@@ -105,7 +87,6 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
                 emojis.setVisibility(View.GONE);
                 rbFeedback.setVisibility(View.VISIBLE);
                 rbFeedback.setRating(payloadInner.getEmojiPosition());
-//                rbFeedback.setOnRatingBarChangeListener(onRatingBarChangeListener);
             }
             else
             {
@@ -115,7 +96,7 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
                 loademojis(payloadInner.getEmojiPosition());
             }
 
-            tvfeedback_template_title.setText(payloadInner.getText());
+            feedback_template_title.setText(payloadInner.getText());
         }
 
         llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
@@ -187,11 +168,6 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
         this.payloadInner = payloadInner;
     }
 
-    public void setData(PayloadInner payloadInner, boolean isFromListMenu){
-        this.payloadInner = payloadInner;
-        this.isFromListMenu = isFromListMenu;
-    }
-
     private void resetAll() {
         icon_1.setImageResource(R.drawable.feedback_icon_1);
         icon_2.setImageResource(R.drawable.feedback_icon_2);
@@ -206,7 +182,6 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
         int id = v.getId();
         if (id == R.id.icon_1) {
             resetAll();
-            //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
             loademojis(0);
             position = 1;
             updateData();
@@ -258,24 +233,20 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
         this.payloadInner.setEmojiPosition(position);
         switch (position) {
             case 0:
-                Glide.with(getActivity()).load(R.drawable.feedback_icon_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
+                Glide.with(requireActivity()).load(R.drawable.feedback_icon_1).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_1));
                 break;
             case 1:
-                Glide.with(getActivity()).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
+                Glide.with(requireActivity()).load(R.drawable.feedback_icon_2).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_2));
                 break;
             case 2:
-                Glide.with(getActivity()).load(R.drawable.feedback_icon_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
+                Glide.with(requireActivity()).load(R.drawable.feedback_icon_3).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_3));
                 break;
             case 3:
-                Glide.with(getActivity()).load(R.drawable.feedback_icon_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
+                Glide.with(requireActivity()).load(R.drawable.feedback_icon_4).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_4));
                 break;
             case 4:
-                Glide.with(getActivity()).load(R.drawable.feedback_icon_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
+                Glide.with(requireActivity()).load(R.drawable.feedback_icon_5).apply(new RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE)).into(new DrawableImageViewTarget(icon_5));
                 break;
         }
-    }
-
-    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
 }

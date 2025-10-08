@@ -113,7 +113,7 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
         return botListModels != null ? botListModels.get(position) : null;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

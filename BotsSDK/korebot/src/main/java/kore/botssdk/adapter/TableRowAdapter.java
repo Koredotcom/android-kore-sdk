@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,15 +18,13 @@ import kore.botssdk.net.SDKConfiguration;
 public class TableRowAdapter extends RecyclerView.Adapter<TableRowAdapter.ViewHolder> {
     private final List<List<String>> rowItems;
     private final List<List<String>> headers;
-    private final boolean isEnabled;
     private final LayoutInflater layoutInflater;
 
 
-    public TableRowAdapter(Context context, List<List<String>> rowItems, List<List<String>> headers, boolean isEnabled) {
+    public TableRowAdapter(Context context, List<List<String>> rowItems, List<List<String>> headers) {
         layoutInflater = LayoutInflater.from(context);
         this.rowItems = rowItems;
         this.headers = headers;
-        this.isEnabled = isEnabled;
     }
 
     @NonNull

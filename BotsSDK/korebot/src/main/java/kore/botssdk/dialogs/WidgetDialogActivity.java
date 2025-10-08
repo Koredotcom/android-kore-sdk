@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.WidgetCancelActionsAdapter;
@@ -31,7 +31,6 @@ import kore.botssdk.models.WidgetDialogModel;
 
 public class WidgetDialogActivity extends Dialog {
 
-    private ImageView img_cancel;
     final WidgetDialogModel widgetDialogModel;
     TextView txtTitle, tv_time, txtPlace, tv_users;
     View sideBar;
@@ -44,7 +43,7 @@ public class WidgetDialogActivity extends Dialog {
     final VerticalListViewActionHelper verticalListViewActionHelper;
     WidgetCancelActionsAdapter adapter;
     boolean flagMeetingInProgress;
-    long starttime, endtimer;
+    long startTime, endTimer;
 
     public WidgetDialogActivity(Context mContext, WidgetDialogModel widgetDialogModel, WCalEventsTemplateModel model, boolean isFromFullView, VerticalListViewActionHelper verticalListViewActionHelper) {
         super(mContext, R.style.WidgetDialog);
@@ -60,11 +59,9 @@ public class WidgetDialogActivity extends Dialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-
         setCanceledOnTouchOutside(true);
 
-        getWindow().setBackgroundDrawableResource(R.color.transparent_card);
+        Objects.requireNonNull(getWindow()).setBackgroundDrawableResource(R.color.transparent_card);
 
         setContentView(R.layout.item_selection_dialog);
         initViews();
@@ -79,7 +76,7 @@ public class WidgetDialogActivity extends Dialog {
         recycler_actions.setVisibility(View.GONE);
         adapter = new WidgetCancelActionsAdapter((Activity) mContext,
                 this, model, isFromFullView, verticalListViewActionHelper);
-        caculateTime((long) model.getData().getDuration().getStart(), (long) model.getData().getDuration().getEnd());
+        calculateTime((long) model.getData().getDuration().getStart(), (long) model.getData().getDuration().getEnd());
 
 
         recycler_actions.setAdapter(adapter);
@@ -92,10 +89,10 @@ public class WidgetDialogActivity extends Dialog {
 
     }
 
-    public List<WCalEventsTemplateModel.Action> sortShowingAction(boolean timebased) {
-        List<WCalEventsTemplateModel.Action> newlistActions = new ArrayList<>();
+    public List<WCalEventsTemplateModel.Action> sortShowingAction(boolean timebase) {
+        List<WCalEventsTemplateModel.Action> newListActions = new ArrayList<>();
         for (WCalEventsTemplateModel.Action data : model.getActions()) {
-            if (timebased) {
+            if (timebase) {
                 return model.getActions();
             } else {
                 if (data.getType().equalsIgnoreCase("url") && data.getCustom_type().equalsIgnoreCase("url")) {
@@ -104,23 +101,13 @@ public class WidgetDialogActivity extends Dialog {
                 if (data.getType().equalsIgnoreCase("dial") && data.getCustom_type().equalsIgnoreCase("dial") && !data.getDial().equalsIgnoreCase("")) {
                     continue;
                 }
-                newlistActions.add(data);
+                newListActions.add(data);
             }
         }
-        return newlistActions;
-    }
-
-
-    public void dissmissanim() {
-        Animation bottomdown = AnimationUtils.loadAnimation(getContext(),
-                R.anim.bottomdown);
-        recycler_actions.startAnimation(bottomdown);
-        recycler_actions.setVisibility(View.INVISIBLE);
+        return newListActions;
     }
 
     private void initViews() {
-
-        img_cancel = findViewById(R.id.img_cancel);
         txtTitle = findViewById(R.id.txtTitle);
         tv_time = findViewById(R.id.tv_time);
         txtPlace = findViewById(R.id.txtPlace);
@@ -132,10 +119,10 @@ public class WidgetDialogActivity extends Dialog {
         recycler_actions.setLayoutManager(layoutManager);
     }
 
-    private void caculateTime(long start, long end) {
+    private void calculateTime(long start, long end) {
         //  DateFormat dateFormat = new SimpleDateFormat("dd MMM, yyyy, hh:mm:ss a");
-        starttime = start;
-        endtimer = end;
+        startTime = start;
+        endTimer = end;
         long timeStampNow = System.currentTimeMillis();
 
         if (timeStampNow >= start && timeStampNow <= end) {
@@ -147,7 +134,7 @@ public class WidgetDialogActivity extends Dialog {
         } else {
             //meeting completed
 
-            stateCheck(0, "Meeting Completed");
+            stateCheck(0);
 
         }
     }
@@ -156,47 +143,44 @@ public class WidgetDialogActivity extends Dialog {
         @Override
         public void run() {
             //Current time stamp
-            long cuurentTime = System.currentTimeMillis();
-            long milliseconds = 0;
-            if (cuurentTime > endtimer) {
+            long currentTime = System.currentTimeMillis();
+            long milliseconds;
+            if (currentTime > endTimer) {
                 // meeting completed
-                stateCheck(0, "Meeting Completed");
+                stateCheck(0);
                 someHandler.removeCallbacks(this);
-            } else if (cuurentTime >= starttime && cuurentTime <= endtimer) {
+            } else if (currentTime >= startTime) {
                 //meeting in progress
-                stateCheck(1, "Meeting in progress");
-            } else if (cuurentTime <= starttime) {
+                stateCheck(1);
+            } else {
                 //meeting need to start
-                milliseconds = starttime - cuurentTime;
+                milliseconds = startTime - currentTime;
                 int seconds = (int) milliseconds / 1000;
 
                 if (seconds <= TIMER_START_MINUTE) {
-                    stateCheck(-1, "Meeting need to start");
+                    stateCheck(-1);
                 } else {
-                    stateCheck(4, "Before our timw");
+                    stateCheck(4);
                 }
             }
             someHandler.postDelayed(this, 1000);
         }
     };
 
-    public void runTimer(long starttime, long endtimer) {
+    public void runTimer(long startTime, long endTimer) {
+        this.startTime = startTime;
+        this.endTimer = endTimer;
         someHandler = new Handler(getMainLooper());
         someHandler.postDelayed(runnable
                 , 10);
     }
 
-    public void stateCheck(int state, String message) {
+    public void stateCheck(int state) {
         switch (state) {
             case 0:
-
                 adapter.setActionItems(sortShowingAction(false));
-
-                //meeting completed
                 break;
-
             case 1:
-
                 //meeting in progress
                 if (!flagMeetingInProgress) {
 
@@ -208,7 +192,6 @@ public class WidgetDialogActivity extends Dialog {
 
             case -1:
                 //meeting need to start
-
                 if (!flagMeetingInProgress) {
                     flagMeetingInProgress = true;
                     adapter.setActionItems(sortShowingAction(true));
@@ -227,7 +210,7 @@ public class WidgetDialogActivity extends Dialog {
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (someHandler != null&&runnable!=null) {
+        if (someHandler != null) {
             someHandler.removeCallbacks(runnable);
         }
     }

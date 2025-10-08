@@ -177,8 +177,6 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         newMenuLogo.setOnClickListener(v -> {
             if (botOptionsModel != null && botOptionsModel.getTasks() != null && !botOptionsModel.getTasks().isEmpty()) {
                 OptionsActionSheetFragment bottomSheetDialog = new OptionsActionSheetFragment();
-                bottomSheetDialog.setisFromFullView(false);
-                bottomSheetDialog.setSkillName("skillName", "trigger");
                 bottomSheetDialog.setData(botOptionsModel);
                 bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
                 bottomSheetDialog.show(requireActivity().getSupportFragmentManager(), "add_tags");

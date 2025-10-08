@@ -19,14 +19,12 @@ public class TableTemplateDataAdapter extends RecyclerView.Adapter<TableTemplate
 
     private final List<List<String>> headers;
     private final List<Object> listItems;
-    private final boolean isEnabled;
     private final LayoutInflater layoutInflater;
 
-    public TableTemplateDataAdapter(Context context, List<List<String>> headers, List<Object> items, boolean isEnabled) {
+    public TableTemplateDataAdapter(Context context, List<List<String>> headers, List<Object> items) {
         layoutInflater = LayoutInflater.from(context);
         this.headers = headers;
         this.listItems = items;
-        this.isEnabled = isEnabled;
     }
 
     @NonNull

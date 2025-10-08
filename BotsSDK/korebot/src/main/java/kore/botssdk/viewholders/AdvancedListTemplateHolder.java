@@ -50,7 +50,7 @@ public class AdvancedListTemplateHolder extends BaseViewHolder {
         AdvancedListAdapter botListTemplateAdapter = new AdvancedListAdapter(itemView.getContext(), autoExpandListView);
         botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-        botListTemplateAdapter.dispalyCount(payloadInner.getListItemDisplayCount());
+        botListTemplateAdapter.displayCount(payloadInner.getListItemDisplayCount());
         botListTemplateAdapter.setBotListModelArrayList(payloadInner.getListItems());
         botListTemplateAdapter.notifyDataSetChanged();
         autoExpandListView.setAdapter(botListTemplateAdapter);
