@@ -1,12 +1,8 @@
 package com.kore.korebot;
 
-import static android.Manifest.permission.POST_NOTIFICATIONS;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +13,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
@@ -61,28 +56,28 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "cs-1e845b00-81ad-5757-a1e7-d0f6fea227e9";
+        String clientId = "PLEASE_ENTER_CLIENT_ID";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "5OcBSQtH/k6Q/S6A3bseYfOee02YjjLLTNoT1qZDBso=";
+        String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
 
         //Set botId, This value is mandatory
-        String botId = "st-b9889c46-218c-58f7-838f-73ae9203488c";
+        String botId = "PLEASE_ENTER_BOT_ID";
 
         //Set identity, This value is mandatory
         String identity = "PLEASE_ENTER_IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = "Kore.ai Bot";
+        String botName = "PLEASE_ENTER_BOT_NAME";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "https://bots.kore.ai";
+        String serverUrl = "PLEASE_ENTER_SERVER_URL";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "https://bots.kore.ai";
+        String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
+        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -116,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.setLocalBranding(false, getLocalBrandingModel());
 
         // Flag to set status bar color as header background color
-        SDKConfig.setIsUpdateStatusBarColor(false);
+        SDKConfig.setIsUpdateStatusBarColor(true);
 
         //Method to reset the bot connection and start a new session by overriding the previous state
         // SDKConfig.disconnectBotSession(MainActivity.this);
