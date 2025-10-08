@@ -30,58 +30,33 @@ import kore.botssdk.adapter.ListViewMoreAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.viewUtils.DimensionUtil;
 
 public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
 
-    private View view;
-    private boolean isFromFullView;
     private ArrayList<BotListModel> model;
-    private VerticalListViewActionHelper verticalListViewActionHelper;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-    private boolean isFromListMenu = false;
-    private ListView lvMoreData;
-    private int dp1;
-    private LinearLayout llCloseBottomSheet, llBottomLayout;
-    public String getSkillName() {
-        return skillName;
-    }
     private BottomSheetDialog bottomSheetDialog;
-    private final boolean showHeader = true;
-    private int count;
-    private RecyclerView rvViewMore;
-    private TextView tvOptionsTitle;
     private String title;
-    private SharedPreferences sharedPreferences;
 
-    public void setSkillName(String skillName, String trigger) {
-        this.skillName = skillName;
-        this.trigger = trigger;
-    }
-
-    private String skillName;
-    private String trigger;
     @Override
     public View onCreateView(LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.list_view_more_sheet, container,false);
-        lvMoreData = view.findViewById(R.id.lvMoreData);
-        llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
-        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
-        rvViewMore = view.findViewById(R.id.rvMoreData);
-        llBottomLayout = view.findViewById(R.id.llBottomLayout);
-        sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        rvViewMore.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+        View view = inflater.inflate(R.layout.list_view_more_sheet, container, false);
+        ListView lvMoreData = view.findViewById(R.id.lvMoreData);
+        LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
+        TextView tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
+        RecyclerView rvViewMore = view.findViewById(R.id.rvMoreData);
+        LinearLayout llBottomLayout = view.findViewById(R.id.llBottomLayout);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        rvViewMore.setLayoutManager(new LinearLayoutManager(requireActivity(), LinearLayoutManager.VERTICAL, false));
         tvOptionsTitle.setVisibility(View.VISIBLE);
         rvViewMore.setVisibility(View.VISIBLE);
-        this.dp1 = (int) DimensionUtil.dp1;
         BotListViewTemplateAdapter botListTemplateAdapter;
         if (lvMoreData.getAdapter() == null) {
             botListTemplateAdapter = new BotListViewTemplateAdapter(getContext(), lvMoreData, model.size(), bottomSheetDialog);
@@ -146,21 +121,8 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
         return bottomSheetDialog;
     }
 
-    public void setisFromFullView(boolean isFromFullView) {
-        this.isFromFullView = isFromFullView;
-    }
-
     public void setData(String title, ArrayList<BotListModel> botListModelArrayList) {
         this.model = botListModelArrayList;
         this.title = title;
-    }
-
-    public void setData(ArrayList<BotListModel> botListModelArrayList, boolean isFromListMenu){
-        model = botListModelArrayList;
-        this.isFromListMenu = isFromListMenu;
-    }
-
-    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
-        this. verticalListViewActionHelper=verticalListViewActionHelper;
     }
 }

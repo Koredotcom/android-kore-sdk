@@ -435,8 +435,7 @@ class WebSocketWriter extends Handler {
 
             // Check if the message that we sent was a close frame and was a reply
             // to a closing handshake, if so, then notify master to close the socket.
-            if (msg.obj instanceof Close) {
-                Close closeMessage = (Close) msg.obj;
+            if (msg.obj instanceof Close closeMessage) {
                 if (closeMessage.mIsReply) {
                     notify(new Close(closeMessage.mCode, closeMessage.mReason, true));
                 }

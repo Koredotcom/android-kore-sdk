@@ -39,31 +39,34 @@ public class ContactCardItemAdapter extends RecyclerView.Adapter<ContactCardItem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ContactTemplateModel botListModel = getItem(position);
-        if (!StringUtils.isNullOrEmpty(botListModel.getUserIcon())) {
-            holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load("https://hs.sbcounty.gov/cn/Photo%20Gallery/_w/Sample%20Picture%20-%20Koala_jpg.jpg").transform(roundedCornersTransform).into(holder.botListItemImage);
-        }
+        if(botListModel != null)
+        {
+            if (!StringUtils.isNullOrEmpty(botListModel.getUserIcon())) {
+                holder.botListItemImage.setVisibility(View.VISIBLE);
+                Picasso.get().load(botListModel.getUserIcon()).transform(roundedCornersTransform).into(holder.botListItemImage);
+            }
 
-        holder.botListItemTitle.setTag(botListModel);
-        holder.botListItemTitle.setText(botListModel.getUserName());
-        if (!StringUtils.isNullOrEmpty(botListModel.getUserContactNumber())) {
-            holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-            holder.botListItemSubtitle.setText(botListModel.getUserContactNumber());
+            holder.botListItemTitle.setTag(botListModel);
+            holder.botListItemTitle.setText(botListModel.getUserName());
+            if (!StringUtils.isNullOrEmpty(botListModel.getUserContactNumber())) {
+                holder.botListItemSubtitle.setVisibility(View.VISIBLE);
+                holder.botListItemSubtitle.setText(botListModel.getUserContactNumber());
 
-            holder.botListItemSubtitle.setOnClickListener(v -> {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + botListModel.getUserContactNumber()));
-                    holder.botListItemSubtitle.getContext().startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+                holder.botListItemSubtitle.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + botListModel.getUserContactNumber()));
+                        holder.botListItemSubtitle.getContext().startActivity(intent);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
 
-        if (!StringUtils.isNullOrEmpty(botListModel.getUserEmailId())) {
-            holder.bot_list_item_email.setVisibility(View.VISIBLE);
-            holder.bot_list_item_email.setText(botListModel.getUserEmailId());
+            if (!StringUtils.isNullOrEmpty(botListModel.getUserEmailId())) {
+                holder.bot_list_item_email.setVisibility(View.VISIBLE);
+                holder.bot_list_item_email.setText(botListModel.getUserEmailId());
+            }
         }
     }
 
@@ -76,7 +79,7 @@ public class ContactCardItemAdapter extends RecyclerView.Adapter<ContactCardItem
         return models != null ? models.size() : 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

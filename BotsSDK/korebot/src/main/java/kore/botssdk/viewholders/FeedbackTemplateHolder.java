@@ -153,7 +153,6 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         if (payloadInner.getSliderView() && !payloadInner.getDialogCancel()) {
             payloadInner.setDialogCancel(true);
             FeedbackActionSheetFragment bottomSheetDialog = new FeedbackActionSheetFragment();
-            bottomSheetDialog.setSkillName("skillName", "trigger");
             bottomSheetDialog.setData(payloadInner);
             bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
             bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

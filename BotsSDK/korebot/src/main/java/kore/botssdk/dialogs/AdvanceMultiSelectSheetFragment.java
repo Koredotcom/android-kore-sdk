@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -41,13 +40,11 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfiguration;
 
 public class AdvanceMultiSelectSheetFragment extends BottomSheetDialogFragment implements AdvanceMultiSelectListener {
-    final String LOG_TAG = AdvanceMultiSelectSheetFragment.class.getSimpleName();
     private ComposeFooterInterface composeFooterInterface;
     private BottomSheetDialog bottomSheetDialog;
     private final ArrayList<AdvanceMultiSelectCollectionModel> allCheckedItems = new ArrayList<>();
     private final AdvancedMultiSelectAdapter advancedMultiSelectAdapter = new AdvancedMultiSelectAdapter();
     private PayloadInner payloadInner;
-    private RecyclerView recyclerView;
     private TextView tvAdvanceDone;
 
     @Override
@@ -57,8 +54,8 @@ public class AdvanceMultiSelectSheetFragment extends BottomSheetDialogFragment i
         ImageView ivClose = view.findViewById(R.id.ivClose);
         RelativeLayout llBottomLayout = view.findViewById(R.id.llBottomLayout);
         tvOptionsTitle.setVisibility(View.VISIBLE);
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        recyclerView = view.findViewById(R.id.category_list);
+        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        RecyclerView recyclerView = view.findViewById(R.id.category_list);
         recyclerView.setVerticalScrollBarEnabled(false);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 

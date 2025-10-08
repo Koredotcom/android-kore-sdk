@@ -116,8 +116,8 @@ public class AdvancedMultiSelectAdapter extends RecyclerView.Adapter<AdvancedMul
         this.multiSelectModels = multiSelectModels;
     }
 
-    public void setAdvanceMultiListener(AdvanceMultiSelectListener advanceMultiSelectListner) {
-        this.advanceMultiSelectListener = advanceMultiSelectListner;
+    public void setAdvanceMultiListener(AdvanceMultiSelectListener advanceMultiSelectListener) {
+        this.advanceMultiSelectListener = advanceMultiSelectListener;
     }
 
     public void refresh() {

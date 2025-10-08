@@ -4,7 +4,6 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Outline;
@@ -43,7 +42,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.EntityEditEvent;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
@@ -88,7 +86,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View baseView = inflater.inflate(R.layout.base_view_holder, parent, false);
         View childView = inflater.inflate(layoutId, null);
-        LinearLayoutCompat contentLayout = (LinearLayoutCompat) baseView.findViewById(R.id.contentLayout);
+        LinearLayoutCompat contentLayout = baseView.findViewById(R.id.contentLayout);
         contentLayout.addView(childView, LinearLayoutCompat.LayoutParams.MATCH_PARENT, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         return baseView;
     }

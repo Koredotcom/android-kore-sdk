@@ -144,7 +144,6 @@ public class FragmentActivity extends AppCompatActivity implements BotChatCloseL
         customData.put("name", "Kore Bot");
         customData.put("emailId", "emailId");
         customData.put("mobile", "mobile");
-        customData.put("accountId", "accountId");
         customData.put("timeZoneOffset", -330);
         customData.put("UserTimeInGMT", TimeZone.getDefault().getID() + " " + Locale.getDefault().getISO3Language());
         return customData;

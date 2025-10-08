@@ -17,7 +17,6 @@ public class BotAppCompactActivity extends AppCompatActivity {
     protected final String LOG_TAG = getClass().getSimpleName();
     private ProgressDialog mProgressDialog;
 
-    // SpiceManager spiceManager = new SpiceManager(BotRestService.class);
     public void finish() {
         super.finish();
     }

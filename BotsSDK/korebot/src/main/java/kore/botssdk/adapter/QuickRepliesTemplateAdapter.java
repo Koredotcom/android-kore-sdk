@@ -28,8 +28,7 @@ public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReply
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int quickReplyFontColor;
-
-    private boolean isEnabled = true;
+    private final boolean isEnabled;
 
     public QuickRepliesTemplateAdapter(Context context, RecyclerView parentRecyclerView, boolean isEnabled) {
         this.context = context;
@@ -77,15 +76,15 @@ public class QuickRepliesTemplateAdapter extends RecyclerView.Adapter<QuickReply
                 }
             }
 
-            if (isEnabled && composeFooterInterface != null && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
+            if (composeFooterInterface != null && BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
                 composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload, false);
             } else if (invokeGenericWebViewInterface != null && BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
                 invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
-            } else if (isEnabled && composeFooterInterface != null && BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
+            } else if (composeFooterInterface != null && BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
                 composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload, false);
             } else if (invokeGenericWebViewInterface != null && BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
                 invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
-            } else if (isEnabled && composeFooterInterface != null) {
+            } else if (composeFooterInterface != null) {
                 composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload, false);
             }
         });

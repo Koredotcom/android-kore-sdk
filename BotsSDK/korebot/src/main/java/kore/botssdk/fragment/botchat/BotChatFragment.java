@@ -55,7 +55,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.models.FormActionTemplate;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
@@ -307,7 +306,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     @Override
-    public void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation) {
+    public void uploadBulkFile(String fileName, String filePath, String extension, String filePathThumbnail, String orientation) {
     }
 
     @Override
@@ -363,20 +362,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     @Override
-    public void onFormActionButtonClicked(FormActionTemplate fTemplate) {
-    }
-
-    @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
         baseFooterFragment.setComposeText(text);
-    }
-
-    @Override
-    public void sendImage(String fP, String fN, String fPT) {
-    }
-
-    @Override
-    public void externalReadWritePermission(String fileUrl) {
     }
 
     @Override
@@ -427,38 +414,36 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     public void showCloseAlert() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_NEUTRAL:
-                        dialog.dismiss();
-                        break;
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        if (sharedPreferences != null) {
-                            if (botClient != null && isAgentTransfer) {
-                                botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-                            }
-
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean("IS_RECONNECT", false);
-                            editor.putInt("HISTORY_COUNT", 0);
-                            editor.apply();
-                            BotSocketConnectionManager.killInstance();
-                            activityCloseListener.onChatBotClosed();
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_NEUTRAL:
+                    dialog.dismiss();
+                    break;
+                case DialogInterface.BUTTON_NEGATIVE:
+                    if (sharedPreferences != null) {
+                        if (botClient != null && isAgentTransfer) {
+                            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
                         }
-                        break;
-                    case DialogInterface.BUTTON_POSITIVE:
-                        if (sharedPreferences != null) {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean("IS_RECONNECT", true);
-                            editor.putInt("HISTORY_COUNT", botContentFragment.getAdapterCount());
-                            editor.apply();
-                            BotSocketConnectionManager.killInstance();
-                            activityCloseListener.onChatBotMinimized();
-                        }
-                }
 
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("IS_RECONNECT", false);
+                        editor.putInt("HISTORY_COUNT", 0);
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
+                        activityCloseListener.onChatBotClosed();
+                    }
+                    break;
+                case DialogInterface.BUTTON_POSITIVE:
+                    if (sharedPreferences != null) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("IS_RECONNECT", true);
+                        editor.putInt("HISTORY_COUNT", botContentFragment.getAdapterCount());
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
+                        activityCloseListener.onChatBotMinimized();
+                    }
             }
+
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
         builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
@@ -472,14 +457,12 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             return;
         }
         PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
-        switch (payloadInner.getTemplate_type()) {
-            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
-                if (payloadInner.getSliderView()) {
-                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
-                    fragment.setData(payloadInner);
-                    fragment.setComposeFooterInterface(this);
-                    fragment.show(getChildFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
-                }
+        if (payloadInner.getTemplate_type().equals(BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE)) {
+            if (payloadInner.getSliderView()) {
+                AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
+                fragment.setData(payloadInner);
+                fragment.setComposeFooterInterface(this);
+                fragment.show(getChildFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
             }
         }
     }

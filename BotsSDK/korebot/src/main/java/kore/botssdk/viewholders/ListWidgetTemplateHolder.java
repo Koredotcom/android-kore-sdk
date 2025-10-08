@@ -34,7 +34,6 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import kore.botssdk.R;
-import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.adapter.ListWidgetAdapter;
 import kore.botssdk.dialogs.WidgetActionSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
@@ -121,8 +120,7 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
 //                meetingDesc.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUTTON_ACTIVE_TXT_COLOR, "#000000")));
         }
 
-        if (payloadInner.getHeaderOptions() != null && payloadInner.getHeaderOptions() instanceof HeaderOptionsModel && ((HeaderOptionsModel) payloadInner.getHeaderOptions()).getType() != null) {
-            HeaderOptionsModel headerOptionsModel = ((HeaderOptionsModel) payloadInner.getHeaderOptions());
+        if (payloadInner.getHeaderOptions() != null && payloadInner.getHeaderOptions() instanceof HeaderOptionsModel headerOptionsModel && ((HeaderOptionsModel) payloadInner.getHeaderOptions()).getType() != null) {
             switch (headerOptionsModel.getType()) {
                 case "button":
                     iconImageLoad.setVisibility(GONE);
@@ -157,7 +155,7 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
                     imgMenu.setOnClickListener(v -> {
                         if (payloadInner.getHeaderOptions() != null && headerOptionsModel.getMenu() != null && !headerOptionsModel.getMenu().isEmpty()) {
                             WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
-                            bottomSheetDialog.setisFromFullView(false);
+                            bottomSheetDialog.setIsFromFullView(false);
                             bottomSheetDialog.setSkillName("skillName", "trigger");
                             bottomSheetDialog.setData(payloadInner, true);
                             bottomSheetDialog.setVerticalListViewActionHelper(null);

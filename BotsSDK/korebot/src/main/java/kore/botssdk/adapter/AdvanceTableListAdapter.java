@@ -96,12 +96,6 @@ public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableLi
         return buttons != null ? buttons.size() : 0;
     }
 
-    boolean isFullView;
-
-    public void setIsFromFullView(boolean isFullView) {
-        this.isFullView = isFullView;
-    }
-
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
         final TextView botListItemTitle;
         final TextView botListItemSubtitle;

@@ -48,8 +48,7 @@ public class LinkifyTextView extends AppCompatTextView {
     public boolean onTouchEvent(MotionEvent event) {
         final TextView widget = this;
         final Object text = widget.getText();
-        if (text instanceof Spannable) {
-            final Spannable buffer = (Spannable)text;
+        if (text instanceof Spannable buffer) {
             final int action = event.getAction();
 
             if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_DOWN) {

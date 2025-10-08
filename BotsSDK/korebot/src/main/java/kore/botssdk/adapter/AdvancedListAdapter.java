@@ -274,7 +274,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.DEFAULT)) {
             if (botListModel.getTextInformation() != null && !botListModel.getTextInformation().isEmpty()) {
                 holder.lvDetails.setVisibility(View.VISIBLE);
-                holder.lvDetails.setAdapter(new AdvanceListdetailsAdapter(context, botListModel.getTextInformation()));
+                holder.lvDetails.setAdapter(new AdvanceListDetailsAdapter(context, botListModel.getTextInformation()));
             }
 
             if (botListModel.getButtons() != null && !botListModel.getButtons().isEmpty()) {
@@ -292,10 +292,10 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 holder.rvDefaultButtons.setAdapter(advanceListButtonAdapter);
 
                 if (displayLimit != 0) {
-                    ArrayList<Widget.Button> tempBtns = new ArrayList<>();
+                    ArrayList<Widget.Button> tempButtons = new ArrayList<>();
 
                     for (int i = displayLimit - 1; i < botListModel.getButtons().size(); i++) {
-                        tempBtns.add(botListModel.getButtons().get(i));
+                        tempButtons.add(botListModel.getButtons().get(i));
                     }
 
                     holder.llButtonMore.setVisibility(View.VISIBLE);
@@ -305,7 +305,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     ImageView ivDropDownCLose = btnsPopUpView.findViewById(R.id.ivDropDownCLose);
 
                     recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-                    AdvanceListButtonAdapter advanceButtonAdapter = new AdvanceListButtonAdapter(context, tempBtns, BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
+                    AdvanceListButtonAdapter advanceButtonAdapter = new AdvanceListButtonAdapter(context, tempButtons, BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                     recyclerView.setAdapter(advanceButtonAdapter);
 
                     ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
@@ -602,7 +602,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         });
     }
 
-    public void dispalyCount(int count) {
+    public void displayCount(int count) {
         this.count = count;
     }
 

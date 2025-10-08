@@ -114,7 +114,6 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
             webview.getSettings().setDomStorageEnabled(true);
             webview.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
             webview.setWebViewClient(new WebViewClient() {
-                @SuppressWarnings("deprecation")
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     return super.shouldOverrideUrlLoading(view, url);
@@ -147,7 +146,6 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                     super.onPageStarted(view, url, favicon);
                     mProgressBar.setVisibility(ProgressBar.VISIBLE);
                     tvPleaseWait.setVisibility(View.VISIBLE);
-//                    webview.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
@@ -155,7 +153,6 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                     super.onPageFinished(view, url);
                     mProgressBar.setVisibility(ProgressBar.GONE);
                     tvPleaseWait.setVisibility(View.GONE);
-//                    webview.setVisibility(View.VISIBLE);
                 }
             });
             webview.setWebChromeClient(new WebChromeClient() {
@@ -174,9 +171,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
 
             webview.loadUrl(url);
         }
-        webview.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> {
-            downloadFile(url, contentDisposition, mimeType, false);
-        });
+        webview.setDownloadListener((url, userAgent, contentDisposition, mimeType, contentLength) -> downloadFile(url, contentDisposition, mimeType, false));
     }
 
     private void downloadFile(String url, String contentDisposition, String mimeType, boolean isFromMenus) {

@@ -19,7 +19,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -27,12 +26,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.BotListViewTemplateAdapter;
-import kore.botssdk.adapter.ListViewTemplateAdapter;
 import kore.botssdk.application.AppControl;
 import kore.botssdk.fileupload.utils.StringUtils;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
-import kore.botssdk.listener.VerticalListViewActionHelper;
 import kore.botssdk.models.BotListViewMoreDataModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
@@ -45,21 +42,9 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private TextView tvTab1;
     private TextView tvTab2;
-    private TextView tvOptionsTitle;
-    private boolean isEnabled;
     private String title;
     private BottomSheetDialog bottomSheetDialog;
     private boolean showHeader = false;
-
-    public String getSkillName() {
-        return skillName;
-    }
-
-    public void setSkillName(String skillName, String trigger) {
-        this.skillName = skillName;
-    }
-
-    private String skillName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -67,7 +52,7 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         ListView lvMoreData = view.findViewById(R.id.lvMoreData);
         tvTab1 = view.findViewById(R.id.tvTab1);
         tvTab2 = view.findViewById(R.id.tvTab2);
-        tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
+        TextView tvOptionsTitle = view.findViewById(R.id.tvOptionsTitle);
         LinearLayout llCloseBottomSheet = view.findViewById(R.id.llCloseBottomSheet);
         LinearLayout llTabHeader = view.findViewById(R.id.llTabHeader);
         LinearLayout llBottomLayout = view.findViewById(R.id.llBottomLayout);
@@ -160,11 +145,6 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public void setIsEnabled(boolean isEnabled) {
-        this.isEnabled = isEnabled;
-    }
-
-
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -184,20 +164,9 @@ public class ListActionSheetFragment extends BottomSheetDialogFragment {
         return bottomSheetDialog;
     }
 
-    public void setIsFromFullView(boolean isFromFullView) {
-    }
-
     public void setData(String title, BotListViewMoreDataModel taskTemplateModel) {
         this.title = title;
         model = taskTemplateModel;
-    }
-
-    public void setData(String title, BotListViewMoreDataModel taskTemplateModel, boolean isFromListMenu) {
-        this.title = title;
-        model = taskTemplateModel;
-    }
-
-    public void setVerticalListViewActionHelper(VerticalListViewActionHelper verticalListViewActionHelper) {
     }
 }
 

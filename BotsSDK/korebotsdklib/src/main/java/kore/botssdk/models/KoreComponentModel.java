@@ -350,10 +350,9 @@ public class KoreComponentModel implements Parcelable {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof KoreComponentModel) {
+        if (obj instanceof KoreComponentModel obj2) {
 
             KoreComponentModel obj1 = this;
-            KoreComponentModel obj2 = (KoreComponentModel) obj;
 
             String type = obj1.getMediaType();
 

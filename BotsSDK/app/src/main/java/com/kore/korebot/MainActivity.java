@@ -1,12 +1,8 @@
 package com.kore.korebot;
 
-import static android.Manifest.permission.POST_NOTIFICATIONS;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +13,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
@@ -195,17 +190,6 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Permission needed to send push notifications", Toast.LENGTH_SHORT).show();
                 }
             });
-
-    private void askNotificationPermission() {
-        // This is only necessary for API level >= 33 (TIRAMISU)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, POST_NOTIFICATIONS) !=
-                    PackageManager.PERMISSION_GRANTED) {
-                // FCM SDK (and your app) can post notifications.
-                requestPermissionLauncher.launch(POST_NOTIFICATIONS);
-            }
-        }
-    }
 
     private BrandingModel getLocalBrandingModel() {
         BrandingModel brandingModel = new BrandingModel();

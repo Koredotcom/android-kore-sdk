@@ -23,17 +23,11 @@ import kore.botssdk.listener.VerticalListViewActionHelper;
 
 public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
 
-    private View view;
     private boolean isFromFullView;
-    private RecyclerView recycler_actions;
     private Object model;
     private VerticalListViewActionHelper verticalListViewActionHelper;
     private boolean isFromListMenu = false;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-
-    public String getSkillName() {
-        return skillName;
-    }
 
     public void setSkillName(String skillName, String trigger) {
         this.skillName = skillName;
@@ -48,9 +42,9 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.widget_actions_sheet, container,
+        View view = inflater.inflate(R.layout.widget_actions_sheet, container,
                 false);
-        recycler_actions = view.findViewById(R.id.recycler_actions);
+        RecyclerView recycler_actions = view.findViewById(R.id.recycler_actions);
         recycler_actions.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
@@ -91,7 +85,7 @@ public class WidgetActionSheetFragment extends BottomSheetDialogFragment {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
-    public void setisFromFullView(boolean isFromFullView) {
+    public void setIsFromFullView(boolean isFromFullView) {
         this.isFromFullView = isFromFullView;
     }
 

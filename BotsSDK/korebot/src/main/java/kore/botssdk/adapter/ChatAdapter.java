@@ -25,7 +25,6 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewholders.AdvanceMultiSelectTemplateHolder;
 import kore.botssdk.viewholders.AdvancedListTemplateHolder;
@@ -375,9 +374,9 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     }
 
     private BaseViewHolder getCustomTemplate(ViewGroup parent, Class<?> clazzType) {
-        Class<?> clazz = null;
-        Method method = null;
-        BaseViewHolder holder = null;
+        Class<?> clazz;
+        Method method;
+        BaseViewHolder holder;
         try {
             clazz = Class.forName(clazzType.getName());
             // Get the method by name and parameter types

@@ -72,30 +72,24 @@ public class AdvanceOptionsAdapter extends BaseAdapter {
         AdvanceOptionsModel dataObj = (AdvanceOptionsModel) getItem(position);
         holder.tvBtnText.setText(dataObj.getLabel());
         holder.ivOptions.setVisibility(View.VISIBLE);
-        holder.ivOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.ivOptions.setOnClickListener(view -> {
 
-                if (dataObj.getType().equalsIgnoreCase("radio"))
-                    setChecked(position);
-                else
-                    dataObj.setChecked(!dataObj.isChecked());
+            if (dataObj.getType().equalsIgnoreCase("radio"))
+                setChecked(position);
+            else
+                dataObj.setChecked(!dataObj.isChecked());
 
-                notifyDataSetChanged();
-            }
+            notifyDataSetChanged();
         });
 
-        holder.llOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.llOptions.setOnClickListener(view -> {
 
-                if (dataObj.getType().equalsIgnoreCase("radio"))
-                    setChecked(position);
-                else
-                    dataObj.setChecked(!dataObj.isChecked());
+            if (dataObj.getType().equalsIgnoreCase("radio"))
+                setChecked(position);
+            else
+                dataObj.setChecked(!dataObj.isChecked());
 
-                notifyDataSetChanged();
-            }
+            notifyDataSetChanged();
         });
 
         if (dataObj.getType().equalsIgnoreCase("radio")) {

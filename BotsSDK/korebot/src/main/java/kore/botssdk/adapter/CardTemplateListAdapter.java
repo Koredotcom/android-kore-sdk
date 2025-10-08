@@ -83,12 +83,6 @@ public class CardTemplateListAdapter extends RecyclerView.Adapter<CardTemplateLi
         return buttons != null ? buttons.size() : 0;
     }
 
-    boolean isFullView;
-
-    public void setIsFromFullView(boolean isFullView) {
-        this.isFullView = isFullView;
-    }
-
     public static class ButtonViewHolder extends RecyclerView.ViewHolder {
         final TextView tvBtnText;
         final TextView tvDescriptionTitle;

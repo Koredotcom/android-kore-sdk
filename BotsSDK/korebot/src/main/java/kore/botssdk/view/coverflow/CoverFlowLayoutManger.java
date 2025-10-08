@@ -24,8 +24,8 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
     private float mIntervalRatio = 0.5f;
     private int mStartX = 0;
     private int mStartY = 0;
-    private SparseArray<Rect> mAllItemFrames = new SparseArray<>();
-    private SparseBooleanArray mHasAttachedItems = new SparseBooleanArray();
+    private final SparseArray<Rect> mAllItemFrames = new SparseArray<>();
+    private final SparseBooleanArray mHasAttachedItems = new SparseBooleanArray();
     private RecyclerView.Recycler mRecycle;
     private RecyclerView.State mState;
     private ValueAnimator mAnimation;
@@ -225,7 +225,7 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
 
     private void item3D(View child, Rect frame) {
         float center = (frame.left + frame.right - 2 * mOffsetAll) / 2f;
-        float value = (center - (mStartX + mDecoratedChildWidth / 2f)) * 1f / (getItemCount() * getIntervalDistance());
+        float value = (center - (mStartX + mDecoratedChildWidth / 2f)) / (getItemCount() * getIntervalDistance());
         value = (float) Math.sqrt(Math.abs(value));
         float symbol = center > (mStartX + mDecoratedChildWidth / 2f) ? -1 : 1;
         child.setRotationY(symbol * 50 * value);
@@ -307,7 +307,7 @@ public class CoverFlowLayoutManger extends RecyclerView.LayoutManager {
     private float computeGreyScale(int x) {
         float itemMidPos = x + mDecoratedChildWidth / 2;
         float itemDx2Mid = Math.abs(itemMidPos - getHorizontalSpace() / 2f);
-        float value = 1 - itemDx2Mid * 1.0f / (getHorizontalSpace() / 2);
+        float value = 1 - itemDx2Mid / (getHorizontalSpace() / 2);
         if (value < 0.1) value = 0.1f;
         if (value > 1) value = 1;
         value = (float) Math.pow(value, .8);

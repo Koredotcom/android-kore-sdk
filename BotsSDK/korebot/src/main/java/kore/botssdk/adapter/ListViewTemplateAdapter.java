@@ -3,7 +3,6 @@ package kore.botssdk.adapter;
 import static android.content.Context.MODE_PRIVATE;
 import static kore.botssdk.models.BotResponsePayLoadText.THEME_NAME;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -35,13 +34,11 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final boolean isEnabled;
-    private final SharedPreferences sharedPreferences;
     private final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
     private final List<BotListModel> botListModels;
     private final int size;
 
-    public ListViewTemplateAdapter(Context context, List<BotListModel> botListModels, boolean isEnabled, int size) {
-        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, MODE_PRIVATE);
+    public ListViewTemplateAdapter(List<BotListModel> botListModels, boolean isEnabled, int size) {
         this.botListModels = botListModels;
         this.isEnabled = isEnabled;
         this.size = size;
@@ -104,7 +101,7 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
         return botListModels != null ? botListModels.get(position) : null;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;
