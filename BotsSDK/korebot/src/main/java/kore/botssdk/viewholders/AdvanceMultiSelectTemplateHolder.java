@@ -107,6 +107,7 @@ public class AdvanceMultiSelectTemplateHolder extends BaseViewHolder implements 
                 }
 
                 composeFooterInterface.onSendClick(titles.toString(), values.toString(), true);
+                if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
             });
 
         } else {

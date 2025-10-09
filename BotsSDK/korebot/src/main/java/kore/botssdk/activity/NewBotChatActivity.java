@@ -39,7 +39,7 @@ import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
-import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
+import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.content.NewBotContentFragment;
@@ -55,8 +55,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.SDKConfig;
@@ -532,20 +530,14 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
-                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null ||
+                !botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getSliderView()) {
             return;
         }
-        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
-        switch (payloadInner.getTemplate_type()) {
-            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
-                if (payloadInner.getSliderView()) {
-                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
-                    fragment.setData(payloadInner);
-                    fragment.setComposeFooterInterface(this);
-                    fragment.show(getSupportFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
-                }
-            }
-        }
+        TemplateBottomSheetFragment bottomSheetFragment = new TemplateBottomSheetFragment();
+        bottomSheetFragment.setComposeFooterInterface(this);
+        bottomSheetFragment.setInvokeGenericWebViewInterface(this);
+        bottomSheetFragment.show(botResponse, getSupportFragmentManager());
     }
 
     @Override
