@@ -1,6 +1,5 @@
 package kore.botssdk.activity;
 
-import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 import android.annotation.SuppressLint;
@@ -24,14 +23,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.core.view.WindowInsetsControllerCompat;
 
 import kore.botssdk.R;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfig;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.ToastUtils;
 
@@ -41,7 +37,7 @@ public class BotAppCompactActivity extends AppCompatActivity {
     protected final String LOG_TAG = getClass().getSimpleName();
     private ProgressDialog mProgressDialog;
     private FrameLayout contentContainer;
-    private View status_bar_bg;
+    private View statusBarLayout;
     private SharedPreferences sharedPreferences;
 
     public void finish() {
@@ -52,16 +48,16 @@ public class BotAppCompactActivity extends AppCompatActivity {
         super.onCreate(data);
         setContentView(R.layout.activity_base);
         contentContainer = findViewById(R.id.content_container);
-        status_bar_bg = findViewById(R.id.status_bar_bg);
+        statusBarLayout = findViewById(R.id.status_bar_bg);
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.base_frame), (view, windowInsets) -> {
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             view.setPadding(insets.left, 0, insets.right, insets.bottom);
-            if(sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0) == 0) sharedPreferences.edit().putInt(BundleConstants.STATUS_BAR_HEIGHT, insets.top).apply();
+            if (sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0) == 0)
+                sharedPreferences.edit().putInt(BundleConstants.STATUS_BAR_HEIGHT, insets.top).apply();
             return WindowInsetsCompat.CONSUMED;
         });
-
     }
 
 
@@ -74,17 +70,16 @@ public class BotAppCompactActivity extends AppCompatActivity {
         if (SDKConfig.isUpdateStatusBarColor()) {
             Window window = getWindow();
             if (Build.VERSION.SDK_INT >= 35) {
-                status_bar_bg.setVisibility(VISIBLE);
-                ViewGroup.LayoutParams params = status_bar_bg.getLayoutParams();
+                statusBarLayout.setVisibility(VISIBLE);
+                ViewGroup.LayoutParams params = statusBarLayout.getLayoutParams();
                 params.height = sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0);
-                status_bar_bg.setLayoutParams(params);
+                statusBarLayout.setLayoutParams(params);
 
-                if(color.isBlank())
-                    status_bar_bg.setBackgroundColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.primary));
+                if (color.isBlank())
+                    statusBarLayout.setBackgroundColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.primary));
                 else
-                    status_bar_bg.setBackgroundColor(Color.parseColor(color));
-            }
-            else {
+                    statusBarLayout.setBackgroundColor(Color.parseColor(color));
+            } else {
                 window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
                 window.setStatusBarColor(Color.parseColor(color));
             }
