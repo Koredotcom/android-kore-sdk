@@ -35,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.DrawableImageViewTarget;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
 import java.util.Objects;
@@ -81,6 +82,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     protected ChatContentStateListener contentStateListener;
     SharedPreferences sharedPreferences;
+    protected BottomSheetDialog bottomSheetDialog;
 
     protected static View createView(int layoutId, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
@@ -113,10 +115,15 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         this.composeFooterInterface = composeFooterInterface;
     }
 
+    public void setBottomSheetDialog(BottomSheetDialog bottomSheetDialog) {
+        this.bottomSheetDialog = bottomSheetDialog;
+    }
+
     public void setBotIcon(String iconUrl) {
         ImageView botIcon = itemView.findViewById(R.id.bot_icon);
         if (botIcon != null) {
-            botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon ? View.VISIBLE : View.GONE);
+            botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon && bottomSheetDialog == null ? View.VISIBLE : View.GONE);
+            if (bottomSheetDialog != null) return;
             if (SDKConfiguration.BubbleColors.showIcon) {
                 if (StringUtils.isNotEmpty(iconUrl))
                     Glide.with(context).load(iconUrl).error(R.mipmap.ic_launcher).into(new DrawableImageViewTarget(botIcon));
@@ -132,6 +139,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setMsgTime(String msgTime, boolean isBotRequest, int viewType) {
+        if (bottomSheetDialog != null) return;
         TextView msgTimeView = itemView.findViewById(R.id.msg_time);
         msgTimeView.setVisibility((SDKConfiguration.isTimeStampsRequired() && viewType < 2) ? View.VISIBLE : View.GONE);
         LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) msgTimeView.getLayoutParams();
@@ -149,6 +157,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setTimeStamp(String timeStamp) {
+        if (bottomSheetDialog != null) return;
         TextView timeStampView = itemView.findViewById(R.id.time_stamp);
         timeStampView.setVisibility(timeStamp != null && !timeStamp.isEmpty() ? View.VISIBLE : View.GONE);
         timeStampView.setText(timeStamp);
@@ -240,8 +249,10 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
 
                 if (circle) leftDrawable.setCornerRadii(roundedRadii);
-                else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE)) leftDrawable.setCornerRadii(recLeftRadii);
-                else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE)) leftDrawable.setCornerRadii(sqrLeftRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE))
+                    leftDrawable.setCornerRadii(recLeftRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE))
+                    leftDrawable.setCornerRadii(sqrLeftRadii);
                 else leftDrawable.setCornerRadii(balLeftRadii);
             }
             layoutBubble.setGravity(Gravity.START);
@@ -262,8 +273,10 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightBgColor));
 
                 if (circle) rightDrawable.setCornerRadii(roundedRadii);
-                else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE)) rightDrawable.setCornerRadii(recRightRadii);
-                else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE)) rightDrawable.setCornerRadii(sqrRightRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE))
+                    rightDrawable.setCornerRadii(recRightRadii);
+                else if (bubble_style.equalsIgnoreCase(BundleConstants.SQUARE))
+                    rightDrawable.setCornerRadii(sqrRightRadii);
                 else rightDrawable.setCornerRadii(balRightRadii);
             }
 
@@ -278,7 +291,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     protected void setResponseText(LinearLayoutCompat layoutBubble, String textualContent, String msgTime) {
-        if (layoutBubble == null) return;
+        if (layoutBubble == null || bottomSheetDialog != null) return;
         if (bubbleText == null) initBubbleText(layoutBubble, false);
         bubbleText.setVisibility(View.VISIBLE);
         bubbleText.setText("");

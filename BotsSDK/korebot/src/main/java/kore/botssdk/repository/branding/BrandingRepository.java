@@ -86,8 +86,9 @@ public class BrandingRepository {
                 configModel.getFooter().setBg_color(configModel.getGeneral().getColors().getSecondary());
                 configModel.getFooter().getCompose_bar().setOutline_color(configModel.getGeneral().getColors().getPrimary());
                 configModel.getFooter().getCompose_bar().setInline_color(configModel.getGeneral().getColors().getSecondary_text());
-                configModel.getHeader().getTitle().setColor(configModel.getGeneral().getColors().getPrimary());
-                configModel.getHeader().getSub_title().setColor(configModel.getGeneral().getColors().getPrimary());
+                configModel.getHeader().setAvatar_bg_color(configModel.getGeneral().getColors().getPrimary());
+                configModel.getHeader().getTitle().setColor(configModel.getGeneral().getColors().getPrimary_text());
+                configModel.getHeader().getSub_title().setColor(configModel.getGeneral().getColors().getPrimary_text());
             }
 
             botBrandingModel = botBrandingModel.updateWith(configModel);

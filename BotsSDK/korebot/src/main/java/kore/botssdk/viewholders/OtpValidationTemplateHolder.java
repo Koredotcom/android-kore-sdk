@@ -3,6 +3,7 @@ package kore.botssdk.viewholders;
 import static android.content.Context.MODE_PRIVATE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static kore.botssdk.models.BotResponse.BUBBLE_LEFT_BG_COLOR;
 import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_BG_COLOR;
 import static kore.botssdk.models.BotResponse.BUBBLE_RIGHT_TEXT_COLOR;
 import static kore.botssdk.models.BotResponse.THEME_NAME;
@@ -10,6 +11,7 @@ import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.text.Editable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
@@ -17,10 +19,12 @@ import android.text.style.UnderlineSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +48,8 @@ public class OtpValidationTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
+        LinearLayoutCompat llCloseBottomSheet = itemView.findViewById(R.id.llCloseBottomSheet);
+        LinearLayoutCompat layoutOtp = itemView.findViewById(R.id.layout_otp);
         AppCompatImageView ivClose = itemView.findViewById(R.id.close);
         TextView tvTitle = itemView.findViewById(R.id.title);
         TextView tvDescription = itemView.findViewById(R.id.description);
@@ -51,6 +57,13 @@ public class OtpValidationTemplateHolder extends BaseViewHolder {
         RecyclerView otpRecycler = itemView.findViewById(R.id.otp_recycler);
         TextView tvSubmit = itemView.findViewById(R.id.submit);
         TextView tvResendOtp = itemView.findViewById(R.id.resend_otp);
+        if (bottomSheetDialog != null){
+            llCloseBottomSheet.setPadding(llCloseBottomSheet.getPaddingLeft(), 0, llCloseBottomSheet.getPaddingRight(), llCloseBottomSheet.getPaddingBottom());
+        }
+        SharedPreferences sharedPrefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
+        String itemBgColor = sharedPrefs.getString(BUBBLE_LEFT_BG_COLOR, "#000000");
+        GradientDrawable gradientDrawable = (GradientDrawable) layoutOtp.getBackground().mutate();
+        gradientDrawable.setStroke((int) dp1, bottomSheetDialog == null ? Color.parseColor(itemBgColor) : Color.TRANSPARENT);
         otpRecycler.addItemDecoration(new HorizontalSpaceItemDecoration(10));
         otpRecycler.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
         otpRecycler.post(() -> {
@@ -84,11 +97,10 @@ public class OtpValidationTemplateHolder extends BaseViewHolder {
 
         if (payloadInner.getOtpButtons() != null && payloadInner.getOtpButtons().size() > 1) {
             tvSubmit.setText(payloadInner.getOtpButtons().get(0).getTitle());
-            SharedPreferences sharedPrefs = itemView.getContext().getSharedPreferences(THEME_NAME, MODE_PRIVATE);
-            String bgColor = sharedPrefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5");
+            String btnBgColor = sharedPrefs.getString(BUBBLE_RIGHT_BG_COLOR, "#3F51B5");
             String txtColor = sharedPrefs.getString(BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF");
             setRoundedCorner(tvSubmit, 6 * dp1);
-            tvSubmit.setBackgroundColor(Color.parseColor(bgColor));
+            tvSubmit.setBackgroundColor(Color.parseColor(btnBgColor));
             tvSubmit.setTextColor(Color.parseColor(txtColor));
             SpannableString content = new SpannableString(payloadInner.getOtpButtons().get(1).getTitle());
             content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
@@ -109,6 +121,7 @@ public class OtpValidationTemplateHolder extends BaseViewHolder {
                 if (composeFooterInterface != null && otp.length() == payloadInner.getPinLength()) {
                     composeFooterInterface.onSendClick(getDotMessage(otp), otp, false);
                 }
+                if (bottomSheetDialog != null) bottomSheetDialog.dismiss();
             });
 
             tvResendOtp.setOnClickListener(v -> {

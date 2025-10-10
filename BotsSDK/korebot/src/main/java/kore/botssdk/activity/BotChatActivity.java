@@ -64,9 +64,7 @@ import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
-import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
-import kore.botssdk.dialogs.OtpValidationTemplateBottomSheet;
-import kore.botssdk.dialogs.ResetPinTemplateBottomSheet;
+import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fileupload.core.KoreWorker;
@@ -93,7 +91,6 @@ import kore.botssdk.models.BrandingHeaderModel;
 import kore.botssdk.models.EventModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
-import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BitmapUtils;
@@ -359,7 +356,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                if (!StringUtils.isNullOrEmpty(fileUrl)) KaMediaUtils.saveFileFromUrlToKorePath(BotChatActivity.this, fileUrl);
+                if (!StringUtils.isNullOrEmpty(fileUrl))
+                    KaMediaUtils.saveFileFromUrlToKorePath(BotChatActivity.this, fileUrl);
             } else {
                 Toast.makeText(getApplicationContext(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
             }
@@ -391,7 +389,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         if (!StringUtils.isNullOrEmpty(message)) {
             closeWelcomeDialog();
 
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
                 viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, null);
@@ -425,7 +424,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
         if (attachments != null && !attachments.isEmpty()) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
                 viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, attachments);
@@ -567,32 +567,14 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
-                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null ||
+                !botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getSliderView()) {
             return;
         }
-        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
-        if (payloadInner.getSliderView()) {
-            switch (payloadInner.getTemplate_type()) {
-                case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
-                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
-                    fragment.setData(payloadInner);
-                    fragment.setComposeFooterInterface(this);
-                    fragment.show(getSupportFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
-                }
-                case BotResponse.TEMPLATE_TYPE_OTP_VALIDATION -> {
-                    OtpValidationTemplateBottomSheet fragment = new OtpValidationTemplateBottomSheet();
-                    fragment.setData(payloadInner);
-                    fragment.setComposeFooterInterface(this);
-                    fragment.show(getSupportFragmentManager(), OtpValidationTemplateBottomSheet.class.getName());
-                }
-                case BotResponse.TEMPLATE_TYPE_RESET_PIN -> {
-                    ResetPinTemplateBottomSheet fragment = new ResetPinTemplateBottomSheet();
-                    fragment.setData(payloadInner);
-                    fragment.setComposeFooterInterface(this);
-                    fragment.show(getSupportFragmentManager(), ResetPinTemplateBottomSheet.class.getName());
-                }
-            }
-        }
+        TemplateBottomSheetFragment bottomSheetFragment = new TemplateBottomSheetFragment();
+        bottomSheetFragment.setComposeFooterInterface(this);
+        bottomSheetFragment.setInvokeGenericWebViewInterface(this);
+        bottomSheetFragment.show(botResponse, getSupportFragmentManager());
     }
 
     @Override
@@ -699,7 +681,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             composerView.setVisibility(VISIBLE);
             BottomPanelFragment composerFragment = new BottomPanelFragment();
             Bundle bundle = getIntent().getExtras();
-            if (bundle != null) bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
+            if (bundle != null)
+                bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
 
             composerFragment.setArguments(bundle);
             getSupportFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
@@ -823,7 +806,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         tvAgentName.setText(eventModel.getMessage().getFirstName());
         tvCallType.setText(getString(R.string.incoming_audio_call));
 
-        if (eventModel.getMessage().isVideoCall()) tvCallType.setText(getString(R.string.incoming_video_call));
+        if (eventModel.getMessage().isVideoCall())
+            tvCallType.setText(getString(R.string.incoming_video_call));
 
         tvCallAccept.setOnClickListener(v -> {
             if (eventModel.getMessage() != null) {
