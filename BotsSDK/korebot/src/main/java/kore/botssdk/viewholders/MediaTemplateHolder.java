@@ -236,10 +236,10 @@ public class MediaTemplateHolder extends BaseViewHolder {
                     tvVideoTitle.setText(payloadInner.getText());
                 }
 
-//                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-//                    vvAttachment.setVideoPath(payloadInner.getVideoUrl());
-//                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                    vvAttachment.setVideoPath("https://www.w3schools.com/html/mov_bbb.mp4");
+                if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                    vvAttachment.setVideoPath(payloadInner.getVideoUrl());
+                else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                    vvAttachment.setVideoPath(payloadInner.getUrl());
 
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) vvAttachment.getLayoutParams();
                 layoutParams.height = (int) (190 * dp1);
@@ -286,10 +286,10 @@ public class MediaTemplateHolder extends BaseViewHolder {
                 ivFullScreen.setOnClickListener(v -> {
 
                     Intent intent = new Intent(itemView.getContext(), VideoFullScreenActivity.class);
-//                    if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
-//                        intent.putExtra("VideoUrl", payloadInner.getVideoUrl());
-//                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
-                        intent.putExtra("VideoUrl", "https://www.w3schools.com/html/mov_bbb.mp4");
+                    if (!StringUtils.isNullOrEmpty(payloadInner.getVideoUrl()))
+                        intent.putExtra("VideoUrl", payloadInner.getVideoUrl());
+                    else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl()))
+                        intent.putExtra("VideoUrl", payloadInner.getUrl());
 
                     intent.putExtra("CurrentPosition", currentPos);
                     itemView.getContext().startActivity(intent);
