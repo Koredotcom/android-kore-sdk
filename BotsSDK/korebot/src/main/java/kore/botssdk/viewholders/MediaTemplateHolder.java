@@ -44,7 +44,6 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DownloadUtils;
-import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.StringUtils;
 
 public class MediaTemplateHolder extends BaseViewHolder {
@@ -352,7 +351,8 @@ public class MediaTemplateHolder extends BaseViewHolder {
             public void run() {
                 try {
                     currentPos = vvAttachment.getCurrentPosition();
-                    tvVideoTiming.setText(StringUtils.timeConversion((long) currentPos) + "/" + StringUtils.timeConversion((long) totalDuration));
+                    String video_timing = StringUtils.timeConversion((long) currentPos) + "/" + StringUtils.timeConversion((long) totalDuration);
+                    tvVideoTiming.setText(video_timing);
                     sbVideo.setProgress((int) currentPos);
                     handler.postDelayed(this, 1000);
                 } catch (IllegalStateException ed) {
@@ -394,7 +394,8 @@ public class MediaTemplateHolder extends BaseViewHolder {
             public void run() {
                 try {
                     currentAudioPos = player.getCurrentPosition();
-                    tvAudioVideoTiming.setText(StringUtils.timeConversion((long) currentAudioPos) + "/" + StringUtils.timeConversion((long) totalAudioDuration));
+                    String video_timing = StringUtils.timeConversion((long) currentAudioPos) + "/" + StringUtils.timeConversion((long) totalAudioDuration);
+                    tvAudioVideoTiming.setText(video_timing);
                     sbAudioVideo.setProgress((int) currentAudioPos);
                     handler.postDelayed(this, 1000);
                 } catch (IllegalStateException ed) {

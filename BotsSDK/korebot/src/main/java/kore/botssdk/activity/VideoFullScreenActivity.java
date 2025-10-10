@@ -22,6 +22,9 @@ import android.widget.VideoView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import java.util.Objects;
 
@@ -50,6 +53,13 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.video_full_screen);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.rlVideo), (view, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         KoreEventCenter.register(this);
         vvFullScreen = findViewById(R.id.vvFullVideo);
         ivPlayPauseIcon = findViewById(R.id.ivPlayPauseIcon);

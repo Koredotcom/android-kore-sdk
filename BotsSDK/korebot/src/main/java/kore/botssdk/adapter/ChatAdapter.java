@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -63,31 +65,10 @@ import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 
 @SuppressWarnings("UnKnownNullness")
 public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
-
     private final HashMap<String, Integer> headersMap = new HashMap<>();
-
-    public ComposeFooterInterface getComposeFooterInterface() {
-        return composeFooterInterface;
-    }
-
-    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        this.composeFooterInterface = composeFooterInterface;
-    }
-
-    public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
-        return invokeGenericWebViewInterface;
-    }
-
-    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
-        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-    }
-
-    ComposeFooterInterface composeFooterInterface;
+    private BottomSheetDialog bottomSheetDialog;
+    private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-
-    public ArrayList<BaseBotMessage> getBaseBotMessageArrayList() {
-        return baseBotMessageArrayList;
-    }
 
     private final ArrayList<BaseBotMessage> baseBotMessageArrayList;
 
@@ -128,6 +109,30 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
 
     private final HashMap<Integer, String> customTemplates = new HashMap<>();
 
+    public ComposeFooterInterface getComposeFooterInterface() {
+        return composeFooterInterface;
+    }
+
+    public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
+        this.composeFooterInterface = composeFooterInterface;
+    }
+
+    public InvokeGenericWebViewInterface getInvokeGenericWebViewInterface() {
+        return invokeGenericWebViewInterface;
+    }
+
+    public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
+        this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
+    }
+
+    public void setBottomSheetDialog(BottomSheetDialog bottomSheetDialog) {
+        this.bottomSheetDialog = bottomSheetDialog;
+    }
+
+    public ArrayList<BaseBotMessage> getBaseBotMessageArrayList() {
+        return baseBotMessageArrayList;
+    }
+
     public ChatAdapter() {
         super();
         baseBotMessageArrayList = new ArrayList<>();
@@ -164,7 +169,11 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                         customTemplateType = getCustomTemplateType(payInner.getPie_type());
                     }
                 }
-                if (customTemplateType != -1) return customTemplateType;
+                if (customTemplateType != -1) {
+                    if (payInner.getSliderView() && bottomSheetDialog == null)
+                        return TEMPLATE_BUBBLE_RESPONSE;
+                    else return customTemplateType;
+                }
 
                 if (StringUtils.isNotEmpty(payInner.getTemplate_type())) {
                     switch (payInner.getTemplate_type()) {
@@ -230,7 +239,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                         case BotResponse.TEMPLATE_BENEFICIARY:
                             return TEMPLATE_BENEFICIARY;
                         case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE:
-                            return !payInner.getSliderView() ? TEMPLATE_ADVANCE_MULTI_SELECT : TEMPLATE_BUBBLE_RESPONSE;
+                            return payInner.getSliderView() && bottomSheetDialog == null ? TEMPLATE_BUBBLE_RESPONSE : TEMPLATE_ADVANCE_MULTI_SELECT;
                         case BotResponse.TEMPLATE_TYPE_RESULTS_LIST:
                             return TEMPLATE_RESULTS;
                         default:
@@ -329,14 +338,16 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             case TEMPLATE_MEDIA -> MediaTemplateHolder.getInstance(parent);
             case TEMPLATE_FEEDBACK -> FeedbackTemplateHolder.getInstance(parent);
             case TEMPLATE_RADIO_OPTIONS -> RadioOptionsTemplateHolder.getInstance(parent);
-            case TEMPLATE_WELCOME_QUICK_REPLIES -> WelcomeQuickRepliesTemplateHolder.getInstance(parent);
+            case TEMPLATE_WELCOME_QUICK_REPLIES ->
+                    WelcomeQuickRepliesTemplateHolder.getInstance(parent);
             case TEMPLATE_NOTIFICATIONS -> AgentTransferTemplateHolder.getInstance(parent);
             case TEMPLATE_CONTACT_CARD -> ContactCardTemplateHolder.getInstance(parent);
             case TEMPLATE_BANKING_FEEDBACK -> BankingFeedbackTemplateHolder.getInstance(parent);
             case TEMPLATE_PDF_DOWNLOAD -> PdfTemplateHolder.getInstance(parent);
             case TEMPLATE_BENEFICIARY -> BeneficiaryTemplateHolder.getInstance(parent);
             case TEMPLATE_MULTI_SELECT -> MultiSelectTemplateHolder.getInstance(parent);
-            case TEMPLATE_ADVANCE_MULTI_SELECT -> AdvanceMultiSelectTemplateHolder.getInstance(parent);
+            case TEMPLATE_ADVANCE_MULTI_SELECT ->
+                    AdvanceMultiSelectTemplateHolder.getInstance(parent);
             case TEMPLATE_RESULTS -> ResultsTemplateHolder.getInstance(parent);
             default -> ResponseTextTemplateHolder.getInstance(parent);
         };
@@ -347,6 +358,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         boolean isLastItem = position == baseBotMessageArrayList.size() - 1;
         BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(position);
         holder.setIsLastItem(isLastItem);
+        holder.setBottomSheetDialog(bottomSheetDialog);
         holder.setMsgTime(baseBotMessage.getTimeStamp(), baseBotMessage instanceof BotRequest, getItemViewType(position));
         if (baseBotMessage instanceof BotResponse) {
             if (StringUtils.isNotEmpty(((BotResponse) baseBotMessage).getIcon()))
@@ -383,7 +395,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             method = clazz.getDeclaredMethod("getInstance", ViewGroup.class);
             // Invoke the static method with the parameter and get the result
             holder = (BaseViewHolder) method.invoke(null, parent);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException e) {
             throw new RuntimeException(e);
         }
         return holder;

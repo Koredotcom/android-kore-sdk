@@ -35,6 +35,9 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.FileProvider;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.exifinterface.media.ExifInterface;
 
 import java.io.ByteArrayOutputStream;
@@ -49,6 +52,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.reactivex.annotations.NonNull;
@@ -57,13 +61,11 @@ import kore.botssdk.exceptions.NoExternalStorageException;
 import kore.botssdk.exceptions.NoWriteAccessException;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.KoreMedia;
-import kore.botssdk.utils.AsyncTaskExecutor;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
 import kore.botssdk.utils.LogUtils;
-import kore.botssdk.utils.StringUtils;
 
 @SuppressLint("UnknownNullness")
 public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreMedia, ActivityResultCallback<ActivityResult> {
@@ -87,6 +89,13 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ka_capture_image);
+
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_capture_image), (view, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             imagePickType = extras.getString(BundleConstants.PICK_TYPE);
@@ -249,7 +258,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
 
     private File createVideoFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         String videoFileName = "VIDEO_" + timeStamp;
         File mediaStorageDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES);
 

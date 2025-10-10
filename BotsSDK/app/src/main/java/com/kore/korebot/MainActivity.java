@@ -1,8 +1,12 @@
 package com.kore.korebot;
 
+import static android.Manifest.permission.POST_NOTIFICATIONS;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +17,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
@@ -57,27 +62,35 @@ public class MainActivity extends AppCompatActivity {
 
         //Set clientId, If jwtToken is empty this value is mandatory
         String clientId = "PLEASE_ENTER_CLIENT_ID";
+//        String clientId = getProperty("clientId").toString();
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
         String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+//        String clientSecret = getProperty("clientSecret").toString();
 
         //Set botId, This value is mandatory
         String botId = "PLEASE_ENTER_BOT_ID";
+//        String botId = getProperty("botId").toString();
 
         //Set identity, This value is mandatory
         String identity = "PLEASE_ENTER_IDENTITY";
+//        String identity = getProperty("identity").toString();
 
         //Set botName, This value is mandatory
         String botName = "PLEASE_ENTER_BOT_NAME";
+//        String botName = getProperty("botName").toString();
 
         //Set serverUrl, This value is mandatory
         String serverUrl = "PLEASE_ENTER_SERVER_URL";
+//        String serverUrl = getProperty("serverUrl").toString();
 
         //Set brandingUrl, This value is mandatory
         String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
+//        String brandingUrl = getProperty("brandingUrl").toString();
 
         //Set jwtServerUrl, This value is mandatory
         String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
+//        String jwtServerUrl = getProperty("jwtServerUrl").toString();
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -214,4 +227,19 @@ public class MainActivity extends AppCompatActivity {
         brandingModel.setChatBubbleStyle("square");
         return brandingModel;
     }
+
+//    private Object getProperty(String propertyName) {
+//        try {
+//            InputStream rawResource = getResources().openRawResource(R.raw.config);
+//            Properties properties = new Properties();
+//            properties.load(rawResource);
+//
+//            return properties.getProperty(propertyName);
+//        } catch (Resources.NotFoundException e) {
+//            Log.e("LOG", "Unable to find the config file: " + e.getMessage());
+//        } catch (IOException e) {
+//            Log.e("LOG", "Failed to open config file.");
+//        }
+//        return null;
+//    }
 }

@@ -1,5 +1,6 @@
 package kore.botssdk.activity;
 
+import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
@@ -39,7 +40,7 @@ import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.bot.BotClient;
-import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
+import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.content.NewBotContentFragment;
@@ -55,8 +56,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.models.FormActionTemplate;
-import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.SDKConfig;
@@ -73,7 +72,7 @@ import kore.botssdk.viewmodels.chat.BotChatViewModel;
 import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 
 @SuppressWarnings("UnKnownNullness")
-public class NewBotChatActivity extends AppCompatActivity implements BotChatViewListener, ComposeFooterInterface, InvokeGenericWebViewInterface {
+public class NewBotChatActivity extends BotAppCompactActivity implements BotChatViewListener, ComposeFooterInterface, InvokeGenericWebViewInterface {
     private ProgressBar taskProgressBar;
     private String jwt;
     BotClient botClient;
@@ -149,7 +148,8 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (SDKConfiguration.OverrideKoreConfig.disable_action_bar && getSupportActionBar() != null)
             getSupportActionBar().hide();
 
-        setContentView(R.layout.bot_chat_layout);
+        setContentLayout(R.layout.bot_chat_layout);
+
         botClient = new BotClient(NewBotChatActivity.this);
 
         BotChatViewModelFactory factory = new BotChatViewModelFactory(NewBotChatActivity.this, botClient, NewBotChatActivity.this);
@@ -262,6 +262,8 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
             }
+
+            sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
             changeStatusBarColor(brandingModel.getWidgetHeaderColor());
         }
     }
@@ -315,7 +317,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
     public void updateTitleBar(BaseSocketConnectionManager.CONNECTION_STATE state) {
         switch (state) {
             case CONNECTING:
-                taskProgressBar.setVisibility(View.VISIBLE);
+                taskProgressBar.setVisibility(VISIBLE);
                 break;
             case CONNECTED: {
                 taskProgressBar.setVisibility(View.GONE);
@@ -324,7 +326,7 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
             break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED: {
-                taskProgressBar.setVisibility(View.VISIBLE);
+                taskProgressBar.setVisibility(VISIBLE);
                 baseFooterFragment.setDisabled(true);
                 baseFooterFragment.updateUI();
             }
@@ -472,14 +474,6 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         super.onPause();
     }
 
-    private void changeStatusBarColor(String color) {
-        if (SDKConfig.isUpdateStatusBarColor()) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.parseColor(color));
-        }
-    }
-
     void showCloseAlert() {
         DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
             @Override
@@ -532,20 +526,14 @@ public class NewBotChatActivity extends AppCompatActivity implements BotChatView
         if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
-                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null ||
+                !botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getSliderView()) {
             return;
         }
-        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
-        switch (payloadInner.getTemplate_type()) {
-            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
-                if (payloadInner.getSliderView()) {
-                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
-                    fragment.setData(payloadInner);
-                    fragment.setComposeFooterInterface(this);
-                    fragment.show(getSupportFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
-                }
-            }
-        }
+        TemplateBottomSheetFragment bottomSheetFragment = new TemplateBottomSheetFragment();
+        bottomSheetFragment.setComposeFooterInterface(this);
+        bottomSheetFragment.setInvokeGenericWebViewInterface(this);
+        bottomSheetFragment.show(botResponse, getSupportFragmentManager());
     }
 
     @Override
