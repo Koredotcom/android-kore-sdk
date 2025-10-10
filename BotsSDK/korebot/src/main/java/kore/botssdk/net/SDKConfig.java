@@ -13,8 +13,6 @@ import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.BundleUtils;
 
 public class SDKConfig {
     private static BaseContentFragment customContentFragment = null;

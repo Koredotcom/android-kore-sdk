@@ -55,4 +55,6 @@ public class BundleConstants {
     public static final String TYPING = "typing";
     public static final String CENTER = "center";
     public static final String FIT_TO_WIDTH = "fitToWidth";
+    public static final String STATUS_BAR_HEIGHT = "STATUS_BAR_HEIGHT";
+    public static final String STATUS_BAR_COLOR = "STATUS_BAR_COLOR";
 }

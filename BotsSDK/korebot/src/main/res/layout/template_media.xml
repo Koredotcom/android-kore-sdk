@@ -61,11 +61,10 @@
                 android:id="@+id/vvAttachment"
                 android:layout_width="250dp"
                 android:layout_height="150dp"
-                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
-                android:layout_weight="1"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -80,7 +79,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_above="@+id/sbVideo"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -88,7 +86,7 @@
                         android:id="@+id/ivPlayPauseIcon"
                         android:layout_width="@dimen/dimen_25dp"
                         android:layout_height="@dimen/dimen_25dp"
-                        android:layout_marginLeft="@dimen/dimen_7dp"
+                        android:layout_marginStart="@dimen/dimen_7dp"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_play_icon" />
 
@@ -96,9 +94,7 @@
                         android:id="@+id/tvVideoTiming"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_above="@+id/sbVideo"
-                        android:layout_marginLeft="@dimen/dimen_10dp"
-                        android:layout_toRightOf="@+id/ivPlayPauseIcon"
+                        android:layout_marginStart="@dimen/dimen_10dp"
                         android:layout_weight="1"
                         android:text="@string/_00_00_00_00"
                         android:textColor="@color/white"
@@ -108,9 +104,7 @@
                         android:id="@+id/ivFullScreen"
                         android:layout_width="@dimen/dimen_25dp"
                         android:layout_height="@dimen/dimen_25dp"
-                        android:layout_above="@+id/sbVideo"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/dimen_7dp"
+                        android:layout_marginEnd="@dimen/dimen_7dp"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_fullscreen_icon" />
 
@@ -118,7 +112,7 @@
                         android:id="@+id/ivVideoMore"
                         android:layout_width="@dimen/dimen_25dp"
                         android:layout_height="@dimen/dimen_25dp"
-                        android:layout_marginRight="@dimen/dimen_10dp"
+                        android:layout_marginEnd="@dimen/dimen_10dp"
                         android:layout_weight="0"
                         android:importantForAccessibility="no"
                         android:src="@drawable/ic_more_vert_white_24dp" />
@@ -129,7 +123,6 @@
                     android:id="@+id/sbVideo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:maxHeight="@dimen/dimen_3dp"
                     android:minHeight="@dimen/dimen_3dp"
@@ -143,7 +136,6 @@
             android:id="@+id/llAudio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_marginBottom="@dimen/dimen_10dp"
             android:background="@drawable/audio_template_bg"
             android:gravity="center_vertical"

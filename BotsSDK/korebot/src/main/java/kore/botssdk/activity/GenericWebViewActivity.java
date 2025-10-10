@@ -6,6 +6,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -36,7 +37,9 @@ import java.net.URL;
 import java.util.concurrent.Executors;
 
 import kore.botssdk.R;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfig;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 
 @SuppressLint({"SetJavaScriptEnabled", "UnKnownNullness"})
@@ -54,7 +57,11 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.generic_webview_layout);
+        setContentLayout(R.layout.generic_webview_layout);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        changeStatusBarColor(sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5"));
+
         Bundle receivedBundle = getIntent().getExtras();
         if (receivedBundle != null) {
             url = receivedBundle.getString(EXTRA_URL);
