@@ -80,21 +80,16 @@ public class BotAppCompactActivity extends AppCompatActivity {
                 window.setStatusBarColor(Color.parseColor(color));
             }
         }
+        else changeStatusBarColorWithHeight();
     }
 
-    protected void changeStatusBarColorWithHeight(String color) {
-        if (SDKConfig.isUpdateStatusBarColor()) {
-            Window window = getWindow();
+    protected void changeStatusBarColorWithHeight() {
             if (Build.VERSION.SDK_INT >= 35) {
                 ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.base_frame), (view, windowInsets) -> {
                     Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
                     view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
                     return WindowInsetsCompat.CONSUMED;
                 });
-            } else {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.parseColor(color));
-            }
         }
     }
     public void initDataBase() {

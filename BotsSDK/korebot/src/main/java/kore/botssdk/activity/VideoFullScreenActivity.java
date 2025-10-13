@@ -52,8 +52,7 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
         super.onCreate(savedInstanceState);
         setContentLayout(R.layout.video_full_screen);
 
-        SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        changeStatusBarColorWithHeight(sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5"));
+        changeStatusBarColorWithHeight();
 
         KoreEventCenter.register(this);
         vvFullScreen = findViewById(R.id.vvFullVideo);

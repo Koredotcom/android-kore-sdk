@@ -62,7 +62,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.generic_webview_layout);
+        setContentLayout(R.layout.generic_webview_layout);
 
         SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
         changeStatusBarColor(sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5"));
