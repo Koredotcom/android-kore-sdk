@@ -41,8 +41,9 @@ public class ButtonTemplateHolder extends BaseViewHolder {
         ArrayList<BotButtonModel> botButtonModels = payloadInner.getButtons();
         final ButtonTemplateAdapter buttonTypeAdapter;
         RecyclerView buttonsList = itemView.findViewById(R.id.buttonsList);
+        String variation = payloadInner.getVariation() != null ? payloadInner.getVariation() : "";
 
-        switch (payloadInner.getVariation()) {
+         switch (variation) {
             case BotResponse.PLAIN:
             case BotResponse.TEXT_INVERTED:
             case BotResponse.BACKGROUND_INVERTED:
@@ -57,6 +58,7 @@ public class ButtonTemplateHolder extends BaseViewHolder {
             default:
                 buttonsList.setLayoutManager(new LinearLayoutManager(buttonsList.getContext(), LinearLayoutManager.VERTICAL, false));
         }
+
         if (payloadInner.isFullWidth()) {
             buttonsList.setLayoutManager(new LinearLayoutManager(buttonsList.getContext(), LinearLayoutManager.VERTICAL, false));
         }

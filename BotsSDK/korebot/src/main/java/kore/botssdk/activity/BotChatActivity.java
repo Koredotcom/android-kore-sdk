@@ -22,7 +22,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkCapabilities;
@@ -35,8 +34,6 @@ import android.os.Messenger;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -122,7 +119,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     private SharedPreferences sharedPreferences;
     private final Handler messageHandler = new Handler();
     private String fileUrl;
-    private Dialog progressBar, welcomeDialog;
+    private Dialog progressBar;
     boolean isAgentTransfer = false;
     private Dialog alertDialog;
     private BotChatViewModel viewModel;
@@ -181,7 +178,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bot_chat_layout);
+        setContentLayout(R.layout.bot_chat_layout);
+
         botClient = new BotClient(this);
 
         new DimensionUtil(BotChatActivity.this);
@@ -221,9 +219,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
         if (progressBar != null) progressBar.dismiss();
 
-        if (welcomeDialog != null) {
-            welcomeDialog.hide();
-        }
         if (botClient != null) botClient.disconnect();
         KoreEventCenter.unregister(this);
         super.onDestroy();
@@ -376,19 +371,9 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         super.onPause();
     }
 
-    private void changeStatusBarColor(String color) {
-        if (SDKConfig.isUpdateStatusBarColor()) {
-            Window window = getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(Color.parseColor(color));
-        }
-    }
-
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
         if (!StringUtils.isNullOrEmpty(message)) {
-            closeWelcomeDialog();
-
             if (!SDKConfiguration.Client.isWebHook)
                 BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
@@ -401,7 +386,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
-        closeWelcomeDialog();
         botContentFragment.showTypingStatus();
         if (!SDKConfiguration.Client.isWebHook) {
             if (payload != null) {
@@ -435,9 +419,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
     @Override
     public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollUpNeeded) {
-        if (message.equalsIgnoreCase(BundleUtils.OPEN_WELCOME)) {
-            if (welcomeDialog != null) welcomeDialog.show();
-        }
     }
 
     @Override
@@ -466,8 +447,10 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     public void onBrandingDetails(BotBrandingModel botBrandingModel) {
         if (botBrandingModel != null) {
             botName = botBrandingModel.getHeader().getTitle().getName();
-            if (botBrandingModel.getHeader() != null)
+            if (botBrandingModel.getHeader() != null) {
+                sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, botBrandingModel.getHeader().getBg_color()).apply();
                 changeStatusBarColor(botBrandingModel.getHeader().getBg_color());
+            }
             if (!isWelcomeVisible && botBrandingModel.getWelcome_screen() != null && botBrandingModel.getWelcome_screen().isShow()) {
                 isWelcomeVisible = true;
                 WelcomeScreenFragment fragment = new WelcomeScreenFragment();
@@ -776,14 +759,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         progressBar.setCancelable(false);
         progressBar.setCanceledOnTouchOutside(false);
         progressBar.show();
-    }
-
-    void closeWelcomeDialog() {
-        if (welcomeDialog != null && welcomeDialog.isShowing()) {
-            welcomeDialog.dismiss();
-
-            closeProgressDialogue();
-        }
     }
 
     void closeProgressDialogue() {

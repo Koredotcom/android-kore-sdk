@@ -4,6 +4,8 @@ import static kore.botssdk.utils.BundleConstants.CHOOSE_IMAGE_BUNDLED_PERMISSION
 import static kore.botssdk.utils.BundleConstants.CHOOSE_VIDEO_BUNDLED_PERMISSION_REQUEST;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,6 +29,7 @@ import java.util.Objects;
 import kore.botssdk.R;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.VideoTimerEvent;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.KaPermissionsHelper;
@@ -47,7 +50,11 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.video_full_screen);
+        setContentLayout(R.layout.video_full_screen);
+
+        SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+        changeStatusBarColorWithHeight(sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5"));
+
         KoreEventCenter.register(this);
         vvFullScreen = findViewById(R.id.vvFullVideo);
         ivPlayPauseIcon = findViewById(R.id.ivPlayPauseIcon);

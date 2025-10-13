@@ -78,4 +78,6 @@ public class BundleConstants {
     public static final String CALL_AGENT_WEBRTC_TERMINATED = "call_agent_webrtc_terminated";
     public static final String CONNECTED = "CONNECTED";
     public static final String FIT_TO_WIDTH = "fitToWidth";
+    public static final String STATUS_BAR_HEIGHT = "STATUS_BAR_HEIGHT";
+    public static final String STATUS_BAR_COLOR = "STATUS_BAR_COLOR";
 }
