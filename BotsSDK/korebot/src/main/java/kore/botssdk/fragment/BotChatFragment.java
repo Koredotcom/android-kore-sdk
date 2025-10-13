@@ -58,7 +58,7 @@ import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
 import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
 import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
-import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
+import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.fileupload.core.KoreWorker;
@@ -85,7 +85,6 @@ import kore.botssdk.models.BrandingHeaderModel;
 import kore.botssdk.models.EventModel;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
-import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BitmapUtils;
@@ -305,7 +304,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
             if (KaPermissionsHelper.hasPermission(requireActivity(), Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                if (!StringUtils.isNullOrEmpty(fileUrl)) KaMediaUtils.saveFileFromUrlToKorePath(requireContext(), fileUrl);
+                if (!StringUtils.isNullOrEmpty(fileUrl))
+                    KaMediaUtils.saveFileFromUrlToKorePath(requireContext(), fileUrl);
             } else {
                 Toast.makeText(requireActivity(), "Access denied. Operation failed !!", Toast.LENGTH_LONG).show();
             }
@@ -329,7 +329,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         if (!StringUtils.isNullOrEmpty(message)) {
             closeWelcomeDialog();
 
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
                 viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, null);
@@ -353,7 +354,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
         if (attachments != null && !attachments.isEmpty()) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
                 viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, attachments);
@@ -493,20 +495,14 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
-                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null ||
+                !botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getSliderView()) {
             return;
         }
-        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
-        switch (payloadInner.getTemplate_type()) {
-            case BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE -> {
-                if (payloadInner.getSliderView()) {
-                    AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
-                    fragment.setData(payloadInner);
-                    fragment.setComposeFooterInterface(this);
-                    fragment.show(getChildFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
-                }
-            }
-        }
+        TemplateBottomSheetFragment bottomSheetFragment = new TemplateBottomSheetFragment();
+        bottomSheetFragment.setComposeFooterInterface(this);
+        bottomSheetFragment.setInvokeGenericWebViewInterface(this);
+        bottomSheetFragment.show(botResponse, getChildFragmentManager());
     }
 
     @Override
@@ -560,7 +556,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             composerView.setVisibility(VISIBLE);
             BottomPanelFragment composerFragment = new BottomPanelFragment();
             Bundle bundle = getArguments();
-            if (bundle != null) bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
+            if (bundle != null)
+                bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
 
             composerFragment.setArguments(bundle);
             getChildFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
@@ -684,7 +681,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         tvAgentName.setText(eventModel.getMessage().getFirstName());
         tvCallType.setText(getString(R.string.incoming_audio_call));
 
-        if (eventModel.getMessage().isVideoCall()) tvCallType.setText(getString(R.string.incoming_video_call));
+        if (eventModel.getMessage().isVideoCall())
+            tvCallType.setText(getString(R.string.incoming_video_call));
 
         tvCallAccept.setOnClickListener(v -> {
             if (eventModel.getMessage() != null) {
