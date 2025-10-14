@@ -449,7 +449,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             botName = botBrandingModel.getHeader().getTitle().getName();
             if (botBrandingModel.getHeader() != null) {
                 sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, botBrandingModel.getHeader().getBg_color()).apply();
-                changeStatusBarColor(botBrandingModel.getHeader().getBg_color());
+                changeStatusBarColor(SDKConfig.isUpdateStatusBarColor() ? sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5") : "");
             }
             if (!isWelcomeVisible && botBrandingModel.getWelcome_screen() != null && botBrandingModel.getWelcome_screen().isShow()) {
                 isWelcomeVisible = true;

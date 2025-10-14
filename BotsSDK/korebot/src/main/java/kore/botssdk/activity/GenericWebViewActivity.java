@@ -2,12 +2,10 @@ package kore.botssdk.activity;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
-import android.content.BroadcastReceiver;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -16,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +21,6 @@ import android.webkit.ConsoleMessage;
 import android.webkit.URLUtil;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
@@ -44,7 +40,6 @@ import kore.botssdk.R;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 
 @SuppressLint("SetJavaScriptEnabled")
@@ -65,7 +60,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         setContentLayout(R.layout.generic_webview_layout);
 
         SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        changeStatusBarColor(sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5"));
+        changeStatusBarColor(SDKConfig.isUpdateStatusBarColor() ? sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5") : "");
 
         Bundle receivedBundle = getIntent().getExtras();
         if (receivedBundle != null) {

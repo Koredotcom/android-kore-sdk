@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
         //Flag to show widget panel
         SDKConfig.enableWidgetPanel(false);
 
+        SDKConfig.setIsUpdateStatusBarColor(false);
+
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
 

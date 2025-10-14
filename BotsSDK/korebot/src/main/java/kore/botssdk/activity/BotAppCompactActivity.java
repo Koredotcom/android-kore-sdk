@@ -63,35 +63,39 @@ public class BotAppCompactActivity extends AppCompatActivity {
     }
 
     protected void changeStatusBarColor(String color) {
-        if (SDKConfig.isUpdateStatusBarColor()) {
-            Window window = getWindow();
-            if (Build.VERSION.SDK_INT >= 35) {
-                statusBarLayout.setVisibility(VISIBLE);
-                ViewGroup.LayoutParams params = statusBarLayout.getLayoutParams();
-                params.height = sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0);
-                statusBarLayout.setLayoutParams(params);
+        if (Build.VERSION.SDK_INT >= 35) {
+            statusBarLayout.setVisibility(VISIBLE);
+            ViewGroup.LayoutParams params = statusBarLayout.getLayoutParams();
+            params.height = sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0);
+            statusBarLayout.setLayoutParams(params);
 
-                if (color.isBlank())
-                    statusBarLayout.setBackgroundColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.primary));
-                else
-                    statusBarLayout.setBackgroundColor(Color.parseColor(color));
-            } else {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.parseColor(color));
-            }
+            if (color.isBlank())
+                statusBarLayout.setBackgroundColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.colorPrimary));
+            else
+                statusBarLayout.setBackgroundColor(Color.parseColor(color));
+        } else {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color.isBlank() ? ContextCompat.getColor(BotAppCompactActivity.this, R.color.colorPrimary) : Color.parseColor(color));
         }
-        else changeStatusBarColorWithHeight();
     }
 
     protected void changeStatusBarColorWithHeight() {
-            if (Build.VERSION.SDK_INT >= 35) {
-                ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.base_frame), (view, windowInsets) -> {
-                    Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-                    view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
-                    return WindowInsetsCompat.CONSUMED;
-                });
+        if (Build.VERSION.SDK_INT >= 35) {
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.base_frame), (view, windowInsets) -> {
+                Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+                view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+                view.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.black));
+                return WindowInsetsCompat.CONSUMED;
+            });
+        }
+        else {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.black));
         }
     }
+
     public void initDataBase() {
         dataBase = new MySQLiteHelper(this);
     }
