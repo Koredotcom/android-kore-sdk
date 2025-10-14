@@ -1,6 +1,7 @@
 package com.kore.ui.adapters
 
 import android.content.Context
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kore.SDKConfig
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
@@ -27,7 +28,6 @@ import com.kore.model.constants.BotResponseConstants.SELECTED_POSITION
 import com.kore.model.constants.BotResponseConstants.SELECTED_TIME
 import com.kore.model.constants.BotResponseConstants.SLIDER_VIEW
 import com.kore.model.constants.BotResponseConstants.TEXT_MESSAGE
-import com.kore.ui.R
 import com.kore.ui.row.SimpleListAdapter
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.row.botchat.AdvancedListTemplateRow
@@ -70,9 +70,10 @@ import java.util.Calendar
 import java.util.Locale
 
 class BotChatAdapter(private val context: Context, types: List<SimpleListRow.SimpleListRowType>) : SimpleListAdapter(types),
-    ChatContentStateListener {
+                                                                                                   ChatContentStateListener {
     private var messages: List<BaseBotMessage> = emptyList()
     private var actionEvent: (event: UserActionEvent) -> Unit = {}
+    private var bottomSheetDialog: BottomSheetDialog? = null
 
     private fun createTextTemplate(
         msgId: String, isRequest: Boolean, msg: String?, iconUrl: String?, isLastItem: Boolean, msgTime: String = "", errorTextColor: String = ""
@@ -83,6 +84,10 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
     fun setActionEvent(actionEvent: (event: UserActionEvent) -> Unit) {
         this.actionEvent = actionEvent
+    }
+
+    fun setBottomSheetDialog(bottomSheetDialog: BottomSheetDialog?) {
+        this.bottomSheetDialog = bottomSheetDialog;
     }
 
     fun addAndCreateRows(baseBotMessages: List<BaseBotMessage>, isHistory: Boolean = false, isReconnection: Boolean): List<SimpleListRow> {
@@ -133,7 +138,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
             val isLastItem = index == botMessages.size - 1
             val msgId = baseBotMsg.messageId
             currentTimeStamp = baseBotMsg.messageDate
-            if (currentTimeStamp != previousTimeStamp) {
+            if (currentTimeStamp != previousTimeStamp && bottomSheetDialog == null) {
                 rows = rows + TimeStampTemplateRow(msgId, currentTimeStamp)
                 previousTimeStamp = currentTimeStamp
             }
@@ -157,7 +162,9 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                         is PayloadOuter -> {
                             var newRows = createCustomTemplate(body.type, baseBotMsg, isLastItem, rows)
                             if (newRows.size != rows.size) {
-                                rows = newRows
+                                LogUtils.e("SLIDER_VIEW", (body.payload?.get(SLIDER_VIEW) as Boolean?).toString())
+                                if (body.payload != null && (body.payload?.get(SLIDER_VIEW) as Boolean? == false || bottomSheetDialog != null))
+                                    rows = newRows
                                 continue
                             }
                             if (!body.text.isNullOrEmpty()) {
@@ -175,21 +182,31 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         innerMap[TEXT_MESSAGE]
                                     } else ""
 
-                                    val isTextMsg = textMessage != null && textMessage.toString().isNotEmpty()
+                                    val isTextMsg = bottomSheetDialog == null && textMessage != null && textMessage.toString().isNotEmpty()
 
                                     val templateType = innerMap[BotResponseConstants.KEY_TEMPLATE_TYPE]
                                     newRows = createCustomTemplate(templateType.toString(), baseBotMsg, isLastItem, rows)
                                     if (newRows == rows) {
                                         if (innerMap[BotResponseConstants.CAROUSEL_TYPE] != null) {
                                             newRows =
-                                                createCustomTemplate(innerMap[BotResponseConstants.CAROUSEL_TYPE].toString(), baseBotMsg, isLastItem, rows)
+                                                createCustomTemplate(
+                                                    innerMap[BotResponseConstants.CAROUSEL_TYPE].toString(),
+                                                    baseBotMsg,
+                                                    isLastItem,
+                                                    rows
+                                                )
                                         } else if (innerMap[PIE_TYPE] != null) {
                                             newRows = createCustomTemplate(innerMap[PIE_TYPE].toString(), baseBotMsg, isLastItem, rows)
                                         } else if (innerMap[DIRECTION] != null) {
                                             newRows = createCustomTemplate(innerMap[DIRECTION].toString(), baseBotMsg, isLastItem, rows)
                                         } else if (innerMap[BotResponseConstants.TABLE_DESIGN] != null) {
                                             newRows =
-                                                createCustomTemplate(innerMap[BotResponseConstants.TABLE_DESIGN].toString(), baseBotMsg, isLastItem, rows)
+                                                createCustomTemplate(
+                                                    innerMap[BotResponseConstants.TABLE_DESIGN].toString(),
+                                                    baseBotMsg,
+                                                    isLastItem,
+                                                    rows
+                                                )
                                         }
                                     }
                                     if (newRows.size != rows.size) {
@@ -257,7 +274,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_ADVANCED_LIST -> {
-                                            if (textMessage != null && textMessage.toString().isNotEmpty()) {
+                                            if (isTextMsg) {
                                                 rows = rows + createTextTemplate(
                                                     msgId,
                                                     false,
@@ -295,9 +312,10 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                             if (innerMap[DISPLAY_LIMIT] == null) {
                                                 innerMap[DISPLAY_LIMIT] = (innerMap[BotResponseConstants.LIMIT] as Double).toInt()
                                             }
-                                            if (innerMap[SLIDER_VIEW] as Boolean? == true) {
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == true && bottomSheetDialog == null) {
                                                 if (isTextMsg) {
-                                                    rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
+                                                    rows =
+                                                        rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                                 }
                                             } else {
                                                 rows = rows + AdvanceMultiSelectTemplateRow(
@@ -424,13 +442,13 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_OTP -> {
-                                            if (innerMap[SLIDER_VIEW] as Boolean? == false) {
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == false || bottomSheetDialog != null) {
                                                 rows = rows + OtpTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, isLastItem, actionEvent)
                                             }
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_RESET_PIN -> {
-                                            if (innerMap[SLIDER_VIEW] as Boolean? == false) {
+                                            if (innerMap[SLIDER_VIEW] as Boolean? == false || bottomSheetDialog != null) {
                                                 rows = rows + ResetPinTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, isLastItem, actionEvent)
                                             }
                                         }
@@ -446,7 +464,15 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         }
 
                                         else -> {
-                                            rows = rows + createTextTemplate(msgId, false, (templateType ?: body.type).toString(), iconUrl, isLastItem, msgTime)
+                                            if (bottomSheetDialog == null)
+                                                rows = rows + createTextTemplate(
+                                                    msgId,
+                                                    false,
+                                                    (templateType ?: body.type).toString(),
+                                                    iconUrl,
+                                                    isLastItem,
+                                                    msgTime
+                                                )
                                         }
                                     }
                                 } else {
@@ -471,7 +497,13 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_ERROR)) {
                                 if (innerMap != null && innerMap[KEY_TEXT] != null) {
                                     rows = rows + createTextTemplate(
-                                        baseBotMsg.messageId, false, innerMap[KEY_TEXT].toString(), iconUrl, isLastItem, msgTime, innerMap[COLOR].toString()
+                                        baseBotMsg.messageId,
+                                        false,
+                                        innerMap[KEY_TEXT].toString(),
+                                        iconUrl,
+                                        isLastItem,
+                                        msgTime,
+                                        innerMap[COLOR].toString()
                                     )
                                 }
                             } else if (body.type.equals(BotResponseConstants.COMPONENT_TYPE_TEXT)) {
@@ -507,6 +539,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                 }
             }
         }
+        rows.map { row -> row.setTemplateBottomSheetDialog(bottomSheetDialog) }
         return rows
     }
 

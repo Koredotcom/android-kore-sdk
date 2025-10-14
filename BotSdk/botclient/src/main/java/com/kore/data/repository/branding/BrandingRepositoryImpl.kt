@@ -17,7 +17,6 @@ import com.kore.network.api.responsemodels.branding.BrandingFooterModel
 import com.kore.network.api.responsemodels.branding.BrandingGeneralModel
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.network.api.responsemodels.branding.BrandingTitleModel
-import com.kore.network.api.responsemodels.branding.updateWith
 import com.kore.network.api.responsemodels.branding.updateWithV3Model
 import com.kore.network.api.service.BrandingApi
 import java.io.InputStreamReader
@@ -54,12 +53,12 @@ internal fun getLocalBrandingDetails(context: Context): BotActiveThemeModel? {
 }
 
 internal fun processResponse(responseModel: BotActiveThemeModel?): BotActiveThemeModel? {
-    val configBrandingModel = SDKConfiguration.getBotBrandingConfig()?: return responseModel
+    val configBrandingModel = SDKConfiguration.getBotBrandingConfig()?: responseModel?.brandingModel ?: return responseModel
     if (configBrandingModel.general.colors.useColorPaletteOnly == true) {
         configBrandingModel.header.bgColor = configBrandingModel.general.colors.secondary
         configBrandingModel.header.avatarBgColor = configBrandingModel.general.colors.primary
-        configBrandingModel.header.title?.color = configBrandingModel.general.colors.primary
-        configBrandingModel.header.subTitle?.color = configBrandingModel.general.colors.primary
+        configBrandingModel.header.title?.color = configBrandingModel.general.colors.primaryText
+        configBrandingModel.header.subTitle?.color = configBrandingModel.general.colors.primaryText
         configBrandingModel.footer.composeBar?.outlineColor = configBrandingModel.general.colors.primary
         configBrandingModel.footer.composeBar?.inlineColor = configBrandingModel.general.colors.secondaryText
     }

@@ -34,6 +34,8 @@ import com.kore.event.BotChatEvent
 import com.kore.listeners.BotChatCloseListener
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotResponse
+import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
@@ -60,9 +62,7 @@ import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
-import com.kore.ui.bottomsheet.AdvancedMultiSelectBottomSheet
-import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
-import com.kore.ui.bottomsheet.ResetPinTemplateBottomSheet
+import com.kore.ui.bottomsheet.TemplateBottomSheetFragment
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
@@ -288,6 +288,19 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.onFileDownloadProgress(msgId, progress, downloadedBytes)
     }
 
+    override fun showTemplateBottomSheet(botResponse: BotResponse) {
+        if (botResponse.message.isEmpty() || botResponse.message[0].cInfo == null || botResponse.message[0].cInfo?.body == null ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload.isNullOrEmpty() ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload?.get(BotResponseConstants.KEY_TEMPLATE_TYPE) == null ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload?.get(BotResponseConstants.SLIDER_VIEW) == false
+        ) {
+            return
+        }
+        val bottomSheetFragment = TemplateBottomSheetFragment()
+        bottomSheetFragment.setOnActionEvent(this::onActionEvent)
+        bottomSheetFragment.show(botResponse, childFragmentManager)
+    }
+
     private fun showAlertDialog(eventModel: HashMap<String, Any>) {
         alertDialog = Dialog(requireContext())
         val dialogBinding: IncomingCallLayoutBinding = DataBindingUtil.inflate(layoutInflater, R.layout.incoming_call_layout, null, false)
@@ -356,21 +369,6 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onLoadHistory(isReconnect: Boolean) {
         contentFragment.onLoadHistory(isReconnect)
-    }
-
-    override fun showOtpBottomSheet(payload: HashMap<String, Any>) {
-        val bottomSheet = OtpTemplateBottomSheet()
-        bottomSheet.showData(payload, true, childFragmentManager, this::onActionEvent)
-    }
-
-    override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
-        val bottomSheet = ResetPinTemplateBottomSheet()
-        bottomSheet.showData(payload, true, childFragmentManager, this::onActionEvent)
-    }
-
-    override fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>) {
-        val bottomSheet = AdvancedMultiSelectBottomSheet()
-        bottomSheet.showData(msgId, payload, this::onActionEvent, childFragmentManager)
     }
 
     fun showCloseAlert() {

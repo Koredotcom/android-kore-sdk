@@ -34,6 +34,8 @@ import com.kore.common.utils.LogUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotResponse
+import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
@@ -61,9 +63,7 @@ import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
-import com.kore.ui.bottomsheet.AdvancedMultiSelectBottomSheet
-import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
-import com.kore.ui.bottomsheet.ResetPinTemplateBottomSheet
+import com.kore.ui.bottomsheet.TemplateBottomSheetFragment
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
@@ -217,7 +217,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         if (header?.botMessage == null && header?.brandingModel != null) {
             header.brandingModel?.header?.bgColor?.let { updateStatusBarColor(it) }
             Handler(Looper.getMainLooper()).postDelayed({
-//                binding.clProgress.isVisible = false
+                //                binding.clProgress.isVisible = false
                 if (!isMinimized() && !isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
                     isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
@@ -252,7 +252,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
             }, 2000)
         } else {
-//            binding.clProgress.isVisible = false
+            //            binding.clProgress.isVisible = false
             binding.chatWindow.isVisible = true
             val customHeaderFragment = SDKConfig.getCustomHeaderFragment(HEADER_SIZE_COMPACT)
             addHeaderFragmentToActivity(customHeaderFragment ?: ChatV2HeaderFragment(), header?.brandingModel)
@@ -366,19 +366,17 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.onLoadHistory(isReconnect)
     }
 
-    override fun showOtpBottomSheet(payload: HashMap<String, Any>) {
-        val bottomSheet = OtpTemplateBottomSheet()
-        bottomSheet.showData(payload, true, supportFragmentManager, this::onActionEvent)
-    }
-
-    override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
-        val bottomSheet = ResetPinTemplateBottomSheet()
-        bottomSheet.showData(payload, true, supportFragmentManager, this::onActionEvent)
-    }
-
-    override fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>) {
-        val bottomSheet = AdvancedMultiSelectBottomSheet()
-        bottomSheet.showData(msgId, payload, this::onActionEvent, supportFragmentManager)
+    override fun showTemplateBottomSheet(botResponse: BotResponse) {
+        if (botResponse.message.isEmpty() || botResponse.message[0].cInfo == null || botResponse.message[0].cInfo?.body == null ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload.isNullOrEmpty() ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload?.get(BotResponseConstants.KEY_TEMPLATE_TYPE) == null ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload?.get(BotResponseConstants.SLIDER_VIEW) == false
+        ) {
+            return
+        }
+        val bottomSheetFragment = TemplateBottomSheetFragment()
+        bottomSheetFragment.setOnActionEvent(this::onActionEvent)
+        bottomSheetFragment.show(botResponse, supportFragmentManager)
     }
 
     private fun updateStatusBarColor(color: String) {

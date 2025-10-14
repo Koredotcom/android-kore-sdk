@@ -38,12 +38,9 @@ import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.BUTTON_STACKED
 import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
-import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_ADVANCED_MULTI_SELECT
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE_RANGE
-import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_OTP
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_QUICK_REPLIES
-import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_RESET_PIN
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
@@ -113,8 +110,15 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
                         isAgentTransfer = botResponse.fromAgent
                         getView()?.showTypingIndicator(botResponse.icon)
-                        getView()?.addMessageToAdapter(botResponse)
-//                        historyOffset += 1
+                        botResponse.message[0].cInfo?.body?.let { body ->
+                            if (body is PayloadOuter && body.payload?.get(BotResponseConstants.SLIDER_VIEW) as Boolean? == true) {
+                                getView()?.showTemplateBottomSheet(botResponse)
+                                return
+                            } else {
+                                getView()?.addMessageToAdapter(botResponse)
+                            }
+                        }
+                        // historyOffset += 1
                         val lastItem = getView()?.getAdapterLastItems() as BotResponse
 
                         when (val body = lastItem.message[0].cInfo?.body) {
@@ -132,24 +136,6 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                                                     if (innerMap[TYPE] != null) innerMap[TYPE] as String else "",
                                                     innerMap[BUTTON_STACKED] as Boolean? == true
                                                 )
-                                            }
-
-                                            TEMPLATE_TYPE_OTP -> {
-                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
-                                                    getView()?.showOtpBottomSheet(innerMap)
-                                                }
-                                            }
-
-                                            TEMPLATE_TYPE_RESET_PIN -> {
-                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
-                                                    getView()?.showPinResetBottomSheet(innerMap)
-                                                }
-                                            }
-
-                                            TEMPLATE_TYPE_ADVANCED_MULTI_SELECT -> {
-                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
-                                                    getView()?.showAdvancedMultiSelectBottomSheet(botResponse.messageId, innerMap)
-                                                }
                                             }
 
                                             else -> {
@@ -361,11 +347,21 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_BG_COLOR, it.general.colors.primary)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, it.general.colors.primaryText)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_INACTIVE_BG_COLOR, it.general.colors.secondary)
-                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_INACTIVE_TXT_COLOR, it.general.colors.secondaryText)
+                preferenceRepository.putStringValue(
+                    context,
+                    THEME_NAME,
+                    BotResponseConstants.BUTTON_INACTIVE_TXT_COLOR,
+                    it.general.colors.secondaryText
+                )
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, it.general.colors.secondary)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, it.general.colors.primaryText)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, it.general.colors.primary)
-                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, it.general.colors.secondaryText)
+                preferenceRepository.putStringValue(
+                    context,
+                    THEME_NAME,
+                    BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR,
+                    it.general.colors.secondaryText
+                )
             }
             it.body.timeStamp?.let { timeStamp ->
                 if (timeStamp.color.isNotEmpty()) preferenceRepository.putStringValue(

@@ -1,5 +1,7 @@
 package com.kore.ui.row.botchat
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
@@ -66,6 +68,13 @@ class OtpTemplateRow(
             description.text = payload[DESCRIPTION] as String?
             phoneNumber.text = payload[MOBILE_NUMBER] as String?
             pinLength = (payload[PIN_LENGTH] as Double).toInt()
+            if (bottomSheetDialog != null) {
+                llCloseBottomSheet.setPadding(llCloseBottomSheet.paddingLeft, 0, llCloseBottomSheet.paddingRight, llCloseBottomSheet.paddingBottom)
+            }
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val itemBgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            val gradientDrawable = root.background.mutate() as GradientDrawable
+            gradientDrawable.setStroke(1.dpToPx(root.context), if (bottomSheetDialog == null) itemBgColor else Color.TRANSPARENT)
             otpRecycler.addItemDecoration(HorizontalSpaceItemDecoration(itemSpace))
             otpRecycler.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.HORIZONTAL, false)
             otpRecycler.post {
@@ -86,11 +95,10 @@ class OtpTemplateRow(
             }
             (payload[OTP_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 submit.text = list[0][KEY_TITLE]
-                val sharedPrefs = PreferenceRepositoryImpl()
-                val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+                val btnBgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
                 val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
                 submit.setRoundedCorner(6.dpToPx(root.context).toFloat())
-                submit.setBackgroundColor(bgColor)
+                submit.setBackgroundColor(btnBgColor)
                 submit.setTextColor(txtColor)
                 val content = SpannableString(list[1][KEY_TITLE])
                 content.setSpan(UnderlineSpan(), 0, content.length, 0)
@@ -120,6 +128,7 @@ class OtpTemplateRow(
                 if (otp.length == pinLength) {
                     actionEvent(BotChatEvent.SendMessage(otp.getDotMessage(), otp))
                 }
+                bottomSheetDialog?.dismiss()
             }
             resendOtp.setOnClickListener {
                 if (!isLastItem) return@setOnClickListener

@@ -1,5 +1,7 @@
 package com.kore.ui.row.botchat
 
+import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.ViewGroup
@@ -63,9 +65,16 @@ class ResetPinTemplateRow(
             title.text = payload[KEY_TITLE] as String?
             enterNewPin.text = payload[ENTER_PIN_TITLE] as String?
             reenterNewPin.text = payload[REENTER_PIN_TITLE] as String?
+            if (bottomSheetDialog != null) {
+                llCloseBottomSheet.setPadding(llCloseBottomSheet.paddingLeft, 0, llCloseBottomSheet.paddingRight, llCloseBottomSheet.paddingBottom)
+            }
+            val sharedPrefs = PreferenceRepositoryImpl()
+            val itemBgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+            val gradientDrawable = root.background.mutate() as GradientDrawable
+            gradientDrawable.setStroke(1.dpToPx(root.context), if (bottomSheetDialog == null) itemBgColor else Color.TRANSPARENT)
+
             (payload[RESET_BUTTONS] as List<Map<String, String>>?)?.let { list ->
                 reset.text = list[0][KEY_TITLE]
-                val sharedPrefs = PreferenceRepositoryImpl()
                 val bgColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
                 val txtColor = sharedPrefs.getStringValue(root.context, THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF").toColorInt()
                 reset.setRoundedCorner(6.dpToPx(root.context).toFloat())
@@ -142,6 +151,7 @@ class ResetPinTemplateRow(
                 } else {
                     Toast.makeText(root.context, payload[WARNING_MESSAGE].toString(), Toast.LENGTH_LONG).show()
                 }
+                bottomSheetDialog?.dismiss()
             }
         }
     }
