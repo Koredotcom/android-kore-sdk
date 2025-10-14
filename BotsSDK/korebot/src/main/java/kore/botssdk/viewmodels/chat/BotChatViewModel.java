@@ -66,6 +66,7 @@ import kore.botssdk.websocket.SocketWrapper;
 @SuppressWarnings("UnKnownNullness")
 public class BotChatViewModel extends ViewModel {
     private static final String LOG_TAG = "NewBotChatActivity";
+    private static final String TAG = BotChatViewModel.class.getName();
     Context context;
     Gson gson = new Gson();
     BotClient botClient;
@@ -106,7 +107,7 @@ public class BotChatViewModel extends ViewModel {
             botOptionsModel = gson.fromJson(reader, BotOptionsModel.class);
             LogUtils.e("Options Size", String.valueOf(botOptionsModel.getTasks().size()));
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e("Options Size", String.valueOf(e));
         }
         return botOptionsModel;
     }
@@ -235,7 +236,7 @@ public class BotChatViewModel extends ViewModel {
 
             chatView.addMessageToAdapter(botResponse);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e(TAG, "Failed to complete risky operation" + e);
             if (e instanceof JsonSyntaxException) {
                 try {
                     //This is the case Bot returning user sent message from another channel
@@ -282,7 +283,7 @@ public class BotChatViewModel extends ViewModel {
                             }
                         }
                     } catch (Exception e2) {
-                        e2.printStackTrace();
+                        LogUtils.e("Exception", String.valueOf(e2));
                     }
                 }
             }

@@ -27,6 +27,9 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -226,6 +229,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
         setupTextToSpeech();
         KoreEventCenter.register(this);
+
+        changeStatusBarColor(SDKConfig.isUpdateStatusBarColor() ? sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5") : "");
     }
 
     private void setupTextToSpeech() {
@@ -264,7 +269,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             }
 
             sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
-            changeStatusBarColor(brandingModel.getWidgetHeaderColor());
         }
     }
 
