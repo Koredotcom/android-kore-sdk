@@ -6,6 +6,8 @@ public class PayloadOuter {
     private PayloadInner payload;
     private String text;
 
+    private FormDataModel formData;
+
     public String getType() {
         return type;
     }
@@ -27,5 +29,9 @@ public class PayloadOuter {
 
     public void setPayload(PayloadInner payload) {
         this.payload = payload;
+    }
+
+    public FormDataModel getFormData() {
+        return formData;
     }
 }

@@ -29,6 +29,7 @@ public class ResponseTextTemplateHolder extends BaseViewHolder {
         ComponentModel componentModel = getComponentModel(baseBotMessage);
         String compType = componentModel.getType();
         PayloadOuter payOuter = componentModel.getPayload();
+        if (payOuter == null) return;
         String message = "";
         boolean isError = false;
         if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {

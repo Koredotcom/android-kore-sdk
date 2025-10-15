@@ -44,6 +44,7 @@ import kore.botssdk.viewholders.CarouselStackedTemplateHolder;
 import kore.botssdk.viewholders.CarouselTemplateHolder;
 import kore.botssdk.viewholders.ClockTemplateHolder;
 import kore.botssdk.viewholders.ContactCardTemplateHolder;
+import kore.botssdk.viewholders.DigitalFormTemplateHolder;
 import kore.botssdk.viewholders.DropDownTemplateHolder;
 import kore.botssdk.viewholders.FeedbackTemplateHolder;
 import kore.botssdk.viewholders.FormTemplateHolder;
@@ -114,6 +115,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public static final int TEMPLATE_OTP_VALIDATION = 34;
     public static final int TEMPLATE_RESET_PIN = 35;
     public static final int TEMPLATE_ANSWER = 36;
+    public static final int TEMPLATE_DIGITAL_FORM = 37;
 
     private final HashMap<Integer, String> customTemplates = new HashMap<>();
     private BottomSheetDialog bottomSheetDialog;
@@ -163,6 +165,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         } else {
             ComponentModel componentModel = getComponentModel(baseBotMessage);
             PayloadOuter payOuter = componentModel.getPayload();
+            if (payOuter == null) return TEMPLATE_BUBBLE_RESPONSE;
             PayloadInner payInner;
             payInner = payOuter.getPayload();
             if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) && payInner != null) {
@@ -187,6 +190,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                 if (StringUtils.isNotEmpty(payInner.getTemplate_type())) {
                     switch (payInner.getTemplate_type()) {
                         case BotResponse.TEMPLATE_TYPE_BUTTON:
+                            if (payOuter.getFormData() != null)
+                                return TEMPLATE_DIGITAL_FORM;
                             return TEMPLATE_BUTTON;
                         case BotResponse.TEMPLATE_TYPE_CAROUSEL:
                             if (payInner.getCarousel_type() != null && payInner.getCarousel_type().equals(BotResponse.STACKED)) {
@@ -334,6 +339,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         return switch (viewType) {
             case TEMPLATE_BUBBLE_REQUEST -> RequestTextTemplateHolder.getInstance(parent);
             case TEMPLATE_BUTTON -> ButtonTemplateHolder.getInstance(parent);
+            case TEMPLATE_DIGITAL_FORM -> DigitalFormTemplateHolder.getInstance(parent);
             case TEMPLATE_BUTTON_LINK -> ButtonLinkTemplateHolder.getInstance(parent);
             case TEMPLATE_LIST_VIEW -> ListViewTemplateHolder.getInstance(parent);
             case TEMPLATE_LIST -> ListTemplateHolder.getInstance(parent);

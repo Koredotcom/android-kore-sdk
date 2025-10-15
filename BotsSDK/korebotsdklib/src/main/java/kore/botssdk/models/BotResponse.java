@@ -108,6 +108,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String BACKGROUND_INVERTED = "backgroundInverted";
     public static final String STACKED_BUTTONS = "stackedButtons";
     public static final String TEXT_INVERTED = "textInverted";
+    public static final String DIGITAL_FORM = "digitalForm";
 
     private String type;
     private BotInfoModel botInfo;

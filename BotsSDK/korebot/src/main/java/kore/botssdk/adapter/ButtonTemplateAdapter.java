@@ -113,6 +113,11 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
             holder.buttonTitle.setTextColor(Color.parseColor(invertBgColor));
             bgDrawable.setColor(color);
             bgDrawable.setStroke((int) (1 * dp1), color);
+        } else if (BotResponse.DIGITAL_FORM.equals(variation)) {
+            int color = Color.TRANSPARENT;
+            holder.buttonTitle.setTextColor(Color.parseColor(invertBgColor));
+            bgDrawable.setColor(color);
+            bgDrawable.setStroke((int) (1 * dp1), color);
         } else {
             int color = Color.parseColor(buttonBgColor);
             holder.buttonTitle.setTextColor(Color.parseColor(activeTextColor));
