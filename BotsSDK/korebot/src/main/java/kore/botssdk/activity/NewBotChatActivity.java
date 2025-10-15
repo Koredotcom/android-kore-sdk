@@ -297,6 +297,11 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     @Override
+    public void stopTypingStatus() {
+        botContentFragment.stopTypingStatus();
+    }
+
+    @Override
     public void setIsAgentConnected(boolean isAgentConnected) {
         isAgentTransfer = isAgentConnected;
         baseFooterFragment.setIsAgentConnected(isAgentConnected);

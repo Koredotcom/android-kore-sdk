@@ -40,6 +40,7 @@ import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.models.AgentInfoModel;
+import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotOptionsModel;
@@ -226,15 +227,19 @@ public class BotChatViewModel extends ViewModel {
                 BotSocketConnectionManager.getInstance().startDelayMsgTimer();
             }
 
+            chatView.showTypingStatus();
+
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
-            }
+                chatView.addMessageToAdapter(botResponse);
+            } else if (!getMessageText(botResponse).isBlank()) {
+                chatView.addMessageToAdapter(botResponse);
+            } else chatView.stopTypingStatus();
 
             if (!isActivityResumed) {
                 postNotification("Kore Message", "Received new message.");
             }
 
-            chatView.addMessageToAdapter(botResponse);
         } catch (Exception e) {
             LogUtils.e(TAG, "Failed to complete risky operation" + e);
             if (e instanceof JsonSyntaxException) {
@@ -288,6 +293,50 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
         }
+    }
+
+    private String getMessageText(BaseBotMessage baseBotMessage) {
+        ComponentModel componentModel = getComponentModel(baseBotMessage);
+        String compType = componentModel.getType();
+        PayloadOuter payOuter = componentModel.getPayload();
+        String message = "";
+        if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
+            message = payOuter.getText();
+        } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
+            message = payOuter.getPayload().getText();
+        } else if (payOuter.getType() != null && payOuter.getType().equals(BotResponse.COMPONENT_TYPE_TEXT)) {
+            message = payOuter.getText();
+        }
+        PayloadInner payInner;
+        if (payOuter.getText() != null) {
+            if (payOuter.getText().contains("&quot"))
+                message = payOuter.getText().replace("&quot;", "\"");
+            else message = payOuter.getText();
+        }
+        payInner = payOuter.getPayload();
+        if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
+            message = payInner.getText();
+        } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
+            message = payInner.getText_message();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTitle()))
+            message = payInner.getTitle();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getHeading()))
+            message = payInner.getHeading();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type())) {
+            message = payInner.getTemplate_type();
+        } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText()) && payOuter.getType() != null) {
+            message = payOuter.getType();
+        }
+
+        return message;
+    }
+
+    protected ComponentModel getComponentModel(BaseBotMessage baseBotMessage) {
+        ComponentModel compModel = null;
+        if (baseBotMessage instanceof BotResponse && ((BotResponse) baseBotMessage).getMessage() != null && !((BotResponse) baseBotMessage).getMessage().isEmpty()) {
+            compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
+        }
+        return compModel;
     }
 
     public String getUniqueDeviceId(Context context) {

@@ -44,6 +44,7 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DownloadUtils;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 
 public class MediaTemplateHolder extends BaseViewHolder {
@@ -146,8 +147,6 @@ public class MediaTemplateHolder extends BaseViewHolder {
                             .into(new DrawableImageViewTarget(ivImage));
                     tvDownload.setOnClickListener(view -> {
                         DownloadUtils.downloadFile(view.getContext(), payloadInner.getUrl(), null);
-//                        if (invokeGenericWebViewInterface != null)
-//                            invokeGenericWebViewInterface.invokeGenericWebView(payloadInner.getUrl());
                     });
                 }
                 break;
@@ -170,7 +169,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                         player.setDataSource(itemView.getContext(), uri);
                         player.prepareAsync();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LogUtils.e("Audio Player Pass", String.valueOf(e));
                     }
                 } else if (!StringUtils.isNullOrEmpty(payloadInner.getUrl())) {
                     try {
@@ -179,7 +178,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                         player.setDataSource(itemView.getContext(), uri);
                         player.prepareAsync();
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        LogUtils.e("Audio Player Pass", String.valueOf(e));
                     }
                 }
 
@@ -198,7 +197,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                         try {
                             player.start();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            LogUtils.e("Audio Player Pass", String.valueOf(e));
                         }
                         v.setTag(false);
                     } else {
@@ -206,7 +205,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                         try {
                             player.pause();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            LogUtils.e("Audio Player Pass", String.valueOf(e));
                         }
                         v.setTag(true);
                     }
@@ -356,7 +355,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                     sbVideo.setProgress((int) currentPos);
                     handler.postDelayed(this, 1000);
                 } catch (IllegalStateException ed) {
-                    ed.printStackTrace();
+                    LogUtils.e("Video Progress", String.valueOf(ed));
                 }
             }
         };
@@ -399,7 +398,7 @@ public class MediaTemplateHolder extends BaseViewHolder {
                     sbAudioVideo.setProgress((int) currentAudioPos);
                     handler.postDelayed(this, 1000);
                 } catch (IllegalStateException ed) {
-                    ed.printStackTrace();
+                    LogUtils.e("Audio Progress", String.valueOf(ed));
                 }
             }
         };

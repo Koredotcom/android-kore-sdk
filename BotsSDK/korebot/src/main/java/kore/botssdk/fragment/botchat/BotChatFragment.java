@@ -220,6 +220,11 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     @Override
+    public void stopTypingStatus() {
+        botContentFragment.stopTypingStatus();
+    }
+
+    @Override
     public void setIsAgentConnected(boolean isAgentConnected) {
         isAgentTransfer = isAgentConnected;
         baseFooterFragment.setIsAgentConnected(isAgentConnected);

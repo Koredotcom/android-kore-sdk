@@ -18,6 +18,8 @@ public interface BotChatViewListener extends BaseView {
 
     void showTypingStatus();
 
+    void stopTypingStatus();
+
     void setIsAgentConnected(boolean isAgentConnected);
 
     void enableSendButton();

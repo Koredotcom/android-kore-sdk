@@ -74,6 +74,8 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
 
     public abstract void showTypingStatus();
 
+    public abstract void stopTypingStatus();
+
     public abstract void setQuickRepliesIntoFooter(BotResponse botResponse);
 
     public abstract void addMessageToBotChatAdapter(BotResponse botResponse);
