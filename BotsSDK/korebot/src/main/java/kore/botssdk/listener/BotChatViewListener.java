@@ -1,7 +1,5 @@
 package kore.botssdk.listener;
 
-import java.util.HashMap;
-
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -19,6 +17,8 @@ public interface BotChatViewListener extends BaseView {
 
     void showTypingStatus();
 
+    void stopTypingStatus();
+
     void setIsAgentConnected(boolean isAgentConnected);
 
     void enableSendButton();
@@ -32,10 +32,12 @@ public interface BotChatViewListener extends BaseView {
     void showReconnectionStopped();
 
     void getBrandingDetails();
+
     void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation);
 
     void showAlertDialog(EventModel eventModel);
 
     void hideAlertDialog();
+
     void loadOnConnectionHistory(boolean isReconnect);
 }

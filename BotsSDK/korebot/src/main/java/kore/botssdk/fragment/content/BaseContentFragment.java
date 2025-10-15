@@ -34,7 +34,6 @@ import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
-import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.viewmodels.content.BotContentViewModel;
 import kore.botssdk.viewmodels.content.BotContentViewModelFactory;
@@ -42,6 +41,7 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public abstract class BaseContentFragment extends Fragment implements BotContentFragmentUpdate {
+    private final int limit = 10;
     protected ChatAdapter botsChatAdapter;
     protected ComposeFooterInterface composeFooterInterface;
     protected InvokeGenericWebViewInterface invokeGenericWebViewInterface;
@@ -54,6 +54,12 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
     protected String jwt;
     protected BotContentViewModel mContentViewModel;
     protected TTSUpdate ttsUpdate;
+
+    private static Calendar getClearedUtc() {
+        Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        utc.clear();
+        return utc;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,13 +91,15 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
-        if (botsChatAdapter != null) botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
+        if (botsChatAdapter != null)
+            botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
         this.composeFooterInterface = composeFooterInterface;
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-        if (botsChatAdapter != null) botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        if (botsChatAdapter != null)
+            botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
     }
 
     private void getBundleInfo() {
@@ -108,6 +116,8 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
     protected abstract SwipeRefreshLayout getSwipeRefreshLayout(View view);
 
     public abstract void showTypingStatus();
+
+    public abstract void stopTypingStatus();
 
     public abstract void setQuickRepliesIntoFooter(BotResponse botResponse);
 
@@ -225,8 +235,6 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
 
     public abstract void addMessageToBotChatAdapter(BotResponse botResponse);
 
-    private final int limit = 10;
-
     public abstract void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom);
 
     public abstract void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom, boolean isFirst);
@@ -275,12 +283,6 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
         calendar.roll(Calendar.YEAR, 1);
     }
 
-    private static Calendar getClearedUtc() {
-        Calendar utc = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        utc.clear();
-        return utc;
-    }
-
     public void loadChatHistory(final int _offset, final int limit) {
         if (fetching) {
             if (swipeRefreshLayout != null) {
@@ -317,6 +319,7 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
 
         if (!SDKConfiguration.Client.isWebHook)
             mContentViewModel.loadReconnectionChatHistory(_offset, limit, SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken(), botsChatAdapter.getBaseBotMessageArrayList());
-        else mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
+        else
+            mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
     }
 }

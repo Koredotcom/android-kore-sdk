@@ -103,28 +103,67 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotChatFragment extends Fragment implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
-    private final String LOG_TAG = BotChatFragment.class.getSimpleName();
+    private final Gson gson = new Gson();
+    private final Handler messageHandler = new Handler();
     private ProgressBar taskProgressBar;
     private String jwt;
     private Handler actionBarTitleUpdateHandler;
     private BotClient botClient;
     private BaseContentFragment botContentFragment;
     private BaseFooterFragment composeFooterFragment;
+    @SuppressLint("HandlerLeak")
+    final Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public synchronized void handleMessage(Message msg) {
+            Bundle reply = msg.getData();
+            LogUtils.e("shri", reply + "------------------------------");
+            if (reply.getBoolean("success", true)) {
+                String mediaFilePath = reply.getString("filePath");
+                String MEDIA_TYPE = reply.getString("fileExtn");
+                String mediaFileId = reply.getString("fileId");
+                String mediaFileName = reply.getString("fileName");
+                String componentType = reply.getString("componentType");
+                String thumbnailURL = reply.getString("thumbnailURL");
+                String fileSize = reply.getString("fileSize");
+                KoreComponentModel koreMedia = new KoreComponentModel();
+                koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
+                HashMap<String, Object> cmpData = new HashMap<>(1);
+                cmpData.put("fileName", mediaFileName);
+
+                koreMedia.setComponentData(cmpData);
+                koreMedia.setMediaFileName(getComponentId(componentType));
+                koreMedia.setMediaFilePath(mediaFilePath);
+                koreMedia.setFileSize(fileSize);
+
+                koreMedia.setMediafileId(mediaFileId);
+                koreMedia.setMediaThumbnail(thumbnailURL);
+
+                messageHandler.postDelayed(() -> {
+                    HashMap<String, String> attachmentKey = new HashMap<>();
+                    attachmentKey.put("fileName", mediaFileName + "." + MEDIA_TYPE);
+                    attachmentKey.put("fileType", componentType);
+                    attachmentKey.put("fileId", mediaFileId);
+                    attachmentKey.put("localFilePath", mediaFilePath);
+                    attachmentKey.put("fileExtn", MEDIA_TYPE);
+                    attachmentKey.put("thumbnailURL", thumbnailURL);
+                    composeFooterFragment.addAttachmentToAdapter(attachmentKey);
+                }, 400);
+            } else {
+                String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
+                if (!TextUtils.isEmpty(errorMsg)) {
+                    LogUtils.i("File upload error", errorMsg);
+                    ToastUtils.showToast(requireContext(), "Unable to attach!");
+                }
+            }
+        }
+    };
     private TTSSynthesizer ttsSynthesizer;
-    private final Gson gson = new Gson();
     private RelativeLayout rlChatWindow;
     private FrameLayout composerView;
     private SharedPreferences sharedPreferences;
-    private final Handler messageHandler = new Handler();
     private String fileUrl;
-    private Dialog progressBar, welcomeDialog;
+    private Dialog progressBar;
     private boolean isAgentTransfer = false;
-    private Dialog alertDialog;
-    private BotChatViewModel viewModel;
-    private BotChatFragmentListener fragmentListener;
-    private boolean isWelcomeVisible = true;
-    private String botName = SDKConfiguration.Client.bot_name;
-
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -138,6 +177,11 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             editor.apply();
         }
     };
+    private Dialog alertDialog;
+    private BotChatViewModel viewModel;
+    private BotChatFragmentListener fragmentListener;
+    private boolean isWelcomeVisible = true;
+    private String botName = SDKConfiguration.Client.bot_name;
 
     public void setIsShowWelComeScreen(boolean isShow) {
         isWelcomeVisible = !isShow;
@@ -170,9 +214,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
         if (progressBar != null) progressBar.dismiss();
 
-        if (welcomeDialog != null) {
-            welcomeDialog.hide();
-        }
         if (botClient != null) botClient.disconnect();
         KoreEventCenter.unregister(this);
         super.onDestroy();
@@ -327,8 +368,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
         if (!StringUtils.isNullOrEmpty(message)) {
-            closeWelcomeDialog();
-
             if (!SDKConfiguration.Client.isWebHook)
                 BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
@@ -341,7 +380,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
-        closeWelcomeDialog();
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().sendPayload(message, StringUtils.isNullOrEmpty(payload) ? payload : "");
         } else {
@@ -365,9 +403,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
     @Override
     public void sendWithSomeDelay(String message, String payload, long time, boolean isScrollUpNeeded) {
-        if (message.equalsIgnoreCase(BundleUtils.OPEN_WELCOME)) {
-            if (welcomeDialog != null) welcomeDialog.show();
-        }
     }
 
     @Override
@@ -440,6 +475,11 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void showTypingStatus() {
         botContentFragment.showTypingStatus();
+    }
+
+    @Override
+    public void stopTypingStatus() {
+        botContentFragment.stopTypingStatus();
     }
 
     @Override
@@ -546,7 +586,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         try {
             ttsSynthesizer.stopTextToSpeech();
         } catch (IllegalArgumentException exception) {
-            exception.printStackTrace();
+            LogUtils.i("stopTextToSpeech error", String.valueOf(exception));
         }
     }
 
@@ -575,60 +615,13 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         if (payload != null) {
             BotSocketConnectionManager.getInstance().sendPayload(message, payload);
         } else {
-            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+            BotSocketConnectionManager.getInstance().sendMessage(message, null);
         }
     }
 
     public void sendImage(String fP, String fN, String fPT) {
         viewModel.sendImage(fP, fN, fPT);
     }
-
-    @SuppressLint("HandlerLeak")
-    final Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public synchronized void handleMessage(Message msg) {
-            Bundle reply = msg.getData();
-            LogUtils.e("shri", reply + "------------------------------");
-            if (reply.getBoolean("success", true)) {
-                String mediaFilePath = reply.getString("filePath");
-                String MEDIA_TYPE = reply.getString("fileExtn");
-                String mediaFileId = reply.getString("fileId");
-                String mediaFileName = reply.getString("fileName");
-                String componentType = reply.getString("componentType");
-                String thumbnailURL = reply.getString("thumbnailURL");
-                String fileSize = reply.getString("fileSize");
-                KoreComponentModel koreMedia = new KoreComponentModel();
-                koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
-                HashMap<String, Object> cmpData = new HashMap<>(1);
-                cmpData.put("fileName", mediaFileName);
-
-                koreMedia.setComponentData(cmpData);
-                koreMedia.setMediaFileName(getComponentId(componentType));
-                koreMedia.setMediaFilePath(mediaFilePath);
-                koreMedia.setFileSize(fileSize);
-
-                koreMedia.setMediafileId(mediaFileId);
-                koreMedia.setMediaThumbnail(thumbnailURL);
-
-                messageHandler.postDelayed(() -> {
-                    HashMap<String, String> attachmentKey = new HashMap<>();
-                    attachmentKey.put("fileName", mediaFileName + "." + MEDIA_TYPE);
-                    attachmentKey.put("fileType", componentType);
-                    attachmentKey.put("fileId", mediaFileId);
-                    attachmentKey.put("localFilePath", mediaFilePath);
-                    attachmentKey.put("fileExtn", MEDIA_TYPE);
-                    attachmentKey.put("thumbnailURL", thumbnailURL);
-                    composeFooterFragment.addAttachmentToAdapter(attachmentKey);
-                }, 400);
-            } else {
-                String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
-                if (!TextUtils.isEmpty(errorMsg)) {
-                    LogUtils.i("File upload error", errorMsg);
-                    ToastUtils.showToast(requireContext(), "Unable to attach!");
-                }
-            }
-        }
-    };
 
     String getComponentId(String componentType) {
         if (componentType != null) {
@@ -651,14 +644,6 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         progressBar.setCancelable(false);
         progressBar.setCanceledOnTouchOutside(false);
         progressBar.show();
-    }
-
-    void closeWelcomeDialog() {
-        if (welcomeDialog != null && welcomeDialog.isShowing()) {
-            welcomeDialog.dismiss();
-
-            closeProgressDialogue();
-        }
     }
 
     void closeProgressDialogue() {

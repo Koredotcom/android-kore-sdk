@@ -26,7 +26,6 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.fragment.content.BaseContentFragment;
-import kore.botssdk.fragment.content.BotContentFragment;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBrandingModel;
@@ -95,7 +94,8 @@ public class CustomContentFragment extends BaseContentFragment {
             swipeRefreshLayout.setOnRefreshListener(() -> {
                 if (botsChatAdapter != null)
                     loadChatHistory(botsChatAdapter.getItemCount(), SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
-                else loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
+                else
+                    loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
             });
         } else {
             swipeRefreshLayout.setEnabled(false);
@@ -146,6 +146,11 @@ public class CustomContentFragment extends BaseContentFragment {
     @Override
     public void showTypingStatus() {
         botTypingStatusRl.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void stopTypingStatus() {
+        botTypingStatusRl.setVisibility(View.GONE);
     }
 
     @Override

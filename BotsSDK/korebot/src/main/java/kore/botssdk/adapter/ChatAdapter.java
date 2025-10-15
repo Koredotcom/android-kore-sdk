@@ -1,6 +1,5 @@
 package kore.botssdk.adapter;
 
-import android.os.Build;
 import android.util.Log;
 import android.view.ViewGroup;
 
@@ -70,12 +69,6 @@ import kore.botssdk.viewholders.WelcomeQuickRepliesTemplateHolder;
 @SuppressWarnings("UnKnownNullness")
 public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements ChatContentStateListener {
 
-    private final HashMap<String, Integer> headersMap = new HashMap<>();
-    ComposeFooterInterface composeFooterInterface;
-    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
-
-    private final ArrayList<BaseBotMessage> baseBotMessageArrayList;
-
     public static final int TEMPLATE_CUSTOM_TEMPLATES = 100;
     public static final int TEMPLATE_BUBBLE_RESPONSE = 0;
     public static final int TEMPLATE_BUBBLE_REQUEST = 1;
@@ -114,9 +107,17 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public static final int TEMPLATE_OTP_VALIDATION = 34;
     public static final int TEMPLATE_RESET_PIN = 35;
     public static final int TEMPLATE_ANSWER = 36;
-
+    private final HashMap<String, Integer> headersMap = new HashMap<>();
+    private final ArrayList<BaseBotMessage> baseBotMessageArrayList;
     private final HashMap<Integer, String> customTemplates = new HashMap<>();
+    ComposeFooterInterface composeFooterInterface;
+    private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private BottomSheetDialog bottomSheetDialog;
+
+    public ChatAdapter() {
+        super();
+        baseBotMessageArrayList = new ArrayList<>();
+    }
 
     public ComposeFooterInterface getComposeFooterInterface() {
         return composeFooterInterface;
@@ -140,11 +141,6 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
 
     public void setBottomSheetDialog(BottomSheetDialog bottomSheetDialog) {
         this.bottomSheetDialog = bottomSheetDialog;
-    }
-
-    public ChatAdapter() {
-        super();
-        baseBotMessageArrayList = new ArrayList<>();
     }
 
     public BaseBotMessage getItem(int position) {
@@ -407,9 +403,9 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     }
 
     private BaseViewHolder getCustomTemplate(ViewGroup parent, Class<?> clazzType) {
-        Class<?> clazz = null;
-        Method method = null;
-        BaseViewHolder holder = null;
+        Class<?> clazz;
+        Method method;
+        BaseViewHolder holder;
         try {
             clazz = Class.forName(clazzType.getName());
             // Get the method by name and parameter types
@@ -441,7 +437,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
         prepareHeaderMap();
-        notifyDataSetChanged();
+        notifyItemRangeChanged(0, baseBotMessageArrayList.size() - 1);
+//        notifyDataSetChanged();
     }
 
     public void addMissedBaseBotMessages(ArrayList<BaseBotMessage> list) {
@@ -455,11 +452,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         headersMap.clear();
         for (i = 0; i < baseBotMessageArrayList.size(); i++) {
             BaseBotMessage baseBotMessage = baseBotMessageArrayList.get(i);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
-            } else if (headersMap.get(baseBotMessage.getFormattedDate()) == null) {
-                headersMap.put(baseBotMessage.getFormattedDate(), i);
-            }
+            headersMap.putIfAbsent(baseBotMessage.getFormattedDate(), i);
         }
     }
 

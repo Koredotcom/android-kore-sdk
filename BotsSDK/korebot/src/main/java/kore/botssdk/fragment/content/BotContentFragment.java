@@ -93,7 +93,8 @@ public class BotContentFragment extends BaseContentFragment {
             swipeRefreshLayout.setOnRefreshListener(() -> {
                 if (botsChatAdapter != null)
                     loadChatHistory(botsChatAdapter.getItemCount(), SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
-                else loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
+                else
+                    loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.paginated_scroll_batch_size);
             });
         } else {
             swipeRefreshLayout.setEnabled(false);
@@ -144,6 +145,11 @@ public class BotContentFragment extends BaseContentFragment {
     @Override
     public void showTypingStatus() {
         botTypingStatusRl.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void stopTypingStatus() {
+        botTypingStatusRl.setVisibility(View.GONE);
     }
 
     @Override
