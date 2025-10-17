@@ -60,8 +60,9 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     private var isFirstTime = true
-//    private var historyOffset = 0
-//    private var moreHistory = true
+
+    //    private var historyOffset = 0
+    //    private var moreHistory = true
     private var isAgentTransfer = false
     private var isActivityResumed = false
     private lateinit var context: Context
@@ -77,23 +78,23 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         SpeechSynthesizerHelper(context).apply { setListener(speechSynthesizerListener) }
     }
 
-//    private val headers by lazy {
-//        HashMap<String, Any>().apply {
-//            put("alg", "RS256")
-//            put("typ", "JWT")
-//            put("Content-Type", "application/json; charset=UTF-8")
-//        }
-//    }
-//
-//    private val body by lazy {
-//        HashMap<String, Any>().apply {
-//            put("isAnonymous", false)
-//            put("clientId", SDKConfiguration.getBotConfigModel()?.clientId!!)
-//            put("identity", SDKConfiguration.getBotConfigModel()?.identity!!)
-//            put("aud", "https://idproxy.kore.com/authorize")
-//            put("clientSecret", SDKConfiguration.getBotConfigModel()?.clientSecret!!)
-//        }
-//    }
+    //    private val headers by lazy {
+    //        HashMap<String, Any>().apply {
+    //            put("alg", "RS256")
+    //            put("typ", "JWT")
+    //            put("Content-Type", "application/json; charset=UTF-8")
+    //        }
+    //    }
+    //
+    //    private val body by lazy {
+    //        HashMap<String, Any>().apply {
+    //            put("isAnonymous", false)
+    //            put("clientId", SDKConfiguration.getBotConfigModel()?.clientId!!)
+    //            put("identity", SDKConfiguration.getBotConfigModel()?.identity!!)
+    //            put("aud", "https://idproxy.kore.com/authorize")
+    //            put("clientSecret", SDKConfiguration.getBotConfigModel()?.clientSecret!!)
+    //        }
+    //    }
 
     init {
         botClient.setListener(object : BotConnectionListener {
@@ -109,12 +110,14 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                         if (botResponse !is BotResponse || botResponse.message.isEmpty()) return
 
                         isAgentTransfer = botResponse.fromAgent
-                        getView()?.showTypingIndicator(botResponse.icon)
                         botResponse.message[0].cInfo?.body?.let { body ->
                             if (body is PayloadOuter && body.payload?.get(BotResponseConstants.SLIDER_VIEW) as Boolean? == true) {
+                                getView()?.showTypingIndicator(botResponse.icon)
                                 getView()?.showTemplateBottomSheet(botResponse)
                                 return
                             } else {
+                                if ((botResponse.message[0].cInfo?.body as String?)?.isEmpty() == true) return
+                                getView()?.showTypingIndicator(botResponse.icon)
                                 getView()?.addMessageToAdapter(botResponse)
                             }
                         }
@@ -177,7 +180,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
             override fun onBotRequest(code: BotRequestState, botRequest: BotRequest) {
                 LogUtils.d(LOG_TAG, "$code")
-//                historyOffset += 1
+                //                historyOffset += 1
                 getView()?.addMessageToAdapter(botRequest)
             }
 
