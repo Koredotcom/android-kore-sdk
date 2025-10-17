@@ -78,6 +78,7 @@ class ButtonTemplateRow(
 
     private fun RowButtonTemplateBinding.commonBind() {
         val items = (payload[BotResponseConstants.KEY_BUTTONS] as List<Map<String, *>>)
-        root.adapter = BotButtonsTemplateAdapter(root.context, items, payload, isLastItem, actionEvent)
+        val variation = (payload[BotResponseConstants.BUTTON_VARIATION] as String?) ?: ""
+        root.adapter = BotButtonsTemplateAdapter(root.context, items, payload, isLastItem, variation, actionEvent)
     }
 }

@@ -2,6 +2,7 @@ package com.kore.ui.adapters
 
 import android.content.Context
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.gson.internal.LinkedTreeMap
 import com.kore.SDKConfig
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
@@ -42,6 +43,7 @@ import com.kore.ui.row.botchat.CardTemplateRow
 import com.kore.ui.row.botchat.CarouselStackedTemplateRow
 import com.kore.ui.row.botchat.CarouselTemplateRow
 import com.kore.ui.row.botchat.ClockTemplateRow
+import com.kore.ui.row.botchat.DigitalFormTemplateRow
 import com.kore.ui.row.botchat.DropDownTemplateRow
 import com.kore.ui.row.botchat.FeedbackTemplateRow
 import com.kore.ui.row.botchat.ImageTemplateRow
@@ -221,10 +223,15 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                     when (templateType) {
                                         BotResponseConstants.TEMPLATE_TYPE_BUTTON -> {
                                             if (!innerMap.containsKey(KEY_BUTTONS)) continue
-                                            if (isTextMsg) {
-                                                rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
+                                            if ((baseBotMsg.message[0].component?.payload as LinkedTreeMap<String, Any>?)?.get(BotResponseConstants.FORM_DATA) != null) {
+                                                rows = rows + DigitalFormTemplateRow(baseBotMsg.messageId, innerMap, isLastItem, actionEvent)
+                                            } else {
+                                                if (isTextMsg) {
+                                                    rows =
+                                                        rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
+                                                }
+                                                rows = rows + ButtonTemplateRow(baseBotMsg.messageId, innerMap, isLastItem, actionEvent)
                                             }
-                                            rows = rows + ButtonTemplateRow(baseBotMsg.messageId, innerMap, isLastItem, actionEvent)
                                         }
 
                                         BotResponseConstants.TEMPLATE_TYPE_LIST -> {

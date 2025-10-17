@@ -53,8 +53,8 @@ internal fun getLocalBrandingDetails(context: Context): BotActiveThemeModel? {
 }
 
 internal fun processResponse(responseModel: BotActiveThemeModel?): BotActiveThemeModel? {
-    val configBrandingModel = SDKConfiguration.getBotBrandingConfig()?: responseModel?.brandingModel ?: return responseModel
-    if (configBrandingModel.general.colors.useColorPaletteOnly == true) {
+    val configBrandingModel = SDKConfiguration.getBotBrandingConfig()?: responseModel?.brandingModel
+    if (configBrandingModel?.general?.colors?.useColorPaletteOnly == true) {
         configBrandingModel.header.bgColor = configBrandingModel.general.colors.secondary
         configBrandingModel.header.avatarBgColor = configBrandingModel.general.colors.primary
         configBrandingModel.header.title?.color = configBrandingModel.general.colors.primaryText
@@ -62,7 +62,7 @@ internal fun processResponse(responseModel: BotActiveThemeModel?): BotActiveThem
         configBrandingModel.footer.composeBar?.outlineColor = configBrandingModel.general.colors.primary
         configBrandingModel.footer.composeBar?.inlineColor = configBrandingModel.general.colors.secondaryText
     }
-    val model = responseModel?.updateWithV3Model(configBrandingModel)
+    val model = if (configBrandingModel != null) responseModel?.updateWithV3Model(configBrandingModel) else responseModel
 
     if (model?.brandingModel?.overrideKoreConfig?.isEnable == true) {
         val brandingModel = model.brandingModel

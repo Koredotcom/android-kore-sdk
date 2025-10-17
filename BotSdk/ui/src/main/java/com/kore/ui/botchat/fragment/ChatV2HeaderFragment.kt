@@ -32,9 +32,9 @@ class ChatV2HeaderFragment : BaseHeaderFragment() {
     private fun updateUI() {
         binding.tvBotName.text = brandingModel?.header?.title?.name ?: SDKConfiguration.getBotConfigModel()?.botName
         brandingModel?.let {
-            if (!brandingModel?.general?.colors?.secondary.isNullOrEmpty()) it.general.colors.secondary?.toColorInt()
+            if (!brandingModel?.header?.bgColor.isNullOrEmpty()) it.general.colors.secondary?.toColorInt()
                 ?.let { it1 -> binding.root.setBackgroundColor(it1) }
-            if (!brandingModel?.general?.colors?.secondary.isNullOrEmpty()) it.general.colors.primaryText?.toColorInt()
+            if (!brandingModel?.header?.title?.color.isNullOrEmpty()) it.general.colors.primaryText?.toColorInt()
                 ?.let { it1 -> binding.tvBotName.setTextColor(it1) }
         }
     }

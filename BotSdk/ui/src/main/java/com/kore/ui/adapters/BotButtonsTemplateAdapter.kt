@@ -23,6 +23,7 @@ class BotButtonsTemplateAdapter(
     private val buttons: List<Map<String, *>>,
     private val payload: Map<String, Any?>,
     private val isLastItem: Boolean,
+    private val variation: String?,
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : RecyclerView.Adapter<BotButtonsTemplateAdapter.BotButtonViewHolder>() {
     private var buttonBgColor: String
@@ -81,7 +82,6 @@ class BotButtonsTemplateAdapter(
         }
         val isFullWidth = payload[BotResponseConstants.FULL_WIDTH_] as Boolean? ?: false
         val isStackedButtons = payload[BotResponseConstants.BUTTON_STACKED] as Boolean? ?: false
-        val variation = (payload[BotResponseConstants.BUTTON_VARIATION] as String?) ?: ""
         val bgDrawable = holder.buttonTitle.background as GradientDrawable
         bgDrawable.cornerRadius = 4.dpToPx(context).toFloat()
 
@@ -97,6 +97,10 @@ class BotButtonsTemplateAdapter(
             holder.buttonTitle.setTextColor(invertBgColor.toColorInt())
             bgDrawable.setColor(buttonBgColor.toColorInt())
             bgDrawable.setStroke(1.dpToPx(context), buttonBgColor.toColorInt())
+        } else if (variation == BotResponseConstants.FORM_DATA) {
+            holder.buttonTitle.setTextColor(invertBgColor.toColorInt())
+            bgDrawable.setColor(Color.TRANSPARENT)
+            bgDrawable.setStroke(1.dpToPx(context), Color.TRANSPARENT)
         } else {
             holder.buttonTitle.setTextColor(activeTextColor.toColorInt())
             bgDrawable.setColor(buttonBgColor.toColorInt())
