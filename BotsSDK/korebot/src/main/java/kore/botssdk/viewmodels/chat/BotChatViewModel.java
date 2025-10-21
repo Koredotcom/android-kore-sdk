@@ -51,6 +51,7 @@ import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.models.AgentInfoModel;
+import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotRequest;
@@ -78,7 +79,11 @@ import kore.botssdk.utils.StringUtils;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotChatViewModel extends ViewModel {
+    static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private static final String LOG_TAG = "BotChatActivity";
+    static String uniqueID = null;
+    final int compressQualityInt = 100;
+    final SharedPreferences sharedPreferences;
     Context context;
     Gson gson = new Gson();
     BotClient botClient;
@@ -90,38 +95,7 @@ public class BotChatViewModel extends ViewModel {
     String lastMsgId = "";
     boolean isAgentTransfer = false;
     ArrayList<String> arrMessageList = new ArrayList<>();
-    static String uniqueID = null;
-    static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
-    final int compressQualityInt = 100;
-    final SharedPreferences sharedPreferences;
     private boolean isActivityResumed = false;
-
-    public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
-        this.context = context.getApplicationContext();
-        this.repository = new BrandingRepository(context, chatView);
-        this.chatView = chatView;
-        this.webHookRepository = new WebHookRepository(context, chatView);
-        this.botClient = botClient;
-        ACManager.getInstance().startLogout();
-        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-    }
-
-    public void setIsActivityResumed(boolean isResumed) {
-        isActivityResumed = isResumed;
-    }
-
-    public void getBrandingDetails() {
-        repository.getBrandingDetails(SDKConfiguration.Client.bot_id, botClient.getAccessToken());
-    }
-
-    public void connectToBot(boolean isReconnect) {
-        if (!SDKConfiguration.Client.isWebHook) {
-            BotSocketConnectionManager.getInstance().setChatListener(sListener);
-        }
-
-        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(context, SDKConfiguration.Server.customData, isReconnect);
-    }
-
     final SocketChatListener sListener = new SocketChatListener() {
         @Override
         public void onMessage(BotResponse botResponse) {
@@ -161,6 +135,32 @@ public class BotChatViewModel extends ViewModel {
             getBrandingDetails();
         }
     };
+
+    public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
+        this.context = context.getApplicationContext();
+        this.repository = new BrandingRepository(context, chatView);
+        this.chatView = chatView;
+        this.webHookRepository = new WebHookRepository(context, chatView);
+        this.botClient = botClient;
+        ACManager.getInstance().startLogout();
+        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+    }
+
+    public void setIsActivityResumed(boolean isResumed) {
+        isActivityResumed = isResumed;
+    }
+
+    public void getBrandingDetails() {
+        repository.getBrandingDetails(SDKConfiguration.Client.bot_id, botClient.getAccessToken());
+    }
+
+    public void connectToBot(boolean isReconnect) {
+        if (!SDKConfiguration.Client.isWebHook) {
+            BotSocketConnectionManager.getInstance().setChatListener(sListener);
+        }
+
+        BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(context, SDKConfiguration.Server.customData, isReconnect);
+    }
 
     public void sendReadReceipts() {
         //Added newly for send receipts
@@ -241,17 +241,20 @@ public class BotChatViewModel extends ViewModel {
 
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
-            }
+                chatView.addMessageToAdapter(botResponse);
+            } else if (!getMessageText(botResponse).isBlank()) {
+                chatView.addMessageToAdapter(botResponse);
+            } else chatView.stopTypingStatus();
 
             if (!isActivityResumed) {
                 postNotification("Kore Message", "Received new message.");
             }
 
             if (botResponse.getMessageId() != null) lastMsgId = botResponse.getMessageId();
-            chatView.addMessageToAdapter(botResponse);
+
         } catch (Exception e) {
+            LogUtils.d(LOG_TAG, String.valueOf(e));
             if (e instanceof JsonSyntaxException) {
-                LogUtils.d(LOG_TAG, payload);
                 try {
                     EventModel eventModel = gson.fromJson(payload, EventModel.class);
                     if (eventModel != null && eventModel.getMessage() != null) {
@@ -337,6 +340,50 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
         }
+    }
+
+    private String getMessageText(BaseBotMessage baseBotMessage) {
+        ComponentModel componentModel = getComponentModel(baseBotMessage);
+        String compType = componentModel.getType();
+        PayloadOuter payOuter = componentModel.getPayload();
+        String message = "";
+        if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
+            message = payOuter.getText();
+        } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
+            message = payOuter.getPayload().getText();
+        } else if (payOuter.getType() != null && payOuter.getType().equals(BotResponse.COMPONENT_TYPE_TEXT)) {
+            message = payOuter.getText();
+        }
+        PayloadInner payInner;
+        if (payOuter.getText() != null) {
+            if (payOuter.getText().contains("&quot"))
+                message = payOuter.getText().replace("&quot;", "\"");
+            else message = payOuter.getText();
+        }
+        payInner = payOuter.getPayload();
+        if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
+            message = payInner.getText();
+        } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
+            message = payInner.getText_message();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTitle()))
+            message = payInner.getTitle();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getHeading()))
+            message = payInner.getHeading();
+        else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type())) {
+            message = payInner.getTemplate_type();
+        } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText()) && payOuter.getType() != null) {
+            message = payOuter.getType();
+        }
+
+        return message;
+    }
+
+    protected ComponentModel getComponentModel(BaseBotMessage baseBotMessage) {
+        ComponentModel compModel = null;
+        if (baseBotMessage instanceof BotResponse && ((BotResponse) baseBotMessage).getMessage() != null && !((BotResponse) baseBotMessage).getMessage().isEmpty()) {
+            compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
+        }
+        return compModel;
     }
 
     public String getProxyUrl(String proxy) {
@@ -471,7 +518,8 @@ public class BotChatViewModel extends ViewModel {
                 botResponse.setMessageId(messageId);
                 botResponse.setIcon(icon);
 
-                if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon())) botResponse.setIcon(botMetaModel.getIcon());
+                if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon()))
+                    botResponse.setIcon(botMetaModel.getIcon());
 
                 processPayload("", botResponse);
             } catch (Exception e) {
@@ -496,7 +544,8 @@ public class BotChatViewModel extends ViewModel {
                 botResponse.setMessageId(messageId);
                 botResponse.setIcon(icon);
 
-                if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon())) botResponse.setIcon(botMetaModel.getIcon());
+                if (botMetaModel != null && !StringUtils.isNullOrEmpty(botMetaModel.getIcon()))
+                    botResponse.setIcon(botMetaModel.getIcon());
 
                 processPayload("", botResponse);
             }

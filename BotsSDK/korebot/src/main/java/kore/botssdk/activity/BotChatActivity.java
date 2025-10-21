@@ -107,24 +107,74 @@ import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
 public class BotChatActivity extends BotAppCompactActivity implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
+    private final Gson gson = new Gson();
+    private final Handler messageHandler = new Handler();
+    boolean isAgentTransfer = false;
     private ProgressBar taskProgressBar;
     private String jwt;
     private Handler actionBarTitleUpdateHandler;
     private BotClient botClient;
+    private final BroadcastReceiver closeBotChatReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Objects.equals(intent.getAction(), CLOSE_CHAT_BOT_EVENT)) {
+                if (botClient != null) BotSocketConnectionManager.killInstance();
+                SDKConfig.setIsMinimized(false);
+                finish();
+            }
+        }
+    };
     private BaseContentFragment botContentFragment;
     private BaseFooterFragment composeFooterFragment;
+    @SuppressLint("HandlerLeak")
+    final Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public synchronized void handleMessage(Message msg) {
+            Bundle reply = msg.getData();
+            LogUtils.e("shri", reply + "------------------------------");
+            if (reply.getBoolean("success", true)) {
+                String mediaFilePath = reply.getString("filePath");
+                String MEDIA_TYPE = reply.getString("fileExtn");
+                String mediaFileId = reply.getString("fileId");
+                String mediaFileName = reply.getString("fileName");
+                String componentType = reply.getString("componentType");
+                String thumbnailURL = reply.getString("thumbnailURL");
+                String fileSize = reply.getString("fileSize");
+                KoreComponentModel koreMedia = new KoreComponentModel();
+                koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
+                HashMap<String, Object> cmpData = new HashMap<>(1);
+                cmpData.put("fileName", mediaFileName);
+
+                koreMedia.setComponentData(cmpData);
+                koreMedia.setMediaFileName(getComponentId(componentType));
+                koreMedia.setMediaFilePath(mediaFilePath);
+                koreMedia.setFileSize(fileSize);
+
+                koreMedia.setMediafileId(mediaFileId);
+                koreMedia.setMediaThumbnail(thumbnailURL);
+
+                messageHandler.postDelayed(() -> {
+                    HashMap<String, String> attachmentKey = new HashMap<>();
+                    attachmentKey.put("fileName", mediaFileName + "." + MEDIA_TYPE);
+                    attachmentKey.put("fileType", componentType);
+                    attachmentKey.put("fileId", mediaFileId);
+                    attachmentKey.put("localFilePath", mediaFilePath);
+                    attachmentKey.put("fileExtn", MEDIA_TYPE);
+                    attachmentKey.put("thumbnailURL", thumbnailURL);
+                    composeFooterFragment.addAttachmentToAdapter(attachmentKey);
+                }, 400);
+            } else {
+                String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
+                if (!TextUtils.isEmpty(errorMsg)) {
+                    LogUtils.i("File upload error", errorMsg);
+                    ToastUtils.showToast(BotChatActivity.this, "Unable to attach!");
+                }
+            }
+        }
+    };
     private TTSSynthesizer ttsSynthesizer;
-    private final Gson gson = new Gson();
     private RelativeLayout rlChatWindow;
     private SharedPreferences sharedPreferences;
-    private final Handler messageHandler = new Handler();
-    private String fileUrl;
-    private Dialog progressBar;
-    boolean isAgentTransfer = false;
-    private Dialog alertDialog;
-    private BotChatViewModel viewModel;
-    private boolean isWelcomeVisible = false;
-    private String botName = SDKConfiguration.Client.bot_name;
     private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -150,16 +200,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             }
         }
     };
-    private final BroadcastReceiver closeBotChatReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Objects.equals(intent.getAction(), CLOSE_CHAT_BOT_EVENT)) {
-                if (botClient != null) BotSocketConnectionManager.killInstance();
-                SDKConfig.setIsMinimized(false);
-                finish();
-            }
-        }
-    };
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -173,6 +213,12 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             editor.apply();
         }
     };
+    private String fileUrl;
+    private Dialog progressBar;
+    private Dialog alertDialog;
+    private BotChatViewModel viewModel;
+    private boolean isWelcomeVisible = false;
+    private String botName = SDKConfiguration.Client.bot_name;
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override
@@ -498,6 +544,11 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     }
 
     @Override
+    public void stopTypingStatus() {
+        botContentFragment.stopTypingStatus();
+    }
+
+    @Override
     public void setIsAgentConnected(boolean isAgentConnected) {
         this.isAgentTransfer = isAgentConnected;
         composeFooterFragment.setIsAgentConnected(isAgentConnected);
@@ -690,53 +741,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     public void sendImage(String fP, String fN, String fPT) {
         viewModel.sendImage(fP, fN, fPT);
     }
-
-    @SuppressLint("HandlerLeak")
-    final Handler messagesMediaUploadAcknowledgeHandler = new Handler(Looper.getMainLooper()) {
-        @Override
-        public synchronized void handleMessage(Message msg) {
-            Bundle reply = msg.getData();
-            LogUtils.e("shri", reply + "------------------------------");
-            if (reply.getBoolean("success", true)) {
-                String mediaFilePath = reply.getString("filePath");
-                String MEDIA_TYPE = reply.getString("fileExtn");
-                String mediaFileId = reply.getString("fileId");
-                String mediaFileName = reply.getString("fileName");
-                String componentType = reply.getString("componentType");
-                String thumbnailURL = reply.getString("thumbnailURL");
-                String fileSize = reply.getString("fileSize");
-                KoreComponentModel koreMedia = new KoreComponentModel();
-                koreMedia.setMediaType(BitmapUtils.getAttachmentType(componentType));
-                HashMap<String, Object> cmpData = new HashMap<>(1);
-                cmpData.put("fileName", mediaFileName);
-
-                koreMedia.setComponentData(cmpData);
-                koreMedia.setMediaFileName(getComponentId(componentType));
-                koreMedia.setMediaFilePath(mediaFilePath);
-                koreMedia.setFileSize(fileSize);
-
-                koreMedia.setMediafileId(mediaFileId);
-                koreMedia.setMediaThumbnail(thumbnailURL);
-
-                messageHandler.postDelayed(() -> {
-                    HashMap<String, String> attachmentKey = new HashMap<>();
-                    attachmentKey.put("fileName", mediaFileName + "." + MEDIA_TYPE);
-                    attachmentKey.put("fileType", componentType);
-                    attachmentKey.put("fileId", mediaFileId);
-                    attachmentKey.put("localFilePath", mediaFilePath);
-                    attachmentKey.put("fileExtn", MEDIA_TYPE);
-                    attachmentKey.put("thumbnailURL", thumbnailURL);
-                    composeFooterFragment.addAttachmentToAdapter(attachmentKey);
-                }, 400);
-            } else {
-                String errorMsg = reply.getString(UploadBulkFile.error_msz_key);
-                if (!TextUtils.isEmpty(errorMsg)) {
-                    LogUtils.i("File upload error", errorMsg);
-                    ToastUtils.showToast(BotChatActivity.this, "Unable to attach!");
-                }
-            }
-        }
-    };
 
     String getComponentId(String componentType) {
         if (componentType != null) {
