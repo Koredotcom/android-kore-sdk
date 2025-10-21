@@ -78,7 +78,6 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
     private val networkCallback = NetworkCallbackImpl()
     private val acManager: ACManager = ACManager.getInstance()
     private var alertDialog: Dialog? = null
-    private var isWelcomeScreenShown = false
     private var closeListener: BotChatCloseListener? = null
 
     private val connectivityManager by lazy {
@@ -176,7 +175,10 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun addMessageToAdapter(baseBotMessage: BaseBotMessage) {
-        contentFragment.addMessagesToAdapter(listOf(baseBotMessage), false, false)
+        contentFragment.addMessagesToAdapter(listOf(baseBotMessage),
+            isHistory = false,
+            isReconnection = false
+        )
     }
 
     override fun onActionEvent(event: UserActionEvent) {
@@ -330,7 +332,9 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         Prefs.setIsFirstLogin(requireContext(), false)
         //start login and open app main screen
         Thread {
-            if (!acManager.isRegisterState) acManager.startLogin(requireContext(), false, false)
+            if (!acManager.isRegisterState) acManager.startLogin(requireContext(), false,
+                disconnectCall = false
+            )
             if (!acManager.isRegisterState && Prefs.getAutoLogin(requireContext())) {
                 Toast.makeText(requireContext(), R.string.no_registration, Toast.LENGTH_SHORT).show()
             } else {
@@ -353,6 +357,10 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun showTypingIndicator(icon: String?) {
         contentFragment.showTypingIndicator(icon, true)
+    }
+
+    override fun stopTypingIndicator() {
+        contentFragment.stopTypingIndicator()
     }
 
     override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {

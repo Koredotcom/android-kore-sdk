@@ -58,7 +58,10 @@ abstract class SimpleListRow {
     fun showOrHideIcon(binding: ViewBinding, context: Context, url: String?, isShow: Boolean, isTemplate: Boolean) {
         (binding as BaseRowBinding).apply {
             botIcon.isVisible = isShow && bottomSheetDialog == null
-            if (!isShow || bottomSheetDialog != null) return
+            if (!isShow || bottomSheetDialog != null) {
+                botIcon.visibility = INVISIBLE
+                return
+            }
 
             val isTimeStampVisible = PreferenceRepositoryImpl()
                 .getSharedPreference(root.context, BotResponseConstants.THEME_NAME)
@@ -76,10 +79,6 @@ abstract class SimpleListRow {
                     .into<DrawableImageViewTarget>(DrawableImageViewTarget(botIcon))
             } else {
                 botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.mipmap.ic_launcher, context.getTheme()))
-            }
-            else
-            {
-                botIcon.visibility = INVISIBLE
             }
         }
     }

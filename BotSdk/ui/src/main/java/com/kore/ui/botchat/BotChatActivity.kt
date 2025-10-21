@@ -20,6 +20,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,7 +28,6 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.audiocodes.mv.webrtcsdk.sip.enums.Transport
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.SDKConfig.isMinimized
@@ -45,7 +45,6 @@ import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
-import com.kore.model.constants.BotResponseConstants.START_DATE
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.network.api.responsemodels.branding.BotActiveThemeModel
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
@@ -103,7 +102,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        contentFragment.setView(this)
         binding.viewModel = botChatViewModel
         botChatViewModel.init(this)
         val networkRequest = NetworkRequest.Builder().build()
@@ -374,6 +372,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun showTypingIndicator(icon: String?) {
         contentFragment.showTypingIndicator(icon, true)
+    }
+
+    override fun stopTypingIndicator() {
+        contentFragment.stopTypingIndicator()
     }
 
     override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {

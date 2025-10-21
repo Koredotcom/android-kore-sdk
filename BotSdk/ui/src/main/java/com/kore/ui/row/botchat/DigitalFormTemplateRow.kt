@@ -14,9 +14,10 @@ import com.kore.ui.row.botchat.BotChatRowType.Companion.ROW_DIGITAL_FORM
 
 class DigitalFormTemplateRow(
     private val id: String,
+    private val iconUrl: String?,
     private val payload: HashMap<String, Any>,
     private val isLastItem: Boolean,
-    private val actionEvent: (event: UserActionEvent) -> Unit
+    private val actionEvent: (UserActionEvent) -> Unit
 ) : SimpleListRow() {
     override val type: SimpleListRowType = BotChatRowType.getRowType(ROW_DIGITAL_FORM)
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
@@ -32,6 +33,7 @@ class DigitalFormTemplateRow(
     override fun getChangePayload(otherRow: SimpleListRow): Any = true
 
     override fun <Binding : ViewBinding> bind(binding: Binding) {
+        showOrHideIcon(binding, binding.root.context, iconUrl, isShow = false, isTemplate = true)
         val childBinding = RowDigitalFormTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
             title.text = (payload[KEY_TEXT] as String?)

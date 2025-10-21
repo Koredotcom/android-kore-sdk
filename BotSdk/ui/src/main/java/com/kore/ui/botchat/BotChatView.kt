@@ -17,6 +17,7 @@ interface BotChatView : BaseView {
     fun onBotEventMessage(botResponse: BotEventResponse)
     fun showCalenderTemplate(payload: HashMap<String, Any>)
     fun showTypingIndicator(icon: String?)
+    fun stopTypingIndicator()
     abstract fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean)
     fun getAdapterLastItems(): BaseBotMessage?
     fun hideQuickReplies()

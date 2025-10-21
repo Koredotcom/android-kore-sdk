@@ -34,6 +34,7 @@ abstract class BaseContentFragment : Fragment(), BotContentView, QuickRepliesCli
     abstract fun getAdapterLastItem(): BaseBotMessage?
 
     abstract fun showTypingIndicator(icon: String?, enable: Boolean)
+    abstract fun stopTypingIndicator()
 
     abstract fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean)
 

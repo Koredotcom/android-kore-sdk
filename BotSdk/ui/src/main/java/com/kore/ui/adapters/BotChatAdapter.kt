@@ -224,7 +224,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                         BotResponseConstants.TEMPLATE_TYPE_BUTTON -> {
                                             if (!innerMap.containsKey(KEY_BUTTONS)) continue
                                             if ((baseBotMsg.message[0].component?.payload as LinkedTreeMap<String, Any>?)?.get(BotResponseConstants.FORM_DATA) != null) {
-                                                rows = rows + DigitalFormTemplateRow(baseBotMsg.messageId, innerMap, isLastItem, actionEvent)
+                                                rows = rows + DigitalFormTemplateRow(baseBotMsg.messageId, iconUrl, innerMap, isLastItem, actionEvent)
                                             } else {
                                                 if (isTextMsg) {
                                                     rows =

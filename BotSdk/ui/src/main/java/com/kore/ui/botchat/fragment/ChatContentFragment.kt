@@ -91,6 +91,10 @@ class ChatContentFragment : BaseContentFragment() {
         }
     }
 
+    override fun stopTypingIndicator() {
+        binding.botTypingStatus.isVisible = false
+    }
+
     override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {
         if (quickReplies != null) {
             binding.quickReplyView.isVisible = true
