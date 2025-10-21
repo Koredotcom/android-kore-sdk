@@ -70,6 +70,10 @@
             android:screenOrientation="sensorPortrait" />
 
         <activity
+            android:name="com.kore.ui.botchat.VideoFullViewActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
             android:name="com.kore.ui.audiocodes.webrtcclient.activities.PermissionDeniedActivity"
             android:configChanges="orientation|screenSize" />
 

@@ -19,11 +19,11 @@ afterEvaluate {
 }
 android {
     namespace 'com.kore.ui'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         minSdk 26
-        targetSdkVersion 34
+        targetSdkVersion 35
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -73,6 +73,7 @@ dependencies {
     implementation 'org.apache.commons:commons-lang3:3.3.2'
 
     implementation project(path: ':botclient')
+    implementation 'androidx.documentfile:documentfile:1.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'

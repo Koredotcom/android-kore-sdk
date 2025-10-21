@@ -10,4 +10,5 @@ object BundleConstants {
     const val MINIMIZE_CHAT_EVENT = "minimize-chat-event"
     const val MESSAGE_DELIVERED = "message_delivered"
     const val MESSAGE_READ = "message_read"
+    const val STATUS_BAR_HEIGHT = "status_bar_height"
 }

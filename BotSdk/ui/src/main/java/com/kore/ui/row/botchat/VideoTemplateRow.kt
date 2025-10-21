@@ -1,6 +1,7 @@
 package com.kore.ui.row.botchat
 
 import android.content.Context
+import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -19,9 +20,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.kore.common.constants.MediaConstants
 import com.kore.common.event.UserActionEvent
-import com.kore.ui.row.SimpleListRow
 import com.kore.common.utils.LogUtils
-import com.kore.ui.utils.MediaUtils
 import com.kore.common.utils.StringUtils
 import com.kore.event.BotChatEvent
 import com.kore.model.constants.BotResponseConstants
@@ -29,7 +28,10 @@ import com.kore.model.constants.BotResponseConstants.URL
 import com.kore.model.constants.BotResponseConstants.VIDEO_CURRENT_POSITION
 import com.kore.model.constants.BotResponseConstants.VIDEO_URL
 import com.kore.ui.R
+import com.kore.ui.botchat.VideoFullViewActivity
 import com.kore.ui.databinding.VideoTemplateViewBinding
+import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.MediaUtils
 
 class VideoTemplateRow(
     private val id: String,
@@ -111,7 +113,12 @@ class VideoTemplateRow(
 
             ivFullScreen.setOnClickListener {
                 payload.putIfAbsent(VIDEO_CURRENT_POSITION, currentPosition)
-                videoUrl?.let { actionEvent(BotChatEvent.UrlClick(it.toString())) }
+
+                val intent = Intent(root.context, VideoFullViewActivity::class.java)
+                intent.putExtra("VideoUrl", videoUrl?.toString())
+                intent.putExtra("CurrentPosition", currentPosition)
+                root.context.startActivity(intent)
+
                 if (ivPlayPauseIcon.isSelected) ivPlayPauseIcon.performClick()
             }
 

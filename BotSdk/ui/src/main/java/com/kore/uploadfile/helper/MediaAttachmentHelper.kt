@@ -3,6 +3,7 @@ package com.kore.uploadfile.helper
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Bitmap.createBitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
@@ -335,7 +336,7 @@ class MediaAttachmentHelper(
         val bitmap2Height = bitmap2.height
         val marginLeft = (bitmap1Width * 0.5 - bitmap2Width * 0.5).toFloat()
         val marginTop = (bitmap1Height * 0.5 - bitmap2Height * 0.5).toFloat()
-        val overlayBitmap = Bitmap.createBitmap(bitmap1Width, bitmap1Height, bitmap1.config)
+        val overlayBitmap = createBitmap(bitmap1Width, bitmap1Height, bitmap1.config ?: Bitmap.Config.ARGB_8888)
         val canvas = Canvas(overlayBitmap)
         canvas.drawBitmap(bitmap1, Matrix(), null)
         canvas.drawBitmap(bitmap2, marginLeft, marginTop, null)

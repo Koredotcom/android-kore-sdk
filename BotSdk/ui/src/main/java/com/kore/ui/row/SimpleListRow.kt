@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
 import android.view.View
+import android.view.View.INVISIBLE
 import android.widget.LinearLayout.LayoutParams
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -16,10 +17,11 @@ import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.row.listener.ChatContentStateListener
+import androidx.core.graphics.toColorInt
 
 abstract class SimpleListRow {
     companion object {
-        val MATERIAL_COLORS = intArrayOf(Color.parseColor("#4A9AF2"), Color.parseColor("#5BC8C4"), Color.parseColor("#e74c3c"), Color.parseColor("#3498db"))
+        val MATERIAL_COLORS = intArrayOf("#4A9AF2".toColorInt(), "#5BC8C4".toColorInt(), "#e74c3c".toColorInt(), "#3498db".toColorInt())
         val HOLO_BLUE = Color.rgb(51, 181, 229)
     }
 
@@ -62,6 +64,10 @@ abstract class SimpleListRow {
             if (isShow && !url.isNullOrEmpty()) {
                 Glide.with(context).load(url.toString()).error(com.kore.botclient.R.drawable.ic_launcher)
                     .into<DrawableImageViewTarget>(DrawableImageViewTarget(botIcon))
+            }
+            else
+            {
+                botIcon.visibility = INVISIBLE
             }
         }
     }

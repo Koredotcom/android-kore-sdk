@@ -7,6 +7,7 @@ import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Shader
 import com.squareup.picasso.Transformation
+import androidx.core.graphics.createBitmap
 
 class RoundedCornersTransform : Transformation {
     fun setR(r: Float) {
@@ -21,8 +22,8 @@ class RoundedCornersTransform : Transformation {
             val y = (source.height - size) / 2
             val squaredBitmap = Bitmap.createBitmap(source, x, y, size, size)
             if (squaredBitmap != source) source.recycle()
-            val config = source.config
-            val bitmap = Bitmap.createBitmap(size, size, config)
+            val config: Bitmap.Config? = source.config
+            val bitmap = createBitmap(size, size, config ?: Bitmap.Config.ARGB_8888)
             val canvas = Canvas(bitmap)
             val paint = Paint()
             val shader = BitmapShader(squaredBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP)

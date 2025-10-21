@@ -57,10 +57,18 @@
             app:layout_constraintStart_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <View
+                android:id="@+id/status_bar_bg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bgBlueSignup"
+                android:visibility="visible" />
+
             <FrameLayout
                 android:id="@+id/header_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@+id/status_bar_bg"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatButton
@@ -116,6 +124,6 @@
         </RelativeLayout>
 
 
-    </RelativeLayout>
+        </RelativeLayout>
 
 </layout>

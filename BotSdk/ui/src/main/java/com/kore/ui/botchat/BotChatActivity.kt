@@ -14,12 +14,16 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -32,6 +36,8 @@ import com.kore.botclient.BotClient
 import com.kore.botclient.ConnectionState
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
+import com.kore.data.repository.preference.PreferenceRepository
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
@@ -41,6 +47,7 @@ import com.kore.model.constants.BotResponseConstants.FORMAT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
 import com.kore.model.constants.BotResponseConstants.START_DATE
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.network.api.responsemodels.branding.BotActiveThemeModel
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.services.ClosingService
@@ -85,6 +92,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     private val acManager: ACManager = ACManager.getInstance()
     private var alertDialog: Dialog? = null
     private var isWelcomeScreenShown = false
+    private val prefRepository: PreferenceRepository = PreferenceRepositoryImpl()
 
     private val connectivityManager by lazy {
         getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -111,6 +119,21 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 }
             }
         })
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            binding.root
+        ) { view: View?, windowInsets: WindowInsetsCompat? ->
+            val insets = windowInsets!!.getInsets(WindowInsetsCompat.Type.systemBars())
+            view!!.setPadding(insets.left, 0, insets.right, insets.bottom)
+
+            if(prefRepository.getIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, 0) == 0)
+            {
+                prefRepository.putIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, insets.top)
+            }
+
+            WindowInsetsCompat.CONSUMED
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(onDestroyReceiver, IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED)
             registerReceiver(closeChatBotReceiver, IntentFilter(BundleConstants.CLOSE_CHAT_EVENT), RECEIVER_NOT_EXPORTED)
@@ -221,9 +244,9 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onBrandingDetails(header: BotActiveThemeModel?) {
         if (header?.botMessage == null && header?.brandingModel != null) {
-            header.brandingModel?.header?.bgColor?.let { updateStatusBarColor(it) }
+            header.brandingModel?.header?.bgColor?.let { changeStatusBarColor(if(SDKConfig.isUpdateStatusBarColor()) it else "")
+                updateStatusBarColor(it) }
             Handler(Looper.getMainLooper()).postDelayed({
-//                binding.clProgress.isVisible = false
                 if (!isMinimized() && !isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
                     isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
@@ -521,4 +544,28 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             finish()
         }
     }
+
+    private fun changeStatusBarColor(color: String) {
+        if (Build.VERSION.SDK_INT >= 35) {
+            binding.statusBarBg.visibility = View.VISIBLE
+            val params = binding.statusBarBg.layoutParams
+            params.height = prefRepository.getIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, 50)
+            binding.statusBarBg.setLayoutParams(params)
+
+            binding.statusBarBg.setBackgroundColor(
+                color.takeIf { SDKConfig.isUpdateStatusBarColor() && it.isNotBlank() }?.toColorInt()
+                    ?: ContextCompat.getColor(this@BotChatActivity, R.color.colorPrimary)
+            )
+        } else if(SDKConfig.isUpdateStatusBarColor()){
+            val window = getWindow()
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.setStatusBarColor(
+                if (color.isBlank()) ContextCompat.getColor(
+                    this@BotChatActivity,
+                    R.color.colorPrimary
+                ) else color.toColorInt()
+            )
+        }
+    }
+
 }
