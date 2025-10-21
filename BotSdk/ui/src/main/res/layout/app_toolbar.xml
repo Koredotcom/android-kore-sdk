@@ -3,7 +3,7 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:elevation="4dp"
     android:fitsSystemWindows="true"
-    app:titleTextColor="@color/color_161620"/>
+    android:theme="@style/ThemeOverlay.AppCompat.Light"
+    app:titleTextColor="@color/color_161620" />

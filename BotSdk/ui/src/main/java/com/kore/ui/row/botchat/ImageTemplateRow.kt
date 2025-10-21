@@ -3,7 +3,6 @@ package com.kore.ui.row.botchat
 import android.content.Context
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.view.LayoutInflater
@@ -14,6 +13,8 @@ import android.widget.PopupWindow
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
@@ -23,15 +24,18 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget
 import com.kore.common.constants.MediaConstants
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.StringUtils
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.extensions.setRoundedCorner
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.COMPONENT_TYPE_AUDIO
 import com.kore.model.constants.BotResponseConstants.COMPONENT_TYPE_IMAGE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.databinding.ImageTemplateViewBinding
 import com.kore.ui.row.SimpleListRow
+import com.kore.ui.utils.DownloadUtils
 import com.kore.ui.utils.MediaUtils
 
 class ImageTemplateRow(
@@ -42,6 +46,7 @@ class ImageTemplateRow(
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : SimpleListRow() {
     override val type: SimpleListRowType = BotChatRowType.getRowType(BotChatRowType.ROW_IMAGE_PROVIDER)
+    private val preferenceRepository = PreferenceRepositoryImpl()
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is ImageTemplateRow) return false
@@ -65,6 +70,9 @@ class ImageTemplateRow(
 
             when (tempType) {
                 COMPONENT_TYPE_IMAGE -> {
+                    download.setTextColor(
+                        preferenceRepository.getStringValue(download.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+                    )
                     Glide.with(root.context)
                         .load(payload[BotResponseConstants.URL])
                         .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
@@ -72,10 +80,10 @@ class ImageTemplateRow(
                         .into<DrawableImageViewTarget>(DrawableImageViewTarget(ivImage))
                     download.setRoundedCorner(8f)
                     download.setOnClickListener {
-                        val imageUrl = payload[BotResponseConstants.URL]
-                        imageUrl?.let {
-                            if (imageUrl.toString().isNotEmpty()) actionEvent(BotChatEvent.UrlClick(imageUrl.toString()))
-                        }
+                        val imageUrl = payload[BotResponseConstants.URL] as String?
+                        if (!imageUrl.isNullOrEmpty())
+                            DownloadUtils.downloadFile(download.context, imageUrl, null)
+                        //actionEvent(BotChatEvent.UrlClick(imageUrl.toString()))
                     }
                 }
 
@@ -89,7 +97,7 @@ class ImageTemplateRow(
                         }
 
                     try {
-                        val uri = Uri.parse(audioUrl)
+                        val uri = audioUrl.toUri()
                         player.setAudioStreamType(AudioManager.STREAM_MUSIC)
                         player.setDataSource(root.context, uri)
                         player.prepareAsync()
@@ -175,7 +183,8 @@ class ImageTemplateRow(
             popupWindow.dismiss()
             MediaUtils.setupAppDir(context, MediaConstants.MEDIA_TYPE_AUDIO)
             if (!url.isNullOrEmpty()) {
-                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
+                DownloadUtils.downloadFile(tvTheme1.context, url, null)
+//                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
             }
         }
 

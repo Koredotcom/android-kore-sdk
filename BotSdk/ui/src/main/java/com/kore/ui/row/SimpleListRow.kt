@@ -6,16 +6,19 @@ import android.graphics.Rect
 import android.view.View
 import android.view.View.INVISIBLE
 import android.widget.LinearLayout.LayoutParams
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewbinding.ViewBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.kore.botclient.databinding.BaseRowBinding
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
+import com.kore.ui.R
 import com.kore.ui.row.listener.ChatContentStateListener
 import androidx.core.graphics.toColorInt
 
@@ -28,6 +31,12 @@ abstract class SimpleListRow {
     abstract val type: SimpleListRowType
 
     protected var contentStateListener: ChatContentStateListener? = null
+
+    protected var bottomSheetDialog: BottomSheetDialog? = null
+
+    fun setTemplateBottomSheetDialog(bottomSheetDialog: BottomSheetDialog?){
+        this.bottomSheetDialog = bottomSheetDialog
+    }
 
     abstract fun areItemsTheSame(otherRow: SimpleListRow): Boolean
 
@@ -48,7 +57,8 @@ abstract class SimpleListRow {
 
     fun showOrHideIcon(binding: ViewBinding, context: Context, url: String?, isShow: Boolean, isTemplate: Boolean) {
         (binding as BaseRowBinding).apply {
-            botIcon.isVisible = isShow && !url.isNullOrEmpty()
+            botIcon.isVisible = isShow && bottomSheetDialog == null
+            if (!isShow || bottomSheetDialog != null) return
 
             val isTimeStampVisible = PreferenceRepositoryImpl()
                 .getSharedPreference(root.context, BotResponseConstants.THEME_NAME)
@@ -61,9 +71,11 @@ abstract class SimpleListRow {
                 botIcon.layoutParams = layoutParams
             }
 
-            if (isShow && !url.isNullOrEmpty()) {
+            if (!url.isNullOrEmpty()) {
                 Glide.with(context).load(url.toString()).error(com.kore.botclient.R.drawable.ic_launcher)
                     .into<DrawableImageViewTarget>(DrawableImageViewTarget(botIcon))
+            } else {
+                botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.mipmap.ic_launcher, context.getTheme()))
             }
             else
             {

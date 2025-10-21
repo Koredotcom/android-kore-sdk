@@ -119,7 +119,7 @@ class BotClientHelper {
 
         private fun processBotResponse(response: BotResponse): BotResponse {
             val botInfo = response.botInfo
-            val timeStamp = isoFormatter.parse(response.createdOn)?.time ?: 0L
+            val timeStamp = (isoFormatter.parse(response.createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset + TimeZone.getDefault().dstSavings
             val botResponse = if (response.timeMillis == 0L) {
                 response.copy(
                     createdOn = response.createdOn,
@@ -150,7 +150,7 @@ class BotClientHelper {
 
             if (outerPayload == null) {
                 val outer = botResponse.message[0].component?.payload
-                if (outer != null) {
+                if (outer != null && outer !is String) {
                     val inner = (outer as Map<String, Any>)[PAYLOAD] as LinkedTreeMap<String, Any>?
                     if (inner != null && inner.containsKey(KEY_TEMPLATE_TYPE)) {
                         val jsonOuter = Gson().toJson(outer)

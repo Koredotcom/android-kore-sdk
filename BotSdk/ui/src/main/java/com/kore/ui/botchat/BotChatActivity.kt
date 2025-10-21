@@ -20,7 +20,6 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -41,9 +40,9 @@ import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotResponse
+import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
-import com.kore.model.constants.BotResponseConstants.END_DATE
-import com.kore.model.constants.BotResponseConstants.FORMAT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_COMPACT
 import com.kore.model.constants.BotResponseConstants.HEADER_SIZE_LARGE
 import com.kore.model.constants.BotResponseConstants.START_DATE
@@ -72,15 +71,12 @@ import com.kore.ui.botchat.fragment.ChatHeaderOneFragment
 import com.kore.ui.botchat.fragment.ChatHeaderThreeFragment
 import com.kore.ui.botchat.fragment.ChatHeaderTwoFragment
 import com.kore.ui.botchat.fragment.ChatV2HeaderFragment
-import com.kore.ui.bottomsheet.AdvancedMultiSelectBottomSheet
-import com.kore.ui.bottomsheet.OtpTemplateBottomSheet
-import com.kore.ui.bottomsheet.ResetPinTemplateBottomSheet
+import com.kore.ui.bottomsheet.TemplateBottomSheetFragment
 import com.kore.ui.databinding.ActivityBotChatBinding
 import com.kore.ui.databinding.IncomingCallLayoutBinding
 import com.kore.ui.utils.BundleConstants
 import com.kore.ui.utils.BundleConstants.EXTRA_RESULT
 import org.webrtc.NetworkMonitor.isOnline
-import java.util.Calendar
 
 class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotChatViewModel>(), BotChatView {
     private var contentFragment: BaseContentFragment = SDKConfig.getCustomContentFragment() ?: ChatContentFragment()
@@ -247,6 +243,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             header.brandingModel?.header?.bgColor?.let { changeStatusBarColor(if(SDKConfig.isUpdateStatusBarColor()) it else "")
                 updateStatusBarColor(it) }
             Handler(Looper.getMainLooper()).postDelayed({
+                //                binding.clProgress.isVisible = false
                 if (!isMinimized() && !isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
                     isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
@@ -281,7 +278,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
             }, 2000)
         } else {
-//            binding.clProgress.isVisible = false
+            //            binding.clProgress.isVisible = false
             binding.chatWindow.isVisible = true
             val customHeaderFragment = SDKConfig.getCustomHeaderFragment(HEADER_SIZE_COMPACT)
             addHeaderFragmentToActivity(customHeaderFragment ?: ChatV2HeaderFragment(), header?.brandingModel)
@@ -314,6 +311,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                     ACManager.getInstance().terminate()
                     if (alertDialog?.isShowing == true) alertDialog?.dismiss()
                     val intent = Intent(CallActivity.ACTION_CALL_TERMINATED)
+                    intent.setPackage(packageName)
                     sendBroadcast(intent)
                 }
             }
@@ -322,10 +320,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int) {
         contentFragment.onFileDownloadProgress(msgId, progress, downloadedBytes)
-    }
-
-    override fun onSwipeRefresh() {
-        botChatViewModel.fetchChatHistory(false)
     }
 
     private fun showAlertDialog(eventModel: HashMap<String, Any>) {
@@ -375,47 +369,15 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun showCalenderTemplate(payload: HashMap<String, Any>) {
-        if (BotResponseConstants.TEMPLATE_TYPE_DATE == payload[BotResponseConstants.KEY_TEMPLATE_TYPE]) {
-            val cal = Calendar.getInstance()
-            cal.timeInMillis = MaterialDatePicker.todayInUtcMilliseconds()
-            val builder = MaterialDatePicker.Builder.datePicker()
-            builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
-            builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
-            builder.setCalendarConstraints(botChatViewModel.minRange(cal.timeInMillis).build())
-            builder.setTheme(R.style.MyMaterialCalendarTheme)
-            try {
-                val picker = builder.build()
-                picker.show(supportFragmentManager, picker.toString())
-                picker.addOnPositiveButtonClickListener { selection -> botChatViewModel.onDatePicked(selection) }
-            } catch (e: IllegalArgumentException) {
-                e.printStackTrace()
-            }
-        } else {
-            val builder = MaterialDatePicker.Builder.dateRangePicker()
-            builder.setTitleText(payload[BotResponseConstants.KEY_TITLE] as String)
-            builder.setInputMode(MaterialDatePicker.INPUT_MODE_CALENDAR)
-            builder.setCalendarConstraints(
-                botChatViewModel.limitRange(
-                    (payload[START_DATE] as String?) ?: "", (payload[END_DATE] as String?) ?: "", (payload[FORMAT] as String?) ?: ""
-                ).build()
-            )
-            builder.setTheme(R.style.MyMaterialCalendarTheme)
-            try {
-                val picker = builder.build()
-                picker.show(supportFragmentManager, picker.toString())
-                picker.addOnPositiveButtonClickListener { selection -> botChatViewModel.onRangeDatePicked(selection) }
-            } catch (e: java.lang.IllegalArgumentException) {
-                e.printStackTrace()
-            }
-        }
+        contentFragment.showCalenderTemplate(payload)
     }
 
     override fun showTypingIndicator(icon: String?) {
         contentFragment.showTypingIndicator(icon, true)
     }
 
-    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?) {
-        contentFragment.showQuickReplies(quickReplies, type)
+    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {
+        contentFragment.showQuickReplies(quickReplies, type, isStacked)
     }
 
     override fun getAdapterLastItems(): BaseBotMessage? {
@@ -426,27 +388,21 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         contentFragment.hideQuickReplies()
     }
 
-    override fun onLoadingHistory() {
-        contentFragment.onLoadingHistory()
+    override fun onLoadHistory(isReconnect: Boolean) {
+        contentFragment.onLoadHistory(isReconnect)
     }
 
-    override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
-        contentFragment.addMessagesToAdapter(list, !isMinimized(), isReconnection)
-    }
-
-    override fun showOtpBottomSheet(payload: HashMap<String, Any>) {
-        val bottomSheet = OtpTemplateBottomSheet()
-        bottomSheet.showData(payload, true, supportFragmentManager, this::onActionEvent)
-    }
-
-    override fun showPinResetBottomSheet(payload: HashMap<String, Any>) {
-        val bottomSheet = ResetPinTemplateBottomSheet()
-        bottomSheet.showData(payload, true, supportFragmentManager, this::onActionEvent)
-    }
-
-    override fun showAdvancedMultiSelectBottomSheet(msgId: String, payload: HashMap<String, Any>) {
-        val bottomSheet = AdvancedMultiSelectBottomSheet()
-        bottomSheet.showData(msgId, payload, this::onActionEvent, supportFragmentManager)
+    override fun showTemplateBottomSheet(botResponse: BotResponse) {
+        if (botResponse.message.isEmpty() || botResponse.message[0].cInfo == null || botResponse.message[0].cInfo?.body == null ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload.isNullOrEmpty() ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload?.get(BotResponseConstants.KEY_TEMPLATE_TYPE) == null ||
+            (botResponse.message[0].cInfo?.body as PayloadOuter).payload?.get(BotResponseConstants.SLIDER_VIEW) == false
+        ) {
+            return
+        }
+        val bottomSheetFragment = TemplateBottomSheetFragment()
+        bottomSheetFragment.setOnActionEvent(this::onActionEvent)
+        bottomSheetFragment.show(botResponse, supportFragmentManager)
     }
 
     private fun updateStatusBarColor(color: String) {

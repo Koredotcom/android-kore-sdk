@@ -1,7 +1,6 @@
 package com.kore.ui.adapters
 
 import android.content.Context
-import android.graphics.drawable.GradientDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,6 @@ import android.widget.ImageView
 import android.widget.PopupWindow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +28,7 @@ class ListWidgetButtonAdapter(
     private val style: String,
     private val popupWindow: PopupWindow?,
     private val isLastItem: Boolean,
+    private var isMenus: Boolean = false,
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : RecyclerView.Adapter<ListWidgetButtonAdapter.ButtonViewHolder>() {
 
@@ -53,21 +52,24 @@ class ListWidgetButtonAdapter(
         val txtColor = sharedPrefs.getStringValue(context, THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
         holder.tvButtonTv.setTextColor(txtColor)
         holder.tvButtonTv.text = btn[BotResponseConstants.KEY_TITLE] as String
+        holder.ivBtnImage.isVisible = !isMenus
 
         holder.tvButtonTv.setOnClickListener {
             popupWindow?.dismiss()
-            if (isLastItem && btn[BotResponseConstants.PAYLOAD] != null) {
+            if (BotResponseConstants.BUTTON_TYPE_WEB_URL == btn[BotResponseConstants.TYPE] ||
+                BotResponseConstants.BUTTON_TYPE_URL == btn[BotResponseConstants.TYPE]
+            ) {
+                actionEvent(BotChatEvent.UrlClick(btn[BotResponseConstants.URL].toString()))
+            } else if (isLastItem && btn[BotResponseConstants.PAYLOAD] != null) {
                 actionEvent(BotChatEvent.SendMessage(holder.tvButtonTv.text.toString(), btn[BotResponseConstants.PAYLOAD] as String))
             }
         }
-
-        if (image[BotResponseConstants.IMAGE_SRC] != null && image[BotResponseConstants.IMAGE_SRC].toString().isNotEmpty()) {
-            holder.ivBtnImage.isVisible = true
-            val drawable = ContextCompat.getDrawable(context, R.drawable.ic_correct)
-            drawable?.setTint(txtColor)
-            Glide.with(context).load(image[BotResponseConstants.IMAGE_SRC]).error(drawable)
+        val errorDrawable = ContextCompat.getDrawable(context, R.drawable.ic_correct)
+        errorDrawable?.setTint(txtColor)
+        if (image[BotResponseConstants.IMAGE_SRC] != null && !(image[BotResponseConstants.IMAGE_SRC] as String?).isNullOrEmpty()) {
+            Glide.with(context).load(image[BotResponseConstants.IMAGE_SRC]).error(errorDrawable)
                 .into<DrawableImageViewTarget>(DrawableImageViewTarget(holder.ivBtnImage))
-        } else holder.ivBtnImage.isVisible = false
+        } else holder.ivBtnImage.setImageDrawable(errorDrawable)
     }
 
     override fun getItemCount(): Int {

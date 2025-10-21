@@ -13,7 +13,7 @@
         android:background="@drawable/card_template_bg"
         android:orientation="vertical">
 
-        <com.kore.ui.textview.CustomTextView
+        <com.kore.ui.textview.CustomTextViewBold
             android:id="@+id/tvOnlyTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

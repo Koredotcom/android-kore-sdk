@@ -100,7 +100,7 @@ class ChatHistoryRepositoryImpl : ChatHistoryRepository {
         val botPayLoad = BotPayLoad(message = botMessage, botInfo = botInfo)
         val gson = Gson()
         val jsonPayload = gson.toJson(botPayLoad)
-        val timeStamp = (isoFormatter.parse(createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset
+        val timeStamp = (isoFormatter.parse(createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset + TimeZone.getDefault().dstSavings
         val formattedTime = getFormattedTime(timeStamp, botName, false)
         return gson.fromJson(jsonPayload, BotRequest::class.java)
             .copy(
@@ -125,7 +125,7 @@ class ChatHistoryRepositoryImpl : ChatHistoryRepository {
         val botResponseMessage = BotResponseMessage(BotResponseConstants.COMPONENT_TYPE_TEXT, cModel, ComponentInfo(outer))
         val message: java.util.ArrayList<BotResponseMessage> = java.util.ArrayList<BotResponseMessage>(1)
         message.add(botResponseMessage)
-        val timeStamp = (isoFormatter.parse(createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset
+        val timeStamp = (isoFormatter.parse(createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset + TimeZone.getDefault().dstSavings
         val formattedTime = getFormattedTime(timeStamp, botName, true)
         return BotResponse(
             BotResponseConstants.KEY_BOT_RESPONSE,

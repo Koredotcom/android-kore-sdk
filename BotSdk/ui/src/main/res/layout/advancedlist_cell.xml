@@ -32,7 +32,7 @@
             android:contentDescription="@string/app_name"
             android:visibility="gone" />
 
-        <com.kore.ui.textview.CustomTextView
+        <com.kore.ui.textview.CustomTextViewBold
             android:id="@+id/bot_list_item_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
             android:ellipsize="end"
             android:paddingTop="2dp"
             android:paddingBottom="2dp"
-            android:textColor="@color/footer_color_dark_grey"
+            android:textColor="@color/left_bubble_text_color"
             android:textSize="@dimen/text_size_small"
             android:visibility="gone" />
 

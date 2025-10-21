@@ -246,17 +246,12 @@ class AdvancedListAdapter(
                                 context, when (!alignment.isNullOrEmpty()) {
                                     true -> alignment[BotResponseConstants.BUTTONS_ALIGNMENT] as String
                                     else -> BotResponseConstants.FULL_WIDTH
-                                }, buttons, displayLimit, isLastItem, actionEvent
+                                }, buttons, displayLimit, isLastItem, false, actionEvent
                             )
 
                             holder.rvDefaultButtons.adapter = advanceListButtonAdapter
-
+                            holder.llButtonMore.isVisible = displayLimit != 0
                             if (displayLimit != 0) {
-                                val tempBtn = mutableListOf<Map<String, *>>()
-                                for (i in displayLimit - 1 until buttons.size) {
-                                    tempBtn.add(buttons[i])
-                                }
-                                holder.llButtonMore.visibility = View.VISIBLE
                                 btnPopUpView.minimumWidth = 250.dpToPx(context)
                                 val recyclerView: RecyclerView = btnPopUpView.findViewById(R.id.rvDropDown)
                                 val ivDropDownCLose: ImageView = btnPopUpView.findViewById(R.id.ivDropDownCLose)
@@ -265,7 +260,7 @@ class AdvancedListAdapter(
                                     context, when (!alignment.isNullOrEmpty()) {
                                         true -> alignment[BotResponseConstants.BUTTONS_ALIGNMENT] as String
                                         else -> BotResponseConstants.FULL_WIDTH
-                                    }, tempBtn, tempBtn.size, isLastItem, actionEvent
+                                    }, buttons, buttons.size, isLastItem, false, actionEvent
                                 )
                                 recyclerView.adapter = advanceButtonAdapter
                                 ivDropDownCLose.setOnClickListener { btnPopUpWindow.dismiss() }
@@ -273,7 +268,8 @@ class AdvancedListAdapter(
                             holder.llButtonMore.setOnClickListener { btnPopUpWindow.showAsDropDown(holder.llButtonMore, -15, -350) }
 
                             val sharedPrefs = PreferenceRepositoryImpl()
-                            val txtColor = sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
+                            val txtColor =
+                                sharedPrefs.getStringValue(holder.itemView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5")
                             holder.buttonMore.setTextColor(txtColor.toColorInt())
                         }
                     }
@@ -308,7 +304,7 @@ class AdvancedListAdapter(
                         holder.rvOptionButtons.visibility = View.VISIBLE
                         holder.rvOptionButtons.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
                         holder.rvOptionButtons.adapter =
-                            AdvanceListButtonAdapter(context, DEFAULT, buttons, buttons.size, isLastItem, actionEvent).apply {
+                            AdvanceListButtonAdapter(context, DEFAULT, buttons, buttons.size, isLastItem, true, actionEvent).apply {
                                 setAdvancedOptionsAdapter(advanceOptionsAdapter)
                             }
                     }
@@ -401,6 +397,7 @@ class AdvancedListAdapter(
                                                 if (!isLastItem) return@setOnClickListener
                                                 actionEvent(BotChatEvent.SendMessage(listElementButtonPayload, listElementButtonPayload))
                                             } else {
+                                                holder.ivAction.rotation = (if (cardTemplateModel[IS_COLLAPSED] as Boolean) 0 else 90).toFloat()
                                                 cardTemplateModel[IS_COLLAPSED] = !(cardTemplateModel[IS_COLLAPSED] as Boolean)
                                                 holder.llChildViews.isVisible = cardTemplateModel[IS_COLLAPSED] as Boolean
                                             }
@@ -428,6 +425,7 @@ class AdvancedListAdapter(
                                             options,
                                             options.size,
                                             isLastItem,
+                                            false,
                                             actionEvent
                                         )
                                     recyclerView.adapter = advanceListButtonAdapter
@@ -488,15 +486,14 @@ class AdvancedListAdapter(
                 }
 
                 holder.ivAction.setOnClickListener {
+                    holder.ivAction.rotation = (if (cardTemplateModel[IS_COLLAPSED] as Boolean) 0 else 90).toFloat()
                     cardTemplateModel[IS_COLLAPSED] = !(cardTemplateModel[IS_COLLAPSED] as Boolean)
                     holder.llChildViews.isVisible = cardTemplateModel[IS_COLLAPSED] as Boolean
                 }
             }
         }
 
-        holder.llChildViews.visibility = View.GONE
-
-        if (cardTemplateModel[IS_COLLAPSED] != null && cardTemplateModel[IS_COLLAPSED] as Boolean) holder.llChildViews.isVisible = true
+        holder.llChildViews.isVisible = cardTemplateModel[IS_COLLAPSED] as Boolean? == false
 
         holder.botListItemRoot.setOnClickListener {
 
@@ -523,10 +520,11 @@ class AdvancedListAdapter(
                         } else if (listElementButtonPayload.isNotEmpty()) {
                             if (!isLastItem) return@setOnClickListener
                             actionEvent(BotChatEvent.SendMessage(listElementButtonPayload, listElementButtonPayload))
-                        } else {
+                        } /*else {
+                            holder.ivAction.rotation = (if (cardTemplateModel[IS_COLLAPSED] as Boolean) 0 else 90).toFloat()
                             cardTemplateModel[IS_COLLAPSED] = !(cardTemplateModel[IS_COLLAPSED] as Boolean)
                             holder.llChildViews.isVisible = cardTemplateModel[IS_COLLAPSED] as Boolean
-                        }
+                        }*/
                     }
                 }
             } catch (e: Exception) {

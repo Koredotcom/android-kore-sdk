@@ -12,9 +12,12 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.DrawableImageViewTarget
+import com.google.android.flexbox.FlexDirection
+import com.google.android.flexbox.FlexboxLayoutManager
+import com.google.android.flexbox.JustifyContent
 import com.google.gson.internal.LinkedTreeMap
-import com.kore.ai.botsdk.databinding.CustomBotContentLayoutBinding
-import com.kore.ui.base.BaseView
+import com.kore.SDKConfig.isMinimized
+import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.NetworkUtils
 import com.kore.event.BotChatEvent
@@ -24,15 +27,15 @@ import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 import com.kore.ui.adapters.BotChatAdapter
 import com.kore.ui.adapters.QuickRepliesTemplateAdapter
-import com.kore.ui.botchat.BotChatView
 import com.kore.ui.base.BaseContentFragment
+import com.kore.ui.databinding.BotContentLayoutBinding
 import com.kore.ui.row.botchat.BotChatItemDecoration
 import com.kore.ui.row.botchat.BotChatRowType
+import com.kore.ui.row.botchat.TimeStampTemplateRow
 
 class CustomContentFragment : BaseContentFragment() {
-    private lateinit var binding: CustomBotContentLayoutBinding
+    private lateinit var binding: BotContentLayoutBinding
     private lateinit var chatAdapter: BotChatAdapter
-    private var view: BotChatView? = null
     private lateinit var actionEvent: (event: BotChatEvent) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +44,7 @@ class CustomContentFragment : BaseContentFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        binding = CustomBotContentLayoutBinding.inflate(layoutInflater)
+        binding = BotContentLayoutBinding.inflate(layoutInflater)
         return binding.root
     }
 
@@ -50,17 +53,18 @@ class CustomContentFragment : BaseContentFragment() {
         binding.chatContentList.adapter = chatAdapter
         binding.chatContentList.addItemDecoration(BotChatItemDecoration(requireContext()))
         binding.swipeContainerChat.setOnRefreshListener {
+            if (!SDKConfiguration.OverrideKoreConfig.paginatedScrollEnable) return@setOnRefreshListener
             if (!NetworkUtils.isNetworkAvailable(requireContext())) {
                 Toast.makeText(context, getString(R.string.no_network), Toast.LENGTH_SHORT).show()
                 binding.swipeContainerChat.isRefreshing = false
                 return@setOnRefreshListener
             }
-            this.view?.onSwipeRefresh()
+            contentViewModel.fetchChatHistory(false)
         }
     }
 
-    override fun setView(view: BaseView) {
-        this.view = view as BotChatView
+    override fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean) {
+        addMessagesToAdapter(list, !isMinimized(), isReconnection)
     }
 
     override fun onFileDownloadProgress(msgId: String, progress: Int, downloadBytes: Int) {
@@ -78,7 +82,7 @@ class CustomContentFragment : BaseContentFragment() {
 
     override fun showTypingIndicator(icon: String?, enable: Boolean) {
         binding.botTypingStatus.isVisible = enable
-        if (!icon.isNullOrEmpty()) {
+        if (!icon.isNullOrEmpty() && isResumed) {
             Glide.with(requireActivity()).load(icon)
                 .apply(RequestOptions().diskCacheStrategy(DiskCacheStrategy.NONE))
                 .error(R.drawable.ic_image_photo)
@@ -86,10 +90,22 @@ class CustomContentFragment : BaseContentFragment() {
         }
     }
 
-    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?) {
+    override fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean) {
         if (quickReplies != null) {
             binding.quickReplyView.isVisible = true
-            binding.quickReplyView.layoutManager = LinearLayoutManager(requireActivity(), LinearLayoutManager.HORIZONTAL, false)
+            if (isStacked) {
+                val layoutManager = FlexboxLayoutManager(binding.root.context)
+                layoutManager.justifyContent = JustifyContent.FLEX_START
+                layoutManager.flexDirection = FlexDirection.ROW
+                binding.quickReplyView.layoutManager = layoutManager
+            } else {
+                binding.quickReplyView.layoutManager = LinearLayoutManager(
+                    requireActivity(),
+                    if (type.equals(BotResponseConstants.TEMPLATE_TYPE_LIST, ignoreCase = true))
+                        LinearLayoutManager.VERTICAL else LinearLayoutManager.HORIZONTAL,
+                    false
+                )
+            }
             binding.quickReplyView.adapter = QuickRepliesTemplateAdapter(requireActivity(), type, quickReplies, this)
         }
     }
@@ -101,8 +117,11 @@ class CustomContentFragment : BaseContentFragment() {
     override fun addMessagesToAdapter(messages: List<BaseBotMessage>, isHistory: Boolean, isReconnection: Boolean) {
         binding.swipeContainerChat.isRefreshing = false
         if (messages.isEmpty()) return
-        chatAdapter.submitList(chatAdapter.addAndCreateRows(messages, isHistory, isReconnection))
+        val rows = chatAdapter.addAndCreateRows(messages, isHistory, isReconnection)
+        chatAdapter.submitList(rows)
         binding.chatContentList.postDelayed({
+            val history = rows.filter { it !is TimeStampTemplateRow }
+            contentViewModel.setHistoryOffset(history.size)
             if (!isHistory && chatAdapter.itemCount > 0) {
                 binding.chatContentList.verticalSmoothScrollTo(chatAdapter.itemCount - 1, LinearSmoothScroller.SNAP_TO_START)
             }
@@ -112,6 +131,10 @@ class CustomContentFragment : BaseContentFragment() {
 
     override fun onLoadingHistory() {
         binding.swipeContainerChat.isRefreshing = true
+    }
+
+    override fun onLoadHistory(isReconnect: Boolean) {
+        contentViewModel.loadChatHistory(isReconnect)
     }
 
     override fun getAdapterCount(): Int = chatAdapter.itemCount
@@ -155,5 +178,6 @@ class CustomContentFragment : BaseContentFragment() {
 
     override fun onBrandingDetails() {
         chatAdapter.onBrandingDetails()
+        binding.swipeContainerChat.isEnabled = SDKConfiguration.OverrideKoreConfig.paginatedScrollEnable
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,6 +26,7 @@ class ViewMoreListBottomSheet : BottomSheetDialogFragment() {
     private var isShowHeader = false
     private var bottomSheetDialog: BottomSheetDialog? = null
     private lateinit var items: List<Map<String, Any>>
+    private var title: String? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.dialog_bottom_sheet_view_more, container, false)
@@ -34,6 +36,8 @@ class ViewMoreListBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding?.apply {
+            tvOptionsTitle.isVisible = title != null
+            tvOptionsTitle.text = title
             rvViewMore.layoutManager = LinearLayoutManager(root.context, LinearLayoutManager.VERTICAL, false)
             rvViewMore.adapter = SimpleListAdapter(ListViewTemplateItemRowType.entries).apply {
                 submitList(createRows())
@@ -58,7 +62,8 @@ class ViewMoreListBottomSheet : BottomSheetDialogFragment() {
         return bottomSheetDialog!!
     }
 
-    fun showData(isShowHeader: Boolean, items: List<Map<String, Any>>, manager: FragmentManager) {
+    fun showData(isShowHeader: Boolean, title: String?, items: List<Map<String, Any>>, manager: FragmentManager) {
+        this.title = title;
         this.items = items
         this.isShowHeader = isShowHeader
         show(manager, ViewMoreListBottomSheet::class.java.name)

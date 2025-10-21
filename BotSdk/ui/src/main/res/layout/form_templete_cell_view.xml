@@ -29,9 +29,9 @@
         android:layout_below="@+id/tvFormFieldTitle"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:autofillHints=""
-        android:background="@drawable/form_input_bg"
         android:hint="@string/hello"
-        android:inputType="textPassword"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="4dp"
         android:textColor="#404051"
         android:textColorHint="@color/readReceiptGrey"
         android:textSize="@dimen/text_size_normal" />

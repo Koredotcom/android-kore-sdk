@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.kore.ui.utils.BitmapUtils
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
+import com.kore.ui.utils.BitmapUtils
 
 class AdvanceListDetailsAdapter(
     val context: Context,
@@ -40,14 +40,8 @@ class AdvanceListDetailsAdapter(
         }
     }
 
-
     class DetailsViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var tvBtnText: TextView
-        var ivListBtnIcon: ImageView
-
-        init {
-            tvBtnText = view.findViewById(R.id.tvBtnText)
-            ivListBtnIcon = view.findViewById(R.id.ivListBtnIcon)
-        }
+        var tvBtnText: TextView = view.findViewById(R.id.tvBtnText)
+        var ivListBtnIcon: ImageView = view.findViewById(R.id.ivListBtnIcon)
     }
 }

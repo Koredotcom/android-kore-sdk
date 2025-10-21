@@ -51,6 +51,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
         const val ROW_OTP_PROVIDER = "OtpValidationTemplate"
         const val ROW_RESET_PIN_PROVIDER = "ResetPinTemplate"
         const val ROW_ANSWER_PROVIDER = "AnswerTemplate"
+        const val ROW_DIGITAL_FORM = "DigitalFormTemplate"
 
         private val providers = mutableMapOf<String, SimpleListViewHolderProvider<*>>()
 
@@ -113,6 +114,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             createRowType(ROW_OTP_PROVIDER, providers[ROW_OTP_PROVIDER]!!)
             createRowType(ROW_RESET_PIN_PROVIDER, providers[ROW_RESET_PIN_PROVIDER]!!)
             createRowType(ROW_ANSWER_PROVIDER, providers[ROW_ANSWER_PROVIDER]!!)
+            createRowType(ROW_DIGITAL_FORM, providers[ROW_DIGITAL_FORM]!!)
         }
 
         fun getRowType(rowType: String): RowType {
@@ -136,7 +138,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             providers[ROW_LINE_CHART_PROVIDER] = LineChartTemplateProvider()
             providers[ROW_IMAGE_PROVIDER] = ImageTemplateProvider()
             providers[ROW_CARD_PROVIDER] = CardTemplateProvider()
-            providers[ROW_ADVANCE_PROVIDER] = AdvanceTemplateProvider()
+            providers[ROW_ADVANCE_PROVIDER] = AdvancedListTemplateProvider()
             providers[ROW_VIDEO_PROVIDER] = VideoTemplateProvider()
             providers[ROW_TABLE_PROVIDER] = TableTemplateProvider()
             providers[ROW_TABLE_RESPONSIVE_PROVIDER] = TableResponsiveProvider()
@@ -158,6 +160,7 @@ sealed class BotChatRowType : SimpleListRow.SimpleListRowType {
             providers[ROW_OTP_PROVIDER] = OtpTemplateProvider()
             providers[ROW_RESET_PIN_PROVIDER] = ResetPinTemplateProvider()
             providers[ROW_ANSWER_PROVIDER] = AnswerTemplateProvider()
+            providers[ROW_DIGITAL_FORM] = DigitalFormTemplateProvider()
         }
     }
 }

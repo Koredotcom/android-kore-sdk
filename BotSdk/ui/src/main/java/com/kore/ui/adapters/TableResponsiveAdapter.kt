@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
+import androidx.core.view.isGone
 
 class TableResponsiveAdapter(
     private val context: Context,
@@ -52,7 +53,7 @@ class TableResponsiveAdapter(
         holder.rvTableResponsive.adapter = TableResponsiveChildAdapter(context, values, listHeaderItems)
 
         holder.ivTableResponsiveExpand.setOnClickListener {
-            if (holder.rvTableResponsive.visibility == View.GONE) {
+            if (holder.rvTableResponsive.isGone) {
                 holder.rvTableResponsive.isVisible = true
                 holder.llTableResponsive.isVisible = false
                 holder.ivTableResponsiveExpand.rotation = 90f

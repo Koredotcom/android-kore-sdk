@@ -23,8 +23,9 @@ class BotButtonsTemplateAdapter(
     private val buttons: List<Map<String, *>>,
     private val payload: Map<String, Any?>,
     private val isLastItem: Boolean,
+    private val variation: String?,
     private val actionEvent: (event: UserActionEvent) -> Unit
-) : RecyclerView.Adapter<BotButtonsTemplateAdapter.QuickReplyViewHolder>() {
+) : RecyclerView.Adapter<BotButtonsTemplateAdapter.BotButtonViewHolder>() {
     private var buttonBgColor: String
     private var activeTextColor: String
     private var invertBgColor: String
@@ -43,12 +44,12 @@ class BotButtonsTemplateAdapter(
         invertTextColor = sharedPreferences.getString(BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, invertTextColor)!!
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickReplyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BotButtonViewHolder {
         val convertView: View = LayoutInflater.from(context).inflate(R.layout.row_button_template_cell, parent, false)
-        return QuickReplyViewHolder(convertView)
+        return BotButtonViewHolder(convertView)
     }
 
-    override fun onBindViewHolder(holder: QuickReplyViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: BotButtonViewHolder, position: Int) {
         val buttonMap: Map<String, *> = buttons[position]
         holder.buttonTitle.text = buttonMap[BotResponseConstants.KEY_TITLE] as String
         holder.rootLayout.setOnClickListener {
@@ -79,9 +80,8 @@ class BotButtonsTemplateAdapter(
                 e.printStackTrace()
             }
         }
-        val isFullWidth = payload[BotResponseConstants.FULL_WIDTH_] as Boolean
-        val isStackedButtons = payload[BotResponseConstants.BUTTON_STACKED] as Boolean
-        val variation = (payload[BotResponseConstants.BUTTON_VARIATION] as String?) ?: ""
+        val isFullWidth = payload[BotResponseConstants.FULL_WIDTH_] as Boolean? ?: false
+        val isStackedButtons = payload[BotResponseConstants.BUTTON_STACKED] as Boolean? ?: false
         val bgDrawable = holder.buttonTitle.background as GradientDrawable
         bgDrawable.cornerRadius = 4.dpToPx(context).toFloat()
 
@@ -93,6 +93,14 @@ class BotButtonsTemplateAdapter(
             bgDrawable.setColor(invertBgColor.toColorInt())
             bgDrawable.setStroke(1.dpToPx(context), invertBgColor.toColorInt())
             holder.buttonTitle.setTextColor(invertTextColor.toColorInt())
+        } else if (variation == BotResponseConstants.TEXT_INVERTED) {
+            holder.buttonTitle.setTextColor(invertBgColor.toColorInt())
+            bgDrawable.setColor(buttonBgColor.toColorInt())
+            bgDrawable.setStroke(1.dpToPx(context), buttonBgColor.toColorInt())
+        } else if (variation == BotResponseConstants.FORM_DATA) {
+            holder.buttonTitle.setTextColor(invertBgColor.toColorInt())
+            bgDrawable.setColor(Color.TRANSPARENT)
+            bgDrawable.setStroke(1.dpToPx(context), Color.TRANSPARENT)
         } else {
             holder.buttonTitle.setTextColor(activeTextColor.toColorInt())
             bgDrawable.setColor(buttonBgColor.toColorInt())
@@ -112,7 +120,7 @@ class BotButtonsTemplateAdapter(
         return buttons.size
     }
 
-    class QuickReplyViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class BotButtonViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val buttonTitle: TextView = view.findViewById(R.id.button_title)
         val rootLayout: LinearLayout = view.findViewById(R.id.root_layout)
     }

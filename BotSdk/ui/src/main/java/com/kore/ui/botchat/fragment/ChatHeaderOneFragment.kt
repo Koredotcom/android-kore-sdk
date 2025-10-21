@@ -1,6 +1,8 @@
 package com.kore.ui.botchat.fragment
 
 import android.content.res.ColorStateList
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.VectorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +16,13 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop
 import com.bumptech.glide.request.RequestOptions
 import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.extensions.dpToPx
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_BG_COLOR
+import com.kore.model.constants.BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.network.api.responsemodels.branding.BrandingHeaderModel
 import com.kore.network.api.responsemodels.branding.BrandingQuickStartButtonActionModel
 import com.kore.ui.R
@@ -27,6 +33,7 @@ class ChatHeaderOneFragment : BaseHeaderFragment() {
     private lateinit var binding: BotHeaderBinding
     private var onActionEvent: (event: UserActionEvent) -> Unit = {}
     private var brandingModel: BrandingHeaderModel? = null
+    private val preferenceRepository = PreferenceRepositoryImpl()
 
     override fun setActionEvent(onActionEvent: (event: UserActionEvent) -> Unit) {
         this.onActionEvent = onActionEvent
@@ -43,6 +50,8 @@ class ChatHeaderOneFragment : BaseHeaderFragment() {
             val title = model.title?.name
             binding.tvBotTitle.text = if (!title.isNullOrEmpty()) title else SDKConfiguration.getBotConfigModel()?.botName
             binding.tvBotDesc.text = model.subTitle?.name
+            model.title?.color?.toColorInt()?.let { binding.tvBotTitle.setTextColor(it) }
+            model.subTitle?.color?.toColorInt()?.let { binding.tvBotDesc.setTextColor(it) }
             model.bgColor?.toColorInt()?.let { binding.root.setBackgroundColor(it) }
 
             if (model.icon != null) {
@@ -54,24 +63,27 @@ class ChatHeaderOneFragment : BaseHeaderFragment() {
                     binding.ivBotAvatar.layoutParams =
                         LinearLayout.LayoutParams((40.dpToPx(binding.root.context)), (40.dpToPx(binding.root.context)))
                 } else {
-                    binding.llBotAvatar.backgroundTintList = model.avatarBgColor?.toColorInt()?.let { ColorStateList.valueOf(it) }
-                    when (model.icon?.iconUrl) {
-                        BotResponseConstants.ICON_1 -> binding.ivBotAvatar.setImageDrawable(
-                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_1, context?.theme)
-                        )
+                    val color = preferenceRepository.getStringValue(requireContext(), THEME_NAME, BUBBLE_RIGHT_BG_COLOR, "#ffffff")
+                    binding.llBotAvatar.backgroundTintList = ColorStateList.valueOf(color.toColorInt())
+                    val icon = when (model.icon?.iconUrl) {
+                        BotResponseConstants.ICON_1 ->
+                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_1, context?.theme) as VectorDrawable
 
-                        BotResponseConstants.ICON_2 -> binding.ivBotAvatar.setImageDrawable(
-                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_2, context?.theme)
-                        )
+                        BotResponseConstants.ICON_2 ->
+                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_2, context?.theme) as VectorDrawable
 
-                        BotResponseConstants.ICON_3 -> binding.ivBotAvatar.setImageDrawable(
-                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_3, context?.theme)
-                        )
+                        BotResponseConstants.ICON_3 ->
+                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_3, context?.theme) as VectorDrawable
 
-                        BotResponseConstants.ICON_4 -> binding.ivBotAvatar.setImageDrawable(
-                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_4, context?.theme)
-                        )
+                        BotResponseConstants.ICON_4 ->
+                            ResourcesCompat.getDrawable(resources, R.drawable.ic_icon_4, context?.theme) as VectorDrawable
+
+                        else -> ResourcesCompat.getDrawable(resources, R.mipmap.icon_avatar, context?.theme)
                     }
+
+                    if (icon is VectorDrawable)
+                        icon.setTint(preferenceRepository.getStringValue(requireContext(), THEME_NAME, BUBBLE_RIGHT_TEXT_COLOR, "#ffffff").toColorInt())
+                    binding.ivBotAvatar.setImageDrawable(icon)
                 }
             }
 

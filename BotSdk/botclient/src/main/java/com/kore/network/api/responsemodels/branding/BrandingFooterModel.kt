@@ -24,5 +24,6 @@ fun BrandingFooterModel.updateWith(configModel: BrandingFooterModel): BrandingFo
         iconsColor = configModel.iconsColor?.ifEmpty { this.iconsColor } ?: iconsColor,
         layout = configModel.layout?.ifEmpty { this.layout } ?: layout,
         buttons = this.buttons?.updateWith(configModel.buttons) ?: this.buttons,
+        composeBar = this.composeBar?.updateWith(configModel.composeBar) ?: this.composeBar
     )
 }

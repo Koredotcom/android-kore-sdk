@@ -1,6 +1,8 @@
 package com.kore.ui.row.botchat
 
+import android.graphics.drawable.GradientDrawable
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
@@ -12,11 +14,14 @@ import com.google.android.flexbox.FlexDirection
 import com.google.android.flexbox.FlexboxLayoutManager
 import com.google.android.flexbox.JustifyContent
 import com.kore.common.event.UserActionEvent
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.ui.row.SimpleListRow
 import com.kore.event.BotChatEvent
+import com.kore.model.constants.BotResponseConstants.BUBBLE_LEFT_BG_COLOR
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
 import com.kore.model.constants.BotResponseConstants.NUMBERS_ARRAYS
 import com.kore.model.constants.BotResponseConstants.SELECTED_FEEDBACK
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.THUMBS_UP_DOWN_ARRAYS
 import com.kore.model.constants.BotResponseConstants.VIEW
 import com.kore.model.constants.BotResponseConstants.VIEW_CSAT
@@ -38,6 +43,7 @@ class FeedbackTemplateRow(
     private val actionEvent: (event: UserActionEvent) -> Unit
 ) : SimpleListRow() {
     override val type: SimpleListRowType = BotChatRowType.getRowType(BotChatRowType.ROW_FEEDBACK_PROVIDER)
+    private val sharedPrefs = PreferenceRepositoryImpl()
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
         if (otherRow !is FeedbackTemplateRow) return false
@@ -57,10 +63,13 @@ class FeedbackTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, isShow = false, isTemplate = true)
         val childBinding = RowFeedbackTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
+            val parentBgColor = sharedPrefs.getStringValue(binding.root.context, THEME_NAME, BUBBLE_LEFT_BG_COLOR, "#3F51B5").toColorInt()
+            val drawable = multiSelectLayout.background as GradientDrawable
+            drawable.setStroke(2, parentBgColor)
             tvFeedbackTemplateTitle.text = payload[KEY_TEXT].toString()
             val viewType = payload[VIEW]
             emojis.root.isVisible = viewType == VIEW_CSAT
-            rbFeedback.isVisible = viewType == VIEW_STAR
+            llRbFeedback.isVisible = viewType == VIEW_STAR
             rlViewNPS.isVisible = viewType == VIEW_NPS
             thumbsUpDown.isVisible = viewType == VIEW_THUMBS_UP_DOWN
             commonBind()

@@ -18,6 +18,7 @@ object SDKConfig {
     private var isMinimized: Boolean = false
     private var historyOnNetworkResume = true
     private var isUpdateStatusBarColor = false
+    private var isShowActionBar = true
 
     @JvmStatic
     fun initialize(botConfigModel: BotConfigModel) {
@@ -119,5 +120,13 @@ object SDKConfig {
     @JvmStatic
     fun isUpdateStatusBarColor(): Boolean {
         return isUpdateStatusBarColor
+    }
+
+    @JvmStatic
+    fun isIsShowActionBar(): Boolean = isShowActionBar
+
+    @JvmStatic
+    fun setIsShowActionBar(isShow: Boolean) {
+        isShowActionBar = isShow
     }
 }

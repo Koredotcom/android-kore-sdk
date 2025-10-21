@@ -20,6 +20,7 @@ import com.kore.extensions.dpToPx
 import com.kore.extensions.setRoundedCorner
 import com.kore.listeners.QuickRepliesClickListener
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 
 class QuickRepliesTemplateAdapter(
@@ -40,20 +41,14 @@ class QuickRepliesTemplateAdapter(
         val quickReplyTemplate = quickReplies[position]
         val sharedPrefs = PreferenceRepositoryImpl()
         val bgColor = sharedPrefs.getStringValue(
-            holder.quickReplyView.context,
-            BotResponseConstants.THEME_NAME,
-            BotResponseConstants.BUBBLE_LEFT_BG_COLOR,
-            "#efeffc"
+            holder.quickReplyView.context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#ffffff"
         ).toColorInt()
-        val textColor: String = sharedPrefs.getStringValue(
-            holder.quickReplyView.context,
-            BotResponseConstants.THEME_NAME,
-            BotResponseConstants.BUBBLE_RIGHT_BG_COLOR,
-            "#3F51B5"
-        )
+        val textColor = sharedPrefs.getStringValue(
+            holder.quickReplyView.context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5"
+        ).toColorInt()
         holder.quickReplyView.setRoundedCorner(4.dpToPx(holder.itemView.context).toFloat())
         holder.quickReplyView.setBackgroundColor(bgColor)
-        holder.quickReplyTitle.setTextColor(textColor.toColorInt())
+        holder.quickReplyTitle.setTextColor(textColor)
 
         if (quickReplyTemplate[BotResponseConstants.KEY_TITLE] != null) {
             holder.quickReplyTitle.text = quickReplyTemplate[BotResponseConstants.KEY_TITLE] as String

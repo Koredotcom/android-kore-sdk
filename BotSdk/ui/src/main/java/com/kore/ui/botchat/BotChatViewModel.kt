@@ -6,10 +6,7 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
-import androidx.core.util.Pair
 import androidx.lifecycle.viewModelScope
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.gson.Gson
 import com.kore.SDKConfig
 import com.kore.SDKConfig.isMinimized
@@ -19,8 +16,6 @@ import com.kore.botclient.BotRequestState
 import com.kore.botclient.ConnectionState
 import com.kore.botclient.helper.BotClientHelper
 import com.kore.common.Result
-import com.kore.common.SDKConfiguration
-import com.kore.common.SDKConfiguration.OverrideKoreConfig.historyBatchSize
 import com.kore.common.SDKConfiguration.getBotConfigModel
 import com.kore.common.utils.LogUtils
 import com.kore.common.utils.NetworkUtils
@@ -34,32 +29,27 @@ import com.kore.data.repository.dynamicurl.DynamicUrlRepository
 import com.kore.data.repository.dynamicurl.DynamicUrlRepositoryImpl
 import com.kore.data.repository.preference.PreferenceRepository
 import com.kore.data.repository.preference.PreferenceRepositoryImpl
-import com.kore.extensions.stringToDate
 import com.kore.helper.SpeechSynthesizerHelper
 import com.kore.model.BotEventResponse
 import com.kore.model.BotRequest
 import com.kore.model.BotResponse
 import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
+import com.kore.model.constants.BotResponseConstants.BUTTON_STACKED
 import com.kore.model.constants.BotResponseConstants.KEY_TEMPLATE_TYPE
 import com.kore.model.constants.BotResponseConstants.KEY_TEXT
-import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_ADVANCED_MULTI_SELECT
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_DATE_RANGE
-import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_OTP
 import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_QUICK_REPLIES
-import com.kore.model.constants.BotResponseConstants.TEMPLATE_TYPE_RESET_PIN
 import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.model.constants.BotResponseConstants.TYPE
 import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.R
 import com.kore.ui.base.BaseViewModel
 import com.kore.ui.utils.BundleConstants
-import com.kore.validator.RangeValidator
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -70,9 +60,9 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     private var isFirstTime = true
-    private var historyOffset = 0
-    private var moreHistory = true
-    private lateinit var token: String
+
+    //    private var historyOffset = 0
+    //    private var moreHistory = true
     private var isAgentTransfer = false
     private var isActivityResumed = false
     private lateinit var context: Context
@@ -88,23 +78,23 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         SpeechSynthesizerHelper(context).apply { setListener(speechSynthesizerListener) }
     }
 
-//    private val headers by lazy {
-//        HashMap<String, Any>().apply {
-//            put("alg", "RS256")
-//            put("typ", "JWT")
-//            put("Content-Type", "application/json; charset=UTF-8")
-//        }
-//    }
-//
-//    private val body by lazy {
-//        HashMap<String, Any>().apply {
-//            put("isAnonymous", false)
-//            put("clientId", SDKConfiguration.getBotConfigModel()?.clientId!!)
-//            put("identity", SDKConfiguration.getBotConfigModel()?.identity!!)
-//            put("aud", "https://idproxy.kore.com/authorize")
-//            put("clientSecret", SDKConfiguration.getBotConfigModel()?.clientSecret!!)
-//        }
-//    }
+    //    private val headers by lazy {
+    //        HashMap<String, Any>().apply {
+    //            put("alg", "RS256")
+    //            put("typ", "JWT")
+    //            put("Content-Type", "application/json; charset=UTF-8")
+    //        }
+    //    }
+    //
+    //    private val body by lazy {
+    //        HashMap<String, Any>().apply {
+    //            put("isAnonymous", false)
+    //            put("clientId", SDKConfiguration.getBotConfigModel()?.clientId!!)
+    //            put("identity", SDKConfiguration.getBotConfigModel()?.identity!!)
+    //            put("aud", "https://idproxy.kore.com/authorize")
+    //            put("clientSecret", SDKConfiguration.getBotConfigModel()?.clientSecret!!)
+    //        }
+    //    }
 
     init {
         botClient.setListener(object : BotConnectionListener {
@@ -120,9 +110,18 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                         if (botResponse !is BotResponse || botResponse.message.isEmpty()) return
 
                         isAgentTransfer = botResponse.fromAgent
-                        getView()?.showTypingIndicator(botResponse.icon)
-                        getView()?.addMessageToAdapter(botResponse)
-                        historyOffset += 1
+                        botResponse.message[0].cInfo?.body?.let { body ->
+                            if (body is PayloadOuter && body.payload?.get(BotResponseConstants.SLIDER_VIEW) as Boolean? == true) {
+                                getView()?.showTypingIndicator(botResponse.icon)
+                                getView()?.showTemplateBottomSheet(botResponse)
+                                return
+                            } else {
+                                if ((botResponse.message[0].cInfo?.body as String?)?.isEmpty() == true) return
+                                getView()?.showTypingIndicator(botResponse.icon)
+                                getView()?.addMessageToAdapter(botResponse)
+                            }
+                        }
+                        // historyOffset += 1
                         val lastItem = getView()?.getAdapterLastItems() as BotResponse
 
                         when (val body = lastItem.message[0].cInfo?.body) {
@@ -137,26 +136,9 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                                             TEMPLATE_TYPE_QUICK_REPLIES -> {
                                                 getView()?.showQuickReplies(
                                                     innerMap[TEMPLATE_TYPE_QUICK_REPLIES] as List<Map<String, *>>,
-                                                    if (innerMap[TYPE] != null) innerMap[TYPE] as String else ""
+                                                    if (innerMap[TYPE] != null) innerMap[TYPE] as String else "",
+                                                    innerMap[BUTTON_STACKED] as Boolean? == true
                                                 )
-                                            }
-
-                                            TEMPLATE_TYPE_OTP -> {
-                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
-                                                    getView()?.showOtpBottomSheet(innerMap)
-                                                }
-                                            }
-
-                                            TEMPLATE_TYPE_RESET_PIN -> {
-                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
-                                                    getView()?.showPinResetBottomSheet(innerMap)
-                                                }
-                                            }
-
-                                            TEMPLATE_TYPE_ADVANCED_MULTI_SELECT -> {
-                                                if (innerMap[BotResponseConstants.SLIDER_VIEW] as Boolean? == true) {
-                                                    getView()?.showAdvancedMultiSelectBottomSheet(botResponse.messageId, innerMap)
-                                                }
                                             }
 
                                             else -> {
@@ -189,7 +171,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 when (state) {
                     ConnectionState.CONNECTED -> {
                         isFirstTime = false
-                        if (isReconnection) loadChatHistory(true)
+                        if (isReconnection) getView()?.onLoadHistory(true)
                     }
 
                     else -> {}
@@ -198,15 +180,11 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
             override fun onBotRequest(code: BotRequestState, botRequest: BotRequest) {
                 LogUtils.d(LOG_TAG, "$code")
-                historyOffset += 1
+                //                historyOffset += 1
                 getView()?.addMessageToAdapter(botRequest)
             }
 
-            override suspend fun onAccessTokenGenerated(token: String) {
-                this@BotChatViewModel.token = token
-            }
-
-            override fun onAccessTokenReady() {
+            override fun onAccessTokenGenerated(token: String) {
                 viewModelScope.launch {
                     getBrandingDetails(token)
                 }
@@ -336,138 +314,16 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 is Result.Success -> {
                     onBrandingDetails(response.data?.brandingModel)
                     getView()?.onBrandingDetails(response.data)
-                    loadChatHistory(false)
+                    getView()?.onLoadHistory(false)
                 }
 
                 else -> {
                     getView()?.onBrandingDetails(null)
                     LogUtils.e(LOG_TAG, "BrandingDetails Response error: $response")
-                    loadChatHistory(false)
+                    getView()?.onLoadHistory(false)
                 }
             }
         }
-    }
-
-    fun fetchChatHistory(isReconnect: Boolean) {
-        if (!moreHistory) {
-            getView()?.onChatHistory(emptyList(), isReconnect)
-            return
-        }
-        viewModelScope.launch {
-            val botConfigModel = getBotConfigModel()
-
-            if (!NetworkUtils.isNetworkAvailable(context)) {
-                getView()?.onChatHistory(emptyList(), isReconnect)
-                Toast.makeText(context, context.getString(R.string.no_network), Toast.LENGTH_SHORT).show()
-                return@launch
-            }
-            if (botConfigModel == null) {
-                getView()?.onChatHistory(emptyList(), isReconnect)
-                Toast.makeText(context, context.getString(R.string.error_config_bot), Toast.LENGTH_SHORT).show()
-                return@launch
-            }
-            val historyCount = preferenceRepository.getIntValue(context, THEME_NAME, HISTORY_COUNT, historyBatchSize)
-            when (val response =
-                chatHistoryRepository.getChatHistory(
-                    context,
-                    if (botConfigModel.isWebHook) BotClient.getJwtToken() else BotClient.getAccessToken(),
-                    botConfigModel.botId,
-                    botConfigModel.botName,
-                    historyOffset,
-                    if (historyCount > 10 || historyCount == 0) historyBatchSize else historyCount,
-                    botConfigModel.isWebHook
-                )) {
-                is Result.Success -> {
-                    var historyMessages = response.data.first
-                    if (isReconnect && !isMinimized()) historyMessages = historyMessages.filterIsInstance<BotResponse>()
-                    getView()?.onChatHistory(historyMessages, isReconnect)
-                    historyOffset += response.data.first.size
-                    moreHistory = response.data.second
-//                    SDKConfig.setIsMinimized(false)
-                    if (historyCount > 0)
-                        preferenceRepository.putIntValue(context, THEME_NAME, HISTORY_COUNT, 0)
-                }
-
-                else -> {
-                    getView()?.onChatHistory(emptyList(), isReconnect)
-                    LogUtils.e(LOG_TAG, "RtmUrlResponse error: $response")
-//                    SDKConfig.setIsMinimized(false)
-                }
-            }
-        }
-    }
-
-    internal fun loadChatHistory(isReconnect: Boolean) {
-        if ((isReconnect && SDKConfig.getHistoryOnNetworkResume()) || (!isReconnect && SDKConfiguration.OverrideKoreConfig.historyInitialCall && SDKConfiguration.OverrideKoreConfig.historyEnable)) {
-            historyOffset = 0
-            moreHistory = true
-            getView()?.onLoadingHistory()
-            fetchChatHistory(true)
-        }
-    }
-
-    fun limitRange(startDate: String, endDate: String, format: String): CalendarConstraints.Builder {
-        val constraintsBuilderRange = CalendarConstraints.Builder()
-        val calendarStart = Calendar.getInstance()
-        val calendarEnd = Calendar.getInstance()
-
-        val dateFormat = format.replace("DD", "dd").replace("YYYY", "yyyy")
-        if (dateFormat.isNotEmpty() && (startDate.isNotEmpty() || endDate.isNotEmpty())) {
-            if (startDate.isNotEmpty()) calendarStart.time = startDate.stringToDate(dateFormat)!!
-            if (endDate.isNotEmpty()) calendarEnd.time = endDate.stringToDate(dateFormat)!!
-            val minDate = calendarStart.timeInMillis
-            val maxDate = calendarEnd.timeInMillis
-            if (startDate.isNotEmpty() || endDate.isNotEmpty()) {
-                constraintsBuilderRange.setStart(minDate)
-                constraintsBuilderRange.setEnd(maxDate)
-                constraintsBuilderRange.setValidator(RangeValidator(minDate, maxDate))
-            }
-        } else {
-            constraintsBuilderRange.setValidator(RangeValidator(null, null))
-        }
-        return constraintsBuilderRange
-    }
-
-    fun minRange(date: Long): CalendarConstraints.Builder {
-        val constraintsBuilderRange = CalendarConstraints.Builder()
-
-        if (date > 0) constraintsBuilderRange.setStart(date)
-
-        constraintsBuilderRange.setValidator(DateValidatorPointForward.now())
-        return constraintsBuilderRange
-    }
-
-    fun onRangeDatePicked(selection: Pair<Long, Long>) {
-        val startDate = selection.first
-        val endDate = selection.second
-        val cal = Calendar.getInstance()
-        cal.timeInMillis = startDate
-        val strYear = cal[Calendar.YEAR]
-        val strMonth = cal[Calendar.MONTH] + 1
-        val strDay = cal[Calendar.DAY_OF_MONTH]
-        cal.timeInMillis = endDate
-        val endYear = cal[Calendar.YEAR]
-        val endMonth = cal[Calendar.MONTH] + 1
-        val endDay = cal[Calendar.DAY_OF_MONTH]
-        val formattedDate: StringBuilder = java.lang.StringBuilder()
-        formattedDate.append((if (strMonth > 9) strMonth else "0$strMonth")).append("-")
-            .append(if (strDay > 9) strDay else "0$strDay").append("-").append(strYear)
-            .append(" to ").append((if (endMonth > 9) endMonth else "0$endMonth"))
-            .append("-").append((if (endDay > 9) endDay else "0$endDay")).append("-")
-            .append(endYear)
-
-        sendMessage(formattedDate.toString(), formattedDate.toString())
-    }
-
-    fun onDatePicked(selection: Long) {
-        val calendar = Calendar.getInstance()
-        calendar.timeInMillis = selection
-        val stYear = calendar[Calendar.YEAR]
-        val stMonth = calendar[Calendar.MONTH] + 1
-        val stDay = calendar[Calendar.DAY_OF_MONTH]
-        val formattedDate =
-            ((if (stMonth > 9) stMonth else "0$stMonth").toString() + "-" + (if (stDay > 9) stDay else "0$stDay") + "-" + stYear)
-        sendMessage(formattedDate, formattedDate)
     }
 
     private fun onBrandingDetails(brandingModel: BotBrandingModel?) {
@@ -494,11 +350,21 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_BG_COLOR, it.general.colors.primary)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_ACTIVE_TXT_COLOR, it.general.colors.primaryText)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_INACTIVE_BG_COLOR, it.general.colors.secondary)
-                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUTTON_INACTIVE_TXT_COLOR, it.general.colors.secondaryText)
+                preferenceRepository.putStringValue(
+                    context,
+                    THEME_NAME,
+                    BotResponseConstants.BUTTON_INACTIVE_TXT_COLOR,
+                    it.general.colors.secondaryText
+                )
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, it.general.colors.secondary)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, it.general.colors.primaryText)
                 preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, it.general.colors.primary)
-                preferenceRepository.putStringValue(context, THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, it.general.colors.secondaryText)
+                preferenceRepository.putStringValue(
+                    context,
+                    THEME_NAME,
+                    BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR,
+                    it.general.colors.secondaryText
+                )
             }
             it.body.timeStamp?.let { timeStamp ->
                 if (timeStamp.color.isNotEmpty()) preferenceRepository.putStringValue(

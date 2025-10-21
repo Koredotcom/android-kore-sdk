@@ -30,6 +30,7 @@ import com.kore.model.constants.BotResponseConstants.VIDEO_URL
 import com.kore.ui.R
 import com.kore.ui.botchat.VideoFullViewActivity
 import com.kore.ui.databinding.VideoTemplateViewBinding
+import com.kore.ui.utils.DownloadUtils
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.utils.MediaUtils
 
@@ -185,7 +186,8 @@ class VideoTemplateRow(
             popupWindow.dismiss()
             MediaUtils.setupAppDir(context, MediaConstants.MEDIA_TYPE_VIDEO)
             if (!url.isNullOrEmpty()) {
-                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
+                DownloadUtils.downloadFile(tvTheme1.context, url, null)
+//                actionEvent(BotChatEvent.DownloadLink(id, url, StringUtils.getFileNameFromUrl(url)))
             }
         }
         popupWindow.showAsDropDown(anchorView, -40, 0)

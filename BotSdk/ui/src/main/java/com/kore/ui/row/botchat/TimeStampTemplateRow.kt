@@ -1,7 +1,10 @@
 package com.kore.ui.row.botchat
 
 import android.view.ViewGroup
+import androidx.core.graphics.toColorInt
 import androidx.viewbinding.ViewBinding
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.row.SimpleListRow
 import com.kore.ui.databinding.RowTimeStampTemplateBinding
 
@@ -20,6 +23,12 @@ class TimeStampTemplateRow(private val id: String, private val formattedTime: St
 
     override fun <Binding : ViewBinding> bind(binding: Binding) {
         val childBinding = RowTimeStampTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
-        childBinding.apply { timeStamp.text = formattedTime }
+        childBinding.apply {
+            timeStamp.setTextColor(
+                PreferenceRepositoryImpl().getSharedPreference(root.context, BotResponseConstants.THEME_NAME)
+                    .getString(BotResponseConstants.TIME_STAMP_TXT_COLOR, "#B0B0B0")!!.toColorInt()
+            )
+            timeStamp.text = formattedTime
+        }
     }
 }
