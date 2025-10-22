@@ -105,6 +105,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                         return
                     }
                     if (it.contains(BotResponseConstants.KEY_BOT_RESPONSE)) {
+                        LogUtils.i(LOG_TAG, response)
                         val botResponse = BotClientHelper.processBotMessage(it)
                         if (botResponse !is BotResponse || botResponse.message.isEmpty()) return
 

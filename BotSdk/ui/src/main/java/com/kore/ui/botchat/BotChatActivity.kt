@@ -238,10 +238,11 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
 
     override fun onBrandingDetails(header: BotActiveThemeModel?) {
         if (header?.botMessage == null && header?.brandingModel != null) {
-            header.brandingModel?.header?.bgColor?.let { changeStatusBarColor(if(SDKConfig.isUpdateStatusBarColor()) it else "")
-                updateStatusBarColor(it) }
+            header.brandingModel?.header?.bgColor?.let {
+                changeStatusBarColor(if(SDKConfig.isUpdateStatusBarColor()) it else "")
+                prefRepository.putStringValue(this,
+                THEME_NAME, BundleConstants.STATUS_BAR_COLOR, it)  }
             Handler(Looper.getMainLooper()).postDelayed({
-                //                binding.clProgress.isVisible = false
                 if (!isMinimized() && !isWelcomeScreenShown && header.brandingModel?.welcomeScreen?.show == true) {
                     isWelcomeScreenShown = true
                     WelcomeDialogFragment(header.brandingModel!!).apply {
@@ -405,14 +406,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         val bottomSheetFragment = TemplateBottomSheetFragment()
         bottomSheetFragment.setOnActionEvent(this::onActionEvent)
         bottomSheetFragment.show(botResponse, supportFragmentManager)
-    }
-
-    private fun updateStatusBarColor(color: String) {
-        if (SDKConfig.isUpdateStatusBarColor()) {
-            val window = window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = color.toColorInt()
-        }
     }
 
     fun showCloseAlert() {

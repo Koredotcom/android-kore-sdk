@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
@@ -14,6 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.Window
+import android.view.WindowManager
 import android.webkit.URLUtil
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -25,14 +27,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.kore.SDKConfig
-import com.kore.common.SDKConfiguration
+import com.kore.data.repository.preference.PreferenceRepository
+import com.kore.data.repository.preference.PreferenceRepositoryImpl
+import com.kore.model.constants.BotResponseConstants.THEME_NAME
 import com.kore.ui.R
 import com.kore.ui.audiocodes.webrtcclient.general.Log
 import com.kore.ui.databinding.GenericWebviewLayoutBinding
+import com.kore.ui.utils.BundleConstants
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -48,6 +54,7 @@ class GeneralWebViewActivity : AppCompatActivity() {
     private var webUrl: String = ""
     private lateinit var binding: GenericWebviewLayoutBinding
     private val handler = Handler(Looper.getMainLooper())
+    private val prefRepository: PreferenceRepository = PreferenceRepositoryImpl()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -55,11 +62,21 @@ class GeneralWebViewActivity : AppCompatActivity() {
         binding = GenericWebviewLayoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        changeStatusBarColor(
+            if (SDKConfig.isUpdateStatusBarColor()) {
+                prefRepository.getStringValue(
+                    this,
+                    THEME_NAME,
+                    BundleConstants.STATUS_BAR_COLOR,
+                    "")
+            } else {
+                ""
+            }
+        )
+
         binding.webView.settings.javaScriptEnabled = true
         binding.webView.settings.javaScriptCanOpenWindowsAutomatically = true
         binding.webView.settings.useWideViewPort = true
-//        binding.webView.settings.userAgentString =
-//            "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36"
         binding.webView.settings.domStorageEnabled = true
         binding.webView.settings.loadWithOverviewMode = true
         binding.webView.settings.builtInZoomControls = true
@@ -178,7 +195,7 @@ class GeneralWebViewActivity : AppCompatActivity() {
                     title.let { actionBar.title = title }
                         .runCatching { actionBar.title = ContextCompat.getString(this@GeneralWebViewActivity, R.string.app_name) }
                 } else {
-                    actionBar.setTitle("")
+                    actionBar.title = ""
                 }
             }
         }
@@ -244,5 +261,28 @@ class GeneralWebViewActivity : AppCompatActivity() {
         val clip = ClipData.newPlainText("label", webUrl)
         clipboard.setPrimaryClip(clip)
         Toast.makeText(this, getString(R.string.copy_to_clipboard), Toast.LENGTH_SHORT).show()
+    }
+
+    private fun changeStatusBarColor(color: String) {
+        if (Build.VERSION.SDK_INT >= 35) {
+            binding.statusBarBg.visibility = View.VISIBLE
+            val params = binding.statusBarBg.layoutParams
+            params.height = prefRepository.getIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, 50)
+            binding.statusBarBg.setLayoutParams(params)
+
+            binding.statusBarBg.setBackgroundColor(
+                color.takeIf { SDKConfig.isUpdateStatusBarColor() && it.isNotBlank() }?.toColorInt()
+                    ?: ContextCompat.getColor(this@GeneralWebViewActivity, R.color.colorPrimary)
+            )
+        } else if(SDKConfig.isUpdateStatusBarColor()){
+            val window = getWindow()
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.setStatusBarColor(
+                if (color.isBlank()) ContextCompat.getColor(
+                    this@GeneralWebViewActivity,
+                    R.color.colorPrimary
+                ) else color.toColorInt()
+            )
+        }
     }
 }

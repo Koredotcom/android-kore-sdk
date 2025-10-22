@@ -4,8 +4,18 @@
     android:layout_height="match_parent"
     android:background="@color/white">
 
+    <View
+        android:id="@+id/status_bar_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bgBlueSignup"
+        android:visibility="gone"/>
+
     <include
         android:id="@+id/toolbar"
+        android:layout_below="@+id/status_bar_bg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         layout="@layout/app_toolbar" />
 
     <WebView

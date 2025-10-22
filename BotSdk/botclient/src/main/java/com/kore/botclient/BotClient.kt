@@ -340,7 +340,6 @@ class BotClient private constructor() {
                         }
 
                         override fun onMessage(payload: String?) {
-                            LogUtils.i(LOG_TAG, payload)
                             listener?.onBotResponse(payload)
                         }
 
