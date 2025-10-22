@@ -54,36 +54,36 @@ public class MainActivity extends AppCompatActivity {
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-//        String clientId = "Please enter client ID";
-        String clientId = getConfigValue("clientId");
+        String clientId = "Please enter client ID";
+//        String clientId = getConfigValue("clientId");
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-//        String clientSecret = "Please enter client secret";
-        String clientSecret = getConfigValue("clientSecret");
+        String clientSecret = "Please enter client secret";
+//        String clientSecret = getConfigValue("clientSecret");
 
         //Set botId, This value is mandatory
-//        String botId = "Please enter bot ID";
-        String botId = getConfigValue("botId");
+        String botId = "Please enter bot ID";
+//        String botId = getConfigValue("botId");
 
         //Set identity, This value is mandatory
-//        String identity = "Please enter identity";
-        String identity = getConfigValue("identity");
+        String identity = "Please enter identity";
+//        String identity = getConfigValue("identity");
 
         //Set botName, This value is mandatory
-//        String botName = "Please enter bot name";
-        String botName = getConfigValue("botName");
+        String botName = "Please enter bot name";
+//        String botName = getConfigValue("botName");
 
         //Set serverUrl, This value is mandatory
-//        String serverUrl = "Please enter server url";
-        String serverUrl = getConfigValue("serverUrl");
+        String serverUrl = "Please enter server url";
+//        String serverUrl = getConfigValue("serverUrl");
 
         //Set brandingUrl, This value is mandatory
-//        String brandingUrl = "Please enter branding url";
-        String brandingUrl = getConfigValue("brandingUrl");
+        String brandingUrl = "Please enter branding url";
+//        String brandingUrl = getConfigValue("brandingUrl");
 
         //Set jwtServerUrl, This value is mandatory
-//        String jwtServerUrl = "Please enter Jwt server url";
-        String jwtServerUrl = getConfigValue("jwtServerUrl");
+        String jwtServerUrl = "Please enter Jwt server url";
+//        String jwtServerUrl = getConfigValue("jwtServerUrl");
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -227,18 +227,18 @@ public class MainActivity extends AppCompatActivity {
         return customData;
     }
 
-    public String getConfigValue(String name) {
-        try {
-            InputStream rawResource = getResources().openRawResource(R.raw.config);
-            Properties properties = new Properties();
-            properties.load(rawResource);
-            return properties.getProperty(name);
-        } catch (Resources.NotFoundException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
-        } catch (IOException e) {
-            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
-        }
-
-        return null;
-    }
+//    public String getConfigValue(String name) {
+//        try {
+//            InputStream rawResource = getResources().openRawResource(R.raw.config);
+//            Properties properties = new Properties();
+//            properties.load(rawResource);
+//            return properties.getProperty(name);
+//        } catch (Resources.NotFoundException e) {
+//            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
+//        } catch (IOException e) {
+//            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
+//        }
+//
+//        return null;
+//    }
 }
