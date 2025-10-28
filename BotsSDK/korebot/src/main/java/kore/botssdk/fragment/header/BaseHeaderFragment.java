@@ -1,5 +1,7 @@
 package kore.botssdk.fragment.header;
 
+import android.content.res.Configuration;
+
 import androidx.fragment.app.Fragment;
 
 import kore.botssdk.listener.ComposeFooterInterface;
@@ -19,4 +21,9 @@ public abstract class BaseHeaderFragment extends Fragment {
     }
 
     public abstract void setBrandingDetails(BrandingModel brandingModel);
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
 }

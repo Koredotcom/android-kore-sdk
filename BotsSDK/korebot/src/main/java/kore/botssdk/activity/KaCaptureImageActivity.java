@@ -14,6 +14,7 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -305,7 +306,8 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                                     File file = null;
                                     try {
                                         file = KaMediaUtils.getOutputMediaFile(BitmapUtils.obtainMediaTypeOfExtn(fileExtn), realFileName);
-                                    } catch (NoExternalStorageException | NoWriteAccessException e) {
+                                    } catch (NoExternalStorageException |
+                                             NoWriteAccessException e) {
                                         e.printStackTrace();
                                     }
                                     if (file != null) {
@@ -651,6 +653,21 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
             outState.putParcelable("uri", cameraMediaUri);
             LogUtils.d(LOG_TAG, "onSaveInstanceState() :: +++++++On Save Instance " + cameraMediaUri.getPath());
         }
+
+        // Save additional critical state for orientation changes
+        outState.putString("imagePickType", imagePickType);
+        outState.putString("fileContext", fileContext);
+        outState.putString("MEDIA_TYPE", MEDIA_TYPE);
+        outState.putString("MEDIA_FILENAME", MEDIA_FILENAME);
+        outState.putString("MEDIA_FILE_PATH", MEDIA_FILE_PATH);
+        outState.putString("MEDIA_EXTENSION", MEDIA_EXTENSION);
+        outState.putString("thumbnailFilePath", thumbnailFilePath);
+        outState.putString("mCurrentMediaPath", mCurrentMediaPath);
+        outState.putBoolean("NORMAL_PORTRAIT", NORMAL_PORTRAIT);
+        if (resultIntent != null) {
+            outState.putParcelable("resultIntent", resultIntent);
+        }
+
         super.onSaveInstanceState(outState);
     }
 
@@ -658,6 +675,25 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         cameraMediaUri = savedInstanceState.getParcelable("uri");
+
+        // Restore additional critical state after orientation changes
+        imagePickType = savedInstanceState.getString("imagePickType");
+        fileContext = savedInstanceState.getString("fileContext");
+        MEDIA_TYPE = savedInstanceState.getString("MEDIA_TYPE", MEDIA_TYPE_IMAGE);
+        MEDIA_FILENAME = savedInstanceState.getString("MEDIA_FILENAME");
+        MEDIA_FILE_PATH = savedInstanceState.getString("MEDIA_FILE_PATH");
+        MEDIA_EXTENSION = savedInstanceState.getString("MEDIA_EXTENSION");
+        thumbnailFilePath = savedInstanceState.getString("thumbnailFilePath");
+        mCurrentMediaPath = savedInstanceState.getString("mCurrentMediaPath");
+        NORMAL_PORTRAIT = savedInstanceState.getBoolean("NORMAL_PORTRAIT", true);
+        resultIntent = savedInstanceState.getParcelable("resultIntent");
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        NORMAL_PORTRAIT = newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE;
     }
 
     private void createImageThumbnail(String filePath, Bitmap finalMap) {
