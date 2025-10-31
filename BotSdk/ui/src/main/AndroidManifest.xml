@@ -60,7 +60,8 @@
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name="com.kore.ui.botchat.BotChatActivity"
-            android:screenOrientation="sensorPortrait" />
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.kore.ui.welcome.WelcomeScreenActivity"
             android:screenOrientation="sensorPortrait" />
