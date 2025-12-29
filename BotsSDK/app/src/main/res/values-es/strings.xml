@@ -18,4 +18,5 @@
     <string name="close">Cerca</string>
     <string name="cancel">Cancelar</string>
     <string name="close_or_minimize">¿Quieres cerrar la conversación o minimizarla?</string>
+    <string name="custom_header">Encabezado personalizado</string>
 </resources>
