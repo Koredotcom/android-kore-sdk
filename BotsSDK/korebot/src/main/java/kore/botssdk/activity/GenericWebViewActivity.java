@@ -7,6 +7,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -60,7 +61,7 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
         setContentLayout(R.layout.generic_webview_layout);
 
         SharedPreferences sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
-        changeStatusBarColor(sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5"));
+        changeStatusBarColor(SDKConfig.isUpdateStatusBarColor() ? sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5") : "");
 
         Bundle receivedBundle = getIntent().getExtras();
         if (receivedBundle != null) {
@@ -254,6 +255,12 @@ public class GenericWebViewActivity extends BotAppCompactActivity {
                 actionBar.setTitle("");
             }
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        setUpActionBar();
     }
 }
 

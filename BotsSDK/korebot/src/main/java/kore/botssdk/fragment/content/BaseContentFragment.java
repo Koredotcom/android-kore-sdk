@@ -1,5 +1,6 @@
 package kore.botssdk.fragment.content;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 
@@ -74,6 +75,8 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
 
     public abstract void showTypingStatus();
 
+    public abstract void stopTypingStatus();
+
     public abstract void setQuickRepliesIntoFooter(BotResponse botResponse);
 
     public abstract void addMessageToBotChatAdapter(BotResponse botResponse);
@@ -86,12 +89,14 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {
         this.composeFooterInterface = composeFooterInterface;
-        if (botsChatAdapter != null) botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
+        if (botsChatAdapter != null)
+            botsChatAdapter.setComposeFooterInterface(composeFooterInterface);
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
-        if (botsChatAdapter != null) botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+        if (botsChatAdapter != null)
+            botsChatAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
     }
 
     public int getAdapterCount() {
@@ -269,10 +274,19 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
 
         if (!SDKConfiguration.Client.isWebHook)
             mContentViewModel.loadReconnectionChatHistory(_offset, limit, SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken(), botsChatAdapter.getBaseBotMessageArrayList());
-        else mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
+        else
+            mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
     }
 
     public boolean getmChannelIconURL() {
         return getmChannelIconURL();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (botsChatAdapter != null && botsChatAdapter.getItemCount() > 0) {
+            botsChatAdapter.notifyItemRangeChanged(0, botsChatAdapter.getItemCount() - 1);
+        }
     }
 }

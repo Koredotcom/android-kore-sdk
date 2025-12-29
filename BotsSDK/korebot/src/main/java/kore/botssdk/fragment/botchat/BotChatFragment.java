@@ -38,7 +38,7 @@ import java.util.Objects;
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
 import kore.botssdk.bot.BotClient;
-import kore.botssdk.dialogs.AdvanceMultiSelectSheetFragment;
+import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.content.NewBotContentFragment;
@@ -55,7 +55,6 @@ import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.models.PayloadInner;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.SDKConfig;
@@ -144,6 +143,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             if (botHeaderFragment == null) botHeaderFragment = new BotHeaderFragment();
             botHeaderFragment.setComposeFooterInterface(this);
             botHeaderFragment.setInvokeGenericWebViewInterface(this);
+
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.add(R.id.header_container, botHeaderFragment);
             transaction.commitNow();
@@ -203,11 +203,20 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             if (baseFooterFragment != null)
                 baseFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
 
-            if (botHeaderFragment != null)
+            if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
-        }
 
-        loadOnConnectionHistory(false);
+                if(botHeaderFragment.getMinimize() != null)
+                {
+                    botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
+                    botHeaderFragment.getMinimize().setOnClickListener(v -> {
+                        showCloseAlert();
+                    });
+                }
+            }
+
+            sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
+        }
     }
 
     @Override
@@ -218,6 +227,11 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void showTypingStatus() {
         botContentFragment.showTypingStatus();
+    }
+
+    @Override
+    public void stopTypingStatus() {
+        botContentFragment.stopTypingStatus();
     }
 
     @Override
@@ -312,7 +326,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
         if (!StringUtils.isNullOrEmpty(message)) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
                 mViewModel.addSentMessageToChat(message);
                 mViewModel.sendWebHookMessage(jwt, false, message, null);
@@ -344,7 +359,8 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
         if (attachments != null && !attachments.isEmpty()) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
                 mViewModel.addSentMessageToChat(message);
                 mViewModel.sendWebHookMessage(jwt, false, message, attachments);
@@ -453,18 +469,14 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
-                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null) {
+                botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null ||
+                !botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getSliderView()) {
             return;
         }
-        PayloadInner payloadInner = botResponse.getMessage().get(0).getComponent().getPayload().getPayload();
-        if (payloadInner.getTemplate_type().equals(BotResponse.ADVANCED_MULTI_SELECT_TEMPLATE)) {
-            if (payloadInner.getSliderView()) {
-                AdvanceMultiSelectSheetFragment fragment = new AdvanceMultiSelectSheetFragment();
-                fragment.setData(payloadInner);
-                fragment.setComposeFooterInterface(this);
-                fragment.show(getChildFragmentManager(), AdvanceMultiSelectSheetFragment.class.getName());
-            }
-        }
+        TemplateBottomSheetFragment bottomSheetFragment = new TemplateBottomSheetFragment();
+        bottomSheetFragment.setComposeFooterInterface(this);
+        bottomSheetFragment.setInvokeGenericWebViewInterface(this);
+        bottomSheetFragment.show(botResponse, getChildFragmentManager());
     }
 
     @Override

@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,10 +26,13 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.io.Console;
+
 import kore.botssdk.R;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.ToastUtils;
 
 @SuppressLint("UnknownNullness")
@@ -56,6 +60,7 @@ public class BotAppCompactActivity extends AppCompatActivity {
             view.setPadding(insets.left, 0, insets.right, insets.bottom);
             if (sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0) == 0)
                 sharedPreferences.edit().putInt(BundleConstants.STATUS_BAR_HEIGHT, insets.top).apply();
+            view.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.black));
             return WindowInsetsCompat.CONSUMED;
         });
     }
@@ -67,22 +72,36 @@ public class BotAppCompactActivity extends AppCompatActivity {
     }
 
     protected void changeStatusBarColor(String color) {
-        if (SDKConfig.isUpdateStatusBarColor()) {
-            Window window = getWindow();
-            if (Build.VERSION.SDK_INT >= 35) {
-                statusBarLayout.setVisibility(VISIBLE);
-                ViewGroup.LayoutParams params = statusBarLayout.getLayoutParams();
-                params.height = sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0);
-                statusBarLayout.setLayoutParams(params);
+        if (Build.VERSION.SDK_INT >= 35) {
+            statusBarLayout.setVisibility(VISIBLE);
+            ViewGroup.LayoutParams params = statusBarLayout.getLayoutParams();
+            params.height = sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0);
+            statusBarLayout.setLayoutParams(params);
 
-                if (color.isBlank())
-                    statusBarLayout.setBackgroundColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.primary));
-                else
-                    statusBarLayout.setBackgroundColor(Color.parseColor(color));
-            } else {
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.parseColor(color));
-            }
+            if (StringUtils.isNullOrEmpty(color))
+                statusBarLayout.setBackgroundColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.colorPrimary));
+            else
+                statusBarLayout.setBackgroundColor(Color.parseColor(color));
+        } else {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(color.isBlank() ? ContextCompat.getColor(BotAppCompactActivity.this, R.color.colorPrimary) : Color.parseColor(color));
+        }
+    }
+
+    protected void changeStatusBarColorWithHeight() {
+        if (Build.VERSION.SDK_INT >= 35) {
+            ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.base_frame), (view, windowInsets) -> {
+                Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+                view.setPadding(insets.left, insets.top, insets.right, insets.bottom);
+                view.setBackgroundColor(ContextCompat.getColor(view.getContext(), R.color.black));
+                return WindowInsetsCompat.CONSUMED;
+            });
+        }
+        else {
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.black));
         }
     }
 

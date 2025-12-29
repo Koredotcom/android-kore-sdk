@@ -136,6 +136,11 @@ public class CustomContentFragment extends BaseContentFragment {
     }
 
     @Override
+    public void stopTypingStatus() {
+        botTypingStatusRl.setVisibility(View.GONE);
+    }
+
+    @Override
     public void setQuickRepliesIntoFooter(BotResponse botResponse) {
         quickReplyView.setVisibility(View.VISIBLE);
         ArrayList<QuickReplyTemplate> quickReplyTemplates = getQuickReplies(botResponse);

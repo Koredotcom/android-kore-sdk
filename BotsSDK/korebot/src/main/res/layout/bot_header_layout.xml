@@ -16,4 +16,15 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_header"
         android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/ivHeaderMinimize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:contentDescription="@string/app_name"
+        android:src="@drawable/header_minimis"/>
 </RelativeLayout>

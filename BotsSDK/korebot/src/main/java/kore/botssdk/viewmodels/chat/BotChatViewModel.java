@@ -40,6 +40,7 @@ import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.SocketChatListener;
 import kore.botssdk.models.AgentInfoModel;
+import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotMetaModel;
 import kore.botssdk.models.BotOptionsModel;
@@ -66,6 +67,7 @@ import kore.botssdk.websocket.SocketWrapper;
 @SuppressWarnings("UnKnownNullness")
 public class BotChatViewModel extends ViewModel {
     private static final String LOG_TAG = "NewBotChatActivity";
+    private static final String TAG = BotChatViewModel.class.getName();
     Context context;
     Gson gson = new Gson();
     BotClient botClient;
@@ -80,6 +82,14 @@ public class BotChatViewModel extends ViewModel {
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private boolean isActivityResumed = false;
+    private static final String START_TIMER = "start_timer";
+    private static final String AGENT_EVENT_CONNECTED = "agent_connected";
+    private static final String AGENT_EVENT_DISCONNECTED = "agent_disconnected";
+    private static final String NOTIFICATION_TAG_CHAT_MESSAGE = "ChatMessageNotification";
+    private static final int NOTIFICATION_TAG_NUMBER = 237891;
+    private static final String KORE_PUSH_SERVICE = "Kore_Push_Service";
+    private static final String KORE_ANDROID = "Kore_Android";
+    private static final String NOTIFICATION = "Notification";
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -106,7 +116,7 @@ public class BotChatViewModel extends ViewModel {
             botOptionsModel = gson.fromJson(reader, BotOptionsModel.class);
             LogUtils.e("Options Size", String.valueOf(botOptionsModel.getTasks().size()));
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e("Options Size", String.valueOf(e));
         }
         return botOptionsModel;
     }
@@ -129,6 +139,8 @@ public class BotChatViewModel extends ViewModel {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
+                chatView.loadOnConnectionHistory(isReconnection);
+                new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(context));
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
                     isReconnectionStopped = true;
@@ -136,8 +148,6 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
 
-            chatView.loadOnConnectionHistory(isReconnection);
-            new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(context));
             chatView.updateTitleBar(state);
         }
 
@@ -214,28 +224,32 @@ public class BotChatViewModel extends ViewModel {
                     payOuter = compModel.getPayload();
                     if (payOuter != null) {
                         if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-                            Gson gson = new Gson();
+                            gson = new Gson();
                             payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                         }
                     }
                 }
             }
             final PayloadInner payloadInner = payOuter == null ? null : payOuter.getPayload();
-            if (payloadInner != null && payloadInner.getTemplate_type() != null && "start_timer".equalsIgnoreCase(payloadInner.getTemplate_type())) {
+            if (payloadInner != null && payloadInner.getTemplate_type() != null && START_TIMER.equalsIgnoreCase(payloadInner.getTemplate_type())) {
                 BotSocketConnectionManager.getInstance().startDelayMsgTimer();
             }
 
+            chatView.showTypingStatus();
+
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
-            }
+                chatView.addMessageToAdapter(botResponse);
+            } else if (!getMessageText(botResponse).isBlank()) {
+                chatView.addMessageToAdapter(botResponse);
+            } else chatView.stopTypingStatus();
 
             if (!isActivityResumed) {
                 postNotification("Kore Message", "Received new message.");
             }
 
-            chatView.addMessageToAdapter(botResponse);
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e(TAG, "Failed to complete risky operation" + e);
             if (e instanceof JsonSyntaxException) {
                 try {
                     //This is the case Bot returning user sent message from another channel
@@ -253,9 +267,9 @@ public class BotChatViewModel extends ViewModel {
                             return;
                         }
 
-                        if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
+                        if (botResponse.getMessage().getType().equalsIgnoreCase(AGENT_EVENT_CONNECTED)) {
                             setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
-                        } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
+                        } else if (botResponse.getMessage().getType().equalsIgnoreCase(AGENT_EVENT_DISCONNECTED)) {
                             setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
                         }
 
@@ -282,11 +296,60 @@ public class BotChatViewModel extends ViewModel {
                             }
                         }
                     } catch (Exception e2) {
-                        e2.printStackTrace();
+                        LogUtils.e("Exception", String.valueOf(e2));
                     }
                 }
             }
         }
+    }
+
+    private String getMessageText(BaseBotMessage baseBotMessage) {
+        ComponentModel componentModel = getComponentModel(baseBotMessage);
+        String message = "";
+
+        if(componentModel != null)
+        {
+            String compType = componentModel.getType();
+            PayloadOuter payOuter = componentModel.getPayload();
+
+            if (BotResponse.COMPONENT_TYPE_TEXT.equalsIgnoreCase(compType)) {
+                message = payOuter.getText();
+            } else if (BotResponse.COMPONENT_TYPE_ERROR.equalsIgnoreCase(payOuter.getType())) {
+                message = payOuter.getPayload().getText();
+            } else if (payOuter.getType() != null && payOuter.getType().equals(BotResponse.COMPONENT_TYPE_TEXT)) {
+                message = payOuter.getText();
+            }
+            PayloadInner payInner;
+            if (payOuter.getText() != null) {
+                if (payOuter.getText().contains("&quot"))
+                    message = payOuter.getText().replace("&quot;", "\"");
+                else message = payOuter.getText();
+            }
+            payInner = payOuter.getPayload();
+            if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText())) {
+                message = payInner.getText();
+            } else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getText_message()))
+                message = payInner.getText_message();
+            else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTitle()))
+                message = payInner.getTitle();
+            else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getHeading()))
+                message = payInner.getHeading();
+            else if (payInner != null && !StringUtils.isNullOrEmptyWithTrim(payInner.getTemplate_type())) {
+                message = payInner.getTemplate_type();
+            } else if (StringUtils.isNullOrEmptyWithTrim(payOuter.getText()) && payOuter.getType() != null) {
+                message = payOuter.getType();
+            }
+        }
+
+        return message;
+    }
+
+    protected ComponentModel getComponentModel(BaseBotMessage baseBotMessage) {
+        ComponentModel compModel = null;
+        if (baseBotMessage instanceof BotResponse && ((BotResponse) baseBotMessage).getMessage() != null && !((BotResponse) baseBotMessage).getMessage().isEmpty()) {
+            compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
+        }
+        return compModel;
     }
 
     public String getUniqueDeviceId(Context context) {
@@ -314,7 +377,7 @@ public class BotChatViewModel extends ViewModel {
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
         botPayLoad.setBotInfo(botInfo);
-        Gson gson = new Gson();
+        gson = new Gson();
         String jsonPayload = gson.toJson(botPayLoad);
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
@@ -336,7 +399,7 @@ public class BotChatViewModel extends ViewModel {
                 } else if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) || BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())) {
                     PayloadInner payInner;
                     if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-                        Gson gson = new Gson();
+                        gson = new Gson();
                         payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                     }
                     payInner = payOuter.getPayload();
@@ -368,7 +431,7 @@ public class BotChatViewModel extends ViewModel {
         NotificationCompat.Builder nBuilder;
         if (Build.VERSION.SDK_INT >= 26) {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel notificationChannel = new NotificationChannel("Kore_Push_Service", "Kore_Android", importance);
+            NotificationChannel notificationChannel = new NotificationChannel(KORE_PUSH_SERVICE, KORE_ANDROID, importance);
             mNotificationManager.createNotificationChannel(notificationChannel);
             nBuilder = new NotificationCompat.Builder(context, notificationChannel.getId());
         } else {
@@ -384,7 +447,7 @@ public class BotChatViewModel extends ViewModel {
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-        bundle.putString(BundleUtils.PICK_TYPE, "Notification");
+        bundle.putString(BundleUtils.PICK_TYPE, NOTIFICATION);
         bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
         intent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE);
@@ -393,7 +456,7 @@ public class BotChatViewModel extends ViewModel {
         Notification notification = nBuilder.build();
         notification.ledARGB = 0xff0000FF;
 
-        mNotificationManager.notify("YUIYUYIU", 237891, notification);
+        mNotificationManager.notify(NOTIFICATION_TAG_CHAT_MESSAGE, NOTIFICATION_TAG_NUMBER, notification);
     }
 
     public void displayMessage(String text, String type, String messageId) {
@@ -454,7 +517,7 @@ public class BotChatViewModel extends ViewModel {
 
     public void setPreferenceObject(Object modal, String key) {
         SharedPreferences.Editor prefsEditor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-        Gson gson = new Gson();
+        gson = new Gson();
         String jsonObject = gson.toJson(modal);
         prefsEditor.putString(key, jsonObject);
         prefsEditor.apply();

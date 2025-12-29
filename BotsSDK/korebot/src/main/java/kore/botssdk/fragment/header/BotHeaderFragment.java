@@ -6,17 +6,18 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
 import kore.botssdk.R;
-import kore.botssdk.models.BrandingHeaderModel;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.net.SDKConfiguration;
 
 public class BotHeaderFragment extends BaseHeaderFragment {
     private View view;
+    ImageView ivHeaderMinimize;
 
     @Override
     public void setBrandingDetails(BrandingModel brandingModel) {
@@ -33,6 +34,7 @@ public class BotHeaderFragment extends BaseHeaderFragment {
     private void updateUI() {
         if (view == null) return;
         TextView tvBotTitle = view.findViewById(R.id.tvBotName);
+        ivHeaderMinimize = view.findViewById(R.id.ivHeaderMinimize);
         String title = brandingModel != null && brandingModel.getBotName() != null ? brandingModel.getBotName() : SDKConfiguration.Client.bot_name;
         if (brandingModel != null) {
             tvBotTitle.setText(!TextUtils.isEmpty(title) ? title : SDKConfiguration.Client.bot_name);
@@ -41,5 +43,10 @@ public class BotHeaderFragment extends BaseHeaderFragment {
             if (brandingModel.getWidgetTextColor() != null)
                 tvBotTitle.setTextColor(Color.parseColor(brandingModel.getWidgetTextColor()));
         }
+    }
+
+    @Override
+    public ImageView getMinimize() {
+        return ivHeaderMinimize;
     }
 }

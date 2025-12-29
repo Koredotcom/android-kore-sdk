@@ -14,19 +14,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -226,6 +223,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
         setupTextToSpeech();
         KoreEventCenter.register(this);
+
+        changeStatusBarColor(SDKConfig.isUpdateStatusBarColor() ? sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5") : "");
     }
 
     private void setupTextToSpeech() {
@@ -261,10 +260,17 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
             if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
+
+                if(botHeaderFragment.getMinimize() != null)
+                {
+                    botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
+                    botHeaderFragment.getMinimize().setOnClickListener(v -> {
+                        showCloseAlert();
+                    });
+                }
             }
 
             sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
-            changeStatusBarColor(brandingModel.getWidgetHeaderColor());
         }
     }
 
@@ -290,6 +296,11 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     public void showTypingStatus() {
         botContentFragment.showTypingStatus();
+    }
+
+    @Override
+    public void stopTypingStatus() {
+        botContentFragment.stopTypingStatus();
     }
 
     @Override
@@ -368,7 +379,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         botContentFragment.showTypingStatus();
 
         if (!StringUtils.isNullOrEmpty(message)) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
                 mViewModel.addSentMessageToChat(message);
                 mViewModel.sendWebHookMessage(jwt, false, message, null);
@@ -402,7 +414,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
         botContentFragment.showTypingStatus();
         if (attachments != null && !attachments.isEmpty()) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
                 mViewModel.addSentMessageToChat(message);
                 mViewModel.sendWebHookMessage(jwt, false, message, attachments);
@@ -475,46 +488,43 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     void showCloseAlert() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE: {
-                        if (sharedPreferences != null) {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean(BundleConstants.IS_RECONNECT, true);
-                            editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
-                            editor.apply();
-                            BotSocketConnectionManager.killInstance();
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    if (sharedPreferences != null) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                        editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
 
-                            Intent intent = new Intent();
-                            intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
+                        Intent intent = new Intent();
+                        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
-                    break;
-                    case DialogInterface.BUTTON_NEGATIVE: {
-                        if (sharedPreferences != null) {
-                            if (botClient != null && isAgentTransfer)
-                                botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean(BundleConstants.IS_RECONNECT, false);
-                            editor.putInt(BotResponse.HISTORY_COUNT, 0);
-                            editor.apply();
-                            BotSocketConnectionManager.killInstance();
-                            Intent intent = new Intent();
-                            intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                    break;
-                    case DialogInterface.BUTTON_NEUTRAL:
-                        dialog.dismiss();
-                        break;
                 }
+                break;
+                case DialogInterface.BUTTON_NEGATIVE: {
+                    if (sharedPreferences != null) {
+                        if (botClient != null && isAgentTransfer)
+                            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                        editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
+                        Intent intent = new Intent();
+                        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                }
+                break;
+                case DialogInterface.BUTTON_NEUTRAL:
+                    dialog.dismiss();
+                    break;
             }
         };
 
@@ -570,5 +580,20 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onStart() {
         new Handler().post(() -> BotSocketConnectionManager.getInstance().subscribe());
         super.onStart();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (botContentFragment != null) {
+            botContentFragment.onConfigurationChanged(newConfig);
+        }
+        if (baseFooterFragment != null) {
+            baseFooterFragment.onConfigurationChanged(newConfig);
+        }
+        if (botHeaderFragment != null) {
+            botHeaderFragment.onConfigurationChanged(newConfig);
+        }
     }
 }

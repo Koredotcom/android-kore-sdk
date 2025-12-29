@@ -12,6 +12,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -274,4 +275,11 @@ public abstract class BaseFooterFragment extends Fragment implements ComposeFoot
 
     @Override
     public abstract void addAttachmentToAdapter(HashMap<String, String> attachmentKey);
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        updateUI();
+    }
 }
