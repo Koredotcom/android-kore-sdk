@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.R;
 
@@ -16,11 +18,16 @@ import kore.botssdk.models.BrandingModel;
 
 public class CustomHeaderFragment extends BaseHeaderFragment {
     private View view;
-
+    ImageView ivHeaderMinimize;
     @Override
     public void setBrandingDetails(BrandingModel brandingModel) {
         this.brandingModel = brandingModel;
         updateUI();
+    }
+
+    @Override
+    public ImageView getMinimize() {
+        return ivHeaderMinimize;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +39,9 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
     private void updateUI() {
         if (view == null) return;
         TextView tvBotTitle = view.findViewById(R.id.tvBotName);
-        tvBotTitle.setText("Custom header");
+        ivHeaderMinimize = view.findViewById(kore.botssdk.R.id.ivHeaderMinimize);
+
+        tvBotTitle.setText(ContextCompat.getString(requireContext(), R.string.custom_header));
         if (brandingModel != null) {
             if (brandingModel.getWidgetHeaderColor() != null)
                 view.setBackgroundColor(Color.parseColor(brandingModel.getWidgetHeaderColor()));

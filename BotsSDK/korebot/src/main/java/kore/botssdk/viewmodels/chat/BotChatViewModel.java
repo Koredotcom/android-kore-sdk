@@ -82,6 +82,14 @@ public class BotChatViewModel extends ViewModel {
     private static String uniqueID = null;
     private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private boolean isActivityResumed = false;
+    private static final String START_TIMER = "start_timer";
+    private static final String AGENT_EVENT_CONNECTED = "agent_connected";
+    private static final String AGENT_EVENT_DISCONNECTED = "agent_disconnected";
+    private static final String NOTIFICATION_TAG_CHAT_MESSAGE = "ChatMessageNotification";
+    private static final int NOTIFICATION_TAG_NUMBER = 237891;
+    private static final String KORE_PUSH_SERVICE = "Kore_Push_Service";
+    private static final String KORE_ANDROID = "Kore_Android";
+    private static final String NOTIFICATION = "Notification";
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -131,6 +139,8 @@ public class BotChatViewModel extends ViewModel {
             if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
+                chatView.loadOnConnectionHistory(isReconnection);
+                new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(context));
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
                     isReconnectionStopped = true;
@@ -138,8 +148,6 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
 
-            chatView.loadOnConnectionHistory(isReconnection);
-            new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(context));
             chatView.updateTitleBar(state);
         }
 
@@ -216,14 +224,14 @@ public class BotChatViewModel extends ViewModel {
                     payOuter = compModel.getPayload();
                     if (payOuter != null) {
                         if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-                            Gson gson = new Gson();
+                            gson = new Gson();
                             payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                         }
                     }
                 }
             }
             final PayloadInner payloadInner = payOuter == null ? null : payOuter.getPayload();
-            if (payloadInner != null && payloadInner.getTemplate_type() != null && "start_timer".equalsIgnoreCase(payloadInner.getTemplate_type())) {
+            if (payloadInner != null && payloadInner.getTemplate_type() != null && START_TIMER.equalsIgnoreCase(payloadInner.getTemplate_type())) {
                 BotSocketConnectionManager.getInstance().startDelayMsgTimer();
             }
 
@@ -259,9 +267,9 @@ public class BotChatViewModel extends ViewModel {
                             return;
                         }
 
-                        if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
+                        if (botResponse.getMessage().getType().equalsIgnoreCase(AGENT_EVENT_CONNECTED)) {
                             setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
-                        } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
+                        } else if (botResponse.getMessage().getType().equalsIgnoreCase(AGENT_EVENT_DISCONNECTED)) {
                             setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
                         }
 
@@ -364,7 +372,7 @@ public class BotChatViewModel extends ViewModel {
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
         botPayLoad.setBotInfo(botInfo);
-        Gson gson = new Gson();
+        gson = new Gson();
         String jsonPayload = gson.toJson(botPayLoad);
 
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
@@ -386,7 +394,7 @@ public class BotChatViewModel extends ViewModel {
                 } else if (BotResponse.COMPONENT_TYPE_TEMPLATE.equalsIgnoreCase(payOuter.getType()) || BotResponse.COMPONENT_TYPE_MESSAGE.equalsIgnoreCase(payOuter.getType())) {
                     PayloadInner payInner;
                     if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
-                        Gson gson = new Gson();
+                        gson = new Gson();
                         payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
                     }
                     payInner = payOuter.getPayload();
@@ -418,7 +426,7 @@ public class BotChatViewModel extends ViewModel {
         NotificationCompat.Builder nBuilder;
         if (Build.VERSION.SDK_INT >= 26) {
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel notificationChannel = new NotificationChannel("Kore_Push_Service", "Kore_Android", importance);
+            NotificationChannel notificationChannel = new NotificationChannel(KORE_PUSH_SERVICE, KORE_ANDROID, importance);
             mNotificationManager.createNotificationChannel(notificationChannel);
             nBuilder = new NotificationCompat.Builder(context, notificationChannel.getId());
         } else {
@@ -434,7 +442,7 @@ public class BotChatViewModel extends ViewModel {
         Bundle bundle = new Bundle();
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
-        bundle.putString(BundleUtils.PICK_TYPE, "Notification");
+        bundle.putString(BundleUtils.PICK_TYPE, NOTIFICATION);
         bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
         intent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE);
@@ -443,7 +451,7 @@ public class BotChatViewModel extends ViewModel {
         Notification notification = nBuilder.build();
         notification.ledARGB = 0xff0000FF;
 
-        mNotificationManager.notify("YUIYUYIU", 237891, notification);
+        mNotificationManager.notify(NOTIFICATION_TAG_CHAT_MESSAGE, NOTIFICATION_TAG_NUMBER, notification);
     }
 
     public void displayMessage(String text, String type, String messageId) {
@@ -504,7 +512,7 @@ public class BotChatViewModel extends ViewModel {
 
     public void setPreferenceObject(Object modal, String key) {
         SharedPreferences.Editor prefsEditor = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-        Gson gson = new Gson();
+        gson = new Gson();
         String jsonObject = gson.toJson(modal);
         prefsEditor.putString(key, jsonObject);
         prefsEditor.apply();

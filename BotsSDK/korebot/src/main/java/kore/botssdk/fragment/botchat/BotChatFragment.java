@@ -143,6 +143,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             if (botHeaderFragment == null) botHeaderFragment = new BotHeaderFragment();
             botHeaderFragment.setComposeFooterInterface(this);
             botHeaderFragment.setInvokeGenericWebViewInterface(this);
+
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.add(R.id.header_container, botHeaderFragment);
             transaction.commitNow();
@@ -202,11 +203,20 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             if (baseFooterFragment != null)
                 baseFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
 
-            if (botHeaderFragment != null)
+            if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
-        }
 
-        loadOnConnectionHistory(false);
+                if(botHeaderFragment.getMinimize() != null)
+                {
+                    botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
+                    botHeaderFragment.getMinimize().setOnClickListener(v -> {
+                        showCloseAlert();
+                    });
+                }
+            }
+
+            sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
+        }
     }
 
     @Override

@@ -14,22 +14,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -266,6 +259,11 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
             if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
+
+                botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
+                botHeaderFragment.getMinimize().setOnClickListener(v -> {
+                    showCloseAlert();
+                });
             }
 
             sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
@@ -484,46 +482,43 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     void showCloseAlert() {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE: {
-                        if (sharedPreferences != null) {
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean(BundleConstants.IS_RECONNECT, true);
-                            editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
-                            editor.apply();
-                            BotSocketConnectionManager.killInstance();
+        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+            switch (which) {
+                case DialogInterface.BUTTON_POSITIVE: {
+                    if (sharedPreferences != null) {
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                        editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
 
-                            Intent intent = new Intent();
-                            intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
+                        Intent intent = new Intent();
+                        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
+                        setResult(RESULT_OK, intent);
+                        finish();
                     }
-                    break;
-                    case DialogInterface.BUTTON_NEGATIVE: {
-                        if (sharedPreferences != null) {
-                            if (botClient != null && isAgentTransfer)
-                                botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-
-                            SharedPreferences.Editor editor = sharedPreferences.edit();
-                            editor.putBoolean(BundleConstants.IS_RECONNECT, false);
-                            editor.putInt(BotResponse.HISTORY_COUNT, 0);
-                            editor.apply();
-                            BotSocketConnectionManager.killInstance();
-                            Intent intent = new Intent();
-                            intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
-                            setResult(RESULT_OK, intent);
-                            finish();
-                        }
-                    }
-                    break;
-                    case DialogInterface.BUTTON_NEUTRAL:
-                        dialog.dismiss();
-                        break;
                 }
+                break;
+                case DialogInterface.BUTTON_NEGATIVE: {
+                    if (sharedPreferences != null) {
+                        if (botClient != null && isAgentTransfer)
+                            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                        editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                        editor.apply();
+                        BotSocketConnectionManager.killInstance();
+                        Intent intent = new Intent();
+                        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
+                }
+                break;
+                case DialogInterface.BUTTON_NEUTRAL:
+                    dialog.dismiss();
+                    break;
             }
         };
 

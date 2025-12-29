@@ -21,6 +21,7 @@ public class SDKConfig {
     private static boolean isShowHeader = true;
     private static boolean isUpdateStatusBarColor = false;
     private static boolean isShowActionBar = true;
+    private static boolean isShowHeaderMinimize = true;
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);
@@ -76,6 +77,14 @@ public class SDKConfig {
 
     public static void setIsShowHeader(boolean isShowHeader) {
         SDKConfig.isShowHeader = isShowHeader;
+    }
+
+    public static void showHeaderMinimize(boolean isShowHeaderMinimize) {
+        SDKConfig.isShowHeaderMinimize = isShowHeaderMinimize;
+    }
+
+    public static boolean isIsShowHeaderMinimize() {
+        return isShowHeaderMinimize;
     }
 
     public static void setIsShowIcon(boolean isShow) {
