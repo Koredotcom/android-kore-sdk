@@ -25,25 +25,25 @@
         <activity
             android:name=".activity.GenericWebViewActivity"
             android:label="Kora"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activity.NewBotChatActivity"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activity.KaCaptureImageActivity"
-            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="adjustResize" />
 
         <activity
             android:name=".activity.VideoFullScreenActivity"
-            android:configChanges="orientation|screenSize"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout"
             android:theme="@style/AppTheme" />
 
         <provider

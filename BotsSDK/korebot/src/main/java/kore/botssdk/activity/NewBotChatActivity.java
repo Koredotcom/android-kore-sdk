@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -375,7 +376,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         botContentFragment.showTypingStatus();
 
         if (!StringUtils.isNullOrEmpty(message)) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendMessage(message, null);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendMessage(message, null);
             else {
                 mViewModel.addSentMessageToChat(message);
                 mViewModel.sendWebHookMessage(jwt, false, message, null);
@@ -409,7 +411,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
         botContentFragment.showTypingStatus();
         if (attachments != null && !attachments.isEmpty()) {
-            if (!SDKConfiguration.Client.isWebHook) BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
+            if (!SDKConfiguration.Client.isWebHook)
+                BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
             else {
                 mViewModel.addSentMessageToChat(message);
                 mViewModel.sendWebHookMessage(jwt, false, message, attachments);
@@ -574,5 +577,20 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onStart() {
         new Handler().post(() -> BotSocketConnectionManager.getInstance().subscribe());
         super.onStart();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if (botContentFragment != null) {
+            botContentFragment.onConfigurationChanged(newConfig);
+        }
+        if (baseFooterFragment != null) {
+            baseFooterFragment.onConfigurationChanged(newConfig);
+        }
+        if (botHeaderFragment != null) {
+            botHeaderFragment.onConfigurationChanged(newConfig);
+        }
     }
 }
