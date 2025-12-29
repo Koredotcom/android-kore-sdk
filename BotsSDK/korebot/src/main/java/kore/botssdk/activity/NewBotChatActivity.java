@@ -261,10 +261,13 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             if (botHeaderFragment != null) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
 
-                botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
-                botHeaderFragment.getMinimize().setOnClickListener(v -> {
-                    showCloseAlert();
-                });
+                if(botHeaderFragment.getMinimize() != null)
+                {
+                    botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
+                    botHeaderFragment.getMinimize().setOnClickListener(v -> {
+                        showCloseAlert();
+                    });
+                }
             }
 
             sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();

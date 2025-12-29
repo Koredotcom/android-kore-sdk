@@ -32,6 +32,7 @@ import kore.botssdk.R;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.ToastUtils;
 
 @SuppressLint("UnknownNullness")
@@ -77,7 +78,7 @@ public class BotAppCompactActivity extends AppCompatActivity {
             params.height = sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0);
             statusBarLayout.setLayoutParams(params);
 
-            if (color.isBlank())
+            if (StringUtils.isNullOrEmpty(color))
                 statusBarLayout.setBackgroundColor(ContextCompat.getColor(BotAppCompactActivity.this, R.color.colorPrimary));
             else
                 statusBarLayout.setBackgroundColor(Color.parseColor(color));
