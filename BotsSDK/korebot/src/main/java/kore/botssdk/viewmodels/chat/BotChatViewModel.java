@@ -248,22 +248,18 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
             final PayloadInner payloadInner = payOuter == null ? null : payOuter.getPayload();
+            if (payloadInner != null && payloadInner.getTemplate_type() != null && START_TIMER.equalsIgnoreCase(payloadInner.getTemplate_type())) {
+                BotSocketConnectionManager.getInstance().startDelayMsgTimer();
+            }
+
+            chatView.showTypingStatus();
+
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
-            }
-
-            if(botResponse.getMessage().get(0).getcInfo() != null && botResponse.getMessage().get(0).getcInfo().getBody() != null) {
-                String strOuterPayload = botResponse.getMessage().get(0).getcInfo().getBody();
-                if (isJson(strOuterPayload)) {
-                    chatView.addMessageToAdapter(botResponse);
-                } else if (!strOuterPayload.isBlank()) {
-                    chatView.addMessageToAdapter(botResponse);
-                }
-            } else {
                 chatView.addMessageToAdapter(botResponse);
-            }
-
-            chatView.stopTypingStatus();
+            } else if (!getMessageText(botResponse).isBlank()) {
+                chatView.addMessageToAdapter(botResponse);
+            } else chatView.stopTypingStatus();
 
             if (!isActivityResumed) {
                 postNotification("Kore Message", "Received new message.");
