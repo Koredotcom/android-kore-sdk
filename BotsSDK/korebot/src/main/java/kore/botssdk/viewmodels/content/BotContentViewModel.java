@@ -104,7 +104,7 @@ public class BotContentViewModel extends BaseViewModel<BotContentFragmentUpdate>
 
                     for (int i = 0; i < baseBotMessageList.size(); i++) {
                         for (int j = 0; j < botResp.size(); j++) {
-                            if (baseBotMessageList.get(i).getCreatedOn().equalsIgnoreCase(botResp.get(j).getCreatedOn())) {
+                            if (!StringUtils.isNullOrEmpty(baseBotMessageList.get(i).getCreatedOn()) && baseBotMessageList.get(i).getCreatedOn().equalsIgnoreCase(botResp.get(j).getCreatedOn())) {
                                 pos = j;
                             }
                         }

@@ -19,6 +19,8 @@ import android.os.Bundle;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.ViewModel;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -90,7 +92,6 @@ public class BotChatViewModel extends ViewModel {
     private static final String KORE_PUSH_SERVICE = "Kore_Push_Service";
     private static final String KORE_ANDROID = "Kore_Android";
     private static final String NOTIFICATION = "Notification";
-
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
         this.repository = new BrandingRepository(context, chatView);
@@ -177,6 +178,20 @@ public class BotChatViewModel extends ViewModel {
         }
     }
 
+
+    private boolean isJson(String text) {
+        if (text == null || text.trim().isEmpty()) {
+            return false;
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readTree(text) != null;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
     /**
      * payload processing
      */
@@ -217,6 +232,8 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
 
+            chatView.showTypingStatus();
+
             PayloadOuter payOuter = null;
             if (!botResponse.getMessage().isEmpty()) {
                 ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
@@ -231,18 +248,22 @@ public class BotChatViewModel extends ViewModel {
                 }
             }
             final PayloadInner payloadInner = payOuter == null ? null : payOuter.getPayload();
-            if (payloadInner != null && payloadInner.getTemplate_type() != null && START_TIMER.equalsIgnoreCase(payloadInner.getTemplate_type())) {
-                BotSocketConnectionManager.getInstance().startDelayMsgTimer();
-            }
-
-            chatView.showTypingStatus();
-
             if (payloadInner != null) {
                 payloadInner.convertElementToAppropriate();
+            }
+
+            if(botResponse.getMessage().get(0).getcInfo() != null && botResponse.getMessage().get(0).getcInfo().getBody() != null) {
+                String strOuterPayload = botResponse.getMessage().get(0).getcInfo().getBody();
+                if (isJson(strOuterPayload)) {
+                    chatView.addMessageToAdapter(botResponse);
+                } else if (!strOuterPayload.isBlank()) {
+                    chatView.addMessageToAdapter(botResponse);
+                }
+            } else {
                 chatView.addMessageToAdapter(botResponse);
-            } else if (!getMessageText(botResponse).isBlank()) {
-                chatView.addMessageToAdapter(botResponse);
-            } else chatView.stopTypingStatus();
+            }
+
+            chatView.stopTypingStatus();
 
             if (!isActivityResumed) {
                 postNotification("Kore Message", "Received new message.");

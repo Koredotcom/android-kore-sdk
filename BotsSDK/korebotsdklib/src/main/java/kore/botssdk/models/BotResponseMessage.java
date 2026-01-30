@@ -1,7 +1,6 @@
 package kore.botssdk.models;
 
 /**
- * Created by Pradeep Mahato on 03-Jun-16.
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
 
@@ -26,8 +25,6 @@ public class BotResponseMessage {
     public void setcInfo(BotResponseMessageComponentInfo cInfo) {
         this.cInfo = cInfo;
     }
-
-
 
     public String getType() {
         return type;

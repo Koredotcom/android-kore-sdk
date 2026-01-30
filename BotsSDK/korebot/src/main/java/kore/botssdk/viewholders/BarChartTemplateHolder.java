@@ -138,7 +138,7 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
         BarDataSet[] dataSet;
         List<IBarDataSet> barDataSets = new ArrayList<>();
 
-        if (payloadInner.getBarChartDataModels() != null && payloadInner.getBarChartDataModels().size() > 0) {
+        if (payloadInner.getBarChartDataModels() != null && !payloadInner.getBarChartDataModels().isEmpty()) {
             int size = payloadInner.getBarChartDataModels().size();
             String[] labels = new String[size];
             ArrayList<BotBarChartDataModel> dataList = new ArrayList<>(size);

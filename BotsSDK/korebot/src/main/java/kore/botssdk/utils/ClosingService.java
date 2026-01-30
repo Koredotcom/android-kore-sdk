@@ -27,12 +27,10 @@ public class ClosingService extends Service {
         intent.setPackage(getPackageName());
         sendBroadcast(intent);
 
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.TIRAMISU) {
-            SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-            editor.putBoolean(BundleConstants.IS_RECONNECT, false);
-            editor.putInt(BotResponse.HISTORY_COUNT, 0);
-            editor.apply();
-        }
+        SharedPreferences.Editor editor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+        editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+        editor.putInt(BotResponse.HISTORY_COUNT, 0);
+        editor.apply();
 
         LogUtils.e("onTaskRemoved", "onTaskRemoved called");
         // Destroy the service
