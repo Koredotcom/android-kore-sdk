@@ -113,7 +113,7 @@ startActivity(intent);
 
 ---
 
-### 2. Headless Integration (Without UI)
+### 2. Integration Without UI (Without UI)
 
 #### Setup Steps
 
