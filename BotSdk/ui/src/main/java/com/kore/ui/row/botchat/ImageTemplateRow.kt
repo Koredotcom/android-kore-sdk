@@ -91,7 +91,7 @@ class ImageTemplateRow(
                     val player = MediaPlayer()
 
                     val audioUrl =
-                        when ((payload[BotResponseConstants.AUDIO_URL] as String).isNotEmpty()) {
+                        when (payload[BotResponseConstants.AUDIO_URL] != null && (payload[BotResponseConstants.AUDIO_URL] as String).isNotEmpty()) {
                             true -> payload[BotResponseConstants.AUDIO_URL] as String
                             else -> payload[BotResponseConstants.URL] as String
                         }

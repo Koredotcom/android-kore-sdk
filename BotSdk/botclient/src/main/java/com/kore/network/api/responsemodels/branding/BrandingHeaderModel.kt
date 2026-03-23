@@ -2,8 +2,7 @@ package com.kore.network.api.responsemodels.branding
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.android.parcel.Parcelize
-import java.io.Serializable
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class BrandingHeaderModel(

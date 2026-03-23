@@ -3,12 +3,12 @@ package com.kore.markdown
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.BitmapFactory
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.os.AsyncTask
 import android.text.Html
 import android.util.Base64
 import android.widget.TextView
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.text.HtmlCompat
 import java.io.BufferedInputStream
 import java.io.InputStream
@@ -53,7 +53,7 @@ internal class HttpGetDrawableTask(
                 val bm = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
 
                 // convert Bitmap to Drawable
-                drawable = BitmapDrawable(context!!.resources, bm)
+                drawable = bm.toDrawable(context!!.resources)
                 drawable.setBounds(0, 0, bm.width, bm.height)
             } else {
                 sourceURL = URL(params[0])
@@ -64,7 +64,7 @@ internal class HttpGetDrawableTask(
                 val bm = BitmapFactory.decodeStream(bufferedInputStream)
 
                 // convert Bitmap to Drawable
-                drawable = BitmapDrawable(context!!.resources, bm)
+                drawable = bm.toDrawable(context!!.resources)
                 drawable.setBounds(0, 0, bm.width, bm.height)
             }
         } catch (e: Exception) {

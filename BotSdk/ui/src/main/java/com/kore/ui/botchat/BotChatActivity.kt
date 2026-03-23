@@ -90,10 +90,12 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     private val prefRepository: PreferenceRepository = PreferenceRepositoryImpl()
 
     private val connectivityManager by lazy {
-        getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
     }
 
-    override fun getLayoutID(): Int = R.layout.activity_bot_chat
+    override fun getLayoutID(): Int {
+        return R.layout.activity_bot_chat
+    }
 
     override fun getBindingVariable(): Int = BR.viewModel
 
@@ -208,7 +210,17 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun addMessageToAdapter(baseBotMessage: BaseBotMessage) {
-        contentFragment.addMessagesToAdapter(listOf(baseBotMessage), false, false)
+        contentFragment.addMessagesToAdapter(listOf(baseBotMessage),
+            isHistory = false,
+            isReconnection = false
+        )
+    }
+
+    override fun addStreamingMessage(message: String?, endFlag: Boolean) {
+        if (!message!!.isBlank()) {
+            contentFragment.addStreamingMessage(message)
+            footerFragment.enableSendButton(endFlag)
+        }
     }
 
     override fun onActionEvent(event: UserActionEvent) {
@@ -271,7 +283,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 }
                 contentFragment.onBrandingDetails()
 
-            }, 2000)
+            }, 0)
         } else {
             //            binding.clProgress.isVisible = false
             binding.chatWindow.isVisible = true
@@ -290,19 +302,28 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         val body = botResponse.message ?: return
         if (body[BotResponseConstants.SIP_USER] != null) {
             if (body.isNotEmpty()) {
-                val proxy = (body[BotResponseConstants.ADDRESSES] as List<String>)[0].split(":")[1].replace("//", "")
-                val sipAccount = SipAccount(this)
-                sipAccount.username = botChatViewModel.getUserId()
-                sipAccount.displayName = botChatViewModel.getUserId()
-                sipAccount.domain = body[BotResponseConstants.DOMAIN] as String
-                sipAccount.proxy = proxy
-                sipAccount.port = 5060
-                sipAccount.transport = Transport.UDP
+                val addresses = body[BotResponseConstants.ADDRESSES] as? List<*>
+                val proxy = (addresses?.firstOrNull() as? String)
+                    ?.split(":")
+                    ?.getOrNull(1)
+                    ?.replace("//", "")
 
-                Prefs.setSipAccount(this, sipAccount)
-                Prefs.setIsAutoRedirect(this, true)
+                val domain = body[BotResponseConstants.DOMAIN] as? String
 
-                showAlertDialog(body)
+                if (proxy != null && domain != null) {
+                    val sipAccount = SipAccount(this)
+                    sipAccount.username = botChatViewModel.getUserId()
+                    sipAccount.displayName = botChatViewModel.getUserId()
+                    sipAccount.domain = domain
+                    sipAccount.proxy = proxy
+                    sipAccount.port = 5080
+                    sipAccount.transport = Transport.UDP
+
+                    Prefs.setSipAccount(this, sipAccount)
+                    Prefs.setIsAutoRedirect(this, true)
+
+                    showAlertDialog(body)
+                }
             }
         } else {
             when (body[BotResponseConstants.TYPE].toString()) {
@@ -351,7 +372,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         Prefs.setIsFirstLogin(this, false)
         //start login and open app main screen
         Thread {
-            if (!acManager.isRegisterState) acManager.startLogin(this, false, false)
+            if (!acManager.isRegisterState) acManager.startLogin(this,
+                autologin = false,
+                disconnectCall = false
+            )
             if (!acManager.isRegisterState && Prefs.getAutoLogin(this)) {
                 Toast.makeText(this@BotChatActivity, R.string.no_registration, Toast.LENGTH_SHORT).show()
             } else {
@@ -487,7 +511,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 try {
                     val className = Class.forName(name)
                     val activityIntent = Intent(context, className)
-                    if (launchMode != -1) activityIntent.setFlags(launchMode)
+                    if (launchMode != -1) activityIntent.flags = launchMode
                     context.startActivity(activityIntent)
                 } catch (e: ClassNotFoundException) {
                     throw RuntimeException(e)
@@ -502,21 +526,20 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             binding.statusBarBg.visibility = View.VISIBLE
             val params = binding.statusBarBg.layoutParams
             params.height = prefRepository.getIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, 50)
-            binding.statusBarBg.setLayoutParams(params)
+            binding.statusBarBg.layoutParams = params
 
             binding.statusBarBg.setBackgroundColor(
                 color.takeIf { SDKConfig.isUpdateStatusBarColor() && it.isNotBlank() }?.toColorInt()
                     ?: ContextCompat.getColor(this@BotChatActivity, R.color.colorPrimary)
             )
         } else if(SDKConfig.isUpdateStatusBarColor()){
-            val window = getWindow()
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.setStatusBarColor(
-                if (color.isBlank()) ContextCompat.getColor(
-                    this@BotChatActivity,
-                    R.color.colorPrimary
-                ) else color.toColorInt()
-            )
+
+            @Suppress("DEPRECATION")
+            window.statusBarColor = if (color.isBlank()) ContextCompat.getColor(
+                this@BotChatActivity,
+                R.color.colorPrimary
+            ) else color.toColorInt()
         }
     }
 

@@ -18,11 +18,12 @@ data class BotResponse(
     override val formattedTime: String = "",
     override val messageDate: String = "",
     var icon: String? = null,
+    var sM : Boolean = false,
+    var endChunk : Boolean = false,
     @SerializedName("fromAgent")
     val fromAgent: Boolean = false,
 ) : BaseBotMessage {
     val key: String? = null
-
     @SerializedName("botInfo")
     var botInfo: Map<String, Any>? = null
 }

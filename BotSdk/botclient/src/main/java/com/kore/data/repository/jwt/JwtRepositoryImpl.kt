@@ -7,19 +7,15 @@ import com.kore.network.api.response.JwtTokenResponse
 import com.kore.network.api.response.RtmUrlResponse
 import com.kore.network.api.service.JwtApi
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
+import java.util.Date
 import javax.crypto.SecretKey
 
 class JwtRepositoryImpl : JwtRepository {
     companion object {
         private const val BEARER = "bearer "
         private const val KEY_TYP = "typ"
-        private const val KEY_ISS = "iss"
-        private const val KEY_IAT = "iat"
-        private const val KEY_EXP = "exp"
         private const val KEY_AUD = "aud"
-        private const val KEY_SUB = "sub"
         private const val KEY_USER_IDENTITY = "userIdentity"
         private const val KEY_APP_ID = "appId"
         private const val KEY_IS_ANONYMOUS = "isAnonymous"
@@ -31,14 +27,15 @@ class JwtRepositoryImpl : JwtRepository {
     override fun generateJwt(identity: String, clientSecret: String, clientId: String): String {
         val curTime = System.currentTimeMillis()
         val expTime = curTime + EXPIRY_DURATION
+
         return Jwts.builder()
-            .claim(KEY_ISS, clientId)
-            .claim(KEY_IAT, curTime)
-            .claim(KEY_EXP, expTime)
-            .claim(KEY_AUD, VALUE_AUD)
-            .claim(KEY_SUB, identity)
+            .issuer(clientId)
+            .issuedAt(Date(curTime))
+            .expiration(Date(expTime))
+            .audience().add(VALUE_AUD).and()
+            .subject(identity)
             .claim(KEY_IS_ANONYMOUS, false)
-            .signWith(generateKey(clientSecret), SignatureAlgorithm.HS256)
+            .signWith(generateKey(clientSecret), Jwts.SIG.HS256)
             .compact()
     }
 
@@ -52,16 +49,16 @@ class JwtRepositoryImpl : JwtRepository {
         val expTime = curTime + EXPIRY_DURATION
 
         return Jwts.builder()
-            .setHeaderParam(KEY_TYP, VALUE_TYP)
-            .claim(KEY_IAT, curTime)
-            .claim(KEY_EXP, expTime)
-            .claim(KEY_AUD, VALUE_AUD)
-            .claim(KEY_ISS, clientId)
-            .claim(KEY_SUB, identity)
+            .header().add(KEY_TYP, VALUE_TYP).and()
+            .issuer(clientId)
+            .subject(identity)
+            .audience().add(VALUE_AUD).and()
+            .issuedAt(Date(curTime))
+            .expiration(Date(expTime))
             .claim(KEY_IS_ANONYMOUS, false)
             .claim(KEY_USER_IDENTITY, identity)
             .claim(KEY_APP_ID, clientId)
-            .signWith(generateKey(clientSecret), SignatureAlgorithm.HS256)
+            .signWith(generateKey(clientSecret), Jwts.SIG.HS256)
             .compact()
     }
 

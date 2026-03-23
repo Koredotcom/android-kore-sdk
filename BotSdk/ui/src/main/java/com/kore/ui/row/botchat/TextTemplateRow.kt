@@ -49,13 +49,13 @@ class TextTemplateRow(
     }
 
     override fun areItemsTheSame(otherRow: SimpleListRow): Boolean {
-        if (otherRow !is TextTemplateRow) return false
-        return otherRow.id == id
+        return otherRow is TextTemplateRow && otherRow.id == id
     }
 
     override fun areContentsTheSame(otherRow: SimpleListRow): Boolean {
-        if (otherRow !is TextTemplateRow) return false
-        return otherRow.botMessage == botMessage && otherRow.timeStamp == timeStamp
+        return otherRow is TextTemplateRow &&
+                otherRow.botMessage == botMessage &&
+                otherRow.timeStamp == timeStamp
     }
 
     override fun getChangePayload(otherRow: SimpleListRow): Any = true
@@ -65,22 +65,11 @@ class TextTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, !isBotRequest, false)
         val childBinding = RowTextTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
-            val isTimeStampRequired = timeStamp.isNotEmpty() && PreferenceRepositoryImpl()
-                .getSharedPreference(context, BotResponseConstants.THEME_NAME)
-                .getBoolean(BotResponseConstants.IS_TIME_STAMP_REQUIRED, false)
-            if (isTimeStampRequired) {
-                PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
-                    .getString(BotResponseConstants.TIME_STAMP_TXT_COLOR, "#B0B0B0")?.toColorInt()?.let {
-                        msgTimeStamp.setTextColor(it)
-                    }
-                if (!PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
-                        .getBoolean(BotResponseConstants.TIME_STAMP_IS_BOTTOM, false)
-                ) {
-                    root.removeView(msgTimeStamp)
-                    root.addView(msgTimeStamp, 0)
+            botMessage?.let { if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable) {
+                    botMessage = EmojiUtils.replaceEmoticonsWithEmojis(it)
                 }
             }
-            botMessage?.let { if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable) botMessage = EmojiUtils.replaceEmoticonsWithEmojis(it) }
+
             val stringBuilder = MarkdownUtil.processMarkDown(botMessage ?: "")
             val sequence = stringBuilder.replace("\n", "<br />")
                 .parseAsHtml(HtmlCompat.FROM_HTML_MODE_LEGACY, MarkdownImageTagHandler(context, message, stringBuilder), MarkdownTagHandler())
@@ -89,8 +78,22 @@ class TextTemplateRow(
             val urls = strBuilder.getSpans(0, sequence.length, URLSpan::class.java)
 
             for (span in urls) {
-                makeLinkClickable(strBuilder, span)
+                val start = strBuilder.getSpanStart(span)
+                val end = strBuilder.getSpanEnd(span)
+                val flags = strBuilder.getSpanFlags(span)
+                val clickable = object : ClickableSpan() {
+                    override fun onClick(view: View) {
+                        actionEvent(BotChatEvent.UrlClick(span.url))
+                    }
+                }
+                strBuilder.setSpan(clickable, start, end, flags)
+                strBuilder.removeSpan(span)
             }
+
+            message.text = strBuilder
+            message.movementMethod = LinkMovementMethod.getInstance()
+            message.autoLinkMask = Linkify.WEB_URLS
+            message.setLinkTextColor(LINK_TEXT_COLOR.toColorInt())
 
             val dp16 = 16.dpToPx(context).toFloat()
             val dp8 = 8.dpToPx(context).toFloat()
@@ -105,13 +108,13 @@ class TextTemplateRow(
 
             val sharedPrefs = PreferenceRepositoryImpl()
             val bubbleStyle = sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_STYLE, "EDGE")
-            message.text = strBuilder
+
             val textColor = if (!isBotRequest) {
                 errorTextColor.ifEmpty {
                     sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, "#000000")
                 }
-            } else
-                sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")
+            } else {
+                sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")}
             message.setTextColor(ColorStateList.valueOf(textColor.toColorInt()))
             message.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
@@ -123,9 +126,12 @@ class TextTemplateRow(
 
             val gradientDrawable = message.background as GradientDrawable
             if (!isBotRequest) {
-                if (bubbleStyle.equals(BotResponseConstants.ROUNDED, ignoreCase = true)) gradientDrawable.cornerRadii = roundedRadii
-                else if (bubbleStyle.equals(BotResponseConstants.RECTANGLE, ignoreCase = true)) gradientDrawable.cornerRadii = recLeftRadii
-                else gradientDrawable.cornerRadii = balLeftRadii
+                gradientDrawable.cornerRadii =
+                    when {
+                        bubbleStyle.equals(BotResponseConstants.ROUNDED, true) -> roundedRadii
+                        bubbleStyle.equals(BotResponseConstants.RECTANGLE, true) -> recLeftRadii
+                        else -> balLeftRadii
+                    }
 
                 gradientDrawable.setColor(
                     sharedPrefs.getStringValue(
@@ -135,62 +141,50 @@ class TextTemplateRow(
                         "#efeffc"
                     ).toColorInt()
                 )
-                gradientDrawable.setStroke(
-                    (1.dpToPx(context)),
-                    sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_LEFT_BG_COLOR, "#efeffc").toColorInt()
-                )
-
             } else {
-                if (bubbleStyle.equals(BotResponseConstants.ROUNDED, ignoreCase = true)) gradientDrawable.cornerRadii = roundedRadii
-                else if (bubbleStyle.equals(BotResponseConstants.RECTANGLE, ignoreCase = true)) gradientDrawable.cornerRadii = recRightRadii
-                else gradientDrawable.cornerRadii = balRightRadii
+                gradientDrawable.cornerRadii =
+                    when {
+                        bubbleStyle.equals(BotResponseConstants.ROUNDED, true) -> roundedRadii
+                        bubbleStyle.equals(BotResponseConstants.RECTANGLE, true) -> recRightRadii
+                        else -> balRightRadii
+                    }
 
                 gradientDrawable.setColor(
-                    sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
-                )
-                gradientDrawable.setStroke(
-                    (1.dpToPx(context)),
-                    sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_BG_COLOR, "#3F51B5").toColorInt()
+                    sharedPrefs.getStringValue(
+                        context,
+                        BotResponseConstants.THEME_NAME,
+                        BotResponseConstants.BUBBLE_RIGHT_BG_COLOR,
+                        "#3F51B5"
+                    ).toColorInt()
                 )
             }
 
-
-            message.movementMethod = LinkMovementMethod.getInstance()
-            message.autoLinkMask = Linkify.WEB_URLS
-            message.setLinkTextColor(LINK_TEXT_COLOR.toColorInt())
             root.gravity = if (isBotRequest) Gravity.END else Gravity.START
-            commonBind()
+
+            val isTimeStampRequired =
+                timeStamp.isNotEmpty() &&
+                        PreferenceRepositoryImpl()
+                            .getSharedPreference(context, BotResponseConstants.THEME_NAME)
+                            .getBoolean(BotResponseConstants.IS_TIME_STAMP_REQUIRED, false)
+
+            if(PreferenceRepositoryImpl()
+                    .getSharedPreference(context, BotResponseConstants.THEME_NAME)
+                    .getBoolean(BotResponseConstants.TIME_STAMP_IS_BOTTOM, false))
+                msgTimeStamp.isVisible = isTimeStampRequired
+            else
+                msgTimeStampTop.isVisible = isTimeStampRequired
+
+
+            if (isTimeStampRequired) {
+                msgTimeStampTop.text =
+                    HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                msgTimeStamp.text =
+                    HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            }
         }
     }
 
     override fun <Binding : ViewBinding> bindWithPayload(binding: Binding, payload: List<Any>) {
-        RowTextTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1)).commonBind()
-    }
-
-    private fun RowTextTemplateBinding.commonBind() {
-        val isTimeStampRequired = timeStamp.isNotEmpty() && PreferenceRepositoryImpl()
-            .getSharedPreference(context, BotResponseConstants.THEME_NAME)
-            .getBoolean(BotResponseConstants.IS_TIME_STAMP_REQUIRED, false)
-        msgTimeStamp.isVisible = isTimeStampRequired
-        if (isTimeStampRequired) {
-            msgTimeStamp.text = HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
-            msgTimeStamp.setTextColor(
-                PreferenceRepositoryImpl().getSharedPreference(context, BotResponseConstants.THEME_NAME)
-                    .getString(BotResponseConstants.TIME_STAMP_TXT_COLOR, "#B0B0B0")!!.toColorInt()
-            )
-        }
-    }
-
-    private fun makeLinkClickable(strBuilder: SpannableStringBuilder, span: URLSpan) {
-        val start = strBuilder.getSpanStart(span)
-        val end = strBuilder.getSpanEnd(span)
-        val flags = strBuilder.getSpanFlags(span)
-        val clickable: ClickableSpan = object : ClickableSpan() {
-            override fun onClick(view: View) {
-                actionEvent(BotChatEvent.UrlClick(span.url))
-            }
-        }
-        strBuilder.setSpan(clickable, start, end, flags)
-        strBuilder.removeSpan(span)
+        bind(binding)
     }
 }

@@ -11,6 +11,7 @@ import com.kore.ui.base.BaseView
 interface BotChatView : BaseView {
     fun init()
     fun addMessageToAdapter(baseBotMessage: BaseBotMessage)
+    fun addStreamingMessage(message: String?, endFlag: Boolean)
     fun onActionEvent(event: UserActionEvent)
     fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean)
     fun onBrandingDetails(header: BotActiveThemeModel?)
@@ -21,11 +22,7 @@ interface BotChatView : BaseView {
     abstract fun showQuickReplies(quickReplies: List<Map<String, *>>?, type: String?, isStacked: Boolean)
     fun getAdapterLastItems(): BaseBotMessage?
     fun hideQuickReplies()
-
-    //    fun onLoadingHistory()
     fun onLoadHistory(isReconnect: Boolean)
-
-    //    fun onChatHistory(list: List<BaseBotMessage>, isReconnection: Boolean)
     fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int)
     fun showTemplateBottomSheet(botResponse: BotResponse)
 }

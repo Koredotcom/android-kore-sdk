@@ -10,6 +10,7 @@ object SDKConfiguration {
     private var customData: HashMap<String, Any>? = null
     private var botBrandingModel: BotBrandingModel? = null
     private var socketConnectionMode: String? = null
+    private var iconUrl: String? = null
 
     object OverrideKoreConfig {
         var isEmojiShortcutEnable: Boolean = true
@@ -23,7 +24,7 @@ object SDKConfiguration {
         var showAttachment: Boolean = true
         var showASRMicroPhone: Boolean = true
         var showTextToSpeech: Boolean = true
-        var showHamburgerMenu: Boolean = false
+        var showHamburgerMenu: Boolean = true
         var historyInitialCall: Boolean = false
     }
 
@@ -62,4 +63,10 @@ object SDKConfiguration {
     }
 
     fun getConnectionMode(): String? = socketConnectionMode
+
+    fun setIconUrl(iconUrl: String?) {
+        this.iconUrl = iconUrl
+    }
+
+    fun getIconUrl(): String? = iconUrl
 }

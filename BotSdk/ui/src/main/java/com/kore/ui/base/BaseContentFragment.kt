@@ -48,6 +48,8 @@ abstract class BaseContentFragment : Fragment(), BotContentView, QuickRepliesCli
 
     abstract fun onLoadHistory(isReconnect: Boolean)
 
+    abstract fun addStreamingMessage(message: String?)
+
     fun showCalenderTemplate(payload: HashMap<String, Any>) {
         if (BotResponseConstants.TEMPLATE_TYPE_DATE == payload[BotResponseConstants.KEY_TEMPLATE_TYPE]) {
             val cal = Calendar.getInstance()

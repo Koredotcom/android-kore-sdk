@@ -4,6 +4,7 @@ import android.content.Context
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.internal.LinkedTreeMap
 import com.kore.SDKConfig
+import com.kore.common.SDKConfiguration
 import com.kore.common.event.UserActionEvent
 import com.kore.common.utils.LogUtils
 import com.kore.model.BaseBotMessage
@@ -67,6 +68,11 @@ import com.kore.ui.row.botchat.multiselect.MultiSelectTemplateRow
 import com.kore.ui.row.botchat.radiooptions.RadioOptionsTemplateRow
 import com.kore.ui.row.botchat.tablelist.TableListTemplateRow
 import com.kore.ui.row.listener.ChatContentStateListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -154,7 +160,10 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                 }
 
                 is BotResponse -> {
-                    val iconUrl = baseBotMsg.icon
+                    val iconUrl = SDKConfiguration.getIconUrl() ?: baseBotMsg.icon.also {
+                        SDKConfiguration.setIconUrl(it)
+                    }
+
                     if (baseBotMsg.message.isEmpty()) emptyList<SimpleListRow>()
                     when (val body = baseBotMsg.message[0].cInfo?.body) {
                         is String -> {
@@ -163,7 +172,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
                         is PayloadOuter -> {
                             var newRows = createCustomTemplate(body.type, baseBotMsg, isLastItem, rows)
-                            if (newRows.size != rows.size+1) {
+                            if (newRows.size != rows.size) {
                                 LogUtils.e("SLIDER_VIEW", (body.payload?.get(SLIDER_VIEW) as Boolean?).toString())
                                 if (body.payload != null && (body.payload?.get(SLIDER_VIEW) as Boolean? == false || bottomSheetDialog != null))
                                     rows = newRows
@@ -469,7 +478,6 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                                                 rows = rows + createTextTemplate(msgId, false, textMessage.toString(), iconUrl, isLastItem, msgTime)
                                             }
                                         }
-
                                         else -> {
                                             if (bottomSheetDialog == null)
                                                 rows = rows + createTextTemplate(
@@ -582,5 +590,46 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
 
         val newRows = createRows(messages)
         submitList(newRows)
+    }
+
+    private val streamChannel = Channel<String>(Channel.UNLIMITED)
+
+    init {
+        CoroutineScope(Dispatchers.Main).launch {
+            for (chunk in streamChannel) {
+                appendChunk(chunk)
+//                delay(20) // control typing speed (20–50ms feels natural)
+            }
+        }
+    }
+
+    private fun appendChunk(chunk: String) {
+        val lastMessage = messages.lastOrNull() as? BotResponse ?: return
+
+        when (val body = lastMessage.message.getOrNull(0)?.cInfo?.body) {
+            is String -> {
+                lastMessage.message[0].cInfo?.body = body + chunk
+            }
+            is PayloadOuter -> {
+                body.text = (body.text ?: "") + chunk
+            }
+        }
+
+        submitList(createRows(messages))
+    }
+
+    fun addStreamingMessage(chunk: String) {
+//        streamChannel.trySend(chunk)
+        val lastMessage = messages.lastOrNull() as? BotResponse ?: return
+        when (val body = lastMessage.message.getOrNull(0)?.cInfo?.body) {
+            is String -> {
+                lastMessage.message[0].cInfo?.body = body + chunk
+            }
+            is PayloadOuter -> {
+                body.text = (body.text ?: "") + chunk
+            }
+        }
+
+        submitList(createRows(messages))
     }
 }

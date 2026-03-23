@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.text.Editable
@@ -68,6 +67,7 @@ import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_FILE
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_IMAGE
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_VIDEO
 import com.kore.uploadfile.helper.MediaAttachmentHelper.Companion.REQ_VIDEO_CAPTURE
+import androidx.core.graphics.drawable.toDrawable
 
 class ChatFooterFragment : BaseFooterFragment() {
     lateinit var binding: BotFooterFragmentBinding
@@ -141,7 +141,7 @@ class ChatFooterFragment : BaseFooterFragment() {
                 binding.edtTxtMessage.text?.clear()
                 arrAttachments = emptyList()
             } else if (binding.edtTxtMessage.text.trim().toString().isNotEmpty()) {
-                actionEvent(BotChatEvent.SendMessage(binding.edtTxtMessage.text.toString(), null))
+                actionEvent(BotChatEvent.SendMessage(binding.edtTxtMessage.text.trim().toString(), null))
                 binding.edtTxtMessage.text?.clear()
             }
         }
@@ -245,7 +245,7 @@ class ChatFooterFragment : BaseFooterFragment() {
                 it.window?.let { window ->
                     val wlp: WindowManager.LayoutParams = window.attributes
                     wlp.gravity = Gravity.BOTTOM
-                    window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    window.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
                 }
             }
         }
@@ -333,9 +333,9 @@ class ChatFooterFragment : BaseFooterFragment() {
         try {
             Speech.getInstance()?.stopTextToSpeech()
             Speech.getInstance()?.startListening(binding.progress, this@ChatFooterFragment)
-        } catch (exc: SpeechRecognitionNotAvailable) {
+        } catch (_: SpeechRecognitionNotAvailable) {
             showSpeechNotSupportedDialog()
-        } catch (exc: GoogleVoiceTypingDisabledException) {
+        } catch (_: GoogleVoiceTypingDisabledException) {
             showEnableGoogleVoiceTyping()
         }
     }

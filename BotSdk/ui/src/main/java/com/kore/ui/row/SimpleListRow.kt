@@ -21,6 +21,7 @@ import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 import com.kore.ui.row.listener.ChatContentStateListener
 import androidx.core.graphics.toColorInt
+import com.kore.common.SDKConfiguration
 
 abstract class SimpleListRow {
     companion object {
@@ -63,22 +64,35 @@ abstract class SimpleListRow {
                 return
             }
 
+            // NEW LOGIC: Adjust gravity based on the config
+            val layoutParams = botIcon.layoutParams as LayoutParams
+            if (SDKConfiguration.OverrideKoreConfig.showIconTop) {
+                layoutParams.gravity = android.view.Gravity.TOP
+            } else {
+                layoutParams.gravity = android.view.Gravity.BOTTOM
+            }
+
             val isTimeStampVisible = PreferenceRepositoryImpl()
                 .getSharedPreference(root.context, BotResponseConstants.THEME_NAME)
                 .getBoolean(BotResponseConstants.IS_TIME_STAMP_REQUIRED, false)
 
+            val isTimeStampTop = PreferenceRepositoryImpl()
+                .getSharedPreference(context, BotResponseConstants.THEME_NAME)
+                .getBoolean(BotResponseConstants.TIME_STAMP_IS_BOTTOM, false)
+
             if (isTimeStampVisible && !isTemplate) {
                 val layoutParams = botIcon.layoutParams as LayoutParams
-                layoutParams.topMargin = (25.dpToPx(context))
+                layoutParams.topMargin = if (isTimeStampTop) 5.dpToPx(context) else 23.dpToPx(context)
                 layoutParams.marginEnd = (5.dpToPx(context))
+                layoutParams.bottomMargin = if (isTimeStampTop) 22.dpToPx(context) else 0.dpToPx(context)
                 botIcon.layoutParams = layoutParams
             }
 
             if (!url.isNullOrEmpty()) {
-                Glide.with(context).load(url.toString()).error(com.kore.botclient.R.drawable.ic_launcher)
+                Glide.with(context).load(url).error(com.kore.botclient.R.drawable.ic_launcher)
                     .into<DrawableImageViewTarget>(DrawableImageViewTarget(botIcon))
             } else {
-                botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.mipmap.ic_launcher, context.getTheme()))
+                botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.resources, R.mipmap.ic_launcher, context.getTheme()))
             }
         }
     }

@@ -1,6 +1,8 @@
 package com.kore.ui.botchat.fragment
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,11 +34,17 @@ import com.kore.ui.databinding.BotContentLayoutBinding
 import com.kore.ui.row.botchat.BotChatItemDecoration
 import com.kore.ui.row.botchat.BotChatRowType
 import com.kore.ui.row.botchat.TimeStampTemplateRow
+import java.util.LinkedList
+import java.util.Queue
 
 class ChatContentFragment : BaseContentFragment() {
     private lateinit var binding: BotContentLayoutBinding
     private lateinit var chatAdapter: BotChatAdapter
     private lateinit var actionEvent: (event: BotChatEvent) -> Unit
+    private val wordQueue: Queue<String?> = LinkedList<String?>()
+    private var isStreamingRunning = false
+    private var appendedWordCount = 0
+    private val streamingHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -140,6 +148,73 @@ class ChatContentFragment : BaseContentFragment() {
 
     override fun onLoadHistory(isReconnect: Boolean) {
         contentViewModel.loadChatHistory(isReconnect)
+    }
+
+    override fun addStreamingMessage(message: String?) {
+        if(message?.isNotEmpty() == true)
+        {
+            chatAdapter.addStreamingMessage(message);
+            binding.chatContentList.post(Runnable { binding.chatContentList.scrollBy(0, 1500) })
+        }
+    }
+
+//    override fun addStreamingMessage(message: String?) {
+//        if (message == null || message.isBlank()) return
+//
+//        wordQueue.add(message)
+//
+//        if (!isStreamingRunning) {
+//            processNextBatch()
+//        }
+//    }
+
+    private fun processNextBatch() {
+        if (wordQueue.isEmpty()) {
+            isStreamingRunning = false
+            return
+        }
+
+        isStreamingRunning = true
+
+        val batchSize = getBatchSize()
+
+        val builder = StringBuilder()
+
+        for (i in 0..<batchSize) {
+            val word: String = wordQueue.poll() ?: break
+
+            builder.append(word).append(" ")
+            appendedWordCount++
+        }
+
+        chatAdapter.addStreamingMessage(builder.toString())
+
+        if (appendedWordCount % 3 == 0) {
+            binding.chatContentList.post(Runnable { binding.chatContentList.scrollBy(0, 1500) })
+        }
+
+        streamingHandler.postDelayed(
+            Runnable { this.processNextBatch() },
+            getAdaptiveDelay().toLong()
+        )
+    }
+
+    private fun getBatchSize(): Int {
+        val size: Int = wordQueue.size
+        if (size > 80) return 8
+        if (size > 40) return 5
+        if (size > 15) return 3
+
+        return 1
+    }
+
+    private fun getAdaptiveDelay(): Int {
+        val size: Int = wordQueue.size
+        if (size > 80) return 25
+        if (size > 40) return 30
+        if (size > 15) return 40
+
+        return 35
     }
 
     override fun getAdapterCount(): Int = chatAdapter.itemCount

@@ -9,6 +9,7 @@ import com.kore.common.model.BotConfigModel
 import com.kore.common.utils.DateUtils
 import com.kore.common.utils.DateUtils.formattedSentDateV6
 import com.kore.common.utils.DateUtils.isoFormatter
+import com.kore.common.utils.LogUtils
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotInfoModel
 import com.kore.model.BotMessage
@@ -117,6 +118,78 @@ class BotClientHelper {
             )
         }
 
+
+//        fun processStreamMessage(payload: String): BotResponse? {
+//            return try {
+//                val botResponse: BotResponse? = Gson().fromJson(payload, BotResponse::class.java)
+//
+//                if (botResponse?.message.isNullOrEmpty()) {
+//                    return null
+//                }
+//
+//                var payOuter: PayloadOuter? = null
+//
+//                val compModel = botResponse.message.getOrNull(0)?.component
+//                payOuter = compModel?.payload as PayloadOuter?
+//
+//                payOuter?.text?.let { text ->
+//                    if (text.contains("&quot")) {
+//                        payOuter = Gson().fromJson(
+//                            text.replace("&quot;", "\""),
+//                            PayloadOuter::class.java
+//                        )
+//                    }
+//                }
+//
+//                botResponse
+//            } catch (e: Exception) {
+//                LogUtils.e("Error", e.toString())
+//                null
+//            }
+//        }
+
+        fun processStreamMessage(payload: String): BotResponse? {
+            return try {
+                val botResponse = Gson().fromJson(payload, BotResponse::class.java)
+                    ?: return null
+
+                if (botResponse.message.isEmpty()) {
+                    return null
+                }
+
+                val compModel = botResponse.message.getOrNull(0)?.component
+                    ?: return botResponse
+
+                val payloadAny = compModel.payload
+
+                val payOuter: PayloadOuter? = when (payloadAny) {
+                    is PayloadOuter -> payloadAny
+                    is LinkedTreeMap<*, *> -> {
+                        Gson().fromJson(
+                            Gson().toJson(payloadAny),
+                            PayloadOuter::class.java
+                        )
+                    }
+                    else -> null
+                }
+
+                payOuter?.text?.let { text ->
+                    if (text.contains("&quot")) {
+                        compModel.payload = Gson().fromJson(
+                            text.replace("&quot;", "\""),
+                            PayloadOuter::class.java
+                        )
+                    }
+                }
+
+                botResponse
+
+            } catch (e: Exception) {
+                LogUtils.e("Error", e.toString())
+                null
+            }
+        }
+
         private fun processBotResponse(response: BotResponse): BotResponse {
             val botInfo = response.botInfo
             val timeStamp = (isoFormatter.parse(response.createdOn)?.time ?: 0L) + TimeZone.getDefault().rawOffset + TimeZone.getDefault().dstSavings
@@ -145,13 +218,13 @@ class BotClientHelper {
                     getPayloadOuter(msg, object : TypeToken<PayloadOuter>() {}.type)
                 }
             } catch (e: JsonSyntaxException) {
-                e.printStackTrace()
+//                e.printStackTrace()
             }
 
             if (outerPayload == null) {
                 val outer = botResponse.message[0].component?.payload
                 if (outer != null && outer !is String) {
-                    val inner = (outer as Map<String, Any>)[PAYLOAD] as LinkedTreeMap<String, Any>?
+                    val inner = (outer as Map<*, *>)[PAYLOAD] as LinkedTreeMap<*, *>?
                     if (inner != null && inner.containsKey(KEY_TEMPLATE_TYPE)) {
                         val jsonOuter = Gson().toJson(outer)
                         try {

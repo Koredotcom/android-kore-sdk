@@ -141,6 +141,14 @@ class CustomContentFragment : BaseContentFragment() {
         contentViewModel.loadChatHistory(isReconnect)
     }
 
+    override fun addStreamingMessage(message: String?) {
+        if(message?.isNotEmpty() == true)
+        {
+            chatAdapter.addStreamingMessage(message);
+            binding.chatContentList.post(Runnable { binding.chatContentList.scrollBy(0, 1500) })
+        }
+    }
+
     override fun getAdapterCount(): Int = chatAdapter.itemCount
 
     override fun quickRepliesClicked(quickReplyTemplate: Map<String, *>) {

@@ -23,8 +23,6 @@ import com.kore.common.utils.ToastUtils
 import com.kore.constants.SharedPrefConstants.HISTORY_COUNT
 import com.kore.data.repository.branding.BrandingRepository
 import com.kore.data.repository.branding.BrandingRepositoryImpl
-import com.kore.data.repository.chathistory.ChatHistoryRepository
-import com.kore.data.repository.chathistory.ChatHistoryRepositoryImpl
 import com.kore.data.repository.dynamicurl.DynamicUrlRepository
 import com.kore.data.repository.dynamicurl.DynamicUrlRepositoryImpl
 import com.kore.data.repository.preference.PreferenceRepository
@@ -60,18 +58,16 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     }
 
     private var isFirstTime = true
-//    private var historyOffset = 0
-//    private var moreHistory = true
     private var isAgentTransfer = false
     private var isActivityResumed = false
     private lateinit var context: Context
     private var arrMessageList = ArrayList<String>()
     private val handler = Handler(Looper.getMainLooper())
     private val botClient: BotClient = BotClient.getInstance()
-    private val chatHistoryRepository: ChatHistoryRepository = ChatHistoryRepositoryImpl()
     private val brandingRepository: BrandingRepository = BrandingRepositoryImpl()
     private val dynamicUrlRepository: DynamicUrlRepository = DynamicUrlRepositoryImpl()
     private val preferenceRepository: PreferenceRepository = PreferenceRepositoryImpl()
+    private var isStreamMessage : Boolean = false
 
     private val speechSynthesizerHelper by lazy {
         SpeechSynthesizerHelper(context).apply { setListener(speechSynthesizerListener) }
@@ -105,21 +101,37 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                         return
                     }
                     if (it.contains(BotResponseConstants.KEY_BOT_RESPONSE)) {
-                        LogUtils.i(LOG_TAG, response)
-                        val botResponse = BotClientHelper.processBotMessage(it)
-                        if (botResponse !is BotResponse || botResponse.message.isEmpty()) return
+                        LogUtils.i(LOG_TAG, response);
+
+                        var botResponse: BotResponse = if(!isStreamMessage)
+                            BotClientHelper.processBotMessage(it) as BotResponse
+                        else
+                            BotClientHelper.processStreamMessage(response) as BotResponse
+
+                        if (botResponse.message.isEmpty()) return
 
                         isAgentTransfer = botResponse.fromAgent
                         getView()?.showTypingIndicator(botResponse.icon)
+
                         botResponse.message[0].cInfo?.body?.let { body ->
                             if (body is PayloadOuter && body.payload?.get(BotResponseConstants.SLIDER_VIEW) as Boolean? == true) {
                                 getView()?.showTemplateBottomSheet(botResponse)
                                 getView()?.stopTypingIndicator()
                                 return
                             } else {
-                                getView()?.addMessageToAdapter(botResponse)
+                                if (!isStreamMessage) {
+                                    getView()?.addMessageToAdapter(botResponse)
+                                    isStreamMessage = botResponse.sM
+                                } else {
+                                    val text = botResponse.message[0].cInfo?.body as String
+                                    getView()?.addStreamingMessage(text, botResponse.endChunk)
+
+                                    if (botResponse.endChunk)
+                                        isStreamMessage = false
+                                }
                             }
                         }
+
                         // historyOffset += 1
                         val lastItem = getView()?.getAdapterLastItems() as BotResponse
 

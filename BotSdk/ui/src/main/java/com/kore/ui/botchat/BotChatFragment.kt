@@ -181,6 +181,13 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         )
     }
 
+    override fun addStreamingMessage(message: String?, endFlag: Boolean) {
+        if (!message!!.isBlank()) {
+            contentFragment.addStreamingMessage(message)
+            footerFragment.enableSendButton(endFlag)
+        }
+    }
+
     override fun onActionEvent(event: UserActionEvent) {
         when (event) {
             is BotChatEvent.SendMessage -> {
@@ -258,19 +265,29 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         val body = botResponse.message ?: return
         if (body[BotResponseConstants.SIP_USER] != null) {
             if (body.isNotEmpty()) {
-                val proxy = (body[BotResponseConstants.ADDRESSES] as List<String>)[0].split(":")[1].replace("//", "")
-                val sipAccount = SipAccount(requireContext())
-                sipAccount.username = botChatViewModel.getUserId()
-                sipAccount.displayName = botChatViewModel.getUserId()
-                sipAccount.domain = body[BotResponseConstants.DOMAIN] as String
-                sipAccount.proxy = proxy
-                sipAccount.port = 5060
-                sipAccount.transport = Transport.UDP
 
-                Prefs.setSipAccount(requireContext(), sipAccount)
-                Prefs.setIsAutoRedirect(requireContext(), true)
+                val addresses = body[BotResponseConstants.ADDRESSES] as? List<*>
+                val proxy = (addresses?.firstOrNull() as? String)
+                    ?.split(":")
+                    ?.getOrNull(1)
+                    ?.replace("//", "")
 
-                showAlertDialog(body)
+                val domain = body[BotResponseConstants.DOMAIN] as? String
+
+                if (proxy != null && domain != null) {
+                    val sipAccount = SipAccount(requireContext())
+                    sipAccount.username = botChatViewModel.getUserId()
+                    sipAccount.displayName = botChatViewModel.getUserId()
+                    sipAccount.domain = domain
+                    sipAccount.proxy = proxy
+                    sipAccount.port = 5060
+                    sipAccount.transport = Transport.UDP
+
+                    Prefs.setSipAccount(requireContext(), sipAccount)
+                    Prefs.setIsAutoRedirect(requireContext(), true)
+
+                    showAlertDialog(body)
+                }
             }
         } else {
             when (body[BotResponseConstants.TYPE].toString()) {
