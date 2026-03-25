@@ -71,7 +71,6 @@ import com.kore.ui.row.listener.ChatContentStateListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -87,7 +86,8 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
         msgId: String, isRequest: Boolean, msg: String?, iconUrl: String?, isLastItem: Boolean, msgTime: String = "", errorTextColor: String = ""
     ): TextTemplateRow {
         val rowType = BotChatRowType.getRowType(if (isRequest) ROW_REQUEST_MSG_PROVIDER else ROW_RESPONSE_MSG_PROVIDER)
-        return TextTemplateRow(rowType, context, msgId, msg, isRequest, iconUrl, isLastItem, actionEvent, msgTime, errorTextColor)
+        return TextTemplateRow(rowType,
+            msgId, msg, isRequest, iconUrl, actionEvent, msgTime, errorTextColor)
     }
 
     fun setActionEvent(actionEvent: (event: UserActionEvent) -> Unit) {

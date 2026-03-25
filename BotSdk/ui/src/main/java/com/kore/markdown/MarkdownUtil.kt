@@ -5,7 +5,7 @@ import java.lang.reflect.Array
 object MarkdownUtil {
 
     fun processMarkDown(textStr: String): String {
-        var text = textStr
+        var text = preprocess(textStr)
         text = markDownBoldAndItalic(
             text, MarkdownConstant.STAR,
             MarkdownConstant.BOLD_HTML_START, MarkdownConstant.BOLD_HTML_END
@@ -168,13 +168,17 @@ object MarkdownUtil {
             }*/
             val builder = StringBuilder(text)
             builder.delete(indexP1, indexP4 + 1)
-            val hyperLink: String =
-                java.lang.String.format(MarkdownConstant.LINK_FORMAT, link, hyper)
+            val hyperLink: String = createLink(link, hyper)
             builder.insert(indexP1, hyperLink)
             text = builder.toString()
             //            text = text.replace("!<", "<");
         } while (true)
+
         return text
+    }
+
+    fun createLink(link: String, text: String): String {
+        return "<a href=\"$link\" target=\"_blank\">$text</a>"
     }
 
     /**
@@ -394,6 +398,22 @@ object MarkdownUtil {
             }
         }
         return max
+    }
+
+    fun preprocess(text: String): String {
+        val urlRegex = "(?<!\\()https?://[^\\s)]+".toRegex()
+
+        return text.replace(urlRegex) { match ->
+            val url = match.value
+
+            // If already part of markdown link, skip
+            val before = text.take(match.range.first)
+            if (before.endsWith("](")) {
+                url
+            } else {
+                "[$url]($url)"
+            }
+        }
     }
 
     private fun validateArray(array: Any?) {

@@ -57,8 +57,7 @@ class OptionsActionSheetFragment : BottomSheetDialogFragment() {
 
         val sharedPreferences = requireActivity().getSharedPreferences(BotResponseConstants.THEME_NAME, Context.MODE_PRIVATE)
 
-        if (sharedPreferences != null)
-            sharedPreferences.getString(BotResponseConstants.WIDGET_BG_COLOR, "#FFFFFF")?.toColorInt()?.let { llBottomLayout.setBackgroundColor(it) }
+        sharedPreferences?.getString(BotResponseConstants.WIDGET_BG_COLOR, "#FFFFFF")?.toColorInt()?.let { llBottomLayout.setBackgroundColor(it) }
 
         val layoutManager = FlexboxLayoutManager(requireActivity())
         layoutManager.flexDirection = FlexDirection.ROW
@@ -97,7 +96,7 @@ class OptionsActionSheetFragment : BottomSheetDialogFragment() {
 
         tvOptionsTitle.text = requireActivity().resources.getString(R.string.menu)
 
-        if (sharedPreferences != null) sharedPreferences.getString(BotResponseConstants.WIDGET_TXT_COLOR, "#000000")?.toColorInt()?.let {
+        sharedPreferences?.getString(BotResponseConstants.WIDGET_TXT_COLOR, "#000000")?.toColorInt()?.let {
             tvOptionsTitle.setTextColor(it)
         }
 
@@ -110,9 +109,6 @@ class OptionsActionSheetFragment : BottomSheetDialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        if (bottomSheetDialog?.window != null) {
-            bottomSheetDialog?.window?.attributes?.windowAnimations = R.style.DialogAnimation
-        }
 
         bottomSheetDialog?.setOnShowListener { dialogInterface: DialogInterface ->
             val d = dialogInterface as BottomSheetDialog

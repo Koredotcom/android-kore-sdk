@@ -72,7 +72,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:5.0.5'
     implementation 'com.github.ybq:Android-SpinKit:1.1.0'
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
-    implementation 'com.github.DocsInternal-Kore:WebRtcSdk:0.0.2'
+    implementation 'com.github.DocsInternal-Kore:WebRtcSdk:0.0.4'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0'
     implementation 'org.apache.httpcomponents:httpmime:4.5.14'
     implementation 'com.squareup.picasso:picasso:2.71828'

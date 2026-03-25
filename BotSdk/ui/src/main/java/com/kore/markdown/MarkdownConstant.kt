@@ -6,14 +6,10 @@ class MarkdownConstant {
         const val STAR = '*'
         const val TILDE = '~'
         const val NEW_LINE = '\n'
-
         const val BOLD_HTML_START = "<b>"
         const val BOLD_HTML_END = "</b>"
-
         const val ITALIC_HTML_START = "<i>"
         const val ITALIC_HTML_END = "</i>"
-
-        const val LINK_FORMAT = "<a href=%s>%s</a>"
         const val LINK_P1 = '['
         const val LINK_P2 = ']'
         const val LINK_P3 = '('

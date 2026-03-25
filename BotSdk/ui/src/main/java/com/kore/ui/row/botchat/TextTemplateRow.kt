@@ -1,6 +1,5 @@
 package com.kore.ui.row.botchat
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.GradientDrawable
 import android.text.SpannableStringBuilder
@@ -33,12 +32,10 @@ import com.kore.ui.utils.EmojiUtils
 
 class TextTemplateRow(
     override val type: SimpleListRowType,
-    private val context: Context,
     private val id: String,
     private var botMessage: String?,
     private val isBotRequest: Boolean,
     private val iconUrl: String?,
-    private val isLastItem: Boolean = false,
     private val actionEvent: (event: UserActionEvent) -> Unit,
     private val timeStamp: String,
     private val errorTextColor: String = ""
@@ -90,7 +87,7 @@ class TextTemplateRow(
                 strBuilder.removeSpan(span)
             }
 
-            message.text = strBuilder
+            message.text = strBuilder.trim()
             message.movementMethod = LinkMovementMethod.getInstance()
             message.autoLinkMask = Linkify.WEB_URLS
             message.setLinkTextColor(LINK_TEXT_COLOR.toColorInt())

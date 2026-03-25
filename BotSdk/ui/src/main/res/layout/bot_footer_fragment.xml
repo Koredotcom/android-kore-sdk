@@ -73,7 +73,7 @@
             android:layout_height="48dp"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
@@ -205,7 +205,6 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/dimen_5dp"
             android:layout_marginEnd="@dimen/dimen_10dp"
             android:orientation="horizontal"
             android:visibility="visible">
@@ -230,7 +229,7 @@
 
             <ImageView
                 android:id="@+id/rec_audio_img"
-                android:layout_width="@dimen/dimen_30dp"
+                android:layout_width="@dimen/dimen_35dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:contentDescription="@string/app_name"
