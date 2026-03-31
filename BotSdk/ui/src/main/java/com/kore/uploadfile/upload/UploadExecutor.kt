@@ -8,7 +8,6 @@ import com.kore.uploadfile.listeners.ChunkUploadListener
 import com.kore.uploadfile.ssl.HttpsUrlConnectionBuilder
 import org.apache.http.entity.mime.MultipartEntityBuilder
 import org.apache.http.entity.mime.content.ByteArrayBody
-import org.apache.http.entity.mime.content.StringBody
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.DataOutputStream
@@ -28,7 +27,7 @@ class UploadExecutor(
     private val isWebhook: Boolean,
     private val botId: String
 ) : Runnable {
-    private val LOG_TAG = "UploadExecutor"
+    private val logtag = "UploadExecutor"
 
     override fun run() {
         var serverResponse: StringBuilder? = null
@@ -37,7 +36,7 @@ class UploadExecutor(
         var bufferedReader: BufferedReader? = null
         var dataOutputStream: DataOutputStream? = null
         try {
-            LogUtils.d(LOG_TAG, "About to send chunks" + chunkNo + "for file" + fileName)
+            LogUtils.d(logtag, "About to send chunks" + chunkNo + "for file" + fileName)
             val fullUrl: String = if (isAnonymousUser) {
                 if (!isWebhook) host + String.format(
                     FileUploadEndPoints.ANONYMOUS_CHUNK_UPLOAD,
@@ -64,8 +63,8 @@ class UploadExecutor(
             httpsURLConnection.setRequestProperty("Cache-Control", "no-cache")
             httpsURLConnection.readTimeout = Constants.CONNECTION_READ_TIMEOUT
             val builder = MultipartEntityBuilder.create()
-            builder.addPart("chunkNo", StringBody(chunkNo.toString() + ""))
-            builder.addPart("fileToken", StringBody(fileToken))
+            builder.addTextBody("chunkNo", chunkNo.toString())
+            builder.addTextBody("fileToken", fileToken)
             builder.addPart("chunk", ByteArrayBody(dataToSet, fileName))
             val reqEntity = builder.build()
             httpsURLConnection.setRequestProperty(reqEntity.contentType.name, reqEntity.contentType.value)
@@ -82,26 +81,26 @@ class UploadExecutor(
                 serverResponse.append(c.toChar())
                 c = bufferedReader.read()
             }
-            LogUtils.d(LOG_TAG, "Got serverResponse for chunk upload$serverResponse")
+            LogUtils.d(logtag, "Got serverResponse for chunk upload$serverResponse")
             val statusCode = httpsURLConnection.responseCode
-            LogUtils.e(LOG_TAG, "status code for chunks" + chunkNo + "is" + statusCode)
+            LogUtils.e(logtag, "status code for chunks" + chunkNo + "is" + statusCode)
             var chunkNumber: String? = null
             if (statusCode == 200) {
                 val jsonObject = JSONObject(serverResponse.toString())
                 if (jsonObject.has("chunkNo")) {
                     chunkNumber = jsonObject["chunkNo"] as String
                     listener?.notifyChunkUploadCompleted(chunkNumber, fileName)
-                    LogUtils.e(LOG_TAG, "Response for chunk ::::" + chunkNumber + "for file" + fileName)
+                    LogUtils.e(logtag, "Response for chunk ::::" + chunkNumber + "for file" + fileName)
                 }
             } else {
                 listener?.notifyChunkUploadCompleted(chunkNumber, fileName)
                 throw Exception("Response code not 200")
             }
         } catch (e: Exception) {
-            LogUtils.e(LOG_TAG, "Exception in uploading chunk $e")
+            LogUtils.e(logtag, "Exception in uploading chunk $e")
             e.printStackTrace()
             listener?.notifyChunkUploadCompleted(chunkNo.toString() + "", fileName)
-            LogUtils.e(LOG_TAG, "Failed to post message for chunk no:: $chunkNo")
+            LogUtils.e(logtag, "Failed to post message for chunk no:: $chunkNo")
         } finally {
             try {
                 httpsURLConnection?.disconnect()

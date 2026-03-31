@@ -120,7 +120,7 @@ class ChatHistoryRepositoryImpl : ChatHistoryRepository {
         createdOn: String,
         msgId: String
     ): BotResponse {
-        val payloadOuter = if (outer is PayloadOuter) outer else PayloadOuter(text = outer.toString())
+        val payloadOuter = outer as? PayloadOuter ?: PayloadOuter(text = outer.toString())
         val cModel = ComponentModel(BotResponseConstants.COMPONENT_TYPE_TEMPLATE, payloadOuter)
         val botResponseMessage = BotResponseMessage(BotResponseConstants.COMPONENT_TYPE_TEXT, cModel, ComponentInfo(outer))
         val message: java.util.ArrayList<BotResponseMessage> = java.util.ArrayList<BotResponseMessage>(1)

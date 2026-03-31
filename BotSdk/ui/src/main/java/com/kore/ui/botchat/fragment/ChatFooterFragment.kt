@@ -140,6 +140,7 @@ class ChatFooterFragment : BaseFooterFragment() {
                 binding.attachmentRecycler.isVisible = false
                 binding.edtTxtMessage.text?.clear()
                 arrAttachments = emptyList()
+                enableSendButton(false)
             } else if (binding.edtTxtMessage.text.trim().toString().isNotEmpty()) {
                 actionEvent(BotChatEvent.SendMessage(binding.edtTxtMessage.text.trim().toString(), null))
                 binding.edtTxtMessage.text?.clear()
@@ -206,7 +207,8 @@ class ChatFooterFragment : BaseFooterFragment() {
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
             if (s.isEmpty()) {
-                enableSendButton(false)
+                if(!binding.attachmentRecycler.isVisible)
+                    enableSendButton(false)
             } else if (s.isNotEmpty()) {
                 if ((SDKConfiguration.getBotConfigModel()?.isWebHook == true && NetworkUtils.isNetworkAvailable(requireContext())) || BotClient.isConnected()) {
                     enableSendButton(true)
@@ -497,7 +499,8 @@ class ChatFooterFragment : BaseFooterFragment() {
         arrAttachments = mediaData
         binding.attachmentRecycler.isVisible = true
         binding.attachmentRecycler.adapter = ComposeBarAttachmentAdapter(requireActivity(), this, mediaData)
-        enableSendButton(true)
+        binding.recAudioImg.isVisible = !binding.attachmentRecycler.isVisible
+        binding.llSend.isVisible = binding.attachmentRecycler.isVisible
     }
 
     private fun getDrawableByExt(ext: String): String {

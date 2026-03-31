@@ -25,6 +25,7 @@ import com.kore.common.constants.MediaConstants.Companion.EXTRA_FILE_URI
 import com.kore.common.constants.MediaConstants.Companion.EXTRA_THUMBNAIL_FILE_PATH
 import com.kore.common.constants.MediaConstants.Companion.FOR_MESSAGE
 import com.kore.common.constants.MediaConstants.Companion.MEDIA_TYPE_IMAGE
+import com.kore.common.constants.MediaConstants.Companion.MEDIA_TYPE_VIDEO
 import com.kore.exception.NoExternalStorageException
 import com.kore.exception.NoWriteAccessException
 import com.kore.ui.utils.BitmapUtils
@@ -158,7 +159,7 @@ class CaptureViewModel : BaseViewModel<CaptureView>() {
         onResult: (filePath: String, fileName: String, fileExtension: String, intent: Intent) -> Unit
     ) {
         if (fileContext.equals(FOR_MESSAGE, ignoreCase = true) && cameraMediaUri != null) {
-            getImageForGalleryFooter(cameraMediaUri, thumbnailFilePath, onResult)
+            getVideoForGalleryFooter(cameraMediaUri, thumbnailFilePath, onResult)
         } else {
             onCancel()
         }
@@ -303,6 +304,79 @@ class CaptureViewModel : BaseViewModel<CaptureView>() {
             onCancel()
         }
         return selectedUri
+    }
+
+    private fun getVideoForGalleryFooter(
+        videoUri: Uri,
+        thumbnailFilePath: String,
+        onResult: (
+            filePath: String,
+            fileName: String,
+            fileExtension: String,
+            intent: Intent
+        ) -> Unit
+    ) {
+        var mediaFilePath = ""
+        var mediaFileName = ""
+        var mediaFileExtension = "mp4"
+
+        try {
+            val contentResolver = context.contentResolver
+
+            var fileName: String? = null
+            val cursor = contentResolver.query(videoUri, null, null, null, null)
+            cursor?.use {
+                val nameIndex = it.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME)
+                if (nameIndex != -1 && it.moveToFirst()) {
+                    fileName = it.getString(nameIndex)
+                }
+            }
+
+            if (fileName == null) {
+                fileName = "VIDEO_${System.currentTimeMillis()}.mp4"
+            }
+
+            val destFile = MediaUtils.getOutputMediaFile(MEDIA_TYPE_VIDEO, null)
+            mediaFilePath = destFile.absolutePath
+
+            contentResolver.openInputStream(videoUri)?.use { inputStream ->
+                FileOutputStream(destFile).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+            }
+
+            mediaFileName = fileName.substringBeforeLast(".")
+            mediaFileExtension = fileName.substringAfterLast(".", "mp4")
+
+            val retriever = MediaMetadataRetriever()
+            var bitmap: Bitmap? = null
+
+            try {
+                retriever.setDataSource(context, videoUri)
+                bitmap = retriever.getFrameAtTime(1_000_000) // 1 sec frame
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                retriever.release()
+            }
+
+            bitmap?.let {
+                createImageThumbnail(mediaFilePath, it, isPortrait)
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        val resultIntent = Intent().apply {
+            putExtra(EXTRA_FILE_NAME, mediaFileName)
+            putExtra(EXTRA_FILE_PATH, mediaFilePath)
+            putExtra(EXTRA_THUMBNAIL_FILE_PATH, thumbnailFilePath)
+            putExtra(EXTRA_FILE_EXT, mediaFileExtension)
+            putExtra(EXTRA_FILE_URI, videoUri) // keep original URI
+        }
+
+        onResult(mediaFilePath, mediaFileName, mediaFileExtension, resultIntent)
     }
 
     private fun getImageForGalleryFooter(

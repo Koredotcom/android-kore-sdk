@@ -214,11 +214,8 @@ class UploadBulkFile(
         var dataSizeRead = 0
         val buffer = ByteArray(BUFFER_SIZE)
         try {
-            fis = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            fis =
                 Files.newInputStream(Paths.get(outFilePath))
-            } else {
-                FileInputStream(outFilePath)
-            }
             if (fis?.available()!! > 0) {
                 var chunkNo = 0
                 while (fis.read(buffer).also { dataSizeRead = it } > 0) {

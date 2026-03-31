@@ -13,7 +13,6 @@ import android.widget.AdapterView
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
@@ -35,8 +34,7 @@ import com.kore.model.constants.BotResponseConstants.URL
 import com.kore.ui.R
 import com.kore.ui.transforms.RoundedCornersTransform
 import com.squareup.picasso.Picasso
-import org.apache.commons.lang3.StringEscapeUtils.unescapeHtml3
-import org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4
+import org.apache.commons.lang3.StringEscapeUtils
 
 class ArticleListAdapter(
     private val context: Context,
@@ -83,13 +81,18 @@ class ArticleListAdapter(
         }
 
         if ((botListModel[KEY_TITLE] as String?)?.isNotEmpty() == true) {
-            var textualContent: String = unescapeHtml4(botListModel[KEY_TITLE].toString().trim())
-            textualContent = unescapeHtml3(textualContent.trim())
+
+            var textualContent = StringEscapeUtils
+                .unescapeHtml4(botListModel[KEY_TITLE].toString().trim())
+
             textualContent = MarkdownUtil.processMarkDown(textualContent)
+
             val sequence: CharSequence = Html.fromHtml(
                 textualContent.replace("\n", "<br />"),
-                MarkdownImageTagHandler(context, holder.tvAction, textualContent), MarkdownTagHandler()
+                MarkdownImageTagHandler(context, holder.tvAction, textualContent),
+                MarkdownTagHandler()
             )
+
             val strBuilder = SpannableStringBuilder(sequence)
 
             holder.botListItemTitle.text = strBuilder

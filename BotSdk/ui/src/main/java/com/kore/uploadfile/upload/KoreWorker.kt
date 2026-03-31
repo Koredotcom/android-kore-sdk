@@ -1,8 +1,6 @@
 package com.kore.uploadfile.upload
 
 import com.kore.uploadfile.listeners.FileUploadedListener
-import okhttp3.internal.notifyAll
-import okhttp3.internal.wait
 import java.util.Vector
 
 class KoreWorker private constructor() : Runnable, Cloneable {
@@ -40,13 +38,13 @@ class KoreWorker private constructor() : Runnable, Cloneable {
                 } else {
                     synchronized(queue) {
                         try {
-                            queue.wait()
+                            (queue as Object).wait()
                         } catch (e: InterruptedException) {
                             e.printStackTrace()
                         }
                     }
                 }
-            } else if (queue.size == 0) {
+            } else if (queue.isEmpty()) {
                 try {
                     Thread.sleep(1000)
                 } catch (e: InterruptedException) {
@@ -66,7 +64,7 @@ class KoreWorker private constructor() : Runnable, Cloneable {
                 queue.addElement(task)
                 if (isInitial) startThread()
                 if (isCallBack) {
-                    queue.notifyAll()
+                    (queue as Object).notifyAll()
                 }
             }
         }
