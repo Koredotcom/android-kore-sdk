@@ -191,7 +191,12 @@ class BotClient private constructor() {
         try {
             MainScope().launch {
                 withContext(Dispatchers.IO) {
-                    when (val result = jwtRepository.getJwtToken(botConfigModel.jwtServerUrl, botConfigModel.clientId, botConfigModel.clientSecret, botConfigModel.identity)) {
+                    when (val result = jwtRepository.getJwtToken(
+                        botConfigModel.jwtServerUrl,
+                        botConfigModel.clientId,
+                        botConfigModel.clientSecret,
+                        botConfigModel.identity
+                    )) {
                         is Result.Success -> {
                             if (result.data?.jwt.isNullOrEmpty()) {
                                 ToastUtils.showToast(context, "Jwt token is not created!")
@@ -417,7 +422,11 @@ class BotClient private constructor() {
             botInfoModel
         ) { jsonPayload, botRequest ->
             if (botConfigModel.isWebHook) {
-                sendWebHookMessage(botRequest, false, msg, payload, attachments)
+                val result = sendWebHookMessage(botRequest, false, msg, payload, attachments)
+                if (msg.isNotEmpty() && msg != MSG_ON_CONNECT && result.second != null) listener?.onBotRequest(
+                    if (result.first) BotRequestState.SENT_BOT_REQ_SUCCESS else BotRequestState.SENT_BOT_REQ_FAIL,
+                    result.second!!
+                )
                 return@createRequestPayload
             }
             LogUtils.d(LOG_TAG, "Payload: $jsonPayload")
@@ -425,9 +434,47 @@ class BotClient private constructor() {
                 socketConnection.sendMessage(jsonPayload)
                 if (msg.isNotEmpty()) listener?.onBotRequest(BotRequestState.SENT_BOT_REQ_SUCCESS, botRequest)
             } else {
-                if (msg.isNotEmpty()) listener?.onBotRequest(BotRequestState.SENT_BOT_REQ_FAIL, botRequest)
+                if (msg.isNotEmpty()) listener?.onBotRequest(
+                    BotRequestState.SENT_BOT_REQ_FAIL,
+                    botRequest.copy(jsonPayload = jsonPayload, isFailed = true)
+                )
             }
         }
+    }
+
+    fun resendMessage(botRequest: BotRequest): Boolean {
+        var isResendSuccess = true
+        val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return false
+        if (botConfigModel.isWebHook) {
+            if (!NetworkUtils.isNetworkAvailable(context)) isResendSuccess = false
+            MainScope().launch {
+                when (val result =
+                    webHookRepository.sendMessage(botConfigModel.botId, getJwtToken(), botRequest.jsonPayload as HashMap<String, Any?>)) {
+                    is Result.Success -> {
+                        //                        if ((botRequest.jsonPayload as HashMap<String, Any?>)["message"] == MSG_ON_CONNECT) {
+                        //                            listener?.onConnectionStateChanged(ConnectionState.CONNECTED, false)
+                        //                        }
+                        result.data.first?.let {
+                            it.map { response -> listener?.onBotResponse(Gson().toJson(response)) }
+                            if (result.data.second.isNotEmpty()) {
+                                startSendingPoll(result.data.second)
+                            }
+                        }
+                    }
+
+                    is Result.Error -> LogUtils.e(LOG_TAG, "Error ${result.exception.message}")
+                }
+                isConnecting = false
+            }
+        } else {
+            if (isConnected()) {
+                socketConnection.sendMessage(botRequest.jsonPayload as String)
+            } else {
+                isResendSuccess = false
+            }
+        }
+
+        return isResendSuccess
     }
 
     private fun sendWebHookMessage(
@@ -436,40 +483,35 @@ class BotClient private constructor() {
         msg: String,
         payload: String?,
         attachments: List<Map<String, *>>?
-    ) {
+    ): Pair<Boolean, BotRequest?> {
+        val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return Pair(false, botRequest)
+        setMoreCustomData()
+        val jsonPayload = BotClientHelper.createWebHookRequestPayload(isNewSession, msg, payload, attachments, botConfigModel, botCustomData)
+        LogUtils.d(LOG_TAG, "Webhook Payload: $jsonPayload")
         if (!NetworkUtils.isNetworkAvailable(context)) {
-            ToastUtils.showToast(context, context.getString(R.string.no_network), Toast.LENGTH_LONG)
-            return
+            //            ToastUtils.showToast(context, context.getString(R.string.no_network), Toast.LENGTH_LONG)
+            return Pair(false, botRequest?.copy(jsonPayload = jsonPayload, isFailed = true))
         }
         MainScope().launch {
-            val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return@launch
-            botRequest?.let {
-                if (msg.isNotEmpty() && msg != MSG_ON_CONNECT) listener?.onBotRequest(BotRequestState.SENT_BOT_REQ_SUCCESS, it)
-            }
-            setMoreCustomData()
-            BotClientHelper.createWebHookRequestPayload(isNewSession, msg, payload, attachments, botConfigModel, botCustomData)
-            { jsonPayload ->
-                LogUtils.d(LOG_TAG, "Webhook Payload: $jsonPayload")
-                MainScope().launch {
-                    when (val result = webHookRepository.sendMessage(botConfigModel.botId, getJwtToken(), jsonPayload)) {
-                        is Result.Success -> {
-                            if (msg == MSG_ON_CONNECT) {
-                                listener?.onConnectionStateChanged(ConnectionState.CONNECTED, false)
-                            }
-                            result.data.first?.let {
-                                it.map { response -> listener?.onBotResponse(Gson().toJson(response)) }
-                                if (result.data.second.isNotEmpty()) {
-                                    startSendingPoll(result.data.second)
-                                }
-                            }
-                        }
-
-                        is Result.Error -> LogUtils.e(LOG_TAG, "Error ${result.exception.message}")
+            when (val result = webHookRepository.sendMessage(botConfigModel.botId, getJwtToken(), jsonPayload)) {
+                is Result.Success -> {
+                    if (msg == MSG_ON_CONNECT) {
+                        listener?.onConnectionStateChanged(ConnectionState.CONNECTED, false)
                     }
-                    isConnecting = false
+                    result.data.first?.let {
+                        it.map { response -> listener?.onBotResponse(Gson().toJson(response)) }
+                        if (result.data.second.isNotEmpty()) {
+                            startSendingPoll(result.data.second)
+                        }
+                    }
                 }
+
+                is Result.Error -> LogUtils.e(LOG_TAG, "Error ${result.exception.message}")
             }
+            isConnecting = false
         }
+
+        return Pair(true, botRequest?.copy(isFailed = false))
     }
 
     private fun getWebHookMeta(token: String, isReconnectionAttempt: Boolean) {
@@ -483,7 +525,9 @@ class BotClient private constructor() {
         MainScope().launch {
             when (val result = webHookRepository.getWebhookMeta(token, botConfigModel.botId)) {
                 is Result.Success -> {
-                    sendWebHookMessage(null, !isReconnectionAttempt, MSG_ON_CONNECT, null, null)
+                    if (NetworkUtils.isNetworkAvailable(context)) {
+                        sendWebHookMessage(null, !isReconnectionAttempt, MSG_ON_CONNECT, null, null)
+                    }
                 }
 
                 is Result.Error -> {

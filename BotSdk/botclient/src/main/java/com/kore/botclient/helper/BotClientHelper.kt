@@ -75,8 +75,8 @@ class BotClientHelper {
             attachments: List<Map<String, *>>?,
             botConfigModel: BotConfigModel,
             botCustomData: HashMap<String, Any?>,
-            onCreatePayload: (HashMap<String, Any?>) -> Unit
-        ) {
+//            onCreatePayload: (HashMap<String, Any?>) -> Unit
+        ): HashMap<String, Any?> {
             val hashMap = HashMap<String, Any?>()
             try {
                 val session = Session(newSession)
@@ -96,7 +96,9 @@ class BotClientHelper {
                 e.printStackTrace()
             }
 
-            onCreatePayload(hashMap)
+            return hashMap
+
+//            onCreatePayload(hashMap)
         }
 
         fun processBotMessage(botMessage: String): BaseBotMessage =

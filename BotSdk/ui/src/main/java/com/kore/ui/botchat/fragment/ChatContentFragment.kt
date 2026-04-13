@@ -25,6 +25,7 @@ import com.kore.common.utils.NetworkUtils
 import com.kore.event.BotChatEvent
 import com.kore.extensions.verticalSmoothScrollTo
 import com.kore.model.BaseBotMessage
+import com.kore.model.BotRequest
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 import com.kore.ui.adapters.BotChatAdapter
@@ -67,7 +68,7 @@ class ChatContentFragment : BaseContentFragment() {
                 binding.swipeContainerChat.isRefreshing = false
                 return@setOnRefreshListener
             }
-//            this.view?.onSwipeRefresh()
+            //            this.view?.onSwipeRefresh()
             contentViewModel.fetchChatHistory(false)
         }
     }
@@ -142,6 +143,14 @@ class ChatContentFragment : BaseContentFragment() {
         }, 100)
     }
 
+    override fun onResendMessage(botRequest: BotRequest) {
+        chatAdapter.onResendMessage(botRequest)
+    }
+
+    override fun getMessageById(msgId: String): BaseBotMessage {
+        return chatAdapter.getMessageById(msgId)
+    }
+
     override fun onLoadingHistory() {
         binding.swipeContainerChat.isRefreshing = true
     }
@@ -151,22 +160,25 @@ class ChatContentFragment : BaseContentFragment() {
     }
 
     override fun addStreamingMessage(message: String?) {
-        if(message?.isNotEmpty() == true)
-        {
+        if (message?.isNotEmpty() == true) {
             chatAdapter.addStreamingMessage(message);
             binding.chatContentList.post(Runnable { binding.chatContentList.scrollBy(0, 1500) })
         }
     }
 
-//    override fun addStreamingMessage(message: String?) {
-//        if (message == null || message.isBlank()) return
-//
-//        wordQueue.add(message)
-//
-//        if (!isStreamingRunning) {
-//            processNextBatch()
-//        }
-//    }
+    override fun deleteMessage(messageId: String) {
+        chatAdapter.deleteMessage(messageId)
+    }
+
+    //    override fun addStreamingMessage(message: String?) {
+    //        if (message == null || message.isBlank()) return
+    //
+    //        wordQueue.add(message)
+    //
+    //        if (!isStreamingRunning) {
+    //            processNextBatch()
+    //        }
+    //    }
 
     private fun processNextBatch() {
         if (wordQueue.isEmpty()) {
@@ -257,6 +269,7 @@ class ChatContentFragment : BaseContentFragment() {
     }
 
     override fun onBrandingDetails() {
+
         chatAdapter.onBrandingDetails()
         binding.swipeContainerChat.isEnabled = SDKConfiguration.OverrideKoreConfig.paginatedScrollEnable
     }

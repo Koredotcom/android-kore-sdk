@@ -23,6 +23,7 @@ import com.kore.common.utils.NetworkUtils
 import com.kore.event.BotChatEvent
 import com.kore.extensions.verticalSmoothScrollTo
 import com.kore.model.BaseBotMessage
+import com.kore.model.BotRequest
 import com.kore.model.constants.BotResponseConstants
 import com.kore.ui.R
 import com.kore.ui.adapters.BotChatAdapter
@@ -133,6 +134,14 @@ class CustomContentFragment : BaseContentFragment() {
         }, 100)
     }
 
+    override fun onResendMessage(botRequest: BotRequest) {
+        chatAdapter.onResendMessage(botRequest)
+    }
+
+    override fun getMessageById(msgId: String): BaseBotMessage {
+        return chatAdapter.getMessageById(msgId)
+    }
+
     override fun onLoadingHistory() {
         binding.swipeContainerChat.isRefreshing = true
     }
@@ -142,11 +151,14 @@ class CustomContentFragment : BaseContentFragment() {
     }
 
     override fun addStreamingMessage(message: String?) {
-        if(message?.isNotEmpty() == true)
-        {
+        if (message?.isNotEmpty() == true) {
             chatAdapter.addStreamingMessage(message);
             binding.chatContentList.post(Runnable { binding.chatContentList.scrollBy(0, 1500) })
         }
+    }
+
+    override fun deleteMessage(messageId: String) {
+        chatAdapter.deleteMessage(messageId)
     }
 
     override fun getAdapterCount(): Int = chatAdapter.itemCount

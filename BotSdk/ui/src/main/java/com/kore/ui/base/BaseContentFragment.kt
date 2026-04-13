@@ -7,6 +7,7 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.kore.common.event.UserActionEvent
 import com.kore.listeners.QuickRepliesClickListener
 import com.kore.model.BaseBotMessage
+import com.kore.model.BotRequest
 import com.kore.model.constants.BotResponseConstants
 import com.kore.model.constants.BotResponseConstants.END_DATE
 import com.kore.model.constants.BotResponseConstants.FORMAT
@@ -41,6 +42,7 @@ abstract class BaseContentFragment : Fragment(), BotContentView, QuickRepliesCli
     abstract fun hideQuickReplies()
 
     abstract fun addMessagesToAdapter(messages: List<BaseBotMessage>, isHistory: Boolean, isReconnection: Boolean)
+    abstract fun onResendMessage(botRequest: BotRequest)
 
     abstract fun getAdapterCount(): Int
 
@@ -49,6 +51,10 @@ abstract class BaseContentFragment : Fragment(), BotContentView, QuickRepliesCli
     abstract fun onLoadHistory(isReconnect: Boolean)
 
     abstract fun addStreamingMessage(message: String?)
+
+    abstract fun deleteMessage(messageId: String)
+
+    abstract fun getMessageById(msgId: String): BaseBotMessage
 
     fun showCalenderTemplate(payload: HashMap<String, Any>) {
         if (BotResponseConstants.TEMPLATE_TYPE_DATE == payload[BotResponseConstants.KEY_TEMPLATE_TYPE]) {

@@ -228,6 +228,12 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
         botClient.sendMessage(message, payload)
     }
 
+    fun resendMessage(botRequest: BotRequest) {
+        val isResendSuccess = botClient.resendMessage(botRequest)
+        if (isResendSuccess)
+            getView()?.onResendMessage(botRequest.copy(jsonPayload = null, isFailed = false))
+    }
+
     fun sendAttachment(message: String, attachments: List<Map<String, *>>?) {
         botClient.sendMessage(message, null, attachments)
     }

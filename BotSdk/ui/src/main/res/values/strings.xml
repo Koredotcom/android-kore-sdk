@@ -331,4 +331,9 @@
     <string name="copy_to_clipboard">Copied to clipboard</string>
     <string name="downloading_file">Downloading file…</string>
     <string name="downloading_failed">Downloading failed!</string>
+    <string name="message_sent_failed">Sending failed!</string>
+    <string name="resend">Resend</string>
+    <string name="or">or</string>
+    <string name="delete">Delete</string>
+    <string name="sent">Sent</string>
 </resources>

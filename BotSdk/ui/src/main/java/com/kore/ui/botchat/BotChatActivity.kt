@@ -40,6 +40,7 @@ import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotRequest
 import com.kore.model.BotResponse
 import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
@@ -122,8 +123,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             val insets = windowInsets!!.getInsets(WindowInsetsCompat.Type.systemBars())
             view!!.setPadding(insets.left, 0, insets.right, insets.bottom)
 
-            if(prefRepository.getIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, 0) == 0)
-            {
+            if (prefRepository.getIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, 0) == 0) {
                 prefRepository.putIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, insets.top)
             }
 
@@ -210,10 +210,15 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
     }
 
     override fun addMessageToAdapter(baseBotMessage: BaseBotMessage) {
-        contentFragment.addMessagesToAdapter(listOf(baseBotMessage),
+        contentFragment.addMessagesToAdapter(
+            listOf(baseBotMessage),
             isHistory = false,
             isReconnection = false
         )
+    }
+
+    override fun onResendMessage(botRequest: BotRequest) {
+        contentFragment.onResendMessage(botRequest)
     }
 
     override fun addStreamingMessage(message: String?, endFlag: Boolean) {
@@ -237,6 +242,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             is BotChatEvent.ShowAttachmentOptions -> footerFragment.showAttachmentActionSheet()
             is BotChatEvent.DownloadLink -> botChatViewModel.downloadFile(event.msgId, event.url, event.fileName)
             is BotChatEvent.OnBackPressed -> if (isOnline()) showCloseAlert()
+            is BotChatEvent.ResendMessage -> botChatViewModel.resendMessage(contentFragment.getMessageById(event.msgId) as BotRequest)
+            is BotChatEvent.DeleteMessage -> contentFragment.deleteMessage(event.msgId)
         }
     }
 
@@ -282,7 +289,6 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                     else -> addHeaderFragmentToActivity(customHeaderFragment ?: ChatHeaderTwoFragment(), header.brandingModel)
                 }
                 contentFragment.onBrandingDetails()
-
             }, 0)
         } else {
             //            binding.clProgress.isVisible = false
@@ -292,9 +298,12 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         }
 
         header?.brandingModel?.header?.bgColor?.let {
-            changeStatusBarColor(if(SDKConfig.isUpdateStatusBarColor()) it else "")
-            prefRepository.putStringValue(this,
-                THEME_NAME, BundleConstants.STATUS_BAR_COLOR, it)  }
+            changeStatusBarColor(if (SDKConfig.isUpdateStatusBarColor()) it else "")
+            prefRepository.putStringValue(
+                this,
+                THEME_NAME, BundleConstants.STATUS_BAR_COLOR, it
+            )
+        }
         footerFragment.setBrandingDetails(header?.brandingModel)
     }
 
@@ -372,7 +381,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         Prefs.setIsFirstLogin(this, false)
         //start login and open app main screen
         Thread {
-            if (!acManager.isRegisterState) acManager.startLogin(this,
+            if (!acManager.isRegisterState) acManager.startLogin(
+                this,
                 autologin = false,
                 disconnectCall = false
             )
@@ -532,7 +542,7 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 color.takeIf { SDKConfig.isUpdateStatusBarColor() && it.isNotBlank() }?.toColorInt()
                     ?: ContextCompat.getColor(this@BotChatActivity, R.color.colorPrimary)
             )
-        } else if(SDKConfig.isUpdateStatusBarColor()){
+        } else if (SDKConfig.isUpdateStatusBarColor()) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
 
             @Suppress("DEPRECATION")

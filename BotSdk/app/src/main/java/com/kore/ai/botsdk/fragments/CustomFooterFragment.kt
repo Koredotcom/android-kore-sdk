@@ -224,7 +224,7 @@ class CustomFooterFragment : BaseFooterFragment() {
     override fun enableSendButton(enable: Boolean) {
         isEnabled = enable
         if (isAttachedToWindow) {
-            binding.llSend.isVisible = enable && binding.edtTxtMessage.text.trim().isNotEmpty()
+            binding.llSend.isVisible = /*enable &&*/ binding.edtTxtMessage.text.trim().isNotEmpty()
             binding.recAudioImg.isVisible = !enable
         }
     }

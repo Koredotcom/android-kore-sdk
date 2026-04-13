@@ -4,6 +4,7 @@ import com.kore.botclient.ConnectionState
 import com.kore.common.event.UserActionEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotRequest
 import com.kore.model.BotResponse
 import com.kore.network.api.responsemodels.branding.BotActiveThemeModel
 import com.kore.ui.base.BaseView
@@ -11,6 +12,7 @@ import com.kore.ui.base.BaseView
 interface BotChatView : BaseView {
     fun init()
     fun addMessageToAdapter(baseBotMessage: BaseBotMessage)
+    fun onResendMessage(botRequest: BotRequest)
     fun addStreamingMessage(message: String?, endFlag: Boolean)
     fun onActionEvent(event: UserActionEvent)
     fun onConnectionStateChanged(state: ConnectionState, isReconnection: Boolean)

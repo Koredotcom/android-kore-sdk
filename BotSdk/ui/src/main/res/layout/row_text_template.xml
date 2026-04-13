@@ -30,6 +30,61 @@
         android:layout_margin="2dp"
         android:textColor="#B0B0B0"
         android:textSize="@dimen/text_size_very_small"
-        tools:text="SDK Demo 03:39 PM, Today"
-        android:visibility="gone"/>
+        tools:text="SDK Demo 03:39 PM, Today" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_failed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <com.kore.ui.textview.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/message_sent_failed"
+            android:textColor="#f53636"
+            android:textSize="@dimen/text_size_very_small" />
+
+        <com.kore.ui.textview.CustomTextView
+            android:id="@+id/resend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/resend"
+            android:textColor="@color/bubble_link_text_color"
+            android:textSize="@dimen/text_size_very_small" />
+
+        <com.kore.ui.textview.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/or"
+            android:textColor="@color/greyHead"
+            android:textSize="@dimen/text_size_very_small" />
+
+        <com.kore.ui.textview.CustomTextView
+            android:id="@+id/delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/delete"
+            android:textColor="@color/bubble_link_text_color"
+            android:textSize="@dimen/text_size_very_small" />
+
+        <com.kore.ui.textview.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:layout_marginEnd="4dp"
+            android:text="@string/sent"
+            android:textColor="#B0B0B0"
+            android:textSize="@dimen/text_size_very_small" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>
