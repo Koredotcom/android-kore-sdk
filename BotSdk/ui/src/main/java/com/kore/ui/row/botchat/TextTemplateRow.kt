@@ -38,6 +38,7 @@ class TextTemplateRow(
     private val iconUrl: String?,
     private val actionEvent: (event: UserActionEvent) -> Unit,
     private val timeStamp: String,
+    private val isFailed: Boolean = false,
     private val errorTextColor: String = ""
 ) : SimpleListRow() {
 
@@ -52,7 +53,7 @@ class TextTemplateRow(
     override fun areContentsTheSame(otherRow: SimpleListRow): Boolean {
         return otherRow is TextTemplateRow &&
                 otherRow.botMessage == botMessage &&
-                otherRow.timeStamp == timeStamp
+                otherRow.timeStamp == timeStamp && otherRow.isFailed == isFailed
     }
 
     override fun getChangePayload(otherRow: SimpleListRow): Any = true
@@ -62,7 +63,8 @@ class TextTemplateRow(
         showOrHideIcon(binding, binding.root.context, iconUrl, !isBotRequest, false)
         val childBinding = RowTextTemplateBinding.bind((binding.root as ViewGroup).getChildAt(1))
         childBinding.apply {
-            botMessage?.let { if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable) {
+            botMessage?.let {
+                if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable) {
                     botMessage = EmojiUtils.replaceEmoticonsWithEmojis(it)
                 }
             }
@@ -111,7 +113,8 @@ class TextTemplateRow(
                     sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_LEFT_TEXT_COLOR, "#000000")
                 }
             } else {
-                sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")}
+                sharedPrefs.getStringValue(context, BotResponseConstants.THEME_NAME, BotResponseConstants.BUBBLE_RIGHT_TEXT_COLOR, "#FFFFFF")
+            }
             message.setTextColor(ColorStateList.valueOf(textColor.toColorInt()))
             message.setBackgroundDrawable(
                 ResourcesCompat.getDrawable(
@@ -164,19 +167,32 @@ class TextTemplateRow(
                             .getSharedPreference(context, BotResponseConstants.THEME_NAME)
                             .getBoolean(BotResponseConstants.IS_TIME_STAMP_REQUIRED, false)
 
-            if(PreferenceRepositoryImpl()
+            if (PreferenceRepositoryImpl()
                     .getSharedPreference(context, BotResponseConstants.THEME_NAME)
-                    .getBoolean(BotResponseConstants.TIME_STAMP_IS_BOTTOM, false))
+                    .getBoolean(BotResponseConstants.TIME_STAMP_IS_BOTTOM, false)
+            )
                 msgTimeStamp.isVisible = isTimeStampRequired
             else
                 msgTimeStampTop.isVisible = isTimeStampRequired
 
 
             if (isTimeStampRequired) {
-                msgTimeStampTop.text =
-                    HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                msgTimeStamp.text =
-                    HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                msgTimeStampTop.text = HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                msgTimeStamp.text = HtmlCompat.fromHtml(timeStamp, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            }
+
+            llFailed.isVisible = isBotRequest && isFailed
+            if (isFailed) {
+                resend.setOnClickListener {
+                    actionEvent(BotChatEvent.ResendMessage(id))
+                }
+                delete.setOnClickListener {
+                    actionEvent(BotChatEvent.DeleteMessage(id))
+                }
+            } else {
+                resend.setOnClickListener(null)
+                delete.setOnClickListener(null)
+
             }
         }
     }

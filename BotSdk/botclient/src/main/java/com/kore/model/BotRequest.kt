@@ -11,7 +11,9 @@ data class BotRequest(
     override val createdOn: String = "",
     override val formattedTime: String = "",
     override val messageDate: String = "",
-    private val resourceId: String? = "/bot.message"
+    private val resourceId: String? = "/bot.message",
+    val isFailed: Boolean = false,
+    val jsonPayload: Any? = null
 ) : BaseBotMessage {
     fun updateRenderMessage() {
         message?.checkAndUpdateRenderMessage()

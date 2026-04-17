@@ -34,6 +34,7 @@ import com.kore.event.BotChatEvent
 import com.kore.listeners.BotChatCloseListener
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotRequest
 import com.kore.model.BotResponse
 import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
@@ -181,6 +182,10 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
         )
     }
 
+    override fun onBotRequestFailed(botRequest: BotRequest) {
+        contentFragment.onBotRequestFailed(botRequest)
+    }
+
     override fun addStreamingMessage(message: String?, endFlag: Boolean) {
         if (!message!!.isBlank()) {
             contentFragment.addStreamingMessage(message)
@@ -208,6 +213,8 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
             is BotChatEvent.ShowAttachmentOptions -> footerFragment.showAttachmentActionSheet()
             is BotChatEvent.DownloadLink -> botChatViewModel.downloadFile(event.msgId, event.url, event.fileName)
             is BotChatEvent.OnBackPressed -> if (NetworkMonitor.isOnline()) showCloseAlert()
+            is BotChatEvent.ResendMessage -> botChatViewModel.resendMessage(contentFragment.getMessageById(event.msgId) as BotRequest)
+            is BotChatEvent.DeleteMessage -> contentFragment.deleteMessage(event.msgId)
         }
     }
 
@@ -301,6 +308,10 @@ class BotChatFragment : BaseFragment<ActivityBotChatBinding, BotChatView, BotCha
                 }
             }
         }
+    }
+
+    override fun onMessageAck(msgId: String) {
+        contentFragment.onMessageAck(msgId)
     }
 
     override fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int) {

@@ -11,4 +11,6 @@ sealed class BotChatEvent : UserActionEvent {
     data object ShowAttachmentOptions : BotChatEvent()
     data object OnBackPressed : BotChatEvent()
     class DownloadLink(val msgId: String, val url: String, val fileName: String?) : BotChatEvent()
+    class ResendMessage(val msgId: String): BotChatEvent()
+    class DeleteMessage(val msgId: String): BotChatEvent()
 }

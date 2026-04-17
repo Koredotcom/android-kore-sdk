@@ -45,11 +45,15 @@ import com.kore.network.api.responsemodels.branding.BotBrandingModel
 import com.kore.ui.R
 import com.kore.ui.base.BaseViewModel
 import com.kore.ui.utils.BundleConstants
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.Timer
+import java.util.TimerTask
 
 @SuppressLint("StaticFieldLeak")
 class BotChatViewModel : BaseViewModel<BotChatView>() {
@@ -67,29 +71,30 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
     private val brandingRepository: BrandingRepository = BrandingRepositoryImpl()
     private val dynamicUrlRepository: DynamicUrlRepository = DynamicUrlRepositoryImpl()
     private val preferenceRepository: PreferenceRepository = PreferenceRepositoryImpl()
-    private var isStreamMessage : Boolean = false
+    private var isStreamMessage: Boolean = false
+    var job: Job? = null
 
     private val speechSynthesizerHelper by lazy {
         SpeechSynthesizerHelper(context).apply { setListener(speechSynthesizerListener) }
     }
 
-//    private val headers by lazy {
-//        HashMap<String, Any>().apply {
-//            put("alg", "RS256")
-//            put("typ", "JWT")
-//            put("Content-Type", "application/json; charset=UTF-8")
-//        }
-//    }
-//
-//    private val body by lazy {
-//        HashMap<String, Any>().apply {
-//            put("isAnonymous", false)
-//            put("clientId", SDKConfiguration.getBotConfigModel()?.clientId!!)
-//            put("identity", SDKConfiguration.getBotConfigModel()?.identity!!)
-//            put("aud", "https://idproxy.kore.com/authorize")
-//            put("clientSecret", SDKConfiguration.getBotConfigModel()?.clientSecret!!)
-//        }
-//    }
+    //    private val headers by lazy {
+    //        HashMap<String, Any>().apply {
+    //            put("alg", "RS256")
+    //            put("typ", "JWT")
+    //            put("Content-Type", "application/json; charset=UTF-8")
+    //        }
+    //    }
+    //
+    //    private val body by lazy {
+    //        HashMap<String, Any>().apply {
+    //            put("isAnonymous", false)
+    //            put("clientId", SDKConfiguration.getBotConfigModel()?.clientId!!)
+    //            put("identity", SDKConfiguration.getBotConfigModel()?.identity!!)
+    //            put("aud", "https://idproxy.kore.com/authorize")
+    //            put("clientSecret", SDKConfiguration.getBotConfigModel()?.clientSecret!!)
+    //        }
+    //    }
 
     init {
         botClient.setListener(object : BotConnectionListener {
@@ -103,7 +108,7 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     if (it.contains(BotResponseConstants.KEY_BOT_RESPONSE)) {
                         LogUtils.i(LOG_TAG, response);
 
-                        var botResponse: BotResponse = if(!isStreamMessage)
+                        var botResponse: BotResponse = if (!isStreamMessage)
                             BotClientHelper.processBotMessage(it) as BotResponse
                         else
                             BotClientHelper.processStreamMessage(response) as BotResponse
@@ -173,6 +178,12 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                     } else if (it.contains(BotResponseConstants.KEY_EVENTS)) {
                         val botResponse = Gson().fromJson(it, BotEventResponse::class.java)
                         getView()?.onBotEventMessage(botResponse)
+                    } else if (it.contains(BotResponseConstants.KEY_ACK)) {
+                        val ack = Gson().fromJson(it, HashMap::class.java)
+                        if (ack[BotResponseConstants.KEY_OK] == true && ack[TYPE] == BotResponseConstants.KEY_ACK) {
+                            if (job?.isActive == true) job?.cancel()
+                            getView()?.onMessageAck((ack[BotResponseConstants.KEY_REPLY_TO] as? Double)?.toLong()?.toString() ?: "")
+                        }
                     }
                 }
             }
@@ -191,8 +202,13 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
             override fun onBotRequest(code: BotRequestState, botRequest: BotRequest) {
                 LogUtils.d(LOG_TAG, "$code")
-//                historyOffset += 1
-                getView()?.addMessageToAdapter(botRequest)
+                //                historyOffset += 1
+                if (code == BotRequestState.SENT_BOT_REQ_SUCCESS) {
+                    getView()?.addMessageToAdapter(botRequest)
+                    startTimer(botRequest)
+                } else {
+                    getView()?.onBotRequestFailed(botRequest)
+                }
             }
 
             override fun onAccessTokenGenerated(token: String) {
@@ -201,6 +217,15 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
                 }
             }
         })
+    }
+
+    fun startTimer(botRequest: BotRequest) {
+        if (job?.isActive == true) job?.cancel()
+
+        job = viewModelScope.launch {
+            delay(5000)
+            getView()?.onBotRequestFailed(botRequest)
+        }
     }
 
     fun isAgentTransfer(): Boolean = isAgentTransfer
@@ -226,6 +251,10 @@ class BotChatViewModel : BaseViewModel<BotChatView>() {
 
     fun sendMessage(message: String, payload: String?) {
         botClient.sendMessage(message, payload)
+    }
+
+    fun resendMessage(botRequest: BotRequest) {
+        botClient.resendMessage(botRequest)
     }
 
     fun sendAttachment(message: String, attachments: List<Map<String, *>>?) {

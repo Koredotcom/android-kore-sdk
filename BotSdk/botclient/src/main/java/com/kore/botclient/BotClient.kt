@@ -191,7 +191,12 @@ class BotClient private constructor() {
         try {
             MainScope().launch {
                 withContext(Dispatchers.IO) {
-                    when (val result = jwtRepository.getJwtToken(botConfigModel.jwtServerUrl, botConfigModel.clientId, botConfigModel.clientSecret, botConfigModel.identity)) {
+                    when (val result = jwtRepository.getJwtToken(
+                        botConfigModel.jwtServerUrl,
+                        botConfigModel.clientId,
+                        botConfigModel.clientSecret,
+                        botConfigModel.identity
+                    )) {
                         is Result.Success -> {
                             if (result.data?.jwt.isNullOrEmpty()) {
                                 ToastUtils.showToast(context, "Jwt token is not created!")
@@ -443,13 +448,16 @@ class BotClient private constructor() {
         }
         MainScope().launch {
             val botConfigModel = SDKConfiguration.getBotConfigModel() ?: return@launch
-            botRequest?.let {
-                if (msg.isNotEmpty() && msg != MSG_ON_CONNECT) listener?.onBotRequest(BotRequestState.SENT_BOT_REQ_SUCCESS, it)
-            }
             setMoreCustomData()
             BotClientHelper.createWebHookRequestPayload(isNewSession, msg, payload, attachments, botConfigModel, botCustomData)
             { jsonPayload ->
                 LogUtils.d(LOG_TAG, "Webhook Payload: $jsonPayload")
+                botRequest?.let {
+                    if (msg.isNotEmpty() && msg != MSG_ON_CONNECT) listener?.onBotRequest(
+                        BotRequestState.SENT_BOT_REQ_SUCCESS,
+                        it.copy(jsonPayload = jsonPayload)
+                    )
+                }
                 MainScope().launch {
                     when (val result = webHookRepository.sendMessage(botConfigModel.botId, getJwtToken(), jsonPayload)) {
                         is Result.Success -> {
@@ -469,6 +477,12 @@ class BotClient private constructor() {
                     isConnecting = false
                 }
             }
+        }
+    }
+
+    fun resendMessage(botRequest: BotRequest) {
+        if (isConnected()) {
+            socketConnection.sendMessage(botRequest.jsonPayload as String)
         }
     }
 

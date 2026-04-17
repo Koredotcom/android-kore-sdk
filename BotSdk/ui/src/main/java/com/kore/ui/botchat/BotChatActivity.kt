@@ -15,6 +15,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.WindowInsetsController
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -40,6 +41,7 @@ import com.kore.data.repository.preference.PreferenceRepositoryImpl
 import com.kore.event.BotChatEvent
 import com.kore.model.BaseBotMessage
 import com.kore.model.BotEventResponse
+import com.kore.model.BotRequest
 import com.kore.model.BotResponse
 import com.kore.model.PayloadOuter
 import com.kore.model.constants.BotResponseConstants
@@ -116,11 +118,22 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             }
         })
 
-        ViewCompat.setOnApplyWindowInsetsListener(
-            binding.root
-        ) { view: View?, windowInsets: WindowInsetsCompat? ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view: View?, windowInsets: WindowInsetsCompat? ->
             val insets = windowInsets!!.getInsets(WindowInsetsCompat.Type.systemBars())
-            view!!.setPadding(insets.left, 0, insets.right, insets.bottom)
+            val imeVisible = windowInsets.isVisible(WindowInsetsCompat.Type.ime())
+            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+            view?.setPadding(
+                insets.left,
+                insets.top,
+                insets.right,
+                if (imeVisible) imeInsets.bottom else insets.bottom
+            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.insetsController?.setSystemBarsAppearance(
+                    WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+                    WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                )
+            }
 
             if(prefRepository.getIntValue(this, THEME_NAME, BundleConstants.STATUS_BAR_HEIGHT, 0) == 0)
             {
@@ -216,6 +229,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
         )
     }
 
+    override fun onBotRequestFailed(botRequest: BotRequest) {
+        contentFragment.onBotRequestFailed(botRequest)
+    }
+
     override fun addStreamingMessage(message: String?, endFlag: Boolean) {
         if (!message!!.isBlank()) {
             contentFragment.addStreamingMessage(message)
@@ -237,6 +254,8 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
             is BotChatEvent.ShowAttachmentOptions -> footerFragment.showAttachmentActionSheet()
             is BotChatEvent.DownloadLink -> botChatViewModel.downloadFile(event.msgId, event.url, event.fileName)
             is BotChatEvent.OnBackPressed -> if (isOnline()) showCloseAlert()
+            is BotChatEvent.ResendMessage -> botChatViewModel.resendMessage(contentFragment.getMessageById(event.msgId) as BotRequest)
+            is BotChatEvent.DeleteMessage -> contentFragment.deleteMessage(event.msgId)
         }
     }
 
@@ -337,6 +356,10 @@ class BotChatActivity : BaseActivity<ActivityBotChatBinding, BotChatView, BotCha
                 }
             }
         }
+    }
+
+    override fun onMessageAck(msgId: String) {
+        contentFragment.onMessageAck(msgId)
     }
 
     override fun onFileDownloadProgress(msgId: String, progress: Int, downloadedBytes: Int) {

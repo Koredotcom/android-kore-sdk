@@ -83,15 +83,29 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
     private var bottomSheetDialog: BottomSheetDialog? = null
 
     private fun createTextTemplate(
-        msgId: String, isRequest: Boolean, msg: String?, iconUrl: String?, isLastItem: Boolean, msgTime: String = "", errorTextColor: String = ""
+        msgId: String, isRequest: Boolean, msg: String?, iconUrl: String?, isLastItem: Boolean, msgTime: String = "", errorTextColor: String = "", isFailed: Boolean = false
     ): TextTemplateRow {
         val rowType = BotChatRowType.getRowType(if (isRequest) ROW_REQUEST_MSG_PROVIDER else ROW_RESPONSE_MSG_PROVIDER)
         return TextTemplateRow(rowType,
-            msgId, msg, isRequest, iconUrl, actionEvent, msgTime, errorTextColor)
+            msgId, msg, isRequest, iconUrl, actionEvent, msgTime, isFailed, errorTextColor)
     }
 
     fun setActionEvent(actionEvent: (event: UserActionEvent) -> Unit) {
         this.actionEvent = actionEvent
+    }
+
+    fun getMessageById(msgId: String): BaseBotMessage = messages.filter { it.messageId == msgId }[0]
+
+    fun onMessageAct(msgId: String) {
+        messages = messages.map {
+            if (it is BotRequest && it.messageId == msgId) it.copy(jsonPayload = null, isFailed = false) else it
+        }
+        submitList(createRows(messages))
+    }
+
+    fun onBotRequestFailed(botRequest: BotRequest) {
+        messages = messages.map { message -> if (message.messageId == botRequest.messageId) botRequest.copy(isFailed = true) else message }
+        submitList(createRows(messages))
     }
 
     fun setBottomSheetDialog(bottomSheetDialog: BottomSheetDialog?) {
@@ -155,7 +169,7 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
                 is BotRequest -> {
                     val body = baseBotMsg.message?.body
                     if (body?.trim()?.isNotEmpty() == true) {
-                        rows = rows + createTextTemplate(msgId, true, body, null, isLastItem, msgTime)
+                        rows = rows + createTextTemplate(msgId, true, body, null, isLastItem, msgTime, isFailed = baseBotMsg.isFailed)
                     }
                 }
 
@@ -630,6 +644,11 @@ class BotChatAdapter(private val context: Context, types: List<SimpleListRow.Sim
             }
         }
 
+        submitList(createRows(messages))
+    }
+
+    fun deleteMessage(messageId: String){
+        messages = messages.filter { it.messageId != messageId }
         submitList(createRows(messages))
     }
 }
