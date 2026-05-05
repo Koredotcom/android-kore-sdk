@@ -235,6 +235,8 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
 
     public abstract void addMessageToBotChatAdapter(BotResponse botResponse);
 
+    public abstract void addStreamingMessage(String message);
+
     public abstract void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom);
 
     public abstract void addMessagesToBotChatAdapter(ArrayList<BaseBotMessage> list, boolean scrollToBottom, boolean isFirst);

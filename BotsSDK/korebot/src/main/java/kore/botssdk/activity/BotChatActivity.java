@@ -855,4 +855,10 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + jwt, SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         }
     }
+
+    @Override
+    public void addStreamingMessage(String message, boolean endFlag) {
+        botContentFragment.addStreamingMessage(message);
+        composeFooterFragment.setDisabled(!endFlag);
+    }
 }

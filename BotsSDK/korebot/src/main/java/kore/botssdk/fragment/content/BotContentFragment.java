@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,8 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import kore.botssdk.R;
 import kore.botssdk.itemdecoration.ChatAdapterItemDecoration;
@@ -48,6 +52,12 @@ public class BotContentFragment extends BaseContentFragment {
     private QuickReplyView quickReplyView;
     private LinearLayout botTypingStatusRl;
     private SharedPreferences sharedPreferences;
+
+    private final Queue<String> wordQueue = new LinkedList<>();
+    private final Handler streamingHandler = new Handler(Looper.getMainLooper());
+    private boolean isStreamingRunning = false;
+    private boolean userAtBottom = true;
+    private int appendedWordCount = 0;
 
     @Nullable
     @Override
@@ -200,5 +210,70 @@ public class BotContentFragment extends BaseContentFragment {
                 scrollToBottom();
             }
         }
+    }
+
+    @Override
+    public void addStreamingMessage(String message) {
+
+        if (message == null || message.isBlank()) return;
+
+        wordQueue.add(message);
+
+        if (!isStreamingRunning) {
+            processNextBatch();
+        }
+    }
+
+
+    private void processNextBatch() {
+
+        if (wordQueue.isEmpty()) {
+            isStreamingRunning = false;
+            return;
+        }
+
+        isStreamingRunning = true;
+
+        int batchSize = getBatchSize();
+
+        StringBuilder builder = new StringBuilder();
+
+        for (int i = 0; i < batchSize; i++) {
+            String word = wordQueue.poll();
+            if (word == null) break;
+
+            builder.append(word).append(" ");
+            appendedWordCount++;
+        }
+
+        botsChatAdapter.addStreamingMessage(builder.toString());
+
+        if (appendedWordCount % 3 == 0) {
+            botsBubblesListView.post(() ->
+                    botsBubblesListView.scrollBy(0, 1500));
+        }
+
+        streamingHandler.postDelayed(
+                this::processNextBatch,
+                getAdaptiveDelay()
+        );
+    }
+
+    private int getBatchSize() {
+        int size = wordQueue.size();
+        if (size > 80) return 8;
+        if (size > 40) return 5;
+        if (size > 15) return 3;
+
+        return 1;
+    }
+
+    private int getAdaptiveDelay() {
+        int size = wordQueue.size();
+        if (size > 80) return 25;
+        if (size > 40) return 30;
+        if (size > 15) return 40;
+
+        return 35;
     }
 }

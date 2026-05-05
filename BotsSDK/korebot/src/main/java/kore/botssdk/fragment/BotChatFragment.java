@@ -741,4 +741,12 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     public void setListener(BotChatFragmentListener listener) {
         fragmentListener = listener;
     }
+
+    @Override
+    public void addStreamingMessage(String message, boolean endFlag) {
+        if (!message.isBlank()) {
+            botContentFragment.addStreamingMessage(message);
+            composeFooterFragment.enableOrDisableSendButton(endFlag);
+        }
+    }
 }

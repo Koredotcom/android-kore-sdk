@@ -7,6 +7,7 @@ import static kore.botssdk.utils.BitmapUtils.rotateIfNecessary;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,9 +22,14 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.text.TextUtils;
+import android.util.Log;
+import android.util.Size;
+import android.webkit.MimeTypeMap;
 
-import androidx.documentfile.provider.DocumentFile;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -38,6 +44,7 @@ import java.util.HashMap;
 import kore.botssdk.R;
 import kore.botssdk.fileupload.core.KoreWorker;
 import kore.botssdk.fileupload.core.UploadBulkFile;
+import kore.botssdk.fileupload.core.UploadVideoFile;
 import kore.botssdk.fragment.footer.ComposeFooterFragment;
 import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.models.KoreComponentModel;
@@ -72,45 +79,106 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
     }
 
     public void processVideoResponse(String jwt, Uri selectedImage) {
-        String orientation;
-        String fileName = null;
-        String realPath = KaMediaUtils.getRealPath(context.get(), selectedImage);
-        if (realPath != null) {
-            if (!realPath.isEmpty()) {
-                int startInd = realPath.lastIndexOf(File.separator) + 1;
-                int endInd = realPath.indexOf(".", startInd);
-                fileName = realPath.substring(startInd, endInd);
+        String fileName = getFileName(context.get(), selectedImage);
+        String ext = getFileExtensionFromMime(context.get(), selectedImage);
+        String thumbnail = loadThumbnailAndGetPath(context.get(), selectedImage, 800);
+        processVideoFileUpload(jwt, fileName, selectedImage, ext, BitmapUtils.obtainMediaTypeOfExtn(ext), thumbnail, BitmapUtils.ORIENTATION_LS);
+    }
+
+    public static @Nullable String loadThumbnailAndGetPath(
+            @NonNull Context context,
+            @NonNull Uri uri,
+            int sizePx
+    ) {
+        InputStream in = null;
+        FileOutputStream out = null;
+
+        try {
+            Bitmap thumbnail;
+
+            // Android 10+ (API 29+)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                thumbnail = context.getContentResolver()
+                        .loadThumbnail(uri, new Size(sizePx, sizePx), null);
+            } else {
+                // Fallback for older versions
+                in = context.getContentResolver().openInputStream(uri);
+                if (in == null) return null;
+
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inSampleSize = 2;
+                thumbnail = BitmapFactory.decodeStream(in, null, options);
             }
 
-            Bitmap thumbnail;
-            String extn = realPath.substring(realPath.lastIndexOf(".") + 1);
-            thumbnail = BitmapFactory.decodeResource(context.get().getResources(), R.mipmap.videoplaceholder_left);
+            if (thumbnail == null)
+                thumbnail = BitmapFactory.decodeResource(context.getResources(), R.drawable.videoplaceholder_left);
 
-            Bitmap hover = BitmapFactory.decodeResource(context.get().getResources(), R.mipmap.btn_video_play_irc);
-            thumbnail = overlay(thumbnail, hover);
-            orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-            String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, realPath, compressQualityInt);
-            processFileUpload(jwt, fileName, realPath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
-        } else {
+            File cacheDir = new File(context.getCacheDir(), "thumbnails");
+            if (!cacheDir.exists()) cacheDir.mkdirs();
+
+            String fileName = "thumb_" + System.currentTimeMillis() + ".jpg";
+            File thumbFile = new File(cacheDir, fileName);
+
+            out = new FileOutputStream(thumbFile);
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 85, out);
+            out.flush();
+
+            return thumbFile.getAbsolutePath();
+
+        } catch (Exception e) {
+            Log.e("Thumbnail", "Failed to load/save thumbnail", e);
+            return null;
+
+        } finally {
             try {
-                DocumentFile pickFile = DocumentFile.fromSingleUri(context.get(), selectedImage);
-                String name = null;
-                String type = null;
+                if (in != null) in.close();
+                if (out != null) out.close();
+            } catch (IOException ignored) {}
+        }
+    }
 
-                if (pickFile != null) {
-                    name = pickFile.getName();
-                    type = pickFile.getType();
-                }
+    public static String getFileName(Context context, Uri uri) {
+        try (Cursor cursor = context.getContentResolver()
+                .query(uri, null, null, null, null)) {
 
-                if (type != null && type.contains("video")) {
-                    KaMediaUtils.setupAppDir(context.get(), BundleConstants.MEDIA_TYPE_VIDEO);
-                    String filePath = KaMediaUtils.getAppDir() + File.separator + name;
-                    new SaveVideoTask(jwt, filePath, name, selectedImage, context.get()).executeAsync();
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (nameIndex != -1) {
+                    return cursor.getString(nameIndex);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
+        return null;
+    }
+
+    public void processVideoFileUpload(String jwt, String fileName, Uri filePath, String ext, String mediaType, String thumbnailFilePath, String orientation) {
+        KoreWorker.getInstance().addTask(new UploadVideoFile(
+                fileName,
+                filePath,
+                "bearer " + jwt,
+                SocketWrapper.getInstance(context.get()).getBotUserId(),
+                "workflows",
+                ext,
+                getBufferSize(mediaType),
+                new Messenger(messagesMediaUploadAcknowledgeHandler),
+                thumbnailFilePath,
+                "AT_" + System.currentTimeMillis(),
+                context.get(),
+                mediaType,
+                SDKConfiguration.Server.SERVER_URL,
+                orientation,
+                true,
+                SDKConfiguration.Client.isWebHook,
+                SDKConfiguration.Client.bot_id)
+        );
+    }
+
+    public static String getFileExtensionFromMime(Context context, Uri uri) {
+        String mime = context.getContentResolver().getType(uri);
+        if (mime != null) {
+            return MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+        }
+        return null;
     }
 
     public void processImageResponse(String jwt, Intent data) {

@@ -164,7 +164,16 @@ public class CustomContentFragment extends BaseContentFragment {
         botTypingStatusRl.setVisibility(View.GONE);
         botsBubblesListView.smoothScrollToPosition(botsChatAdapter.getItemCount());
     }
-
+    @Override
+    public void addStreamingMessage(String message) {
+        if(!message.isBlank())
+        {
+            botsChatAdapter.addStreamingMessage(message);
+            botsBubblesListView.post(() -> {
+                botsBubblesListView.scrollBy(0, 2000);
+            });
+        }
+    }
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = view.findViewById(R.id.botTypingStatus);
         CircularProfileView botTypingStatusIcon = view.findViewById(R.id.typing_status_item_cpv);

@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowInsetsController;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -20,6 +21,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.audiocodes.webrtcclient.db.MySQLiteHelper;
@@ -47,10 +50,19 @@ public class BotAppCompactActivity extends AppCompatActivity {
         sharedPreferences = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.base_frame), (view, windowInsets) -> {
+            Insets ime = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
             Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            view.setPadding(insets.left, 0, insets.right, insets.bottom);
+            int bottom = ime.bottom;
+            if (bottom == 0) bottom = insets.bottom;
+            view.setPadding(insets.left,0, insets.right, bottom);
             if (sharedPreferences.getInt(BundleConstants.STATUS_BAR_HEIGHT, 0) == 0)
                 sharedPreferences.edit().putInt(BundleConstants.STATUS_BAR_HEIGHT, insets.top).apply();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                Objects.requireNonNull(getWindow().getInsetsController()).setSystemBarsAppearance(
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+                        WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS
+                );
+            }
             return WindowInsetsCompat.CONSUMED;
         });
 

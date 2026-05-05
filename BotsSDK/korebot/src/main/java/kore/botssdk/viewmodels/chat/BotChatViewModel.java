@@ -96,6 +96,7 @@ public class BotChatViewModel extends ViewModel {
     boolean isAgentTransfer = false;
     ArrayList<String> arrMessageList = new ArrayList<>();
     private boolean isActivityResumed = false;
+    boolean isStreamMessage = false;
     final SocketChatListener sListener = new SocketChatListener() {
         @Override
         public void onMessage(BotResponse botResponse) {
@@ -123,8 +124,9 @@ public class BotChatViewModel extends ViewModel {
         public void onMessage(SocketDataTransferModel data) {
             if (data == null) return;
             if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE)) {
-                processPayload(data.getPayLoad(), null);
-
+                if (!isStreamMessage)
+                    processPayload(data.getPayLoad(), null);
+                else processStreamMessage(data.getPayLoad());
             } else if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE)) {
                 chatView.updateContentListOnSend(data.getBotRequest());
             }
@@ -144,6 +146,43 @@ public class BotChatViewModel extends ViewModel {
         this.botClient = botClient;
         ACManager.getInstance().startLogout();
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+    }
+
+
+    private void processStreamMessage(String payload) {
+        try {
+            final BotResponse botResponse = gson.fromJson(payload, BotResponse.class);
+            if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
+                return;
+            }
+            isStreamMessage = botResponse.issM();
+
+            if (botResponse.isEndChunk())
+                isStreamMessage = false;
+
+            if (!StringUtils.isNullOrEmpty(botResponse.getIcon()))
+                SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
+
+            PayloadOuter payOuter = null;
+            if (!botResponse.getMessage().isEmpty()) {
+                ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
+                if (compModel != null) {
+                    payOuter = compModel.getPayload();
+                    if (payOuter != null) {
+                        if (payOuter.getText() != null && payOuter.getText().contains("&quot")) {
+                            gson = new Gson();
+                            payOuter = gson.fromJson(payOuter.getText().replace("&quot;", "\""), PayloadOuter.class);
+                        }
+                    }
+                }
+            }
+
+            if (payOuter != null && payOuter.getText() != null) {
+                chatView.addStreamingMessage(payOuter.getText(), botResponse.isEndChunk());
+            }
+        } catch (Exception e) {
+            LogUtils.e("Error", String.valueOf(e));
+        }
     }
 
     public void setIsActivityResumed(boolean isResumed) {
@@ -186,6 +225,10 @@ public class BotChatViewModel extends ViewModel {
             if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 return;
             }
+            isStreamMessage = botResponse.issM();
+
+            if(botResponse.isEndChunk())
+                isStreamMessage = false;
             try {
                 long timeMillis = botResponse.getTimeInMillis(botResponse.getCreatedOn(), true);
                 botResponse.setCreatedInMillis(timeMillis);

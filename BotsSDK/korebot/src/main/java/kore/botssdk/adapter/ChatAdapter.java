@@ -49,6 +49,7 @@ import kore.botssdk.viewholders.DropDownTemplateHolder;
 import kore.botssdk.viewholders.FeedbackTemplateHolder;
 import kore.botssdk.viewholders.FormTemplateHolder;
 import kore.botssdk.viewholders.LineChartTemplateHolder;
+import kore.botssdk.viewholders.LinkTemplateHolder;
 import kore.botssdk.viewholders.ListTemplateHolder;
 import kore.botssdk.viewholders.ListViewTemplateHolder;
 import kore.botssdk.viewholders.ListWidgetTemplateHolder;
@@ -116,6 +117,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
     public static final int TEMPLATE_RESET_PIN = 35;
     public static final int TEMPLATE_ANSWER = 36;
     public static final int TEMPLATE_DIGITAL_FORM = 37;
+    public static final int TEMPLATE_LINK = 38;
 
     private final HashMap<Integer, String> customTemplates = new HashMap<>();
     private BottomSheetDialog bottomSheetDialog;
@@ -264,6 +266,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                             return payInner.getSliderView() && bottomSheetDialog == null ? TEMPLATE_BUBBLE_RESPONSE : TEMPLATE_RESET_PIN;
                         case BotResponse.TEMPLATE_TYPE_ANSWER:
                             return TEMPLATE_ANSWER;
+                        case BotResponse.COMPONENT_TYPE_LINK:
+                            return TEMPLATE_LINK;
                         default:
                             return TEMPLATE_BUBBLE_RESPONSE;
                     }
@@ -280,7 +284,9 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                     if (customTemplateType != -1) return customTemplateType;
                     return TEMPLATE_MEDIA;
                 }
-            } else if (!StringUtils.isNullOrEmpty(payOuter.getType())) {
+            } else if (BotResponse.COMPONENT_TYPE_LINK.equalsIgnoreCase(payOuter.getType()) && payInner != null)
+                return TEMPLATE_LINK;
+            else if (!StringUtils.isNullOrEmpty(payOuter.getType())) {
                 int customTemplateType = getCustomTemplateType(payOuter.getType());
                 if (customTemplateType != -1) return customTemplateType;
 
@@ -376,6 +382,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             case TEMPLATE_OTP_VALIDATION -> OtpValidationTemplateHolder.getInstance(parent);
             case TEMPLATE_RESET_PIN -> ResetPinTemplateHolder.getInstance(parent);
             case TEMPLATE_ANSWER -> AnswerTemplateHolder.getInstance(parent);
+            case TEMPLATE_LINK -> LinkTemplateHolder.getInstance(parent);
             default -> ResponseTextTemplateHolder.getInstance(parent);
         };
     }
@@ -499,6 +506,21 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
             baseBotMessageArrayList.remove(foundIndex);
             baseBotMessageArrayList.add(foundIndex, response);
             notifyItemChanged(foundIndex);
+        }
+    }
+
+    public void addStreamingMessage(String message) {
+        BotResponse botResponse = (BotResponse) baseBotMessageArrayList.get(baseBotMessageArrayList.size() - 1);
+        PayloadOuter payOuter;
+        if (!botResponse.getMessage().isEmpty()) {
+            ComponentModel compModel = botResponse.getMessage().get(0).getComponent();
+            if (compModel != null) {
+                payOuter = compModel.getPayload();
+                if (payOuter != null) {
+                    payOuter.setText(payOuter.getText() + message);
+                    notifyItemChanged(baseBotMessageArrayList.size() - 1);
+                }
+            }
         }
     }
 }

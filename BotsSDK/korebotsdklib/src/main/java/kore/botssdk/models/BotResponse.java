@@ -28,6 +28,7 @@ public class BotResponse extends BaseBotMessage {
     public static final String COMPONENT_TYPE_IMAGE = "image";
     public static final String COMPONENT_TYPE_AUDIO = "audio";
     public static final String COMPONENT_TYPE_VIDEO = "video";
+    public static final String COMPONENT_TYPE_LINK = "link";
     public static final String VIEW_STAR = "star";
     public static final String VIEW_NPS = "NPS";
     public static final String VIEW_CSAT = "CSAT";
@@ -119,6 +120,9 @@ public class BotResponse extends BaseBotMessage {
     private boolean fromAgent = false;
     private Map<String, Object> contentState;
 
+    private boolean sM;
+    private boolean endChunk;
+
     public void setFromAgent(boolean fromAgent) {
         this.fromAgent = fromAgent;
     }
@@ -184,5 +188,17 @@ public class BotResponse extends BaseBotMessage {
 
     public void setContentState(Map<String, Object> contentState) {
         this.contentState = contentState;
+    }
+
+    public void setsM(boolean sM) {
+        this.sM = sM;
+    }
+
+    public boolean issM() {
+        return sM;
+    }
+
+    public boolean isEndChunk() {
+        return endChunk;
     }
 }

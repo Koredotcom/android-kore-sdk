@@ -112,6 +112,8 @@ public class PayloadInner {
     @SerializedName("answer_payload")
     private AnswerPayloadModel answerPayload;
 
+    private String name;
+
     public void setTemplate_type(String template_type) {
         this.template_type = template_type;
     }
@@ -475,7 +477,9 @@ public class PayloadInner {
     public AnswerPayloadModel getAnswerPayload() {
         return answerPayload;
     }
-
+    public String getName() {
+        return name;
+    }
     public ArrayList<ContactTemplateModel> getContactCardModel() {
         if (getCards() != null && getCards() instanceof ArrayList<?>) {
             String cardsAsString = gson.toJson(getCards());

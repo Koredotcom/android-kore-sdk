@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
@@ -27,6 +28,7 @@ import kore.botssdk.models.BotListElementButton;
 import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
+import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapter.ViewHolder> {
@@ -63,13 +65,7 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         if (!StringUtils.isNullOrEmpty(botListModel.getSubtitle())) {
             holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-
-            Markwon markwon = Markwon.builder(holder.itemView.getContext())
-                    .usePlugin(HtmlPlugin.create())
-                    .usePlugin(LinkifyPlugin.create())
-                    .build();
-
-            markwon.setMarkdown(holder.botListItemSubtitle, botListModel.getSubtitle());
+            holder.botListItemSubtitle.setText(HtmlCompat.fromHtml(MarkdownUtil.processMarkDown(botListModel.getSubtitle()), HtmlCompat.FROM_HTML_MODE_LEGACY));
         }
         if (botListModel.getButtons() == null || botListModel.getButtons().isEmpty()) {
             holder.botListItemButton.setVisibility(View.GONE);
