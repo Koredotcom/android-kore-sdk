@@ -10,6 +10,7 @@ import com.kore.ai.widgetsdk.utils.StringUtils;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 public class KnowledgeDetailModel implements Serializable {
     public String getTempHeader() {
         return tempHeader;
@@ -67,15 +68,16 @@ public class KnowledgeDetailModel implements Serializable {
         this.meetingDetails = meetingDetails;
     }
 
- /*   public List<Participant> getParticipants() {
-        return participants;
-    }
+    /*   public List<Participant> getParticipants() {
+           return participants;
+       }
 
-    public void setParticipants(List<Participant> participants) {
-        this.participants = participants;
-    }
-*/
+       public void setParticipants(List<Participant> participants) {
+           this.participants = participants;
+       }
+   */
     private List<CalEventsTemplateModel.Attendee> attendees = null;
+
     public String getmId() {
         return mId;
     }
@@ -129,33 +131,6 @@ public class KnowledgeDetailModel implements Serializable {
     public String getSharedBy() {
         return sharedBy;
     }
-
-    public String getFormattedModifiedDate() {
-        if (formattedModifiedDate == null) {
-            formattedModifiedDate = DateUtils.formattedSentDateV6(lastMod);
-        }
-        return formattedModifiedDate;
-    }
-
-    public String getFormattedHeaderDate() {
-        if (formattedHeaderDate == null) {
-            formattedHeaderDate = DateUtils.formattedSentDateV8(lastMod, false);
-        }
-        return formattedHeaderDate;
-    }
-
-    private String formattedHeaderDate;
-
-    public void setFormattedModifiedDate(String formattedModifiedDate) {
-        this.formattedModifiedDate = formattedModifiedDate;
-    }
-
-    public String getLastModifiedDate() {
-        return "Modified " + DateUtils.formattedSentDateV8(lastMod, true);
-    }
-
-    private String formattedModifiedDate;
-
 
     public void setSharedBy(String sharedBy) {
         this.sharedBy = sharedBy;
@@ -246,17 +221,14 @@ public class KnowledgeDetailModel implements Serializable {
     }
 
 
-public String getFormatedDate()
-{
-   return DateUtils.formattedSentDateV8_InAnnouncement(createdOn);
-}
+    public String getFormatedDate() {
+        return DateUtils.formattedSentDateV8_InAnnouncement(createdOn);
+    }
 
 
-public boolean getDateLabelVisblity()
-{
-    return DateUtils.formattedSentDateV8_InAnnouncement2(createdOn);
-}
-
+    public boolean getDateLabelVisblity() {
+        return DateUtils.formattedSentDateV8_InAnnouncement2(createdOn);
+    }
 
 
     public void setCreatedOn(long createdOn) {
@@ -547,7 +519,7 @@ public boolean getDateLabelVisblity()
 
     }
 
-    public static class VoteModel implements Serializable{
+    public static class VoteModel implements Serializable {
         int vote;
 
         public int getVote() {
@@ -611,7 +583,7 @@ public boolean getDateLabelVisblity()
         }
     }
 
-    public static class CommentModel implements Serializable{
+    public static class CommentModel implements Serializable {
         private long cOn;
         private String id;
         private long lMod;

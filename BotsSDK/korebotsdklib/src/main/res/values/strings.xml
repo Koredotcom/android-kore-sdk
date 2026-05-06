@@ -6,4 +6,7 @@
     <string name="time_stamp_days">d</string>
     <string name="time_stamp_weeks">w</string>
     <string name="time_stamp_years">y</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="tomorrow">Tomorrow</string>
 </resources>

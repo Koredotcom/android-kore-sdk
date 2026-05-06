@@ -12,7 +12,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +19,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
-import android.os.Process;
-import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.text.TextUtils;
 import android.util.Log;
@@ -31,7 +28,6 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,10 +46,8 @@ import kore.botssdk.listener.ComposeFooterUpdate;
 import kore.botssdk.models.KoreComponentModel;
 import kore.botssdk.models.KoreMedia;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.AsyncTasks;
 import kore.botssdk.utils.BitmapUtils;
 import kore.botssdk.utils.BundleConstants;
-import kore.botssdk.utils.KaMediaUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.ToastUtils;
 import kore.botssdk.view.viewUtils.FileUtils;
@@ -198,9 +192,7 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
                     File _file = new File(filePath);
 
                     LogUtils.d(LOG_TAG, " file.exists() ---------------------------------------- " + _file.exists());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        fOut = Files.newOutputStream(_file.toPath());
-                    } else fOut = new FileOutputStream(_file);
+                    fOut = Files.newOutputStream(_file.toPath());
 
                     thePic.compress(Bitmap.CompressFormat.JPEG, compressQualityInt, fOut);
                     thePic = rotateIfNecessary(filePath, thePic);
@@ -285,91 +277,6 @@ public class BotFooterViewModel extends BaseViewModel<ComposeFooterUpdate> {
             return "video_" + System.currentTimeMillis();
         } else {
             return "doc_" + System.currentTimeMillis();
-        }
-    }
-
-    private class SaveVideoTask extends AsyncTasks<String, String, String> {
-        private final String filePath;
-        private String fileName;
-        private final Uri fileUri;
-        private final WeakReference<Context> mContext;
-        private final String jwt;
-
-        SaveVideoTask(String jwt, String filePath, String fileName, Uri fileUri, Context mContext) {
-            this.filePath = filePath;
-            this.fileName = fileName;
-            this.fileUri = fileUri;
-            this.mContext = new WeakReference<>(mContext);
-            this.jwt = jwt;
-        }
-
-        @Override
-        protected void doInBackground(String... params) {
-            android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_MORE_FAVORABLE);
-            if (filePath != null && mContext.get() != null) {
-                FileOutputStream fOut = null;
-                BufferedOutputStream out = null;
-                InputStream in = null;
-
-                try {
-
-                    fOut = new FileOutputStream(filePath);
-                    out = new BufferedOutputStream(fOut);
-                    in = mContext.get().getContentResolver().openInputStream(fileUri);
-                    byte[] buffer = new byte[8192];
-                    int len;
-                    while ((len = in != null ? in.read(buffer) : 0) >= 0) {
-                        out.write(buffer, 0, len);
-                    }
-                    out.flush();
-                } catch (Exception e) {
-                    LogUtils.e(LOG_TAG, e.toString());
-                } finally {
-                    if (fOut != null) {
-                        try {
-                            fOut.getFD().sync();
-                            fOut.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    try {
-                        if (out != null) out.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    try {
-                        if (in != null) in.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute() {
-//            filePath = path;
-            if (filePath != null && mContext.get() != null) {
-                if (!filePath.isEmpty()) {
-                    int startInd = filePath.lastIndexOf(File.separator) + 1;
-                    int endInd = filePath.indexOf(".", startInd);
-                    fileName = filePath.substring(startInd, endInd);
-                }
-                String extn = filePath.substring(filePath.lastIndexOf(".") + 1);
-                Bitmap hover = BitmapFactory.decodeResource(context.get().getResources(), R.mipmap.btn_video_play_irc);
-                Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(filePath, MediaStore.Video.Thumbnails.MINI_KIND);
-                if (thumbnail == null) {
-                    thumbnail = BitmapFactory.decodeResource(context.get().getResources(), R.mipmap.videoplaceholder_left);
-
-                }
-                thumbnail = overlay(thumbnail, hover);
-                String orientation = thumbnail.getWidth() > thumbnail.getHeight() ? BitmapUtils.ORIENTATION_LS : BitmapUtils.ORIENTATION_PT;
-                String bmpPath = BitmapUtils.createImageThumbnailForBulk(thumbnail, filePath, compressQualityInt);
-                processFileUpload(jwt, fileName, filePath, extn, BitmapUtils.obtainMediaTypeOfExtn(extn), bmpPath, orientation);
-            }
         }
     }
 

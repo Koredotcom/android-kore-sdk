@@ -1,5 +1,6 @@
 package kore.botssdk.net;
 
+import android.graphics.Typeface;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,10 @@ public class SDKConfig {
     private static boolean isShowActionBar = true;
     private static boolean isUpdateStatusBarColor = false;
     private static BotBrandingModel botBrandingModel;
+
+    public static void setFontFamily(Typeface regularTf, Typeface semiBoldTf, Typeface boldTf) {
+        SDKConfiguration.setFontFamily(regularTf, semiBoldTf, boldTf);
+    }
 
     public static void setCustomTemplateView(@NonNull String templateName, @NonNull View templateView) {
         SDKConfiguration.setCustomTemplateView(templateName, templateView);

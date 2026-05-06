@@ -36,7 +36,7 @@ public class KaMediaUtils {
     public static final String DOWNLOADED_AUDIO_FOLDER = "Kore Audio";
     public static final String DOWNLOADED_VIDEO_FOLDER = "Kore Video";
     public static final String DOWNLOADED_DOCUMENT_FOLDER = "Kore Document";
-    public static final String DOWNLOAD_ARCHIVE_FOLDER = "Kore Archieve";
+    public static final String DOWNLOAD_ARCHIVE_FOLDER = "Kore Archive";
     private static final String LOG_TAG = "MediaUtil";
     static File mediaStorageDir = null;
 

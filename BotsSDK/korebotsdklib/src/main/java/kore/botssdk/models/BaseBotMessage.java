@@ -1,5 +1,7 @@
 package kore.botssdk.models;
 
+import android.content.Context;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -90,5 +92,8 @@ public abstract class BaseBotMessage {
             return "<medium><b>" + SDKConfiguration.Client.bot_name + "</b></medium>" + " " + DateUtils.getTimeInAmPm(milliSecs) + ", " +
                     DateUtils.formattedSentDateV6(milliSecs);
         }
+    }
+    public String prepareLocaleTimeStamp(Context context, long milliSecs) {
+        return DateUtils.getDateEEMMMDDYYYYHhMmSs(context, milliSecs);
     }
 }

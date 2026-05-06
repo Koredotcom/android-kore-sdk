@@ -1,7 +1,6 @@
 package kore.botssdk.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 
@@ -9,6 +8,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.res.ResourcesCompat;
 
 import kore.botssdk.R;
+import kore.botssdk.net.SDKConfiguration;
 
 public class CustomTextViewBold extends AppCompatTextView {
 
@@ -22,14 +22,14 @@ public class CustomTextViewBold extends AppCompatTextView {
     public CustomTextViewBold(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         style(context, attrs);
-
     }
 
     private void style(Context context, AttributeSet attrs) {
-
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ActionBar);
+        if (SDKConfiguration.getBold() != null) {
+            setTypeface(SDKConfiguration.getBold());
+            return;
+        }
         Typeface tfRegular = ResourcesCompat.getFont(context, R.font.latobold);
         setTypeface(tfRegular);
-        a.recycle();
     }
 }

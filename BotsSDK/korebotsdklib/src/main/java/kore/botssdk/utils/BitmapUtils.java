@@ -49,6 +49,7 @@ public class BitmapUtils {
     public static final String EXT_AUDIO_10 = "m4a";
     public static final String EXT_AUDIO_9 = "amr";
     public static final String EXT_AUDIO_MP3 = "mp3";
+    public static final String EXT_AUDIO_DOT_MP3 = ".mp3";
     public static final String EXT_AUDIO_MPEG = "mpeg";
     public static final String EXT_AUDIO_MID = "mid";
     public static final String EXT_AUDIO_BASIC = "au";
@@ -424,6 +425,7 @@ public class BitmapUtils {
             case EXT_AUDIO_9:
             case EXT_AUDIO_AAC:
             case EXT_AUDIO_PLAIN:
+            case EXT_AUDIO_DOT_MP3:
                 return TYPE_AUDIO_ATTACHMENT;
 
             case EXT_ZIP:

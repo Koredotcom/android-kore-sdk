@@ -8,6 +8,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.res.ResourcesCompat;
 
 import kore.botssdk.R;
+import kore.botssdk.net.SDKConfiguration;
 
 public class CustomEditTextView extends AppCompatEditText {
 
@@ -25,7 +26,10 @@ public class CustomEditTextView extends AppCompatEditText {
     }
 
     private void style(Context context, AttributeSet attrs) {
-
+        if (SDKConfiguration.getRegular() != null) {
+            setTypeface(SDKConfiguration.getRegular());
+            return;
+        }
         Typeface tfRegular = ResourcesCompat.getFont(context, R.font.latoregular);
         setTypeface(tfRegular);
     }

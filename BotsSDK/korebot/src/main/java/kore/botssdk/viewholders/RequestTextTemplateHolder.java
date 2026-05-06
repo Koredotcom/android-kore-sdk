@@ -3,6 +3,7 @@ package kore.botssdk.viewholders;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
 import android.view.View;
@@ -18,6 +19,7 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.EmojiUtils;
+import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
@@ -46,6 +48,10 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
         LinkifyTextView bubbleText = itemView.findViewById(R.id.bubble_text);
         bubbleText.setText("");
         Context context = bubbleText.getContext();
+        Typeface regular = KaFontUtils.getCustomTypeface("regular", context);
+        if (SDKConfiguration.getRegular() != null) {
+            regular = SDKConfiguration.getRegular();
+        }
         if (textualContent != null && !textualContent.isEmpty()) {
             if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable)
                 textualContent = EmojiUtils.replaceEmoticonsWithEmojis(textualContent);
@@ -64,6 +70,7 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
                 makeLinkClickable(strBuilder, span);
             }
 
+            bubbleText.setTypeface(regular);
             bubbleText.setText(strBuilder);
             bubbleText.setMovementMethod(null);
             bubbleText.setVisibility(View.VISIBLE);
