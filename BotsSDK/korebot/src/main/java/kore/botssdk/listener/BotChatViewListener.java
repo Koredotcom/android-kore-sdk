@@ -42,4 +42,6 @@ public interface BotChatViewListener extends BaseView {
     void loadOnConnectionHistory(boolean isReconnect);
 
     void addStreamingMessage(String message, boolean endFlag);
+
+    void updateMessageStatus(BotRequest botRequest);
 }

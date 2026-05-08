@@ -1,5 +1,6 @@
 package kore.botssdk.activity;
 
+import static android.app.Activity.RESULT_OK;
 import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
@@ -34,6 +35,7 @@ import android.os.Messenger;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -81,6 +83,7 @@ import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -353,6 +356,17 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         botContentFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
     }
 
+    @Override
+    public void updateMessageStatus(BotRequest botRequest) {
+        botContentFragment.updateMessageStatus(botRequest);
+    }
+
+    @Override
+    public void onSendClick(BaseBotMessage message, boolean isFromUtterance) {
+        LogUtils.e("Resending text", new Gson().toJson(message));
+        botClient.sendMessage(new Gson().toJson(message));
+    }
+
     public void onEvent(String jwt) {
         this.jwt = jwt;
 
@@ -393,6 +407,11 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     }
 
     @Override
+    public void onDeleteClick(BaseBotMessage message) {
+        botContentFragment.deleteMessage(message);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @androidx.annotation.NonNull String[] permissions, @androidx.annotation.NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CHOOSE_IMAGE_BUNDLED_PERMISSION_REQUEST) {
@@ -421,7 +440,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     public void onSendClick(String message, boolean isFromUtterance) {
         if (!StringUtils.isNullOrEmpty(message)) {
             if (!SDKConfiguration.Client.isWebHook)
-                BotSocketConnectionManager.getInstance().sendMessage(message, null);
+                BotSocketConnectionManager.getInstance().sendMessage(message);
             else {
                 viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, null);
@@ -437,7 +456,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             if (payload != null) {
                 BotSocketConnectionManager.getInstance().sendPayload(message, payload);
             } else {
-                BotSocketConnectionManager.getInstance().sendMessage(message, "");
+                BotSocketConnectionManager.getInstance().sendMessage(message);
             }
         } else {
             BotSocketConnectionManager.getInstance().stopTextToSpeech();
@@ -677,8 +696,32 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             }
         };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
-        builder.setMessage(R.string.close_or_minimize).setCancelable(false).setPositiveButton(R.string.minimize, dialogClickListener).setNegativeButton(R.string.close, dialogClickListener).setNeutralButton(R.string.cancel, dialogClickListener).show();
+        AlertDialog dialog = new AlertDialog.Builder(BotChatActivity.this)
+                .setMessage(R.string.close_or_minimize)
+                .setCancelable(false)
+                .setPositiveButton(R.string.minimize, dialogClickListener)
+                .setNegativeButton(R.string.close, dialogClickListener)
+                .setNeutralButton(R.string.cancel, dialogClickListener)
+                .create();
+
+        dialog.show();
+
+        if (SDKConfiguration.getRegular() != null) {
+            // 1️⃣ Set message font
+            TextView messageView = dialog.findViewById(android.R.id.message);
+            if (messageView != null) {
+                messageView.setTypeface(SDKConfiguration.getRegular());
+            }
+
+            // 2️⃣ Set button fonts
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+            Button neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+
+            if (positiveButton != null) positiveButton.setTypeface(SDKConfiguration.getRegular());
+            if (negativeButton != null) negativeButton.setTypeface(SDKConfiguration.getRegular());
+            if (neutralButton != null) neutralButton.setTypeface(SDKConfiguration.getRegular());
+        }
     }
 
     @Override
@@ -726,7 +769,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
     @Override
     public void onPanelSendClick(String message, boolean isFromUtterance) {
-        BotSocketConnectionManager.getInstance().sendMessage(message, null);
+        BotSocketConnectionManager.getInstance().sendMessage(message);
     }
 
     @Override
@@ -734,7 +777,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         if (payload != null) {
             BotSocketConnectionManager.getInstance().sendPayload(message, payload);
         } else {
-            BotSocketConnectionManager.getInstance().sendMessage(message, payload);
+            BotSocketConnectionManager.getInstance().sendMessage(message);
         }
     }
 

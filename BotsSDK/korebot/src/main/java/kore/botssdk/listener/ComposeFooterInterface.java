@@ -6,6 +6,7 @@ import android.os.Bundle;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.CalEventsTemplateModel;
 import kore.botssdk.models.FormActionTemplate;
@@ -24,6 +25,7 @@ public interface ComposeFooterInterface {
     void onSendClick(String message, String payload, boolean isFromUtterance);
 
     void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance);
+    void onSendClick(BaseBotMessage message, boolean isFromUtterance);
 
     void sendWithSomeDelay(String message, String payload, long time, boolean isScrollUpNeeded);
 
@@ -33,4 +35,6 @@ public interface ComposeFooterInterface {
 
     void onDeepLinkClicked(String url);
     void sendImage(String fP, String fN, String fPT);
+
+    void onDeleteClick(BaseBotMessage message);
 }

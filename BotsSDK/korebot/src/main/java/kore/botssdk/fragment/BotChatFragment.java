@@ -78,6 +78,7 @@ import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.listener.TTSUpdate;
+import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
@@ -301,6 +302,22 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         botContentFragment.setTtsUpdate(BotSocketConnectionManager.getInstance());
     }
 
+    @Override
+    public void updateMessageStatus(BotRequest botRequest) {
+        botContentFragment.updateMessageStatus(botRequest);
+    }
+
+    @Override
+    public void onSendClick(BaseBotMessage message, boolean isFromUtterance) {
+        LogUtils.e("Resending text", new Gson().toJson(message));
+        botClient.sendMessage(new Gson().toJson(message));
+    }
+
+    @Override
+    public void onDeleteClick(BaseBotMessage message) {
+        botContentFragment.deleteMessage(message);
+    }
+
     public void onEvent(String jwt) {
         this.jwt = jwt;
 
@@ -369,7 +386,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     public void onSendClick(String message, boolean isFromUtterance) {
         if (!StringUtils.isNullOrEmpty(message)) {
             if (!SDKConfiguration.Client.isWebHook)
-                BotSocketConnectionManager.getInstance().sendMessage(message, null);
+                BotSocketConnectionManager.getInstance().sendMessage(message);
             else {
                 viewModel.addSentMessageToChat(message);
                 viewModel.sendWebHookMessage(jwt, false, message, null);
@@ -607,7 +624,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
     @Override
     public void onPanelSendClick(String message, boolean isFromUtterance) {
-        BotSocketConnectionManager.getInstance().sendMessage(message, null);
+        BotSocketConnectionManager.getInstance().sendMessage(message);
     }
 
     @Override
@@ -615,7 +632,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         if (payload != null) {
             BotSocketConnectionManager.getInstance().sendPayload(message, payload);
         } else {
-            BotSocketConnectionManager.getInstance().sendMessage(message, null);
+            BotSocketConnectionManager.getInstance().sendMessage(message);
         }
     }
 

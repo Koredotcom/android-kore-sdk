@@ -451,6 +451,14 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         }
     }
 
+    public void updateBaseBotMessage(BaseBotMessage baseBotMessage) {
+        int index = baseBotMessageArrayList.indexOf(baseBotMessage);
+        if (index != -1) {
+            baseBotMessageArrayList.set(index, baseBotMessage);
+            notifyItemChanged(index);
+        }
+    }
+
     public void addBaseBotMessages(ArrayList<BaseBotMessage> list) {
         baseBotMessageArrayList.addAll(0, list);
         prepareHeaderMap();
@@ -521,6 +529,16 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                     notifyItemChanged(baseBotMessageArrayList.size() - 1);
                 }
             }
+        }
+    }
+
+    public void deleteMessage(BaseBotMessage message) {
+        int position = baseBotMessageArrayList.indexOf(message);
+
+        if (position != -1) {
+            baseBotMessageArrayList.remove(position);
+            notifyItemRemoved(position);
+            notifyItemRangeChanged(position, baseBotMessageArrayList.size());
         }
     }
 }

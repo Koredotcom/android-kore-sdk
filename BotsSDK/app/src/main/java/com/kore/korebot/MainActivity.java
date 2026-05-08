@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
 
         SDKConfig.setQueryParams(getQueryParams());
         SDKConfig.setCustomData(getCustomData());
+        SDKConfiguration.setDeviceLocale(Locale.ENGLISH);
+//        SDKConfig.setFontFamily(ResourcesCompat.getFont(MainActivity.this, R.font.fss_light), ResourcesCompat.getFont(MainActivity.this, R.font.fss_regular), ResourcesCompat.getFont(MainActivity.this, R.font.fss_bold));
 //        SDKConfig.setBotBrandingConfigModel(getConfigBrandingModel(this));
 //        SDKConfig.setCustomContentFragment(new CustomContentFragment());
 //        SDKConfig.setCustomFooterFragment(new CustomFooterFragment());

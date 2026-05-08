@@ -319,5 +319,9 @@
     <string name="reset_pin">Reset Pin</string>
     <string name="answered_by_ai">Answered by AI</string>
     <string name="source_item">%s. %s</string>
+    <string name="send_again">Send again</string>
+    <string name="sending_failed">"Sending failed. "</string>
+    <string name="or"> or </string>
+    <string name="delete">Delete</string>
 
 </resources>

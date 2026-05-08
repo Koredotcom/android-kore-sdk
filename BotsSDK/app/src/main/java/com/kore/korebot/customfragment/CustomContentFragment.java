@@ -211,4 +211,13 @@ public class CustomContentFragment extends BaseContentFragment {
             }
         }
     }
+
+    @Override
+    public void updateMessageStatus(BotRequest botRequest) {
+        if (botRequest.getMessage() != null) {
+            if (botsChatAdapter != null) {
+                botsChatAdapter.updateBaseBotMessage(botRequest);
+            }
+        }
+    }
 }

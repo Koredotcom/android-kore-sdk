@@ -224,6 +224,7 @@ public class SDKConfiguration {
         public static boolean showASRMicroPhone = true;
         public static boolean showTextToSpeech = true;
         public static boolean history_initial_call = false;
+        public static boolean update_custom_data_to_user_message = false;
     }
 
     public static boolean isTimeStampsRequired() {

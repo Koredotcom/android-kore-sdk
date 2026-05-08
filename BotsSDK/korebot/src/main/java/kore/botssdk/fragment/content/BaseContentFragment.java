@@ -324,4 +324,12 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
         else
             mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
     }
+
+    public abstract void updateMessageStatus(BotRequest botRequest);
+
+    public void deleteMessage(BaseBotMessage message) {
+        if (botsChatAdapter != null && botsChatAdapter.getItemCount() > 0) {
+            botsChatAdapter.deleteMessage(message);
+        }
+    }
 }

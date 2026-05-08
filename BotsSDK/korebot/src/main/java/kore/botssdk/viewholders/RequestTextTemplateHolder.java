@@ -1,5 +1,7 @@
 package kore.botssdk.viewholders;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 
 import android.content.Context;
@@ -8,6 +10,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -41,17 +44,29 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         RestResponse.BotMessage message = ((BotRequest) baseBotMessage).getMessage();
         String msg = message != null ? (String) message.getBody() : "";
-        setRequestText(msg);
+        setRequestText(msg, ((BotRequest) baseBotMessage).getStatus(), baseBotMessage);
     }
 
-    private void setRequestText(String textualContent) {
+    private void setRequestText(String textualContent, BotRequest.MessageStatus status, BaseBotMessage message) {
         LinkifyTextView bubbleText = itemView.findViewById(R.id.bubble_text);
+        LinearLayoutCompat llSendAgain = itemView.findViewById(R.id.llSendAgain);
+        TextView tvSend = itemView.findViewById(R.id.tvSend);
+        TextView tvDelete = itemView.findViewById(R.id.tvDelete);
+
+        llSendAgain.setVisibility(GONE);
+
+        if(status == BotRequest.MessageStatus.FAILED) {
+            llSendAgain.setVisibility(VISIBLE);
+        }
+
         bubbleText.setText("");
         Context context = bubbleText.getContext();
+
         Typeface regular = KaFontUtils.getCustomTypeface("regular", context);
-        if (SDKConfiguration.getRegular() != null) {
+        if(SDKConfiguration.getRegular() != null) {
             regular = SDKConfiguration.getRegular();
         }
+
         if (textualContent != null && !textualContent.isEmpty()) {
             if (SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable)
                 textualContent = EmojiUtils.replaceEmoticonsWithEmojis(textualContent);
@@ -73,9 +88,19 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
             bubbleText.setTypeface(regular);
             bubbleText.setText(strBuilder);
             bubbleText.setMovementMethod(null);
-            bubbleText.setVisibility(View.VISIBLE);
+            bubbleText.setVisibility(VISIBLE);
 
-            itemView.setOnClickListener(v -> composeFooterInterface.copyMessageToComposer(strBuilder.toString(), true));
+            itemView.setOnLongClickListener(v -> {
+                composeFooterInterface.copyMessageToComposer(bubbleText.getText().toString(), false);
+                return false;
+            });
+
+            tvSend.setOnClickListener(v -> {
+                composeFooterInterface.onSendClick(message, false);
+            });
+
+            tvDelete.setOnClickListener( v -> composeFooterInterface.onDeleteClick(message));
+
         } else {
             bubbleText.setText("");
             bubbleText.setVisibility(View.GONE);

@@ -654,17 +654,22 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     @Override
     public void advanceButtonClick(ArrayList<AdvanceOptionsModel> arrAdvanceOptionsModels) {
         StringBuilder stringBuilder = new StringBuilder();
+        StringBuilder renderStringBuilder = new StringBuilder();
         for (AdvanceOptionsModel advanceOptionsModel : arrAdvanceOptionsModels) {
             if (advanceOptionsModel.isChecked()) {
-                if (StringUtils.isNullOrEmpty(stringBuilder))
+                if (StringUtils.isNullOrEmpty(stringBuilder)) {
                     stringBuilder.append(advanceOptionsModel.getValue());
-                else
+                    renderStringBuilder.append(advanceOptionsModel.getLabel());
+                }
+                else {
                     stringBuilder.append(", ").append(advanceOptionsModel.getValue());
+                    renderStringBuilder.append(", ").append(advanceOptionsModel.getLabel());
+                }
             }
         }
 
         if (composeFooterInterface != null)
-            composeFooterInterface.onSendClick(stringBuilder.toString(), stringBuilder.toString(), true);
+            composeFooterInterface.onSendClick(renderStringBuilder.toString(), stringBuilder.toString(), true);
     }
 
     @Override

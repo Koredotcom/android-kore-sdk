@@ -1,4 +1,231 @@
 <resources>
-    <string name="app_name">Kore.ai bot</string>
+    <string name="app_name">"Kore.ai Bot"</string>
+    <string name="socket_connecting">Connecting</string>
+    <string name="socket_connected">Connected</string>
+    <string name="socket_disconnected">Disconnected</string>
+    <string name="socket_failed">Failed to connect</string>
+    <string name="send">"Send"</string>
+    <string name="please_wait">"Please wait…"</string>
+    <string name="speak_now">"Speak now"</string>
+    <string name="no_network">"No network!"</string>
+    <string name="click_hear_to_enter_text">click hear to enter text</string>
+    <string name="click_hear_to_speak_something">click hear to speak something</string>
+    <string name="tap_to_speak">Tap to speak</string>
+    <string name="repeat">Please repeat</string>
+    <string name="custom_header">Custom Header</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="speech_not_available">Speech recognition is not available on this device. Do you want to install Google app to have speech recognition?</string>
+    <string name="permission_required">You need to grant the permission to use the microphone</string>
+    <string name="enable_google_voice_typing">Please enable Google Voice Typing to use speech recognition!</string>
+    <string name="label_to">To</string>
+    <string name="label_from">From</string>
+    <string name="label_cc">Cc</string>
+    <string name="atatchment_format">%d Attachments</string>
+    <plurals name="attachment_count">
+        <item quantity="one">1 Attachment </item>
+        <item quantity="other">%d  Attachments</item>
+    </plurals>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="sortable_indicator_content_description">Sortable Indicator</string>
+    <string name="default_header">Header %1$d</string>
+    <string name="default_cell">Data [%1$d:%2$d]</string>
+    <string name="modify_slots">MODIFY SLOTS</string>
+    <string name="confirm">Confirm</string>
+    <string name="need_login">You’d need to login to view the content</string>
+    <string name="conversation_end">Conversation ended at</string>
+    <plurals name="confirm_slots">
+        <item quantity="one">Confirm availability for 1 slot</item>
+        <item quantity="other">Confirm availability for %d slots</item>
+    </plurals>
+    <string name="selected_task_completion">%1$d out of %2$d tasks are selected for completion</string>
+    <string name="selected_task_duedate">%1$d out of %2$d tasks are selected for change due date</string>
+    <string name="view_more">View More</string>
+    <string name="chase_digital_assistantSM"><![CDATA[Chase Digital Assistant<sup><small>SM</small></sup>]]></string>
+    <string name="icon_e91d">&#xe91d;</string> <!-- PHONE -->
+    <string name="icon_e915">&#xe915;</string> <!-- MAIL -->
+    <string name="icon_e979" translatable="false">&#xe979;</string> <!-- MEETING -->
+    <string name="icon_e961" translatable="false">&#xe961;</string> <!-- MORE -->
+    <string name="icon_e914" translatable="false">&#xe914;</string> <!-- LESS -->
+    <string name="icon_e92c" translatable="false">&#xe92c;</string> <!-- LOCATION -->
+    <string name="icon_e94f" translatable="false">&#xe94f;</string> <!-- DEVICE-->
+    <string name="icon_e94e" translatable="false">&#xe94e;</string> <!-- CLOUD -->
+    <string name="icon_62" translatable="false">&#x62;</string> <!-- COMPANY -->
+    <string name="icon_e959" translatable="false">&#xe959;</string>
+    <string name="icon_33" translatable="false">&#x33;</string>
+    <string name="icon_d" translatable="false">&#xd;</string> <!-- calendar icon-->
+    <string name="icon_e96c" translatable="false">&#xe96c;</string> <!-- tasks-->
+    <string name="icon_e927" translatable="false">&#xe927;</string> <!-- due outlined-->
+    <string name="icon_e926" translatable="false">&#xe926;</string> <!-- due filled-->
+    <string name="icon_e943" translatable="false">&#xe943;</string> <!-- notif-->
+    <string name="icon_64" translatable="false">&#xe64;</string> <!-- meetings-->
+    <string name="icon_2d" translatable="false">&#x2d;</string><!-- meetings-->
+    <string name="icon_e954" translatable="false">&#xe954;</string> <!-- join-->
+    <string name="icon_e92a" translatable="false">&#xe92a;</string> <!-- notes-->
+    <string name="icon_e958" translatable="false">&#xe958;</string> <!--Keyboard-->
+    <string name="icon_e935" translatable="false">&#xe98a;</string> <!--HOME-->
+    <string name="icon_e922" translatable="false">&#xe922;</string>
+    <string name="icon_e903" translatable="false">&#xe903;</string>
+    <string name="icon_e93c" translatable="false">&#xe93c;</string> <!--edit icon-->
+    <string name="icon_28" translatable="false">&#x28;</string>
+    <string name="icon_e91a" translatable="false">&#xe91a;</string>
+    <string name="icon_e913" translatable="false">&#xe913;</string>
+    <string name="camera">&#128247;</string>
+    <string name="video">&#127909;</string>
+    <string name="attachment">&#128195;</string>
+    <string name="audio">&#9835;</string>
+    <string name="icon_e995" translatable="false">&#xe995;</string> <!-- threads-->
+    <string name="icon_e996" translatable="false">&#xe996;</string> <!-- teams-->
+    <string name="read_more"><![CDATA[<u> Read More </u>]]></string>
+    <string name="show_less"><![CDATA[<u> Show Less </u>]]></string>
+
+    <string name="border0" translatable="false">
+        <![CDATA[
+        <style>
+        p.dashed {border-style: dashed;}
+        </style>
+        <body>
+        <p class=“+”dashed“+”>A dashed border.</p>
+        </body>
+        ]]>
+    </string>
+
+    <string name="border1" translatable="false">
+    <![CDATA[
+        <div style=“display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;”>Sushanth</div>
+     ]]>
+    </string>
+    <string name="save">Save</string>
+    <string name="connect">Connect</string>
+    <string name="whatcanbeimproved">What can be Improved ?</string>
+    <string name="submit">Submit</string>
+    <string name="show_more">Show More</string>
+    <string name="about">About</string>
+    <string name="add_suggestions">Add Suggestions</string>
+    <string name="get_started">Get Started</string>
+    <string name="see_all_results">See all results</string>
+    <string name="more">More</string>
+    <string name="more_">… More</string>
+    <string name="download">Download</string>
+    <string name="nodata">No Data</string>
+    <string name="no_upcoming_meetings">No Upcoming Meetings</string>
+    <string name="no_files">No Files</string>
+    <string name="you">You</string>
+    <string name="view_less">View less</string>
+    <string name="y" translatable="false">y</string>
+    <string name="schedule_meeting">schedule meeting</string>
+    <string name="bot_sdk_demo">Bot SDK Demo</string>
+    <string name="start_using_the_bots">Start using the Bots</string>
+    <string name="see_more">See More</string>
+    <string name="hi_shan_i_am_here_to_answer_n_your_questions_about_credit_card">Hi Shan, I am here to answer\n your questions about credit card.</string>
+    <string name="kevin_peterson" translatable="false">Kevin Peterson</string>
+    <string name="_9_00_am_to_10_15_am" translatable="false">9:00 AM to 10:15 AM</string>
+    <string name="decline">Decline</string>
+    <string name="text">Text</string>
+    <string name="option">Option</string>
+    <string name="subtitle">Subtitle</string>
+    <string name="select">Select</string>
+    <string name="button">Button</string>
+    <string name="stripped_shirt" translatable="false">Stripped Shirt</string>
+    <string name="_40_99" translatable="false">$40.99</string>
+    <string name="buy">Buy</string>
+    <string name="hello">Hello</string>
+    <string name="message">Message…</string>
+    <string name="please_enter_email">Please enter email</string>
+    <string name="hold_and_drag">Hold and drag</string>
+    <string name="what_would_you_like_to_do">What would you like to do?</string>
+    <string name="meeting_notes">Meeting Notes</string>
+    <string name="dial_in">DIAL IN</string>
+    <string name="notes">NOTES</string>
+    <string name="join">JOIN</string>
+    <string name="_00_00_00_00" translatable="false">00:00/00:00</string>
+    <string name="suggested">SUGGESTED</string>
+    <string name="your_articles">Your Articles</string>
+    <string name="_100_match" translatable="false">100% Match</string>
+    <string name="shopping_theme">Shopping theme</string>
+    <string name="logo_theme">Logo theme</string>
+    <string name="widget_theme">Widget Theme</string>
+    <string name="available_slots">Available Slots</string>
+    <string name="choose">Choose</string>
+    <string name="no_options">No Options</string>
+    <string name="web_pages">Web Pages</string>
+    <string name="loading">Loading…</string>
+    <string name="kore_login_icon" translatable="false">kore_login_icon</string>
+    <string name="done">Done</string>
     <string name="title">Title</string>
+    <string name="no_hashtags">No Hashtags</string>
+    <string name="login">Login</string>
+    <string name="hi">hi</string>
+    <string name="most_popular_slot">Most Popular Slot</string>
+    <string name="send_slots">Send Slots</string>
+    <string name="selected_slots">Selected Slots</string>
+    <string name="suggested_faq">Suggested FAQ</string>
+    <string name="tab1" translatable="false">Tab1</string>
+    <string name="tab2" translatable="false">Tab2</string>
+    <string name="knowledge_title">knowledge title</string>
+    <string name="knowledge_description">knowledge description</string>
+    <string name="tags">#tags</string>
+    <string name="_1_attachment" translatable="false">1 Attachment</string>
+    <string name="my_video" translatable="false">My Video</string>
+    <string name="image_name" translatable="false">Image Name</string>
+    <string name="testing" translatable="false">Testing</string>
+    <string name="ok">OK</string>
+    <string name="email">email</string>
+    <string name="upi_id">UPI ID</string>
+    <string name="bot_chat_bubble_background_color" translatable="false">Bot Chat bubble background color</string>
+    <string name="loading_data">Loading data…</string>
+    <string name="to_reorder_the_widgets" translatable="false">to reorder the widgets</string>
+    <string name="minimize">Minimize</string>
+    <string name="close">Close</string>
+    <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
+    <string name="bot_not_connected">Connection to the bot failed after several retries. Please verify your internet connection and try again later.</string>
+    <string name="colon" translatable="false">:</string>
+    <string name="default_click_time" translatable="false">12:00:AM</string>
+    <string name="what_can_be_improved" translatable="false">What can be Improved ?</string>
+    <string name="select_all">Select All</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="attachment_upload_photo">Upload Photo</string>
+    <string name="attachment_upload_video">Upload Video</string>
+    <string name="attachment_upload_document">Upload Document</string>
+    <string name="attachment_capture_photo">Capture Photo</string>
+    <string name="attachment_capture_video">Capture Video</string>
+    <string name="speak_out_the_bot_response_text" translatable="false">Speak out the bot response text</string>
+    <string name="share">Share</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="downloading">Downloading…</string>
+    <string name="downloading_file_name" translatable="false">Downloading to: \"/Downloads/KoreMedia/%s\". Please check in status bar!</string>
+    <string name="copy_to_clipboard">Copied to clipboard</string>
+    <string name="downloading_file">Downloading file…</string>
+    <string name="downloading_failed">Downloading failed!</string>
+    <string name="send_again">Resend</string>
+    <string name="button_to_send_the_message_entered_in_the_text_field">Button to send the message entered in the text field</string>
+    <string name="image_to_change_the_input_mode_to_voice">Button to change the input mode to voice</string>
+    <string name="icon_to_open_the_attachment_options">Button to open the attachment options</string>
+    <string name="button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window">Button to display minimize, close and cancel options before exiting from chat window</string>
+    <string name="drawable_to_display_whether_the_option_is_selected_or_not">Drawable to display whether the option is selected or not</string>
+    <string name="button_to_download_the_pdf">Button to download the pdf</string>
+    <string name="title_of_the_table_content">Title of the table content</string>
+    <string name="sub_title_or_description_of_the_table_content">Sub title or description of the table content</string>
+    <string name="image_icon_of_the_table_content">Image icon of the table content</string>
+    <string name="button_to_show_all_the_table_content_at_full_view">Button to show all the table content at full view</string>
+    <string name="button_to_close_the_full_table_view">Button to close the full table view</string>
+    <string name="button_to_show_the_short_cut_menu_items_of_the_bot">Button to show the short cut menu items of the bot</string>
+    <string name="sending_failed">"Sending failed. "</string>
+    <string name="or"> or </string>
+    <string name="delete">Delete</string>
+
+    <string-array name="attachments_strings">
+        <item>@string/attachment_capture_photo</item>
+        <item>@string/attachment_capture_video</item>
+        <item>@string/attachment_upload_photo</item>
+        <item>@string/attachment_upload_video</item>
+        <item>@string/attachment_upload_document</item>
+    </string-array>
+
+    <string name="icon_to_display_attachment_type">Icon to display attachment type</string>
+    <string name="icon_to_display_the_attachment_type_based_on_extension">Icon to display the attachment type based on extension</string>
+    <string name="custom_content_layout">Custom Content Layout</string>
 </resources>

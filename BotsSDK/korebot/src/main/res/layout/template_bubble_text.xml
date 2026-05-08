@@ -3,7 +3,7 @@
     android:id="@+id/layoutBubble"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <kore.botssdk.view.LinkifyTextView
         android:id="@+id/bubble_text"
@@ -13,4 +13,43 @@
         android:focusable="false"
         android:longClickable="false"
         android:textSize="16sp" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llSendAgain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="@dimen/dimen_10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <kore.botssdk.view.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sending_failed"
+            android:textColor="@color/color_red" />
+
+        <kore.botssdk.view.CustomTextView
+            android:id="@+id/tvSend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/send_again"
+            android:textColor="@color/colorPrimary" />
+
+        <kore.botssdk.view.CustomTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/dimen_5dp"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:text="@string/or"
+            android:textColor="@color/gray_modern" />
+
+        <kore.botssdk.view.CustomTextView
+            android:id="@+id/tvDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:textColor="@color/colorPrimary" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

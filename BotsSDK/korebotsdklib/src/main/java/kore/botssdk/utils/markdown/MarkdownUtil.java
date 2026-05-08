@@ -53,6 +53,17 @@ public class MarkdownUtil {
                 break;
             }
 
+            nIndex = text.indexOf(delimiter, index + 1);
+            if (nIndex == -1) {
+                break;
+            }
+
+            // NEW CHECK: if newline exists between *...* → skip
+            String between = text.substring(index + 1, nIndex);
+            if (between.contains("\n")) {
+                continue;
+            }
+
             //get previous char and ignore SPACE and consecutive STAR
             char c = text.charAt(nIndex - 1);
             if (c == delimiter) {

@@ -11,7 +11,8 @@ public class BotRequest extends BaseBotMessage {
     private RestResponse.BotMessage message;
     private final String resourceid = "/bot.message";
     private BotInfoModel botInfo;
-    private final long id = 1;
+    private long id;
+    private MessageStatus status;
 
     public void setMessage(RestResponse.BotMessage message) {
         this.message = message;
@@ -32,6 +33,23 @@ public class BotRequest extends BaseBotMessage {
 
     public void setCreatedOn(String createdOn) {
         this.createdOn = createdOn;
+    }
+    public long getId() {
+        return id;
+    }
+
+    public enum MessageStatus {
+        SENDING,
+        SENT,
+        FAILED
+    }
+
+    public MessageStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MessageStatus status) {
+        this.status = status;
     }
 
 }

@@ -10,10 +10,11 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 
 import java.security.SecureRandom;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,6 +41,7 @@ import kore.botssdk.utils.NetworkUtility;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.TTSSynthesizer;
 import kore.botssdk.utils.Utils;
+import kore.botssdk.websocket.SocketWrapper;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,6 +71,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     private String botAccessToken, botUserId;
     String botName, streamId;
     private String userId;
+    RestResponse.BotCustomData customData;
 
     private BotSocketConnectionManager() {
         KoreEventCenter.register(this);
@@ -359,30 +362,43 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (botClient != null) botClient.sendMessage(initialMessage);
     }
 
-    public void sendMessage(String message, String payLoad) {
+    public String getAccessToken() {
+        return SocketWrapper.getInstance(mContext).getAccessToken();
+    }
+
+    public void sendMessage(String message) {
         stopTextToSpeech();
-        if (payLoad != null) botClient.sendMessage(payLoad);
-        else botClient.sendMessage(message);
+        customData = new RestResponse.BotCustomData();
 
         //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
+
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
+            customData.putAll(SDKConfiguration.Server.customData);
+
+        customData.put("botToken", getAccessToken());
+        botMessage.setCustomData(customData);
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
         botPayLoad.setBotInfo(botInfo);
+
+        RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
+        botPayLoad.setMeta(meta);
+
         Gson gson = new Gson();
         String jsonPayload = gson.toJson(botPayLoad);
 
+        botClient.sendMessage(jsonPayload);
+
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        try {
-            long timeMillis = botRequest.getTimeInMillis(botRequest.getCreatedOn(), false);
-            botRequest.setCreatedInMillis(timeMillis);
-            botRequest.setFormattedDate(DateUtils.formattedSentDateV6(mContext, timeMillis));
-            botRequest.setTimeStamp(botRequest.prepareLocaleTimeStamp(mContext, timeMillis));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+
+        long timeMillis = botPayLoad.getClientMessageId();
+        botRequest.setCreatedInMillis(timeMillis);
+        botRequest.setFormattedDate(DateUtils.formattedSentDateV6(mContext, timeMillis));
+        botRequest.setTimeStamp(botRequest.prepareLocaleTimeStamp(mContext, timeMillis));
+
         persistBotMessage(null, true, botRequest);
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
@@ -391,63 +407,86 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     public void sendAttachmentMessage(String message, ArrayList<HashMap<String, String>> attachments) {
         stopTextToSpeech();
-        if (message != null) {
-            if (attachments != null && !attachments.isEmpty())
-                botClient.sendMessage(message, attachments);
-            else botClient.sendMessage(message);
-        } else if (attachments != null && !attachments.isEmpty())
-            botClient.sendMessage(message, attachments);
-
-        //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
-        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-        botPayLoad.setMessage(botMessage);
-        BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
-        botPayLoad.setBotInfo(botInfo);
+        final RestResponse.BotPayLoad botPayLoad = getBotPayLoad(message, attachments, botName, streamId);
         Gson gson = new Gson();
         String jsonPayload = gson.toJson(botPayLoad);
 
+        botClient.sendMessage(jsonPayload);
+
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        try {
-            long timeMillis = botRequest.getTimeInMillis(botRequest.getCreatedOn(), false);
-            botRequest.setCreatedInMillis(timeMillis);
-            botRequest.setFormattedDate(DateUtils.formattedSentDateV6(mContext, timeMillis));
-            botRequest.setTimeStamp(botRequest.prepareLocaleTimeStamp(mContext, timeMillis));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        long timeMillis = botPayLoad.getClientMessageId();
+        botRequest.setCreatedInMillis(timeMillis);
+        botRequest.setFormattedDate(DateUtils.formattedSentDateV6(mContext, timeMillis));
+        botRequest.setTimeStamp(botRequest.prepareLocaleTimeStamp(mContext, timeMillis));
+
         persistBotMessage(null, true, botRequest);
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
         }
     }
 
-    public void sendPayload(String message, String payLoad) {
-        stopTextToSpeech();
-        if (payLoad != null) botClient.sendFormData(payLoad, message);
-        else botClient.sendMessage(message);
+    private RestResponse.BotPayLoad getBotPayLoad(String message, ArrayList<HashMap<String, String>> attachments, String botName, String streamId) {
+        RestResponse.BotMessage botMessage = null;
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
 
+        customData = new RestResponse.BotCustomData();
+        customData.put("botToken", getAccessToken());
+
+        if (message != null) {
+            if (attachments != null && !attachments.isEmpty()) {
+                botMessage = new RestResponse.BotMessage(message, attachments);
+                botMessage.setCustomData(customData);
+            } else {
+                botMessage = new RestResponse.BotMessage(message, "");
+                botMessage.setCustomData(customData);
+            }
+        } else if (attachments != null && !attachments.isEmpty()) {
+            botMessage = new RestResponse.BotMessage("", attachments);
+        }
 
         //Update the bot content list with the send message
-        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
-        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         botPayLoad.setMessage(botMessage);
         BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
         botPayLoad.setBotInfo(botInfo);
+
+        RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
+        botPayLoad.setMeta(meta);
+
+        return botPayLoad;
+    }
+
+    public void sendPayload(String message, String payLoad) {
+        stopTextToSpeech();
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+
+        //Update the bot content list with the send message
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad, message);
+        botPayLoad.setMessage(botMessage);
+        customData.put("botToken", getAccessToken());
+        botMessage.setCustomData(customData);
+        BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
+        botPayLoad.setBotInfo(botInfo);
+
+        //Adding the metadata for bot request
+        RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
+        botPayLoad.setMeta(meta);
+
         Gson gson = new Gson();
         String jsonPayload = gson.toJson(botPayLoad);
 
+        botClient.sendMessage(jsonPayload);
+
         BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+
+        if (message != null && !message.isEmpty())
+            botRequest.getMessage().setBody(message);
+
         botRequest.setCreatedOn(DateUtils.isoFormatter.format(new Date()));
-        try {
-            long timeMillis = botRequest.getTimeInMillis(botRequest.getCreatedOn(), false);
-            botRequest.setCreatedInMillis(timeMillis);
-            botRequest.setFormattedDate(DateUtils.formattedSentDateV6(mContext, timeMillis));
-            botRequest.setTimeStamp(botRequest.prepareLocaleTimeStamp(mContext, timeMillis));
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
+        long timeMillis = botPayLoad.getClientMessageId();
+        botRequest.setCreatedInMillis(timeMillis);
+        botRequest.setFormattedDate(DateUtils.formattedSentDateV6(mContext, timeMillis));
+        botRequest.setTimeStamp(botRequest.prepareLocaleTimeStamp(mContext, timeMillis));
         persistBotMessage(null, true, botRequest);
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_MESSAGE_UPDATE, message, botRequest, false));
@@ -460,7 +499,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (botClient != null) botClient.disconnect();
         if (ttsSynthesizer != null) {
             ttsSynthesizer.stopTextToSpeech();
-
         }
     }
 
@@ -516,22 +554,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (text != null && !text.isEmpty() && isSubscribed) {
             ttsSynthesizer.speak(text.replaceAll("<.*?>", ""), botClient.getAccessToken());
         }
-    }
-
-    public String getBotUserId() {
-        return botUserId;
-    }
-
-    public void setBotUserId(String botUserId) {
-        this.botUserId = botUserId;
-    }
-
-    public String getBotAccessToken() {
-        return botAccessToken;
-    }
-
-    public void setBotAccessToken(String botAccessToken) {
-        this.botAccessToken = botAccessToken;
     }
 
     public void onEvent(NetworkEvents.NetworkConnectivityEvent event) {
@@ -595,23 +617,18 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         return 55 * 1000;
     }
 
-
     void postDelayMessage() {
         int mDelay = getDelay();
         try {
             final Handler _handler = new Handler();
-            Runnable r = new Runnable() {
-
-                @Override
-                public void run() {
-                    if (mIsAttemptNeeded) {
-                        if (chatListener != null) {
-                            chatListener.onMessage(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], streamId, botName));
-                        }
-                        postDelayMessage();
+            Runnable r = () -> {
+                if (mIsAttemptNeeded) {
+                    if (chatListener != null) {
+                        chatListener.onMessage(Utils.buildBotMessage(BundleConstants.DELAY_MESSAGES[mAttemptCount], streamId, botName));
                     }
-
+                    postDelayMessage();
                 }
+
             };
             _handler.postDelayed(r, mDelay);
         } catch (Exception e) {
@@ -634,7 +651,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 }
                 postAlertDelayMessage();
             }
-
         }
     };
 
@@ -652,12 +668,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         postDelayMessage();
     }
 
-    public void startAlertMsgTimer() {
-        mAlertIsAttemptNeeded = true;
-        postAlertDelayMessage();
-    }
-
-
     public void stopDelayMsgTimer() {
         mAttemptCount = -1;
         mIsAttemptNeeded = false;
@@ -667,21 +677,5 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         mAlertAttemptCount = 0;
         alertHandler.removeCallbacks(alertRunnable);
         mAlertIsAttemptNeeded = false;
-    }
-
-
-    public void resetAlertHandler() {
-        mAlertAttemptCount = 0;
-        alertHandler.removeCallbacks(alertRunnable);
-        startAlertMsgTimer();
-
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
     }
 }

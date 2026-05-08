@@ -276,4 +276,12 @@ public class BotContentFragment extends BaseContentFragment {
 
         return 35;
     }
+    @Override
+    public void updateMessageStatus(BotRequest botRequest) {
+        if (botRequest.getMessage() != null) {
+            if (botsChatAdapter != null) {
+                botsChatAdapter.updateBaseBotMessage(botRequest);
+            }
+        }
+    }
 }
