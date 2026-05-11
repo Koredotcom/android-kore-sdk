@@ -1,0 +1,191 @@
+<resources>
+    <string name="app_name">"Kore.ai Bot"</string>
+    <string name="socket_connecting">Conectando</string>
+    <string name="socket_connected">Conectado</string>
+    <string name="get_started">Empezar</string>
+    <string name="camera">&#128247;</string>
+    <string name="video">&#127909;</string>
+    <string name="attachment">&#128195;</string>
+    <string name="audio">&#9835;</string>
+    <string name="repeat">Por favor repita</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="speech_not_available">El reconocimiento de voz no está disponible en este dispositivo. ¿Quieres instalar la app de Google para tenerlo?</string>
+    <string name="permission_required">Necesitas conceder permiso para usar el micrófono.</string>
+    <string name="enable_google_voice_typing">¡Habilite Google Voice Typing para utilizar el reconocimiento de voz!</string>
+    <string name="minimize">Minimizar</string>
+    <string name="close">Cerca</string>
+    <string name="cancel">Cancelar</string>
+    <string name="close_or_minimize">¿Quieres cerrar la conversación o minimizarla?</string>
+    <string name="today">Hoy</string>
+    <string name="yesterday">Ayer</string>
+    <string name="tomorrow">Mañana</string>
+    <string name="attachment_capture_photo">Capturar foto</string>
+    <string name="attachment_capture_video">Capturar video</string>
+    <string name="attachment_upload_photo">Subir foto</string>
+    <string name="attachment_upload_video">Subir video</string>
+    <string name="attachment_upload_document">Subir documento</string>
+    <string name="choose">Elegir</string>
+
+    <string name="socket_disconnected">Desconectado</string>
+    <string name="socket_failed">Error de conexión</string>
+    <string name="send">Enviar</string>
+    <string name="please_wait">Por favor espera…</string>
+    <string name="speak_now">Habla ahora</string>
+    <string name="no_network">¡Sin red!</string>
+    <string name="click_hear_to_enter_text">Haz clic aquí para escribir texto</string>
+    <string name="click_hear_to_speak_something">Haz clic aquí para hablar</string>
+    <string name="tap_to_speak">Toca para hablar</string>
+
+    <string name="label_to">Para</string>
+    <string name="label_from">De</string>
+    <string name="label_cc">Cc</string>
+
+    <string name="atatchment_format">%d adjuntos</string>
+    <plurals name="attachment_count">
+        <item quantity="one">1 adjunto</item>
+        <item quantity="many">%d adjuntos</item>
+    </plurals>
+
+    <string name="sortable_indicator_content_description">Indicador de orden</string>
+    <string name="default_header">Encabezado %1$d</string>
+    <string name="default_cell">Dato [%1$d:%2$d]</string>
+
+    <string name="modify_slots">MODIFICAR HORARIOS</string>
+    <string name="confirm">Confirmar</string>
+    <string name="need_login">Necesitas iniciar sesión para ver el contenido</string>
+    <string name="conversation_end">Conversación terminada a las</string>
+    <plurals name="confirm_slots">
+        <item quantity="one">Confirmar disponibilidad para 1 horario</item>
+        <item quantity="many">Confirmar disponibilidad para %d horarios</item>
+    </plurals>
+
+    <string name="selected_task_completion">%1$d de %2$d tareas seleccionadas para completar</string>
+    <string name="selected_task_duedate">%1$d de %2$d tareas seleccionadas para cambiar fecha</string>
+
+    <string name="view_more">Ver más</string>
+    <string name="chase_digital_assistantSM">Asistente Digital Chase<sup><small>SM</small></sup></string>
+
+    <!-- Icons (non-translatable) -->
+    <string name="icon_e91d" translatable="false">&#xe91d;</string>
+    <string name="icon_e915" translatable="false">&#xe915;</string>
+
+    <string name="read_more"><![CDATA[<u> Leer más </u>]]></string>
+    <string name="show_less"><![CDATA[<u> Mostrar menos </u>]]></string>
+
+    <string name="save">Guardar</string>
+    <string name="connect">Conectar</string>
+    <string name="whatcanbeimproved">¿Qué se puede mejorar?</string>
+    <string name="submit">Enviar</string>
+    <string name="show_more">Mostrar más</string>
+    <string name="about">Acerca de</string>
+    <string name="add_suggestions">Agregar sugerencias</string>
+    <string name="see_all_results">Ver todos los resultados</string>
+    <string name="more">Más</string>
+    <string name="more_">… Más</string>
+
+    <string name="download">Descargar</string>
+    <string name="nodata">Sin datos</string>
+    <string name="no_upcoming_meetings">Sin reuniones próximas</string>
+    <string name="no_files">Sin archivos</string>
+    <string name="you">Tú</string>
+    <string name="view_less">Ver menos</string>
+
+    <string name="schedule_meeting">Programar reunión</string>
+    <string name="bot_sdk_demo">Demo SDK Bot</string>
+    <string name="start_using_the_bots">Comienza a usar los bots</string>
+    <string name="see_more">Ver más</string>
+
+    <string name="hi_shan_i_am_here_to_answer_n_your_questions_about_credit_card">Hola Shan, estoy aquí para responder tus preguntas sobre tarjetas de crédito.</string>
+
+    <string name="decline">Rechazar</string>
+    <string name="text">Texto</string>
+    <string name="option">Opción</string>
+    <string name="subtitle">Subtítulo</string>
+    <string name="select">Seleccionar</string>
+    <string name="button">Botón</string>
+
+    <string name="buy">Comprar</string>
+    <string name="hello">Hola</string>
+    <string name="message">Mensaje…</string>
+    <string name="please_enter_email">Por favor ingresa un correo electrónico</string>
+    <string name="hold_and_drag">Mantén y arrastra</string>
+
+    <string name="what_would_you_like_to_do">¿Qué te gustaría hacer?</string>
+
+    <string name="meeting_notes">Notas de reunión</string>
+    <string name="dial_in">LLAMAR</string>
+    <string name="notes">NOTAS</string>
+    <string name="join">UNIRSE</string>
+
+    <string name="suggested">SUGERIDO</string>
+    <string name="your_articles">Tus artículos</string>
+
+    <string name="shopping_theme">Tema de compras</string>
+    <string name="logo_theme">Tema de logo</string>
+    <string name="widget_theme">Tema de widgets</string>
+
+    <string name="available_slots">Horarios disponibles</string>
+    <string name="no_options">Sin opciones</string>
+    <string name="web_pages">Páginas web</string>
+
+    <string name="loading">Cargando…</string>
+    <string name="done">Hecho</string>
+    <string name="title">Título</string>
+    <string name="no_hashtags">Sin hashtags</string>
+
+    <string name="login">Iniciar sesión</string>
+    <string name="hi">Hola</string>
+
+    <string name="most_popular_slot">Horario más popular</string>
+    <string name="send_slots">Enviar horarios</string>
+    <string name="selected_slots">Horarios seleccionados</string>
+
+    <string name="suggested_faq">Preguntas frecuentes sugeridas</string>
+
+    <string name="knowledge_title">Título del conocimiento</string>
+    <string name="knowledge_description">Descripción del conocimiento</string>
+    <string name="tags">#etiquetas</string>
+
+    <string name="ok">OK</string>
+    <string name="email">Correo electrónico</string>
+    <string name="upi_id">ID UPI</string>
+
+    <string name="loading_data">Cargando datos…</string>
+    <string name="bot_not_connected">No se puede conectar al bot. Inténtalo más tarde</string>
+
+    <string name="select_all">Seleccionar todo</string>
+
+    <string name="share">Compartir</string>
+    <string name="copy_link">Copiar enlace</string>
+
+    <string name="downloading">Descargando…</string>
+    <string name="downloading_file">Descargando archivo…</string>
+    <string name="downloading_failed">¡Error al descargar!</string>
+
+    <string name="copy_to_clipboard">Copiado al portapapeles</string>
+    <string name="send_again">Enviar de nuevo</string>
+    <string name="button_to_send_the_message_entered_in_the_text_field">Botón para enviar el mensaje introducido en el campo de texto</string>
+    <string name="image_to_change_the_input_mode_to_voice">Imagen para cambiar el modo de entrada a voz</string>
+    <string name="icon_to_open_the_attachment_options">Icono para abrir las opciones de adjuntos</string>
+    <string name="button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window">Botón para mostrar las opciones de minimizar, cerrar y cancelar antes de salir de la ventana de chat</string>
+    <string name="drawable_to_display_whether_the_option_is_selected_or_not">Elemento visual para mostrar si la opción está seleccionada o no</string>
+    <string name="button_to_download_the_pdf">Botón para descargar el PDF</string>
+    <string name="title_of_the_table_content">Título del contenido de la tabla</string>
+    <string name="sub_title_or_description_of_the_table_content">Subtítulo o descripción del contenido de la tabla</string>
+    <string name="image_icon_of_the_table_content">Botón de imagen del contenido de la tabla</string>
+    <string name="button_to_show_all_the_table_content_at_full_view">Botón para mostrar todo el contenido de la tabla en vista completa</string>
+    <string name="button_to_close_the_full_table_view">Botón para cerrar la vista completa de la tabla</string>
+    <string name="button_to_show_the_short_cut_menu_items_of_the_bot">Botón para mostrar los elementos del menú de acceso rápido del bot</string>
+    <string name="sending_failed">"Sending failed. "</string>
+    <string name="or"> or </string>
+    <string name="delete">Delete</string>
+
+    <string-array name="attachments_strings">
+        <item>@string/attachment_capture_photo</item>
+        <item>@string/attachment_capture_video</item>
+        <item>@string/attachment_upload_photo</item>
+        <item>@string/attachment_upload_video</item>
+        <item>@string/attachment_upload_document</item>
+    </string-array>
+</resources>

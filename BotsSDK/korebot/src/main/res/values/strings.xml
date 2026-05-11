@@ -323,5 +323,19 @@
     <string name="sending_failed">"Sending failed. "</string>
     <string name="or"> or </string>
     <string name="delete">Delete</string>
+    <string name="button_to_show_all_the_table_content_at_full_view">Button to show all the table content at full view</string>
+    <string name="button_to_close_the_full_table_view">Button to close the full table view</string>
+    <string name="button_to_show_the_short_cut_menu_items_of_the_bot">Button to show the short cut menu items of the bot</string>
+    <string name="icon_to_display_attachment_type">Icon to display attachment type</string>
+    <string name="icon_to_display_the_attachment_type_based_on_extension">Icon to display the attachment type based on extension</string>
+    <string name="button_to_send_the_message_entered_in_the_text_field">Button to send the message entered in the text field</string>
+    <string name="image_to_change_the_input_mode_to_voice">Image to change the input mode to voice</string>
+    <string name="icon_to_open_the_attachment_options">Icon to open the attachment options</string>
+    <string name="button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window">Button to display minimize, close and cancel options before exiting from chat window</string>
+    <string name="drawable_to_display_whether_the_option_is_selected_or_not">Drawable to display whether the option is selected or not</string>
+    <string name="button_to_download_the_pdf">Button to download the pdf</string>
+    <string name="title_of_the_table_content">Title of the table content</string>
+    <string name="sub_title_or_description_of_the_table_content">Sub title or description of the table content</string>
+    <string name="image_icon_of_the_table_content">Image icon of the table content</string>
 
 </resources>

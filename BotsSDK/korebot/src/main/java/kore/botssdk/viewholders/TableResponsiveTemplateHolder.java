@@ -56,7 +56,7 @@ public class TableResponsiveTemplateHolder extends BaseViewHolder {
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         List<BotTableDataModel> rows = payloadInner.getTable_elements_data();
         List<List<String>> columns = payloadInner.getColumns();
-        tvShowMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
+//        tvShowMore.setTextColor(Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor));
         rvTableView.setBackgroundColor(Color.parseColor(SDKConfiguration.BubbleColors.leftBubbleSelected));
         setRoundedCorner(rvTableView, 4 * dp1);
 

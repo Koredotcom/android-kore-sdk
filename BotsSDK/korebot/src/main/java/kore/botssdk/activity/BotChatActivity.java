@@ -331,6 +331,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             case CONNECTING:
                 taskProgressBar.setVisibility(View.VISIBLE);
                 updateActionBar();
+                if (SDKConfiguration.Server.getBotStatusListener() != null)
+                    SDKConfiguration.Server.getBotStatusListener().onBotConnecting();
                 break;
             case CONNECTED:
                 taskProgressBar.setVisibility(View.GONE);

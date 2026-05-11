@@ -123,9 +123,17 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
         if (payloadInner == null) return;
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         int barType = payloadInner.isStacked() ? BAR_STACKED : payloadInner.getDirection().equals(BAR_CHART_DIRECTION_VERTICAL) ? BAR_VERTICAL : BAR_HORIZONTAL;
-        barChart.setVisibility(barType != BAR_HORIZONTAL ? View.VISIBLE : View.GONE);
-        horizontalBarChart.setVisibility(barType == BAR_HORIZONTAL ? View.VISIBLE : View.GONE);
-        BarChart mChart = barType == BAR_HORIZONTAL ? horizontalBarChart : barChart;
+//        barChart.setVisibility(barType != BAR_HORIZONTAL ? View.VISIBLE : View.GONE);
+//        horizontalBarChart.setVisibility(barType == BAR_HORIZONTAL ? View.VISIBLE : View.GONE);
+//        BarChart mChart = barType == BAR_HORIZONTAL ? horizontalBarChart : barChart;
+
+        if (payloadInner.getDirection().equals(BAR_CHART_DIRECTION_VERTICAL)) {
+            barChart.setVisibility(View.VISIBLE);
+        } else {
+            horizontalBarChart.setVisibility(View.VISIBLE);
+        }
+
+        BarChart mChart = payloadInner.getDirection().equals(BAR_CHART_DIRECTION_VERTICAL) ? barChart : horizontalBarChart;
         initBarChart(barType, mChart);
 
         float barWidth = 0.2f;
@@ -148,13 +156,15 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
                     dataList.add(payloadInner.getBarChartDataModels().get(in));
                     labels[in] = payloadInner.getBarChartDataModels().get(in).getTitle();
                 }
+                yValues[0] = new ArrayList<>();
                 for (int k = 0; k < dataList.get(0).getValues().size(); k++) {
                     float[] arr = new float[size];
                     for (int j = 0; j < size; j++) {
                         arr[j] = dataList.get(j).getValues().get(k);
                     }
-                    yValues[0] = new ArrayList<>();
-                    yValues[0].add(new BarEntry(k + 1, arr, ""));
+//                    yValues[0] = new ArrayList<>();
+//                    yValues[0].add(new BarEntry(k + 1, arr, ""));
+                    yValues[0].add(new BarEntry(k, arr, ""));
                 }
             } else {
                 for (int index = 0; index < size; index++) {
@@ -208,10 +218,23 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
                 }
             };
 
+            ValueFormatter xStackedAxisFormatter = new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float v) {
+                    int index = (int) v;
+
+                    if (index >= 0 && index < payloadInner.getxAxis().size()) {
+                        return payloadInner.getxAxis().get(index);
+                    } else {
+                        return "";
+                    }
+                }
+            };
+
             xAxis.setValueFormatter(xAxisFormatter);
 
             Legend legend = mChart.getLegend();
-            legend.setVerticalAlignment(barType == BAR_HORIZONTAL ? Legend.LegendVerticalAlignment.BOTTOM : Legend.LegendVerticalAlignment.TOP);
+            legend.setVerticalAlignment(payloadInner.getDirection().equals(BAR_CHART_DIRECTION_VERTICAL) ? Legend.LegendVerticalAlignment.TOP : Legend.LegendVerticalAlignment.BOTTOM);
             legend.setHorizontalAlignment(Legend.LegendHorizontalAlignment.CENTER);
             legend.setOrientation(Legend.LegendOrientation.HORIZONTAL);
             legend.setDrawInside(false);
@@ -224,6 +247,9 @@ public class BarChartTemplateHolder extends BaseViewHolder implements OnChartVal
 
             mChart.getBarData().setBarWidth(barWidth);
             if (barType == BAR_STACKED) {
+                xAxis.setValueFormatter(xStackedAxisFormatter);
+                xAxis.setCenterAxisLabels(false);
+                mChart.getBarData().setBarWidth(.6f);
                 mChart.setFitBars(true);
                 return;
             }

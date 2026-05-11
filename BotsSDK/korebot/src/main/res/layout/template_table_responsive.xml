@@ -29,6 +29,7 @@
             android:paddingHorizontal="6dp"
             android:paddingVertical="10dp"
             android:text="@string/show_more"
+            android:contentDescription="@string/button_to_show_all_the_table_content_at_full_view"
             android:textColor="@color/left_bubble_text_color"
             android:textSize="@dimen/text_size_sub_header" />
     </androidx.appcompat.widget.LinearLayoutCompat>

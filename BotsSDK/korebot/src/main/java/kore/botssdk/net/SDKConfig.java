@@ -11,6 +11,7 @@ import kore.botssdk.fragment.content.BaseContentFragment;
 import kore.botssdk.fragment.footer.BaseFooterFragment;
 import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.models.BotBrandingModel;
+import kore.botssdk.websocket.BotStatusListener;
 
 public class SDKConfig {
     private static boolean isMinimized = false;
@@ -20,6 +21,10 @@ public class SDKConfig {
     private static boolean isShowActionBar = true;
     private static boolean isUpdateStatusBarColor = false;
     private static BotBrandingModel botBrandingModel;
+
+    public static void setBotStatusUpdateListener(BotStatusListener botStatusListener) {
+        SDKConfiguration.Server.setBotStatusListener(botStatusListener);
+    }
 
     public static void setFontFamily(Typeface regularTf, Typeface semiBoldTf, Typeface boldTf) {
         SDKConfiguration.setFontFamily(regularTf, semiBoldTf, boldTf);

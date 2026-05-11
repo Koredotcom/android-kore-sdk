@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_icons24download"
                 android:ellipsize="end"
-                android:contentDescription="@string/app_name"
+                android:contentDescription="@string/icon_to_display_attachment_type"
                 android:maxLines="1"
                 android:visibility="visible" />
 

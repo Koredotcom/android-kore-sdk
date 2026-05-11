@@ -56,12 +56,20 @@ public class RadioOptionsTemplateHolder extends BaseViewHolder {
         List<RadioOptionModel> radioOptions = payloadInner.getRadioOptions();
         String msgId = ((BotResponse) baseBotMessage).getMessageId();
         Map<String, Object> contentState = ((BotResponse) baseBotMessage).getContentState();
-        int selectedItem = contentState != null ? (Integer) contentState.get(BotResponse.SELECTED_ITEM) : -1;
+        int selectedItem = -1;
+        if (contentState != null) {
+            Object value = contentState.get(BotResponse.SELECTED_ITEM);
+            selectedItem = value instanceof Integer ? (Integer) value : 0;
+        }
         RadioOptionsItemAdapter adapter = new RadioOptionsItemAdapter(msgId, radioOptions, isLastItem(), selectedItem, contentStateListener);
         confirm.setOnClickListener(view -> {
             Map<String, Object> changedState = ((BotResponse) baseBotMessage).getContentState();
             if (isLastItem() && composeFooterInterface != null && changedState != null) {
-                int selectedPosition = (Integer) changedState.get(BotResponse.SELECTED_ITEM);
+                int selectedPosition = -1;
+                if (contentState != null) {
+                    Object value = contentState.get(BotResponse.SELECTED_ITEM);
+                    selectedPosition = value instanceof Integer ? (Integer) value : 0;
+                }
                 String message = radioOptions.get(selectedPosition).getPostback().getTitle();
                 String payload = radioOptions.get(selectedPosition).getPostback().getValue();
                 composeFooterInterface.onSendClick(message, payload, false);

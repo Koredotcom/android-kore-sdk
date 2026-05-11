@@ -193,7 +193,9 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                 KoreEventCenter.post(jwtToken);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LogUtils.e("Error at makeJwtGrantCall", e + "");
+            if (SDKConfiguration.Server.getBotStatusListener() != null)
+                SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("Error at makeJwtGrantCall" + e);
             Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
             connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             if (chatListener != null)

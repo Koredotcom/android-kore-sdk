@@ -68,7 +68,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_toEndOf="@+id/newMenuLogo"
-                    android:contentDescription="@string/app_name"
+                    android:contentDescription="@string/icon_to_open_the_attachment_options"
                     android:src="@drawable/attachment_comp"
                     android:visibility="gone" />
 
@@ -189,7 +189,6 @@
                             android:contentDescription="@string/hello"
                             android:src="@drawable/send_white" />
                     </LinearLayout>
-
                 </RelativeLayout>
 
                 <TextView
@@ -221,6 +220,7 @@
                     android:layout_width="@dimen/dimen_35dp"
                     android:layout_height="@dimen/dimen_35dp"
                     android:background="@drawable/ic_send_bg"
+                    android:contentDescription="@string/button_to_send_the_message_entered_in_the_text_field"
                     android:gravity="center"
                     android:visibility="gone">
 
@@ -229,7 +229,8 @@
                         android:layout_width="@dimen/dimen_15dp"
                         android:layout_height="@dimen/dimen_15dp"
                         android:layout_margin="@dimen/dimen_10dp"
-                        android:background="@drawable/ic_send_small" />
+                        android:background="@drawable/ic_send_small"
+                        android:contentDescription="@string/button_to_send_the_message_entered_in_the_text_field" />
 
                 </LinearLayout>
 
@@ -238,7 +239,7 @@
                     android:layout_width="@dimen/dimen_20dp"
                     android:layout_height="@dimen/dimen_20dp"
                     android:layout_gravity="center_vertical"
-                    android:contentDescription="@string/app_name"
+                    android:contentDescription="@string/image_to_change_the_input_mode_to_voice"
                     android:src="@drawable/ic_mic"
                     android:visibility="gone" />
 

@@ -12,6 +12,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginTop="@dimen/dimen_10dp"
         android:layout_marginBottom="@dimen/dimen_15dp"
+        android:contentDescription="@string/button_to_close_the_full_table_view"
         android:src="@drawable/cancel_widget" />
 
     <RelativeLayout
