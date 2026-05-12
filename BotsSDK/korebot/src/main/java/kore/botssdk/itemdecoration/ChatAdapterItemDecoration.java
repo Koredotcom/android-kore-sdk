@@ -14,7 +14,7 @@ public class ChatAdapterItemDecoration extends RecyclerView.ItemDecoration {
 
     public static final int firstItemMarginTop = (int) (12 * dp1);
     public static final int commonVerticalMargin = (int) (6 * dp1);
-    public static final int messageMargin = (int) (40 * dp1);
+    public static final int messageMargin = (int) (30 * dp1);
     public static final int requestMsgMarginRight = (int) (4 * dp1);
     public static final int responseMarginLeft = (int) (4 * dp1);
 

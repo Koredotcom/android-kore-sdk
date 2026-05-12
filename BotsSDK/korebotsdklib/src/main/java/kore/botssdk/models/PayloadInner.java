@@ -597,6 +597,11 @@ public class PayloadInner {
                         }.getType();
                         articleModels = gson.fromJson(elementsAsString, listType);
                     }
+                    else if (BotResponse.TEMPLATE_TYPE_BUTTON_LINK.equals(template_type)) {
+                        Type listType = new TypeToken<ArrayList<BotButtonModel>>() {
+                        }.getType();
+                        buttons = gson.fromJson(elementsAsString, listType);
+                    }
                 }
             }
         } catch (Exception e) {

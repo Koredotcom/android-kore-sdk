@@ -113,12 +113,12 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
                 rvRatingScale.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false));
                 List<FeedbackRatingModel> array = payloadInner.getNumbersArrays();
                 String msgId = ((BotResponse) baseBotMessage).getMessageId();
-                FeedbackRatingScaleAdapter adapter = new FeedbackRatingScaleAdapter(msgId, array, isLastItem(), selectedFeedback);
+                FeedbackRatingScaleAdapter adapter = new FeedbackRatingScaleAdapter(itemView.getContext(), msgId, array, isLastItem(), selectedFeedback);
                 adapter.setComposeFooterInterface(composeFooterInterface);
                 adapter.setListener(contentStateListener);
                 rvRatingScale.setAdapter(adapter);
             }
-
+            break;
             case VIEW_CSAT: {
                 resetAll();
                 int selectedFeedback = contentState != null ? (int) contentState.get(BotResponse.SELECTED_FEEDBACK) : -1;
@@ -141,7 +141,7 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
                 thumbsUpDown.addItemDecoration(new VerticalSpaceItemDecoration(20));
 
                 List<FeedbackThumbsModel> arrFeedbackThumbsModels = payloadInner.getThumpsUpDownArrays();
-                if (arrFeedbackThumbsModels != null && arrFeedbackThumbsModels.size() > 0) {
+                if (arrFeedbackThumbsModels != null && !arrFeedbackThumbsModels.isEmpty()) {
                     FeedbackThumbsAdapter adapter = new FeedbackThumbsAdapter(msgId, arrFeedbackThumbsModels, selectedItem, isLastItem(), contentStateListener);
                     adapter.setComposeFooterInterface(composeFooterInterface);
                     thumbsUpDown.setAdapter(adapter);
@@ -153,7 +153,6 @@ public class FeedbackTemplateHolder extends BaseViewHolder implements View.OnCli
         if (payloadInner.getSliderView() && !payloadInner.getDialogCancel()) {
             payloadInner.setDialogCancel(true);
             FeedbackActionSheetFragment bottomSheetDialog = new FeedbackActionSheetFragment();
-            bottomSheetDialog.setSkillName("skillName", "trigger");
             bottomSheetDialog.setData(payloadInner);
             bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
             bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

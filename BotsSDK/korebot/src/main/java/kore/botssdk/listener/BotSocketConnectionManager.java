@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.google.gson.Gson;
 
 import java.security.SecureRandom;
@@ -181,6 +183,43 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             }
         });
 
+    }
+
+    public interface JwtCallback {
+        void onSuccess(String token);
+        void onError(String error);
+    }
+
+    public void getJwtTokenWithConfig(JwtCallback callback) {
+
+        Call<JWTTokenResponse> call =
+                BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(getRequestObject());
+
+        call.enqueue(new Callback<JWTTokenResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<JWTTokenResponse> call,
+                                   @NonNull Response<JWTTokenResponse> response) {
+
+                if (response.isSuccessful() && response.body() != null) {
+                    try {
+                        String token = response.body().getJwt();
+                        callback.onSuccess(token);
+                    } catch (Exception e) {
+                        LogUtils.e("JWT_ERROR", e.toString());
+                        callback.onError("Parsing error");
+                    }
+                } else {
+                    callback.onError("Response not successful");
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<JWTTokenResponse> call,
+                                  @NonNull Throwable t) {
+                LogUtils.e("JWT_ERROR", t.getMessage());
+                callback.onError(t.getMessage());
+            }
+        });
     }
 
     private void makeJwtGrantCall(String jwtToken, boolean isRefresh) {
@@ -433,6 +472,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
 
         customData = new RestResponse.BotCustomData();
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
+            customData.putAll(SDKConfiguration.Server.customData);
         customData.put("botToken", getAccessToken());
 
         if (message != null) {
@@ -461,6 +502,10 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void sendPayload(String message, String payLoad) {
         stopTextToSpeech();
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+        customData = new RestResponse.BotCustomData();
+
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
+            customData.putAll(SDKConfiguration.Server.customData);
 
         //Update the bot content list with the send message
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad, message);

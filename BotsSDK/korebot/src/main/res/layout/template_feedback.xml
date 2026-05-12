@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@drawable/table_list_bg"
     android:orientation="vertical"
-    android:padding="@dimen/dimen_5dp">
+    android:padding="@dimen/dimen_3dp">
 
     <include
         layout="@layout/template_bubble_text"
@@ -53,7 +53,8 @@
         layout="@layout/include_emojis_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_5dp" />
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/thumbs_up_down"
@@ -153,9 +154,10 @@
         android:id="@+id/rlViewNPS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/dimen_8dp"
-        android:layout_marginBottom="@dimen/dimen_8dp"
-        android:padding="@dimen/dimen_5dp">
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:layout_marginBottom="@dimen/dimen_5dp"
+        android:padding="@dimen/dimen_5dp"
+        android:visibility="gone">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvRatingScale"

@@ -178,6 +178,12 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     private TTSSynthesizer ttsSynthesizer;
     private RelativeLayout rlChatWindow;
     private SharedPreferences sharedPreferences;
+    private String fileUrl;
+    private Dialog progressBar;
+    private Dialog alertDialog;
+    private BotChatViewModel viewModel;
+    private boolean isWelcomeVisible = false;
+    private String botName = SDKConfiguration.Client.bot_name;
     private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -206,22 +212,18 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isAgentTransfer && botClient != null) {
-                botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+            if (Objects.equals(intent.getAction(), CLOSE_CHAT_BOT_EVENT)) {
+                if (botClient != null) BotSocketConnectionManager.killInstance();
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+                editor.putInt(BotResponse.HISTORY_COUNT, 0);
+                editor.apply();
+                finish();
+            } else if (Objects.equals(intent.getAction(), BundleConstants.BOT_RECONNECT)) {
+                viewModel.connectToBot(true);
             }
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            SDKConfig.setIsMinimized(false);
-            editor.putInt(BotResponse.HISTORY_COUNT, 0);
-            editor.apply();
         }
     };
-    private String fileUrl;
-    private Dialog progressBar;
-    private Dialog alertDialog;
-    private BotChatViewModel viewModel;
-    private boolean isWelcomeVisible = false;
-    private String botName = SDKConfiguration.Client.bot_name;
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
     @Override

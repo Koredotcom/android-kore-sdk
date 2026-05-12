@@ -10,6 +10,7 @@ import java.util.Map;
 public class BotResponse extends BaseBotMessage {
     public static final String BUBBLE_STYLE = "BUBBLE_STYLE";
     public static final String TEMPLATE_TYPE_BUTTON = "button";
+    public static final String TEMPLATE_TYPE_BUTTON_LINK = "buttonLinkTemplate";
     public static final String TEMPLATE_TYPE_LIST = "list";
     public static final String TEMPLATE_TYPE_PIE_CHART = "piechart";
     public static final String TEMPLATE_TYPE_LINE_CHART = "linechart";

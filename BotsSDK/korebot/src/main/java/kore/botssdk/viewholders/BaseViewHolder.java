@@ -137,6 +137,21 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             }
         }
     }
+    public void setAgentBotIcon() {
+        ImageView botIcon = itemView.findViewById(R.id.bot_icon);
+        if (botIcon != null) {
+            botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon && bottomSheetDialog == null ? View.VISIBLE : View.GONE);
+            if (bottomSheetDialog != null) return;
+            if (SDKConfiguration.BubbleColors.showIcon) {
+                botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.agent_icon, context.getTheme()));
+            }
+
+            if (SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.OverrideKoreConfig.showIconTop) {
+                LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) botIcon.getLayoutParams();
+                params.topMargin = (int) (21 * dp1);
+            }
+        }
+    }
 
     public void setMsgTime(String msgTime, boolean isBotRequest, int viewType) {
         if (bottomSheetDialog != null) return;

@@ -22,21 +22,29 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
 import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionRequest;
+import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.LogUtils;
+import kore.botssdk.websocket.BotStatusListener;
 
 @SuppressWarnings("UnKnownNullness")
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BotStatusListener {
 
     String TAG = MainActivity.class.getName();
     static boolean allPermissionsGranted = true;
+    private boolean isSchedulerStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         SDKConfig.setQueryParams(getQueryParams());
-        SDKConfig.setCustomData(getCustomData());
         SDKConfiguration.setDeviceLocale(Locale.ENGLISH);
 //        SDKConfig.setFontFamily(ResourcesCompat.getFont(MainActivity.this, R.font.fss_light), ResourcesCompat.getFont(MainActivity.this, R.font.fss_regular), ResourcesCompat.getFont(MainActivity.this, R.font.fss_bold));
 //        SDKConfig.setBotBrandingConfigModel(getConfigBrandingModel(this));
@@ -87,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         String jwtServerUrl = "Please enter Jwt server url";
 //        String jwtServerUrl = getConfigValue("jwtServerUrl");
 
+        SDKConfig.setCustomData(getCustomData(jwtToken));
+
         //Set isWebHook
         SDKConfig.isWebHook(false);
 
@@ -110,6 +119,12 @@ public class MainActivity extends AppCompatActivity {
         SDKConfig.enableWidgetPanel(false);
 
         SDKConfig.setIsUpdateStatusBarColor(false);
+
+        //Flag to opt to add custom data to every user message sent to bot
+        SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message = true;
+
+        //Flag to opt local notification when application went to background on receive of new bot message
+        SDKConfiguration.OverrideKoreConfig.showLocalNotification = false;
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
@@ -139,6 +154,49 @@ public class MainActivity extends AppCompatActivity {
         };
         PermissionManager.getInstance().requestAllPermissions(MainActivity.this, permissionRequest);
     }
+
+
+    @SuppressLint("UnknownNullness")
+    public RestResponse.BotCustomData getCustomData(String jwtToken) {
+        RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
+        customData.put("jwt_token", jwtToken);
+        return customData;
+    }
+
+    private void startTimeout() {
+        if (isSchedulerStarted) return;
+
+        isSchedulerStarted = true;
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+        scheduler.scheduleWithFixedDelay(() -> BotSocketConnectionManager.getInstance().getJwtTokenWithConfig(new BotSocketConnectionManager.JwtCallback() {
+            @Override
+            public void onSuccess(String token) {
+                LogUtils.e("JWT Updated", token);
+
+                //Getting the Jwt Token from out side SDK
+                RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
+                customData.put("jwt_token", token);
+                SDKConfiguration.Server.customData.putAll(customData);
+
+                //To kill the Bot from out side the SDK
+                BotSocketConnectionManager.killInstance();
+
+                //Set the JWT Token to reuse in connecting to the Bot
+                SDKConfiguration.JWTServer.setJwt_token(token);
+
+                //BroadCast to call the Bot Connect from out side of the SDK
+                Intent intent = new Intent(BundleConstants.BOT_RECONNECT);
+                sendBroadcast(intent);
+            }
+
+            @Override
+            public void onError(String error) {
+                LogUtils.e("JWT", error);
+            }
+        }), 5, 5, TimeUnit.MINUTES);
+    }
+
 
     BotBrandingModel getConfigBrandingModel(Context context) {
         try {
@@ -217,18 +275,6 @@ public class MainActivity extends AppCompatActivity {
         return queryParams;
     }
 
-    @SuppressLint("UnknownNullness")
-    public RestResponse.BotCustomData getCustomData() {
-        RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
-        customData.put("name", "Kore Bot");
-        customData.put("emailId", "emailId");
-        customData.put("mobile", "mobile");
-        customData.put("accountId", "accountId");
-        customData.put("timeZoneOffset", -330);
-        customData.put("UserTimeInGMT", TimeZone.getDefault().getID() + " " + Locale.getDefault().getISO3Language());
-        return customData;
-    }
-
 //    public String getConfigValue(String name) {
 //        try {
 //            InputStream rawResource = getResources().openRawResource(R.raw.config);
@@ -243,4 +289,30 @@ public class MainActivity extends AppCompatActivity {
 //
 //        return null;
 //    }
+
+    @Override
+    public void onBotConnected() {
+        LogUtils.e("Bot Current Status", "Bot Connected");
+//        startTimeout();
+    }
+
+    @Override
+    public void onBotDisconnected() {
+        LogUtils.e("Bot Current Status", "Bot Disconnected");
+    }
+
+    @Override
+    public void onBotConnecting() {
+        LogUtils.e("Bot Current Status", "Bot Connecting");
+    }
+
+    @Override
+    public void onBotReconnected() {
+        LogUtils.e("Bot Current Status", "Bot Re-connected");
+    }
+
+    @Override
+    public void onBotConnectionFail(String strReason) {
+        LogUtils.e("Bot Current Status", strReason);
+    }
 }

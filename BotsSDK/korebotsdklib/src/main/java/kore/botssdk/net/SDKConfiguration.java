@@ -236,6 +236,8 @@ public class SDKConfiguration {
         public static boolean showTextToSpeech = true;
         public static boolean history_initial_call = false;
         public static boolean update_custom_data_to_user_message = false;
+        public static boolean disable_alert_on_max_reconnection = false;
+        public static boolean showLocalNotification = true;
     }
 
     public static boolean isTimeStampsRequired() {

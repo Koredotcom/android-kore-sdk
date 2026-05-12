@@ -268,6 +268,8 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
                             return TEMPLATE_ANSWER;
                         case BotResponse.COMPONENT_TYPE_LINK:
                             return TEMPLATE_LINK;
+                        case BotResponse.TEMPLATE_TYPE_BUTTON_LINK:
+                            return TEMPLATE_BUTTON_LINK;
                         default:
                             return TEMPLATE_BUBBLE_RESPONSE;
                     }
@@ -407,6 +409,19 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         holder.setComposeFooterInterface(composeFooterInterface);
         holder.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         holder.bind(getItem(position));
+    }
+
+    private void applyBotIcon(BaseViewHolder holder, BotResponse response) {
+        if (response.isFromAgent()) {
+            holder.setAgentBotIcon();
+            return;
+        }
+
+        String icon = StringUtils.isNotEmpty(response.getIcon())
+                ? response.getIcon()
+                : SDKConfiguration.BubbleColors.getIcon_url();
+
+        holder.setBotIcon(icon);
     }
 
     @Override

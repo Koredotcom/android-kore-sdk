@@ -1,5 +1,7 @@
 package kore.botssdk.utils;
 
+import android.content.Intent;
+
 /**
  * Copyright (c) 2014 Kore Inc. All rights reserved.
  */
@@ -29,6 +31,7 @@ public class BundleConstants {
     public static final String ICON = "icon";
     public static final String BUTTON = "button";
     public static final String DROP_DOWN = "dropdown";
+    public static final String IS_RECONNECT = "IS_RECONNECT";
     public static final String EXTREMELY_LIKELY = "Extremely Likely";
     public static final int TYPING_STATUS_TIME = 1000; //in millisecond
     public static final String[] DELAY_MESSAGES = { "I’m working on it…", "Still, working on it…",
@@ -80,4 +83,5 @@ public class BundleConstants {
     public static final String FIT_TO_WIDTH = "fitToWidth";
     public static final String STATUS_BAR_HEIGHT = "STATUS_BAR_HEIGHT";
     public static final String STATUS_BAR_COLOR = "STATUS_BAR_COLOR";
+    public static final String BOT_RECONNECT = "BOT_RECONNECT";
 }
