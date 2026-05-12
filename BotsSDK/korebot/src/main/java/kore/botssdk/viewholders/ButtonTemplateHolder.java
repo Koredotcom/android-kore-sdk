@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.ButtonTemplateAdapter;
+import kore.botssdk.itemdecoration.SpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
@@ -43,20 +44,16 @@ public class ButtonTemplateHolder extends BaseViewHolder {
         RecyclerView buttonsList = itemView.findViewById(R.id.buttonsList);
         String variation = payloadInner.getVariation() != null ? payloadInner.getVariation() : "";
 
-         switch (variation) {
-            case BotResponse.PLAIN:
-            case BotResponse.TEXT_INVERTED:
-            case BotResponse.BACKGROUND_INVERTED:
-                buttonsList.setLayoutManager(new LinearLayoutManager(buttonsList.getContext(), LinearLayoutManager.HORIZONTAL, false));
-                break;
-            case BotResponse.STACKED_BUTTONS:
-                FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
-                layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-                layoutManager.setFlexDirection(FlexDirection.ROW);
-                buttonsList.setLayoutManager(layoutManager);
-                break;
-            default:
-                buttonsList.setLayoutManager(new LinearLayoutManager(buttonsList.getContext(), LinearLayoutManager.VERTICAL, false));
+        if (variation.equals(BotResponse.STACKED_BUTTONS)) {
+            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(itemView.getContext());
+            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+            layoutManager.setFlexDirection(FlexDirection.COLUMN);
+            buttonsList.setLayoutManager(layoutManager);
+        } else {
+            FlexboxLayoutManager flayoutManager = new FlexboxLayoutManager(itemView.getContext());
+            flayoutManager.setJustifyContent(JustifyContent.FLEX_START);
+            flayoutManager.setFlexDirection(FlexDirection.ROW);
+            buttonsList.setLayoutManager(flayoutManager);
         }
 
         if (payloadInner.isFullWidth()) {
@@ -69,6 +66,9 @@ public class ButtonTemplateHolder extends BaseViewHolder {
             layoutManager.setFlexDirection(FlexDirection.ROW);
             buttonsList.setLayoutManager(layoutManager);
         }
+
+        if (buttonsList.getItemDecorationCount() == 0)
+            buttonsList.addItemDecoration(new SpaceItemDecoration(20));
 
         if (botButtonModels != null && !botButtonModels.isEmpty()) {
             buttonTypeAdapter = new ButtonTemplateAdapter(

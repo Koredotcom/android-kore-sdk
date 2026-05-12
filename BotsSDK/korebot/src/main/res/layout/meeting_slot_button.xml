@@ -3,21 +3,21 @@
     android:id="@+id/root_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="vertical">
 
-    <kore.botssdk.view.CustomTextViewBold
-        android:id="@+id/button_title"
+    <kore.botssdk.view.CustomTextView
+        android:id="@+id/text_view"
         android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:layout_marginEnd="@dimen/dimen_10dp"
-        android:layout_marginBottom="@dimen/dimen_12dp"
-        android:background="@drawable/round_rect"
+        android:layout_height="wrap_content"
+        android:background="@drawable/theme_1_button_bg"
         android:ellipsize="end"
         android:gravity="center"
-        android:maxLines="1"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="5dp"
+        android:maxLines="2"
+        android:minHeight="@dimen/dimen_40dp"
         android:tag="medium"
+        android:text="@string/hi"
         android:textColor="@color/colorPrimary"
-        android:textSize="@dimen/text_size_normal" />
+        android:textSize="@dimen/text_size_normal"
+        android:textStyle="bold" />
 </LinearLayout>

@@ -119,8 +119,8 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
             bgDrawable.setColor(color);
             bgDrawable.setStroke((int) (1 * dp1), color);
         } else {
-            int color = Color.parseColor(buttonBgColor);
-            holder.buttonTitle.setTextColor(Color.parseColor(activeTextColor));
+            int color = Color.parseColor(invertBgColor);
+            holder.buttonTitle.setTextColor(Color.parseColor(invertTextColor));
             bgDrawable.setColor(color);
             bgDrawable.setStroke((int) (1 * dp1), color);
         }
@@ -155,7 +155,7 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
 
         public BotButtonViewHolder(View view) {
             super(view);
-            buttonTitle = view.findViewById(R.id.button_title);
+            buttonTitle = view.findViewById(R.id.text_view);
             rootLayout = view.findViewById(R.id.root_layout);
         }
     }

@@ -53,6 +53,7 @@
         layout="@layout/include_emojis_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_5dp"
         android:visibility="gone" />
 
@@ -154,8 +155,10 @@
         android:id="@+id/rlViewNPS"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
         android:layout_marginTop="@dimen/dimen_5dp"
         android:layout_marginBottom="@dimen/dimen_5dp"
+        android:gravity="center"
         android:padding="@dimen/dimen_5dp"
         android:visibility="gone">
 
