@@ -4,18 +4,20 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.makeramen.roundedimageview.RoundedImageView;
-import com.makeramen.roundedimageview.RoundedTransformationBuilder;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-import com.squareup.picasso.Transformation;
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.File;
 
@@ -24,22 +26,23 @@ import kore.botssdk.drawables.ProfileDrawable;
 import kore.botssdk.utils.StringConstants;
 import kore.botssdk.view.viewUtils.DimensionUtil;
 
-/*
- * Copyright (c) 2014 Kore Inc. All rights reserved.
- */
-@SuppressWarnings("UnKnownNullness")
-public class CircularProfileView extends RoundedImageView {
+public class CircularProfileView extends AppCompatImageView {
+
     private Paint borderPaint;
+
     private float width, height;
-    int dp1, SDK;
+
+    private int dp1;
     private int DEFAULT_HEIGHT;
     private int DEFAULT_WIDTH;
     private int CPV_TEXT_SIZE;
-    int borderStrokeWidth = 0;
-    int borderColor = 0xffffffff;
-    boolean hasBorder;
-    String initials;
-    int profileColor;
+
+    private int borderStrokeWidth = 0;
+    private int borderColor = 0xffffffff;
+    private boolean hasBorder;
+
+    private String initials;
+    private int profileColor;
 
     public CircularProfileView(Context context) {
         super(context);
@@ -58,60 +61,96 @@ public class CircularProfileView extends RoundedImageView {
 
     private void init(AttributeSet attrs, Context context) {
 
-        //Essentials
         if (!isInEditMode()) {
             dp1 = (int) DimensionUtil.dp1;
-            SDK = android.os.Build.VERSION.SDK_INT;
+
             DEFAULT_HEIGHT = dp1 * 52;
             DEFAULT_WIDTH = dp1 * 52;
-            borderPaint = new Paint();
+
+            borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         }
 
-        int PROFILE_DRAWABLE_PADDING;
+        int profileDrawablePadding;
+
         if (attrs != null) {
-            //init attrs
-            TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.CircularProfileView, 0, 0);
-            CPV_TEXT_SIZE = attr.getDimensionPixelSize(R.styleable.CircularProfileView_text_size, dp1 * 17);
-            PROFILE_DRAWABLE_PADDING = (int) attr.getDimension(R.styleable.CircularProfileView_profile_drawable_padding, 0);
-            hasBorder = attr.getBoolean(R.styleable.CircularProfileView_has_border, false);
-            borderColor = attr.getColor(R.styleable.CircularProfileView_border_color, 0xffffffff);
-            borderStrokeWidth = attr.getInt(R.styleable.CircularProfileView_border_width, 0);
+
+            TypedArray attr = getContext().obtainStyledAttributes(
+                    attrs,
+                    R.styleable.CircularProfileView,
+                    0,
+                    0
+            );
+
+            CPV_TEXT_SIZE = attr.getDimensionPixelSize(
+                    R.styleable.CircularProfileView_text_size,
+                    dp1 * 17
+            );
+
+            profileDrawablePadding = (int) attr.getDimension(
+                    R.styleable.CircularProfileView_profile_drawable_padding,
+                    0
+            );
+
+            hasBorder = attr.getBoolean(
+                    R.styleable.CircularProfileView_has_border,
+                    false
+            );
+
+            borderColor = attr.getColor(
+                    R.styleable.CircularProfileView_border_color,
+                    0xffffffff
+            );
+
+            borderStrokeWidth = attr.getInt(
+                    R.styleable.CircularProfileView_border_width,
+                    0
+            );
+
             attr.recycle();
+
         } else {
+
             CPV_TEXT_SIZE = 17 * dp1;
-            PROFILE_DRAWABLE_PADDING = 0;
+            profileDrawablePadding = 0;
         }
 
-        setPadding(PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING, PROFILE_DRAWABLE_PADDING);
+        setPadding(
+                profileDrawablePadding,
+                profileDrawablePadding,
+                profileDrawablePadding,
+                profileDrawablePadding
+        );
 
         int[] attrsArray = new int[]{
-                android.R.attr.id, // 0
-                android.R.attr.layout_width, // 1
-                android.R.attr.layout_height // 2
+                android.R.attr.layout_width,
+                android.R.attr.layout_height
         };
+
         TypedArray ta = context.obtainStyledAttributes(attrs, attrsArray);
-        width = ta.getDimensionPixelSize(1, DEFAULT_WIDTH);
-        height = ta.getDimensionPixelSize(2, DEFAULT_HEIGHT);
+
+        width = ta.getDimensionPixelSize(0, DEFAULT_WIDTH);
+        height = ta.getDimensionPixelSize(1, DEFAULT_HEIGHT);
+
         ta.recycle();
 
-        setDimens(width, height);
-
-        //initialize kore presence background paint
-        Paint mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setColor(Color.WHITE);
-        mPaint.setStyle(Paint.Style.FILL);
-
+        setScaleType(ScaleType.CENTER_CROP);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
         int childWidthSpec = MeasureSpec.makeMeasureSpec((int) width, MeasureSpec.EXACTLY);
+
         int childHeightSpec = MeasureSpec.makeMeasureSpec((int) height, MeasureSpec.EXACTLY);
+
         int zeroSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY);
+
         if (getVisibility() == View.VISIBLE || getVisibility() == View.INVISIBLE) {
+
             super.onMeasure(childWidthSpec, childHeightSpec);
+
         } else {
+
             super.onMeasure(zeroSpec, zeroSpec);
         }
     }
@@ -121,155 +160,165 @@ public class CircularProfileView extends RoundedImageView {
     }
 
     public void setDefaultBackground(int color, String initials, float textSize) {
-        ProfileDrawable profileDrawable = new ProfileDrawable(color, initials, textSize);
+
+        ProfileDrawable profileDrawable = new ProfileDrawable(
+                color,
+                initials,
+                textSize
+        );
+
         profileDrawable.mutate();
-        setBackgroundDrawable(profileDrawable);
+
+        setBackground(profileDrawable);
     }
 
-    private Transformation getRoundTransformation() {
-        return new RoundedTransformationBuilder()
-                .oval(true)
-                .build();
+    public void setProfileImageUrl(String url) {
+
+        Object source = url.startsWith(StringConstants.HTTP_SCHEME)
+                ? url
+                : new File(url);
+
+        loadCircularImage(source);
     }
 
-    public void setProfileImageUrl(String url, boolean applyRoundTransform) {
-        if (applyRoundTransform) {
-            if (url.startsWith(StringConstants.HTTP_SCHEME)) {
-                Picasso.get()
-                        .load(url)
-                        .transform(getRoundTransformation())
-                        .into(viewTarget);
-            } else {
-                Picasso.get()
-                        .load(new File(url))
-                        .transform(getRoundTransformation())
-                        .into(viewTarget);
-            }
+    private void loadCircularImage(Object source) {
 
-        } else {
-            if (url.startsWith(StringConstants.HTTP_SCHEME)) {
-                Picasso.get()
-                        .load(url)
-                        .into(viewTarget);
-            } else {
-                Picasso.get()
-                        .load(new File(url))
-                        .into(viewTarget);
-            }
-        }
+        Glide.with(getContext())
+                .asBitmap()
+                .load(source)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transform(new CircleCrop())
+                .into(viewTarget);
     }
 
-    public void populateLayout(String nameInitials, String url, Drawable d, int imageRes,
-                               int color, boolean b) {
-        populateLayout(nameInitials, null, url, d, imageRes, color, b, -1, -1);
+    public void populateLayout(String nameInitials,
+                               String url,
+                               Drawable drawable,
+                               int imageRes,
+                               int color,
+                               boolean ignored) {
+
+        populateLayout(nameInitials, url, drawable, imageRes, color, ignored, -1, -1);
     }
 
-    public void populateLayout(String nameInitials, String filePath, String imageUrl, Drawable d,
-                               int imageResource, int color, boolean applyRoundTransform,
-                               float width, float height) {
+    public void populateLayout(String nameInitials,
+                               String imageUrl,
+                               Drawable drawable,
+                               int imageResource,
+                               int color,
+                               boolean ignored,
+                               float width,
+                               float height) {
 
         if (color == 0) {
-            color = getResources().getColor(R.color.bgBlueSignup);
+            color = ContextCompat.getColor(getContext(), R.color.bgBlueSignup);
         }
 
         this.profileColor = color;
 
-        Picasso.get().cancelRequest(viewTarget);
+        Glide.with(getContext()).clear(viewTarget);
+
         if (nameInitials != null) {
             nameInitials = nameInitials.toUpperCase();
         }
 
         this.initials = nameInitials;
 
-        //Set the imageURL
-        setDefaultBackground(color, ""); // draw initials only if there is no image drawable
+        setDefaultBackground(color, "");
 
         if (imageResource != -1) {
-            setDefaultBackground(color, "");
-            setImageResource(imageResource);
-        } else if (d != null) {
-            setDefaultBackground(color, "");
-            setImageDrawable(d);
-        } else if (imageUrl != null && !imageUrl.isEmpty() && !imageUrl.equalsIgnoreCase("no_avatar")) {
-            setProfileImageUrl(imageUrl, applyRoundTransform);
+
+            loadCircularImage(imageResource);
+
+        } else if (drawable != null) {
+
+            loadCircularImage(drawable);
+
+        } else if (imageUrl != null
+                && !imageUrl.isEmpty()
+                && !"no_avatar".equalsIgnoreCase(imageUrl)) {
+
+            setProfileImageUrl(imageUrl);
+
         } else {
+
             setImageDrawable(null);
-            setDefaultBackground(color, nameInitials); // drawing initials.
+
+            setDefaultBackground(color, nameInitials);
         }
 
         if (width != -1 && height != -1) {
+
             this.width = width;
             this.height = height;
-        }
-    }
 
-    public void setDimens(float width, float height) {
-        if (this.width != width || this.height != height) {
-            this.width = width;
-            this.height = height;
-            createPath();
+            requestLayout();
         }
-    }
-
-    private void createPath() {
-        float xCenter = (width - (getPaddingLeft() + getPaddingRight())) / 2f;
-        float yCenter = (height - (getPaddingTop() + getPaddingBottom())) / 2f;
-        Path circlePath = new Path();
-        circlePath.addCircle(xCenter + getPaddingLeft(), yCenter + getPaddingTop(), width / 2f, Path.Direction.CCW);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+
         super.onDraw(canvas);
+
         if (hasBorder) {
             drawBorder(canvas);
         }
     }
 
     private void drawBorder(Canvas canvas) {
+
         borderPaint.setStyle(Paint.Style.STROKE);
-        borderPaint.setAntiAlias(true);
         borderPaint.setStrokeWidth(borderStrokeWidth);
         borderPaint.setColor(borderColor);
-        int centerX = (getMeasuredWidth() / 2);
-        int centerY = (getMeasuredHeight() / 2);
-        int radius = (getMeasuredWidth() / 2 - borderStrokeWidth / 2);
+
+        int centerX = getMeasuredWidth() / 2;
+
+        int centerY = getMeasuredHeight() / 2;
+
+        int radius = (getMeasuredWidth() / 2) - (borderStrokeWidth / 2);
+
         canvas.drawCircle(centerX, centerY, radius, borderPaint);
     }
 
-    void updateWithPic(Bitmap bitmap) {
-        if (bitmap != null) {
-            setImageBitmap(bitmap);
-        }
-    }
+    private final CustomTarget<Bitmap> viewTarget = new CustomTarget<Bitmap>() {
 
-    @Override
-    public void setBorderColor(int borderColor) {
-        this.borderColor = borderColor;
-    }
-
-    final Target viewTarget = new Target() {
         @Override
-        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
-            setImageDrawable(null);
-            updateWithPic(bitmap);
+        public void onResourceReady(@NonNull Bitmap resource,
+                                    Transition<? super Bitmap> transition) {
+
             setBackgroundResource(0);
+
+            setImageBitmap(resource);
         }
 
         @Override
-        public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+        public void onLoadCleared(Drawable placeholder) {
+        }
+
+        @Override
+        public void onLoadFailed(Drawable errorDrawable) {
+
             setImageDrawable(null);
+
             setBackgroundResource(0);
+
             setDefaultBackground(profileColor, initials);
         }
 
-
         @Override
-        public void onPrepareLoad(Drawable drawable) {
+        public void onLoadStarted(Drawable placeholder) {
+
             setImageDrawable(null);
+
             setBackgroundResource(0);
+
             setDefaultBackground(profileColor, initials);
         }
     };
 
+    public void setBorderColor(int borderColor) {
+        this.borderColor = borderColor;
+        invalidate();
+    }
 }

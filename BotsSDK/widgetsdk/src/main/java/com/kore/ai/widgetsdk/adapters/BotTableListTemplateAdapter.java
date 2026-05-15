@@ -29,7 +29,6 @@ import com.kore.ai.widgetsdk.models.BotTableListDefaultActionsModel;
 import com.kore.ai.widgetsdk.models.BotTableListElementsItemsModel;
 import com.kore.ai.widgetsdk.models.BotTableListElementsModel;
 import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 
 import java.util.ArrayList;
 
@@ -39,20 +38,18 @@ public class BotTableListTemplateAdapter extends BaseAdapter {
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     final LayoutInflater ownLayoutInflator;
     final Context context;
-    final RoundedCornersTransform roundedCornersTransform;
     int count = 0;
 
     public BotTableListTemplateAdapter(Context context, int count) {
         this.ownLayoutInflator = LayoutInflater.from(context);
         this.context = context;
-        this.roundedCornersTransform = new RoundedCornersTransform();
         this.count = count;
     }
 
     @Override
     public int getCount() {
         if (botTableListModels != null) {
-            return botTableListModels.size() > count ? count : botTableListModels.size();
+            return Math.min(botTableListModels.size(), count);
         } else {
             return 0;
         }

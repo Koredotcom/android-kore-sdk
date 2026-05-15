@@ -17,7 +17,6 @@ import com.kore.ai.widgetsdk.listeners.InvokeGenericWebViewInterface;
 import com.kore.ai.widgetsdk.models.BotTableListElementsItemsModel;
 import com.kore.ai.widgetsdk.utils.DimensionUtil;
 import com.kore.ai.widgetsdk.utils.StringUtils;
-import com.kore.ai.widgetsdk.views.viewutils.RoundedCornersTransform;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ public class BotTableListInnerAdapter extends BaseAdapter
     private final Context context;
     private final ArrayList<BotTableListElementsItemsModel> botTableListRowItemsModels;
     final LayoutInflater ownLayoutInflation;
-    final RoundedCornersTransform roundedCornersTransform;
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final int dp1;
@@ -37,7 +35,6 @@ public class BotTableListInnerAdapter extends BaseAdapter
         this.ownLayoutInflation = LayoutInflater.from(context);
         this.context = context;
         this.botTableListRowItemsModels = botTableListRowItemsModels;
-        this.roundedCornersTransform = new RoundedCornersTransform();
         this.dp1 = (int) DimensionUtil.dp1;
     }
 
@@ -86,7 +83,6 @@ public class BotTableListInnerAdapter extends BaseAdapter
             if(!StringUtils.isNullOrEmpty(botListModel.getImage().getImage_src()))
             {
                 holder.botListItemImage.setVisibility(View.VISIBLE);
-                Picasso.get().load(botListModel.getImage().getImage_src()).transform(roundedCornersTransform).into(holder.botListItemImage);
 
                 if(botListModel.getImage().getRadius() > 0)
                 {

@@ -21,23 +21,19 @@ public class SettingsActivity extends BaseAppCompatActivity {
 
         int[] settingsButtonClickListID = {R.id.settings_button_general, R.id.settings_button_account, R.id.settings_button_call_stats};
 
-        View.OnClickListener settingsClickListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View clickedView) {
-                if (clickedView == null) {
-                    return;
-                }
-                int id = clickedView.getId();
-                if (id == R.id.settings_button_general) {
-                    startNextActivity(GeneralSettingsActivity.class);
-                } else if (id == R.id.settings_button_account) {
-                    startNextActivity(AccountActivity.class);
-                } else if (id == R.id.settings_button_call_stats) {
-                    startNextActivity(CallStatsActivity.class);
-                }
-
+        View.OnClickListener settingsClickListener = clickedView -> {
+            if (clickedView == null) {
+                return;
             }
+            int id = clickedView.getId();
+            if (id == R.id.settings_button_general) {
+                startNextActivity(GeneralSettingsActivity.class);
+            } else if (id == R.id.settings_button_account) {
+                startNextActivity(AccountActivity.class);
+            } else if (id == R.id.settings_button_call_stats) {
+                startNextActivity(CallStatsActivity.class);
+            }
+
         };
 
         for (int settingsButtonClickID : settingsButtonClickListID) {

@@ -133,65 +133,53 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             //Widget Task
             holder.tv_actions.setText(text);
 
-            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            holder.tv_actions.setOnClickListener(view -> {
 
-                    if (Utility.checkIsSkillKora()) {
-                        startActions(holder.getBindingAdapterPosition(), false);
+                if (Utility.checkIsSkillKora()) {
+                    startActions(holder.getBindingAdapterPosition(), false);
 
-                    } else {
-                        DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                startActions(holder.getBindingAdapterPosition(), true);
-                                dialog.dismiss();
-                            }
-                        });
-                    }
+                } else {
+                    DialogCaller.showDialog(mainContext, null, (dialog, which) -> {
+                        startActions(holder.getBindingAdapterPosition(), true);
+                        dialog.dismiss();
+                    });
                 }
             });
 
         } else if (model instanceof WCalEventsTemplateModel) {
 
-            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    WCalEventsTemplateModel.Action action = ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition());
-                    String type = ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getType();
-                    if (((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getType().equalsIgnoreCase("view_details")) {
-                        //view meeting
-                        verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, (WCalEventsTemplateModel) model);
-                        (widgetDialogActivity).dismiss();
-                    } else if (type.equalsIgnoreCase("url") && ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getCustom_type().equalsIgnoreCase("url")) {
-                        //join meeting
-                        verticalListViewActionHelper.navigationToDialAndJoin("url", action.getUrl());
-                        (widgetDialogActivity).dismiss();
+            holder.tv_actions.setOnClickListener(v -> {
+                WCalEventsTemplateModel.Action action = ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition());
+                String type = ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getType();
+                if (((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getType().equalsIgnoreCase("view_details")) {
+                    //view meeting
+                    verticalListViewActionHelper.calendarItemClicked(BotResponse.TEMPLATE_TYPE_CAL_EVENTS_WIDGET, (WCalEventsTemplateModel) model);
+                    (widgetDialogActivity).dismiss();
+                } else if (type.equalsIgnoreCase("url") && ((WCalEventsTemplateModel) model).getActions().get(holder.getBindingAdapterPosition()).getCustom_type().equalsIgnoreCase("url")) {
+                    //join meeting
+                    verticalListViewActionHelper.navigationToDialAndJoin("url", action.getUrl());
+                    (widgetDialogActivity).dismiss();
 
-                    } else if (type.equalsIgnoreCase("dial") && action.getCustom_type().equalsIgnoreCase("dial")) {
-                        verticalListViewActionHelper.navigationToDialAndJoin("dial", action.getDial());
-                        (widgetDialogActivity).dismiss();
-                    } else if (type.equalsIgnoreCase("url") && action.getCustom_type().equalsIgnoreCase("meetingUrl")) {
-                        verticalListViewActionHelper.navigationToDialAndJoin("meetingUrl", action.getUrl());
-                        (widgetDialogActivity).dismiss();
+                } else if (type.equalsIgnoreCase("dial") && action.getCustom_type().equalsIgnoreCase("dial")) {
+                    verticalListViewActionHelper.navigationToDialAndJoin("dial", action.getDial());
+                    (widgetDialogActivity).dismiss();
+                } else if (type.equalsIgnoreCase("url") && action.getCustom_type().equalsIgnoreCase("meetingUrl")) {
+                    verticalListViewActionHelper.navigationToDialAndJoin("meetingUrl", action.getUrl());
+                    (widgetDialogActivity).dismiss();
 
-                    } else if (type.equalsIgnoreCase(BotResponse.TAKE_NOTES)) {
-                        verticalListViewActionHelper.takeNotesNavigation((WCalEventsTemplateModel) model);
-                        (widgetDialogActivity).dismiss();
+                } else if (type.equalsIgnoreCase(BotResponse.TAKE_NOTES)) {
+                    verticalListViewActionHelper.takeNotesNavigation((WCalEventsTemplateModel) model);
+                    (widgetDialogActivity).dismiss();
 
+                } else {
+                    if (Utility.checkIsSkillKora()) {
+                        postAction(holder.getBindingAdapterPosition(), false);
                     } else {
-                        if (Utility.checkIsSkillKora()) {
-                            postAction(holder.getBindingAdapterPosition(), false);
-                        } else {
 
-                            DialogCaller.showDialog(mainContext, null, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    postAction(holder.getBindingAdapterPosition(), true);
-                                    dialog.dismiss();
-                                }
-                            });
-                        }
+                        DialogCaller.showDialog(mainContext, null, (dialog, which) -> {
+                            postAction(holder.getBindingAdapterPosition(), true);
+                            dialog.dismiss();
+                        });
                     }
                 }
             });
@@ -211,12 +199,9 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
             if (act.getType().equalsIgnoreCase("url")) {
                 holder.tv_actions.setText(act.getTitle());
-                holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        verticalListViewActionHelper.navigationToDialAndJoin("url", act.getUrl());
-                        (widgetDialogActivity).dismiss();
-                    }
+                holder.tv_actions.setOnClickListener(view -> {
+                    verticalListViewActionHelper.navigationToDialAndJoin("url", act.getUrl());
+                    (widgetDialogActivity).dismiss();
                 });
 
             } else {
@@ -229,14 +214,11 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
                 holder.tv_actions.setText(text);
 
-                holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        (widgetDialogActivity).dismiss();
+                holder.tv_actions.setOnClickListener(view -> {
+                    (widgetDialogActivity).dismiss();
 
-                        buttonAction(act.getUtterance(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
-                    }
+                    buttonAction(act.getUtterance(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                 });
             }
         } else if (model instanceof WidgetListElementModel elementModel2) {
@@ -249,26 +231,20 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
 
 
             Widget.Button finalButton = button;
-            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    (widgetDialogActivity).dismiss();
-                    buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
-                }
+            holder.tv_actions.setOnClickListener(v -> {
+                (widgetDialogActivity).dismiss();
+                buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
             });
         }
         else if(model instanceof WidgetListModel wL)
         {
             holder.tv_actions.setText(wL.getHeaderOptions().getMenu().get(position).getTitle());
             Widget.Button finalButton = wL.getHeaderOptions().getMenu().get(position);
-            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    (widgetDialogActivity).dismiss();
-                    buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
-                }
+            holder.tv_actions.setOnClickListener(v -> {
+                (widgetDialogActivity).dismiss();
+                buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
             });
 
         }else if(model instanceof BaseChartModel ba)
@@ -276,13 +252,10 @@ public class WidgetSelectActionsAdapter extends RecyclerView.Adapter<WidgetSelec
             //  return (actionList!=null&&ba!=null&&ba.getHeaderOptions()!=null&&ba.getHeaderOptions().getMenu()!=null)?ba.getHeaderOptions().getMenu().size():0;
             holder.tv_actions.setText(ba.getHeaderOptions().getMenu().get(position).getTitle());
             Widget.Button finalButton = ba.getHeaderOptions().getMenu().get(position);
-            holder.tv_actions.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    (widgetDialogActivity).dismiss();
-                    buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
-                }
+            holder.tv_actions.setOnClickListener(v -> {
+                (widgetDialogActivity).dismiss();
+                buttonClick(finalButton, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))) ;
             });
         }
     }

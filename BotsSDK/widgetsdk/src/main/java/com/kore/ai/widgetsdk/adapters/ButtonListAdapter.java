@@ -70,15 +70,12 @@ public class ButtonListAdapter extends RecyclerView.Adapter<ButtonListAdapter.Bu
         }
         final String utterance = utt;*/
 
-        holder.tv.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
+        holder.tv.setOnClickListener(v -> {
 
 //                buttonAction(utterance);
 
-                buttonAction(btn, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
-            }
+            buttonAction(btn, Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                    (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
         });
     }
 

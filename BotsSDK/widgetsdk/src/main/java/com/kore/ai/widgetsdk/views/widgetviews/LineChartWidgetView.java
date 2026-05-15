@@ -87,9 +87,7 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
         mChart.setMarkerView(mv);
 //        mChart.setOnChartGestureListener(this);
 
-        pin_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        pin_view.setOnClickListener(v -> {
 
 //                KaRestAPIHelper.actionPinnAndUnPinn(authData.accessToken, userData.getId(),mWidget,panelData, new PinUnPinnCallBack() {
 //                    @Override
@@ -106,7 +104,6 @@ public class LineChartWidgetView extends BaseWidgetView/* implements OnChartGest
 //                });
 
 
-            }
         });
     }
 

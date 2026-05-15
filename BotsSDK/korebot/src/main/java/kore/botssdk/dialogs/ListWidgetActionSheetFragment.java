@@ -96,12 +96,9 @@ public class ListWidgetActionSheetFragment extends BottomSheetDialogFragment {
         else
             tvOptionsTitle.setVisibility(View.GONE);
 
-        llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(bottomSheetDialog != null)
-                    bottomSheetDialog.dismiss();
-            }
+        llCloseBottomSheet.setOnClickListener(v -> {
+            if(bottomSheetDialog != null)
+                bottomSheetDialog.dismiss();
         });
         return view;
 

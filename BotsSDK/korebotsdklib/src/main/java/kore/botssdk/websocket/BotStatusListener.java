@@ -4,12 +4,7 @@ public interface BotStatusListener {
 
     void onBotConnected();
 
-    void onBotDisconnected();
+    void onBotDisconnected(String event_code, String event_message);
 
-    void onBotConnecting();
-
-    void onBotReconnected();
-
-    void onBotConnectionFail(String strReason);
-
+    void onBotConnectionFail(String event_code, String strReason);
 }

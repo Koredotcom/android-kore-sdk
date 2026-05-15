@@ -86,41 +86,32 @@ public class SearchCentralPanelAdapter extends RecyclerView.Adapter<SearchCentra
         }
 
         holder.tvReadMore.setTag(true);
-        holder.tvReadMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if((boolean)view.getTag())
-                {
-                    holder.tvFullDescription.setVisibility(VISIBLE);
-                    holder.tvDescription.setVisibility(GONE);
-                    view.setTag(false);
-                    holder.tvReadMore.setText(HtmlCompat.fromHtml(context.getResources().getString(R.string.show_less), HtmlCompat.FROM_HTML_MODE_LEGACY));
-                }
-                else
-                {
-                    holder.tvFullDescription.setVisibility(GONE);
-                    holder.tvDescription.setVisibility(VISIBLE);
-                    view.setTag(true);
-                    holder.tvReadMore.setText(HtmlCompat.fromHtml(context.getResources().getString(R.string.read_more), HtmlCompat.FROM_HTML_MODE_LEGACY));
-                }
-
+        holder.tvReadMore.setOnClickListener(view -> {
+            if((boolean)view.getTag())
+            {
+                holder.tvFullDescription.setVisibility(VISIBLE);
+                holder.tvDescription.setVisibility(GONE);
+                view.setTag(false);
+                holder.tvReadMore.setText(HtmlCompat.fromHtml(context.getResources().getString(R.string.show_less), HtmlCompat.FROM_HTML_MODE_LEGACY));
             }
+            else
+            {
+                holder.tvFullDescription.setVisibility(GONE);
+                holder.tvDescription.setVisibility(VISIBLE);
+                view.setTag(true);
+                holder.tvReadMore.setText(HtmlCompat.fromHtml(context.getResources().getString(R.string.read_more), HtmlCompat.FROM_HTML_MODE_LEGACY));
+            }
+
         });
 
-        holder.tvPanelLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!StringUtils.isNullOrEmpty(liveSearchResultsModel.getUrl()))
-                    invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getUrl());
-            }
+        holder.tvPanelLink.setOnClickListener(view -> {
+            if(!StringUtils.isNullOrEmpty(liveSearchResultsModel.getUrl()))
+                invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getUrl());
         });
 
-        holder.ivSuggestedPage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!StringUtils.isNullOrEmpty(liveSearchResultsModel.getUrl()))
-                    invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getUrl());
-            }
+        holder.ivSuggestedPage.setOnClickListener(view -> {
+            if(!StringUtils.isNullOrEmpty(liveSearchResultsModel.getUrl()))
+                invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getUrl());
         });
     }
 

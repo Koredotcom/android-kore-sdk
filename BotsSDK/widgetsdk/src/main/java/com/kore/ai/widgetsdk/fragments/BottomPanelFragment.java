@@ -132,12 +132,9 @@ public class BottomPanelFragment extends KaBaseFragment implements PanelInterfac
         dp1 = (int) dp1;
         screenHeight = (int) AppControl.getInstance(getContext()).getDimensionUtil().screenHeight;
 
-        closeBtnPanel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                persistentPanel.setVisibility(GONE);
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
+        closeBtnPanel.setOnClickListener(v -> {
+            persistentPanel.setVisibility(GONE);
+            mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         });
 
         panelDrag.setOnTouchListener(new View.OnTouchListener() {

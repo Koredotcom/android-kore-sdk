@@ -77,33 +77,27 @@ public class LiveSearchCyclerAdapter extends RecyclerView.Adapter<LiveSearchCycl
 
 
         holder.tvTitle.setTag(true);
-        holder.tvTitle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (liveSearchResultsModel.getSys_content_type().equalsIgnoreCase(BundleConstants.FAQ)) {
-                    if ((boolean) view.getTag()) {
-                        holder.tvDescription.setVisibility(View.GONE);
-                        holder.tvFullDescription.setVisibility(View.VISIBLE);
-                        view.setTag(false);
-                    } else {
-                        holder.tvDescription.setVisibility(View.VISIBLE);
-                        holder.tvFullDescription.setVisibility(View.GONE);
-                        view.setTag(true);
-                    }
+        holder.tvTitle.setOnClickListener(view -> {
+            if (liveSearchResultsModel.getSys_content_type().equalsIgnoreCase(BundleConstants.FAQ)) {
+                if ((boolean) view.getTag()) {
+                    holder.tvDescription.setVisibility(View.GONE);
+                    holder.tvFullDescription.setVisibility(View.VISIBLE);
+                    view.setTag(false);
+                } else {
+                    holder.tvDescription.setVisibility(View.VISIBLE);
+                    holder.tvFullDescription.setVisibility(View.GONE);
+                    view.setTag(true);
                 }
             }
         });
 
-        holder.llPages.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        holder.llPages.setOnClickListener(view -> {
 
-                if (invokeGenericWebViewInterface != null) {
-                    if (!StringUtils.isNullOrEmpty(liveSearchResultsModel.getUrl()))
-                        invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getUrl());
-                    else if (!StringUtils.isNullOrEmpty(liveSearchResultsModel.getPage_url()))
-                        invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getPage_url());
-                }
+            if (invokeGenericWebViewInterface != null) {
+                if (!StringUtils.isNullOrEmpty(liveSearchResultsModel.getUrl()))
+                    invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getUrl());
+                else if (!StringUtils.isNullOrEmpty(liveSearchResultsModel.getPage_url()))
+                    invokeGenericWebViewInterface.invokeGenericWebView(liveSearchResultsModel.getPage_url());
             }
         });
     }

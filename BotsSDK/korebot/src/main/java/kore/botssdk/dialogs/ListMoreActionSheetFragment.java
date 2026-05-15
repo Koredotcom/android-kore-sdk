@@ -106,12 +106,9 @@ public class ListMoreActionSheetFragment extends BottomSheetDialogFragment {
         ListViewMoreAdapter listViewMoreAdapter = new ListViewMoreAdapter(model);
         rvViewMore.setAdapter(listViewMoreAdapter);
 
-        llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(bottomSheetDialog != null)
-                    bottomSheetDialog.dismiss();
-            }
+        llCloseBottomSheet.setOnClickListener(v -> {
+            if(bottomSheetDialog != null)
+                bottomSheetDialog.dismiss();
         });
         return view;
 

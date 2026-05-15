@@ -65,11 +65,6 @@ public class SkillSwitchDialog extends Dialog {
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(adapter);
 
-        recyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        recyclerView.setOnClickListener(v -> dismiss());
     }
 }

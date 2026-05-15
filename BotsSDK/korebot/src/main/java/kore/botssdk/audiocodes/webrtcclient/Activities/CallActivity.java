@@ -202,244 +202,200 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         // otherwise it will transfer the active call to the 2nd call.
         transferCallButton.setEnabled(true);
 
-        endCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        endCallButton.setOnClickListener(v -> {
 
-                Log.d(TAG, "session getTermination: " + session.getTermination());
-                if (session.getTermination() == CallTermination.TERMINATED_NOT_FOUND) {
-                    handleCallTermination(session, null);
-                    return;
-                }
-                if (session.getTermination() == CallTermination.TERMINATED_MEDIA_FAILED) {
-                    handleCallTermination(session, null);
-                    return;
-                }
-                //session.
-                Log.d(TAG, "session getCallState: " + session.getCallState());
-                Log.d(TAG, "session getTermination: " + session.getTermination());
-                session.terminate();
+            Log.d(TAG, "session getTermination: " + session.getTermination());
+            if (session.getTermination() == CallTermination.TERMINATED_NOT_FOUND) {
                 handleCallTermination(session, null);
+                return;
             }
-        });
-
-        endVideoCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d(TAG, "session getTermination: " + session.getTermination());
-                if (session.getTermination() == CallTermination.TERMINATED_NOT_FOUND) {
-                    handleCallTermination(session, null);
-                    return;
-                }
-                if (session.getTermination() == CallTermination.TERMINATED_MEDIA_FAILED) {
-                    handleCallTermination(session, null);
-                    return;
-                }
-                //session.
-                Log.d(TAG, "session getCallState: " + session.getCallState());
-                Log.d(TAG, "session getTermination: " + session.getTermination());
-                session.terminate();
+            if (session.getTermination() == CallTermination.TERMINATED_MEDIA_FAILED) {
                 handleCallTermination(session, null);
+                return;
             }
+            //session.
+            Log.d(TAG, "session getCallState: " + session.getCallState());
+            Log.d(TAG, "session getTermination: " + session.getTermination());
+            session.terminate();
+            handleCallTermination(session, null);
         });
 
-        switchCameraButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                session.switchCamera();
+        endVideoCallButton.setOnClickListener(v -> {
+
+            Log.d(TAG, "session getTermination: " + session.getTermination());
+            if (session.getTermination() == CallTermination.TERMINATED_NOT_FOUND) {
+                handleCallTermination(session, null);
+                return;
             }
+            if (session.getTermination() == CallTermination.TERMINATED_MEDIA_FAILED) {
+                handleCallTermination(session, null);
+                return;
+            }
+            //session.
+            Log.d(TAG, "session getCallState: " + session.getCallState());
+            Log.d(TAG, "session getTermination: " + session.getTermination());
+            session.terminate();
+            handleCallTermination(session, null);
         });
 
-        holdButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isLocalHold = session.isLocalHold();
-                setHold(!isLocalHold);
-            }
+        switchCameraButton.setOnClickListener(v -> session.switchCamera());
+
+        holdButton.setOnClickListener(v -> {
+            boolean isLocalHold = session.isLocalHold();
+            setHold(!isLocalHold);
         });
 
-        videoHoldButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isLocalHold = session.isLocalHold();
-                setHold(!isLocalHold);
-            }
+        videoHoldButton.setOnClickListener(v -> {
+            boolean isLocalHold = session.isLocalHold();
+            setHold(!isLocalHold);
         });
 
-        muteAudioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        muteAudioButton.setOnClickListener(v -> {
 
-                boolean isAudioMuted = session.isAudioMuted();
-                Log.d(TAG, "isAudioMuted before: " + isAudioMuted);
+            boolean isAudioMuted = session.isAudioMuted();
+            Log.d(TAG, "isAudioMuted before: " + isAudioMuted);
 
-                isAudioMuted = !isAudioMuted;
+            isAudioMuted = !isAudioMuted;
 
-                session.muteAudio(isAudioMuted);
-                session.muteVideo(isAudioMuted);
+            session.muteAudio(isAudioMuted);
+            session.muteVideo(isAudioMuted);
 
-                isAudioMuted = session.isAudioMuted();
-                Log.d(TAG, "isAudioMuted after: " + isAudioMuted);
-                muteAudioButton.setSelected(isAudioMuted);
-                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
+            isAudioMuted = session.isAudioMuted();
+            Log.d(TAG, "isAudioMuted after: " + isAudioMuted);
+            muteAudioButton.setSelected(isAudioMuted);
+            ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
 
-                if (isAudioMuted)
-                    ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
-            }
+            if (isAudioMuted)
+                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
         });
 
-        muteVideoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        muteVideoButton.setOnClickListener(v -> {
 
-                boolean isAudioMuted = session.isAudioMuted();
-                Log.d(TAG, "isAudioMuted before: " + isAudioMuted);
+            boolean isAudioMuted = session.isAudioMuted();
+            Log.d(TAG, "isAudioMuted before: " + isAudioMuted);
 
-                isAudioMuted = !isAudioMuted;
+            isAudioMuted = !isAudioMuted;
 
-                session.muteAudio(isAudioMuted);
-                session.muteVideo(isAudioMuted);
+            session.muteAudio(isAudioMuted);
+            session.muteVideo(isAudioMuted);
 
-                isAudioMuted = session.isAudioMuted();
-                Log.d(TAG, "isAudioMuted after: " + isAudioMuted);
-                muteVideoButton.setSelected(isAudioMuted);
-                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
+            isAudioMuted = session.isAudioMuted();
+            Log.d(TAG, "isAudioMuted after: " + isAudioMuted);
+            muteVideoButton.setSelected(isAudioMuted);
+            ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_off, getTheme()));
 
-                if (isAudioMuted)
-                    ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
-            }
+            if (isAudioMuted)
+                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_call_mute_on, getTheme()));
         });
 
-        switchCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for (Integer index : sessionList) {
-                    Log.d(TAG, "Session ID: " + index);
+        switchCallButton.setOnClickListener(v -> {
+            for (Integer index : sessionList) {
+                Log.d(TAG, "Session ID: " + index);
+            }
+            for (Integer index : sessionList) {
+
+                if (index != session.getSessionID()) {
+                    session.hold(true);
+                    session = AudioCodesUA.getInstance().getSession(index);
+                    session.hold(false);
+                    updateUI();
+                    Log.d(TAG, "Session index: " + index);
+                    return;
                 }
-                for (Integer index : sessionList) {
+            }
+        });
 
+        addCallButton.setOnClickListener(v -> {
+            String call = Prefs.getSecondCall(CallActivity.this);
+            if (call == null || call.equals("")) {
+                Toast.makeText(CallActivity.this, getString(R.string.no_remote_contact), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            try {
+                Log.d(TAG, "Calling to: " + call);
+                if (session.hasVideo()) {
+                    session.stopVideo();
+                }
+                RemoteContact contact = new RemoteContact();
+                contact.setUserName(call);
+                session = AudioCodesUA.getInstance().call(contact, session.hasVideo(), null);
+                Log.d(TAG, "Added call_activity: " + session.getSessionID());
+                if (!sessionList.contains(session.getSessionID())) {
+                    sessionList.add(session.getSessionID());
+                }
+                switchCallButton.setEnabled(true);
+                updateCallGui();
+                updateUI();
+            } catch (WebRTCException e) {
+                Log.d(TAG, "oops: " + e.getMessage());
+            }
+        });
+
+        transferCallButton.setOnClickListener(v -> {
+            if (sessionList.size() > 1) {
+                for (Integer index : sessionList) {
                     if (index != session.getSessionID()) {
-                        session.hold(true);
-                        session = AudioCodesUA.getInstance().getSession(index);
-                        session.hold(false);
+                        AudioCodesSession transferSession = AudioCodesUA.getInstance().getSession(index);
+                        transferSession.transferCall(session);
                         updateUI();
-                        Log.d(TAG, "Session index: " + index);
                         return;
                     }
                 }
-            }
-        });
-
-        addCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String call = Prefs.getSecondCall(CallActivity.this);
-                if (call == null || call.equals("")) {
+            } else {
+                String call = Prefs.getTransferCall(CallActivity.this);
+                if (call == null || call.isEmpty()) {
                     Toast.makeText(CallActivity.this, getString(R.string.no_remote_contact), Toast.LENGTH_SHORT).show();
                     return;
                 }
-                try {
-                    Log.d(TAG, "Calling to: " + call);
-                    if (session.hasVideo()) {
-                        session.stopVideo();
-                    }
-                    RemoteContact contact = new RemoteContact();
-                    contact.setUserName(call);
-                    session = AudioCodesUA.getInstance().call(contact, session.hasVideo(), null);
-                    Log.d(TAG, "Added call_activity: " + session.getSessionID());
-                    if (!sessionList.contains(session.getSessionID())) {
-                        sessionList.add(session.getSessionID());
-                    }
-                    switchCallButton.setEnabled(true);
-                    updateCallGui();
-                    updateUI();
-                } catch (WebRTCException e) {
-                    Log.d(TAG, "oops: " + e.getMessage());
-                }
+                RemoteContact transferContact = new RemoteContact();
+                transferContact.setUserName(call);
+                session.transferCall(transferContact);
             }
         });
 
-        transferCallButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sessionList.size() > 1) {
-                    for (Integer index : sessionList) {
-                        if (index != session.getSessionID()) {
-                            AudioCodesSession transferSession = AudioCodesUA.getInstance().getSession(index);
-                            transferSession.transferCall(session);
-                            updateUI();
-                            return;
-                        }
-                    }
-                } else {
-                    String call = Prefs.getTransferCall(CallActivity.this);
-                    if (call == null || call.isEmpty()) {
-                        Toast.makeText(CallActivity.this, getString(R.string.no_remote_contact), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    RemoteContact transferContact = new RemoteContact();
-                    transferContact.setUserName(call);
-                    session.transferCall(transferContact);
-                }
+        audioRouteButton.setOnClickListener(v -> {
+            if (route == WebRTCAudioManager.AudioRoute.BLUETOOTH) {
+                route = WebRTCAudioManager.AudioRoute.SPEAKER_PHONE;
+            } else if (route == WebRTCAudioManager.AudioRoute.SPEAKER_PHONE) {
+                route = WebRTCAudioManager.AudioRoute.EARPIECE;
+            } else {
+                route = WebRTCAudioManager.AudioRoute.BLUETOOTH;
             }
+            Log.d("WebRTCAudioManager", "new route = " + route);
+            ac.setAudioRoute(route);
         });
 
-        audioRouteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (route == WebRTCAudioManager.AudioRoute.BLUETOOTH) {
-                    route = WebRTCAudioManager.AudioRoute.SPEAKER_PHONE;
-                } else if (route == WebRTCAudioManager.AudioRoute.SPEAKER_PHONE) {
-                    route = WebRTCAudioManager.AudioRoute.EARPIECE;
-                } else {
-                    route = WebRTCAudioManager.AudioRoute.BLUETOOTH;
-                }
-                Log.d("WebRTCAudioManager", "new route = " + route);
-                ac.setAudioRoute(route);
+        videoRouteButton.setOnClickListener(v -> {
+            if (route == WebRTCAudioManager.AudioRoute.BLUETOOTH) {
+                route = WebRTCAudioManager.AudioRoute.SPEAKER_PHONE;
+            } else if (route == WebRTCAudioManager.AudioRoute.SPEAKER_PHONE) {
+                route = WebRTCAudioManager.AudioRoute.EARPIECE;
+            } else {
+                route = WebRTCAudioManager.AudioRoute.BLUETOOTH;
             }
+            Log.d("WebRTCAudioManager", "new route = " + route);
+            ac.setAudioRoute(route);
         });
 
-        videoRouteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (route == WebRTCAudioManager.AudioRoute.BLUETOOTH) {
-                    route = WebRTCAudioManager.AudioRoute.SPEAKER_PHONE;
-                } else if (route == WebRTCAudioManager.AudioRoute.SPEAKER_PHONE) {
-                    route = WebRTCAudioManager.AudioRoute.EARPIECE;
-                } else {
-                    route = WebRTCAudioManager.AudioRoute.BLUETOOTH;
-                }
-                Log.d("WebRTCAudioManager", "new route = " + route);
-                ac.setAudioRoute(route);
+        addVideoButton.setOnClickListener(v -> {
+            Log.d(TAG, "hasVideo: " + session.hasVideo() + " isVideoMuted: " + session.isVideoMuted());
+            if (session.hasVideo()) {
+                Log.d(TAG, "new video mute stat: " + !session.isVideoMuted());
+                session.muteVideo(!session.isVideoMuted());
+            } else {
+                Log.d(TAG, "add video to the session");
+                session.reinviteWithVideo();
             }
+            updateVideoButton();
         });
 
-        addVideoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "hasVideo: " + session.hasVideo() + " isVideoMuted: " + session.isVideoMuted());
-                if (session.hasVideo()) {
-                    Log.d(TAG, "new video mute stat: " + !session.isVideoMuted());
-                    session.muteVideo(!session.isVideoMuted());
-                } else {
-                    Log.d(TAG, "add video to the session");
-                    session.reinviteWithVideo();
-                }
-                updateVideoButton();
-            }
-        });
+        dtmfButton.setOnClickListener(v -> {
+            dtmfEnabled = !dtmfEnabled;
+            updateCallGui();
 
-        dtmfButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dtmfEnabled = !dtmfEnabled;
-                updateCallGui();
+            int drawable = dtmfEnabled ? R.drawable.ic_dial_pad_on : R.drawable.ic_dial_pad_off;
 
-                int drawable = dtmfEnabled ? R.drawable.ic_dial_pad_on : R.drawable.ic_dial_pad_off;
-
-                ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), drawable, getTheme()));
-            }
+            ((ImageView) v).setImageDrawable(ResourcesCompat.getDrawable(getResources(), drawable, getTheme()));
         });
         session.addSessionEventListener(this);
 
@@ -471,39 +427,35 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     void initDtmf() {
         int[] keypadButtonClickListID = {R.id.call_button_keypad_1, R.id.call_button_keypad_2, R.id.call_button_keypad_3, R.id.call_button_keypad_4, R.id.call_button_keypad_5, R.id.call_button_keypad_6, R.id.call_button_keypad_7, R.id.call_button_keypad_8, R.id.call_button_keypad_9, R.id.call_button_keypad_hash, R.id.call_button_keypad_0, R.id.call_button_keypad_asterisk};
 
-        View.OnClickListener dialpadClickListener = new View.OnClickListener() {
-
-            @Override
-            public void onClick(View clickedView) {
-                if (clickedView == null) {
-                    return;
-                }
-                int id = clickedView.getId();
-                if (id == R.id.call_button_keypad_1) {
-                    session.sendDTMF(DTMF.ONE);
-                } else if (id == R.id.call_button_keypad_2) {
-                    session.sendDTMF(DTMF.TWO);
-                } else if (id == R.id.call_button_keypad_3) {
-                    session.sendDTMF(DTMF.THREE);
-                } else if (id == R.id.call_button_keypad_4) {
-                    session.sendDTMF(DTMF.FOUR);
-                } else if (id == R.id.call_button_keypad_5) {
-                    session.sendDTMF(DTMF.FIVE);
-                } else if (id == R.id.call_button_keypad_6) {
-                    session.sendDTMF(DTMF.SIX);
-                } else if (id == R.id.call_button_keypad_7) {
-                    session.sendDTMF(DTMF.SEVEN);
-                } else if (id == R.id.call_button_keypad_8) {
-                    session.sendDTMF(DTMF.EIGHT);
-                } else if (id == R.id.call_button_keypad_9) {
-                    session.sendDTMF(DTMF.NINE);
-                } else if (id == R.id.call_button_keypad_hash) {
-                    session.sendDTMF(DTMF.POUND);
-                } else if (id == R.id.call_button_keypad_0) {
-                    session.sendDTMF(DTMF.ZERO);
-                } else if (id == R.id.call_button_keypad_asterisk) {
-                    session.sendDTMF(DTMF.STAR);
-                }
+        View.OnClickListener dialpadClickListener = clickedView -> {
+            if (clickedView == null) {
+                return;
+            }
+            int id = clickedView.getId();
+            if (id == R.id.call_button_keypad_1) {
+                session.sendDTMF(DTMF.ONE);
+            } else if (id == R.id.call_button_keypad_2) {
+                session.sendDTMF(DTMF.TWO);
+            } else if (id == R.id.call_button_keypad_3) {
+                session.sendDTMF(DTMF.THREE);
+            } else if (id == R.id.call_button_keypad_4) {
+                session.sendDTMF(DTMF.FOUR);
+            } else if (id == R.id.call_button_keypad_5) {
+                session.sendDTMF(DTMF.FIVE);
+            } else if (id == R.id.call_button_keypad_6) {
+                session.sendDTMF(DTMF.SIX);
+            } else if (id == R.id.call_button_keypad_7) {
+                session.sendDTMF(DTMF.SEVEN);
+            } else if (id == R.id.call_button_keypad_8) {
+                session.sendDTMF(DTMF.EIGHT);
+            } else if (id == R.id.call_button_keypad_9) {
+                session.sendDTMF(DTMF.NINE);
+            } else if (id == R.id.call_button_keypad_hash) {
+                session.sendDTMF(DTMF.POUND);
+            } else if (id == R.id.call_button_keypad_0) {
+                session.sendDTMF(DTMF.ZERO);
+            } else if (id == R.id.call_button_keypad_asterisk) {
+                session.sendDTMF(DTMF.STAR);
             }
         };
 
@@ -516,50 +468,47 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     }
 
     void updateUI() {
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                if (!guiInitialized) {
-                    initGUI();
-                    WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(new MyWebRTcAudioRouteListener());
-                    updateCallGui();
+        handler.post(() -> {
+            if (!guiInitialized) {
+                initGUI();
+                WebRTCAudioManager.getInstance().setWebRTcAudioRouteListener(new MyWebRTcAudioRouteListener());
+                updateCallGui();
+            }
+
+            RemoteContact remote = session.getRemoteNumber();
+            if (remote != null) {
+                String callState = getString(R.string.call_textview_call_state) + " " + session.getCallState();
+                callStateTextView.setText(callState);
+
+                if (session.getCallState().toString().equalsIgnoreCase(BundleConstants.CONNECTED)) {
+                    if (count == 0)
+                        timerHandler.postDelayed(runnable, 1000);
                 }
 
-                RemoteContact remote = session.getRemoteNumber();
-                if (remote != null) {
-                    String callState = getString(R.string.call_textview_call_state) + " " + session.getCallState();
-                    callStateTextView.setText(callState);
-
-                    if (session.getCallState().toString().equalsIgnoreCase(BundleConstants.CONNECTED)) {
-                        if (count == 0)
-                            timerHandler.postDelayed(runnable, 1000);
-                    }
-
-                    //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
-                    List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(CallActivity.this, NativeDBManager.QueryType.BY_PHONE_AND_SIP, remote.getUserName());//  .getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
-                    String displayName = remote.getDisplayName();
-                    String userName = remote.getUserName();
-                    // Log.d(TAG, "check user name: "+userName+" displayName:"+displayName);
-                    if (nativeDBObjectList != null && !nativeDBObjectList.isEmpty()) {
-                        // Log.d(TAG, "check user nativeDBObjectList: " +nativeDBObjectList.size());
-                        NativeDBObject nativeDBObject = nativeDBObjectList.get(0);
-                        if (nativeDBObject.getPhotoURI() != null) {
-                            Bitmap photoBitmap = ImageUtils.getContactBitmapFromURI(CallActivity.this, Uri.parse(nativeDBObject.getPhotoURI()));
-                            if (photoBitmap != null) {
-                                Bitmap roundPhotoBitmap = ImageUtils.getCroppedRoundBitmap(photoBitmap, contactImageView.getDrawable().getIntrinsicHeight());
-                                //Bitmap photoBitmap = BitmapFactory.decodeByteArray(photo, 0, photo.length);
-                                contactImageView.setImageBitmap(roundPhotoBitmap);
-                            }
+                //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
+                List<NativeDBObject> nativeDBObjectList = NativeDBManager.getContactList(CallActivity.this, NativeDBManager.QueryType.BY_PHONE_AND_SIP, remote.getUserName());//  .getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
+                String displayName = remote.getDisplayName();
+                String userName = remote.getUserName();
+                // Log.d(TAG, "check user name: "+userName+" displayName:"+displayName);
+                if (nativeDBObjectList != null && !nativeDBObjectList.isEmpty()) {
+                    // Log.d(TAG, "check user nativeDBObjectList: " +nativeDBObjectList.size());
+                    NativeDBObject nativeDBObject = nativeDBObjectList.get(0);
+                    if (nativeDBObject.getPhotoURI() != null) {
+                        Bitmap photoBitmap = ImageUtils.getContactBitmapFromURI(CallActivity.this, Uri.parse(nativeDBObject.getPhotoURI()));
+                        if (photoBitmap != null) {
+                            Bitmap roundPhotoBitmap = ImageUtils.getCroppedRoundBitmap(photoBitmap, contactImageView.getDrawable().getIntrinsicHeight());
+                            //Bitmap photoBitmap = BitmapFactory.decodeByteArray(photo, 0, photo.length);
+                            contactImageView.setImageBitmap(roundPhotoBitmap);
                         }
-                        displayName = nativeDBObject.getDisplayName();
                     }
-
-                    contactPhoneNumberTextView.setText(userName);
-                    session.addSessionEventListener(myAudioCodesSessionEventListener);
-                } else {
-                    finish();
-                    Log.d(TAG, "RemoteContact null!");
+                    displayName = nativeDBObject.getDisplayName();
                 }
+
+                contactPhoneNumberTextView.setText(userName);
+                session.addSessionEventListener(myAudioCodesSessionEventListener);
+            } else {
+                finish();
+                Log.d(TAG, "RemoteContact null!");
             }
         });
     }

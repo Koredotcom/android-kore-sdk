@@ -41,43 +41,15 @@ public class TabletButtonsFragment extends BaseFragment implements FragmentLifec
         ImageView exitButton = (ImageView) rootView.findViewById(R.id.tablet_buttons_exit_imageview);
 
 
-        dialerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallBackHandler.onTabChange(0);
-            }
+        dialerButton.setOnClickListener(v -> CallBackHandler.onTabChange(0));
+        recentsButton.setOnClickListener(v -> CallBackHandler.onTabChange(1));
+        contactsButton.setOnClickListener(v -> CallBackHandler.onTabChange(2));
+        chatButton.setOnClickListener(v -> CallBackHandler.onTabChange(3));
+        settingsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(TabletButtonsFragment.this.getContext(), SettingsActivity.class);
+            startActivity(intent);
         });
-        recentsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallBackHandler.onTabChange(1);
-            }
-        });
-        contactsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallBackHandler.onTabChange(2);
-            }
-        });
-        chatButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallBackHandler.onTabChange(3);
-            }
-        });
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TabletButtonsFragment.this.getContext(), SettingsActivity.class);
-                startActivity(intent);
-            }
-        });
-        exitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LogoutManager.closeApplication(requireContext());
-            }
-        });
+        exitButton.setOnClickListener(v -> LogoutManager.closeApplication(requireContext()));
 
 
     }

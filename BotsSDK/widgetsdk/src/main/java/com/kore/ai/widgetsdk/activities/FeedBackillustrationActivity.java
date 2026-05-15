@@ -36,60 +36,45 @@ public class FeedBackillustrationActivity extends KaAppCompatActivity {
         text_label=findViewById(R.id.text_label);
         text_label.setText("How was your experience with "+name+" ?");
 
-        icon_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        icon_1.setOnClickListener(v -> {
 
-                resetAll();
-                // icon_1.setImageResource(R.drawable.feedbac_ic_emo_1);
-                loademojis(0);
-                position = 0;
-                updateData();
-            }
+            resetAll();
+            // icon_1.setImageResource(R.drawable.feedbac_ic_emo_1);
+            loademojis(0);
+            position = 0;
+            updateData();
         });
 
-        icon_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        icon_2.setOnClickListener(v -> {
 
-                resetAll();
-                loademojis(1);
-                position = 1;
-                updateData();
-            }
+            resetAll();
+            loademojis(1);
+            position = 1;
+            updateData();
         });
 
-        icon_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        icon_3.setOnClickListener(v -> {
 
-                resetAll();
-                //    icon_3.setImageResource(R.drawable.feedbac_ic_emo_3);
-                loademojis(2);
-                position = 2;
-                updateData();
-            }
+            resetAll();
+            //    icon_3.setImageResource(R.drawable.feedbac_ic_emo_3);
+            loademojis(2);
+            position = 2;
+            updateData();
         });
-        icon_4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetAll();
-                //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
-                loademojis(3);
-                position = 3;
-                updateData();
-            }
+        icon_4.setOnClickListener(v -> {
+            resetAll();
+            //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
+            loademojis(3);
+            position = 3;
+            updateData();
         });
 
-        icon_5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetAll();
-                // icon_5.setImageResource(R.drawable.feedbacon_emo_5);
-                loademojis(4);
-                position = 4;
-                updateData();
-            }
+        icon_5.setOnClickListener(v -> {
+            resetAll();
+            // icon_5.setImageResource(R.drawable.feedbacon_emo_5);
+            loademojis(4);
+            position = 4;
+            updateData();
         });
     }
 

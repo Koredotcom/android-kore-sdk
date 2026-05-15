@@ -149,9 +149,7 @@ public class PieChartWidgetView extends BaseWidgetView {
         getUserData();
 
 
-        pin_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        pin_view.setOnClickListener(v -> {
 
 //                KaRestAPIHelper.actionPinnAndUnPinn(authData.accessToken, userData.getId(),mWidget,panelData, new PinUnPinnCallBack() {
 //                    @Override
@@ -171,7 +169,6 @@ public class PieChartWidgetView extends BaseWidgetView {
 //                });
 
 
-            }
         });
 
 
@@ -226,17 +223,14 @@ public class PieChartWidgetView extends BaseWidgetView {
                         if (model != null && model.getData().get(0) != null && model.getData().get(0).getTemplateType() != null && model.getData().get(0).getTemplateType().equals("loginURL")) {
                             mChart.setVisibility(GONE);
                             login_View.setVisibility(VISIBLE);
-                            login_button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (mContext instanceof Activity && model.getData().get(0).getLogin() != null && !StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
-                                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                                        intent.putExtra("url", model.getData().get(0).getLogin().getUrl());
-                                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-                                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                                    } else {
-                                        Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
-                                    }
+                            login_button.setOnClickListener(v -> {
+                                if (mContext instanceof Activity && model.getData().get(0).getLogin() != null && !StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
+                                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                                    intent.putExtra("url", model.getData().get(0).getLogin().getUrl());
+                                    intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
+                                    ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                                } else {
+                                    Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
                                 }
                             });
 
@@ -333,13 +327,8 @@ public class PieChartWidgetView extends BaseWidgetView {
                         tvButtonParent.setVisibility(GONE);
 
 
-                    tvButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            buttonAction(model.getHeaderOptions().getButton(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                    (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
-                        }
-                    });
+                    tvButton.setOnClickListener(v -> buttonAction(model.getHeaderOptions().getButton(), Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))));
 
                     break;
                 case "menu":
@@ -350,19 +339,16 @@ public class PieChartWidgetView extends BaseWidgetView {
                     tvUrl.setVisibility(GONE);
 
 
-                    imgMenu.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (model.getHeaderOptions() != null && model.getHeaderOptions().getMenu() != null && model.getHeaderOptions().getMenu().size() > 0) {
+                    imgMenu.setOnClickListener(v -> {
+                        if (model.getHeaderOptions() != null && model.getHeaderOptions().getMenu() != null && !model.getHeaderOptions().getMenu().isEmpty()) {
 
-                                WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
-                                bottomSheetDialog.setisFromFullView(false);
-                                bottomSheetDialog.setSkillName(skillName, trigger);
-                                bottomSheetDialog.setData(model, true);
-                                bottomSheetDialog.setVerticalListViewActionHelper(null);
-                                bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
+                            WidgetActionSheetFragment bottomSheetDialog = new WidgetActionSheetFragment();
+                            bottomSheetDialog.setisFromFullView(false);
+                            bottomSheetDialog.setSkillName(skillName, trigger);
+                            bottomSheetDialog.setData(model, true);
+                            bottomSheetDialog.setVerticalListViewActionHelper(null);
+                            bottomSheetDialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "add_tags");
 
-                            }
                         }
                     });
                     break;
@@ -402,24 +388,21 @@ public class PieChartWidgetView extends BaseWidgetView {
 
                     if (model.getHeaderOptions().getImage() != null && model.getHeaderOptions().getImage().getImage_src() != null) {
                         Picasso.get().load(model.getHeaderOptions().getImage().getImage_src()).into(icon_image_load);
-                        icon_image_load.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                        icon_image_load.setOnClickListener(v -> {
 
-                                if (model.getHeaderOptions().getImage() != null && model.getHeaderOptions().getImage().getType() != null && model.getHeaderOptions().getImage().getType().equals("url")) {
-                                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getHeaderOptions().getImage().getUrl()));
-                                    try {
-                                        mContext.startActivity(browserIntent);
-                                    } catch (ActivityNotFoundException ex) {
-                                        ex.printStackTrace();
-                                    }
-                                } else if (model.getHeaderOptions().getImage() != null && model.getHeaderOptions().getImage().getType() != null && model.getHeaderOptions().getImage().getType().equals("postback")) {
-                                    buttonAction(model.getHeaderOptions().getImage().getUtterance() != null ? model.getHeaderOptions().getImage().getUtterance() : model.getHeaderOptions().getImage().getPayload() != null ? model.getHeaderOptions().getImage().getPayload() : "", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
-                                            (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
+                            if (model.getHeaderOptions().getImage() != null && model.getHeaderOptions().getImage().getType() != null && model.getHeaderOptions().getImage().getType().equals("url")) {
+                                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(model.getHeaderOptions().getImage().getUrl()));
+                                try {
+                                    mContext.startActivity(browserIntent);
+                                } catch (ActivityNotFoundException ex) {
+                                    ex.printStackTrace();
                                 }
-
-                                //  buttonAction(model.getHeaderOptions().getImage().getUtterance()!=null?model.getHeaderOptions().getImage().getUtterance():model.getHeaderOptions().getImage().getPayload()!=null?model.getHeaderOptions().getImage().getPayload():"",true);
+                            } else if (model.getHeaderOptions().getImage() != null && model.getHeaderOptions().getImage().getType() != null && model.getHeaderOptions().getImage().getType().equals("postback")) {
+                                buttonAction(model.getHeaderOptions().getImage().getUtterance() != null ? model.getHeaderOptions().getImage().getUtterance() : model.getHeaderOptions().getImage().getPayload() != null ? model.getHeaderOptions().getImage().getPayload() : "", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) ||
+                                        (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)));
                             }
+
+                            //  buttonAction(model.getHeaderOptions().getImage().getUtterance()!=null?model.getHeaderOptions().getImage().getUtterance():model.getHeaderOptions().getImage().getPayload()!=null?model.getHeaderOptions().getImage().getPayload():"",true);
                         });
                     }
                     break;

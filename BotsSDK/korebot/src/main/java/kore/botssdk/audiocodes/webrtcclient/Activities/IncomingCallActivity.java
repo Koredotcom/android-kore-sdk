@@ -159,26 +159,11 @@ public class IncomingCallActivity extends BaseAppCompatActivity implements Audio
         answerVideoButton.setVisibility(session.hasVideo()? View.VISIBLE: View.GONE);
 
 
-        answerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                answer();
-            }
-        });
+        answerButton.setOnClickListener(v -> answer());
 
-        answerVideoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                answerWithVideo();
-            }
-        });
+        answerVideoButton.setOnClickListener(v -> answerWithVideo());
 
-        declineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                decline();
-            }
-        });
+        declineButton.setOnClickListener(v -> decline());
 
         session.addSessionEventListener(this);
 

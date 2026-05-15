@@ -333,8 +333,6 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             case CONNECTING:
                 taskProgressBar.setVisibility(View.VISIBLE);
                 updateActionBar();
-                if (SDKConfiguration.Server.getBotStatusListener() != null)
-                    SDKConfiguration.Server.getBotStatusListener().onBotConnecting();
                 break;
             case CONNECTED:
                 taskProgressBar.setVisibility(View.GONE);
@@ -408,6 +406,22 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
     @Override
     public void onDeepLinkClicked(String url) {
+        if (sharedPreferences != null) {
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+            editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+            editor.apply();
+            BotSocketConnectionManager.killInstance();
+
+            if (SDKConfiguration.Server.getBotStatusListener() != null) {
+                SDKConfiguration.Server.getBotStatusListener().onBotDisconnected("DeepLinkClicked", url);
+            }
+
+            Intent intent = new Intent();
+            intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     @Override
@@ -672,6 +686,13 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
                         editor.apply();
                         BotSocketConnectionManager.killInstance();
 
+                        if (SDKConfiguration.Server.getBotStatusListener() != null) {
+                            SDKConfiguration.Server.getBotStatusListener().onBotDisconnected(
+                                    "BotMinimized",
+                                    "Bot Minimized by the user"
+                            );
+                        }
+
                         Intent intent = new Intent();
                         intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
                         setResult(RESULT_OK, intent);
@@ -688,6 +709,12 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
                         editor.putInt(BotResponse.HISTORY_COUNT, 0);
                         editor.apply();
                         BotSocketConnectionManager.killInstance();
+                        if (SDKConfiguration.Server.getBotStatusListener() != null) {
+                            SDKConfiguration.Server.getBotStatusListener().onBotDisconnected(
+                                    "BotMinimized",
+                                    "Bot Minimized by the user"
+                            );
+                        }
                         Intent intent = new Intent();
                         intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
                         setResult(RESULT_OK, intent);
@@ -879,14 +906,20 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
     @Override
     public void showReconnectionStopped() {
-        DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
-            if (which == DialogInterface.BUTTON_POSITIVE) {
-                finish();
-            }
-        };
+        if (!SDKConfiguration.OverrideKoreConfig.disable_alert_on_max_reconnection) {
+            DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
+                if (which == DialogInterface.BUTTON_POSITIVE) {
+                    BotSocketConnectionManager.killInstance();
+                    finish();
+                }
+            };
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
-        builder.setMessage(R.string.bot_not_connected).setCancelable(false).setPositiveButton(R.string.ok, dialogClickListener).show();
+            AlertDialog.Builder builder = new AlertDialog.Builder(BotChatActivity.this);
+            builder.setMessage(R.string.bot_not_connected).setCancelable(false).setPositiveButton(R.string.ok, dialogClickListener).show();
+
+            if (SDKConfiguration.Server.getBotStatusListener() != null)
+                SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("BotNotConnected", "Connection to the bot failed after several retries");
+        }
     }
 
     @Override
@@ -895,7 +928,8 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     }
 
     @Override
-    public void uploadBulkFile(String fileName, String filePath, String extn, String filePathThumbnail, String orientation) {
+    public void uploadBulkFile(String fileName, String filePath, String extn, String
+            filePathThumbnail, String orientation) {
         if (!SDKConfiguration.Client.isWebHook) {
             KoreWorker.getInstance().addTask(new UploadBulkFile(fileName, filePath, "bearer " + SocketWrapper.getInstance(BotChatActivity.this).getAccessToken(), SocketWrapper.getInstance(BotChatActivity.this).getBotUserId(), "workflows", extn, KoreMedia.BUFFER_SIZE_IMAGE, new Messenger(messagesMediaUploadAcknowledgeHandler), filePathThumbnail, "AT_" + System.currentTimeMillis(), BotChatActivity.this, BitmapUtils.obtainMediaTypeOfExtn(extn), (SDKConfiguration.Server.SERVER_URL), orientation, true, SDKConfiguration.Client.isWebHook, SDKConfiguration.Client.bot_id));
         } else {

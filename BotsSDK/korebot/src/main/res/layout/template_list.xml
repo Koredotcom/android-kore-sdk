@@ -24,6 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
+            android:paddingStart="@dimen/dimen_0"
             android:paddingTop="@dimen/dimen_10dp"
             android:paddingEnd="@dimen/dimen_20dp"
             android:paddingBottom="@dimen/dimen_10dp"
@@ -35,14 +36,15 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/botCustomListView"
             android:layout_width="match_parent"
-            android:nestedScrollingEnabled="false"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
 
         <kore.botssdk.view.CustomTextView
             android:id="@+id/botCustomListViewButton"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="center"
+            android:minHeight="@dimen/dimen_40dp"
             android:textColor="@android:color/holo_blue_dark"
             android:visibility="visible" />
     </androidx.appcompat.widget.LinearLayoutCompat>

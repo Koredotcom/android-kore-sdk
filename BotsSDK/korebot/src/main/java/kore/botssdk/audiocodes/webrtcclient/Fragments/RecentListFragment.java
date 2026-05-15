@@ -49,12 +49,10 @@ public class RecentListFragment extends BaseFragment implements FragmentLifecycl
 
         //Erase all table
         if (erase != null) {
-            erase.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    if (requireActivity() instanceof BotAppCompactActivity)
-                        ((BotAppCompactActivity) requireActivity()).getDataBase().deleteTable();
-                    refreshData();
-                }
+            erase.setOnClickListener(v -> {
+                if (requireActivity() instanceof BotAppCompactActivity)
+                    ((BotAppCompactActivity) requireActivity()).getDataBase().deleteTable();
+                refreshData();
             });
         }
     }

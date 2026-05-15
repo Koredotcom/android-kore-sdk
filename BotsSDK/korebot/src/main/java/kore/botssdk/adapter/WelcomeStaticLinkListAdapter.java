@@ -44,35 +44,32 @@ public class WelcomeStaticLinkListAdapter extends RecyclerView.Adapter<WelcomeSt
         staticViewHolder.link_title.setText(quickReplyTemplate.getTitle());
         staticViewHolder.link_desc.setText(quickReplyTemplate.getDescription());
 
-        staticViewHolder.quick_reply_view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    String quickReplyPayload;
-                    try {
-                        BrandingQuickStartButtonActionModel buttonActionModel = quickReplyTemplate.getAction();
-                        if (!StringUtils.isNullOrEmpty(buttonActionModel.getValue())) {
-                            quickReplyPayload = buttonActionModel.getValue();
+        staticViewHolder.quick_reply_view.setOnClickListener(v -> {
+            if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                String quickReplyPayload;
+                try {
+                    BrandingQuickStartButtonActionModel buttonActionModel = quickReplyTemplate.getAction();
+                    if (!StringUtils.isNullOrEmpty(buttonActionModel.getValue())) {
+                        quickReplyPayload = buttonActionModel.getValue();
 
-                            if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(buttonActionModel.getType())) {
-                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
-                                if (dialogFragment != null) dialogFragment.dismiss();
-                            } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonActionModel.getType())) {
-                                invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
-                            } else if (BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(buttonActionModel.getType())) {
-                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
-                                if (dialogFragment != null) dialogFragment.dismiss();
-                            } else if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())
-                                    || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonActionModel.getType())) {
-                                invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
-                            } else {
-                                if (dialogFragment != null) dialogFragment.dismiss();
-                                composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
-                            }
+                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(buttonActionModel.getType())) {
+                            composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
+                            if (dialogFragment != null) dialogFragment.dismiss();
+                        } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonActionModel.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
+                        } else if (BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(buttonActionModel.getType())) {
+                            composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
+                            if (dialogFragment != null) dialogFragment.dismiss();
+                        } else if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonActionModel.getType())
+                                || BundleConstants.BUTTON_TYPE_URL.equalsIgnoreCase(buttonActionModel.getType())) {
+                            invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
+                        } else {
+                            if (dialogFragment != null) dialogFragment.dismiss();
+                            composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload, false);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

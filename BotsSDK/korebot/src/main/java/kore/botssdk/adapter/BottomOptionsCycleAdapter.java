@@ -80,15 +80,12 @@ public class BottomOptionsCycleAdapter extends RecyclerView.Adapter<BottomOption
         }
 
         holder.bottom_option_name.setText(botListModel.getTitle());
-        holder.bot_list_item_root.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.bot_list_item_root.setOnClickListener(v -> {
 
-                if(bottomSheetDialog != null)
-                    bottomSheetDialog.dismiss();
+            if(bottomSheetDialog != null)
+                bottomSheetDialog.dismiss();
 
-                sendMessageText(model.get(holder.getBindingAdapterPosition()).getTitle(), model.get(holder.getBindingAdapterPosition()).getValue());
-            }
+            sendMessageText(model.get(holder.getBindingAdapterPosition()).getTitle(), model.get(holder.getBindingAdapterPosition()).getValue());
         });
     }
 

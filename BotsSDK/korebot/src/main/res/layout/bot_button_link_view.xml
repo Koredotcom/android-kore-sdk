@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/theme1_left_bubble_bg"
+        android:minHeight="@dimen/dimen_40dp"
         android:text="Title"
         android:textColor="@color/txtFontBlack"
         android:textSize="@dimen/text_size_sub_header" />
@@ -24,5 +25,4 @@
         android:dividerHeight="1dp"
         android:listSelector="@android:color/transparent"
         android:scrollbars="none" />
-
 </LinearLayout>

@@ -86,25 +86,22 @@ public class HashTagWidgetAdapter extends RecyclerView.Adapter {
 
             ((HashViewHolder) holder).tv_hashtag.setText(hashList.get(position).getName());
             ((HashViewHolder) holder).tv_numberofviews.setText(hashList.get(position).getTitle_right());
-            ((HashViewHolder) holder).rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+            ((HashViewHolder) holder).rootView.setOnClickListener(view -> {
 
-                    if (Utility.checkIsSkillKora()) {
-                        postAction(holder.getBindingAdapterPosition(), ((HashViewHolder) holder), false);
-                    } else {
-                        DialogCaller.showDialog(activity, null,new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                postAction(holder.getBindingAdapterPosition(), ((HashViewHolder) holder), true);
-                                dialog.dismiss();
-                            }
-                        });
-
-                    }
-
+                if (Utility.checkIsSkillKora()) {
+                    postAction(holder.getBindingAdapterPosition(), ((HashViewHolder) holder), false);
+                } else {
+                    DialogCaller.showDialog(activity, null,new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            postAction(holder.getBindingAdapterPosition(), ((HashViewHolder) holder), true);
+                            dialog.dismiss();
+                        }
+                    });
 
                 }
+
+
             });
         } else if (holder instanceof EmptyHashViewHolder) {
             ((EmptyHashViewHolder) holder).tv_message.setText(holder.getItemViewType() == NO_DATA ? "No Hashtags" : msg);

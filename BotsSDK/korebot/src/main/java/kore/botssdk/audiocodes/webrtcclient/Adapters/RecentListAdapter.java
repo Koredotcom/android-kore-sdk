@@ -146,30 +146,22 @@ public class RecentListAdapter extends ArrayAdapter<CallEntry> {
 
         //holder.contactImage.setImageResource(R.drawable.default_contact_list_picture);
 
-        holder.buttonClickView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                ((ViewGroup)view.getParent()).setSelected(true);
-                if (callButtonClickListener != null) {
-                    callButtonClickListener.onItemClick(null, view, position, 0);
-                }
-
-                //((ViewGroup)view.getParent()).dispatchKeyEvent(new KeyEvent(KeyEvent.KEYCODE_F7, ));
+        holder.buttonClickView.setOnClickListener(view -> {
+            ((ViewGroup)view.getParent()).setSelected(true);
+            if (callButtonClickListener != null) {
+                callButtonClickListener.onItemClick(null, view, position, 0);
             }
+
+            //((ViewGroup)view.getParent()).dispatchKeyEvent(new KeyEvent(KeyEvent.KEYCODE_F7, ));
         });
 
-        convertView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                ((ViewGroup)view.getParent()).setSelected(true);
-                boolean contactPermission = PermissionManager.getInstance().checkPermission(context, PermissionManagerType.CONTACTS);
-                if (contactPermission && onCreateItemClickListener != null) {
-                    onCreateItemClickListener.onItemClick(null, view, position, 0);
-                } else {
-                    Log.e(TAG, "Contact permission disabled or null");
-                }
+        convertView.setOnClickListener(view -> {
+            ((ViewGroup)view.getParent()).setSelected(true);
+            boolean contactPermission = PermissionManager.getInstance().checkPermission(context, PermissionManagerType.CONTACTS);
+            if (contactPermission && onCreateItemClickListener != null) {
+                onCreateItemClickListener.onItemClick(null, view, position, 0);
+            } else {
+                Log.e(TAG, "Contact permission disabled or null");
             }
         });
 

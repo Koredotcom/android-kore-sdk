@@ -43,63 +43,60 @@ public class DialerFragment extends BaseFragment implements FragmentLifecycle {
         int[] keypadButtonLongClickListID = {R.id.dialer_button_keypad_0, R.id.dialer_button_keypad_back};
 
         EditText callNumberEditText = rootView.findViewById(R.id.dialer_editText_call_number);
-        View.OnClickListener dialPadClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View clickedView) {
-                String currentNumber = "";
+        View.OnClickListener dialPadClickListener = clickedView -> {
+            String currentNumber = "";
 
-                if (clickedView == null) {
-                    return;
-                }
-                boolean videoCall = false;
-                if (clickedView.getId() == R.id.dialer_button_keypad_1)
-                    currentNumber += "1";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_2)
-                    currentNumber += "2";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_3)
-                    currentNumber += "3";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_4)
-                    currentNumber += "4";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_5)
-                    currentNumber += "5";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_6)
-                    currentNumber += "6";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_7)
-                    currentNumber += "7";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_8)
-                    currentNumber += "8";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_9)
-                    currentNumber += "9";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_hash)
-                    currentNumber += "#";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_0)
-                    currentNumber += "0";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_asterisk)
-                    currentNumber += "*";
-                else if (clickedView.getId() == R.id.dialer_button_keypad_back)
-                    callNumberEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                else if (clickedView.getId() == R.id.dialer_button_video_call)
-                    videoCall = true;
-                else if (clickedView.getId() == R.id.dialer_button_call) {
-                    callNumberEditText.setText(callNumberEditText.getText().toString().replace("#", ""));
-                    if (callNumberEditText.getText().toString().isEmpty()) {
-                        if (!(requireActivity() instanceof BotAppCompactActivity)) return;
-                        List<CallEntry> callEntryList = ((BotAppCompactActivity) requireActivity()).getDataBase().getEntries(1);
-                        if (callEntryList != null && !callEntryList.isEmpty()) {
-                            currentNumber = callEntryList.get(0).getContactNumber();//callNumberEditText.setText(callEntryList.get(0).getContactNumber());
-                        }
+            if (clickedView == null) {
+                return;
+            }
+            boolean videoCall = false;
+            if (clickedView.getId() == R.id.dialer_button_keypad_1)
+                currentNumber += "1";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_2)
+                currentNumber += "2";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_3)
+                currentNumber += "3";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_4)
+                currentNumber += "4";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_5)
+                currentNumber += "5";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_6)
+                currentNumber += "6";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_7)
+                currentNumber += "7";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_8)
+                currentNumber += "8";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_9)
+                currentNumber += "9";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_hash)
+                currentNumber += "#";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_0)
+                currentNumber += "0";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_asterisk)
+                currentNumber += "*";
+            else if (clickedView.getId() == R.id.dialer_button_keypad_back)
+                callNumberEditText.dispatchKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+            else if (clickedView.getId() == R.id.dialer_button_video_call)
+                videoCall = true;
+            else if (clickedView.getId() == R.id.dialer_button_call) {
+                callNumberEditText.setText(callNumberEditText.getText().toString().replace("#", ""));
+                if (callNumberEditText.getText().toString().isEmpty()) {
+                    if (!(requireActivity() instanceof BotAppCompactActivity)) return;
+                    List<CallEntry> callEntryList = ((BotAppCompactActivity) requireActivity()).getDataBase().getEntries(1);
+                    if (callEntryList != null && !callEntryList.isEmpty()) {
+                        currentNumber = callEntryList.get(0).getContactNumber();//callNumberEditText.setText(callEntryList.get(0).getContactNumber());
+                    }
+                } else {
+                    if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(requireContext())) {
+                        Toast.makeText(getContext(), R.string.no_registration, Toast.LENGTH_SHORT).show();
                     } else {
-                        if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(requireContext())) {
-                            Toast.makeText(getContext(), R.string.no_registration, Toast.LENGTH_SHORT).show();
-                        } else {
-                            ACManager.getInstance().callNumber(callNumberEditText.getText().toString(), videoCall);
-                        }
+                        ACManager.getInstance().callNumber(callNumberEditText.getText().toString(), videoCall);
                     }
                 }
+            }
 
-                if (currentNumber != null && !currentNumber.equals("")) {
-                    updateCallNumber(callNumberEditText, currentNumber);
-                }
+            if (currentNumber != null && !currentNumber.equals("")) {
+                updateCallNumber(callNumberEditText, currentNumber);
             }
         };
 

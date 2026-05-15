@@ -73,31 +73,28 @@ public class GeneralSettingsActivity extends BaseAppCompatActivity {
         redirectCallCheckBox.setChecked(Prefs.isRedirectCall(context));
         redirectCallEditText.setText(Prefs.getRedirectCallUser(this));
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    DTMFOptions.DTMFMethod saveDTMFMethod = DTMFOptions.DTMFMethod.values()[dtmfTypeSpinner.getSelectedItemPosition()];
-                    Prefs.setDTMFType(context, saveDTMFMethod);
-                    Log.d(TAG,"saveDTMFMethod: "+saveDTMFMethod);
+        saveButton.setOnClickListener(view -> {
+            try {
+                DTMFOptions.DTMFMethod saveDTMFMethod = DTMFOptions.DTMFMethod.values()[dtmfTypeSpinner.getSelectedItemPosition()];
+                Prefs.setDTMFType(context, saveDTMFMethod);
+                Log.d(TAG,"saveDTMFMethod: "+saveDTMFMethod);
 
-                    Log.LogLevel saveLogLevel = Log.LogLevel.values()[logLevelSpinner.getSelectedItemPosition()];
-                    Prefs.setLogLevel(context, saveLogLevel);
-                    Log.setLogLevel(saveLogLevel);
-                    Log.d(TAG,"saveLogLevel: "+saveLogLevel);
+                Log.LogLevel saveLogLevel = Log.LogLevel.values()[logLevelSpinner.getSelectedItemPosition()];
+                Prefs.setLogLevel(context, saveLogLevel);
+                Log.setLogLevel(saveLogLevel);
+                Log.d(TAG,"saveLogLevel: "+saveLogLevel);
 
-                    Prefs.setAutoRedirect(context, autoRedirectCheckBox.isChecked());
-                    Prefs.setRedirectCall(context, redirectCallCheckBox.isChecked());
-                    Prefs.setRedirectCallUser(context, redirectCallEditText.getText().toString());
+                Prefs.setAutoRedirect(context, autoRedirectCheckBox.isChecked());
+                Prefs.setRedirectCall(context, redirectCallCheckBox.isChecked());
+                Prefs.setRedirectCallUser(context, redirectCallEditText.getText().toString());
 
-                    ACManager.getInstance().updateWebRTCConfig();
+                ACManager.getInstance().updateWebRTCConfig();
 
-                } catch (Exception e) {
-                    Log.e(TAG,"error: "+e);
-                }
-                finish();
-
+            } catch (Exception e) {
+                Log.e(TAG,"error: "+e);
             }
+            finish();
+
         });
     }
 

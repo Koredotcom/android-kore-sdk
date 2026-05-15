@@ -56,29 +56,26 @@ public class SkillWidgetAdapter extends RecyclerView.Adapter<SkillWidgetViewHold
 
         holder.item_text.setText(model.get(position).getTitle());
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.itemView.setOnClickListener(v -> {
 
-                if (Utility.checkIsSkillKora()) {
-                    postAction(holder.getBindingAdapterPosition());
+            if (Utility.checkIsSkillKora()) {
+                postAction(holder.getBindingAdapterPosition());
+            } else {
+                if (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
+                    DialogCaller.showDialog(context, skillName, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            postAction(holder.getBindingAdapterPosition());
+                            dialog.dismiss();
+                        }
+                    });
                 } else {
-                    if (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION)) {
-                        DialogCaller.showDialog(context, skillName, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                postAction(holder.getBindingAdapterPosition());
-                                dialog.dismiss();
-                            }
-                        });
-                    } else {
-                        postAction(holder.getBindingAdapterPosition());
-                    }
-
+                    postAction(holder.getBindingAdapterPosition());
                 }
 
-
             }
+
+
         });
     }
 

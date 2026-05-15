@@ -67,19 +67,9 @@ public class BankingFeedbackTemplateAdapter extends BaseAdapter {
             holder.rbSelect.setClickable(true);
             holder.rbSelect.setEnabled(true);
 
-            holder.llExperience.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    feedbackExperienceUpdateListner.updateExperienceList(position, feedbackExperienceContentModels);
-                }
-            });
+            holder.llExperience.setOnClickListener(v -> feedbackExperienceUpdateListner.updateExperienceList(position, feedbackExperienceContentModels));
 
-            holder.rbSelect.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    feedbackExperienceUpdateListner.updateExperienceList(position, feedbackExperienceContentModels);
-                }
-            });
+            holder.rbSelect.setOnClickListener(v -> feedbackExperienceUpdateListner.updateExperienceList(position, feedbackExperienceContentModels));
         }
 
         FeedbackExperienceContentModel dataObj = feedbackExperienceContentModels.get(position);

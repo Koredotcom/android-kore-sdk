@@ -33,7 +33,11 @@ import com.bumptech.glide.request.transition.Transition;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.JustifyContent;
-import com.squareup.picasso.Picasso;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.PromotionsAdapter;
@@ -49,7 +53,6 @@ import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.view.AutoExpandListView;
 import kore.botssdk.view.HeightAdjustableViewPager;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class WelcomeScreenFragment extends DialogFragment {
     private BotBrandingModel botBrandingModel;
@@ -151,13 +154,29 @@ public class WelcomeScreenFragment extends DialogFragment {
                 }
 
                 if (welcomeModel.getLogo() != null && !StringUtils.isNullOrEmpty(welcomeModel.getLogo().getLogo_url())) {
-                    Picasso.get().load(welcomeModel.getLogo().getLogo_url()).transform(new RoundedCornersTransform()).into(ivWelcomeLogo);
+                    Glide.with(ivWelcomeLogo.getContext())
+                            .load(welcomeModel.getLogo().getLogo_url())
+                            .transform(
+                                    new MultiTransformation<>(
+                                            new CenterCrop(),
+                                            new RoundedCorners(20)
+                                    )
+                            )
+                            .into(ivWelcomeLogo);
                 }
 
                 if (botBrandingModel.getHeader() != null && botBrandingModel.getHeader().getIcon() != null) {
                     if (botBrandingModel.getHeader().getIcon().getType().equalsIgnoreCase(BundleUtils.CUSTOM)) {
                         llStarterLogo.setBackgroundResource(0);
-                        Picasso.get().load(botBrandingModel.getHeader().getIcon().getIcon_url()).transform(new RoundedCornersTransform()).into(ivStarterLogo);
+                        Glide.with(ivStarterLogo.getContext())
+                                .load(botBrandingModel.getHeader().getIcon().getIcon_url())
+                                .transform(
+                                        new MultiTransformation<>(
+                                                new CenterCrop(),
+                                                new RoundedCorners(20)
+                                        )
+                                )
+                                .into(ivStarterLogo);
                         ivStarterLogo.setLayoutParams(new LinearLayout.LayoutParams((int) (40 * dp1), (int) (40 * dp1)));
                     } else {
                         switch (botBrandingModel.getHeader().getIcon().getIcon_url()) {

@@ -117,28 +117,13 @@ public class SkillsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
         SkillItemViewHolder skillItemVH = (SkillItemViewHolder) holder;
         skillItemVH.textView.setText(data.get(position).getName());
-        skillItemVH.textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doSkillItemAction(holder.getBindingAdapterPosition());
-            }
-        });
+        skillItemVH.textView.setOnClickListener(v -> doSkillItemAction(holder.getBindingAdapterPosition()));
         if (data.get(position).isCurrentSkill()) {
             skillItemVH.skillSwitchCancel.setVisibility(View.VISIBLE);
-            skillItemVH.skillSwitchCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    skillSwitchDialog.dismissDialog();
-                }
-            });
+            skillItemVH.skillSwitchCancel.setOnClickListener(v -> skillSwitchDialog.dismissDialog());
         }
 
-        skillItemVH.rl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                doSkillItemAction(holder.getBindingAdapterPosition());
-            }
-        });
+        skillItemVH.rl.setOnClickListener(v -> doSkillItemAction(holder.getBindingAdapterPosition()));
 
 
         Picasso.get().load(SDKConfiguration.Server.SERVER_URL + "/" + data.get(position).getIcon())

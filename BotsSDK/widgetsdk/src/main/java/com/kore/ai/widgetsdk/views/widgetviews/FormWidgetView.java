@@ -160,17 +160,14 @@ public class FormWidgetView extends LinearLayout implements VerticalListViewActi
                         if (model != null && model.getData().get(0) != null && model.getData().get(0).getTemplateType() != null && model.getData().get(0).getTemplateType().equals("loginURL")) {
                             tvFillForm.setVisibility(GONE);
                             login_View.setVisibility(VISIBLE);
-                            login_button.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    if (mContext instanceof Activity && model.getData().get(0).getLogin() != null && !StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
-                                        Intent intent = new Intent(mContext, GenericWebViewActivity.class);
-                                        intent.putExtra("url", model.getData().get(0).getLogin().getUrl());
-                                        intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
-                                        ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
-                                    } else {
-                                        Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
-                                    }
+                            login_button.setOnClickListener(v -> {
+                                if (mContext instanceof Activity && model.getData().get(0).getLogin() != null && !StringUtils.isNullOrEmptyWithTrim(model.getData().get(0).getLogin().getUrl())) {
+                                    Intent intent = new Intent(mContext, GenericWebViewActivity.class);
+                                    intent.putExtra("url", model.getData().get(0).getLogin().getUrl());
+                                    intent.putExtra("header", mContext.getResources().getString(R.string.app_name));
+                                    ((Activity) mContext).startActivityForResult(intent, BundleConstants.REQ_CODE_REFRESH_CURRENT_PANEL);
+                                } else {
+                                    Toast.makeText(mContext, "Instance not activity", Toast.LENGTH_LONG).show();
                                 }
                             });
 

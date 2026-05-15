@@ -72,7 +72,7 @@ public class ListViewTemplateHolder extends BaseViewHolder {
         title.setVisibility(heading != null && !heading.isEmpty() ? VISIBLE : GONE);
         if (listElements != null && !listElements.isEmpty()) {
             int size = moreCount != 0 && listElements.size() > moreCount ? moreCount : listElements.size();
-            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(context, listElements, isLastItem(), size);
+            ListViewTemplateAdapter botListTemplateAdapter = new ListViewTemplateAdapter(itemView.getContext(), listElements, isLastItem(), size);
             botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
             botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
             recyclerView.setAdapter(botListTemplateAdapter);

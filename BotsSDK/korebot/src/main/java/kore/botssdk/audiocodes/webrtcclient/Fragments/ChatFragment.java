@@ -65,17 +65,14 @@ public class ChatFragment extends BaseFragment implements FragmentLifecycle {
         lastMessageContact = rootView.findViewById(R.id.chat_last_message_contact_textview);
         lastMessage = rootView.findViewById(R.id.chat_last_message_textview);
         Button sens = rootView.findViewById(R.id.chat_send_button);
-        sens.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String user = contact.getText().toString();
-                String text = message.getText().toString();
-                if (!user.isEmpty() && !text.isEmpty()) {
-                    if (!ACManager.getInstance().isRegisterState()) {
-                        Toast.makeText(getContext(), R.string.no_registration, Toast.LENGTH_SHORT).show();
-                    } else {
-                        ACManager.getInstance().sendInstantMessage(user, text);
-                    }
+        sens.setOnClickListener(v -> {
+            String user = contact.getText().toString();
+            String text = message.getText().toString();
+            if (!user.isEmpty() && !text.isEmpty()) {
+                if (!ACManager.getInstance().isRegisterState()) {
+                    Toast.makeText(getContext(), R.string.no_registration, Toast.LENGTH_SHORT).show();
+                } else {
+                    ACManager.getInstance().sendInstantMessage(user, text);
                 }
             }
         });

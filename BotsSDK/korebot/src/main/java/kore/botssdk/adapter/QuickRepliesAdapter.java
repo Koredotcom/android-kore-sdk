@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -64,7 +64,9 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
         QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
 
         if (quickReplyTemplate.getImage_url() != null && !quickReplyTemplate.getImage_url().isEmpty()) {
-            Picasso.get().load(quickReplyTemplate.getImage_url()).into(holder.getQuickReplyImage());
+            Glide.with(context)
+                    .load(quickReplyTemplate.getImage_url())
+                    .into(holder.getQuickReplyImage());
             holder.getQuickReplyImage().setVisibility(View.VISIBLE);
         } else {
             holder.getQuickReplyImage().setVisibility(View.GONE);
@@ -72,39 +74,36 @@ public class QuickRepliesAdapter extends RecyclerView.Adapter<QuickReplyViewHold
 
         holder.getQuickReplyTitle().setText(quickReplyTemplate.getTitle());
 
-        holder.getQuickReplyRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position =  parentRecyclerView.getChildAdapterPosition(v);
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    QuickReplyTemplate quickReplyTemplate = quickReplyTemplateArrayList.get(position);
+        holder.getQuickReplyRoot().setOnClickListener(v -> {
+            int position1 =  parentRecyclerView.getChildAdapterPosition(v);
+            if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                QuickReplyTemplate quickReplyTemplate1 = quickReplyTemplateArrayList.get(position1);
 
-                    String quickReplyPayload;
+                String quickReplyPayload;
+                try {
+                    quickReplyPayload = (String) quickReplyTemplate1.getPayload();
+                }catch (Exception e)
+                {
                     try {
-                        quickReplyPayload = (String) quickReplyTemplate.getPayload();
-                    }catch (Exception e)
+                        QuickRepliesPayloadModel quickRepliesPayloadModel = (QuickRepliesPayloadModel) quickReplyTemplate1.getPayload();
+                        quickReplyPayload = quickRepliesPayloadModel.getName();
+                    }
+                    catch (Exception exception)
                     {
-                        try {
-                            QuickRepliesPayloadModel quickRepliesPayloadModel = (QuickRepliesPayloadModel) quickReplyTemplate.getPayload();
-                            quickReplyPayload = quickRepliesPayloadModel.getName();
-                        }
-                        catch (Exception exception)
-                        {
-                            quickReplyPayload = "";
-                        }
+                        quickReplyPayload = "";
                     }
+                }
 
-                    if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getContent_type())) {
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
-                    } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
-                    }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(),quickReplyPayload,false);
-                    }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate.getContent_type())){
-                        invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
-                    }else{
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyPayload,false);
-                    }
+                if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate1.getContent_type())) {
+                    composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload,false);
+                } else if(BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate1.getContent_type())){
+                    invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
+                }else if(BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate1.getContent_type())){
+                    composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(),quickReplyPayload,false);
+                }else if(BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate1.getContent_type())){
+                    invokeGenericWebViewInterface.invokeGenericWebView(quickReplyPayload);
+                }else{
+                    composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyPayload,false);
                 }
             }
         });

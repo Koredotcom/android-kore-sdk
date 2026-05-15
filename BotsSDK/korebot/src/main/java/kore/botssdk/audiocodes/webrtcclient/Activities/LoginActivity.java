@@ -141,62 +141,59 @@ public class LoginActivity extends BaseAppCompatActivity {
         }
 
 
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        loginButton.setOnClickListener(view -> {
 
-                if (validateField(userNameEditText) && validateField(passwordEditText)) {
+            if (validateField(userNameEditText) && validateField(passwordEditText)) {
 
-                    String userName = userNameEditText.getText().toString().trim();
-                    String password = passwordEditText.getText().toString().trim();
-                    sipAccount.setUsername(userName);
-                    if (!oAuthEnable) {
-                        sipAccount.setPassword(password);
-                    } else {
-                        sipAccount.setPassword("no password");
-                    }
-                    //if(validateField(displayNameEditText)&&validateField(domainEditText)&&validateField(sipAddressEditText)&&validateField(turnServerEditText)&&validateField(stunserverEditText))
-                    if (validateField(displayNameEditText) && validateField(domainEditText) && validateField(sipAddressEditText) && validateField(portEditText)) {
-                        sipAccount.setDisplayName(displayNameEditText.getText().toString().trim());
-                        sipAccount.setDomain(domainEditText.getText().toString().trim());
-                        sipAccount.setProxy(sipAddressEditText.getText().toString().trim());
-                        sipAccount.setTransport(AppUtils.getTransport(LoginActivity.this, transportSpinner.getSelectedItem().toString().trim()));
-
-                        int portNumber;
-                        try {
-                            portNumber = Integer.valueOf(portEditText.getText().toString().trim());
-                        } catch (Exception e) {
-                            //use default port number;
-                            portNumber = Integer.valueOf(getString(R.string.sip_account_port_default));
-                        }
-                        sipAccount.setPort(portNumber);
-                        //sipAccount.setPassword(turnServerEditText.getText().toString().trim());
-                        //sipAccount.setUsername(stunserverEditText.getText().toString().trim());
-                    }
-
-                    Prefs.setSipAccount(LoginActivity.this, sipAccount);
-                    if (oAuthEnable) {
-                        OAuthManager.getInstance().setURL(oauthUrlEditText.getText().toString());
-                        OAuthManager.getInstance().setRealm(oauthRealmEditText.getText().toString());
-                        OAuthManager.getInstance().setClientId(oauthClientIdEditText.getText().toString());
-                        OAuthManager.getInstance().authorize(LoginActivity.this, userName, password, new OAuthManager.LoginCallback() {
-                            @Override
-                            public void onAuthorize(boolean success) {
-                                if (success) {
-                                    openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
-                                } else {
-                                    Toast.makeText(LoginActivity.this, getString(R.string.oauth_error), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
-                    } else {
-                        openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
-                    }
-                }
-                Prefs.setSipAccount(LoginActivity.this, sipAccount);
+                String userName = userNameEditText.getText().toString().trim();
+                String password = passwordEditText.getText().toString().trim();
+                sipAccount.setUsername(userName);
                 if (!oAuthEnable) {
+                    sipAccount.setPassword(password);
+                } else {
+                    sipAccount.setPassword("no password");
+                }
+                //if(validateField(displayNameEditText)&&validateField(domainEditText)&&validateField(sipAddressEditText)&&validateField(turnServerEditText)&&validateField(stunserverEditText))
+                if (validateField(displayNameEditText) && validateField(domainEditText) && validateField(sipAddressEditText) && validateField(portEditText)) {
+                    sipAccount.setDisplayName(displayNameEditText.getText().toString().trim());
+                    sipAccount.setDomain(domainEditText.getText().toString().trim());
+                    sipAccount.setProxy(sipAddressEditText.getText().toString().trim());
+                    sipAccount.setTransport(AppUtils.getTransport(LoginActivity.this, transportSpinner.getSelectedItem().toString().trim()));
+
+                    int portNumber;
+                    try {
+                        portNumber = Integer.valueOf(portEditText.getText().toString().trim());
+                    } catch (Exception e) {
+                        //use default port number;
+                        portNumber = Integer.valueOf(getString(R.string.sip_account_port_default));
+                    }
+                    sipAccount.setPort(portNumber);
+                    //sipAccount.setPassword(turnServerEditText.getText().toString().trim());
+                    //sipAccount.setUsername(stunserverEditText.getText().toString().trim());
+                }
+
+                Prefs.setSipAccount(LoginActivity.this, sipAccount);
+                if (oAuthEnable) {
+                    OAuthManager.getInstance().setURL(oauthUrlEditText.getText().toString());
+                    OAuthManager.getInstance().setRealm(oauthRealmEditText.getText().toString());
+                    OAuthManager.getInstance().setClientId(oauthClientIdEditText.getText().toString());
+                    OAuthManager.getInstance().authorize(LoginActivity.this, userName, password, new OAuthManager.LoginCallback() {
+                        @Override
+                        public void onAuthorize(boolean success) {
+                            if (success) {
+                                openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
+                            } else {
+                                Toast.makeText(LoginActivity.this, getString(R.string.oauth_error), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                } else {
                     openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
                 }
+            }
+            Prefs.setSipAccount(LoginActivity.this, sipAccount);
+            if (!oAuthEnable) {
+                openNextScreen(autologin.isChecked(), disconnectCall.isChecked());
             }
         });
 

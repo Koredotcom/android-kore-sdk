@@ -28,7 +28,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.ArrayList;
 
@@ -40,10 +43,8 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.Widget;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 @SuppressLint("UnknownNullness")
 public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListButtonAdapter.ButtonViewHolder> {
@@ -116,7 +117,15 @@ public class AdvanceListButtonAdapter extends RecyclerView.Adapter<AdvanceListBu
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     holder.ivBtnImage.setImageBitmap(decodedByte);
                 } else {
-                    Picasso.get().load(btn.getIcon()).transform(new RoundedCornersTransform()).into(holder.ivBtnImage);
+                    Glide.with(holder.ivBtnImage.getContext())
+                            .load(btn.getIcon())
+                            .transform(
+                                    new MultiTransformation<>(
+                                            new CenterCrop(),
+                                            new RoundedCorners(20)
+                                    )
+                            )
+                            .into(holder.ivBtnImage);
                 }
             } catch (Exception e) {
                 holder.ivBtnImage.setVisibility(GONE);

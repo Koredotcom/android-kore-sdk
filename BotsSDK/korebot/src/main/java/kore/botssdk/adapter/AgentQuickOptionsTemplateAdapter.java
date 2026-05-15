@@ -46,27 +46,24 @@ public class AgentQuickOptionsTemplateAdapter extends RecyclerView.Adapter<Quick
         holder.getQuickReplyImage().setVisibility(View.GONE);
         holder.getQuickReplyTitle().setText(quickReplyTemplate.getName());
 
-        holder.getQuickReplyRoot().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int position = parentRecyclerView.getChildAdapterPosition(v);
-                if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    BotButtonModel quickReplyTemplate = quickReplyTemplateArrayList.get(position);
-                    if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate.getType())) {
-                        String quickReplyTitle = quickReplyTemplate.getName();
-                        String quickReplyPayload = quickReplyTemplate.getBotOptionPostBackModel().getValue();
-                        composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload, false);
-                    } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate.getType())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
-                    } else if (BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate.getType())) {
-                        composeFooterInterface.onSendClick(quickReplyTemplate.getTitle(), quickReplyTemplate.getPayload(), false);
-                    } else if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate.getType())) {
-                        invokeGenericWebViewInterface.invokeGenericWebView(quickReplyTemplate.getPayload());
-                    } else {
-                        String quickReplyTitle = quickReplyTemplate.getName();
-                        String quickReplyPayload = quickReplyTemplate.getBotOptionPostBackModel().getValue();
-                        composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload, false);
-                    }
+        holder.getQuickReplyRoot().setOnClickListener(v -> {
+            int position1 = parentRecyclerView.getChildAdapterPosition(v);
+            if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                BotButtonModel quickReplyTemplate1 = quickReplyTemplateArrayList.get(position1);
+                if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(quickReplyTemplate1.getType())) {
+                    String quickReplyTitle = quickReplyTemplate1.getName();
+                    String quickReplyPayload = quickReplyTemplate1.getBotOptionPostBackModel().getValue();
+                    composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload, false);
+                } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(quickReplyTemplate1.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(BundleConstants.BUTTON_TYPE_USER_INTENT);
+                } else if (BundleConstants.BUTTON_TYPE_TEXT.equalsIgnoreCase(quickReplyTemplate1.getType())) {
+                    composeFooterInterface.onSendClick(quickReplyTemplate1.getTitle(), quickReplyTemplate1.getPayload(), false);
+                } else if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(quickReplyTemplate1.getType())) {
+                    invokeGenericWebViewInterface.invokeGenericWebView(quickReplyTemplate1.getPayload());
+                } else {
+                    String quickReplyTitle = quickReplyTemplate1.getName();
+                    String quickReplyPayload = quickReplyTemplate1.getBotOptionPostBackModel().getValue();
+                    composeFooterInterface.onSendClick(quickReplyTitle, quickReplyPayload, false);
                 }
             }
         });

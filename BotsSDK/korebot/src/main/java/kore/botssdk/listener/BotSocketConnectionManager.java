@@ -70,7 +70,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     CONNECTION_STATE connection_state = DISCONNECTED;
-    private String botAccessToken, botUserId;
     String botName, streamId;
     private String userId;
     RestResponse.BotCustomData customData;
@@ -86,24 +85,26 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         return botSocketConnectionManager;
     }
 
-
     @Override
     public void onOpen(boolean isReconnection) {
         connection_state = CONNECTION_STATE.CONNECTED;
         if (chatListener != null) {
             chatListener.onConnectionStateChanged(connection_state, isReconnection);
         }
-        botAccessToken = botClient.getAccessToken();
-        botUserId = botClient.getUserId();
         botClient.sendMessage(null);
     }
-
 
     @Override
     public void onClose(int code, String reason) {
         connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
         if (chatListener != null) {
             chatListener.onConnectionStateChanged(connection_state, false);
+            if (SDKConfiguration.Server.getBotStatusListener() != null && code == 3) {
+                SDKConfiguration.Server.getBotStatusListener().onBotDisconnected(
+                        "BotConnectionLost",
+                        "The bot was disconnected due to a network connectivity issue. Please check the internet connection and try reconnecting."
+                );
+            }
         }
     }
 
@@ -120,6 +121,14 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             botSocketConnectionManager.stopDelayMsgTimer();
             botSocketConnectionManager.stopAlertMsgTimer();
             botSocketConnectionManager.shutDownConnection();
+        }
+    }
+
+    public static void killInstanceToReconnect() {
+        if (botSocketConnectionManager != null) {
+            botSocketConnectionManager.stopDelayMsgTimer();
+            botSocketConnectionManager.stopAlertMsgTimer();
+            botSocketConnectionManager.shutDownConnectionToReconnect();
         }
     }
 
@@ -234,7 +243,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         } catch (Exception e) {
             LogUtils.e("Error at makeJwtGrantCall", e + "");
             if (SDKConfiguration.Server.getBotStatusListener() != null)
-                SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("Error at makeJwtGrantCall" + e);
+                SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("BotNotConnected", "Error at makeJwtGrantCall"+e);
             Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
             connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             if (chatListener != null)
@@ -546,6 +555,15 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (botClient != null) botClient.disconnect();
         if (ttsSynthesizer != null) {
             ttsSynthesizer.stopTextToSpeech();
+        }
+    }
+
+    public void shutDownConnectionToReconnect() {
+        botSocketConnectionManager = null;
+        if (botClient != null) botClient.disconnectToReconnect();
+        if (ttsSynthesizer != null) {
+            ttsSynthesizer.stopTextToSpeech();
+
         }
     }
 

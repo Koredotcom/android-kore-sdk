@@ -18,7 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.ArrayList;
 
@@ -32,7 +35,6 @@ import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ViewHolder> {
     private final ArrayList<ArticleModel> articles;
@@ -71,7 +73,15 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                 holder.botListItemImage.setImageBitmap(decodedByte);
             } else {
-                Picasso.get().load(articleModel.getIcon()).transform(new RoundedCornersTransform()).into(holder.botListItemImage);
+                Glide.with(holder.botListItemImage.getContext())
+                        .load(articleModel.getIcon())
+                        .transform(
+                                new MultiTransformation<>(
+                                        new CenterCrop(),
+                                        new RoundedCorners(20)
+                                )
+                        )
+                        .into(holder.botListItemImage);
             }
         }
 

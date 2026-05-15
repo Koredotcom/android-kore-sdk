@@ -18,7 +18,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.ArrayList;
 
@@ -27,17 +30,14 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapter.ViewHolder> {
     private final ArrayList<BotListModel> model;
-    final RoundedCornersTransform roundedCornersTransform;
     private SharedPreferences sharedPreferences;
     private GradientDrawable rightDrawable;
 
     public ListViewMoreAdapter(@NonNull ArrayList<BotListModel> model) {
         this.model = model;
-        this.roundedCornersTransform = new RoundedCornersTransform();
 
     }
 
@@ -67,7 +67,15 @@ public class ListViewMoreAdapter extends RecyclerView.Adapter<ListViewMoreAdapte
 
         if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+            Glide.with(holder.botListItemImage.getContext())
+                    .load(botListModel.getImage_url())
+                    .transform(
+                            new MultiTransformation<>(
+                                    new CenterCrop(),
+                                    new RoundedCorners(20)
+                            )
+                    )
+                    .into(holder.botListItemImage);
         }
 
         holder.botListItemTitle.setTag(botListModel);

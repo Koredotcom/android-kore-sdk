@@ -15,21 +15,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.AgentQuickOptionsTemplateAdapter;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.CircleTransform;
 
 public class AgentTransferTemplateHolder extends BaseViewHolder {
     private final TextView tvAgentCardText;
     private final ImageView ivAgentImage;
     private final TextView tvAgentName;
     private final TextView tvAgentRole;
-    private final CircleTransform circleTransform;
     private final RecyclerView rvAgentButtons;
     private final LinearLayout llAgentDetails;
 
@@ -45,7 +43,6 @@ public class AgentTransferTemplateHolder extends BaseViewHolder {
         tvAgentRole = itemView.findViewById(R.id.tvAgentRole);
         rvAgentButtons = itemView.findViewById(R.id.rvAgentButtons);
         llAgentDetails = itemView.findViewById(R.id.llAgentDetails);
-        circleTransform = new CircleTransform();
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(3, LinearLayoutManager.HORIZONTAL);
         rvAgentButtons.setLayoutManager(staggeredGridLayoutManager);
         rvAgentButtons.setItemAnimator(new DefaultItemAnimator());
@@ -56,7 +53,7 @@ public class AgentTransferTemplateHolder extends BaseViewHolder {
     public void bind(BaseBotMessage baseBotMessage) {
         PayloadInner payloadInner = getPayloadInner(baseBotMessage);
         if (payloadInner == null) return;
-        if (payloadInner.getButtons() != null && payloadInner.getButtons().size() > 0) {
+        if (payloadInner.getButtons() != null && !payloadInner.getButtons().isEmpty()) {
             rvAgentButtons.setVisibility(View.VISIBLE);
             llAgentDetails.setVisibility(GONE);
 
@@ -80,7 +77,10 @@ public class AgentTransferTemplateHolder extends BaseViewHolder {
 
             if (!StringUtils.isNullOrEmpty(payloadInner.getImage_url())) {
                 ivAgentImage.setVisibility(View.VISIBLE);
-                Picasso.get().load(payloadInner.getImage_url()).transform(circleTransform).into(ivAgentImage);
+                Glide.with(context)
+                        .load(payloadInner.getImage_url())
+                        .circleCrop()
+                        .into(ivAgentImage);
             }
         }
     }

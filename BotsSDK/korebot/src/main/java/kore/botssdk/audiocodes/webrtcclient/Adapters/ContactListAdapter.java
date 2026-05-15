@@ -103,27 +103,19 @@ public class ContactListAdapter extends BaseAdapter {
             }
         }
 
-        holder.buttonClickView.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View view) {
-                if (callButtonClickListener != null) {
-                    callButtonClickListener.onItemClick(null, view, position, 0);
-                }
+        holder.buttonClickView.setOnClickListener(view -> {
+            if (callButtonClickListener != null) {
+                callButtonClickListener.onItemClick(null, view, position, 0);
             }
         });
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        convertView.setOnClickListener(view -> {
 
-            @Override
-            public void onClick(View view) {
-
-                boolean contactPermission = PermissionManager.getInstance().checkPermission(context, PermissionManagerType.CONTACTS);
-                if (contactPermission && onCreateItemClickListener != null) {
-                    onCreateItemClickListener.onItemClick(null, view, position, 0);
-                } else {
-                    Log.e(TAG, "Contact permission disabled or null");
-                }
+            boolean contactPermission = PermissionManager.getInstance().checkPermission(context, PermissionManagerType.CONTACTS);
+            if (contactPermission && onCreateItemClickListener != null) {
+                onCreateItemClickListener.onItemClick(null, view, position, 0);
+            } else {
+                Log.e(TAG, "Contact permission disabled or null");
             }
         });
         return convertView;

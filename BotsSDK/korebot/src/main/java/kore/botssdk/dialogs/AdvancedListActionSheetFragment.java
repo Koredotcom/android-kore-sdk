@@ -88,12 +88,9 @@ public class AdvancedListActionSheetFragment extends BottomSheetDialogFragment {
         lvMoreData.setAdapter(botListTemplateAdapter);
         botListTemplateAdapter.notifyDataSetChanged();
 
-        llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(bottomSheetDialog != null)
-                    bottomSheetDialog.dismiss();
-            }
+        llCloseBottomSheet.setOnClickListener(v -> {
+            if(bottomSheetDialog != null)
+                bottomSheetDialog.dismiss();
         });
         return view;
 

@@ -1,5 +1,6 @@
 package kore.botssdk.adapter;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
@@ -12,21 +13,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.ContactTemplateModel;
+import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.CircleTransform;
 
 public class ContactCardItemAdapter extends RecyclerView.Adapter<ContactCardItemAdapter.ViewHolder> {
     private final ArrayList<ContactTemplateModel> models;
-    final CircleTransform roundedCornersTransform = new CircleTransform();
+    private final Context context;
 
-    public ContactCardItemAdapter(ArrayList<ContactTemplateModel> models) {
+    public ContactCardItemAdapter(Context context, ArrayList<ContactTemplateModel> models) {
         this.models = models;
+        this.context = context;
     }
 
     @NonNull
@@ -39,31 +41,37 @@ public class ContactCardItemAdapter extends RecyclerView.Adapter<ContactCardItem
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ContactTemplateModel botListModel = getItem(position);
-        if (!StringUtils.isNullOrEmpty(botListModel.getUserIcon())) {
-            holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load("https://hs.sbcounty.gov/cn/Photo%20Gallery/_w/Sample%20Picture%20-%20Koala_jpg.jpg").transform(roundedCornersTransform).into(holder.botListItemImage);
-        }
+        if (botListModel != null) {
+            if (!StringUtils.isNullOrEmpty(botListModel.getUserIcon())) {
+                holder.botListItemImage.setVisibility(View.VISIBLE);
 
-        holder.botListItemTitle.setTag(botListModel);
-        holder.botListItemTitle.setText(botListModel.getUserName());
-        if (!StringUtils.isNullOrEmpty(botListModel.getUserContactNumber())) {
-            holder.botListItemSubtitle.setVisibility(View.VISIBLE);
-            holder.botListItemSubtitle.setText(botListModel.getUserContactNumber());
+                Glide.with(context)
+                        .load(botListModel.getUserIcon())
+                        .circleCrop()
+                        .into(holder.botListItemImage);
+            }
 
-            holder.botListItemSubtitle.setOnClickListener(v -> {
-                try {
-                    Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:" + botListModel.getUserContactNumber()));
-                    holder.botListItemSubtitle.getContext().startActivity(intent);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        }
+            holder.botListItemTitle.setTag(botListModel);
+            holder.botListItemTitle.setText(botListModel.getUserName());
+            if (!StringUtils.isNullOrEmpty(botListModel.getUserContactNumber())) {
+                holder.botListItemSubtitle.setVisibility(View.VISIBLE);
+                holder.botListItemSubtitle.setText(botListModel.getUserContactNumber());
 
-        if (!StringUtils.isNullOrEmpty(botListModel.getUserEmailId())) {
-            holder.bot_list_item_email.setVisibility(View.VISIBLE);
-            holder.bot_list_item_email.setText(botListModel.getUserEmailId());
+                holder.botListItemSubtitle.setOnClickListener(v -> {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse("tel:" + botListModel.getUserContactNumber()));
+                        holder.botListItemSubtitle.getContext().startActivity(intent);
+                    } catch (Exception e) {
+                        LogUtils.e("Error at activity not found", e+"");
+                    }
+                });
+            }
+
+            if (!StringUtils.isNullOrEmpty(botListModel.getUserEmailId())) {
+                holder.bot_list_item_email.setVisibility(View.VISIBLE);
+                holder.bot_list_item_email.setText(botListModel.getUserEmailId());
+            }
         }
     }
 
@@ -76,7 +84,7 @@ public class ContactCardItemAdapter extends RecyclerView.Adapter<ContactCardItem
         return models != null ? models.size() : 0;
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         RelativeLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

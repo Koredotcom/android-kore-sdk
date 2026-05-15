@@ -49,7 +49,7 @@ public class ContactCardTemplateHolder extends BaseViewHolder {
         }
 
         ContactCardItemAdapter botListTemplateAdapter;
-        botListTemplateAdapter = new ContactCardItemAdapter(botListModelArrayList);
+        botListTemplateAdapter = new ContactCardItemAdapter(itemView.getContext(), botListModelArrayList);
         recyclerView.setAdapter(botListTemplateAdapter);
     }
 }

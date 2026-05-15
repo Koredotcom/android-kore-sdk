@@ -97,54 +97,36 @@ public class VideoFullScreenActivity extends BotAppCompactActivity
             });
         }
 
-        ivFullScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                VideoTimerEvent event = new VideoTimerEvent();
-                event.setCurrentPos(current_pos);
-                KoreEventCenter.post(event);
-                finish();
-            }
+        ivFullScreen.setOnClickListener(v -> {
+            VideoTimerEvent event = new VideoTimerEvent();
+            event.setCurrentPos(current_pos);
+            KoreEventCenter.post(event);
+            finish();
         });
 
         ivPlayPauseIcon.setTag(true);
-        ivPlayPauseIcon.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+        ivPlayPauseIcon.setOnClickListener(v -> {
+            if((boolean)v.getTag())
             {
-                if((boolean)v.getTag())
-                {
-                    ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_pause_icon, getTheme()));
-                    vvFullScreen.start();
-                    v.setTag(false);
-                }
-                else
-                {
-                    ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_play_icon, getTheme()));
-                    vvFullScreen.pause();
-                    v.setTag(true);
-                }
+                ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_pause_icon, getTheme()));
+                vvFullScreen.start();
+                v.setTag(false);
+            }
+            else
+            {
+                ivPlayPauseIcon.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.ic_play_icon, getTheme()));
+                vvFullScreen.pause();
+                v.setTag(true);
             }
         });
 
-        ivVideoMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupWindow.showAtLocation(ivVideoMore, Gravity.BOTTOM|Gravity.END, 80, 400);
-            }
-        });
+        ivVideoMore.setOnClickListener(v -> popupWindow.showAtLocation(ivVideoMore, Gravity.BOTTOM|Gravity.END, 80, 400));
 
-        tvTheme1.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
+        tvTheme1.setOnClickListener(v -> {
+            popupWindow.dismiss();
+            if(checkForPermissionAccessAndRequest())
             {
-                popupWindow.dismiss();
-                if(checkForPermissionAccessAndRequest())
-                {
-                    KaMediaUtils.saveFileFromUrlToKorePath(VideoFullScreenActivity.this, videoUrl);
-                }
+                KaMediaUtils.saveFileFromUrlToKorePath(VideoFullScreenActivity.this, videoUrl);
             }
         });
 

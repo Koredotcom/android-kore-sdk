@@ -1,12 +1,20 @@
 package kore.botssdk.viewholders;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
+
 import android.app.Dialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,12 +27,14 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.adapter.TableTemplateAdapter;
 import kore.botssdk.adapter.TableTemplateHeaderAdapter;
 import kore.botssdk.itemdecoration.VerticalSpaceItemDecoration;
 import kore.botssdk.models.BaseBotMessage;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.MiniTableModel;
 import kore.botssdk.models.PayloadInner;
 
@@ -44,8 +54,19 @@ public class TableTemplateHolder extends BaseViewHolder {
         rvTableViewHeader = itemView.findViewById(R.id.rvTableViewHeader);
         botTableShowMoreButton = itemView.findViewById(R.id.botTableShowMoreButton);
         rvTableView.setLayoutManager(new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.VERTICAL, false));
+        RelativeLayout rlTableRoot = itemView.findViewById(R.id.rlTableRoot);
         rvTableView.addItemDecoration(new VerticalSpaceItemDecoration(LinearLayoutManager.VERTICAL));
         LinearLayoutCompat layoutBubble = itemView.findViewById(R.id.layoutBubble);
+        SharedPreferences sharedPreferences = itemView.getContext().getSharedPreferences(BotResponse.THEME_NAME, MODE_PRIVATE);
+        GradientDrawable bgDrawable = (GradientDrawable) rlTableRoot.getBackground();
+        GradientDrawable headerDrawable = (GradientDrawable) rvTableViewHeader.getBackground();
+
+        if (bgDrawable != null) {
+            bgDrawable.setStroke((int) (1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#efeffc")));
+        }
+
+        if (headerDrawable != null)
+            headerDrawable.setStroke((int) (1 * dp1), Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_BG_COLOR, "#efeffc")));
         initBubbleText(layoutBubble, false);
     }
 
@@ -77,7 +98,7 @@ public class TableTemplateHolder extends BaseViewHolder {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.tableview_dialog);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
+        lp.copyFrom(Objects.requireNonNull(dialog.getWindow()).getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         lp.gravity = Gravity.CENTER;

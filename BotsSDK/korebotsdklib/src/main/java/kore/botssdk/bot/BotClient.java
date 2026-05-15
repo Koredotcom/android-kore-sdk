@@ -84,6 +84,13 @@ public class BotClient {
     }
 
     /**
+     * [MANDATORY] Invoke this method to disconnect the previously connected socket connection and reconnect.
+     */
+    public void disconnectToReconnect() {
+        SocketWrapper.getInstance(mContext).disConnectToReconnect();
+    }
+
+    /**
      * @return whether socket connection is present
      */
     public boolean isConnected() {

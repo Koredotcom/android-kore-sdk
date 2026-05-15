@@ -60,6 +60,7 @@
         android:clickable="false"
         android:ellipsize="end"
         android:maxLines="1"
+        android:minHeight="40dp"
         android:textColor="@color/listview_cost"
         android:textSize="14sp"
         android:textStyle="bold" />

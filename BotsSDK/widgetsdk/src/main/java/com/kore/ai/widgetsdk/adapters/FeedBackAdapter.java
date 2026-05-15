@@ -121,17 +121,14 @@ public class FeedBackAdapter extends RecyclerView.Adapter<FeedBackAdapter.FeedBa
                 return false;
             }
         });
-        holder.checkBox_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.checkBox_btn.setOnClickListener(v -> {
 
-                options.get(holder.getBindingAdapterPosition()).setUserAction(holder.checkBox_btn.isChecked());
+            options.get(holder.getBindingAdapterPosition()).setUserAction(holder.checkBox_btn.isChecked());
 
-                if (options.get(holder.getBindingAdapterPosition()).getAction().equalsIgnoreCase("inputText")) {
-                    holder.edt_freetext.setVisibility(holder.checkBox_btn.isChecked() ? View.VISIBLE : View.GONE);
-                }
-                refreshButtonState();
+            if (options.get(holder.getBindingAdapterPosition()).getAction().equalsIgnoreCase("inputText")) {
+                holder.edt_freetext.setVisibility(holder.checkBox_btn.isChecked() ? View.VISIBLE : View.GONE);
             }
+            refreshButtonState();
         });
 
 

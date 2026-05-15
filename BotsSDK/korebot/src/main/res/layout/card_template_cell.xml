@@ -136,7 +136,7 @@
             android:ellipsize="end"
             android:gravity="center"
             android:maxLines="1"
-            android:padding="@dimen/dimen_15dp"
+            android:minHeight="@dimen/dimen_40dp"
             android:text="@string/app_name"
             android:textColor="@color/white"
             android:textSize="@dimen/text_size_normal"

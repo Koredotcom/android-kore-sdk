@@ -30,7 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.HashMap;
 
@@ -195,7 +195,9 @@ public class ListWidgetTemplateHolder extends BaseViewHolder {
                 case "image":
                     iconImageLoad.setVisibility(VISIBLE);
                     if (headerOptionsModel.getImage() != null && headerOptionsModel.getImage().getImage_src() != null) {
-                        Picasso.get().load(headerOptionsModel.getImage().getImage_src()).into(iconImageLoad);
+                        Glide.with(context)
+                                .load(headerOptionsModel.getImage().getImage_src())
+                                .into(iconImageLoad);
                         iconImageLoad.setOnClickListener(v -> {
                             if (payloadInner.getHeaderOptions() != null && headerOptionsModel.getImage() != null && headerOptionsModel.getImage().getPayload() != null) {
                                 buttonAction(headerOptionsModel.getImage().getPayload());

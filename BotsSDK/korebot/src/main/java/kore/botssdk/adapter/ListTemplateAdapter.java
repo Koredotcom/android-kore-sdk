@@ -14,13 +14,13 @@ import androidx.annotation.NonNull;
 import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.List;
 
-import io.noties.markwon.Markwon;
-import io.noties.markwon.html.HtmlPlugin;
-import io.noties.markwon.linkify.LinkifyPlugin;
 import kore.botssdk.R;
 import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
@@ -29,13 +29,11 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownUtil;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapter.ViewHolder> {
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     final boolean isEnabled;
-    final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
     final List<BotListModel> botListModels;
     Context context;
 
@@ -57,7 +55,15 @@ public class ListTemplateAdapter extends RecyclerView.Adapter<ListTemplateAdapte
         if (botListModel == null) return;
         if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+            Glide.with(context)
+                    .load(botListModel.getImage_url())
+                    .transform(
+                            new MultiTransformation<>(
+                                    new CenterCrop(),
+                                    new RoundedCorners(20)
+                            )
+                    )
+                    .into(holder.botListItemImage);
         }
 
         holder.botListItemTitle.setTag(botListModel);

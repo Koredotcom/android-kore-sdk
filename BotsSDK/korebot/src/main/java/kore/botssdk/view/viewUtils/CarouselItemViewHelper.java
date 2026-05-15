@@ -18,7 +18,7 @@ import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -92,7 +92,9 @@ public class CarouselItemViewHelper {
             }
             try {
                 if (botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty()) {
-                    Picasso.get().load(botCarouselModel.getImage_url()).into(carouselViewHolder.carouselItemImage);
+                    Glide.with(carouselViewHolder.carouselItemImage.getContext())
+                            .load(botCarouselModel.getImage_url())
+                            .into(carouselViewHolder.carouselItemImage);
                     carouselViewHolder.carouselItemImage.setVisibility(View.VISIBLE);
                 } else {
                     carouselViewHolder.carouselItemImage.setVisibility(GONE);
@@ -173,24 +175,21 @@ public class CarouselItemViewHelper {
                 }
             });
 
-            carouselViewHolder.carouselItemRoot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    BotListDefaultModel botListDefaultModel = botCarouselModel.getDefault_action();
-                    if (invokeGenericWebViewInterface != null && botListDefaultModel != null) {
-                        if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListDefaultModel.getType())) {
-                            invokeGenericWebViewInterface.invokeGenericWebView(botListDefaultModel.getUrl());
-                        } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botListDefaultModel.getType())) {
-                            invokeGenericWebViewInterface.handleUserActions(botListDefaultModel.getAction(), botListDefaultModel.getCustomData());
-                        }
-                    } else if (composeFooterInterface != null && botListDefaultModel != null) {
-                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
-                            String buttonPayload = botCarouselModel.getDefault_action().getPayload();
-                            composeFooterInterface.onSendClick(buttonPayload, false);
-                        } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
-                            String buttonPayload = botCarouselModel.getDefault_action().getPayload();
-                            composeFooterInterface.onSendClick(buttonPayload, false);
-                        }
+            carouselViewHolder.carouselItemRoot.setOnClickListener(v -> {
+                BotListDefaultModel botListDefaultModel = botCarouselModel.getDefault_action();
+                if (invokeGenericWebViewInterface != null && botListDefaultModel != null) {
+                    if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(botListDefaultModel.getType())) {
+                        invokeGenericWebViewInterface.invokeGenericWebView(botListDefaultModel.getUrl());
+                    } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(botListDefaultModel.getType())) {
+                        invokeGenericWebViewInterface.handleUserActions(botListDefaultModel.getAction(), botListDefaultModel.getCustomData());
+                    }
+                } else if (composeFooterInterface != null && botListDefaultModel != null) {
+                    if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(botListDefaultModel.getType())) {
+                        String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                        composeFooterInterface.onSendClick(buttonPayload, false);
+                    } else if (BundleConstants.BUTTON_TYPE_POSTBACK_DISP_PAYLOAD.equalsIgnoreCase(botListDefaultModel.getType())) {
+                        String buttonPayload = botCarouselModel.getDefault_action().getPayload();
+                        composeFooterInterface.onSendClick(buttonPayload, false);
                     }
                 }
             });

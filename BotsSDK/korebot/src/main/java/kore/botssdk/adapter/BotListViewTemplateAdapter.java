@@ -18,8 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -30,7 +33,6 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 @SuppressLint("UnknownNullness")
 public class BotListViewTemplateAdapter extends BaseAdapter {
@@ -38,14 +40,12 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final Context context;
-    private final RoundedCornersTransform roundedCornersTransform;
     final ListView parentListView;
     private final int count;
     private final BottomSheetDialog bottomSheetDialog;
 
     public BotListViewTemplateAdapter(Context context, ListView parentListView, int count, BottomSheetDialog bottomSheetDialog) {
         this.context = context;
-        this.roundedCornersTransform = new RoundedCornersTransform();
         this.parentListView = parentListView;
         this.count = count;
         this.bottomSheetDialog = bottomSheetDialog;
@@ -98,7 +98,15 @@ public class BotListViewTemplateAdapter extends BaseAdapter {
 
         if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+            Glide.with(context)
+                    .load(botListModel.getImage_url())
+                    .transform(
+                            new MultiTransformation<>(
+                                    new CenterCrop(),
+                                    new RoundedCorners(20)
+                            )
+                    )
+                    .into(holder.botListItemImage);
         }
 
         holder.botListItemTitle.setTag(botListModel);

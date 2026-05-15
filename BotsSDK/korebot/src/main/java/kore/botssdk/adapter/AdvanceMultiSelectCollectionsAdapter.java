@@ -22,7 +22,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -107,10 +108,11 @@ public class AdvanceMultiSelectCollectionsAdapter extends RecyclerView.Adapter<A
         if (!StringUtils.isNullOrEmpty(item.getImage_url())) {
             holder.ivAdvMultiSelect.setVisibility(View.VISIBLE);
 
-            Picasso.get().load(item.getImage_url())
-                    .centerInside()
+            Glide.with(holder.ivAdvMultiSelect.getContext())
+                    .load(item.getImage_url())
                     .placeholder(R.drawable.transparant_image)
-                    .resize((int) (40 * dp1), (int) (40 * dp1))
+                    .override((int) (40 * dp1), (int) (40 * dp1))
+                    .centerInside()
                     .into(holder.ivAdvMultiSelect);
         }
 

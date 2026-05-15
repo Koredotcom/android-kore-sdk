@@ -40,7 +40,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import net.cachapa.expandablelayout.ExpandableLayout;
 
@@ -63,7 +66,6 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 import kore.botssdk.viewholders.EmptyWidgetViewHolder;
 
 @SuppressLint("UnknownNullness")
@@ -192,7 +194,15 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             if (model.getImage() != null && !StringUtils.isNullOrEmpty(model.getImage().getImage_src()) && Patterns.WEB_URL.matcher(model.getImage().getImage_src()).matches()) {
                 String url = model.getImage().getImage_src().trim();
                 url = url.replace("http://", "https://");
-                Picasso.get().load(url).error(R.drawable.ic_image_photo).transform(new RoundedCornersTransform()).into(holder.imageIcon);
+                Glide.with(mContext)
+                        .load(url)
+                        .transform(
+                                new MultiTransformation<>(
+                                        new CenterCrop(),
+                                        new RoundedCorners(20)
+                                )
+                        )
+                        .into(holder.imageIcon);
             } else {
                 holder.imageIcon.setVisibility(GONE);
             }
@@ -275,7 +285,15 @@ public class ListWidgetAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         holder.tvButtonParent.setVisibility(GONE);
                         holder.tvUrl.setVisibility(GONE);
                         if (model.getValue().getImage() != null && !StringUtils.isNullOrEmpty(model.getValue().getImage().getImage_src())) {
-                            Picasso.get().load(model.getValue().getImage().getImage_src()).into(holder.icon_image_load);
+                            Glide.with(mContext)
+                                    .load(model.getValue().getImage().getImage_src())
+                                    .transform(
+                                            new MultiTransformation<>(
+                                                    new CenterCrop(),
+                                                    new RoundedCorners(20)
+                                            )
+                                    )
+                                    .into(holder.icon_image_load);
                             holder.icon_image_load.setOnClickListener(v -> defaultAction(model.getValue().getImage().getUtterance() != null ? model.getValue().getImage().getUtterance() : model.getValue().getImage().getPayload() != null ? model.getValue().getImage().getPayload() : "", Constants.SKILL_SELECTION.equalsIgnoreCase(Constants.SKILL_HOME) || TextUtils.isEmpty(Constants.SKILL_SELECTION) || (!StringUtils.isNullOrEmpty(skillName) && !skillName.equalsIgnoreCase(Constants.SKILL_SELECTION))));
                         }
                         break;

@@ -149,13 +149,10 @@ public class KaWidgetBaseAdapterNew extends RecyclerView.Adapter implements Upda
             ((DefaultViewHolder) holder).getCustomView().setWidget(widget.getData().getWidgets().get(position), panelData, jwtToken);
         } else if (holder instanceof EditViewHolder) {
             EditViewHolder editViewHolder = (EditViewHolder) holder;
-            editViewHolder.btnEdit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+            editViewHolder.btnEdit.setOnClickListener(v -> {
 //                    Intent intent=new Intent(kaWidgetFragmentContext, WidgetReOrderActivity.class);
 //                    intent.putExtra("data",widget);
 //                    kaWidgetFragmentContext.startActivity(intent);
-                }
             });
         } else if (holder instanceof PieChartViewHolder) {
             ((PieChartViewHolder) holder).getCustomView().setWidget(widget.getData().getName(), widget.getData().getWidgets().get(position), panelData, jwtToken);

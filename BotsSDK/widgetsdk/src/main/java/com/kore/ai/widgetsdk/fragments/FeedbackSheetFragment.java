@@ -161,143 +161,122 @@ public class FeedbackSheetFragment extends BottomSheetDialogFragment implements 
         label_view = view.findViewById(R.id.label_view);
         sub_text = view.findViewById(R.id.sub_text);
 
-        closeBtnPanel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                bottomSheetBehavior.setHideable(true);
-                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        closeBtnPanel.setOnClickListener(v -> {
+            bottomSheetBehavior.setHideable(true);
+            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
 
-                if (context instanceof FeedBackillustrationActivity) {
-                    ((FeedBackillustrationActivity) context).finish();
-                   // KoreEventCenter.post(new FinishActivityEvent());
-                }
-
+            if (context instanceof FeedBackillustrationActivity) {
+                ((FeedBackillustrationActivity) context).finish();
+               // KoreEventCenter.post(new FinishActivityEvent());
             }
+
         });
 
-        icon_1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        icon_1.setOnClickListener(v -> {
 
-                resetAll();
-                // icon_1.setImageResource(R.drawable.feedbac_ic_emo_1);
-                loademojis(0);
-                position = 0;
-                updateData();
-            }
+            resetAll();
+            // icon_1.setImageResource(R.drawable.feedbac_ic_emo_1);
+            loademojis(0);
+            position = 0;
+            updateData();
         });
 
-        icon_2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        icon_2.setOnClickListener(v -> {
 
-                resetAll();
-                // icon_2.setImageResource(R.drawable.feedbac_ic_emo_2);
-                loademojis(1);
-                position = 1;
-                updateData();
-            }
+            resetAll();
+            // icon_2.setImageResource(R.drawable.feedbac_ic_emo_2);
+            loademojis(1);
+            position = 1;
+            updateData();
         });
 
-        icon_3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        icon_3.setOnClickListener(v -> {
 
-                resetAll();
-                //    icon_3.setImageResource(R.drawable.feedbac_ic_emo_3);
-                loademojis(2);
-                position = 2;
-                updateData();
-            }
+            resetAll();
+            //    icon_3.setImageResource(R.drawable.feedbac_ic_emo_3);
+            loademojis(2);
+            position = 2;
+            updateData();
         });
-        icon_4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetAll();
-                //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
-                loademojis(3);
-                position = 3;
-                updateData();
-            }
+        icon_4.setOnClickListener(v -> {
+            resetAll();
+            //  icon_4.setImageResource(R.drawable.feedbac_ic_emo_4);
+            loademojis(3);
+            position = 3;
+            updateData();
         });
 
-        icon_5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                resetAll();
-                // icon_5.setImageResource(R.drawable.feedbacon_emo_5);
-                loademojis(4);
-                position = 4;
-                updateData();
-            }
+        icon_5.setOnClickListener(v -> {
+            resetAll();
+            // icon_5.setImageResource(R.drawable.feedbacon_emo_5);
+            loademojis(4);
+            position = 4;
+            updateData();
         });
 
         updateData();
 
 
-        submit_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        submit_button.setOnClickListener(v -> {
 
-                if (adapter != null && adapter.getSubmitData() != null) {
-                    FeedbakResponse fb = adapter.getSubmitData();
-                    if (fb.getOptions() != null && fb.getOptions().size() > 0) {
-                        ArrayList<String> list = new ArrayList<>();
-                        String comment = "";
-                        boolean commentFound = false;
-                        HashMap<String, Object> hmObj = new HashMap();
-                        for (FeedbackDataResponse.Option temp : fb.getOptions()) {
-                            list.add(temp.getId());
-                            if (temp.getAction().equalsIgnoreCase("inputText")) {
-                                comment = !StringUtils.isNullOrEmptyWithTrim(temp.getUserAnswer()) ? temp.getUserAnswer().trim() : " ";
-                                commentFound = !StringUtils.isNullOrEmptyWithTrim(temp.getUserAnswer());
-                            }
-
-                            //}
-                        }
-                        if (list.size() > 0) {
-                            hmObj.put("featureId", id);
-                            hmObj.put("rating", "" + (position + 1));
-                            hmObj.put("options", list);
-                            //if (!StringUtils.isNullOrEmptyWithTrim(comment)) {
-                            if (commentFound) {
-                                hmObj.put("comments", comment);
-                            }
-                            //}
-
-                            KoreEventCenter.post(new RatingEvent(hmObj));
-                            bottomSheetBehavior.setHideable(true);
-                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                            if (context instanceof FeedBackillustrationActivity) {
-                                ((FeedBackillustrationActivity) context).finish();
-                                KoreEventCenter.post(new FinishActivityEvent());
-                            }else
-                            {
-                                new EmailSessionManager(getActivity()).saveTime(System.currentTimeMillis());
-                            }
-
-
-                        }
-                    } else {
-                        // ToastUtils.showToast(getActivity(), "please select option");
-                    }
-
-                } else {
+            if (adapter != null && adapter.getSubmitData() != null) {
+                FeedbakResponse fb = adapter.getSubmitData();
+                if (fb.getOptions() != null && !fb.getOptions().isEmpty()) {
+                    ArrayList<String> list = new ArrayList<>();
+                    String comment = "";
+                    boolean commentFound = false;
                     HashMap<String, Object> hmObj = new HashMap();
-                    hmObj.put("featureId", id);
-                    hmObj.put("rating", "" + (position + 1));
-                    KoreEventCenter.post(new RatingEvent(hmObj));
-                    bottomSheetBehavior.setHideable(true);
-                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-                    if (context instanceof FeedBackillustrationActivity) {
-                        ((FeedBackillustrationActivity) context).finish();
-                        KoreEventCenter.post(new FinishActivityEvent());
+                    for (FeedbackDataResponse.Option temp : fb.getOptions()) {
+                        list.add(temp.getId());
+                        if (temp.getAction().equalsIgnoreCase("inputText")) {
+                            comment = !StringUtils.isNullOrEmptyWithTrim(temp.getUserAnswer()) ? temp.getUserAnswer().trim() : " ";
+                            commentFound = !StringUtils.isNullOrEmptyWithTrim(temp.getUserAnswer());
+                        }
+
+                        //}
                     }
-                    else {
-                        new EmailSessionManager(getActivity()).saveTime(System.currentTimeMillis());
+                    if (list.size() > 0) {
+                        hmObj.put("featureId", id);
+                        hmObj.put("rating", "" + (position + 1));
+                        hmObj.put("options", list);
+                        //if (!StringUtils.isNullOrEmptyWithTrim(comment)) {
+                        if (commentFound) {
+                            hmObj.put("comments", comment);
+                        }
+                        //}
+
+                        KoreEventCenter.post(new RatingEvent(hmObj));
+                        bottomSheetBehavior.setHideable(true);
+                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                        if (context instanceof FeedBackillustrationActivity) {
+                            ((FeedBackillustrationActivity) context).finish();
+                            KoreEventCenter.post(new FinishActivityEvent());
+                        }else
+                        {
+                            new EmailSessionManager(getActivity()).saveTime(System.currentTimeMillis());
+                        }
+
+
                     }
+                } else {
                     // ToastUtils.showToast(getActivity(), "please select option");
                 }
+
+            } else {
+                HashMap<String, Object> hmObj = new HashMap();
+                hmObj.put("featureId", id);
+                hmObj.put("rating", "" + (position + 1));
+                KoreEventCenter.post(new RatingEvent(hmObj));
+                bottomSheetBehavior.setHideable(true);
+                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                if (context instanceof FeedBackillustrationActivity) {
+                    ((FeedBackillustrationActivity) context).finish();
+                    KoreEventCenter.post(new FinishActivityEvent());
+                }
+                else {
+                    new EmailSessionManager(getActivity()).saveTime(System.currentTimeMillis());
+                }
+                // ToastUtils.showToast(getActivity(), "please select option");
             }
         });
 

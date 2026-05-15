@@ -40,12 +40,7 @@ public class BankingFeedbackButtonsAdapter extends RecyclerView.Adapter<BankingF
         holder.tvButton.setText(botListModel.getLabel());
 
         if (holder.tvButton.getText().toString().equalsIgnoreCase(BundleConstants.BUTTON_TYPE_CONFIRM) && isEnabled) {
-            holder.tvButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    feedbackExperienceUpdateListner.sendFeedback();
-                }
-            });
+            holder.tvButton.setOnClickListener(v -> feedbackExperienceUpdateListner.sendFeedback());
         }
     }
 

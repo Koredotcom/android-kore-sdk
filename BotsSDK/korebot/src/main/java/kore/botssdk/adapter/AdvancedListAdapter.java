@@ -37,7 +37,10 @@ import androidx.core.text.HtmlCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.ArrayList;
 
@@ -50,14 +53,12 @@ import kore.botssdk.models.AdvancedListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.HeaderOptionsModel;
 import kore.botssdk.models.Widget;
-import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.markdown.MarkdownImageTagHandler;
 import kore.botssdk.utils.markdown.MarkdownTagHandler;
 import kore.botssdk.utils.markdown.MarkdownUtil;
 import kore.botssdk.view.AutoExpandListView;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 @SuppressLint("UnknownNullness")
 public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonClickListner {
@@ -65,7 +66,6 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     ComposeFooterInterface composeFooterInterface;
     InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final Context context;
-    private final RoundedCornersTransform roundedCornersTransform;
     final ListView parentListView;
     private int count;
     final PopupWindow popupWindow, btnsPopUpWindow;
@@ -75,8 +75,6 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
     public AdvancedListAdapter(Context context, ListView parentListView) {
         this.context = context;
         prefs = context.getSharedPreferences(THEME_NAME, MODE_PRIVATE);
-        this.roundedCornersTransform = new RoundedCornersTransform();
-        roundedCornersTransform.setRadius(10);
         this.parentListView = parentListView;
         popUpView = View.inflate(context, R.layout.advancelist_drop_down_popup, null);
         popupWindow = new PopupWindow(popUpView, LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT, true);
@@ -170,7 +168,15 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     holder.ivDescription.setImageBitmap(decodedByte);
                 } else {
-                    Picasso.get().load(botListModel.getIcon()).transform(roundedCornersTransform).into(holder.ivDescription);
+                    Glide.with(context)
+                            .load(botListModel.getIcon())
+                            .transform(
+                                    new MultiTransformation<>(
+                                            new CenterCrop(),
+                                            new RoundedCorners(20)
+                                    )
+                            )
+                            .into(holder.ivDescription);
                 }
             } catch (Exception e) {
                 holder.ivDescription.setVisibility(GONE);
@@ -210,7 +216,15 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     holder.ivDescription.setImageBitmap(decodedByte);
                 } else {
-                    Picasso.get().load(botListModel.getDescriptionIcon()).transform(roundedCornersTransform).into(holder.ivDescription);
+                    Glide.with(context)
+                            .load(botListModel.getDescriptionIcon())
+                            .transform(
+                                    new MultiTransformation<>(
+                                            new CenterCrop(),
+                                            new RoundedCorners(20)
+                                    )
+                            )
+                            .into(holder.ivDescription);
                 }
             } catch (Exception e) {
                 holder.ivDescription.setVisibility(GONE);
@@ -314,20 +328,10 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                     AdvanceListButtonAdapter advanceButtonAdapter = new AdvanceListButtonAdapter(context, tempBtns, BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                     recyclerView.setAdapter(advanceButtonAdapter);
 
-                    ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            btnsPopUpWindow.dismiss();
-                        }
-                    });
+                    ivDropDownCLose.setOnClickListener(view -> btnsPopUpWindow.dismiss());
                 }
 
-                holder.llButtonMore.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        btnsPopUpWindow.showAsDropDown(holder.llButtonMore, 135, -450);
-                    }
-                });
+                holder.llButtonMore.setOnClickListener(view -> btnsPopUpWindow.showAsDropDown(holder.llButtonMore, 135, -450));
             }
         } else if (!StringUtils.isNullOrEmpty(botListModel.getView()) && botListModel.getView().equalsIgnoreCase(BundleConstants.OPTIONS)) {
             AdvanceOptionsAdapter advanceOptionsAdapter = null;
@@ -377,7 +381,15 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                                 holder.ivAction.setImageBitmap(decodedByte);
                             } else {
-                                Picasso.get().load(botListModel.getIcon()).transform(roundedCornersTransform).into(holder.ivAction);
+                                Glide.with(context)
+                                        .load(botListModel.getIcon())
+                                        .transform(
+                                                new MultiTransformation<>(
+                                                        new CenterCrop(),
+                                                        new RoundedCorners(20)
+                                                )
+                                        )
+                                        .into(holder.ivAction);
                             }
                         } catch (Exception ex) {
                             holder.ivAction.setVisibility(GONE);
@@ -425,16 +437,13 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
                         holder.tvAction.setTypeface(holder.tvAction.getTypeface(), Typeface.BOLD);
 
-                        holder.tvAction.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
-                                    composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
-                                else {
-                                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
-                                    botListModel.setCollapsed(!botListModel.isCollapsed());
-                                    notifyDataSetChanged();
-                                }
+                        holder.tvAction.setOnClickListener(v -> {
+                            if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
+                                composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
+                            else {
+                                holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
+                                botListModel.setCollapsed(!botListModel.isCollapsed());
+                                notifyDataSetChanged();
                             }
                         });
                     } else if (!StringUtils.isNullOrEmpty(headerOptionsModel.getValue())) {
@@ -470,7 +479,15 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                                 holder.ivAction.setImageBitmap(decodedByte);
                             } else {
-                                Picasso.get().load(headerOptionsModel.getIcon()).transform(roundedCornersTransform).into(holder.ivAction);
+                                Glide.with(context)
+                                        .load(headerOptionsModel.getIcon())
+                                        .transform(
+                                                new MultiTransformation<>(
+                                                        new CenterCrop(),
+                                                        new RoundedCorners(20)
+                                                )
+                                        )
+                                        .into(holder.ivAction);
                             }
                         } catch (Exception ex) {
                             holder.ivAction.setVisibility(GONE);
@@ -518,20 +535,17 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
 
                         holder.tvAction.setTypeface(holder.tvAction.getTypeface(), Typeface.BOLD);
 
-                        holder.tvAction.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
-                                    composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
-                                else {
-                                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
-                                    botListModel.setCollapsed(!botListModel.isCollapsed());
-                                    notifyDataSetChanged();
-                                }
+                        holder.tvAction.setOnClickListener(v -> {
+                            if (composeFooterInterface != null && !StringUtils.isNullOrEmpty(headerOptionsModel.getPayload()))
+                                composeFooterInterface.onSendClick(holder.tvAction.getText().toString(), headerOptionsModel.getPayload(), true);
+                            else {
+                                holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
+                                botListModel.setCollapsed(!botListModel.isCollapsed());
+                                notifyDataSetChanged();
                             }
                         });
 
-                    } else if (headerOptionsModel.getType().equalsIgnoreCase(BundleConstants.DROP_DOWN) && headerOptionsModel.getDropdownOptions() != null && headerOptionsModel.getDropdownOptions().size() > 0) {
+                    } else if (headerOptionsModel.getType().equalsIgnoreCase(BundleConstants.DROP_DOWN) && headerOptionsModel.getDropdownOptions() != null && !headerOptionsModel.getDropdownOptions().isEmpty()) {
                         holder.rlDropDown.setVisibility(View.VISIBLE);
                         popUpView.setMinimumWidth((int) (150 * dp1));
 
@@ -541,18 +555,8 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                         AdvanceListButtonAdapter advanceListButtonAdapter = new AdvanceListButtonAdapter(context, headerOptionsModel.getDropdownOptions(), BundleConstants.FULL_WIDTH, AdvancedListAdapter.this, composeFooterInterface, invokeGenericWebViewInterface, false);
                         recyclerView.setAdapter(advanceListButtonAdapter);
 
-                        ivDropDownCLose.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                popupWindow.dismiss();
-                            }
-                        });
-                        holder.ivDropDownAction.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                popupWindow.showAsDropDown(holder.ivDropDownAction, -400, 0);
-                            }
-                        });
+                        ivDropDownCLose.setOnClickListener(view -> popupWindow.dismiss());
+                        holder.ivDropDownAction.setOnClickListener(view -> popupWindow.showAsDropDown(holder.ivDropDownAction, -400, 0));
                     } else if (!StringUtils.isNullOrEmpty(headerOptionsModel.getValue())) {
                         holder.tvAction.setVisibility(View.VISIBLE);
 
@@ -575,13 +579,10 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 }
             }
 
-            holder.ivAction.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
-                    botListModel.setCollapsed(!botListModel.isCollapsed());
-                    notifyDataSetChanged();
-                }
+            holder.ivAction.setOnClickListener(view -> {
+                holder.ivAction.setRotation(botListModel.isCollapsed() ? 90 : 0);
+                botListModel.setCollapsed(!botListModel.isCollapsed());
+                notifyDataSetChanged();
             });
         }
 
@@ -590,18 +591,15 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
         if (!botListModel.isCollapsed())
             holder.llChildViews.setVisibility(View.VISIBLE);
 
-        holder.botListItemRoot.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.botListItemRoot.setOnClickListener(v -> {
+            if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
+                int position1 = parentListView.getPositionForView(v);
+                AdvancedListModel _botListModel = getItem(position1);
                 if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                    int position = parentListView.getPositionForView(v);
-                    AdvancedListModel _botListModel = getItem(position);
-                    if (composeFooterInterface != null && invokeGenericWebViewInterface != null) {
-                        if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getType())) {
-                            String listElementButtonPayload = _botListModel.getPayload();
-                            String listElementButtonTitle = _botListModel.getTitle();
-                            composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload, false);
-                        }
+                    if (BundleConstants.BUTTON_TYPE_POSTBACK.equalsIgnoreCase(_botListModel.getType())) {
+                        String listElementButtonPayload = _botListModel.getPayload();
+                        String listElementButtonTitle = _botListModel.getTitle();
+                        composeFooterInterface.onSendClick(listElementButtonTitle, listElementButtonPayload, false);
                     }
                 }
             }
@@ -660,8 +658,7 @@ public class AdvancedListAdapter extends BaseAdapter implements AdvanceButtonCli
                 if (StringUtils.isNullOrEmpty(stringBuilder)) {
                     stringBuilder.append(advanceOptionsModel.getValue());
                     renderStringBuilder.append(advanceOptionsModel.getLabel());
-                }
-                else {
+                } else {
                     stringBuilder.append(", ").append(advanceOptionsModel.getValue());
                     renderStringBuilder.append(", ").append(advanceOptionsModel.getLabel());
                 }

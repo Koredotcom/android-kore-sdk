@@ -1,7 +1,9 @@
 package kore.botssdk.adapter;
 
+
 import static kore.botssdk.view.viewUtils.DimensionUtil.dp1;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.LayoutInflater;
@@ -15,7 +17,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.List;
 
@@ -24,19 +29,18 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotTableListRowItemsModel;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class TableListInnerAdapter extends RecyclerView.Adapter<TableListInnerAdapter.ViewHolder> {
     private final List<BotTableListRowItemsModel> botTableListModels;
     private final boolean isEnabled;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
+    private final Context context;
 
-    private final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
-
-    public TableListInnerAdapter(List<BotTableListRowItemsModel> botTableListModels, boolean isEnabled) {
+    public TableListInnerAdapter(Context context, List<BotTableListRowItemsModel> botTableListModels, boolean isEnabled) {
         this.botTableListModels = botTableListModels;
         this.isEnabled = isEnabled;
+        this.context = context;
     }
 
     @NonNull
@@ -55,7 +59,16 @@ public class TableListInnerAdapter extends RecyclerView.Adapter<TableListInnerAd
         if (botListModel.getTitle() != null && botListModel.getTitle().getImage() != null) {
             if (!StringUtils.isNullOrEmpty(botListModel.getTitle().getImage().getImage_src())) {
                 holder.botListItemImage.setVisibility(View.VISIBLE);
-                Picasso.get().load(botListModel.getTitle().getImage().getImage_src()).transform(roundedCornersTransform).into(holder.botListItemImage);
+
+                Glide.with(context)
+                        .load(botListModel.getTitle().getImage().getImage_src())
+                        .transform(
+                                new MultiTransformation<>(
+                                        new CenterCrop(),
+                                        new RoundedCorners(20)
+                                )
+                        )
+                        .into(holder.botListItemImage);
 
                 if (botListModel.getTitle().getImage().getRadius() > 0) {
                     holder.botListItemImage.getLayoutParams().height = (int) (botListModel.getTitle().getImage().getRadius() * 2 * dp1);
@@ -143,7 +156,7 @@ public class TableListInnerAdapter extends RecyclerView.Adapter<TableListInnerAd
         return botTableListModels != null ? botTableListModels.get(position) : null;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         LinearLayout botListItemRoot;
         ImageView botListItemImage;
         TextView botListItemTitle;

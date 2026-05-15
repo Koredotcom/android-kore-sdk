@@ -155,20 +155,17 @@ public class ShareMeetingAdapter extends RecyclerView.Adapter<ShareMeetingAdapte
 
             holder.check_user.setChecked(attendeesList.get(position).isCheckState());
             /*if(!isAllSwitchSelected) {*/
-                holder.check_user.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        boolean isChecked = holder.check_user.isChecked();
-                        if (isChecked) {
-                            attendeesList.get(holder.getBindingAdapterPosition()).setCheckState(true);
-                            updateNewSharedOrUnShared(attendeesList.get(holder.getBindingAdapterPosition()), true);
+                holder.check_user.setOnClickListener(view -> {
+                    boolean isChecked = holder.check_user.isChecked();
+                    if (isChecked) {
+                        attendeesList.get(holder.getBindingAdapterPosition()).setCheckState(true);
+                        updateNewSharedOrUnShared(attendeesList.get(holder.getBindingAdapterPosition()), true);
 
-                        } else {
-                            attendeesList.get(holder.getBindingAdapterPosition()).setCheckState(false);
-                            updateNewSharedOrUnShared(attendeesList.get(holder.getBindingAdapterPosition()), false);
-                        }
-                        doAllInviteeAction();
+                    } else {
+                        attendeesList.get(holder.getBindingAdapterPosition()).setCheckState(false);
+                        updateNewSharedOrUnShared(attendeesList.get(holder.getBindingAdapterPosition()), false);
                     }
+                    doAllInviteeAction();
                 });
             /*}*/
         }

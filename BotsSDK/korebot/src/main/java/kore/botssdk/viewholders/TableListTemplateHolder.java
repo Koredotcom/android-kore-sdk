@@ -42,7 +42,7 @@ public class TableListTemplateHolder extends BaseViewHolder {
         setResponseText(itemView.findViewById(R.id.layoutBubble), payloadInner.getText(), baseBotMessage.getTimeStamp());
         ArrayList<BotTableListModel> botListModelArrayList = payloadInner.getTableListElements();
         TableListTemplateAdapter botListTemplateAdapter;
-        botListTemplateAdapter = new TableListTemplateAdapter(botListModelArrayList, isLastItem());
+        botListTemplateAdapter = new TableListTemplateAdapter(itemView.getContext(), botListModelArrayList, isLastItem());
         botListTemplateAdapter.setComposeFooterInterface(composeFooterInterface);
         botListTemplateAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
         recyclerView.setAdapter(botListTemplateAdapter);

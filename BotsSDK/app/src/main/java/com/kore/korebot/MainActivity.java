@@ -1,5 +1,7 @@
 package com.kore.korebot;
 
+import static androidx.core.content.ContextCompat.startActivity;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
                 SDKConfiguration.Server.customData.putAll(customData);
 
                 //To kill the Bot from out side the SDK
-                BotSocketConnectionManager.killInstance();
+                BotSocketConnectionManager.killInstanceToReconnect();
 
                 //Set the JWT Token to reuse in connecting to the Bot
                 SDKConfiguration.JWTServer.setJwt_token(token);
@@ -297,22 +299,21 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
     }
 
     @Override
-    public void onBotDisconnected() {
-        LogUtils.e("Bot Current Status", "Bot Disconnected");
+    public void onBotDisconnected(String event_code, String event_message) {
+        if (event_code.equals("DeepLinkClicked")) {
+            try {
+                Class<?> clazz = Class.forName(event_message);
+                Intent intent = new Intent(MainActivity.this, clazz);
+                startActivity(intent);
+
+            } catch (ClassNotFoundException e) {
+                LogUtils.e("MainActivity ClassNotFoundException", e+"");
+            }
+        }
     }
 
     @Override
-    public void onBotConnecting() {
-        LogUtils.e("Bot Current Status", "Bot Connecting");
-    }
-
-    @Override
-    public void onBotReconnected() {
-        LogUtils.e("Bot Current Status", "Bot Re-connected");
-    }
-
-    @Override
-    public void onBotConnectionFail(String strReason) {
-        LogUtils.e("Bot Current Status", strReason);
+    public void onBotConnectionFail(String event_code, String event_message) {
+        LogUtils.e(event_code, event_message);
     }
 }

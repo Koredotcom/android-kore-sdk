@@ -80,14 +80,11 @@ dependencies {
     implementation 'com.github.DocsInternal-Kore:WebRtcSdk:0.0.2'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'com.squareup.picasso:picasso:2.71828'
-    implementation 'com.makeramen:roundedimageview:2.3.0'
     implementation 'com.google.code.gson:gson:2.13.2'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
-    implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.bumptech.glide:glide:5.0.5'
     implementation 'com.github.emojione:emojione-android:3.1.0'
     implementation 'com.github.cachapa:ExpandableLayout:2.9.2'

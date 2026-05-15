@@ -130,21 +130,18 @@ public final class PannelAdapter extends RecyclerView.Adapter<PannelAdapter.RVie
         holder.img_icon.setTypeface(KaUtility.getTypeFaceObj(context));
         holder.unreadIcon.setVisibility(View.GONE);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (data != null) {
-                    String tempIconId = data.get_id();
-                    for (int index = 0; index < panelResponseData.getPanels().size(); index++) {
-                        panelResponseData.getPanels().get(index).setItemClicked(tempIconId.equals(panelResponseData.getPanels().get(index).get_id()) && !tempIconId.equalsIgnoreCase(""));
-                    }
-                    PanelBaseModel panelBaseModel = new PanelBaseModel();
-                    panelBaseModel.setData(data);
-                    if (panelInterface != null) {
-                        panelInterface.onPanelClicked(panelBaseModel);
-                    }
-                    notifyDataSetChanged();
+        holder.itemView.setOnClickListener(view -> {
+            if (data != null) {
+                String tempIconId = data.get_id();
+                for (int index = 0; index < panelResponseData.getPanels().size(); index++) {
+                    panelResponseData.getPanels().get(index).setItemClicked(tempIconId.equals(panelResponseData.getPanels().get(index).get_id()) && !tempIconId.equalsIgnoreCase(""));
                 }
+                PanelBaseModel panelBaseModel = new PanelBaseModel();
+                panelBaseModel.setData(data);
+                if (panelInterface != null) {
+                    panelInterface.onPanelClicked(panelBaseModel);
+                }
+                notifyDataSetChanged();
             }
         });
     }

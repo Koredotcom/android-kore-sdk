@@ -18,7 +18,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.List;
 
@@ -29,19 +32,17 @@ import kore.botssdk.models.BotListModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTemplateAdapter.ViewHolder> {
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     private final boolean isEnabled;
-    private final SharedPreferences sharedPreferences;
-    private final RoundedCornersTransform roundedCornersTransform = new RoundedCornersTransform();
     private final List<BotListModel> botListModels;
     private final int size;
+    private final Context context;
 
     public ListViewTemplateAdapter(Context context, List<BotListModel> botListModels, boolean isEnabled, int size) {
-        sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, MODE_PRIVATE);
+        this.context = context;
         this.botListModels = botListModels;
         this.isEnabled = isEnabled;
         this.size = size;
@@ -61,7 +62,15 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
 
         if (!StringUtils.isNullOrEmpty(botListModel.getImage_url())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
-            Picasso.get().load(botListModel.getImage_url()).transform(roundedCornersTransform).into(holder.botListItemImage);
+            Glide.with(context)
+                    .load(botListModel.getImage_url())
+                    .transform(
+                            new MultiTransformation<>(
+                                    new CenterCrop(),
+                                    new RoundedCorners(20)
+                            )
+                    )
+                    .into(holder.botListItemImage);
         }
 
         holder.botListItemTitle.setTag(botListModel);
@@ -69,7 +78,8 @@ public class ListViewTemplateAdapter extends RecyclerView.Adapter<ListViewTempla
         holder.botListItemTitle.setTypeface(null, Typeface.BOLD);
         holder.botListItemCost.setText(botListModel.getValue());
 
-        if (botListModel.getColor() != null) holder.botListItemCost.setTextColor(Color.parseColor(botListModel.getColor()));
+        if (botListModel.getColor() != null)
+            holder.botListItemCost.setTextColor(Color.parseColor(botListModel.getColor()));
 
         holder.botListItemCost.setTypeface(null, Typeface.BOLD);
 

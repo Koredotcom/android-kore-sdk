@@ -94,18 +94,15 @@ public class BeneficiaryTemplateHolder extends BaseViewHolder {
             botCustomListRoot.setVisibility(VISIBLE);
             if (botButtonModelArrayList != null && !botButtonModelArrayList.isEmpty()) {
                 botCustomListViewButton.setText(Html.fromHtml(botButtonModelArrayList.get(0).getTitle()));
-                botCustomListViewButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
-                        bottomSheetDialog.setIsFromFullView(false);
-                        bottomSheetDialog.setSkillName("skillName", "trigger");
+                botCustomListViewButton.setOnClickListener(v -> {
+                    ListActionSheetFragment bottomSheetDialog = new ListActionSheetFragment();
+                    bottomSheetDialog.setIsFromFullView(false);
+                    bottomSheetDialog.setSkillName("skillName", "trigger");
 //                        bottomSheetDialog.setData(botListModelArrayList);
-                        bottomSheetDialog.setHeaderVisible(true);
-                        bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
-                        bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
-                        bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
-                    }
+                    bottomSheetDialog.setHeaderVisible(true);
+                    bottomSheetDialog.setComposeFooterInterface(composeFooterInterface);
+                    bottomSheetDialog.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);
+                    bottomSheetDialog.show(((FragmentActivity) itemView.getContext()).getSupportFragmentManager(), "add_tags");
                 });
 
 

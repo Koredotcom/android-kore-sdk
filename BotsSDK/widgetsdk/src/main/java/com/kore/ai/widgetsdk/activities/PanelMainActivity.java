@@ -194,12 +194,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
         mBottomSheetBehavior = CustomBottomSheetBehavior.from(persistentPanel);
 //        mBottomSheetBehaviorAudio = CustomBottomSheetBehavior.from(audioLayout);
 
-        closeBtnPanel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
-            }
-        });
+        closeBtnPanel.setOnClickListener(v -> mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_HIDDEN));
 
         panelDrag.setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
@@ -256,10 +251,7 @@ public class PanelMainActivity extends KaAppCompatActivity implements PanelInter
                 }
 
 
-                editButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
+                editButton.setOnClickListener(v -> {
                 });
             }
 

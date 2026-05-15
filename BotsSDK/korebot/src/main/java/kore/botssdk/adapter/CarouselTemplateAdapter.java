@@ -28,7 +28,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -82,7 +82,9 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
         }
         try {
             if (botCarouselModel.getImage_url() != null && !botCarouselModel.getImage_url().isEmpty()) {
-                Picasso.get().load(botCarouselModel.getImage_url()).into(holder.carouselItemImage);
+                Glide.with(holder.carouselItemImage.getContext())
+                        .load(botCarouselModel.getImage_url())
+                        .into(holder.carouselItemImage);
                 holder.carouselItemImage.setVisibility(VISIBLE);
             } else {
                 holder.carouselItemImage.setVisibility(GONE);
@@ -205,7 +207,7 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
         this.type = type;
         this.botCarouselModels = botCarouselModels;
         this.isEnabled = isEnabled;
-        notifyDataSetChanged();
+        notifyItemChanged(0, (botCarouselModels.size()-1));
     }
 
     public void setComposeFooterInterface(ComposeFooterInterface composeFooterInterface) {

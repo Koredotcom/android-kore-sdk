@@ -27,30 +27,24 @@ public class PermissionDeniedActivity extends BaseAppCompatActivity {
         Button continueButton = (Button)findViewById(R.id.permission_denied_button_continue);
         Button editButton = (Button)findViewById(R.id.permission_denied_button_edit);
 
-        continueButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean isFirstLogin = Prefs.isFirstLogin(PermissionDeniedActivity.this);
-                if (isFirstLogin)
-                {
-                    startNextActivity(LoginActivity.class);
-                    finish();
-                }
-                else {
-                    //start login and open app main screen
-                    ACManager.getInstance().startLogin(PermissionDeniedActivity.this);
-                    startNextActivity(MainActivity.class);
-                    finish();
-                }
+        continueButton.setOnClickListener(view -> {
+            boolean isFirstLogin = Prefs.isFirstLogin(PermissionDeniedActivity.this);
+            if (isFirstLogin)
+            {
+                startNextActivity(LoginActivity.class);
+                finish();
+            }
+            else {
+                //start login and open app main screen
+                ACManager.getInstance().startLogin(PermissionDeniedActivity.this);
+                startNextActivity(MainActivity.class);
+                finish();
             }
         });
 
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PermissionManager.askForSystemAlertWindowPermission(PermissionDeniedActivity.this);
-                finish();
-            }
+        editButton.setOnClickListener(view -> {
+            PermissionManager.askForSystemAlertWindowPermission(PermissionDeniedActivity.this);
+            finish();
         });
     }
 

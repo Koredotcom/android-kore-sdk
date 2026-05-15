@@ -118,37 +118,28 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
             tvfeedback_template_title.setText(payloadInner.getText());
         }
 
-        llCloseBottomSheet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(bottomSheetDialog != null)
-                    bottomSheetDialog.dismiss();
-            }
+        llCloseBottomSheet.setOnClickListener(v -> {
+            if(bottomSheetDialog != null)
+                bottomSheetDialog.dismiss();
         });
 
-        tvFeedbackSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        tvFeedbackSubmit.setOnClickListener(v -> {
 
-                if(bottomSheetDialog != null)
-                    bottomSheetDialog.dismiss();
+            if(bottomSheetDialog != null)
+                bottomSheetDialog.dismiss();
 
-                if(!StringUtils.isNullOrEmpty(etFeedbackComment.getText().toString()))
-                    composeFooterInterface.onSendClick(position+":"+etFeedbackComment.getText().toString(), position+":"+etFeedbackComment.getText().toString(), false);
-                else
-                    composeFooterInterface.onSendClick(position+"", position+"", false);
-            }
+            if(!StringUtils.isNullOrEmpty(etFeedbackComment.getText().toString()))
+                composeFooterInterface.onSendClick(position+":"+etFeedbackComment.getText().toString(), position+":"+etFeedbackComment.getText().toString(), false);
+            else
+                composeFooterInterface.onSendClick(position+"", position+"", false);
         });
 
-        rbFeedback.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                position = (int) rating;
-                payloadInner.setEmojiPosition(position);
+        rbFeedback.setOnRatingBarChangeListener((ratingBar, rating, fromUser) -> {
+            position = (int) rating;
+            payloadInner.setEmojiPosition(position);
 
-                if(fromUser)
-                    updateData();
-            }
+            if(fromUser)
+                updateData();
         });
 
         return view;
@@ -166,17 +157,13 @@ public class FeedbackActionSheetFragment extends BottomSheetDialogFragment imple
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         bottomSheetDialog = (BottomSheetDialog) super.onCreateDialog(savedInstanceState);
-        bottomSheetDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-            @Override
-            public void onShow(DialogInterface dialogInterface) {
-                BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
-                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        bottomSheetDialog.setOnShowListener(dialogInterface -> {
+            BottomSheetDialog d = (BottomSheetDialog) dialogInterface;
+            FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
 
-                bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
-                bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
-                bottomSheetBehavior.setPeekHeight(200 * dp1);
-            }
-
+            bottomSheet.getLayoutParams().height = (int) (AppControl.getInstance(getContext()).getDimensionUtil().screenHeight - 40 * dp1);
+            bottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+            bottomSheetBehavior.setPeekHeight(200 * dp1);
         });
 
         // Do something with your dialog like setContentView() or whatever

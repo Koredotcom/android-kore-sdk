@@ -17,14 +17,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 
 import java.util.ArrayList;
 
 import kore.botssdk.R;
 import kore.botssdk.models.AdvanceListTableModel;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.viewUtils.RoundedCornersTransform;
 
 public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableListAdapter.ButtonViewHolder> {
     private final LayoutInflater inflater;
@@ -47,21 +49,16 @@ public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableLi
         AdvanceListTableModel.AdvanceTableRowDataModel btn = buttons.get(i);
         holder.botListItemTitle.setText(btn.getTitle());
 
-        if (!StringUtils.isNullOrEmpty(btn.getIcon()))
-        {
+        if (!StringUtils.isNullOrEmpty(btn.getIcon())) {
             holder.botListItemImage.setVisibility(View.VISIBLE);
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(100, 100);
             layoutParams.setMargins(0, 0, 10, 0);
 
-            if(!StringUtils.isNullOrEmpty(btn.getIconSize()))
-            {
-                if(btn.getIconSize().equalsIgnoreCase("large"))
-                {
+            if (!StringUtils.isNullOrEmpty(btn.getIconSize())) {
+                if (btn.getIconSize().equalsIgnoreCase("large")) {
                     layoutParams.height = 180;
                     layoutParams.width = 180;
-                }
-                else if(btn.getIconSize().equalsIgnoreCase("small"))
-                {
+                } else if (btn.getIconSize().equalsIgnoreCase("small")) {
                     layoutParams.height = 60;
                     layoutParams.width = 60;
                 }
@@ -77,7 +74,15 @@ public class AdvanceTableListAdapter extends RecyclerView.Adapter<AdvanceTableLi
                     Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
                     holder.botListItemImage.setImageBitmap(decodedByte);
                 } else {
-                    Picasso.get().load(btn.getIcon()).transform(new RoundedCornersTransform()).into(holder.botListItemImage);
+                    Glide.with(holder.botListItemImage)
+                            .load(btn.getIcon())
+                            .transform(
+                                    new MultiTransformation<>(
+                                            new CenterCrop(),
+                                            new RoundedCorners(20)
+                                    )
+                            )
+                            .into(holder.botListItemImage);
                 }
             } catch (Exception e) {
                 holder.botListItemImage.setVisibility(GONE);
