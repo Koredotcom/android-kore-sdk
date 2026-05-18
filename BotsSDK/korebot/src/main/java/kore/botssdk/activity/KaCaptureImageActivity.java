@@ -32,7 +32,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.content.FileProvider;
+import kore.botssdk.utils.KoreBotFileProvider;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -182,7 +182,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 captureIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
                 try {
-                    Uri photoURI = FileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".provider", createImageFile());
+                    Uri photoURI = KoreBotFileProvider.getUriForFile(this, this.getApplicationContext().getPackageName() + ".korebot.provider", createImageFile());
                     captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                     cameraMediaUri = photoURI;
                 } catch (IOException e) {
@@ -197,7 +197,7 @@ public class KaCaptureImageActivity extends KaAppCompatActivity implements KoreM
                 File videoFile = createVideoFile();
                 Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
 
-                Uri videoURI = FileProvider.getUriForFile(this, getPackageName() + ".provider",
+                Uri videoURI = KoreBotFileProvider.getUriForFile(this, getPackageName() + ".korebot.provider",
                         videoFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, videoURI);
                 videoMediaFilePath = videoFile.getAbsoluteFile();

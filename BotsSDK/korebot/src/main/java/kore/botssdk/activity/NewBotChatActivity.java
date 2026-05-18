@@ -358,7 +358,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void showReconnectionStopped() {
-        if(!SDKConfiguration.OverrideKoreConfig.disable_alert_on_max_reconnection) {
+        if (!isFinishing() && !isDestroyed() && !SDKConfiguration.OverrideKoreConfig.disable_alert_on_max_reconnection) {
             DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
                 if (which == DialogInterface.BUTTON_POSITIVE) {
                     BotSocketConnectionManager.killInstance();
@@ -370,7 +370,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             builder.setMessage(R.string.bot_not_connected).setCancelable(false).setPositiveButton(R.string.ok, dialogClickListener).show();
         }
 
-        if(SDKConfiguration.Server.getBotStatusListener() != null)
+        if (SDKConfiguration.Server.getBotStatusListener() != null)
             SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("BotNotConnected", "Connection to the bot failed after several retries");
     }
 
@@ -539,6 +539,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     void showCloseAlert() {
+        if (isFinishing() || isDestroyed()) return;
+
         DialogInterface.OnClickListener dialogClickListener = (dialog, which) -> {
             switch (which) {
                 case DialogInterface.BUTTON_POSITIVE: {
@@ -624,6 +626,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     }
 
     private void showTemplateBottomSheet(BotResponse botResponse) {
+        if (isFinishing() || isDestroyed()) return;
+
         if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
