@@ -57,6 +57,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'com.google.android.gms:play-services-basement:18.9.0'
     implementation 'com.google.android.gms:play-services-base:18.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
 
 //    implementation 'com.github.Koredotcom:android-kore-sdk:10.25.1'
 

@@ -110,6 +110,10 @@ public class SDKConfig {
         }
     }
 
+    public static void setBubbleDateFormat(String dateFormat) {
+        BotResponse.BUBBLE_DATE_FORMAT = dateFormat;
+    }
+
     public static boolean isIsShowActionBar() {
         return isShowActionBar;
     }

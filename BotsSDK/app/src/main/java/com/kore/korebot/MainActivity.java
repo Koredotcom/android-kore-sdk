@@ -110,7 +110,11 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         //Flag to show bot header minimize icon or hide
         SDKConfig.showHeaderMinimize(true);
 
+        //Set the listener to the SDK to get the Bot callbacks to the parent application
         SDKConfig.setBotStatusUpdateListener(MainActivity.this);
+
+        //Set the date format in which user wants to display the format above the bot and user responses
+        SDKConfig.setBubbleDateFormat("MMM dd'{S}' 'at' h:mm a");
 
         //Flag to send the custom fonts to the SDK
         //SDKConfig.setFontFamily(ResourcesCompat.getFont(MainActivity.this, R.font.fss_light), ResourcesCompat.getFont(MainActivity.this, R.font.fss_regular), ResourcesCompat.getFont(MainActivity.this, R.font.fss_bold));

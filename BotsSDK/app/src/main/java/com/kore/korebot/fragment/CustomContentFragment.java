@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.kore.korebot.R;
 
 import java.util.ArrayList;
@@ -32,7 +34,6 @@ import kore.botssdk.models.QuickReplyTemplate;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.StringUtils;
-import kore.botssdk.view.CircularProfileView;
 import kore.botssdk.view.DotsTextView;
 import kore.botssdk.view.QuickReplyView;
 
@@ -193,8 +194,12 @@ public class CustomContentFragment extends BaseContentFragment {
 
     protected void initializeBotTypingStatus(View view, String mChannelIconURL) {
         botTypingStatusRl = view.findViewById(R.id.botTypingStatus);
-        CircularProfileView botTypingStatusIcon = view.findViewById(R.id.typing_status_item_cpv);
-        botTypingStatusIcon.populateLayout(mBotNameInitials, mChannelIconURL, null, mBotIconId, Color.parseColor(SDKConfiguration.BubbleColors.quickReplyColor), true);
+        ImageView botTypingStatusIcon = view.findViewById(R.id.typing_status_item_cpv);
+
+        if (!StringUtils.isNullOrEmpty(mChannelIconURL)) {
+            Glide.with(this).load(mChannelIconURL).into(botTypingStatusIcon);
+        }
+
         typingStatusItemDots = view.findViewById(R.id.typing_status_item_dots);
         typingStatusItemDots.setTextColor(Color.BLACK);
     }
