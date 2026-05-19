@@ -151,14 +151,54 @@ public class DateUtils {
                 }
             }
 
-            SimpleDateFormat outputFormat =
-                    new SimpleDateFormat("EEE, MMM dd yyyy hh:mm:ss a", deviceLocale);
+            if (BotResponse.BUBBLE_DATE_FORMAT == null || BotResponse.BUBBLE_DATE_FORMAT.isEmpty()) {
+                BotResponse.BUBBLE_DATE_FORMAT = "EEE, MMM dd yyyy hh:mm:ss a";
+            }
 
-            return outputFormat.format(date);
+            SimpleDateFormat outputFormat =
+                    new SimpleDateFormat(BotResponse.BUBBLE_DATE_FORMAT, deviceLocale);
+
+            String result = outputFormat.format(date);
+            if (result.contains("{S}")) {
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(date);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+                result = result.replace("{S}", getDayOfMonthSuffix(day));
+            }
+            return result;
 
         } catch (Exception e) {
             LogUtils.e("Date format exception", e+"");
-            return "";
+            try {
+                Locale deviceLocale;
+                Date date = new Date(timeMillis);
+
+                if(SDKConfiguration.getDeviceLocale() != null)
+                {
+                    deviceLocale = SDKConfiguration.getDeviceLocale();
+                }
+                else {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        deviceLocale = context.getResources()
+                                .getConfiguration()
+                                .getLocales()
+                                .get(0);
+                    } else {
+                        deviceLocale = context.getResources()
+                                .getConfiguration()
+                                .locale;
+                    }
+                }
+
+                SimpleDateFormat outputFormat =
+                        new SimpleDateFormat("EEE, MMM dd yyyy hh:mm:ss a", deviceLocale);
+
+                return outputFormat.format(date);
+
+            } catch (Exception ex) {
+                LogUtils.e("Date format exception", ex+"");
+                return "";
+            }
         }
     }
 
@@ -283,5 +323,17 @@ public class DateUtils {
         }
 
         return time;
+    }
+
+    private static String getDayOfMonthSuffix(final int n) {
+        if (n >= 11 && n <= 13) {
+            return "th";
+        }
+        return switch (n % 10) {
+            case 1 -> "st";
+            case 2 -> "nd";
+            case 3 -> "rd";
+            default -> "th";
+        };
     }
 }

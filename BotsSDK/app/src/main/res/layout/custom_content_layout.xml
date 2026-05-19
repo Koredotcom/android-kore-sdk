@@ -73,7 +73,7 @@
             android:visibility="gone">
 
             <!-- Type Image -->
-            <kore.botssdk.view.CircularProfileView
+            <ImageView
                 android:id="@+id/typing_status_item_cpv"
                 android:layout_width="@dimen/typing_layout_cpv_width"
                 android:layout_height="@dimen/typing_layout_cpv_height"
