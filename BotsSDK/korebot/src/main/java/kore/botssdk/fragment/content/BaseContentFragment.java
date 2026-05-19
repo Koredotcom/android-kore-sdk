@@ -259,12 +259,15 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        if (!SDKConfiguration.Client.isWebHook)
-            mContentViewModel.loadChatHistory(_offset, limit, SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken());
-        else mContentViewModel.loadChatHistory(_offset, limit, jwt);
+        if (mContentViewModel != null && isAdded() && getActivity() != null) {
+            if (!SDKConfiguration.Client.isWebHook)
+                mContentViewModel.loadChatHistory(_offset, limit, SocketWrapper.getInstance(getActivity().getApplicationContext()).getAccessToken());
+            else mContentViewModel.loadChatHistory(_offset, limit, jwt);
+        }
     }
 
-    public void loadReconnectionChatHistory(final int _offset, final int limit) {
+    public void loadReconnectionChatHistory(final int _offset, final int limit)
+    {
         if (fetching) {
             if (swipeRefreshLayout != null) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -276,10 +279,12 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
             swipeRefreshLayout.setRefreshing(true);
         }
 
-        if (!SDKConfiguration.Client.isWebHook)
-            mContentViewModel.loadReconnectionChatHistory(_offset, limit, SocketWrapper.getInstance(requireActivity().getApplicationContext()).getAccessToken(), botsChatAdapter.getBaseBotMessageArrayList());
-        else
-            mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
+        if (mContentViewModel != null && isAdded() && getActivity() != null) {
+            if (!SDKConfiguration.Client.isWebHook)
+                mContentViewModel.loadReconnectionChatHistory(_offset, limit, SocketWrapper.getInstance(getActivity().getApplicationContext()).getAccessToken(), botsChatAdapter.getBaseBotMessageArrayList());
+            else
+                mContentViewModel.loadReconnectionChatHistory(_offset, limit, jwt, botsChatAdapter.getBaseBotMessageArrayList());
+        }
     }
 
     @Override
