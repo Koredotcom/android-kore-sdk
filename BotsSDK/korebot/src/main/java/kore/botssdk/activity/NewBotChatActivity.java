@@ -543,6 +543,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         new PushNotificationRegister().unsubscribePushNotification(botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("PREF_UNIQUE_ID", mViewModel.getUniqueID()));
 
         if (botClient != null) botClient.disconnect();
+        BotSocketConnectionManager.getInstance().shutDownConnection();
         KoreEventCenter.unregister(this);
         super.onDestroy();
     }

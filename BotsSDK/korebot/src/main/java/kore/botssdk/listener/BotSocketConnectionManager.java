@@ -564,12 +564,12 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void shutDownConnection() {
-        botSocketConnectionManager = null;
         if (botClient != null) botClient.disconnect();
         if (ttsSynthesizer != null) {
             ttsSynthesizer.stopTextToSpeech();
-
         }
+        KoreEventCenter.unregister(this);
+        botSocketConnectionManager = null;
     }
     public void shutDownConnectionToReconnect() {
         botSocketConnectionManager = null;
