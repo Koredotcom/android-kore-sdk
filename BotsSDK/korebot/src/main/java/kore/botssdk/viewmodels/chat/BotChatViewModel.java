@@ -134,6 +134,8 @@ public class BotChatViewModel extends ViewModel {
         if (!SDKConfiguration.Client.isWebHook) {
             BotSocketConnectionManager.getInstance().setChatListener(sListener);
         }
+
+        SocketWrapper.getInstance(context).disConnect();
         BotSocketConnectionManager.getInstance().startAndInitiateConnectionWithReconnect(context, SDKConfiguration.Server.customData, isReconnect);
     }
 

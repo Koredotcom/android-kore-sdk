@@ -59,7 +59,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-base:18.9.0'
     implementation 'com.github.bumptech.glide:glide:4.16.0'
 
-//    implementation 'com.github.Koredotcom:android-kore-sdk:10.25.2'
+//    implementation 'com.github.SudheerJa-Kore:android-kore-sdk:10.25.3'
 
     implementation(project(':korebot')) {
         exclude module: 'support-v4'
