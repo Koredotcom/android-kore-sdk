@@ -240,10 +240,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void addMessageToAdapter(BotResponse baseBotMessage) {
-        botContentFragment.addMessageToBotChatAdapter(baseBotMessage);
-        mViewModel.textToSpeech(baseBotMessage, baseFooterFragment.isTTSEnabled());
-        botContentFragment.setQuickRepliesIntoFooter(baseBotMessage);
-        botContentFragment.showCalendarIntoFooter(baseBotMessage);
+        if (botContentFragment != null && botContentFragment.isAdded()) {
+            botContentFragment.addMessageToBotChatAdapter(baseBotMessage);
+            botContentFragment.setQuickRepliesIntoFooter(baseBotMessage);
+            botContentFragment.showCalendarIntoFooter(baseBotMessage);
+        }
+
+        if (baseFooterFragment != null && baseFooterFragment.isAdded()) {
+            mViewModel.textToSpeech(baseBotMessage, baseFooterFragment.isTTSEnabled());
+        }
+
         showTemplateBottomSheet(baseBotMessage);
     }
 
@@ -251,7 +257,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
         if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
             taskProgressBar.setVisibility(View.GONE);
-            baseFooterFragment.enableSendButton();
+            if (baseFooterFragment != null && baseFooterFragment.isAdded())
+                baseFooterFragment.enableSendButton();
         }
     }
 
@@ -259,17 +266,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onBrandingDetails(BrandingModel brandingModel) {
         if (brandingModel != null) {
             botName = brandingModel.getBotName();
-            if (botContentFragment != null)
+            if (botContentFragment != null && botContentFragment.isAdded())
                 botContentFragment.changeThemeBackGround(brandingModel.getWidgetBodyColor(), brandingModel.getWidgetHeaderColor(), brandingModel.getWidgetTextColor(), brandingModel.getBotName());
 
-            if (baseFooterFragment != null)
+            if (baseFooterFragment != null && baseFooterFragment.isAdded())
                 baseFooterFragment.changeThemeBackGround(brandingModel.getWidgetFooterColor(), brandingModel.getWidgetFooterHintColor());
 
-            if (botHeaderFragment != null) {
+            if (botHeaderFragment != null && botHeaderFragment.isAdded()) {
                 botHeaderFragment.setBrandingDetails(brandingModel);
 
-                if(botHeaderFragment.getMinimize() != null)
-                {
+                if (botHeaderFragment.getMinimize() != null) {
                     botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
                     botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
                 }
@@ -282,42 +288,47 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void loadOnConnectionHistory(boolean isReconnect) {
-        if (botContentFragment != null && isReconnect) {
+        if (botContentFragment != null && botContentFragment.isAdded() && isReconnect) {
             if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > SDKConfiguration.OverrideKoreConfig.history_batch_size)
                 botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
             else if (sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 0) > 0)
                 botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
             else if (SDKConfiguration.Client.history_on_network_resume)
                 botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
-        } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null) {
+        } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null && botContentFragment.isAdded()) {
             botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
         }
     }
 
     @Override
     public void updateContentListOnSend(BotRequest botRequest) {
-        botContentFragment.updateContentListOnSend(botRequest);
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.updateContentListOnSend(botRequest);
     }
 
     @Override
     public void showTypingStatus() {
-        botContentFragment.showTypingStatus();
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.showTypingStatus();
     }
 
     @Override
     public void stopTypingStatus() {
-        botContentFragment.stopTypingStatus();
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.stopTypingStatus();
     }
 
     @Override
     public void setIsAgentConnected(boolean isAgentConnected) {
         isAgentTransfer = isAgentConnected;
-        baseFooterFragment.setIsAgentConnected(isAgentConnected);
+        if (baseFooterFragment != null && baseFooterFragment.isAdded())
+            baseFooterFragment.setIsAgentConnected(isAgentConnected);
     }
 
     @Override
     public void enableSendButton() {
-        baseFooterFragment.enableSendButton();
+        if (baseFooterFragment != null && baseFooterFragment.isAdded())
+            baseFooterFragment.enableSendButton();
     }
 
     @Override
@@ -338,17 +349,20 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 break;
             case CONNECTED: {
                 taskProgressBar.setVisibility(View.GONE);
-                baseFooterFragment.enableSendButton();
+                if (baseFooterFragment != null && baseFooterFragment.isAdded())
+                    baseFooterFragment.enableSendButton();
 
-                if(SDKConfiguration.Server.getBotStatusListener() != null)
+                if (SDKConfiguration.Server.getBotStatusListener() != null)
                     SDKConfiguration.Server.getBotStatusListener().onBotConnected();
             }
             break;
             case DISCONNECTED:
             case CONNECTED_BUT_DISCONNECTED: {
                 taskProgressBar.setVisibility(VISIBLE);
-                baseFooterFragment.setDisabled(true);
-                baseFooterFragment.updateUI();
+                if (baseFooterFragment != null && baseFooterFragment.isAdded()) {
+                    baseFooterFragment.setDisabled(true);
+                    baseFooterFragment.updateUI();
+                }
             }
             break;
             default:
@@ -381,7 +395,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void addAttachmentToAdapter(HashMap<String, String> attachmentKey) {
-        baseFooterFragment.addAttachmentToAdapter(attachmentKey);
+        if (baseFooterFragment != null && baseFooterFragment.isAdded())
+            baseFooterFragment.addAttachmentToAdapter(attachmentKey);
     }
 
     @Override
@@ -390,18 +405,23 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void addStreamingMessage(String message, boolean endFlag) {
-        botContentFragment.addStreamingMessage(message);
-        baseFooterFragment.setDisabled(!endFlag);
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.addStreamingMessage(message);
+
+        if (baseFooterFragment != null && baseFooterFragment.isAdded())
+            baseFooterFragment.setDisabled(!endFlag);
     }
 
     @Override
     public void updateMessageStatus(BotRequest botRequest) {
-        botContentFragment.updateMessageStatus(botRequest);
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.updateMessageStatus(botRequest);
     }
 
     @Override
     public void onSendClick(String message, boolean isFromUtterance) {
-        botContentFragment.showTypingStatus();
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.showTypingStatus();
 
         if (!StringUtils.isNullOrEmpty(message)) {
             if (!SDKConfiguration.Client.isWebHook)
@@ -416,7 +436,9 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void onSendClick(String message, String payload, boolean isFromUtterance) {
-        botContentFragment.showTypingStatus();
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.showTypingStatus();
+
         if (!SDKConfiguration.Client.isWebHook) {
             if (payload != null) {
                 BotSocketConnectionManager.getInstance().sendPayload(message, payload);
@@ -437,7 +459,9 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void onSendClick(String message, ArrayList<HashMap<String, String>> attachments, boolean isFromUtterance) {
-        botContentFragment.showTypingStatus();
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.showTypingStatus();
+
         if (attachments != null && !attachments.isEmpty()) {
             if (!SDKConfiguration.Client.isWebHook)
                 BotSocketConnectionManager.getInstance().sendAttachmentMessage(message, attachments);
@@ -456,15 +480,16 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onEvent(String jwt) {
         this.jwt = jwt;
         if (SDKConfiguration.Client.isWebHook) {
-            if (botContentFragment != null) botContentFragment.setJwtTokenForWebHook(jwt);
-            if (baseFooterFragment != null) baseFooterFragment.setJwtToken(jwt);
+            if (botContentFragment != null && botContentFragment.isAdded()) botContentFragment.setJwtTokenForWebHook(jwt);
+            if (baseFooterFragment != null && baseFooterFragment.isAdded()) baseFooterFragment.setJwtToken(jwt);
             mViewModel.getWebHookMeta(jwt);
         }
     }
 
     @Override
     public void copyMessageToComposer(String text, boolean isForOnboard) {
-        baseFooterFragment.setComposeText(text);
+        if (baseFooterFragment != null && baseFooterFragment.isAdded())
+            baseFooterFragment.setComposeText(text);
     }
 
     @Override
@@ -472,7 +497,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         if (sharedPreferences != null) {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean(BundleConstants.IS_RECONNECT, true);
-            editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+            if (botContentFragment != null && botContentFragment.isAdded())
+                editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
             editor.apply();
             BotSocketConnectionManager.killInstance();
 
@@ -489,7 +515,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void onDeleteClick(BaseBotMessage message) {
-        botContentFragment.deleteMessage(message);
+        if (botContentFragment != null && botContentFragment.isAdded())
+            botContentFragment.deleteMessage(message);
     }
 
     @Override
@@ -516,6 +543,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         new PushNotificationRegister().unsubscribePushNotification(botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("PREF_UNIQUE_ID", mViewModel.getUniqueID()));
 
         if (botClient != null) botClient.disconnect();
+        BotSocketConnectionManager.getInstance().shutDownConnection();
         KoreEventCenter.unregister(this);
         super.onDestroy();
     }
@@ -547,7 +575,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     if (sharedPreferences != null) {
                         SharedPreferences.Editor editor = sharedPreferences.edit();
                         editor.putBoolean(BundleConstants.IS_RECONNECT, true);
-                        editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+                        if (botContentFragment != null && botContentFragment.isAdded())
+                            editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
                         editor.apply();
                         BotSocketConnectionManager.killInstance();
 

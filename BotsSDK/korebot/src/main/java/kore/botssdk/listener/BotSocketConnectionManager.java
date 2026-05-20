@@ -149,12 +149,14 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void onReconnectStopped(String reason) {
-        chatListener.onConnectionStateChanged(CONNECTION_STATE.RECONNECTION_STOPPED, false);
+        if(chatListener != null)
+            chatListener.onConnectionStateChanged(CONNECTION_STATE.RECONNECTION_STOPPED, false);
     }
 
     @Override
     public void onStartCompleted(boolean isReconnect) {
-        chatListener.onStartCompleted(isReconnect);
+        if(chatListener != null)
+            chatListener.onStartCompleted(isReconnect);
     }
 
     private void makeStsJwtCallWithConfig(final boolean isRefresh) {
@@ -562,12 +564,12 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void shutDownConnection() {
-        botSocketConnectionManager = null;
         if (botClient != null) botClient.disconnect();
         if (ttsSynthesizer != null) {
             ttsSynthesizer.stopTextToSpeech();
-
         }
+        KoreEventCenter.unregister(this);
+        botSocketConnectionManager = null;
     }
     public void shutDownConnectionToReconnect() {
         botSocketConnectionManager = null;
