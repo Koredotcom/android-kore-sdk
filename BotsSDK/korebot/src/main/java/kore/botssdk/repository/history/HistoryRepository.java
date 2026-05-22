@@ -69,13 +69,16 @@ public class HistoryRepository {
                                     if (data != null && data.isEmpty()) continue;
                                     try {
                                         PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
-                                        BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
-                                        r.setType(msg.getType());
-                                        r.setIcon(history.getIcon());
-                                        long timeMillis = r.getTimeInMillis(msg.getCreatedOn(), true);
-                                        r.setFormattedDate(DateUtils.formattedSentDateV6(context, timeMillis));
-                                        r.setTimeStamp(r.prepareLocaleTimeStamp(context, timeMillis));
-                                        msgs.add(r);
+                                        if(outer != null)
+                                        {
+                                            BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
+                                            r.setType(msg.getType());
+                                            r.setIcon(history.getIcon());
+                                            long timeMillis = r.getTimeInMillis(msg.getCreatedOn(), true);
+                                            r.setFormattedDate(DateUtils.formattedSentDateV6(context, timeMillis));
+                                            r.setTimeStamp(r.prepareLocaleTimeStamp(context, timeMillis));
+                                            msgs.add(r);
+                                        }
                                     } catch (com.google.gson.JsonSyntaxException ex) {
                                         BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
