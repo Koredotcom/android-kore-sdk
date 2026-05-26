@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="voice_activity_title">WebRTC Call</string>
+    <string name="voice_ai_assistant">AI Assistant</string>
+    
+    <string name="voice_status_ready">Ready to call</string>
+    <string name="voice_status_initializing">Initializing…</string>
+    <string name="voice_status_calling">Calling…</string>
+    <string name="voice_status_ringing">Ringing…</string>
+    <string name="voice_status_in_call">In call</string>
+    <string name="voice_status_connected">Connected</string>
+    <string name="voice_status_call_ended">Call ended</string>
+    <string name="voice_status_registered">Registered - Ready</string>
+    <string name="voice_status_permission_denied">Permission denied</string>
+    
+    <string name="voice_btn_mute">Mute</string>
+    <string name="voice_btn_unmute">Unmute</string>
+    <string name="voice_btn_speaker_on">Speaker On</string>
+    <string name="voice_btn_speaker_off">Speaker Off</string>
+    <string name="voice_btn_call">Call</string>
+    <string name="voice_btn_hangup">Hang Up</string>
+    <string name="voice_btn_connecting">Connecting…</string>
+    
+    <string name="voice_permission_title">Permission Required</string>
+    <string name="voice_permission_message">Microphone permission is required to make calls. Please enable it in app settings.</string>
+</resources>

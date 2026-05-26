@@ -1,0 +1,19 @@
+# Copy these properties to ~/.gradle/gradle.properties (recommended) or
+# uncomment and fill in a local gradle.properties (never commit secrets).
+
+# Maven coordinates (can also live in project gradle.properties)
+# VOICE_MODE_SDK_GROUP=ai.kore.voicemode
+# VOICE_MODE_SDK_VERSION=1.0.0
+
+# Sonatype Central / OSSRH (https://central.sonatype.com)
+mavenCentralUsername=your-sonatype-username
+mavenCentralPassword=your-sonatype-token
+
+# GPG signing (required for Maven Central releases)
+signing.keyId=last8ofkeyid
+signing.password=your-key-password
+signing.secretKeyRingFile=/Users/you/.gnupg/secring.gpg
+
+# Alternative: in-memory keys (CI) — set in CI env instead of secretKeyRingFile:
+# ORG_GRADLE_PROJECT_signingKey=...
+# ORG_GRADLE_PROJECT_signingPassword=...

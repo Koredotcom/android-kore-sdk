@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Voice Activity Colors -->
+    <color name="voice_background">#1a1a2e</color>
+    <color name="voice_status_bg">#16213e</color>
+    <color name="voice_avatar_bg">#0f3460</color>
+    
+    <color name="voice_status_active">#4ade80</color>
+    <color name="voice_status_inactive">#6b7280</color>
+    
+    <color name="voice_btn_active">#3b82f6</color>
+    <color name="voice_btn_inactive">#374151</color>
+    <color name="voice_btn_disabled">#1f2937</color>
+    
+    <color name="voice_call_btn">#22c55e</color>
+    <color name="voice_hangup_btn">#ef4444</color>
+    <color name="voice_connecting_btn">#f59e0b</color>
+    
+    <color name="voice_text_white">#ffffff</color>
+    <color name="voice_text_disabled">#6b7280</color>
+</resources>

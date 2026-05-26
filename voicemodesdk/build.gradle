@@ -1,0 +1,145 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+def publishGroupId = findProperty('VOICE_MODE_SDK_GROUP') ?: 'kore.botssdk.voicemode'
+def publishVersion = findProperty('VOICE_MODE_SDK_VERSION') ?: '1.0.0'
+def publishArtifactId = 'voicemodesdk'
+
+android {
+    compileSdk 34
+
+    defaultConfig {
+        minSdkVersion 23
+        targetSdkVersion 34
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    namespace 'kore.botssdk.voicemode'
+
+    publishing {
+        singleVariant('release') {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.core:core:1.13.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    implementation 'io.getstream:stream-webrtc-android:1.1.1'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+}
+
+tasks.withType(Javadoc).configureEach {
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = publishGroupId
+                artifactId = publishArtifactId
+                version = publishVersion
+
+                pom {
+                    name = 'Kore Voice Mode SDK'
+                    description = 'Android WebRTC voice SDK with SIP signaling and JWT authentication for the Kore platform.'
+                    url = 'https://github.com/Koredotcom/android-kore-sdk'
+
+                    licenses {
+                        license {
+                            name = 'The Apache License, Version 2.0'
+                            url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'kore'
+                            name = 'Kore.ai'
+                            organization = 'Kore.ai'
+                            organizationUrl = 'https://kore.ai'
+                        }
+                    }
+
+                    scm {
+                        connection = 'scm:git:git://github.com/Koredotcom/android-kore-sdk.git'
+                        developerConnection = 'scm:git:ssh://github.com:Koredotcom/android-kore-sdk.git'
+                        url = 'https://github.com/Koredotcom/android-kore-sdk'
+                    }
+                }
+            }
+        }
+
+        repositories {
+            mavenLocal()
+
+            maven {
+                name = 'MavenCentral'
+                def isSnapshot = publishVersion.endsWithIgnoreCase('SNAPSHOT')
+                url = isSnapshot
+                        ? 'https://central.sonatype.com/repository/maven-snapshots/'
+                        : 'https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/'
+
+                credentials {
+                    username = findPublishCredential('mavenCentralUsername', 'MAVEN_CENTRAL_USERNAME')
+                    password = findPublishCredential('mavenCentralPassword', 'MAVEN_CENTRAL_PASSWORD')
+                }
+            }
+        }
+    }
+
+    def signingKeyId = findPublishCredential('signing.keyId', 'SIGNING_KEY_ID')
+    def signingPassword = findPublishCredential('signing.password', 'SIGNING_PASSWORD')
+    def signingSecretKeyRingFile = findPublishCredential('signing.secretKeyRingFile', 'SIGNING_SECRET_KEY_RING_FILE')
+
+    if (signingKeyId && signingPassword && signingSecretKeyRingFile) {
+        signing {
+            sign publishing.publications.release
+        }
+    }
+}
+
+String findPublishCredential(String propertyName, String envName) {
+    def value = project.findProperty(propertyName)
+    if (value == null) {
+        value = System.getenv(envName)
+    }
+    return value?.toString()
+}
+
+tasks.register('publishToMavenCentral') {
+    group = 'publishing'
+    description = 'Publishes the release AAR and POM to Maven Central (requires credentials and signing).'
+    dependsOn 'publishReleasePublicationToMavenCentralRepository'
+}
+
+tasks.register('publishVoiceModeSdkToMavenLocal') {
+    group = 'publishing'
+    description = 'Publishes the release AAR to the local Maven repository (~/.m2/repository).'
+    dependsOn 'publishReleasePublicationToMavenLocal'
+}
