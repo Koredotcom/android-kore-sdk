@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,8 +23,6 @@ import androidx.core.view.WindowCompat;
 import java.util.ArrayList;
 import java.util.List;
 
-import kore.botssdk.voicemode.utils.PermissionHelper;
-
 /**
  * Sample Voice Activity demonstrating the WebRTC SDK usage.
  * This activity provides a complete UI for making voice calls with:
@@ -31,7 +30,7 @@ import kore.botssdk.voicemode.utils.PermissionHelper;
  * - Mute/Unmute control
  * - Speaker toggle
  * - Connection status display
- * 
+ *
  * <p>To use this activity, you can either:
  * <ul>
  *   <li>Start it directly with default credentials</li>
@@ -81,13 +80,13 @@ public class SampleVoiceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         setupWindow();
         setContentView(R.layout.activity_sample_voice);
-        
+
         initViews();
         setupClickListeners();
-        
+
         webRTCClient = new WebRTCClient(this);
         webRTCClient.setListener(new WebRTCEventListener());
         webRTCClient.setDebugEnabled(true);
@@ -97,7 +96,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
         Window window = getWindow();
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         window.setStatusBarColor(ContextCompat.getColor(this, R.color.voice_background));
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowCompat.setDecorFitsSystemWindows(window, false);
         }
@@ -107,15 +106,15 @@ public class SampleVoiceActivity extends AppCompatActivity {
         statusIndicator = findViewById(R.id.statusIndicator);
         tvStatus = findViewById(R.id.tvStatus);
         avatarFrame = findViewById(R.id.avatarFrame);
-        
+
         btnMute = findViewById(R.id.btnMute);
         tvMuteIcon = findViewById(R.id.tvMuteIcon);
         tvMuteLabel = findViewById(R.id.tvMuteLabel);
-        
+
         btnSpeaker = findViewById(R.id.btnSpeaker);
         tvSpeakerIcon = findViewById(R.id.tvSpeakerIcon);
         tvSpeakerLabel = findViewById(R.id.tvSpeakerLabel);
-        
+
         btnCall = findViewById(R.id.btnCall);
         tvCallIcon = findViewById(R.id.tvCallIcon);
         tvCallLabel = findViewById(R.id.tvCallLabel);
@@ -131,7 +130,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
      * Get the WebRTC configuration.
      * Override this method in a subclass to provide custom credentials,
      * or pass credentials via Intent extras.
-     * 
+     *
      * @return WebRTCConfig instance
      */
     protected WebRTCConfig getWebRTCConfig() {
@@ -145,29 +144,15 @@ public class SampleVoiceActivity extends AppCompatActivity {
         String sipDomain = getIntent().getStringExtra(EXTRA_SIP_DOMAIN);
 
         // Use defaults if not provided via intent
-        if (botId == null || botId.isEmpty()) {
-            botId = "st-3e2406df-8df0-5b0a-81d9-7862fe1c718a";
-        }
-        if (clientId == null || clientId.isEmpty()) {
-            clientId = "cs-9d78f6d6-3d70-57f8-8f78-eb93bef11dd3";
-        }
-        if (clientSecret == null || clientSecret.isEmpty()) {
-            clientSecret = "pZwmJd164NifbmXJKyJhG3rxzc3rSdn8OAuvcdP1k+0=";
-        }
-        if (identity == null || identity.isEmpty()) {
-            identity = "user@example.com";
-        }
-        if (webSocketUrl == null || webSocketUrl.isEmpty()) {
-            webSocketUrl = "wss://savg-sbc1.kore.ai:8443/";
-        }
-        if (jwtServiceUrl == null || jwtServiceUrl.isEmpty()) {
-            jwtServiceUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/users/sts";
-        }
-        if (serverUrl == null || serverUrl.isEmpty()) {
-            serverUrl = "https://platform.kore.ai";
-        }
-        if (sipDomain == null || sipDomain.isEmpty()) {
-            sipDomain = "unifiedxo-prod-savg.kore.ai";
+
+        if (botId == null || botId.isEmpty() || clientId == null || clientId.isEmpty() || clientSecret == null || clientSecret.isEmpty() ||
+                identity == null || identity.isEmpty() ||
+                webSocketUrl == null || webSocketUrl.isEmpty() ||
+                jwtServiceUrl == null || jwtServiceUrl.isEmpty() ||
+                serverUrl == null || serverUrl.isEmpty()
+        ) {
+            Toast.makeText(this, "Please check the bot configuration!", Toast.LENGTH_LONG).show();
+            finish();
         }
 
         return new WebRTCConfig.Builder()
@@ -199,14 +184,14 @@ public class SampleVoiceActivity extends AppCompatActivity {
 
     private void requestPermissionsAndCall() {
         List<String> permissionsNeeded = new ArrayList<>();
-        
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) 
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             permissionsNeeded.add(Manifest.permission.RECORD_AUDIO);
         }
-        
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) 
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT)
                     != PackageManager.PERMISSION_GRANTED) {
                 permissionsNeeded.add(Manifest.permission.BLUETOOTH_CONNECT);
             }
@@ -215,17 +200,17 @@ public class SampleVoiceActivity extends AppCompatActivity {
         if (permissionsNeeded.isEmpty()) {
             initializeCall();
         } else {
-            ActivityCompat.requestPermissions(this, 
-                    permissionsNeeded.toArray(new String[0]), 
+            ActivityCompat.requestPermissions(this,
+                    permissionsNeeded.toArray(new String[0]),
                     PERMISSION_REQUEST_CODE);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, 
-                                          @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        
+
         if (requestCode == PERMISSION_REQUEST_CODE) {
             boolean micGranted = false;
             boolean bluetoothGranted = true;
@@ -246,7 +231,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
             } else {
                 boolean shouldShowRationale = ActivityCompat.shouldShowRequestPermissionRationale(
                         this, Manifest.permission.RECORD_AUDIO);
-                
+
                 if (!shouldShowRationale) {
                     showPermissionDeniedDialog();
                 } else {
@@ -284,7 +269,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
         if (webRTCClient != null) {
             webRTCClient.hangup();
         }
-        
+
         resetCallState();
         updateStatus(getString(R.string.voice_status_ready));
     }
@@ -319,7 +304,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
         isConnecting = false;
         isMuted = false;
         currentSession = null;
-        
+
         updateUI();
     }
 
@@ -360,7 +345,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
             if (isInCall) {
                 btnMute.setEnabled(true);
                 btnMute.setAlpha(1.0f);
-                
+
                 if (isMuted) {
                     btnMute.setBackgroundResource(R.drawable.bg_control_button_active);
                     tvMuteIcon.setText("🔇");
@@ -387,7 +372,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
             if (isInCall) {
                 btnSpeaker.setEnabled(true);
                 btnSpeaker.setAlpha(1.0f);
-                
+
                 if (isSpeakerOn) {
                     btnSpeaker.setBackgroundResource(R.drawable.bg_control_button_active);
                     tvSpeakerIcon.setText("🔊");
