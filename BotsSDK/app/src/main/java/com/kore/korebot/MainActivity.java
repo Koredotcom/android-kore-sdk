@@ -144,42 +144,11 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         //Enable the flag if the bot needs to support Emoji shortcuts decryption
         SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
 
+        //Disable the flag if the bot reconnection not needed inside the SDK
+        SDKConfiguration.OverrideKoreConfig.reconnectionBySDK = true;
+
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
-    }
-
-    private void startTimeout() {
-        if(isSchedulerStarted) return;
-
-        isSchedulerStarted = true;
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-
-        scheduler.scheduleWithFixedDelay(() -> BotSocketConnectionManager.getInstance().getJwtTokenWithConfig(new BotSocketConnectionManager.JwtCallback() {
-            @Override
-            public void onSuccess(String token) {
-                LogUtils.e("JWT Updated", token);
-
-                //Getting the Jwt Token from outside SDK
-                RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
-                customData.put("jwt_token", token);
-                SDKConfiguration.Server.customData.putAll(customData);
-
-                //To kill the Bot from outside the SDK
-                BotSocketConnectionManager.killInstanceToReconnect();
-
-                //Set the JWT Token to reuse in connecting to the Bot
-                SDKConfiguration.JWTServer.setJwt_token(token);
-
-                //BroadCast to call the Bot Connect from outside the SDK
-                Intent intent = new Intent(BundleConstants.BOT_RECONNECT);
-                sendBroadcast(intent);
-            }
-
-            @Override
-            public void onError(String error) {
-                LogUtils.e("JWT", error);
-            }
-        }), 5, 5, TimeUnit.MINUTES);
     }
 
     // You can do the assignment inside onAttach or onCreate, i.e, before the activity is displayed
@@ -250,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
     @Override
     public void onBotConnected() {
         LogUtils.e("Bot Current Status", "Bot Connected");
-//        startTimeout();
     }
 
     @Override

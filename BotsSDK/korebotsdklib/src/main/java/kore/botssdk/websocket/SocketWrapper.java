@@ -6,8 +6,11 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -33,6 +36,7 @@ import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -112,18 +116,43 @@ public final class SocketWrapper {
                 HashMap<String, Object> hsh1 = new HashMap<>();
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
-                if (botAuthorizationResponse.body() != null) {
+                if (botAuthorizationResponse.isSuccessful() && botAuthorizationResponse.body() != null) {
                     botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
                     auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
 
-                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1);
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + auth,hsh1);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
-                    if (rtmUrlResponse.body() != null)
+                    if (rtmUrlResponse.isSuccessful() && rtmUrlResponse.body() != null) {
                         observableEmitter.onNext(rtmUrlResponse.body());
-                }
+                        observableEmitter.onComplete();
+                    } else {
+                        String errorMessage = "RTM URL API failed";
 
-                observableEmitter.onComplete();
+                        try (ResponseBody errorBody = rtmUrlResponse.errorBody()) {
+                            if (errorBody != null) {
+                                errorMessage = errorBody.string();
+                            }
+
+                        } catch (Exception e) {
+                            LogUtils.e("Error at RTM Url", ""+e);
+                        }
+
+                        observableEmitter.onError( new Throwable(errorMessage));
+                    }
+                } else {
+                    String errorMessage = "JWT Grant failed with code: "+ botAuthorizationResponse.code();
+
+                    try (ResponseBody errorBody = botAuthorizationResponse.errorBody()) {
+                        if (errorBody != null) {
+                            errorMessage = errorBody.string();
+                        }
+                    } catch (Exception e) {
+                        LogUtils.e("Error at JWT Grant", ""+e);
+                    }
+
+                    observableEmitter.onError(new Throwable(errorMessage));
+                }
             } catch (Exception e) {
                 observableEmitter.onError(e);
             }
@@ -178,9 +207,21 @@ public final class SocketWrapper {
 
             @Override
             public void onError(@NonNull Throwable throwable) {
-                LogUtils.d("HI", "on error");
-                mIsReconnectionAttemptNeeded = true;
-                reconnectAttempt();
+
+                String errorMessage = throwable.getMessage();
+
+                if (errorMessage == null || errorMessage.trim().isEmpty()) {
+                    errorMessage = "Error at makeJwtGrantCall";
+                }
+
+                if (SDKConfiguration.Server.getBotStatusListener() != null) {
+                    SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("BotNotConnected", errorMessage);
+                }
+
+                if (SDKConfiguration.OverrideKoreConfig.reconnectionBySDK) {
+                    mIsReconnectionAttemptNeeded = true;
+                    reconnectAttempt();
+                }
             }
 
             @Override
@@ -230,7 +271,9 @@ public final class SocketWrapper {
                             LogUtils.d("Socket Wrapper", "Hey socketConnectionListener is null");
                         }
                         isConnecting = false;
-                        reconnectAttempt();
+                        if(SDKConfiguration.OverrideKoreConfig.reconnectionBySDK) {
+                            reconnectAttempt();
+                        }
                     }
 
                     @Override
@@ -347,21 +390,44 @@ public final class SocketWrapper {
                 HashMap<String, Object> hsh1 = new HashMap<>();
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
-                if (botAuthorizationResponse.body() != null) {
+                if (botAuthorizationResponse.isSuccessful() && botAuthorizationResponse.body() != null) {
                     auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
                     botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
 
-                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), hsh1, true);
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + auth, hsh1,true);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
-                    if (rtmUrlResponse.body() != null)
+                    if (rtmUrlResponse.isSuccessful() && rtmUrlResponse.body() != null){
                         observableEmitter.onNext(rtmUrlResponse.body());
+                        observableEmitter.onComplete();
 
-                    observableEmitter.onComplete();
-                } else if (botAuthorizationResponse.code() != 200) {
-                    observableEmitter.onError(new Throwable());
+                    } else {
+                        String errorMessage = "RTM reconnect API failed with code: " + rtmUrlResponse.code();
+
+                        try (ResponseBody errorBody = rtmUrlResponse.errorBody()) {
+                            if (errorBody != null) {
+                                errorMessage = errorBody.string();
+                            }
+                        } catch (Exception e) {
+                            LogUtils.e(LOG_TAG, e+"");
+                        }
+
+                        observableEmitter.onError(new Throwable(errorMessage));
+                    }
+                } else {
+
+                    String errorMessage = "JWT Grant failed with code: "+ botAuthorizationResponse.code();
+
+                    try (ResponseBody errorBody = botAuthorizationResponse.errorBody()) {
+                        if (errorBody != null) {
+                            errorMessage = errorBody.string();
+                        }
+                    } catch (Exception e) {
+                        LogUtils.e(LOG_TAG, e+"");
+                    }
+
+                    observableEmitter.onError(new Throwable(errorMessage));
                 }
-
             } catch (Exception e) {
                 observableEmitter.onError(e);
             }
@@ -392,8 +458,10 @@ public final class SocketWrapper {
             @Override
             public void onError(@NonNull Throwable throwable) {
                 LogUtils.d("HI", "on error");
-                mIsReconnectionAttemptNeeded = true;
-                reconnectAttempt();
+                if(SDKConfiguration.OverrideKoreConfig.reconnectionBySDK) {
+                    mIsReconnectionAttemptNeeded = true;
+                    reconnectAttempt();
+                }
             }
 
             @Override

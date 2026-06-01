@@ -670,34 +670,44 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         bottomSheetFragment.show(botResponse, getSupportFragmentManager());
     }
 
-    @Override
-    protected void onStop() {
-        mViewModel.setIsActivityResumed(false);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();
-
-            if (!taskList.isEmpty()) {
-                String topClassName = Objects.requireNonNull(taskList.get(0).getTaskInfo().topActivity).toString();
-                if (!topClassName.contains(getApplicationContext().getPackageName())) {
-
-//                    if (botClient != null) {
-//                        botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-
-                        LogUtils.e("onStop", "onStop called");
-
-                        SharedPreferences.Editor prefsEditor = getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-                        String jsonObject = new Gson().toJson("");
-                        prefsEditor.putString(BotResponse.AGENT_INFO_KEY, jsonObject);
-                        prefsEditor.putBoolean(BundleConstants.IS_RECONNECT, false);
-                        prefsEditor.putInt(BotResponse.HISTORY_COUNT, 0);
-                        prefsEditor.apply();
+//    @Override
+//    protected void onStop() {
+//        mViewModel.setIsActivityResumed(false);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+//            List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();
+//
+//            if (taskList != null && !taskList.isEmpty()) {
+//
+//                ActivityManager.AppTask appTask = taskList.get(0);
+//
+//                if (appTask != null &&
+//                        appTask.getTaskInfo() != null &&
+//                        appTask.getTaskInfo().topActivity != null) {
+//
+//                    String topClassName = appTask.getTaskInfo().topActivity.toString();
+//
+//                    if (!topClassName.contains(getApplicationContext().getPackageName())) {
+//
+//                        LogUtils.e("onStop", "onStop called");
+//
+//                        SharedPreferences.Editor prefsEditor =
+//                                getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
+//
+//                        String jsonObject = new Gson().toJson("");
+//
+//                        prefsEditor.putString(BotResponse.AGENT_INFO_KEY, jsonObject);
+//                        prefsEditor.putBoolean(BundleConstants.IS_RECONNECT, false);
+//                        prefsEditor.putInt(BotResponse.HISTORY_COUNT, 0);
+//                        prefsEditor.apply();
 //                    }
-                }
-            }
-        }
-        super.onStop();
-    }
+//                } else {
+//                    LogUtils.e("TAG", "TaskInfo or topActivity is null");
+//                }
+//            }
+//        }
+//        super.onStop();
+//    }
 
 
     @Override
