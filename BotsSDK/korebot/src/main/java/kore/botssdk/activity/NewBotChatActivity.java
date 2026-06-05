@@ -4,11 +4,11 @@ import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 import static kore.botssdk.utils.BundleConstants.BOT_RECONNECT;
+import static kore.botssdk.utils.BundleConstants.CHAT_CLEAR;
 import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
 import static kore.botssdk.utils.BundleConstants.MINIMIZE_CHAT_BOT_EVENT;
 
 import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,7 +36,6 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Objects;
 
 import kore.botssdk.R;
@@ -124,7 +123,13 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 editor.apply();
                 finish();
             } else if (Objects.equals(intent.getAction(), BundleConstants.BOT_RECONNECT)) {
-                mViewModel.connectToBot(true);
+                mViewModel.connectToBot(intent.getBooleanExtra(BundleConstants.BOT_RECONNECT, true));
+            }
+            else if (Objects.equals(intent.getAction(), BundleConstants.CHAT_CLEAR))
+            {
+                if (botContentFragment != null) {
+                    botContentFragment.clearChats();
+                }
             }
         }
     };
@@ -177,10 +182,12 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT), RECEIVER_EXPORTED);
+            registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR), RECEIVER_EXPORTED);
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
         } else {
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT));
+            registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR));
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT));
         }
 

@@ -53,3 +53,29 @@ SDKConfig.setBotStatusUpdateListener(new BotStatusListener() {
 
 ---
 *Note: Ensure you handle the `DeepLinkClicked` event to navigate the user to appropriate sections of your application.*
+
+## SDK Broadcast Commands
+
+The SDK also responds to specific system-wide broadcasts that allow you to control the chat behavior from outside the SDK components.
+
+### 1. Clear Chat History
+**Command:** `BundleConstants.CHAT_CLEAR`  
+**Purpose:** Instantly clears all messages from the current chat screen without disconnecting the bot.  
+**Usage:**
+```java
+Intent clearIntent = new Intent(BundleConstants.CHAT_CLEAR);
+sendBroadcast(clearIntent);
+```
+**Common Use Case:** Use this inside `onBotConnected()` if your business logic requires a fresh, empty screen every time a new session starts.
+
+### 2. Reconnect Bot
+**Command:** `BundleConstants.BOT_RECONNECT`  
+**Purpose:** Forces the SDK to re-establish the WebSocket connection. This is particularly useful for updating the JWT token or recovering from a persistent connection failure.  
+**Usage:**
+```java
+Intent intent = new Intent(BundleConstants.BOT_RECONNECT);
+intent.putExtra(BundleConstants.BOT_RECONNECT, false); // false = fresh connection, true = attempt resume
+sendBroadcast(intent);
+```
+**Common Use Case:** Use this after refreshing an expired JWT token or when manual reconnection is required after a long timeout.
+

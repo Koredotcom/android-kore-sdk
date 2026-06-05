@@ -300,4 +300,10 @@ public abstract class BaseContentFragment extends Fragment implements BotContent
             botsChatAdapter.deleteMessage(message);
         }
     }
+
+    public void clearChats() {
+        if (botsChatAdapter != null) {
+            botsChatAdapter.clearMessages();
+        }
+    }
 }

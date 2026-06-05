@@ -408,6 +408,11 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         return baseBotMessageArrayList.size();
     }
 
+    public void clearMessages() {
+        baseBotMessageArrayList.clear();
+        notifyDataSetChanged();
+    }
+
     private BaseViewHolder getCustomTemplate(ViewGroup parent, Class<?> clazzType) {
         Class<?> clazz;
         Method method;

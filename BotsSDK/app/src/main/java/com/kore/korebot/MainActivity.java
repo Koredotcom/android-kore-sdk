@@ -219,6 +219,10 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
     @Override
     public void onBotConnected() {
         LogUtils.e("Bot Current Status", "Bot Connected");
+
+        //BroadCast to clear the current chat
+//        Intent clearIntent = new Intent(BundleConstants.CHAT_CLEAR);
+//        sendBroadcast(clearIntent);
     }
 
     @Override
