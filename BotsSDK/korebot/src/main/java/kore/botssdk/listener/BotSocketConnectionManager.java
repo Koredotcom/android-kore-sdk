@@ -251,7 +251,6 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             if(SDKConfiguration.Server.getBotStatusListener() != null)
                 SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("BotNotConnected", "Error at makeJwtGrantCall"+e);
 
-            Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
             connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
             if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
         }
