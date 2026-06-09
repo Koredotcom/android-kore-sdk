@@ -634,6 +634,7 @@ public class SIPWebSocketClient {
                 }
             }
             body = bodyBuilder.toString().trim();
+            logDebug("firstLine: " + firstLine);
 
             if (firstLine.startsWith("SIP/2.0")) {
                 Pattern pattern = Pattern.compile("SIP/2\\.0\\s+(\\d+)\\s+(.*)");

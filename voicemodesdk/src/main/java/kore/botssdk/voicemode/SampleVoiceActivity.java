@@ -1,16 +1,21 @@
 package kore.botssdk.voicemode;
 
 import android.Manifest;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.app.AlertDialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,32 +23,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Sample Voice Activity demonstrating the WebRTC SDK usage.
- * This activity provides a complete UI for making voice calls with:
- * - Call/Hangup functionality
- * - Mute/Unmute control
- * - Speaker toggle
- * - Connection status display
- *
- * <p>To use this activity, you can either:
- * <ul>
- *   <li>Start it directly with default credentials</li>
- *   <li>Pass custom credentials via Intent extras</li>
- *   <li>Override {@link #getWebRTCConfig()} in a subclass</li>
- * </ul>
- */
-public class SampleVoiceActivity extends AppCompatActivity {
+import kore.botssdk.voicemode.listener.VoiceModeCallback;
+import kore.botssdk.voicemode.viewmodel.VoiceModeViewModel;
 
-    private static final String TAG = "SampleVoiceActivity";
+/**
+ * Full-screen voice mode activity with WebRTC.
+ * Shows animated connecting circle or animated orb based on connection state.
+ *
+ * <p>Credentials can be passed via Intent extras or by overriding {@link #getWebRTCConfig()}.
+ */
+public class SampleVoiceActivity extends AppCompatActivity implements VoiceModeCallback {
+
     private static final int PERMISSION_REQUEST_CODE = 1001;
 
-    // Intent extra keys
     public static final String EXTRA_BOT_ID = "bot_id";
     public static final String EXTRA_CLIENT_ID = "client_id";
     public static final String EXTRA_CLIENT_SECRET = "client_secret";
@@ -53,86 +54,99 @@ public class SampleVoiceActivity extends AppCompatActivity {
     public static final String EXTRA_SERVER_URL = "server_url";
     public static final String EXTRA_SIP_DOMAIN = "sip_domain";
 
-    // UI Components
-    private View statusIndicator;
+    private VoiceModeViewModel viewModel;
+
+    private View rootLayout;
+    private TextView tvBotResponse;
+    private ImageView ivConnectingCircle;
+    private FrameLayout btnClose;
     private TextView tvStatus;
-    private FrameLayout avatarFrame;
-    private LinearLayout btnMute;
-    private TextView tvMuteIcon;
-    private TextView tvMuteLabel;
-    private LinearLayout btnSpeaker;
-    private TextView tvSpeakerIcon;
-    private TextView tvSpeakerLabel;
-    private LinearLayout btnCall;
-    private TextView tvCallIcon;
-    private TextView tvCallLabel;
+    private ImageView ivVoiceModeIcon;
+    private View bottomBar;
 
-    // State
-    private boolean isInCall = false;
-    private boolean isConnecting = false;
-    private boolean isMuted = false;
-    private boolean isSpeakerOn = true;
-
-    // WebRTC Client
-    private WebRTCClient webRTCClient;
-    private CallSession currentSession;
+    private ObjectAnimator rotationAnimator;
+    private AnimationDrawable voiceModeAnimation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setupWindow();
         setContentView(R.layout.activity_sample_voice);
 
         initViews();
+        applyEdgeToEdgeInsets(findViewById(android.R.id.content));
         setupClickListeners();
+        initViewModel();
 
-        webRTCClient = new WebRTCClient(this);
-        webRTCClient.setListener(new WebRTCEventListener());
-        webRTCClient.setDebugEnabled(true);
+        showConnectingState();
+        requestPermissionsAndStart();
     }
 
     private void setupWindow() {
         Window window = getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        window.setStatusBarColor(ContextCompat.getColor(this, R.color.voice_background));
+        if (window == null) {
+            return;
+        }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowCompat.setDecorFitsSystemWindows(window, false);
+        WindowCompat.setDecorFitsSystemWindows(window, false);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        window.setNavigationBarColor(Color.TRANSPARENT);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        WindowInsetsControllerCompat windowInsetsController =
+                WindowCompat.getInsetsController(window, window.getDecorView());
+        if (windowInsetsController != null) {
+            windowInsetsController.setAppearanceLightStatusBars(true);
+            windowInsetsController.setAppearanceLightNavigationBars(true);
         }
     }
 
     private void initViews() {
-        statusIndicator = findViewById(R.id.statusIndicator);
+        rootLayout = findViewById(R.id.rootLayout);
+        tvBotResponse = findViewById(R.id.tvBotResponse);
+        ivConnectingCircle = findViewById(R.id.ivConnectingCircle);
+        btnClose = findViewById(R.id.btnClose);
         tvStatus = findViewById(R.id.tvStatus);
-        avatarFrame = findViewById(R.id.avatarFrame);
+        ivVoiceModeIcon = findViewById(R.id.ivVoiceModeIcon);
+        bottomBar = findViewById(R.id.bottomBar);
+    }
 
-        btnMute = findViewById(R.id.btnMute);
-        tvMuteIcon = findViewById(R.id.tvMuteIcon);
-        tvMuteLabel = findViewById(R.id.tvMuteLabel);
+    private void applyEdgeToEdgeInsets(View view) {
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
+            Insets insets = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
 
-        btnSpeaker = findViewById(R.id.btnSpeaker);
-        tvSpeakerIcon = findViewById(R.id.tvSpeakerIcon);
-        tvSpeakerLabel = findViewById(R.id.tvSpeakerLabel);
+            if (tvBotResponse != null) {
+                ViewGroup.MarginLayoutParams responseParams =
+                        (ViewGroup.MarginLayoutParams) tvBotResponse.getLayoutParams();
+                responseParams.topMargin = insets.top + 60;
+                tvBotResponse.setLayoutParams(responseParams);
+            }
 
-        btnCall = findViewById(R.id.btnCall);
-        tvCallIcon = findViewById(R.id.tvCallIcon);
-        tvCallLabel = findViewById(R.id.tvCallLabel);
+            if (bottomBar != null) {
+                ViewGroup.MarginLayoutParams bottomParams =
+                        (ViewGroup.MarginLayoutParams) bottomBar.getLayoutParams();
+                bottomParams.bottomMargin = insets.bottom + 32;
+                bottomBar.setLayoutParams(bottomParams);
+            }
+
+            return WindowInsetsCompat.CONSUMED;
+        });
     }
 
     private void setupClickListeners() {
-        btnCall.setOnClickListener(v -> handleCallToggle());
-        btnMute.setOnClickListener(v -> handleMuteToggle());
-        btnSpeaker.setOnClickListener(v -> handleSpeakerToggle());
+        btnClose.setOnClickListener(v -> {
+            if (viewModel != null) {
+                viewModel.stopVoiceMode();
+            }
+            finish();
+        });
     }
 
-    /**
-     * Get the WebRTC configuration.
-     * Override this method in a subclass to provide custom credentials,
-     * or pass credentials via Intent extras.
-     *
-     * @return WebRTCConfig instance
-     */
+    private void initViewModel() {
+        viewModel = new VoiceModeViewModel(this);
+        viewModel.setVoiceModeCallback(this);
+    }
+
     protected WebRTCConfig getWebRTCConfig() {
         String botId = getIntent().getStringExtra(EXTRA_BOT_ID);
         String clientId = getIntent().getStringExtra(EXTRA_CLIENT_ID);
@@ -143,16 +157,12 @@ public class SampleVoiceActivity extends AppCompatActivity {
         String serverUrl = getIntent().getStringExtra(EXTRA_SERVER_URL);
         String sipDomain = getIntent().getStringExtra(EXTRA_SIP_DOMAIN);
 
-        // Use defaults if not provided via intent
-
-        if (botId == null || botId.isEmpty() || clientId == null || clientId.isEmpty() || clientSecret == null || clientSecret.isEmpty() ||
-                identity == null || identity.isEmpty() ||
-                webSocketUrl == null || webSocketUrl.isEmpty() ||
-                jwtServiceUrl == null || jwtServiceUrl.isEmpty() ||
-                serverUrl == null || serverUrl.isEmpty()
-        ) {
-            Toast.makeText(this, "Please check the bot configuration!", Toast.LENGTH_LONG).show();
+        if (isNullOrEmpty(botId) || isNullOrEmpty(clientId) || isNullOrEmpty(clientSecret)
+                || isNullOrEmpty(identity) || isNullOrEmpty(webSocketUrl)
+                || isNullOrEmpty(jwtServiceUrl) || isNullOrEmpty(serverUrl)) {
+            Toast.makeText(this, R.string.voice_mode_webrtc_not_configured, Toast.LENGTH_LONG).show();
             finish();
+            return null;
         }
 
         return new WebRTCConfig.Builder()
@@ -170,19 +180,7 @@ public class SampleVoiceActivity extends AppCompatActivity {
                 .build();
     }
 
-    private void handleCallToggle() {
-        if (isConnecting) {
-            return;
-        }
-
-        if (isInCall) {
-            handleHangup();
-        } else {
-            requestPermissionsAndCall();
-        }
-    }
-
-    private void requestPermissionsAndCall() {
+    private void requestPermissionsAndStart() {
         List<String> permissionsNeeded = new ArrayList<>();
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
@@ -198,12 +196,27 @@ public class SampleVoiceActivity extends AppCompatActivity {
         }
 
         if (permissionsNeeded.isEmpty()) {
-            initializeCall();
+            startVoiceMode();
         } else {
             ActivityCompat.requestPermissions(this,
                     permissionsNeeded.toArray(new String[0]),
                     PERMISSION_REQUEST_CODE);
         }
+    }
+
+    private void startVoiceMode() {
+        WebRTCConfig config = getWebRTCConfig();
+        if (config == null || isFinishing()) {
+            return;
+        }
+
+        if (!VoiceModeViewModel.isVoiceModeConfigured(config)) {
+            Toast.makeText(this, R.string.voice_mode_webrtc_not_configured, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        viewModel.startVoiceMode(config);
     }
 
     @Override
@@ -213,357 +226,197 @@ public class SampleVoiceActivity extends AppCompatActivity {
 
         if (requestCode == PERMISSION_REQUEST_CODE) {
             boolean micGranted = false;
-            boolean bluetoothGranted = true;
 
             for (int i = 0; i < permissions.length; i++) {
                 if (Manifest.permission.RECORD_AUDIO.equals(permissions[i])) {
                     micGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
                 }
-                if (Manifest.permission.BLUETOOTH_CONNECT.equals(permissions[i])) {
-                    bluetoothGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
-                }
             }
 
-            Log.d(TAG, "Permission results: mic=" + micGranted + ", bluetooth=" + bluetoothGranted);
-
             if (micGranted) {
-                initializeCall();
+                startVoiceMode();
             } else {
                 boolean shouldShowRationale = ActivityCompat.shouldShowRequestPermissionRationale(
                         this, Manifest.permission.RECORD_AUDIO);
 
                 if (!shouldShowRationale) {
-                    showPermissionDeniedDialog();
+                    new AlertDialog.Builder(this)
+                            .setTitle(R.string.voice_permission_title)
+                            .setMessage(R.string.voice_permission_message)
+                            .setPositiveButton(android.R.string.ok, (dialog, which) -> finish())
+                            .show();
                 } else {
-                    updateStatus(getString(R.string.voice_status_permission_denied));
+                    Toast.makeText(this, R.string.voice_status_permission_denied, Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
         }
     }
 
-    private void showPermissionDeniedDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle(R.string.voice_permission_title)
-                .setMessage(R.string.voice_permission_message)
-                .setPositiveButton(android.R.string.ok, null)
-                .show();
+    @Override
+    public void onVoiceModeStateChanged(VoiceModeState state) {
+        if (isFinishing()) {
+            return;
+        }
+        runOnUiThread(() -> updateUIForState(state));
     }
 
-    private void initializeCall() {
-        isConnecting = true;
-        updateStatus(getString(R.string.voice_status_initializing));
-        updateCallButton();
+    @Override
+    public void onVoiceModeConnected() {
+        if (isFinishing()) {
+            return;
+        }
+        runOnUiThread(this::showConnectedState);
+    }
 
-        try {
-            WebRTCConfig config = getWebRTCConfig();
-            webRTCClient.initWithCredentials(config);
-        } catch (Exception e) {
-            Log.e(TAG, "Failed to initialize call", e);
-            isConnecting = false;
-            updateStatus("Failed: " + e.getMessage());
-            updateCallButton();
+    @Override
+    public void onVoiceModeDisconnected(String reason) {
+        if (isFinishing()) {
+            return;
+        }
+        runOnUiThread(this::stopAllAnimations);
+    }
+
+    @Override
+    public void onVoiceModeError(String error) {
+        if (isFinishing()) {
+            return;
+        }
+        runOnUiThread(() -> {
+            Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+            stopAllAnimations();
+            tvStatus.setText(R.string.voice_mode_error);
+        });
+    }
+
+    private void updateUIForState(VoiceModeState state) {
+        switch (state) {
+            case IDLE:
+                showConnectingState();
+                tvStatus.setText(R.string.voice_mode_status_ready);
+                break;
+
+            case CONNECTING:
+                showConnectingState();
+                tvStatus.setText(R.string.voice_mode_status_connecting);
+                break;
+
+            case REGISTERING:
+                showConnectingState();
+                tvStatus.setText(R.string.voice_mode_status_registering);
+                break;
+
+            case CALLING:
+                showConnectingState();
+                tvStatus.setText(R.string.voice_mode_status_calling);
+                break;
+
+            case IN_PROGRESS:
+                showConnectedState();
+                break;
+
+            case DISCONNECTING:
+                tvStatus.setText(R.string.voice_mode_status_disconnecting);
+                break;
+
+            case ERROR:
+                tvStatus.setText(R.string.voice_mode_error);
+                break;
         }
     }
 
-    private void handleHangup() {
-        if (webRTCClient != null) {
-            webRTCClient.hangup();
-        }
+    private void showConnectingState() {
+        tvBotResponse.setVisibility(View.GONE);
+        ivConnectingCircle.setVisibility(View.VISIBLE);
+        tvStatus.setVisibility(View.VISIBLE);
+        ivVoiceModeIcon.setVisibility(View.GONE);
 
-        resetCallState();
-        updateStatus(getString(R.string.voice_status_ready));
+        stopConnectedAnimations();
+        startConnectingAnimation();
     }
 
-    private void handleMuteToggle() {
-        if (!isInCall || webRTCClient == null) {
+    private void showConnectedState() {
+        tvBotResponse.setVisibility(View.VISIBLE);
+        tvBotResponse.setText("");
+
+        ivConnectingCircle.setVisibility(View.GONE);
+        tvStatus.setVisibility(View.GONE);
+        ivVoiceModeIcon.setVisibility(View.VISIBLE);
+
+        stopConnectingAnimation();
+        startConnectedAnimations();
+    }
+
+    private void startConnectingAnimation() {
+        if (rotationAnimator != null && rotationAnimator.isRunning()) {
             return;
         }
 
-        if (isMuted) {
-            webRTCClient.unmute();
-            isMuted = false;
-        } else {
-            webRTCClient.mute();
-            isMuted = true;
+        rotationAnimator = ObjectAnimator.ofFloat(ivConnectingCircle, "rotation", 0f, 360f);
+        rotationAnimator.setDuration(3000);
+        rotationAnimator.setInterpolator(new LinearInterpolator());
+        rotationAnimator.setRepeatCount(ValueAnimator.INFINITE);
+        rotationAnimator.start();
+    }
+
+    private void stopConnectingAnimation() {
+        if (rotationAnimator != null) {
+            rotationAnimator.cancel();
+            rotationAnimator = null;
         }
-
-        updateMuteButton();
     }
 
-    private void handleSpeakerToggle() {
-        if (!isInCall || webRTCClient == null) {
-            return;
+    private void startConnectedAnimations() {
+        startVoiceModeAnimation();
+    }
+
+    private void startVoiceModeAnimation() {
+        if (ivVoiceModeIcon != null && ivVoiceModeIcon.getDrawable() instanceof AnimationDrawable) {
+            voiceModeAnimation = (AnimationDrawable) ivVoiceModeIcon.getDrawable();
+            voiceModeAnimation.start();
         }
-
-        isSpeakerOn = webRTCClient.toggleSpeaker();
-        updateSpeakerButton();
     }
 
-    private void resetCallState() {
-        isInCall = false;
-        isConnecting = false;
-        isMuted = false;
-        currentSession = null;
-
-        updateUI();
+    private void stopConnectedAnimations() {
+        stopVoiceModeAnimation();
     }
 
-    private void updateUI() {
-        updateStatusIndicator();
-        updateAvatarFrame();
-        updateMuteButton();
-        updateSpeakerButton();
-        updateCallButton();
+    private void stopVoiceModeAnimation() {
+        if (voiceModeAnimation != null && voiceModeAnimation.isRunning()) {
+            voiceModeAnimation.stop();
+            voiceModeAnimation = null;
+        }
     }
 
-    private void updateStatus(String status) {
-        runOnUiThread(() -> tvStatus.setText(status));
+    private void stopAllAnimations() {
+        stopConnectingAnimation();
+        stopConnectedAnimations();
     }
 
-    private void updateStatusIndicator() {
-        runOnUiThread(() -> {
-            if (isInCall) {
-                statusIndicator.setBackgroundResource(R.drawable.bg_status_indicator_active);
-            } else {
-                statusIndicator.setBackgroundResource(R.drawable.bg_status_indicator_inactive);
-            }
-        });
-    }
-
-    private void updateAvatarFrame() {
-        runOnUiThread(() -> {
-            if (isInCall) {
-                avatarFrame.setBackgroundResource(R.drawable.bg_avatar_active);
-            } else {
-                avatarFrame.setBackgroundResource(R.drawable.bg_avatar_inactive);
-            }
-        });
-    }
-
-    private void updateMuteButton() {
-        runOnUiThread(() -> {
-            if (isInCall) {
-                btnMute.setEnabled(true);
-                btnMute.setAlpha(1.0f);
-
-                if (isMuted) {
-                    btnMute.setBackgroundResource(R.drawable.bg_control_button_active);
-                    tvMuteIcon.setText("🔇");
-                    tvMuteLabel.setText(R.string.voice_btn_unmute);
-                } else {
-                    btnMute.setBackgroundResource(R.drawable.bg_control_button_inactive);
-                    tvMuteIcon.setText("🎤");
-                    tvMuteLabel.setText(R.string.voice_btn_mute);
-                }
-                tvMuteLabel.setTextColor(ContextCompat.getColor(this, R.color.voice_text_white));
-            } else {
-                btnMute.setEnabled(false);
-                btnMute.setAlpha(0.5f);
-                btnMute.setBackgroundResource(R.drawable.bg_control_button_disabled);
-                tvMuteIcon.setText("🎤");
-                tvMuteLabel.setText(R.string.voice_btn_mute);
-                tvMuteLabel.setTextColor(ContextCompat.getColor(this, R.color.voice_text_disabled));
-            }
-        });
-    }
-
-    private void updateSpeakerButton() {
-        runOnUiThread(() -> {
-            if (isInCall) {
-                btnSpeaker.setEnabled(true);
-                btnSpeaker.setAlpha(1.0f);
-
-                if (isSpeakerOn) {
-                    btnSpeaker.setBackgroundResource(R.drawable.bg_control_button_active);
-                    tvSpeakerIcon.setText("🔊");
-                    tvSpeakerLabel.setText(R.string.voice_btn_speaker_on);
-                } else {
-                    btnSpeaker.setBackgroundResource(R.drawable.bg_control_button_inactive);
-                    tvSpeakerIcon.setText("🔈");
-                    tvSpeakerLabel.setText(R.string.voice_btn_speaker_off);
-                }
-                tvSpeakerLabel.setTextColor(ContextCompat.getColor(this, R.color.voice_text_white));
-            } else {
-                btnSpeaker.setEnabled(false);
-                btnSpeaker.setAlpha(0.5f);
-                btnSpeaker.setBackgroundResource(R.drawable.bg_control_button_disabled);
-                tvSpeakerIcon.setText("🔊");
-                tvSpeakerLabel.setText(R.string.voice_btn_speaker_on);
-                tvSpeakerLabel.setTextColor(ContextCompat.getColor(this, R.color.voice_text_disabled));
-            }
-        });
-    }
-
-    private void updateCallButton() {
-        runOnUiThread(() -> {
-            if (isConnecting) {
-                btnCall.setBackgroundResource(R.drawable.bg_connecting_button);
-                tvCallIcon.setText("⏳");
-                tvCallLabel.setText(R.string.voice_btn_connecting);
-                btnCall.setEnabled(false);
-            } else if (isInCall) {
-                btnCall.setBackgroundResource(R.drawable.bg_hangup_button);
-                tvCallIcon.setText("📞");
-                tvCallLabel.setText(R.string.voice_btn_hangup);
-                btnCall.setEnabled(true);
-            } else {
-                btnCall.setBackgroundResource(R.drawable.bg_call_button);
-                tvCallIcon.setText("📞");
-                tvCallLabel.setText(R.string.voice_btn_call);
-                btnCall.setEnabled(true);
-            }
-        });
+    public void updateBotResponse(String text) {
+        if (tvBotResponse != null && !isFinishing()) {
+            runOnUiThread(() -> tvBotResponse.setText(text));
+        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (webRTCClient != null) {
-            webRTCClient.disconnect();
-            webRTCClient = null;
+        stopAllAnimations();
+        if (viewModel != null) {
+            viewModel.cleanup();
         }
     }
 
     @Override
     public void onBackPressed() {
-        if (isInCall) {
-            new AlertDialog.Builder(this)
-                    .setTitle("End Call?")
-                    .setMessage("Do you want to end the current call?")
-                    .setPositiveButton("End Call", (dialog, which) -> {
-                        handleHangup();
-                        super.onBackPressed();
-                    })
-                    .setNegativeButton("Cancel", null)
-                    .show();
-        } else {
-            super.onBackPressed();
+        if (viewModel != null && viewModel.isVoiceModeActive()) {
+            viewModel.stopVoiceMode();
         }
+        super.onBackPressed();
     }
 
-    /**
-     * WebRTC Event Listener implementation
-     */
-    private class WebRTCEventListener extends WebRTCListenerAdapter {
-
-        @Override
-        public void onConnected() {
-            Log.d(TAG, "WebSocket connected");
-        }
-
-        @Override
-        public void onDisconnected() {
-            Log.d(TAG, "WebSocket disconnected");
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    resetCallState();
-                    updateStatus(getString(R.string.voice_status_ready));
-                }
-            });
-        }
-
-        @Override
-        public void onRegistered() {
-            Log.d(TAG, "SIP registered");
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    updateStatus(getString(R.string.voice_status_registered));
-                }
-            });
-        }
-
-        @Override
-        public void onRegistrationFailed(String error) {
-            Log.e(TAG, "Registration failed: " + error);
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    isConnecting = false;
-                    updateStatus("Registration failed: " + error);
-                    updateCallButton();
-                }
-            });
-        }
-
-        @Override
-        public void onCallProgress() {
-            Log.d(TAG, "Call progress - ringing");
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    isConnecting = false;
-                    isInCall = true;
-                    updateStatus(getString(R.string.voice_status_ringing));
-                    updateUI();
-                }
-            });
-        }
-
-        @Override
-        public void onCallAccepted() {
-            Log.d(TAG, "Call accepted");
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    isConnecting = false;
-                    isInCall = true;
-                    updateStatus(getString(R.string.voice_status_in_call));
-                    updateUI();
-                }
-            });
-        }
-
-        @Override
-        public void onCallConfirmed() {
-            Log.d(TAG, "Call confirmed - media established");
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    isConnecting = false;
-                    isInCall = true;
-                    updateStatus(getString(R.string.voice_status_connected));
-                    updateUI();
-                }
-            });
-        }
-
-        @Override
-        public void onCallEnded(String cause) {
-            Log.d(TAG, "Call ended: " + cause);
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    resetCallState();
-                    updateStatus(getString(R.string.voice_status_call_ended));
-                    updateUI();
-                }
-            });
-        }
-
-        @Override
-        public void onCallFailed(String cause) {
-            Log.e(TAG, "Call failed: " + cause);
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    isConnecting = false;
-                    isInCall = false;
-                    updateStatus("Failed: " + cause);
-                    updateUI();
-                }
-            });
-        }
-
-        @Override
-        public void onIncomingCall(CallSession session) {
-            Log.d(TAG, "Incoming call from: " + session.getRemoteUri());
-            currentSession = session;
-        }
-
-        @Override
-        public void onError(String error) {
-            Log.e(TAG, "Error: " + error);
-            runOnUiThread(() -> {
-                if (!isFinishing()) {
-                    isConnecting = false;
-                    updateStatus("Error: " + error);
-                    updateCallButton();
-                }
-            });
-        }
+    private static boolean isNullOrEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

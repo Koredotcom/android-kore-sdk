@@ -29,7 +29,7 @@
             android:name=".SampleVoiceActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar"
+            android:theme="@style/VoiceModeFullScreen"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="kore.botssdk.voicemode.VOICE_CALL" />

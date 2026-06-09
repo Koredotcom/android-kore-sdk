@@ -1,0 +1,37 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="35dp"
+    android:height="35dp"
+    android:viewportWidth="35"
+    android:viewportHeight="35">
+    
+    <!-- Circle background - active state (blue/primary color) -->
+    <path
+        android:pathData="M17.5,17.5m-17.5,0a17.5,17.5 0,1 1,35 0a17.5,17.5 0,1 1,-35 0"
+        android:fillColor="#0078CD"/>
+    
+    <!-- Sound wave bars - frame 2 with different heights -->
+    <!-- Bar 1 (left) -->
+    <path
+        android:pathData="M8.5,15v5a1,1 0,0 0,2 0v-5a1,1 0,0 0,-2 0z"
+        android:fillColor="#FFFFFF"/>
+    
+    <!-- Bar 2 -->
+    <path
+        android:pathData="M12.5,11v13a1,1 0,0 0,2 0v-13a1,1 0,0 0,-2 0z"
+        android:fillColor="#FFFFFF"/>
+    
+    <!-- Bar 3 (center) -->
+    <path
+        android:pathData="M16.5,10v15a1,1 0,0 0,2 0v-15a1,1 0,0 0,-2 0z"
+        android:fillColor="#FFFFFF"/>
+    
+    <!-- Bar 4 -->
+    <path
+        android:pathData="M20.5,9v17a1,1 0,0 0,2 0v-17a1,1 0,0 0,-2 0z"
+        android:fillColor="#FFFFFF"/>
+    
+    <!-- Bar 5 (right) -->
+    <path
+        android:pathData="M24.5,13v9a1,1 0,0 0,2 0v-9a1,1 0,0 0,-2 0z"
+        android:fillColor="#FFFFFF"/>
+</vector>

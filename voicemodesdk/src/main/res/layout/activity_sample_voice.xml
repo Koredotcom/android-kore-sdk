@@ -1,223 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/voice_background"
-    android:fitsSystemWindows="true">
+    android:background="#F5F5F5">
 
-    <!-- Header -->
     <TextView
-        android:id="@+id/tvHeader"
-        android:layout_width="wrap_content"
+        android:id="@+id/tvBotResponse"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:text="@string/voice_activity_title"
-        android:textColor="@color/voice_text_white"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="24dp"
+        android:lineSpacingExtra="4dp"
+        android:textColor="#333333"
         android:textSize="24sp"
-        android:textStyle="bold"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Status Container -->
+    <FrameLayout
+        android:id="@+id/animationContainer"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivConnectingCircle"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:layout_gravity="center"
+            android:src="@drawable/voice_mode_connecting_circle"
+            android:visibility="visible" />
+
+    </FrameLayout>
+
     <LinearLayout
-        android:id="@+id/statusContainer"
-        android:layout_width="wrap_content"
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/bg_status_container"
+        android:layout_marginBottom="32dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="20dp"
-        android:paddingVertical="12dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvHeader">
-
-        <View
-            android:id="@+id/statusIndicator"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/bg_status_indicator_inactive" />
-
-        <TextView
-            android:id="@+id/tvStatus"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/voice_status_ready"
-            android:textColor="@color/voice_text_white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <!-- Avatar Section -->
-    <LinearLayout
-        android:id="@+id/avatarContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/controlsContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusContainer">
-
-        <FrameLayout
-            android:id="@+id/avatarFrame"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:background="@drawable/bg_avatar_inactive">
-
-            <TextView
-                android:id="@+id/tvAvatarIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="🤖"
-                android:textSize="50sp" />
-
-        </FrameLayout>
-
-        <TextView
-            android:id="@+id/tvCallerName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/voice_ai_assistant"
-            android:textColor="@color/voice_text_white"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-    <!-- Control Buttons -->
-    <LinearLayout
-        android:id="@+id/controlsContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@id/callButtonContainer"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <!-- Mute Button -->
-        <LinearLayout
-            android:id="@+id/btnMute"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
-            android:alpha="0.5"
-            android:background="@drawable/bg_control_button_disabled"
-            android:clickable="true"
-            android:enabled="false"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/tvMuteIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="🎤"
-                android:textSize="28sp" />
-
-            <TextView
-                android:id="@+id/tvMuteLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/voice_btn_mute"
-                android:textColor="@color/voice_text_disabled"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <!-- Speaker Button -->
-        <LinearLayout
-            android:id="@+id/btnSpeaker"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:alpha="0.5"
-            android:background="@drawable/bg_control_button_disabled"
-            android:clickable="true"
-            android:enabled="false"
-            android:focusable="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:id="@+id/tvSpeakerIcon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:text="🔊"
-                android:textSize="28sp" />
-
-            <TextView
-                android:id="@+id/tvSpeakerLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/voice_btn_speaker_on"
-                android:textColor="@color/voice_text_disabled"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <!-- Call/Hangup Button -->
-    <LinearLayout
-        android:id="@+id/callButtonContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
-        android:gravity="center"
+        android:paddingHorizontal="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
-            android:id="@+id/btnCall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_call_button"
+        <FrameLayout
+            android:id="@+id/btnClose"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:background="@drawable/voice_mode_close_btn_bg"
             android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:minWidth="200dp"
-            android:orientation="horizontal"
-            android:paddingHorizontal="50dp"
-            android:paddingVertical="18dp">
+            android:focusable="true">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/voice_mode_close"
+                android:src="@drawable/ic_voice_mode_close" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center">
 
             <TextView
-                android:id="@+id/tvCallIcon"
+                android:id="@+id/tvStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="12dp"
-                android:text="📞"
-                android:textSize="24sp" />
+                android:layout_gravity="center"
+                android:text="@string/voice_mode_status_connecting"
+                android:textColor="#666666"
+                android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tvCallLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/voice_btn_call"
-                android:textColor="@color/voice_text_white"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+            <ImageView
+                android:id="@+id/ivVoiceModeIcon"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/voice_mode_pulse_animation"
+                android:visibility="gone" />
+        </FrameLayout>
 
-        </LinearLayout>
+        <View
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
 
     </LinearLayout>
 

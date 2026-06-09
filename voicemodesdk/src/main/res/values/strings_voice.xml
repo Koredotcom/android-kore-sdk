@@ -2,6 +2,20 @@
 <resources>
     <string name="voice_activity_title">WebRTC Call</string>
     <string name="voice_ai_assistant">AI Assistant</string>
+
+    <string name="voice_mode_close">Close voice mode</string>
+    <string name="voice_mode_connecting">Connecting to voice mode…</string>
+    <string name="voice_mode_in_progress">Voice mode in progress. Tap to stop.</string>
+    <string name="voice_mode_error">Voice mode error</string>
+    <string name="voice_mode_disconnected">Voice mode disconnected</string>
+    <string name="voice_mode_webrtc_not_configured">WebRTC is not configured. Please check your SDK configuration.</string>
+    <string name="voice_mode_title">Voice Mode</string>
+    <string name="voice_mode_status_ready">Ready</string>
+    <string name="voice_mode_status_connecting">Connecting…</string>
+    <string name="voice_mode_status_registering">Registering…</string>
+    <string name="voice_mode_status_calling">Calling…</string>
+    <string name="voice_mode_status_in_call">Connected</string>
+    <string name="voice_mode_status_disconnecting">Disconnecting…</string>
     
     <string name="voice_status_ready">Ready to call</string>
     <string name="voice_status_initializing">Initializing…</string>
