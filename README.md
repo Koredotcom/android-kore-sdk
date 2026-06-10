@@ -55,6 +55,17 @@ include ':voicemodesdk'
 dependencies {
     implementation project(':voicemodesdk')
 }
+// To launch the sample voice call UI:
+Intent intent = new Intent(getApplicationContext(), SampleVoiceActivity.class);
+intent.putExtra(SampleVoiceActivity.EXTRA_BOT_ID, "BOT_ID");
+intent.putExtra(SampleVoiceActivity.EXTRA_CLIENT_ID, "CLIENT_ID");
+intent.putExtra(SampleVoiceActivity.EXTRA_CLIENT_SECRET, "CLIENT_SECRET");
+intent.putExtra(SampleVoiceActivity.EXTRA_IDENTITY, "user1@user.com");
+intent.putExtra(SampleVoiceActivity.EXTRA_WEBSOCKET_URL, "WEB_SOCKET_URL");// wss://aaaa-aaa1.aaa.aa:<port number>/
+intent.putExtra(SampleVoiceActivity.EXTRA_JWT_SERVICE_URL, "JWT_SERVICE_URL");
+intent.putExtra(SampleVoiceActivity.EXTRA_SERVER_URL, "SERVER_URL");
+intent.putExtra(SampleVoiceActivity.EXTRA_SIP_DOMAIN, "SIP_DOMAIN"); //xxxxxxxx-prod-xxxx.xxxx.xx
+startActivity(intent);
 ```
 
 Full API and integration details: [voicemodesdk/README.md](voicemodesdk/README.md).

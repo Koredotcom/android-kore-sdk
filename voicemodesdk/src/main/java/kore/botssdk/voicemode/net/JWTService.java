@@ -64,7 +64,7 @@ public class JWTService {
         RequestBody body = RequestBody.create(requestBody.toString(), JSON);
 
         Request request = new Request.Builder()
-                .url(jwtServiceUrl)
+                .url(jwtServiceUrl+"users/sts")
                 .addHeader("Content-Type", "application/json")
                 .addHeader("Accept", "application/json")
                 .post(body)
@@ -122,7 +122,7 @@ public class JWTService {
      * @param callback Callback for result
      */
     public void fetchUserId(String serverUrl, String jwtToken, String botId, UserIdCallback callback) {
-        String apiUrl = serverUrl + "/api/oAuth/token/jwtgrant";
+        String apiUrl = serverUrl + "api/oAuth/token/jwtgrant";
 
         JsonObject botInfo = new JsonObject();
         botInfo.addProperty("chatBot", "Bot");

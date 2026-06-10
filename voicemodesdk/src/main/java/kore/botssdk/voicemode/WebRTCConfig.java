@@ -13,7 +13,7 @@ public class WebRTCConfig {
     private String webSocketUrl;
     private String jwtServiceUrl;
     private String serverUrl;
-    private String sipDomain;
+    private String sipDomain = "unifiedxo-prod-savg.kore.ai";
     private String jwtToken;
     private String userId;
     private String sipUri;
@@ -30,7 +30,7 @@ public class WebRTCConfig {
         this.webSocketUrl = builder.webSocketUrl;
         this.jwtServiceUrl = builder.jwtServiceUrl;
         this.serverUrl = builder.serverUrl;
-        this.sipDomain = builder.sipDomain;
+        this.sipDomain = builder.sipDomain != null && !builder.sipDomain.isEmpty() ? builder.sipDomain : this.sipDomain;
         this.debug = builder.debug;
         this.autoRegister = builder.autoRegister;
         this.autoCall = builder.autoCall;
