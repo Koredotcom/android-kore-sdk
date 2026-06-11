@@ -124,9 +124,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 finish();
             } else if (Objects.equals(intent.getAction(), BundleConstants.BOT_RECONNECT)) {
                 mViewModel.connectToBot(intent.getBooleanExtra(BundleConstants.BOT_RECONNECT, true));
-            }
-            else if (Objects.equals(intent.getAction(), BundleConstants.CHAT_CLEAR))
-            {
+            } else if (Objects.equals(intent.getAction(), BundleConstants.CHAT_CLEAR)) {
                 if (botContentFragment != null) {
                     botContentFragment.clearChats();
                 }
@@ -487,8 +485,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     public void onEvent(String jwt) {
         this.jwt = jwt;
         if (SDKConfiguration.Client.isWebHook) {
-            if (botContentFragment != null && botContentFragment.isAdded()) botContentFragment.setJwtTokenForWebHook(jwt);
-            if (baseFooterFragment != null && baseFooterFragment.isAdded()) baseFooterFragment.setJwtToken(jwt);
+            if (botContentFragment != null && botContentFragment.isAdded())
+                botContentFragment.setJwtTokenForWebHook(jwt);
+            if (baseFooterFragment != null && baseFooterFragment.isAdded())
+                baseFooterFragment.setJwtToken(jwt);
             mViewModel.getWebHookMeta(jwt);
         }
     }
@@ -510,7 +510,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             BotSocketConnectionManager.killInstance();
 
             if (SDKConfiguration.Server.getBotStatusListener() != null) {
-                SDKConfiguration.Server.getBotStatusListener().onBotDisconnected("DeepLinkClicked", url);
+                SDKConfiguration.Server.getBotStatusListener().onDeepLinkClicked("DeepLinkClicked", url);
             }
 
             Intent intent = new Intent();
@@ -529,10 +529,28 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     public void invokeGenericWebView(String url) {
         if (url != null && !url.isEmpty()) {
-            Intent intent = new Intent(this, GenericWebViewActivity.class);
-            intent.putExtra(EXTRA_URL, url);
-            intent.putExtra(EXTRA_HEADER, !botName.isEmpty() ? botName : SDKConfiguration.Client.bot_name);
-            startActivity(intent);
+            if (SDKConfiguration.OverrideKoreConfig.sendAllDeepLink && SDKConfiguration.Server.getBotStatusListener() != null) {
+                if (sharedPreferences != null) {
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putBoolean(BundleConstants.IS_RECONNECT, true);
+                    if (botContentFragment != null && botContentFragment.isAdded())
+                        editor.putInt(BotResponse.HISTORY_COUNT, botContentFragment.getAdapterCount());
+                    editor.apply();
+                    BotSocketConnectionManager.killInstance();
+
+                    SDKConfiguration.Server.getBotStatusListener().onDeepLinkClicked("DeepLinkClicked", url);
+
+                    Intent intent = new Intent();
+                    intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_MINIMIZED);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            } else {
+                Intent intent = new Intent(this, GenericWebViewActivity.class);
+                intent.putExtra(EXTRA_URL, url);
+                intent.putExtra(EXTRA_HEADER, !botName.isEmpty() ? botName : SDKConfiguration.Client.bot_name);
+                startActivity(intent);
+            }
         }
     }
 
@@ -642,8 +660,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
         dialog.show();
 
-        if(SDKConfiguration.getRegular() != null)
-        {
+        if (SDKConfiguration.getRegular() != null) {
             // 1️⃣ Set message font
             TextView messageView = dialog.findViewById(android.R.id.message);
             if (messageView != null) {
@@ -653,11 +670,11 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             // 2️⃣ Set button fonts
             Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
             Button negativeButton = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
-            Button neutralButton  = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+            Button neutralButton = dialog.getButton(AlertDialog.BUTTON_NEUTRAL);
 
             if (positiveButton != null) positiveButton.setTypeface(SDKConfiguration.getRegular());
             if (negativeButton != null) negativeButton.setTypeface(SDKConfiguration.getRegular());
-            if (neutralButton != null)  neutralButton.setTypeface(SDKConfiguration.getRegular());
+            if (neutralButton != null) neutralButton.setTypeface(SDKConfiguration.getRegular());
         }
     }
 

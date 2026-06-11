@@ -14,17 +14,12 @@ import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import kore.botssdk.activity.NewBotChatActivity;
-import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
-import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.LangUtils;
 import kore.botssdk.utils.LogUtils;
@@ -32,8 +27,6 @@ import kore.botssdk.websocket.BotStatusListener;
 
 @SuppressLint("HardcodedPassword")
 public class MainActivity extends AppCompatActivity implements BotStatusListener {
-
-    private boolean isSchedulerStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,7 +138,10 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
 
         //Disable the flag if the bot reconnection not needed inside the SDK
-        SDKConfiguration.OverrideKoreConfig.reconnectionBySDK = true;
+        SDKConfiguration.OverrideKoreConfig.reconnectionBySDK = false;
+
+        //Enable the flag if the deeplink not needed inside the SDK
+        SDKConfiguration.OverrideKoreConfig.sendAllDeepLink = false;
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
@@ -219,29 +215,20 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
     @Override
     public void onBotConnected() {
         LogUtils.e("Bot Current Status", "Bot Connected");
-
-        //BroadCast to clear the current chat
-//        Intent clearIntent = new Intent(BundleConstants.CHAT_CLEAR);
-//        sendBroadcast(clearIntent);
     }
 
     @Override
     public void onBotDisconnected(String event_code, String event_message) {
         LogUtils.e(event_code, event_message);
-        if (event_code.equals("DeepLinkClicked")) {
-            try {
-                Class<?> clazz = Class.forName(event_message);
-                Intent intent = new Intent(MainActivity.this, clazz);
-                startActivity(intent);
-
-            } catch (ClassNotFoundException e) {
-                LogUtils.e("MainActivity ClassNotFoundException", e+"");
-            }
-        }
     }
 
     @Override
     public void onBotConnectionFail(String event_code, String event_message) {
         LogUtils.e(event_code, event_message);
+    }
+
+    @Override
+    public void onDeepLinkClicked(String event_code, String url) {
+        LogUtils.e(event_code, url);
     }
 }

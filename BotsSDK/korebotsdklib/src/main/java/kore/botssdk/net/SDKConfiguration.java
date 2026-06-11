@@ -202,6 +202,7 @@ public class SDKConfiguration {
         public static boolean update_custom_data_to_user_message = false;
         public static boolean showLocalNotification = true;
         public static boolean reconnectionBySDK = true;
+        public static boolean sendAllDeepLink = false;
     }
 
     public static boolean isTimeStampsRequired() {

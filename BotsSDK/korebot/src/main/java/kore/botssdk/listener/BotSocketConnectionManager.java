@@ -103,7 +103,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         if (chatListener != null) {
             chatListener.onConnectionStateChanged(connection_state, false);
 
-            if (SDKConfiguration.Server.getBotStatusListener() != null && code == 3) {
+            if (SDKConfiguration.Server.getBotStatusListener() != null && (code == 3 || code == 2)) {
                 SDKConfiguration.Server.getBotStatusListener().onBotDisconnected(
                         "BotConnectionLost",
                         "The bot was disconnected due to a network connectivity issue. Please check the internet connection and try reconnecting."
