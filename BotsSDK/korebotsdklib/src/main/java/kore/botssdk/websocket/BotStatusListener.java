@@ -7,4 +7,6 @@ public interface BotStatusListener {
     void onBotDisconnected(String event_code, String event_message);
 
     void onBotConnectionFail(String event_code, String strReason);
+
+    void onDeepLinkClicked(String event_code, String url);
 }
