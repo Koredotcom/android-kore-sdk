@@ -83,6 +83,7 @@ public class SDKConfiguration {
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static String SERVER_URL = "PLEASE_ENTER_SERVER_URL";
         public static String Branding_SERVER_URL = "PLEASE_ENTER_BRANDING_SERVER_URL";
+        public static String notificationDeviceId = "";
         public static HashMap<String, Object> queryParams = new HashMap<>();
 
         public static RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
@@ -98,6 +99,10 @@ public class SDKConfiguration {
 
         public static void setCustomData(RestResponse.BotCustomData customData) {
             Server.customData = customData;
+        }
+
+        public static void setNotificationDeviceId(String notificationDeviceId) {
+            Server.notificationDeviceId = notificationDeviceId;
         }
 
         public static void setBotStatusListener(BotStatusListener botStatusListener) {

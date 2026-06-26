@@ -118,6 +118,9 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         // Flag to set status bar color as header background color
         SDKConfig.setIsUpdateStatusBarColor(true);
 
+        // Flag to set deviceId for notifications
+        SDKConfig.setDeviceId("");
+
         //Method to reset the bot connection and start a new session by overriding the previous state
         // SDKConfig.disconnectBotSession(MainActivity.this);
 

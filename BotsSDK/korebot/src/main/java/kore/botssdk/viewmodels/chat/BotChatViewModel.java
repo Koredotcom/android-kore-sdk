@@ -85,8 +85,6 @@ public class BotChatViewModel extends ViewModel {
     boolean isAgentTransfer = false;
     boolean isStreamMessage = false;
     ArrayList<String> arrMessageList = new ArrayList<>();
-    private static String uniqueID = null;
-    private static final String PREF_UNIQUE_ID = "PREF_UNIQUE_ID";
     private boolean isActivityResumed = false;
     private static final String START_TIMER = "start_timer";
     private static final String AGENT_EVENT_CONNECTED = "agent_connected";
@@ -151,7 +149,9 @@ public class BotChatViewModel extends ViewModel {
                 chatView.onConnectionStateChanged(state, isReconnection);
                 isReconnectionStopped = false;
                 chatView.loadOnConnectionHistory(isReconnection);
-                new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), getUniqueDeviceId(context));
+
+                if(!SDKConfiguration.Server.notificationDeviceId.isEmpty())
+                    new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {
                     isReconnectionStopped = true;
@@ -459,24 +459,6 @@ public class BotChatViewModel extends ViewModel {
             compModel = ((BotResponse) baseBotMessage).getMessage().get(0).getComponent();
         }
         return compModel;
-    }
-
-    public String getUniqueDeviceId(Context context) {
-        if (uniqueID == null) {
-            SharedPreferences sharedPrefs = context.getSharedPreferences(PREF_UNIQUE_ID, Context.MODE_PRIVATE);
-            uniqueID = sharedPrefs.getString(PREF_UNIQUE_ID, null);
-            if (uniqueID == null) {
-                uniqueID = UUID.randomUUID().toString();
-                SharedPreferences.Editor editor = sharedPrefs.edit();
-                editor.putString(PREF_UNIQUE_ID, uniqueID);
-                editor.apply();
-            }
-        }
-        return uniqueID;
-    }
-
-    public String getUniqueID() {
-        return uniqueID;
     }
 
     public void addSentMessageToChat(String message) {
