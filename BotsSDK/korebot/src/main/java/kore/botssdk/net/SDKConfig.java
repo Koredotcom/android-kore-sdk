@@ -55,6 +55,10 @@ public class SDKConfig {
         SDKConfiguration.Client.isWebHook = isWebHook;
     }
 
+    public static void setDeviceId(String deviceId) {
+        SDKConfiguration.Server.setNotificationDeviceId(deviceId);
+    }
+
     public static void addCustomContentFragment(BaseContentFragment contentFragment) {
         customContentFragment = contentFragment;
     }

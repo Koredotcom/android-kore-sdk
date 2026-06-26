@@ -565,7 +565,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         if (isAgentTransfer && botClient != null)
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
-        new PushNotificationRegister().unsubscribePushNotification(botClient.getUserId(), botClient.getAccessToken(), sharedPreferences.getString("PREF_UNIQUE_ID", mViewModel.getUniqueID()));
+        if(!SDKConfiguration.Server.notificationDeviceId.isEmpty())
+            new PushNotificationRegister().unsubscribePushNotification(botClient.getUserId(), botClient.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
 
         if (botClient != null) botClient.disconnect();
         BotSocketConnectionManager.getInstance().shutDownConnection();
