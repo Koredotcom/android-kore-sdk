@@ -594,17 +594,21 @@ public class WebSocketConnection implements IWebSocket {
 
                     LOGGER.d("WebSockets Ping received");
 
-                    if (ping.mPayload == null) {
-                        mWsHandler.onPing();
-                    } else {
-                        mWsHandler.onPing(ping.mPayload);
+                    if (mWsHandler != null) {
+                        if (ping.mPayload == null) {
+                            mWsHandler.onPing();
+                        } else {
+                            mWsHandler.onPing(ping.mPayload);
+                        }
                     }
 
                 } else if (msg.obj instanceof Pong pong) {
-                    if (pong.mPayload == null) {
-                        mWsHandler.onPong();
-                    } else {
-                        mWsHandler.onPong(pong.mPayload);
+                    if (mWsHandler != null) {
+                        if (pong.mPayload == null) {
+                            mWsHandler.onPong();
+                        } else {
+                            mWsHandler.onPong(pong.mPayload);
+                        }
                     }
 
                     LOGGER.d("WebSockets Pong received");

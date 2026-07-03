@@ -144,7 +144,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon && bottomSheetDialog == null ? View.VISIBLE : View.GONE);
             if (bottomSheetDialog != null) return;
             if (SDKConfiguration.BubbleColors.showIcon) {
-                botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.agent_icon, context.getTheme()));
+                if(SDKConfiguration.BubbleColors.getAgentAvatar() != null)
+                    botIcon.setImageDrawable(SDKConfiguration.BubbleColors.getAgentAvatar());
+                else if (StringUtils.isNotEmpty(SDKConfiguration.BubbleColors.getAgent_url())) {
+                    Glide.with(context).load(SDKConfiguration.BubbleColors.getAgent_url()).error(R.drawable.agent_icon).into(new DrawableImageViewTarget(botIcon));
+                } else
+                    botIcon.setImageDrawable(ResourcesCompat.getDrawable(context.getResources(), R.drawable.agent_icon, context.getTheme()));
             }
 
             if (SDKConfiguration.isTimeStampsRequired() && SDKConfiguration.OverrideKoreConfig.showIconTop) {

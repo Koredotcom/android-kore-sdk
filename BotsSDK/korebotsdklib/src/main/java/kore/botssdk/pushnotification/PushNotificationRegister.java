@@ -26,6 +26,7 @@ public class PushNotificationRegister {
      */
 
     public void registerPushNotification(String userId, String accessToken, String deviceId) {
+        if (userId == null || accessToken == null || deviceId == null) return;
 
         HashMap<String, Object> pushNotificationRequestMap = new HashMap<>();
         pushNotificationRequestMap.put(Constants.PUSH_NOTIF_OS_TYPE, Constants.PUSH_NOTIF_OS_TYPE_ANDROID);
@@ -62,6 +63,7 @@ public class PushNotificationRegister {
      */
 
     public void unsubscribePushNotification(String userId, String accessToken, String deviceId) {
+        if (userId == null || accessToken == null || deviceId == null) return;
 
         HashMap<String, Object> pushNotificationRequestMap = new HashMap<>();
         pushNotificationRequestMap.put(Constants.PUSH_NOTIF_DEVICE_ID, deviceId);

@@ -10,7 +10,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if(NetworkUtility.isNetworkConnectionAvailable(context)){
-            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(context,false);
+            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(context);
         }
 
     }
