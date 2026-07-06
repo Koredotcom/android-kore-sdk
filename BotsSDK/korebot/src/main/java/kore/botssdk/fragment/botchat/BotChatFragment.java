@@ -449,7 +449,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         mViewModel.setIsActivityResumed(true);
 
         if (!SDKConfiguration.Client.isWebHook) {
-            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(requireContext(), false);
+            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(requireContext());
             updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
         }
 

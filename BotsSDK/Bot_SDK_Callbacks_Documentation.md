@@ -54,6 +54,24 @@ SDKConfig.setBotStatusUpdateListener(new BotStatusListener() {
 ---
 *Note: Ensure you handle the `DeepLinkClicked` event to navigate the user to appropriate sections of your application.*
 
+## SDK Customization API
+
+The SDK provides static methods via `SDKConfig` to customize the appearance and behavior of the bot from the parent application.
+
+### 1. Set Agent Avatar
+**Method:**
+```java
+SDKConfig.setAgentAvatar(Drawable agentAvatar, String agentUrl)
+```
+**Purpose:** Allows the parent application to customize the agent's icon. This is particularly useful for displaying a specific persona or a real-time agent image when a human agent is chatting with the user.
+
+**Functionality:**
+*   **Local Drawable:** You can pass a `Drawable` object to be used as the avatar.
+*   **Icon URL:** You can pass a string URL. The SDK will automatically fetch and display the image from this URL.
+*   **Priority:** If both are provided, the SDK will prioritize the local drawable or use the URL as a fallback depending on internal logic.
+
+**Common Use Case:** Call this method during SDK initialization or dynamically when an agent joins the conversation to update the chat bubble icons.
+
 ## SDK Broadcast Commands
 
 The SDK also responds to specific system-wide broadcasts that allow you to control the chat behavior from outside the SDK components.
@@ -78,4 +96,21 @@ intent.putExtra(BundleConstants.BOT_RECONNECT, false); // false = fresh connecti
 sendBroadcast(intent);
 ```
 **Common Use Case:** Use this after refreshing an expired JWT token or when manual reconnection is required after a long timeout.
+
+### 3. Unsubscribe Push Notifications
+**Command:** `BundleConstants.CALL_UNSUBSCRIBE`  
+**Purpose:** Triggers the unsubscription API for push notifications. This allows the host application to opt-out the user from bot notifications from any part of the app.
+
+**Pre-requisite:**
+Disable the automatic unsubscribe flag in the SDK configuration:
+```java
+SDKConfiguration.OverrideKoreConfig.default_unsubscribe = false;
+```
+
+**Usage:**
+```java
+Intent unsubscribeIntent = new Intent(BundleConstants.CALL_UNSUBSCRIBE);
+sendBroadcast(unsubscribeIntent);
+```
+**Common Use Case:** Use this when a user logs out of your main application or manually toggles off bot notifications in your app's settings menu.
 

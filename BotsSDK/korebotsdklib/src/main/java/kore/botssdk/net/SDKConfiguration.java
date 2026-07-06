@@ -6,6 +6,7 @@ package kore.botssdk.net;
 
 import android.annotation.SuppressLint;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.View;
 
@@ -181,10 +182,25 @@ public class SDKConfiguration {
 
         private static int icon = -1;
         private static String icon_url = "";
+        private static Drawable agentAvatar;
+        private static String agent_url = "";
 
         public static String quickReplyColor = "#EEEEF0";
         public static String quickReplyTextColor = "#000000";
         public static String quickBorderColor = "#000000";
+
+        public static void setAgentAvatar(Drawable agent_Avatar, String agentUrl) {
+            agentAvatar = agent_Avatar;
+            agent_url = agentUrl;
+        }
+
+        public static Drawable getAgentAvatar() {
+            return agentAvatar;
+        }
+
+        public static String getAgent_url() {
+            return agent_url;
+        }
     }
 
     @SuppressLint("HardcodedPassword")
@@ -208,6 +224,7 @@ public class SDKConfiguration {
         public static boolean showLocalNotification = true;
         public static boolean reconnectionBySDK = true;
         public static boolean sendAllDeepLink = false;
+        public static boolean default_unsubscribe = true;
     }
 
     public static boolean isTimeStampsRequired() {

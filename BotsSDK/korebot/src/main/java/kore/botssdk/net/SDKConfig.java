@@ -3,6 +3,7 @@ package kore.botssdk.net;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -69,6 +70,11 @@ public class SDKConfig {
 
     public static void addCustomFooterFragment(BaseFooterFragment fragment) {
         customFooterFragment = fragment;
+    }
+
+    public static void setAgentAvatar(Drawable agentAvatar, String agenturl)
+    {
+        SDKConfiguration.BubbleColors.setAgentAvatar(agentAvatar, agenturl);
     }
 
     public static BaseFooterFragment getCustomFooterFragment() {

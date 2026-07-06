@@ -117,10 +117,20 @@ public final class SocketWrapper {
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
                 if (botAuthorizationResponse.isSuccessful() && botAuthorizationResponse.body() != null) {
-                    botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
-                    auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
+                    RestResponse.BotAuthorization botAuthBody = botAuthorizationResponse.body();
+                    if (botAuthBody.getUserInfo() != null) {
+                        botUserId = botAuthBody.getUserInfo().getUserId();
+                    }
+                    if (botAuthBody.getAuthorization() != null) {
+                        auth = botAuthBody.getAuthorization().getAccessToken();
+                    }
 
-                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + auth,hsh1);
+                    if (auth == null) {
+                        observableEmitter.onError(new Throwable("Access token is null"));
+                        return;
+                    }
+
+                    Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + auth, hsh1);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
                     if (rtmUrlResponse.isSuccessful() && rtmUrlResponse.body() != null) {
@@ -183,11 +193,13 @@ public final class SocketWrapper {
                 if (!isReconnect) {
                     try {
                         StringBuilder queryParams = new StringBuilder();
-                        for (Map.Entry<String, Object> entry : SDKConfiguration.Server.queryParams.entrySet()) {
-                            queryParams.append("&");
-                            queryParams.append(entry.getKey());
-                            queryParams.append("=");
-                            queryParams.append(entry.getValue());
+                        if (SDKConfiguration.Server.queryParams != null) {
+                            for (Map.Entry<String, Object> entry : SDKConfiguration.Server.queryParams.entrySet()) {
+                                queryParams.append("&");
+                                queryParams.append(entry.getKey());
+                                queryParams.append("=");
+                                queryParams.append(entry.getValue());
+                            }
                         }
                         socketConnectionListener.onStartCompleted(false);
                         connectToSocket(rtmUrl.getUrl().concat(StringUtils.isNotEmpty(SDKConfiguration.Client.connection_mode) ? "&ConnectionMode=" + SDKConfiguration.Client.connection_mode : "") + queryParams, false);
@@ -325,10 +337,20 @@ public final class SocketWrapper {
                     Response<RestResponse.BotAuthorization> botAuthorizationResponse = botAuthorizationCall.execute();
 
                     if (botAuthorizationResponse.body() != null) {
-                        auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
-                        botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
+                        RestResponse.BotAuthorization botAuthBody = botAuthorizationResponse.body();
+                        if (botAuthBody.getAuthorization() != null) {
+                            auth = botAuthBody.getAuthorization().getAccessToken();
+                        }
+                        if (botAuthBody.getUserInfo() != null) {
+                            botUserId = botAuthBody.getUserInfo().getUserId();
+                        }
 
-                        Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + botAuthorizationResponse.body().getAuthorization().getAccessToken(), optParameterBotInfo, true);
+                        if (auth == null) {
+                            observableEmitter.onError(new Throwable("Access token is null"));
+                            return;
+                        }
+
+                        Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + auth, optParameterBotInfo, true);
                         Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();
 
                         if (rtmUrlResponse.body() != null)
@@ -391,8 +413,18 @@ public final class SocketWrapper {
                 hsh1.put(Constants.BOT_INFO, botInfoModel);
 
                 if (botAuthorizationResponse.isSuccessful() && botAuthorizationResponse.body() != null) {
-                    auth = botAuthorizationResponse.body().getAuthorization().getAccessToken();
-                    botUserId = botAuthorizationResponse.body().getUserInfo().getUserId();
+                    RestResponse.BotAuthorization botAuthBody = botAuthorizationResponse.body();
+                    if (botAuthBody.getAuthorization() != null) {
+                        auth = botAuthBody.getAuthorization().getAccessToken();
+                    }
+                    if (botAuthBody.getUserInfo() != null) {
+                        botUserId = botAuthBody.getUserInfo().getUserId();
+                    }
+
+                    if (auth == null) {
+                        observableEmitter.onError(new Throwable("Access token is null"));
+                        return;
+                    }
 
                     Call<RestResponse.RTMUrl> rtmUrlCall = BotRestBuilder.getBotRestService().getRtmUrl("bearer " + auth, hsh1,true);
                     Response<RestResponse.RTMUrl> rtmUrlResponse = rtmUrlCall.execute();

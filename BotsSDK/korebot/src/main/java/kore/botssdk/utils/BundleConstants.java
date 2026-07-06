@@ -59,4 +59,5 @@ public class BundleConstants {
     public static final String STATUS_BAR_COLOR = "STATUS_BAR_COLOR";
     public static final String BOT_RECONNECT = "BOT_RECONNECT";
     public static final String CHAT_CLEAR = "CHAT_CLEAR";
+    public static final String CALL_UNSUBSCRIBE = "CALL_UNSUBSCRIBE";
 }

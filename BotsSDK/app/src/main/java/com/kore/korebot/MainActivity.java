@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.models.BrandingModel;
@@ -146,6 +145,12 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         //Enable the flag if the deeplink not needed inside the SDK
         SDKConfiguration.OverrideKoreConfig.sendAllDeepLink = false;
 
+        //Disable the flag if unsubscribe not needed inside the SDK
+        SDKConfiguration.OverrideKoreConfig.default_unsubscribe = true;
+
+        //Set the agent icon from outside the SDK
+//        SDKConfig.setAgentAvatar(ResourcesCompat.getDrawable(getResources(), R.drawable.button_drawable, getTheme()), "");
+
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
     }
@@ -158,7 +163,10 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
                     // There are no request codes
                     Intent data = result.getData();
                     if (data != null && data.hasExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED)) {
-                        LogUtils.e("ChatBot is", Objects.requireNonNull(data.getStringExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED)));
+                        String chatBotStatus = data.getStringExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED);
+                        if (chatBotStatus != null) {
+                            LogUtils.e("ChatBot is", chatBotStatus);
+                        }
                     }
                 }
             });
@@ -170,7 +178,11 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         Intent intent = new Intent(getApplicationContext(), NewBotChatActivity.class);
         Bundle bundle = new Bundle();
         //This should not be null
-        bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
+        String botInitial = "B";
+        if (SDKConfiguration.Client.bot_name != null && !SDKConfiguration.Client.bot_name.isEmpty()) {
+            botInitial = String.valueOf(SDKConfiguration.Client.bot_name.charAt(0));
+        }
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS, botInitial);
         intent.putExtras(bundle);
         chatActivityResultLauncher.launch(intent);
     }

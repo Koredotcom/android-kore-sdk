@@ -4,6 +4,7 @@ import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 import static kore.botssdk.utils.BundleConstants.BOT_RECONNECT;
+import static kore.botssdk.utils.BundleConstants.CALL_UNSUBSCRIBE;
 import static kore.botssdk.utils.BundleConstants.CHAT_CLEAR;
 import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
 import static kore.botssdk.utils.BundleConstants.MINIMIZE_CHAT_BOT_EVENT;
@@ -57,6 +58,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.UserInfo;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.SDKConfig;
@@ -82,6 +84,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private BaseFooterFragment baseFooterFragment;
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
+    private UserInfo userInfo;
     boolean isAgentTransfer;
     private String botName = SDKConfiguration.Client.bot_name;
     private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
@@ -109,6 +112,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     }
                     finish();
                 }
+            } else if (Objects.equals(intent.getAction(), BundleConstants.CALL_UNSUBSCRIBE)) {
+                if (StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId) && userInfo != null &&
+                        StringUtils.isNotEmpty(userInfo.getUserId()) && StringUtils.isNotEmpty(userInfo.getOrgID()))
+                    new PushNotificationRegister().unsubscribePushNotification(userInfo.getUserId(), userInfo.getOrgID(), SDKConfiguration.Server.notificationDeviceId);
             }
         }
     };
@@ -182,10 +189,12 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT), RECEIVER_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR), RECEIVER_EXPORTED);
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
+            registerReceiver(minimizeBotChatReceiver, new IntentFilter(CALL_UNSUBSCRIBE), RECEIVER_EXPORTED);
         } else {
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR));
+            registerReceiver(minimizeBotChatReceiver, new IntentFilter(CALL_UNSUBSCRIBE));
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT));
         }
 
@@ -284,6 +293,13 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
                     botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
                 }
+            }
+
+            if(botClient != null && !botClient.getUserId().isEmpty() && !botClient.getAccessToken().isEmpty())
+            {
+                userInfo = new UserInfo();
+                userInfo.setUserId(botClient.getUserId());
+                userInfo.setOrgID(botClient.getAccessToken());
             }
 
             sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
@@ -565,7 +581,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         if (isAgentTransfer && botClient != null)
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
-        if(!SDKConfiguration.Server.notificationDeviceId.isEmpty())
+        if (StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId) && SDKConfiguration.OverrideKoreConfig.default_unsubscribe && botClient != null &&
+                StringUtils.isNotEmpty(botClient.getUserId()) && StringUtils.isNotEmpty(botClient.getAccessToken()))
             new PushNotificationRegister().unsubscribePushNotification(botClient.getUserId(), botClient.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
 
         if (botClient != null) botClient.disconnect();
@@ -579,7 +596,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         mViewModel.setIsActivityResumed(true);
 
         if (!SDKConfiguration.Client.isWebHook) {
-            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext(), false);
+            BotSocketConnectionManager.getInstance().checkConnectionAndRetry(getApplicationContext());
             updateTitleBar(BotSocketConnectionManager.getInstance().getConnection_state());
         }
 
@@ -682,7 +699,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private void showTemplateBottomSheet(BotResponse botResponse) {
         if (isFinishing() || isDestroyed()) return;
 
-        if (botResponse.getMessage() == null || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
+        if (botResponse.getMessage() == null || botResponse.getMessage().isEmpty() || botResponse.getMessage().get(0) == null || botResponse.getMessage().get(0).getComponent() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload() == null ||
                 botResponse.getMessage().get(0).getComponent().getPayload().getPayload().getTemplate_type() == null ||
@@ -694,46 +711,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         bottomSheetFragment.setInvokeGenericWebViewInterface(this);
         bottomSheetFragment.show(botResponse, getSupportFragmentManager());
     }
-
-//    @Override
-//    protected void onStop() {
-//        mViewModel.setIsActivityResumed(false);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-//            List<ActivityManager.AppTask> taskList = activityManager.getAppTasks();
-//
-//            if (taskList != null && !taskList.isEmpty()) {
-//
-//                ActivityManager.AppTask appTask = taskList.get(0);
-//
-//                if (appTask != null &&
-//                        appTask.getTaskInfo() != null &&
-//                        appTask.getTaskInfo().topActivity != null) {
-//
-//                    String topClassName = appTask.getTaskInfo().topActivity.toString();
-//
-//                    if (!topClassName.contains(getApplicationContext().getPackageName())) {
-//
-//                        LogUtils.e("onStop", "onStop called");
-//
-//                        SharedPreferences.Editor prefsEditor =
-//                                getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE).edit();
-//
-//                        String jsonObject = new Gson().toJson("");
-//
-//                        prefsEditor.putString(BotResponse.AGENT_INFO_KEY, jsonObject);
-//                        prefsEditor.putBoolean(BundleConstants.IS_RECONNECT, false);
-//                        prefsEditor.putInt(BotResponse.HISTORY_COUNT, 0);
-//                        prefsEditor.apply();
-//                    }
-//                } else {
-//                    LogUtils.e("TAG", "TaskInfo or topActivity is null");
-//                }
-//            }
-//        }
-//        super.onStop();
-//    }
-
 
     @Override
     public void onStart() {

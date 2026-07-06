@@ -539,7 +539,11 @@ public class BotChatViewModel extends ViewModel {
         //This should not be null
         bundle.putBoolean(BundleUtils.SHOW_PROFILE_PIC, false);
         bundle.putString(BundleUtils.PICK_TYPE, NOTIFICATION);
-        bundle.putString(BundleUtils.BOT_NAME_INITIALS, String.valueOf(SDKConfiguration.Client.bot_name.charAt(0)));
+        String botInitial = "B";
+        if (SDKConfiguration.Client.bot_name != null && !SDKConfiguration.Client.bot_name.isEmpty()) {
+            botInitial = String.valueOf(SDKConfiguration.Client.bot_name.charAt(0));
+        }
+        bundle.putString(BundleUtils.BOT_NAME_INITIALS, botInitial);
         intent.putExtras(bundle);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_MUTABLE);
         nBuilder.setContentIntent(pendingIntent);

@@ -1,7 +1,5 @@
 package kore.botssdk.listener;
 
-import static kore.botssdk.listener.BaseSocketConnectionManager.CONNECTION_STATE.DISCONNECTED;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
@@ -29,6 +27,7 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
 import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.events.SocketDataTransferModel;
+import kore.botssdk.io.crossbar.autobahn.websocket.interfaces.IWebSocketConnectionHandler;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
@@ -72,7 +71,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         return connection_state;
     }
 
-    CONNECTION_STATE connection_state = DISCONNECTED;
+    CONNECTION_STATE connection_state = CONNECTION_STATE.DISCONNECTED;
     String botName, streamId;
     private String userId;
 
@@ -99,11 +98,23 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void onClose(int code, String reason) {
-        connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
+        if (code == IWebSocketConnectionHandler.CLOSE_CANNOT_CONNECT) {
+            connection_state = CONNECTION_STATE.DISCONNECTED;
+        } else {
+            connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
+        }
+
         if (chatListener != null) {
             chatListener.onConnectionStateChanged(connection_state, false);
+        }
 
-            if (SDKConfiguration.Server.getBotStatusListener() != null && (code == 3 || code == 2)) {
+        if (SDKConfiguration.Server.getBotStatusListener() != null) {
+            if (code == IWebSocketConnectionHandler.CLOSE_CANNOT_CONNECT) {
+                SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail(
+                        "BotConnectionFail",
+                        "The bot was unable to connect. Please check the internet connection and try again."
+                );
+            } else if (code == IWebSocketConnectionHandler.CLOSE_CONNECTION_LOST) {
                 SDKConfiguration.Server.getBotStatusListener().onBotDisconnected(
                         "BotConnectionLost",
                         "The bot was disconnected due to a network connectivity issue. Please check the internet connection and try reconnecting."
@@ -181,59 +192,22 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                         } catch (Exception e) {
                             LogUtils.e("Error at MakeStsJwtCall", e+"");
                             Toast.makeText(mContext, "Something went wrong in fetching JWT", Toast.LENGTH_SHORT).show();
-                            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
                             if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
                         }
                     }
                 } else {
-                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<JWTTokenResponse> call, @NonNull Throwable t) {
                 LogUtils.d("token refresh", Objects.requireNonNull(t.getMessage()));
-                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
             }
         });
 
-    }
-
-    public interface JwtCallback {
-        void onSuccess(String token);
-        void onError(String error);
-    }
-
-    public void getJwtTokenWithConfig(JwtCallback callback) {
-
-        Call<JWTTokenResponse> call =
-                BotJWTRestBuilder.getBotJWTRestAPI().getJWTToken(getRequestObject());
-
-        call.enqueue(new Callback<JWTTokenResponse>() {
-            @Override
-            public void onResponse(@NonNull Call<JWTTokenResponse> call,
-                                   @NonNull Response<JWTTokenResponse> response) {
-
-                if (response.isSuccessful() && response.body() != null) {
-                    try {
-                        String token = response.body().getJwt();
-                        callback.onSuccess(token);
-                    } catch (Exception e) {
-                        LogUtils.e("JWT_ERROR", e.toString());
-                        callback.onError("Parsing error");
-                    }
-                } else {
-                    callback.onError("Response not successful");
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<JWTTokenResponse> call,
-                                  @NonNull Throwable t) {
-                LogUtils.e("JWT_ERROR", t.getMessage());
-                callback.onError(t.getMessage());
-            }
-        });
     }
 
     private void makeJwtGrantCall(String jwtToken, boolean isRefresh) {
@@ -251,7 +225,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             if(SDKConfiguration.Server.getBotStatusListener() != null)
                 SDKConfiguration.Server.getBotStatusListener().onBotConnectionFail("BotNotConnected", "Error at makeJwtGrantCall"+e);
 
-            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+            connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
             if (chatListener != null) chatListener.onConnectionStateChanged(connection_state, false);
         }
     }
@@ -306,18 +280,18 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
                             KoreEventCenter.post(jwtKeyResponse.getJwt());
                         }
                     } else {
-                        connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                        connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
                     }
 
                 } else {
-                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                    connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
                 }
             }
 
             @Override
             public void onFailure(@NonNull Call<JWTTokenResponse> call, @NonNull Throwable t) {
                 LogUtils.d("token refresh", Objects.requireNonNull(t.getMessage()));
-                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : DISCONNECTED;
+                connection_state = isRefresh ? CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED : CONNECTION_STATE.DISCONNECTED;
             }
         });
 
@@ -334,7 +308,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void startAndInitiateConnectionWithAuthToken(Context mContext, String userId, String accessToken, RestResponse.BotCustomData botCustomData) {
-        if (connection_state == null || connection_state == DISCONNECTED) {
+        if (connection_state == null || connection_state == CONNECTION_STATE.DISCONNECTED) {
             this.mContext = mContext;
             this.userId = userId;
             this.accessToken = accessToken;
@@ -355,7 +329,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     @Override
     public void startAndInitiateConnectionWithConfig(Context mContext, RestResponse.BotCustomData botCustomData1) {
         this.botCustomData = botCustomData1;
-        if (connection_state == null || connection_state == DISCONNECTED) {
+        if (connection_state == null || connection_state == CONNECTION_STATE.DISCONNECTED) {
             this.mContext = mContext;
             connection_state = CONNECTION_STATE.CONNECTING;
             if (chatListener != null) {
@@ -377,7 +351,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void startAndInitiateConnectionWithReconnect(Context mContext, RestResponse.BotCustomData botCustomData, boolean isReconnect) {
         this.botCustomData = botCustomData;
         this.isReconnect = isReconnect;
-        if (connection_state == null || connection_state == DISCONNECTED) {
+        if (connection_state == null || connection_state == CONNECTION_STATE.DISCONNECTED) {
             this.mContext = mContext;
             connection_state = CONNECTION_STATE.CONNECTING;
             if (chatListener != null) {
@@ -403,7 +377,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     private void initiateConnection() {
         if (!NetworkUtility.isNetworkConnectionAvailable(mContext)) {
-            connection_state = DISCONNECTED;
+            connection_state = CONNECTION_STATE.DISCONNECTED;
             if (chatListener != null) {
                 chatListener.onConnectionStateChanged(connection_state, false);
             }
@@ -622,7 +596,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     }
 
     public void startSpeak(String text) {
-        if (text != null && !text.isEmpty() && isSubscribed) {
+        if (text != null && !text.isEmpty() && isSubscribed && ttsSynthesizer != null) {
             ttsSynthesizer.speak(text.replaceAll("<.*?>", ""), botClient.getAccessToken());
         }
     }
@@ -630,18 +604,18 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
     public void onEvent(NetworkEvents.NetworkConnectivityEvent event) {
         if (event.getNetworkInfo() != null && event.getNetworkInfo().isConnected()) {
             if (botClient != null && botClient.isConnected()) return;
-            checkConnectionAndRetry(mContext, false);
+            checkConnectionAndRetry(mContext);
         }
     }
 
     public void onEvent(AuthTokenUpdateEvent ev) {
         if (ev.getAccessToken() != null) {
             accessToken = ev.getAccessToken();
-            checkConnectionAndRetry(mContext, false);
+            checkConnectionAndRetry(mContext);
         }
     }
 
-    public void checkConnectionAndRetry(Context mContext, boolean isFirstTime) {
+    public void checkConnectionAndRetry(Context mContext) {
         ///here going to refresh jwt token from chat activity and it should not
         if (botClient == null) {
             this.mContext = mContext;
@@ -649,7 +623,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             refreshJwtToken();
             return;
         }
-        if (connection_state == DISCONNECTED) initiateConnection();
+        if (connection_state == CONNECTION_STATE.DISCONNECTED) initiateConnection();
         else if (connection_state == CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED) {
             refreshJwtToken();
         }
