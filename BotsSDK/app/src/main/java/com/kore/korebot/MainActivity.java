@@ -16,12 +16,15 @@ import java.util.HashMap;
 
 import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.NotificationModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.pushnotification.PushNotificationRegister;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.LangUtils;
 import kore.botssdk.utils.LogUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.websocket.BotStatusListener;
 
 @SuppressLint("HardcodedPassword")
@@ -201,6 +204,17 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         RestResponse.BotCustomData customData = new RestResponse.BotCustomData();
         customData.put("jwt_token", jwtToken);
         return customData;
+    }
+
+    @Override
+    protected void onDestroy() {
+
+        NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+        if (notificationModel != null && StringUtils.isNotEmpty(notificationModel.getDeviceId()) &&
+                StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()))
+            new PushNotificationRegister().unsubscribePushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), notificationModel.getDeviceId());
+
+        super.onDestroy();
     }
 
     private BrandingModel getLocalBrandingModel() {

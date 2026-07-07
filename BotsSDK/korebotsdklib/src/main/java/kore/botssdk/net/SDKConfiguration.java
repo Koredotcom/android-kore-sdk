@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Locale;
 
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.NotificationModel;
 import kore.botssdk.websocket.BotStatusListener;
 
 /**
@@ -80,7 +81,7 @@ public class SDKConfiguration {
         public static void setServerUrl(String serverUrl) {
             SERVER_URL = serverUrl;
         }
-
+        public static NotificationModel notificationModel;
         public static final String TTS_WS_URL = "wss://speech.kore.ai/tts/ws";
         public static String SERVER_URL = "PLEASE_ENTER_SERVER_URL";
         public static String Branding_SERVER_URL = "PLEASE_ENTER_BRANDING_SERVER_URL";
@@ -108,6 +109,14 @@ public class SDKConfiguration {
 
         public static void setBotStatusListener(BotStatusListener botStatusListener) {
             Server.botStatusListener = botStatusListener;
+        }
+
+        public static void setNotificationModel(NotificationModel notificationModel) {
+            Server.notificationModel = notificationModel;
+        }
+
+        public static NotificationModel getNotificationModel() {
+            return notificationModel;
         }
 
         public static BotStatusListener getBotStatusListener() {
