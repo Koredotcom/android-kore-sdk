@@ -578,7 +578,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
         NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
-        if (notificationModel != null && StringUtils.isNotEmpty(notificationModel.getDeviceId()) &&
+        if (SDKConfiguration.OverrideKoreConfig.default_notifications && notificationModel != null && StringUtils.isNotEmpty(notificationModel.getDeviceId()) &&
                 StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()))
             new PushNotificationRegister().unsubscribePushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), notificationModel.getDeviceId());
 

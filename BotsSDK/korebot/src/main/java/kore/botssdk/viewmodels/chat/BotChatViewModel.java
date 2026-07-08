@@ -150,7 +150,7 @@ public class BotChatViewModel extends ViewModel {
                 isReconnectionStopped = false;
                 chatView.loadOnConnectionHistory(isReconnection);
 
-                if(!SDKConfiguration.Server.notificationDeviceId.isEmpty())
+                if(!SDKConfiguration.Server.notificationDeviceId.isEmpty() && SDKConfiguration.OverrideKoreConfig.default_notifications)
                     new PushNotificationRegister().registerPushNotification(botClient.getUserId(), botClient.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
             } else if (state == BaseSocketConnectionManager.CONNECTION_STATE.RECONNECTION_STOPPED) {
                 if (!isReconnectionStopped) {

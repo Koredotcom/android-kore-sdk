@@ -233,7 +233,7 @@ public class SDKConfiguration {
         public static boolean showLocalNotification = true;
         public static boolean reconnectionBySDK = true;
         public static boolean sendAllDeepLink = false;
-        public static boolean default_unsubscribe = true;
+        public static boolean default_notifications = true;
     }
 
     public static boolean isTimeStampsRequired() {
