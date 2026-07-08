@@ -97,7 +97,25 @@ sendBroadcast(intent);
 ```
 **Common Use Case:** Use this after refreshing an expired JWT token or when manual reconnection is required after a long timeout.
 
-### 3. Unsubscribe Push Notifications
+### 3. Subscribe Push Notifications
+If you need to manually subscribe to push notifications (e.g., when the bot connects or after user login), you can call the following API:
+
+**Usage:**
+```java
+NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+if (notificationModel != null && !SDKConfiguration.OverrideKoreConfig.default_notifications &&
+        StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()) &&
+        StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId)) {
+    new PushNotificationRegister().registerPushNotification(
+            notificationModel.getUserId(), 
+            notificationModel.getAccessToken(), 
+            SDKConfiguration.Server.notificationDeviceId
+    );
+}
+```
+**Common Use Case:** Call this inside `onBotConnected()` if you have manual notification handling enabled (`default_notifications = false`) to register the device for push updates.
+
+### 4. Unsubscribe Push Notifications
 If you need to manually unsubscribe from push notifications (e.g., on user logout), you can call the following API:
 
 **Usage:**
