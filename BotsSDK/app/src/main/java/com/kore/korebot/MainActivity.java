@@ -16,12 +16,15 @@ import java.util.HashMap;
 
 import kore.botssdk.activity.NewBotChatActivity;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.NotificationModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
+import kore.botssdk.pushnotification.PushNotificationRegister;
 import kore.botssdk.utils.BundleUtils;
 import kore.botssdk.utils.LangUtils;
 import kore.botssdk.utils.LogUtils;
+import kore.botssdk.utils.StringUtils;
 import kore.botssdk.websocket.BotStatusListener;
 
 @SuppressLint("HardcodedPassword")
@@ -146,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         SDKConfiguration.OverrideKoreConfig.sendAllDeepLink = false;
 
         //Disable the flag if unsubscribe not needed inside the SDK
-        SDKConfiguration.OverrideKoreConfig.default_unsubscribe = true;
+        SDKConfiguration.OverrideKoreConfig.default_notifications = true;
 
         //Set the agent icon from outside the SDK
 //        SDKConfig.setAgentAvatar(ResourcesCompat.getDrawable(getResources(), R.drawable.button_drawable, getTheme()), "");
@@ -203,6 +206,17 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         return customData;
     }
 
+    @Override
+    protected void onDestroy() {
+
+        NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+        if (!SDKConfiguration.OverrideKoreConfig.default_notifications && notificationModel != null && StringUtils.isNotEmpty(notificationModel.getDeviceId()) &&
+                StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()))
+            new PushNotificationRegister().unsubscribePushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), notificationModel.getDeviceId());
+
+        super.onDestroy();
+    }
+
     private BrandingModel getLocalBrandingModel() {
         BrandingModel brandingModel = new BrandingModel();
         brandingModel.setBotchatBgColor("#F3F5F8");
@@ -230,6 +244,12 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
     @Override
     public void onBotConnected() {
         LogUtils.e("Bot Current Status", "Bot Connected");
+
+        NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+        if (notificationModel != null && !SDKConfiguration.OverrideKoreConfig.default_notifications &&
+                StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()) &&
+                StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId))
+            new PushNotificationRegister().registerPushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
     }
 
     @Override

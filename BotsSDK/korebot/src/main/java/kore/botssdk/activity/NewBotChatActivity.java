@@ -4,7 +4,6 @@ import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
 import static kore.botssdk.utils.BundleConstants.BOT_RECONNECT;
-import static kore.botssdk.utils.BundleConstants.CALL_UNSUBSCRIBE;
 import static kore.botssdk.utils.BundleConstants.CHAT_CLEAR;
 import static kore.botssdk.utils.BundleConstants.CLOSE_CHAT_BOT_EVENT;
 import static kore.botssdk.utils.BundleConstants.MINIMIZE_CHAT_BOT_EVENT;
@@ -58,6 +57,7 @@ import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
+import kore.botssdk.models.NotificationModel;
 import kore.botssdk.models.UserInfo;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
@@ -112,10 +112,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     }
                     finish();
                 }
-            } else if (Objects.equals(intent.getAction(), BundleConstants.CALL_UNSUBSCRIBE)) {
-                if (StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId) && userInfo != null &&
-                        StringUtils.isNotEmpty(userInfo.getUserId()) && StringUtils.isNotEmpty(userInfo.getOrgID()))
-                    new PushNotificationRegister().unsubscribePushNotification(userInfo.getUserId(), userInfo.getOrgID(), SDKConfiguration.Server.notificationDeviceId);
             }
         }
     };
@@ -189,12 +185,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT), RECEIVER_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR), RECEIVER_EXPORTED);
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
-            registerReceiver(minimizeBotChatReceiver, new IntentFilter(CALL_UNSUBSCRIBE), RECEIVER_EXPORTED);
         } else {
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR));
-            registerReceiver(minimizeBotChatReceiver, new IntentFilter(CALL_UNSUBSCRIBE));
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT));
         }
 
@@ -372,6 +366,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 taskProgressBar.setVisibility(View.GONE);
                 if (baseFooterFragment != null && baseFooterFragment.isAdded())
                     baseFooterFragment.enableSendButton();
+
+                SDKConfiguration.Server.setNotificationModel(new NotificationModel(botClient.getUserId(), botClient.getAccessToken(), SDKConfiguration.Server.notificationDeviceId));
 
                 if (SDKConfiguration.Server.getBotStatusListener() != null)
                     SDKConfiguration.Server.getBotStatusListener().onBotConnected();
@@ -581,9 +577,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         if (isAgentTransfer && botClient != null)
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
 
-        if (StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId) && SDKConfiguration.OverrideKoreConfig.default_unsubscribe && botClient != null &&
-                StringUtils.isNotEmpty(botClient.getUserId()) && StringUtils.isNotEmpty(botClient.getAccessToken()))
-            new PushNotificationRegister().unsubscribePushNotification(botClient.getUserId(), botClient.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
+        NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+        if (SDKConfiguration.OverrideKoreConfig.default_notifications && notificationModel != null && StringUtils.isNotEmpty(notificationModel.getDeviceId()) &&
+                StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()))
+            new PushNotificationRegister().unsubscribePushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), notificationModel.getDeviceId());
 
         if (botClient != null) botClient.disconnect();
         BotSocketConnectionManager.getInstance().shutDownConnection();

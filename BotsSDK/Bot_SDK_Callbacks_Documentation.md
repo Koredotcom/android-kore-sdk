@@ -97,20 +97,39 @@ sendBroadcast(intent);
 ```
 **Common Use Case:** Use this after refreshing an expired JWT token or when manual reconnection is required after a long timeout.
 
-### 3. Unsubscribe Push Notifications
-**Command:** `BundleConstants.CALL_UNSUBSCRIBE`  
-**Purpose:** Triggers the unsubscription API for push notifications. This allows the host application to opt-out the user from bot notifications from any part of the app.
-
-**Pre-requisite:**
-Disable the automatic unsubscribe flag in the SDK configuration:
-```java
-SDKConfiguration.OverrideKoreConfig.default_unsubscribe = false;
-```
+### 3. Subscribe Push Notifications
+If you need to manually subscribe to push notifications (e.g., when the bot connects or after user login), you can call the following API:
 
 **Usage:**
 ```java
-Intent unsubscribeIntent = new Intent(BundleConstants.CALL_UNSUBSCRIBE);
-sendBroadcast(unsubscribeIntent);
+NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+if (notificationModel != null && !SDKConfiguration.OverrideKoreConfig.default_notifications &&
+        StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()) &&
+        StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId)) {
+    new PushNotificationRegister().registerPushNotification(
+            notificationModel.getUserId(), 
+            notificationModel.getAccessToken(), 
+            SDKConfiguration.Server.notificationDeviceId
+    );
+}
 ```
-**Common Use Case:** Use this when a user logs out of your main application or manually toggles off bot notifications in your app's settings menu.
+**Common Use Case:** Call this inside `onBotConnected()` if you have manual notification handling enabled (`default_notifications = false`) to register the device for push updates.
+
+### 4. Unsubscribe Push Notifications
+If you need to manually unsubscribe from push notifications (e.g., on user logout), you can call the following API:
+
+**Usage:**
+```java
+NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+if (notificationModel != null && StringUtils.isNotEmpty(notificationModel.getDeviceId()) &&
+        StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken())) {
+    new PushNotificationRegister().unsubscribePushNotification(
+            notificationModel.getUserId(), 
+            notificationModel.getAccessToken(), 
+            notificationModel.getDeviceId()
+    );
+}
+```
+**Common Use Case:** Call this during your application's logout flow to ensure the device stops receiving bot notifications for that user.
+
 
