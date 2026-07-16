@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         SDKConfig.setIsUpdateStatusBarColor(true);
 
         // Flag to set deviceId for notifications
-        SDKConfig.setDeviceId("1234567890");
+        SDKConfig.setDeviceId("");
 
         //Method to reset the bot connection and start a new session by overriding the previous state
         // SDKConfig.disconnectBotSession(MainActivity.this);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         SDKConfiguration.OverrideKoreConfig.sendAllDeepLink = false;
 
         //Disable the flag if unsubscribe not needed inside the SDK
-        SDKConfiguration.OverrideKoreConfig.default_notifications = false;
+        SDKConfiguration.OverrideKoreConfig.default_notifications = true;
 
         //Set the agent icon from outside the SDK
 //        SDKConfig.setAgentAvatar(ResourcesCompat.getDrawable(getResources(), R.drawable.button_drawable, getTheme()), "");
