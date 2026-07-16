@@ -4,7 +4,9 @@ import static org.apache.commons.lang3.StringEscapeUtils.unescapeHtml4;
 import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.graphics.Color;
 import android.graphics.Outline;
 import android.graphics.Typeface;
@@ -12,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
@@ -285,7 +286,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             bubbleText.setTypeface(regular);
             bubbleText.setBackground(leftDrawable);
             bubbleText.setTextColor(Color.parseColor(leftTextColor));
-            bubbleText.setAutoLinkMask(Linkify.WEB_URLS);
             bubbleText.setLinkTextColor(Color.parseColor(leftTextColor));
         } else {
             layoutBubble.setGravity(Gravity.END);
@@ -334,23 +334,43 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                     new MarkdownTagHandler()
             );
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
-            URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
 
+            if (textualContent.indexOf("%%{") > 0) {
+                LogUtils.d("!@#$% BEFORE ", textualContent);
+                textualContent = getReqText(textualContent);
+                LogUtils.d("!@#$% AFTER ", textualContent);
+                strBuilder = new SpannableStringBuilder(textualContent);
+            }
+
+            // 1. Capture ALL existing spans from Markdown/HTML (Bold, Italic, Links, Bullets, etc.)
+            Object[] existingSpans = strBuilder.getSpans(0, strBuilder.length(), Object.class);
+            int[] starts = new int[existingSpans.length];
+            int[] ends = new int[existingSpans.length];
+            int[] flags = new int[existingSpans.length];
+
+            for (int i = 0; i < existingSpans.length; i++) {
+                starts[i] = strBuilder.getSpanStart(existingSpans[i]);
+                ends[i] = strBuilder.getSpanEnd(existingSpans[i]);
+                flags[i] = strBuilder.getSpanFlags(existingSpans[i]);
+            }
+
+            // 2. Add links for plain text URLs and Phone numbers
+            Linkify.addLinks(strBuilder, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
+
+            // 3. Re-apply all original spans to ensure NO formatting is lost
+            for (int i = 0; i < existingSpans.length; i++) {
+                if (starts[i] >= 0 && ends[i] <= strBuilder.length() && starts[i] <= ends[i])
+                    strBuilder.setSpan(existingSpans[i], starts[i], ends[i], flags[i]);
+            }
+
+            URLSpan[] urls = strBuilder.getSpans(0, strBuilder.length(), URLSpan.class);
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
 
             Pattern pattern = Pattern.compile(REGEX_CHAR);
-
             ImageSpan pencilImageSpan;
             boolean isPencilSpanClick = false;
-
-            if (textualContent.indexOf("%%{") > 0) {
-                LogUtils.d("!@#$% BEFORE ", textualContent);// munduki%%{} %%
-                textualContent = getReqText(textualContent);
-                LogUtils.d("!@#$% AFTER ", textualContent);
-                strBuilder = new SpannableStringBuilder(textualContent);
-            }
             Matcher matcher = pattern.matcher(textualContent);
 
             while (matcher.find()) {
@@ -404,7 +424,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             }
 
             bubbleText.setText(strBuilder);
-            bubbleText.setMovementMethod(LinkMovementMethod.getInstance());
             bubbleText.setVisibility(View.VISIBLE);
             setMsgTime(msgTime, false, 0);
         } else {
@@ -414,13 +433,27 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     void makeLinkClickable(SpannableStringBuilder strBuilder, final URLSpan span) {
+        if (strBuilder == null || span == null) return;
+
         int start = strBuilder.getSpanStart(span);
         int end = strBuilder.getSpanEnd(span);
         int flags = strBuilder.getSpanFlags(span);
+
+        if (start == -1 || end == -1 || start > strBuilder.length() || end > strBuilder.length()) return;
+
+        final String url = span.getURL();
         ClickableSpan clickable = new ClickableSpan() {
             public void onClick(@NonNull View view) {
-                if (invokeGenericWebViewInterface != null)
-                    invokeGenericWebViewInterface.invokeGenericWebView(span.getURL());
+                if (url != null && url.startsWith("tel:")) {
+                    try {
+                        Intent intent = new Intent(Intent.ACTION_DIAL);
+                        intent.setData(Uri.parse(url));
+                        context.startActivity(intent);
+                    } catch (Exception e) {
+                        LogUtils.e("BaseViewHolder", "Error opening dialer: " + e.getMessage());
+                    }
+                } else if (invokeGenericWebViewInterface != null)
+                    invokeGenericWebViewInterface.invokeGenericWebView(url);
             }
         };
         strBuilder.setSpan(clickable, start, end, flags);
@@ -433,14 +466,14 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         if (textualContent != null && !textualContent.isEmpty()) {
             textualContent = unescapeHtml4(textualContent.trim());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
-            URLSpan[] urls = strBuilder.getSpans(0, textualContent.length(), URLSpan.class);
+            Linkify.addLinks(strBuilder, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
+            URLSpan[] urls = strBuilder.getSpans(0, strBuilder.length(), URLSpan.class);
 
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
             bubbleText.setTextColor(Color.parseColor(color));
             bubbleText.setText(strBuilder);
-            bubbleText.setMovementMethod(null);
             bubbleText.setVisibility(View.VISIBLE);
         } else {
             bubbleText.setText("");

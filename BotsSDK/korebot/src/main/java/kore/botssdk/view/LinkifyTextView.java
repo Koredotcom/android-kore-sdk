@@ -32,7 +32,7 @@ public class LinkifyTextView extends AppCompatTextView {
     }
 
     private void init() {
-        this.setAutoLinkMask(Linkify.ALL);
+        this.setAutoLinkMask(0);
     }
 
     /**
@@ -78,12 +78,14 @@ public class LinkifyTextView extends AppCompatTextView {
             }
 
         }
-        return false;
+        return super.onTouchEvent(event);
     }
 
     @Override
     public void setText(CharSequence text, BufferType type) {
         super.setText(text, type);
-        this.setMovementMethod(null);
+        if (!isTextSelectable()) {
+            this.setMovementMethod(null);
+        }
     }
 }

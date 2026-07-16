@@ -51,28 +51,28 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "PLEASE_ENTER_CLIENT_ID";
+        String clientId = "YOUR_CLIENT_ID";
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "PLEASE_ENTER_CLIENT_SECRET";
+        String clientSecret = "YOUR_CLIENT_SECRET";
 
         //Set botId, This value is mandatory
-        String botId = "PLEASE_ENTER_BOT_ID";
+        String botId = "YOUR_BOT_ID";
 
         //Set identity, This value is mandatory
-        String identity = "PLEASE_ENTER_IDENTITY";
+        String identity = "YOUR_IDENTITY";
 
         //Set botName, This value is mandatory
-        String botName = "PLEASE_ENTER_BOT_NAME";
+        String botName = "YOUR_BOT_NAME";
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "PLEASE_ENTER_SERVER_URL";
+        String serverUrl = "YOUR_SERVER_URL";
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "PLEASE_ENTER_BRANDING_URL";
+        String brandingUrl = "YOUR_BRANDING_SERVER_URL";
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "PLEASE_ENTER_JWT_SERVER_URL";
+        String jwtServerUrl = "YOUR_JWT_SERVER_URL";
 
         //Set isWebHook
         SDKConfig.isWebHook(false);
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         SDKConfig.setIsUpdateStatusBarColor(true);
 
         // Flag to set deviceId for notifications
-        SDKConfig.setDeviceId("");
+        SDKConfig.setDeviceId("1234567890");
 
         //Method to reset the bot connection and start a new session by overriding the previous state
         // SDKConfig.disconnectBotSession(MainActivity.this);
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         SDKConfiguration.OverrideKoreConfig.sendAllDeepLink = false;
 
         //Disable the flag if unsubscribe not needed inside the SDK
-        SDKConfiguration.OverrideKoreConfig.default_notifications = true;
+        SDKConfiguration.OverrideKoreConfig.default_notifications = false;
 
         //Set the agent icon from outside the SDK
 //        SDKConfig.setAgentAvatar(ResourcesCompat.getDrawable(getResources(), R.drawable.button_drawable, getTheme()), "");
@@ -245,11 +245,11 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
     public void onBotConnected() {
         LogUtils.e("Bot Current Status", "Bot Connected");
 
-        NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
-        if (notificationModel != null && !SDKConfiguration.OverrideKoreConfig.default_notifications &&
-                StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()) &&
-                StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId))
-            new PushNotificationRegister().registerPushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
+//        NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
+//        if (notificationModel != null && !SDKConfiguration.OverrideKoreConfig.default_notifications &&
+//                StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()) &&
+//                StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId))
+//            new PushNotificationRegister().registerPushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
     }
 
     @Override

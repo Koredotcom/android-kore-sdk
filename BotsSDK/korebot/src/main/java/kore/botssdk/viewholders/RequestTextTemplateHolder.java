@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -79,7 +80,30 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
                     new MarkdownTagHandler()
             );
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
-            URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+            
+            // 1. Capture existing spans from Markdown/HTML
+            // 1. Capture ALL existing spans from Markdown/HTML (Bold, Italic, Links, etc.)
+            Object[] existingSpans = strBuilder.getSpans(0, strBuilder.length(), Object.class);
+            int[] starts = new int[existingSpans.length];
+            int[] ends = new int[existingSpans.length];
+            int[] flags = new int[existingSpans.length];
+
+            for (int i = 0; i < existingSpans.length; i++) {
+                starts[i] = strBuilder.getSpanStart(existingSpans[i]);
+                ends[i] = strBuilder.getSpanEnd(existingSpans[i]);
+                flags[i] = strBuilder.getSpanFlags(existingSpans[i]);
+            }
+
+            // 2. Add links for plain text URLs and Phone numbers
+            Linkify.addLinks(strBuilder, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
+
+            // 3. Re-apply all original spans to ensure NO formatting is lost
+            for (int i = 0; i < existingSpans.length; i++) {
+                if (starts[i] >= 0 && ends[i] <= strBuilder.length() && starts[i] <= ends[i])
+                    strBuilder.setSpan(existingSpans[i], starts[i], ends[i], flags[i]);
+            }
+
+            URLSpan[] urls = strBuilder.getSpans(0, strBuilder.length(), URLSpan.class);
 
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
