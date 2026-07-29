@@ -405,13 +405,16 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
 
-        if(SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
+        RestResponse.BotCustomData userCustomData = null;
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message) {
             customData.putAll(SDKConfiguration.Server.customData);
+            userCustomData = SDKConfiguration.Server.customData;
+        }
 
         customData.put("botToken", getAccessToken());
         botMessage.setCustomData(customData);
         botPayLoad.setMessage(botMessage);
-        BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
+        BotInfoModel botInfo = new BotInfoModel(botName, streamId, userCustomData);
         botPayLoad.setBotInfo(botInfo);
 
         RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
