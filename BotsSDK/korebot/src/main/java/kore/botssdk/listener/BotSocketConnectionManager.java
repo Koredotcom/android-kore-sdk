@@ -408,6 +408,8 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         RestResponse.BotCustomData userCustomData = null;
         if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message) {
             customData.putAll(SDKConfiguration.Server.customData);
+        }
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_botInfo) {
             userCustomData = SDKConfiguration.Server.customData;
         }
 
@@ -468,9 +470,12 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         customData = new RestResponse.BotCustomData();
 
-        if(SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
             customData.putAll(SDKConfiguration.Server.customData);
-
+        RestResponse.BotCustomData userCustomData = null;
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_botInfo) {
+            userCustomData = SDKConfiguration.Server.customData;
+        }
         customData.put("botToken", getAccessToken());
 
         if (message != null) {
@@ -488,7 +493,7 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
         //Update the bot content list with the send message
         botPayLoad.setMessage(botMessage);
-        BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
+        BotInfoModel botInfo = new BotInfoModel(botName, streamId, userCustomData);
         botPayLoad.setBotInfo(botInfo);
 
         RestResponse.Meta meta = new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language());
@@ -502,15 +507,19 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
         customData = new RestResponse.BotCustomData();
 
-        if(SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message)
             customData.putAll(SDKConfiguration.Server.customData);
 
+        RestResponse.BotCustomData userCustomData = null;
+        if (SDKConfiguration.OverrideKoreConfig.update_custom_data_to_botInfo) {
+            userCustomData = SDKConfiguration.Server.customData;
+        }
         //Update the bot content list with the send message
         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(payLoad, message);
         botPayLoad.setMessage(botMessage);
         customData.put("botToken", getAccessToken());
         botMessage.setCustomData(customData);
-        BotInfoModel botInfo = new BotInfoModel(botName, streamId, null);
+        BotInfoModel botInfo = new BotInfoModel(botName, streamId, userCustomData);
         botPayLoad.setBotInfo(botInfo);
 
         //Adding the metadata for bot request
