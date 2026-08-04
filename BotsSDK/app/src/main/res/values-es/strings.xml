@@ -15,7 +15,7 @@
     <string name="permission_required">Necesitas conceder permiso para usar el micrófono.</string>
     <string name="enable_google_voice_typing">¡Habilite Google Voice Typing para utilizar el reconocimiento de voz!</string>
     <string name="minimize">Minimizar</string>
-    <string name="close">Cerca</string>
+    <string name="close">Cerrar</string>
     <string name="cancel">Cancelar</string>
     <string name="close_or_minimize">¿Quieres cerrar la conversación o minimizarla?</string>
     <string name="custom_header">Encabezado personalizado</string>
