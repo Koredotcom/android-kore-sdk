@@ -84,7 +84,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private BaseFooterFragment baseFooterFragment;
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
-    private UserInfo userInfo;
     boolean isAgentTransfer;
     private String botName = SDKConfiguration.Client.bot_name;
     private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
@@ -287,13 +286,6 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
                     botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
                 }
-            }
-
-            if(botClient != null && !botClient.getUserId().isEmpty() && !botClient.getAccessToken().isEmpty())
-            {
-                userInfo = new UserInfo();
-                userInfo.setUserId(botClient.getUserId());
-                userInfo.setOrgID(botClient.getAccessToken());
             }
 
             sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
