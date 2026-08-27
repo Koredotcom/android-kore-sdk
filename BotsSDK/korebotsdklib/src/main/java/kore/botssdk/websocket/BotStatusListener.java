@@ -9,4 +9,5 @@ public interface BotStatusListener {
     void onBotConnectionFail(String event_code, String strReason);
 
     void onDeepLinkClicked(String event_code, String url);
+    void onBotMessageReceived(String event_code, String message);
 }

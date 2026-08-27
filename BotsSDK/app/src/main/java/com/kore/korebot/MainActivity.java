@@ -266,4 +266,9 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
     public void onDeepLinkClicked(String event_code, String url) {
         LogUtils.e(event_code, url);
     }
+
+    @Override
+    public void onBotMessageReceived(String event_code, String message) {
+        LogUtils.e(event_code, message);
+    }
 }

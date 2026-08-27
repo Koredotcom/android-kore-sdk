@@ -595,6 +595,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     protected void onPause() {
+        mViewModel.setIsActivityResumed(false);
         super.onPause();
     }
 
