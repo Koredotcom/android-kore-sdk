@@ -354,11 +354,14 @@ public class BotChatViewModel extends ViewModel {
             } else chatView.stopTypingStatus();
 
             if (!isActivityResumed && SDKConfiguration.OverrideKoreConfig.showLocalNotification) {
-                postNotification("Kore Message", "Received new message.");
+//                postNotification("Kore Message", "Received new message.");
+                if (SDKConfiguration.Server.getBotStatusListener() != null) {
+                    SDKConfiguration.Server.getBotStatusListener().onBotMessageReceived("BotMessageReceived", payload);
+                }
             }
 
         } catch (Exception e) {
-            LogUtils.e(TAG, "Failed to complete risky operation" + e);
+            LogUtils.d(TAG, "Failed to complete risky operation" + e);
             if (e instanceof JsonSyntaxException) {
                 try {
                     //This is the case Bot returning user sent message from another channel
