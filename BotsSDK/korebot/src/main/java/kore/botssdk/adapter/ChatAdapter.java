@@ -377,6 +377,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         if (baseBotMessage instanceof BotResponse) {
             applyBotIcon(holder, (BotResponse) baseBotMessage);
         }
+        holder.setBotLanguage(baseBotMessage.getBotLanguage());
         Integer headerPosition = headersMap.get(baseBotMessage.getFormattedDate());
         holder.setTimeStamp(headerPosition != null && headerPosition == position ? baseBotMessage.getFormattedDate() : null);
         holder.setContentStateListener(this);

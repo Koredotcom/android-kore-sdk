@@ -179,7 +179,8 @@
     <string name="button_to_show_the_short_cut_menu_items_of_the_bot">Botón para mostrar los elementos del menú de acceso rápido del bot</string>
     <string name="sending_failed">"Sending failed. "</string>
     <string name="or"> or </string>
-    <string name="delete">Delete</string>
+    <string name="delete">Borrar</string>
+    <string name="answered_by_ai">Respondido por IA</string>
 
     <string-array name="attachments_strings">
         <item>@string/attachment_capture_photo</item>

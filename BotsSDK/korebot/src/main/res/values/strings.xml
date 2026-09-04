@@ -215,6 +215,7 @@
     <string name="sending_failed">"Sending failed. "</string>
     <string name="or"> or </string>
     <string name="delete">Delete</string>
+    <string name="answered_by_ai">Answered by AI</string>
 
     <string-array name="attachments_strings">
         <item>@string/attachment_capture_photo</item>

@@ -74,6 +74,7 @@ public class HistoryRepository {
                                             BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                             r.setType(msg.getType());
                                             r.setIcon(history.getIcon());
+                                            r.setBotLanguage(msg.getBotLanguage());
                                             long timeMillis = r.getTimeInMillis(msg.getCreatedOn(), true);
                                             r.setFormattedDate(DateUtils.formattedSentDateV6(context, timeMillis));
                                             r.setTimeStamp(r.prepareLocaleTimeStamp(context, timeMillis));
@@ -84,6 +85,7 @@ public class HistoryRepository {
                                         BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
                                         r.setIcon(history.getIcon());
+                                        r.setBotLanguage(msg.getBotLanguage());
                                         long timeMillis = r.getTimeInMillis(msg.getCreatedOn(), true);
                                         r.setFormattedDate(DateUtils.formattedSentDateV6(context, timeMillis));
                                         r.setTimeStamp(r.prepareLocaleTimeStamp(context, timeMillis));
@@ -161,10 +163,12 @@ public class HistoryRepository {
                                         PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
                                         BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
+                                        r.setBotLanguage(msg.getBotLanguage());
                                         msgs.add(r);
                                     } catch (com.google.gson.JsonSyntaxException ex) {
                                         BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
+                                        r.setBotLanguage(msg.getBotLanguage());
                                         msgs.add(r);
                                     }
                                 } else {

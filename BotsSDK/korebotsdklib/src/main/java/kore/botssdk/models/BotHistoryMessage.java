@@ -23,6 +23,7 @@ public class BotHistoryMessage {
     private String lmodifiedBy;
     private TagsModel tags;
     private boolean isA;
+    private String botLanguage;
 
     public TagsModel getTags(){
         return tags;
@@ -146,5 +147,13 @@ public class BotHistoryMessage {
 
     public boolean isA() {
         return isA;
+    }
+
+    public String getBotLanguage() {
+        return botLanguage;
+    }
+
+    public void setBotLanguage(String botLanguage) {
+        this.botLanguage = botLanguage;
     }
 }

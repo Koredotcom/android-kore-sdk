@@ -6,6 +6,7 @@ import static kore.botssdk.viewUtils.DimensionUtil.dp1;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.graphics.Color;
 import android.graphics.Outline;
@@ -41,6 +42,7 @@ import com.bumptech.glide.request.target.DrawableImageViewTarget;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.gson.Gson;
 
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -133,6 +135,32 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     protected boolean isFromAgent = false;
+    protected String botLanguage;
+
+    public void setBotLanguage(String botLanguage) {
+        this.botLanguage = botLanguage;
+    }
+
+    private String getAnsweredByAiText(String language) {
+        if (StringUtils.isNullOrEmpty(language)) return context.getString(R.string.answered_by_ai);
+
+        try {
+            Locale locale;
+            if (language.contains("-")) {
+                String[] parts = language.split("-");
+                locale = new Locale(parts[0], parts[1]);
+            } else {
+                locale = new Locale(language);
+            }
+            Configuration configuration = new Configuration(context.getResources().getConfiguration());
+            configuration.setLocale(locale);
+            configuration.setLayoutDirection(locale);
+            Context localizedContext = context.createConfigurationContext(configuration);
+            return localizedContext.getResources().getString(R.string.answered_by_ai);
+        } catch (Exception e) {
+            return context.getString(R.string.answered_by_ai);
+        }
+    }
 
     public void setBotIcon(String iconUrl) {
         isFromAgent = false;
@@ -440,29 +468,52 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             }
 
             if (!isFromAgent && SDKConfiguration.OverrideKoreConfig.showAnsweredByAI) {
-                strBuilder.append("\n\n ");
-                int iconPos = strBuilder.length() - 1;
-                Drawable aiDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
-                if (aiDrawable != null) {
-                    aiDrawable = DrawableCompat.wrap(aiDrawable).mutate();
-                    DrawableCompat.setTint(aiDrawable, getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9"));
-                    aiDrawable.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
-                    ImageSpan imageSpan = new ImageSpan(aiDrawable, ImageSpan.ALIGN_BOTTOM);
-                    strBuilder.setSpan(imageSpan, iconPos, iconPos + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-
-                strBuilder.append(" ");
-                int startAI = strBuilder.length();
-                strBuilder.append("Answered by AI");
-                int endAI = strBuilder.length();
-                strBuilder.setSpan(new ForegroundColorSpan(getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9")), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+                strBuilder.append("\n\n");
+                String aiText = getAnsweredByAiText(botLanguage);
+                int color = getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9");
                 Typeface tfRegular = SDKConfiguration.getRegular();
                 if (tfRegular == null) {
                     tfRegular = ResourcesCompat.getFont(context, R.font.latoregular);
                 }
-                strBuilder.setSpan(new CustomTypefaceSpan(tfRegular), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                if (botLanguage != null && botLanguage.startsWith("ar")) {
+                    int startAI = strBuilder.length();
+                    strBuilder.append(aiText);
+                    int endAI = strBuilder.length();
+                    strBuilder.setSpan(new ForegroundColorSpan(color), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new CustomTypefaceSpan(tfRegular), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    strBuilder.append(" ");
+                    int iconPos = strBuilder.length() - 1;
+                    Drawable aiDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
+                    if (aiDrawable != null) {
+                        aiDrawable = DrawableCompat.wrap(aiDrawable).mutate();
+                        DrawableCompat.setTint(aiDrawable, color);
+                        aiDrawable.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
+                        ImageSpan imageSpan = new ImageSpan(aiDrawable, ImageSpan.ALIGN_BOTTOM);
+                        strBuilder.setSpan(imageSpan, iconPos, iconPos + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                } else {
+                    strBuilder.append(" ");
+                    int iconPos = strBuilder.length() - 1;
+                    Drawable aiDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
+                    if (aiDrawable != null) {
+                        aiDrawable = DrawableCompat.wrap(aiDrawable).mutate();
+                        DrawableCompat.setTint(aiDrawable, color);
+                        aiDrawable.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
+                        ImageSpan imageSpan = new ImageSpan(aiDrawable, ImageSpan.ALIGN_BOTTOM);
+                        strBuilder.setSpan(imageSpan, iconPos, iconPos + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    strBuilder.append(" ");
+                    int startAI = strBuilder.length();
+                    strBuilder.append(aiText);
+                    int endAI = strBuilder.length();
+                    strBuilder.setSpan(new ForegroundColorSpan(color), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new CustomTypefaceSpan(tfRegular), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
 
             bubbleText.setText(strBuilder);
@@ -517,29 +568,52 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             bubbleText.setTextColor(getColor(color, "#000000"));
 
             if (!isFromAgent && SDKConfiguration.OverrideKoreConfig.showAnsweredByAI) {
-                strBuilder.append("\n\n ");
-                int iconPosError = strBuilder.length() - 1;
-                Drawable aiDrawableError = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
-                if (aiDrawableError != null) {
-                    aiDrawableError = DrawableCompat.wrap(aiDrawableError).mutate();
-                    DrawableCompat.setTint(aiDrawableError, getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9"));
-                    aiDrawableError.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
-                    ImageSpan imageSpan = new ImageSpan(aiDrawableError, ImageSpan.ALIGN_BOTTOM);
-                    strBuilder.setSpan(imageSpan, iconPosError, iconPosError + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                }
-
-                strBuilder.append(" ");
-                int startAIError = strBuilder.length();
-                strBuilder.append("Answered by AI");
-                int endAIError = strBuilder.length();
-                strBuilder.setSpan(new ForegroundColorSpan(getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9")), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
+                strBuilder.append("\n\n");
+                String aiText = getAnsweredByAiText(botLanguage);
+                int colorCode = getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9");
                 Typeface tfRegularError = SDKConfiguration.getRegular();
                 if (tfRegularError == null) {
                     tfRegularError = ResourcesCompat.getFont(context, R.font.latoregular);
                 }
-                strBuilder.setSpan(new CustomTypefaceSpan(tfRegularError), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                if (botLanguage != null && botLanguage.startsWith("ar")) {
+                    int startAIError = strBuilder.length();
+                    strBuilder.append(aiText);
+                    int endAIError = strBuilder.length();
+                    strBuilder.setSpan(new ForegroundColorSpan(colorCode), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new CustomTypefaceSpan(tfRegularError), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                    strBuilder.append(" ");
+                    int iconPosError = strBuilder.length() - 1;
+                    Drawable aiDrawableError = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
+                    if (aiDrawableError != null) {
+                        aiDrawableError = DrawableCompat.wrap(aiDrawableError).mutate();
+                        DrawableCompat.setTint(aiDrawableError, colorCode);
+                        aiDrawableError.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
+                        ImageSpan imageSpan = new ImageSpan(aiDrawableError, ImageSpan.ALIGN_BOTTOM);
+                        strBuilder.setSpan(imageSpan, iconPosError, iconPosError + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                } else {
+                    strBuilder.append(" ");
+                    int iconPosError = strBuilder.length() - 1;
+                    Drawable aiDrawableError = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
+                    if (aiDrawableError != null) {
+                        aiDrawableError = DrawableCompat.wrap(aiDrawableError).mutate();
+                        DrawableCompat.setTint(aiDrawableError, colorCode);
+                        aiDrawableError.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
+                        ImageSpan imageSpan = new ImageSpan(aiDrawableError, ImageSpan.ALIGN_BOTTOM);
+                        strBuilder.setSpan(imageSpan, iconPosError, iconPosError + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+
+                    strBuilder.append(" ");
+                    int startAIError = strBuilder.length();
+                    strBuilder.append(aiText);
+                    int endAIError = strBuilder.length();
+                    strBuilder.setSpan(new ForegroundColorSpan(colorCode), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    strBuilder.setSpan(new CustomTypefaceSpan(tfRegularError), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
             }
 
             bubbleText.setText(strBuilder);

@@ -28,6 +28,7 @@ public abstract class BaseBotMessage {
     protected boolean isSend;
     protected String createdOn;
     private long createdInMillis;
+    private String botLanguage;
 
     private String formattedDate = "";
     private String timeStamp = "";
@@ -84,5 +85,13 @@ public abstract class BaseBotMessage {
     }
     public String prepareLocaleTimeStamp(Context context, long milliSecs) {
         return DateUtils.getDateEEMMMDDYYYYHhMmSs(context, milliSecs);
+    }
+
+    public String getBotLanguage() {
+        return botLanguage;
+    }
+
+    public void setBotLanguage(String botLanguage) {
+        this.botLanguage = botLanguage;
     }
 }
