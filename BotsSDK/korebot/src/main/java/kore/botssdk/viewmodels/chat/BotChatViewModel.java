@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -64,6 +65,7 @@ import kore.botssdk.repository.branding.BrandingRepository;
 import kore.botssdk.repository.webhook.WebHookRepository;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -282,9 +284,15 @@ public class BotChatViewModel extends ViewModel {
             final BotResponse botResponse = botLocalResponse != null ? botLocalResponse : gson.fromJson(payload, BotResponse.class);
             if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 AcknowledgeModel acknowledgeModel = gson.fromJson(payload, AcknowledgeModel.class);
-                if (acknowledgeModel != null) {
-                    long messageId = acknowledgeModel.getReplyto();
-                    handleAck(messageId);
+                if (acknowledgeModel != null)
+                {
+                    if(Objects.equals(acknowledgeModel.getType(), BundleConstants.ACK)) {
+                        long messageId = acknowledgeModel.getReplyto();
+                        handleAck(messageId);
+                    }
+                    else if(Objects.equals(acknowledgeModel.getType(), BundleConstants.SESSION_END) && SDKConfiguration.Server.getBotStatusListener() != null) {
+                        SDKConfiguration.Server.getBotStatusListener().onSessionEnded(BundleConstants.SESSION_END, "Bot session has expired");
+                    }
                     return;
                 }
 
@@ -308,6 +316,7 @@ public class BotChatViewModel extends ViewModel {
             if (botClient != null && enable_ack_delivery)
                 botClient.sendMsgAcknowledgement(botResponse.getTimestamp() + "", botResponse.getKey());
 
+            botResponse.setBotLanguage(botResponse.getBotLanguage());
             LogUtils.d(LOG_TAG, payload);
             isAgentTransfer = botResponse.isFromAgent();
 

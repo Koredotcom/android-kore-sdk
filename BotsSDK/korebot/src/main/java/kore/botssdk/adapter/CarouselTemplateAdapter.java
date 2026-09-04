@@ -40,6 +40,7 @@ import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
 import kore.botssdk.utils.Utils;
+import kore.botssdk.utils.markdown.MarkdownUtil;
 
 public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTemplateAdapter.ViewHolder> {
     private ArrayList<? extends BotCarouselModel> botCarouselModels;
@@ -68,8 +69,7 @@ public class CarouselTemplateAdapter extends RecyclerView.Adapter<CarouselTempla
 
         holder.carouselItemTitle.setText(botCarouselModel.getTitle());
         if (!StringUtils.isNullOrEmptyWithTrim(botCarouselModel.getSubtitle())) {
-            holder.carouselItemSubTitle.setText(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? botCarouselModel.getSubtitle() : Html.fromHtml(StringEscapeUtils.unescapeHtml4(botCarouselModel.getSubtitle()).replaceAll("<br>", "")));
-            holder.carouselItemSubTitle.setMaxLines(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? Integer.MAX_VALUE : 3);
+            holder.carouselItemSubTitle.setText(BotResponse.TEMPLATE_TYPE_WELCOME_CAROUSEL.equalsIgnoreCase(type) ? botCarouselModel.getSubtitle() : MarkdownUtil.processMarkDown(botCarouselModel.getSubtitle()));
             holder.carouselItemSubTitle.setVisibility(VISIBLE);
         } else {
             holder.carouselItemSubTitle.setVisibility(GONE);

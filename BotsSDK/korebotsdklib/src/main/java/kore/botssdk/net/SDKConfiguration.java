@@ -234,6 +234,7 @@ public class SDKConfiguration {
         public static boolean reconnectionBySDK = true;
         public static boolean sendAllDeepLink = false;
         public static boolean default_notifications = true;
+        public static boolean showAnsweredByAI = false;
     }
 
     public static boolean isTimeStampsRequired() {

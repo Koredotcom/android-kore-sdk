@@ -74,18 +74,22 @@ public class HistoryRepository {
                                             BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                             r.setType(msg.getType());
                                             r.setIcon(history.getIcon());
+                                            r.setBotLanguage(msg.getBotLanguage());
                                             long timeMillis = r.getTimeInMillis(msg.getCreatedOn(), true);
                                             r.setFormattedDate(DateUtils.formattedSentDateV6(context, timeMillis));
                                             r.setTimeStamp(r.prepareLocaleTimeStamp(context, timeMillis));
+                                            r.setFromAgent(msg.isA());
                                             msgs.add(r);
                                         }
                                     } catch (com.google.gson.JsonSyntaxException ex) {
                                         BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
                                         r.setIcon(history.getIcon());
+                                        r.setBotLanguage(msg.getBotLanguage());
                                         long timeMillis = r.getTimeInMillis(msg.getCreatedOn(), true);
                                         r.setFormattedDate(DateUtils.formattedSentDateV6(context, timeMillis));
                                         r.setTimeStamp(r.prepareLocaleTimeStamp(context, timeMillis));
+                                        r.setFromAgent(msg.isA());
                                         msgs.add(r);
                                     }
                                 } else {
@@ -148,7 +152,7 @@ public class HistoryRepository {
                     if (rBody.isSuccessful() && history != null) {
                         List<BotHistoryMessage> messages = history.getMessages();
                         ArrayList<BaseBotMessage> msgs;
-                        if (messages != null && messages.size() > 0) {
+                        if (messages != null && !messages.isEmpty()) {
                             msgs = new ArrayList<>();
                             for (int index = 0; index < messages.size(); index++) {
                                 BotHistoryMessage msg = messages.get(index);
@@ -159,10 +163,12 @@ public class HistoryRepository {
                                         PayloadOuter outer = gson.fromJson(data, PayloadOuter.class);
                                         BotResponse r = Utils.buildBotMessage(outer, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
+                                        r.setBotLanguage(msg.getBotLanguage());
                                         msgs.add(r);
                                     } catch (com.google.gson.JsonSyntaxException ex) {
                                         BotResponse r = Utils.buildBotMessage(data, msg.getBotId(), SDKConfiguration.Client.bot_name, msg.getCreatedOn(), msg.getId());
                                         r.setType(msg.getType());
+                                        r.setBotLanguage(msg.getBotLanguage());
                                         msgs.add(r);
                                     }
                                 } else {

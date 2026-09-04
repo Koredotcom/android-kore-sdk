@@ -163,4 +163,8 @@ public class SDKConfig {
     public static boolean isUpdateStatusBarColor() {
         return isUpdateStatusBarColor;
     }
+
+    public static void setShowAnsweredByAI(boolean show) {
+        SDKConfiguration.OverrideKoreConfig.showAnsweredByAI = show;
+    }
 }
