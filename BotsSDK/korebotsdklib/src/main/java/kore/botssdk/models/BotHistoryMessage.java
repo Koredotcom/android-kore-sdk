@@ -22,6 +22,7 @@ public class BotHistoryMessage {
     private String resourceid;
     private String lmodifiedBy;
     private TagsModel tags;
+    private boolean isA;
 
     public TagsModel getTags(){
         return tags;
@@ -141,5 +142,9 @@ public class BotHistoryMessage {
 
     public void setLmodifiedBy(String lmodifiedBy) {
         this.lmodifiedBy = lmodifiedBy;
+    }
+
+    public boolean isA() {
+        return isA;
     }
 }

@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -64,6 +65,7 @@ import kore.botssdk.repository.branding.BrandingRepository;
 import kore.botssdk.repository.webhook.WebHookRepository;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
+import kore.botssdk.utils.Constants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.LogUtils;
 import kore.botssdk.utils.StringUtils;
@@ -97,6 +99,173 @@ public class BotChatViewModel extends ViewModel {
     Map<Long, BotRequest> messageMap = new ConcurrentHashMap<>();
     Map<Long, Runnable> timeoutMap = new ConcurrentHashMap<>();
     Handler handler = new Handler(Looper.getMainLooper());
+    String strResp = "{\n" +
+            "  \"type\": \"bot_response\",\n" +
+            "  \"from\": \"bot\",\n" +
+            "  \"message\": [\n" +
+            "    {\n" +
+            "      \"type\": \"text\",\n" +
+            "      \"component\": {\n" +
+            "        \"type\": \"template\",\n" +
+            "        \"payload\": {\n" +
+            "          \"type\": \"template\",\n" +
+            "          \"payload\": {\n" +
+            "            \"template_type\": \"carousel\",\n" +
+            "            \"elements\": [\n" +
+            "              {\n" +
+            "                \"title\": \"⭐TotalUnlimited300Online[Onlineoffer]\",\n" +
+            "                \"image_url\": \"\",\n" +
+            "                \"subtitle\": \"24months\n" +
+            "\n" +
+            "✓UnlimitedNationalMB\n" +
+            "✓12monthsMaximuminternetspeed(Promo)\n" +
+            "✓300MbpsMaximuminternetspeed\n" +
+            "✓UnlimitedMinutesinBulgariaandroamingEUzone\n" +
+            "✓39900MBintheEUroamingarea\n" +
+            "✓200MinutesforinternationalcallstoEUzone\n" +
+            "✓3000MBinBalkansandTurkeyzone\n" +
+            "\n" +
+            "Extras\n" +
+            "•+2digitalservicesfor24months\n" +
+            "•YettelCloud200GBfor9months\n" +
+            "•multiSIMfor6months\n" +
+            "•SmartTechnicianfor3months\n" +
+            "•OnlineProtectfor2months\n" +
+            "•ProfileProtectfor3months\n" +
+            "•OneClickInsuranceswith10%discount\n" +
+            "•PLAYDIEMAXTRAatapreferentialprice\n" +
+            "•AdditionalSmartphoneUniverseextraswhencombinedwithadevice\n" +
+            "•WithGO+yougetservicesworthupto580€\n" +
+            "\n" +
+            "Monthly(first24months):20.45€|39.99BGN\n" +
+            "Monthly(afterexpiration):25.56€|49.99BGN\",\n" +
+            "                \"default_action\": {},\n" +
+            "                \"buttons\": [\n" +
+            "                  {\n" +
+            "                    \"type\": \"web_url\",\n" +
+            "                    \"title\": \"ViewMore\"\n" +
+            "                  }\n" +
+            "                ]\n" +
+            "              },\n" +
+            "              {\n" +
+            "                \"title\": \"TotalUnlimited400\",\n" +
+            "                \"image_url\": \"\",\n" +
+            "                \"subtitle\": \"24months\n" +
+            "\n" +
+            "✓UnlimitedNationalMB\n" +
+            "✓12monthsMaximuminternetspeed(Promo)\n" +
+            "✓400MbpsMaximuminternetspeed\n" +
+            "✓UnlimitedMinutestonationalnetworks\n" +
+            "✓54100MBintheEUroamingarea\n" +
+            "✓200MinutesforinternationalcallstoEUzone\n" +
+            "✓2000MBinBalkansandTurkeyzone\n" +
+            "\n" +
+            "Extras\n" +
+            "•+2Digitalservicesfor24months\n" +
+            "•YettelCloud200GBfor9months\n" +
+            "•multiSIMfor6months\n" +
+            "•Smarttechnicianfor3months\n" +
+            "•OnlineProtectfor2months\n" +
+            "•ProfileProtectfor3months\n" +
+            "•OneClickInsuranceswith10%discount\n" +
+            "•PLAYDIEMAXTRAatapreferentialprice\n" +
+            "•AdditionalSmartphoneUniverseextraswhencombinedwithadevice\n" +
+            "•WithGO+yougetservicesworthupto580€\n" +
+            "\n" +
+            "Monthly(afterexpiration):34.76€|67.99BGN\",\n" +
+            "                \"default_action\": {},\n" +
+            "                \"buttons\": [\n" +
+            "                  {\n" +
+            "                    \"type\": \"web_url\",\n" +
+            "                    \"title\": \"ViewMore\"\n" +
+            "                  }\n" +
+            "                ]\n" +
+            "              },\n" +
+            "              {\n" +
+            "                \"title\": \"TotalUnlimitedMAX\",\n" +
+            "                \"image_url\": \"\",\n" +
+            "                \"subtitle\": \"24months\n" +
+            "\n" +
+            "✓UnlimitedNationalMB\n" +
+            "✓MaxMaximuminternetspeed\n" +
+            "✓UnlimitedMinutesinBulgariaandroamingEUzone\n" +
+            "✓70900MBintheEUroamingarea\n" +
+            "✓300MinutesforinternationalcallstoEUzone\n" +
+            "✓3000MBinBalkansandTurkeyzone\n" +
+            "✓UnlimitedSMSinallnationalnetworksandEUzone\n" +
+            "\n" +
+            "Extras\n" +
+            "•+3digitalservicesfor24months\n" +
+            "•YettelCloud200GBfor9months\n" +
+            "•multiSIMfor6months\n" +
+            "•Smarttechnicianfor6months\n" +
+            "•OnlineProtectfor2months\n" +
+            "•ProfileProtectfor3months\n" +
+            "•OneClickInsurances10%discount\n" +
+            "•PLAYDIEMAXTRAatapreferentialprice\n" +
+            "•AdditionalSmartphoneUniverseextraswhencombinedwithadevice\n" +
+            "•WithGO+yougetservicesworthupto730€\n" +
+            "\n" +
+            "Monthly(afterexpiration):44.99€|87.99BGN\",\n" +
+            "                \"default_action\": {},\n" +
+            "                \"buttons\": [\n" +
+            "                  {\n" +
+            "                    \"type\": \"web_url\",\n" +
+            "                    \"title\": \"ViewMore\"\n" +
+            "                  }\n" +
+            "                ]\n" +
+            "              },\n" +
+            "              {\n" +
+            "                \"title\": \"TotalUnlimited30\",\n" +
+            "                \"image_url\": \"\",\n" +
+            "                \"subtitle\": \"24months\n" +
+            "\n" +
+            "✓UnlimitedNationalMB\n" +
+            "✓12monthsMaximuminternetspeed(Promo)\n" +
+            "✓30MbpsMaximuminternetspeed\n" +
+            "✓UnlimitedMinutesinBulgariaandroamingEUzone\n" +
+            "✓38100MBintheEUroamingarea\n" +
+            "\n" +
+            "Extras\n" +
+            "•+1digitalservicefor6months\n" +
+            "•YettelCloud200GBfor3months\n" +
+            "•multiSIMfor6months\n" +
+            "•OnlineProtectfor2months\n" +
+            "•ProfileProtectfor3months\n" +
+            "•WithGO+yougetservicesworthupto110€\n" +
+            "\n" +
+            "Monthly(afterexpiration):24.54€|47.99BGN\",\n" +
+            "                \"default_action\": {},\n" +
+            "                \"buttons\": [\n" +
+            "                  {\n" +
+            "                    \"type\": \"web_url\",\n" +
+            "                    \"title\": \"ViewMore\"\n" +
+            "                  }\n" +
+            "                ]\n" +
+            "              }\n" +
+            "            ]\n" +
+            "          }\n" +
+            "        }\n" +
+            "      }\n" +
+            "    }\n" +
+            "  ],\n" +
+            "  \"cInfo\": {\n" +
+            "    \"body\": \"{\\\"type\\\":\\\"template\\\",\\\"payload\\\":{\\\"type\\\":\\\"template\\\",\\\"payload\\\":{\\\"template_type\\\":\\\"carousel\\\",\\\"elements\\\":[{\\\"title\\\":\\\"WelcometoPeter'sHats1\\\",\\\"image_url\\\":\\\"https://previews.123rf.com/images/rez_art/rez_art1405/rez_art140500072/28632615-three-beef-tacos-with-cheese-lettuce-and-tomatos-Stock-Photo-taco.jpg\\\",\\\"subtitle\\\":\\\"carouselsubtitle\\\",\\\"default_action\\\":{\\\"type\\\":\\\"web_url\\\",\\\"url\\\":\\\"https://peterssendreceiveapp.ngrok.io/view?item=103\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"},{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_1\\\"}]},{\\\"title\\\":\\\"WelcometoPeter'sHats2\\\",\\\"image_url\\\":\\\"https://static.pexels.com/photos/46239/salmon-dish-food-meal-46239.jpeg\\\",\\\"subtitle\\\":\\\"carouselsubtitle\\\",\\\"default_action\\\":{\\\"type\\\":\\\"web_url\\\",\\\"url\\\":\\\"https://peterssendreceiveapp.ngrok.io/view?item=103\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"},{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_1\\\"}]},{\\\"title\\\":\\\"WelcometoPeter'sHats3\\\",\\\"image_url\\\":\\\"https://previews.123rf.com/images/rez_art/rez_art1405/rez_art140500072/28632615-three-beef-tacos-with-cheese-lettuce-and-tomatos-Stock-Photo-taco.jpg\\\",\\\"subtitle\\\":\\\"carouselsubtitle\\\",\\\"default_action\\\":{\\\"type\\\":\\\"web_url\\\",\\\"url\\\":\\\"https://peterssendreceiveapp.ngrok.io/view?item=103\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"},{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_1\\\"}]},{\\\"title\\\":\\\"WelcometoPeter'sHats4\\\",\\\"image_url\\\":\\\"https://static.pexels.com/photos/416458/pexels-photo-416458.jpeg\\\",\\\"subtitle\\\":\\\"carouselsubtitle\\\",\\\"default_action\\\":{\\\"type\\\":\\\"web_url\\\",\\\"url\\\":\\\"https://peterssendreceiveapp.ngrok.io/view?item=103\\\"},\\\"buttons\\\":[{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_0\\\"},{\\\"type\\\":\\\"postback\\\",\\\"title\\\":\\\"Buynow\\\",\\\"payload\\\":\\\"DEVELOPER_DEFINED_PAYLOAD_1\\\"}]}]}}\"\n" +
+            "  },\n" +
+            "  \"messageId\": \"ms-7fcdf599-1e0d-5049-97a1-dbbf6c212f9d\",\n" +
+            "  \"sessionId\": \"6a5dc4725a11c3bde2525dc4\",\n" +
+            "  \"botInfo\": {\n" +
+            "    \"chatBot\": \"SDKDemo\",\n" +
+            "    \"taskBotId\": \"st-c2a341ba-5612-5ab2-a5b3-d4a81f6a42ea\",\n" +
+            "    \"hostDomain\": \"wss://platform.kore.ai:443\",\n" +
+            "    \"userId\": \"u-99d72cea-5c70-5d6f-96a3-55ec7fea44f6\"\n" +
+            "  },\n" +
+            "  \"createdOn\": \"2026-07-20T06:47:27.075Z\",\n" +
+            "  \"xTraceId\": \"9c861d96-2856-4c4a-91a3-01cccf4c11c3\",\n" +
+            "  \"botLanguage\": \"en\",\n" +
+            "  \"icon\": \"https://platform.kore.ai/api/getMediaStream/market/f-6e20afb1-24b7-51b6-b539-e38c248da06d.png?n=6289699802&s=IjBVZXp0MThKeUhsVlBIcHh3RmhuR1lKWDk5NDQwZTJoZlY3SmprVmliQmc9Ig$$\",\n" +
+            "  \"timestamp\": 1784530047166\n" +
+            "}";
 
     public BotChatViewModel(Context context, BotClient botClient, BotChatViewListener chatView) {
         this.context = context.getApplicationContext();
@@ -282,9 +451,15 @@ public class BotChatViewModel extends ViewModel {
             final BotResponse botResponse = botLocalResponse != null ? botLocalResponse : gson.fromJson(payload, BotResponse.class);
             if (botResponse == null || botResponse.getMessage() == null || botResponse.getMessage().isEmpty()) {
                 AcknowledgeModel acknowledgeModel = gson.fromJson(payload, AcknowledgeModel.class);
-                if (acknowledgeModel != null) {
-                    long messageId = acknowledgeModel.getReplyto();
-                    handleAck(messageId);
+                if (acknowledgeModel != null)
+                {
+                    if(Objects.equals(acknowledgeModel.getType(), BundleConstants.ACK)) {
+                        long messageId = acknowledgeModel.getReplyto();
+                        handleAck(messageId);
+                    }
+                    else if(Objects.equals(acknowledgeModel.getType(), BundleConstants.SESSION_END) && SDKConfiguration.Server.getBotStatusListener() != null) {
+                        SDKConfiguration.Server.getBotStatusListener().onSessionEnded(BundleConstants.SESSION_END, "Bot session has expired");
+                    }
                     return;
                 }
 

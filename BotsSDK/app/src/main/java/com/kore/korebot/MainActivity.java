@@ -151,6 +151,9 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         //Disable the flag if unsubscribe not needed inside the SDK
         SDKConfiguration.OverrideKoreConfig.default_notifications = true;
 
+        //Disable the flag if AnsweredByAi not needed for every bot message
+//        SDKConfig.setShowAnsweredByAI(false);
+
         //Set the agent icon from outside the SDK
 //        SDKConfig.setAgentAvatar(ResourcesCompat.getDrawable(getResources(), R.drawable.button_drawable, getTheme()), "");
 
@@ -269,6 +272,11 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
 
     @Override
     public void onBotMessageReceived(String event_code, String message) {
+        LogUtils.e(event_code, message);
+    }
+
+    @Override
+    public void onSessionEnded(String event_code, String message) {
         LogUtils.e(event_code, message);
     }
 }

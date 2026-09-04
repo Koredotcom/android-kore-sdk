@@ -14,7 +14,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
@@ -58,6 +60,7 @@ import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
+import kore.botssdk.utils.CustomTypefaceSpan;
 import kore.botssdk.utils.EmojiUtils;
 import kore.botssdk.utils.KaFontUtils;
 import kore.botssdk.utils.LogUtils;
@@ -74,6 +77,15 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     };
     public static final int HOLO_BLUE = Color.rgb(51, 181, 229);
     final Context context;
+
+    protected int getColor(String color, String defaultColor) {
+        try {
+            return Color.parseColor(color);
+        } catch (Exception e) {
+            return Color.parseColor(defaultColor);
+        }
+    }
+
     private final String REGEX_CHAR = "%%.*?%%";
     final Gson gson = new Gson();
     private boolean isLastItem = true;
@@ -120,7 +132,10 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         this.bottomSheetDialog = bottomSheetDialog;
     }
 
+    protected boolean isFromAgent = false;
+
     public void setBotIcon(String iconUrl) {
+        isFromAgent = false;
         ImageView botIcon = itemView.findViewById(R.id.bot_icon);
         if (botIcon != null) {
             botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon && bottomSheetDialog == null ? View.VISIBLE : View.GONE);
@@ -140,6 +155,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void setAgentBotIcon() {
+        isFromAgent = true;
         ImageView botIcon = itemView.findViewById(R.id.bot_icon);
         if (botIcon != null) {
             botIcon.setVisibility(SDKConfiguration.BubbleColors.showIcon && bottomSheetDialog == null ? View.VISIBLE : View.GONE);
@@ -174,7 +190,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             }
 
             msgTimeView.setText(HtmlCompat.fromHtml(msgTime, HtmlCompat.FROM_HTML_MODE_COMPACT));
-            msgTimeView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
+            msgTimeView.setTextColor(getColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0"), "#B0B0B0"));
         }
     }
 
@@ -183,7 +199,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         TextView timeStampView = itemView.findViewById(R.id.time_stamp);
         timeStampView.setVisibility(timeStamp != null && !timeStamp.isEmpty() ? View.VISIBLE : View.GONE);
         timeStampView.setText(timeStamp);
-        timeStampView.setTextColor(Color.parseColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0")));
+        timeStampView.setTextColor(getColor(sharedPreferences.getString(BotResponse.BUBBLE_LEFT_TEXT_COLOR, "#B0B0B0"), "#B0B0B0"));
     }
 
     public void setInvokeGenericWebViewInterface(InvokeGenericWebViewInterface invokeGenericWebViewInterface) {
@@ -272,8 +288,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             GradientDrawable leftDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_left_bubble_bg, context.getTheme());
 
             if (leftDrawable != null) {
-                leftDrawable.setColor(Color.parseColor(leftBgColor));
-                leftDrawable.setStroke((int) (1 * dp1), Color.parseColor(leftBgColor));
+                leftDrawable.setColor(getColor(leftBgColor, "#FFFFFF"));
+                leftDrawable.setStroke((int) (1 * dp1), getColor(leftBgColor, "#FFFFFF"));
 
                 if (circle) leftDrawable.setCornerRadii(roundedRadii);
                 else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE))
@@ -285,8 +301,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             layoutBubble.setGravity(Gravity.START);
             bubbleText.setTypeface(regular);
             bubbleText.setBackground(leftDrawable);
-            bubbleText.setTextColor(Color.parseColor(leftTextColor));
-            bubbleText.setLinkTextColor(Color.parseColor(leftTextColor));
+            bubbleText.setTextColor(getColor(leftTextColor, "#000000"));
+            bubbleText.setLinkTextColor(getColor(leftTextColor, "#000000"));
         } else {
             layoutBubble.setGravity(Gravity.END);
 
@@ -295,8 +311,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             GradientDrawable rightDrawable = (GradientDrawable) ResourcesCompat.getDrawable(context.getResources(), R.drawable.theme1_right_bubble_bg, context.getTheme());
 
             if (rightDrawable != null) {
-                rightDrawable.setColor(Color.parseColor(rightBgColor));
-                rightDrawable.setStroke((int) (1 * dp1), Color.parseColor(rightBgColor));
+                rightDrawable.setColor(getColor(rightBgColor, "#B2E3E9"));
+                rightDrawable.setStroke((int) (1 * dp1), getColor(rightBgColor, "#B2E3E9"));
 
                 if (circle) rightDrawable.setCornerRadii(roundedRadii);
                 else if (bubble_style.equalsIgnoreCase(BundleConstants.RECTANGLE))
@@ -309,10 +325,10 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             LinearLayoutCompat.LayoutParams params = (LinearLayoutCompat.LayoutParams) bubbleText.getLayoutParams();
             params.rightMargin = (int) (5 * dp1);
 
-            bubbleText.setLinkTextColor(Color.parseColor(rightTextColor));
+            bubbleText.setLinkTextColor(getColor(rightTextColor, "#000000"));
             bubbleText.setTypeface(medium);
             bubbleText.setBackground(rightDrawable);
-            bubbleText.setTextColor(Color.parseColor(rightTextColor));
+            bubbleText.setTextColor(getColor(rightTextColor, "#000000"));
         }
     }
 
@@ -423,6 +439,32 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 bubbleText.setText(getRemovedEntityEditString(strBuilder.toString()));
             }
 
+            if (!isFromAgent && SDKConfiguration.OverrideKoreConfig.showAnsweredByAI) {
+                strBuilder.append("\n\n ");
+                int iconPos = strBuilder.length() - 1;
+                Drawable aiDrawable = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
+                if (aiDrawable != null) {
+                    aiDrawable = DrawableCompat.wrap(aiDrawable).mutate();
+                    DrawableCompat.setTint(aiDrawable, getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9"));
+                    aiDrawable.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
+                    ImageSpan imageSpan = new ImageSpan(aiDrawable, ImageSpan.ALIGN_BOTTOM);
+                    strBuilder.setSpan(imageSpan, iconPos, iconPos + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+                strBuilder.append(" ");
+                int startAI = strBuilder.length();
+                strBuilder.append("Answered by AI");
+                int endAI = strBuilder.length();
+                strBuilder.setSpan(new ForegroundColorSpan(getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9")), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                Typeface tfRegular = SDKConfiguration.getRegular();
+                if (tfRegular == null) {
+                    tfRegular = ResourcesCompat.getFont(context, R.font.latoregular);
+                }
+                strBuilder.setSpan(new CustomTypefaceSpan(tfRegular), startAI, endAI, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
             bubbleText.setText(strBuilder);
             bubbleText.setVisibility(View.VISIBLE);
             setMsgTime(msgTime, false, 0);
@@ -472,7 +514,34 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             for (URLSpan span : urls) {
                 makeLinkClickable(strBuilder, span);
             }
-            bubbleText.setTextColor(Color.parseColor(color));
+            bubbleText.setTextColor(getColor(color, "#000000"));
+
+            if (!isFromAgent && SDKConfiguration.OverrideKoreConfig.showAnsweredByAI) {
+                strBuilder.append("\n\n ");
+                int iconPosError = strBuilder.length() - 1;
+                Drawable aiDrawableError = AppCompatResources.getDrawable(context, R.drawable.ic_automation_ai);
+                if (aiDrawableError != null) {
+                    aiDrawableError = DrawableCompat.wrap(aiDrawableError).mutate();
+                    DrawableCompat.setTint(aiDrawableError, getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9"));
+                    aiDrawableError.setBounds(0, 0, (int) (16 * dp1), (int) (16 * dp1));
+                    ImageSpan imageSpan = new ImageSpan(aiDrawableError, ImageSpan.ALIGN_BOTTOM);
+                    strBuilder.setSpan(imageSpan, iconPosError, iconPosError + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+
+                strBuilder.append(" ");
+                int startAIError = strBuilder.length();
+                strBuilder.append("Answered by AI");
+                int endAIError = strBuilder.length();
+                strBuilder.setSpan(new ForegroundColorSpan(getColor(sharedPreferences.getString(BotResponse.BUBBLE_RIGHT_BG_COLOR, "#B2E3E9"), "#B2E3E9")), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                strBuilder.setSpan(new AbsoluteSizeSpan(12, true), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                Typeface tfRegularError = SDKConfiguration.getRegular();
+                if (tfRegularError == null) {
+                    tfRegularError = ResourcesCompat.getFont(context, R.font.latoregular);
+                }
+                strBuilder.setSpan(new CustomTypefaceSpan(tfRegularError), startAIError, endAIError, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
             bubbleText.setText(strBuilder);
             bubbleText.setVisibility(View.VISIBLE);
         } else {
