@@ -61,4 +61,5 @@ public class BundleConstants {
     public static final String CHAT_CLEAR = "CHAT_CLEAR";
     public static final String ACK = "ack";
     public static final String SESSION_END = "Session_End";
+    public static final String[] IGNORE_TYPE_MESSAGES = {"TRIGGER_DIALOG_ON_INACTIVITY", "TRIGGERDIALOGON_INACTIVITY"};
 }

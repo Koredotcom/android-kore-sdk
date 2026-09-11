@@ -16,6 +16,9 @@ import java.util.TimeZone;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+
+import java.util.Arrays;
+
 import kore.botssdk.listener.BotContentFragmentUpdate;
 import kore.botssdk.models.BaseBotMessage;
 import kore.botssdk.models.BotHistory;
@@ -30,6 +33,7 @@ import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.net.WebHookRestBuilder;
 import kore.botssdk.retroresponse.ServerBotMsgResponse;
+import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.DateUtils;
 import kore.botssdk.utils.Utils;
 import retrofit2.Call;
@@ -94,17 +98,9 @@ public class HistoryRepository {
                                     }
                                 } else {
                                     try {
-                                        String message = msg.getComponents().get(0).getData().getText();
-                                        message = (msg.getTags() != null && !msg.getTags().getAltText().isEmpty()) ? msg.getTags().getAltText().get(0).getValue() : message;
-                                        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
-                                        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
-                                        botPayLoad.setMessage(botMessage);
-                                        BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
-                                        botPayLoad.setBotInfo(botInfo);
-                                        Gson gson = new Gson();
-                                        String jsonPayload = gson.toJson(botPayLoad);
+                                        BotRequest botRequest = getBotRequest(msg);
+                                        if (botRequest == null) continue;
 
-                                        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
                                         long cTime = Objects.requireNonNull(DateUtils.isoFormatter.parse(msg.getCreatedOn())).getTime() + TimeZone.getDefault().getRawOffset() + TimeZone.getDefault().getDSTSavings();
                                         String createdTime = DateUtils.isoFormatter.format(new Date(cTime));
                                         botRequest.setCreatedOn(createdTime);
@@ -136,6 +132,26 @@ public class HistoryRepository {
                 }
             }
         });
+    }
+
+    private BotRequest getBotRequest(BotHistoryMessage msg) {
+        String message = msg.getComponents().get(0).getData().getText();
+        message = (msg.getTags() != null && !msg.getTags().getAltText().isEmpty()) ? msg.getTags().getAltText().get(0).getValue() : message;
+
+        if (Arrays.asList(BundleConstants.IGNORE_TYPE_MESSAGES).contains(message)) {
+            return null;
+        }
+
+        RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
+        RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
+        botPayLoad.setMessage(botMessage);
+        BotInfoModel botInfo = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, null);
+        botPayLoad.setBotInfo(botInfo);
+        Gson gson = new Gson();
+        String jsonPayload = gson.toJson(botPayLoad);
+
+        BotRequest botRequest = gson.fromJson(jsonPayload, BotRequest.class);
+        return botRequest;
     }
 
     public Observable<ServerBotMsgResponse> getWebHookHistoryRequest(final int _offset, final int limit, String jwt) {
@@ -174,6 +190,11 @@ public class HistoryRepository {
                                 } else {
                                     try {
                                         String message = msg.getComponents().get(0).getData().getText();
+
+                                        if (Arrays.asList(BundleConstants.IGNORE_TYPE_MESSAGES).contains(message)) {
+                                            continue;
+                                        }
+
                                         RestResponse.BotMessage botMessage = new RestResponse.BotMessage(message, "");
                                         RestResponse.BotPayLoad botPayLoad = new RestResponse.BotPayLoad();
                                         botPayLoad.setMessage(botMessage);
