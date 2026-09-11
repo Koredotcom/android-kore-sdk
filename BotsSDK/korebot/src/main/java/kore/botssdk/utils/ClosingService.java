@@ -13,6 +13,11 @@ import kore.botssdk.models.BotResponse;
 
 public class ClosingService extends Service {
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
+    }
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

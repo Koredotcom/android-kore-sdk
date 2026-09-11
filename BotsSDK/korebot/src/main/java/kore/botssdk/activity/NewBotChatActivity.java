@@ -302,6 +302,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 botContentFragment.loadChatHistory(0, sharedPreferences.getInt(BotResponse.HISTORY_COUNT, 1));
             else if (SDKConfiguration.Client.history_on_network_resume)
                 botContentFragment.loadReconnectionChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
+
+            if (sharedPreferences != null) {
+                sharedPreferences.edit().putBoolean(BundleConstants.IS_RECONNECT, false).apply();
+            }
         } else if (SDKConfiguration.OverrideKoreConfig.history_initial_call && SDKConfiguration.OverrideKoreConfig.history_enable && botContentFragment != null && botContentFragment.isAdded()) {
             botContentFragment.loadChatHistory(0, SDKConfiguration.OverrideKoreConfig.history_batch_size);
         }

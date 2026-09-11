@@ -60,7 +60,6 @@
             android:name=".utils.ClosingService"
             android:enabled="true"
             android:exported="false"
-            android:permission="TODO"
             android:stopWithTask="false" />
     </application>
 </manifest>
