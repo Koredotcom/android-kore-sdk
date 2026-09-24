@@ -19,3 +19,9 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
+
+// JitPack looks for this task at the root of a multi-module project. Delegate
+// it to the SDK publication rather than publishing the demo application.
+tasks.register('publishToMavenLocal') {
+    dependsOn(':artemis_socket_sdk:publishReleasePublicationToMavenLocal')
+}
