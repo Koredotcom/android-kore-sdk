@@ -3,6 +3,9 @@
 buildscript {
     repositories {
         google()
+        // JitPack's Maven Central endpoint can be rate-limited. This Google-
+        // hosted mirror serves the same Central artifacts without that limit.
+        maven { url 'https://maven-central.storage-download.googleapis.com/maven2' }
         mavenCentral()
     }
     dependencies {
@@ -15,6 +18,7 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven { url 'https://maven-central.storage-download.googleapis.com/maven2' }
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
     }
