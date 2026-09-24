@@ -19,3 +19,9 @@ allprojects {
         maven { url 'https://www.jitpack.io' }
     }
 }
+
+// JitPack looks for publishToMavenLocal on the root project. The actual
+// publication is defined by the Android library module.
+tasks.register('publishToMavenLocal') {
+    dependsOn ':artemis_socket_sdk:publishToMavenLocal'
+}
