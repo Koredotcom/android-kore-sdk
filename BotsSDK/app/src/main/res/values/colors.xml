@@ -1,5 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="toolbar_background">#ADBCF7</color>
+    <color name="toolbar_text">#202127</color>
+    <color name="toolbar_icon">#5D626E</color>
+    <color name="chat_background">#FAF8FF</color>
+    <color name="composer_background">#FFFFFF</color>
+
+    <color name="status_connected_background">#C8E8CA</color>
+    <color name="status_connected_foreground">#2E7D32</color>
+    <color name="status_connecting_background">#D5E3FF</color>
+    <color name="status_connecting_foreground">#315E9E</color>
+    <color name="status_disconnected_background">#FFE6B8</color>
+    <color name="status_disconnected_foreground">#8A5200</color>
+    <color name="status_error_background">#FFCDD2</color>
+    <color name="status_error_foreground">#B71C1C</color>
+
+    <color name="assistant_message_background">#EEEEEE</color>
+    <color name="user_message_background">#596FCC</color>
+    <color name="assistant_message_text">#202124</color>
+    <color name="user_message_text">#FFFFFF</color>
+    <color name="assistant_message_timestamp">#8A8A8A</color>
+    <color name="user_message_timestamp">#DCE3FF</color>
+    <color name="input_text">#30303A</color>
+    <color name="input_hint">#5D5D68</color>
+    <color name="input_border">#777983</color>
+    <color name="send_button_background">#D5DEFF</color>
+    <color name="send_icon">#304A8D</color>
+    <color name="trace_text">#222222</color>
 </resources>

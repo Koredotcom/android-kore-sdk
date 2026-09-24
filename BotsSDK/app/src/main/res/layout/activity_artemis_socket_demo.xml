@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/chat_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:gravity="center_vertical"
+        android:background="@color/toolbar_background"
+        android:paddingStart="20dp"
+        android:paddingEnd="8dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/demo_title"
+            android:textColor="@color/toolbar_text"
+            android:textSize="24sp"
+            android:fontFamily="sans"
+            android:maxLines="1" />
+
+        <ImageButton
+            android:id="@+id/btnReconnect"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/action_reconnect"
+            android:padding="10dp"
+            android:src="@drawable/ic_refresh"
+            android:tint="@color/toolbar_icon" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/connectionStatusBar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
+        android:orientation="horizontal"
+        android:background="@color/status_disconnected_background">
+
+        <ImageView
+            android:id="@+id/ivConnectionIcon"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:contentDescription="@null"
+            android:src="@drawable/ic_warning"
+            android:tint="@color/status_disconnected_foreground" />
+
+        <ProgressBar
+            android:id="@+id/pbConnection"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="2dp"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvConnectionStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:text="@string/status_not_connected"
+            android:textColor="@color/status_disconnected_foreground"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatMessages"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:background="@color/chat_background"
+        android:overScrollMode="never" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="14dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:background="@color/composer_background"
+        android:elevation="8dp">
+
+        <EditText
+            android:id="@+id/etMessage"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:layout_weight="1"
+            android:background="@drawable/message_input_background"
+            android:hint="@string/hint_message"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            android:textColor="@color/input_text"
+            android:textColorHint="@color/input_hint"
+            android:textSize="18sp"
+            android:inputType="textCapSentences|textMultiLine"
+            android:maxLines="3"
+            android:imeOptions="actionSend" />
+
+        <ImageButton
+            android:id="@+id/btnSend"
+            android:layout_width="58dp"
+            android:layout_height="58dp"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/send_button_background"
+            android:contentDescription="@string/action_send"
+            android:padding="16dp"
+            android:src="@drawable/ic_send"
+            android:tint="@color/send_icon" />
+    </LinearLayout>
+
+</LinearLayout>

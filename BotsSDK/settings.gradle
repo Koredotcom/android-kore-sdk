@@ -1,2 +1,1 @@
-include ':korebot', ':korebotsdklib'
-include ':app'
+include ':artemis_socket_sdk', ':app'

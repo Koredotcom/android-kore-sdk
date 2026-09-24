@@ -1,3 +1,2 @@
-/build
-/src/main/res/raw/config.properties
-/google-services.json
+/build/
+/src/main/assets/artemis_example_config.local.properties

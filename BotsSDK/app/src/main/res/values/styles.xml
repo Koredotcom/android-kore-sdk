@@ -1,0 +1,11 @@
+<resources>
+    <style name="Theme.ArtemisDemo" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:statusBarColor">@color/toolbar_background</item>
+        <item name="android:navigationBarColor">#000000</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="colorAccent">@color/send_icon</item>
+    </style>
+</resources>
