@@ -7,9 +7,10 @@ buildscript {
         // hosted mirror serves the same Central artifacts without that limit.
         maven { url 'https://maven-central.storage-download.googleapis.com/maven2' }
         mavenCentral()
+        maven { url 'https://www.jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath 'com.android.tools.build:gradle:8.7.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
