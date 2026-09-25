@@ -3,10 +3,14 @@
 buildscript {
     repositories {
         google()
+        // JitPack's Maven Central endpoint can be rate-limited. This Google-
+        // hosted mirror serves the same Central artifacts without that limit.
+        maven { url 'https://maven-central.storage-download.googleapis.com/maven2' }
         mavenCentral()
+        maven { url 'https://www.jitpack.io' }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.4'
+        classpath 'com.android.tools.build:gradle:8.7.3'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -15,13 +19,14 @@ buildscript {
 allprojects {
     repositories {
         google()
+        maven { url 'https://maven-central.storage-download.googleapis.com/maven2' }
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
     }
 }
 
-// JitPack looks for publishToMavenLocal on the root project. The actual
-// publication is defined by the Android library module.
+// JitPack looks for this task at the root of a multi-module project. Delegate
+// it to the SDK publication rather than publishing the demo application.
 tasks.register('publishToMavenLocal') {
-    dependsOn ':artemis_socket_sdk:publishToMavenLocal'
+    dependsOn(':artemis_socket_sdk:publishReleasePublicationToMavenLocal')
 }
