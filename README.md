@@ -34,7 +34,48 @@ ArtemisSocketConfiguration configuration = ArtemisSocketConfiguration.builder()
 ArtemisSocketClient client = new ArtemisSocketClient(configuration, listener);
 client.connect();
 client.sendMessage("Hello");
+client.submitAction("select-plan", "basic", null, "render-1");
+client.submitFeedback("assistant-message-id", "star", 5, null, null,
+    new ArtemisFeedbackCallback() {
+        @Override
+        public void onSuccess(String feedbackId) {
+            // Runtime acknowledged this rating.
+        }
+
+        @Override
+        public void onFailure(String code, String message) {
+            // Rejected, disconnected before acknowledgement, or timed out.
+        }
+    });
 client.disconnect();
+client.shutdown();
+```
+
+`submitAction` sends an `action_submit` frame and throws if the action is
+invalid, the client is disconnected, or the socket rejects it. Optional value,
+form data, and render ID are omitted when null. Action submission is a transport
+send; it does not provide a server acknowledgement.
+
+`submitFeedback` sends a `feedback.submit` frame and correlates a matching
+`feedback.ack` by message ID and optional action render ID. The default timeout
+is 10 seconds; an overload accepts a custom positive timeout in milliseconds.
+Success and failure callbacks run on the Android main thread. A successful ack
+must include a nonblank `feedbackId`. A rejection may provide `error.code` and
+`error.message`. Failure codes include `FEEDBACK_TIMEOUT`, `DISCONNECTED`,
+`SEND_REJECTED` and `FEEDBACK_REJECTED`. Only one feedback submission for a
+message/render ID may be pending at a time.
+
+Accepted rating types are `thumbs` (values 0 or 1) and `star` (values 1–10).
+Feedback frames use this shape:
+
+```json
+{"type":"feedback.submit","messageId":"m1","ratingType":"star","ratingValue":5}
+```
+
+The matching acknowledgement uses this shape:
+
+```json
+{"type":"feedback.ack","messageId":"m1","success":true,"feedbackId":"f1"}
 ```
 
 ## Example application
@@ -50,7 +91,8 @@ opened and provides the same chat-focused experience as the Flutter example:
 - API and socket diagnostics available by long-pressing the status strip
 
 Only actual user and assistant message text is rendered in the chat. Socket
-events and action frames are diagnostics-only.
+events and action frames are diagnostics-only; the example does not yet expose
+a UI for submitting actions or feedback.
 
 ## Build
 

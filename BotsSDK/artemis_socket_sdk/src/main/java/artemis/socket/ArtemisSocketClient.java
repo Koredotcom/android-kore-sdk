@@ -9,7 +9,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +32,7 @@ import okhttp3.MediaType;
  * then a ticket-authenticated connection to {@code /ws/sdk}.</p>
  */
 public final class ArtemisSocketClient {
+    private static final long DEFAULT_FEEDBACK_TIMEOUT_MS = 10000L;
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final Gson GSON = new Gson();
 
@@ -37,6 +41,8 @@ public final class ArtemisSocketClient {
     private final OkHttpClient httpClient;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
+    private final Map<String, PendingFeedback> pendingFeedback =
+            new ConcurrentHashMap<>();
 
     private volatile WebSocket webSocket;
     private volatile boolean connected;
@@ -80,6 +86,7 @@ public final class ArtemisSocketClient {
         if (socket != null) {
             socket.close(1000, "Client disconnect");
         }
+        failPendingFeedback("DISCONNECTED", "Connection closed before feedback acknowledgement");
         notifyDisconnected("Client disconnect");
     }
 
@@ -111,6 +118,175 @@ public final class ArtemisSocketClient {
             throw new IllegalStateException("Artemis socket rejected the message");
         }
         notifyLog("WS SEND " + GSON.toJson(message));
+    }
+
+    /**
+     * Sends an interactive action frame. A normal chat message is never used
+     * as a fallback for this operation.
+     */
+    public void submitAction(String actionId, String value,
+                             Map<String, String> formData, String renderId) {
+        if (actionId == null || actionId.trim().isEmpty()) {
+            throw new IllegalArgumentException("actionId must not be empty");
+        }
+        if (formData != null) {
+            for (Map.Entry<String, String> entry : formData.entrySet()) {
+                if (entry.getKey() == null || entry.getKey().trim().isEmpty()
+                        || entry.getValue() == null) {
+                    throw new IllegalArgumentException("formData keys and values must not be null or blank");
+                }
+            }
+        }
+        WebSocket socket = requireConnectedSocket();
+
+        JsonObject action = new JsonObject();
+        action.addProperty("type", "action_submit");
+        action.addProperty("actionId", actionId.trim());
+        if (value != null) action.addProperty("value", value);
+        if (formData != null) {
+            action.add("formData", GSON.toJsonTree(new LinkedHashMap<>(formData)));
+        }
+        if (renderId != null) action.addProperty("renderId", renderId);
+        if (!socket.send(GSON.toJson(action))) {
+            throw new IllegalStateException("Artemis socket rejected the action");
+        }
+        notifyLog("WS action submitted action_id=" + actionId.trim());
+    }
+
+    /**
+     * Sends feedback and reports its server acknowledgement (10 second default
+     * timeout).
+     */
+    public void submitFeedback(String messageId, String ratingType, int ratingValue,
+                               String feedbackText, String actionRenderId,
+                               ArtemisFeedbackCallback callback) {
+        submitFeedback(messageId, ratingType, ratingValue, feedbackText, actionRenderId,
+                DEFAULT_FEEDBACK_TIMEOUT_MS, callback);
+    }
+
+    /** Sends feedback with a caller-selected acknowledgement timeout in milliseconds. */
+    public void submitFeedback(String messageId, String ratingType, int ratingValue,
+                               String feedbackText, String actionRenderId, long timeoutMs,
+                               ArtemisFeedbackCallback callback) {
+        if (messageId == null || messageId.trim().isEmpty()) {
+            throw new IllegalArgumentException("messageId must not be empty");
+        }
+        if (!"thumbs".equals(ratingType) && !"star".equals(ratingType)) {
+            throw new IllegalArgumentException("ratingType must be 'thumbs' or 'star'");
+        }
+        if (("thumbs".equals(ratingType) && ratingValue != 0 && ratingValue != 1)
+                || ("star".equals(ratingType) && (ratingValue < 1 || ratingValue > 10))) {
+            throw new IllegalArgumentException("ratingValue is outside the supported range");
+        }
+        if (timeoutMs <= 0) throw new IllegalArgumentException("timeoutMs must be positive");
+        if (callback == null) throw new IllegalArgumentException("callback is required");
+        WebSocket socket = requireConnectedSocket();
+
+        String normalizedMessageId = messageId.trim();
+        String key = feedbackKey(normalizedMessageId, actionRenderId);
+        PendingFeedback pending = new PendingFeedback(callback);
+        if (pendingFeedback.putIfAbsent(key, pending) != null) {
+            throw new IllegalStateException("Feedback is already pending for this message");
+        }
+        try {
+            synchronized (pending) {
+                if (pendingFeedback.get(key) != pending) return;
+                pending.timeout = () -> finishFeedback(
+                        key, pending, null, "FEEDBACK_TIMEOUT",
+                        "Feedback acknowledgement timed out");
+                mainHandler.postDelayed(pending.timeout, timeoutMs);
+                JsonObject feedback = new JsonObject();
+                feedback.addProperty("type", "feedback.submit");
+                feedback.addProperty("messageId", normalizedMessageId);
+                feedback.addProperty("ratingType", ratingType);
+                feedback.addProperty("ratingValue", ratingValue);
+                if (feedbackText != null) {
+                    feedback.addProperty("feedbackText", feedbackText);
+                }
+                if (actionRenderId != null) {
+                    feedback.addProperty("actionRenderId", actionRenderId);
+                }
+                if (!socket.send(GSON.toJson(feedback))) {
+                    finishFeedback(key, pending, null, "SEND_REJECTED",
+                            "Artemis socket rejected the feedback");
+                    return;
+                }
+                notifyLog("WS feedback submitted message_id=" + normalizedMessageId);
+            }
+        } catch (RuntimeException ignored) {
+            finishFeedback(key, pending, null, "SEND_FAILED", "Feedback could not be sent");
+        }
+    }
+
+    private WebSocket requireConnectedSocket() {
+        WebSocket socket = webSocket;
+        if (!connected || socket == null) {
+            throw new IllegalStateException("Artemis socket is not connected");
+        }
+        return socket;
+    }
+
+    private static String feedbackKey(String messageId, String actionRenderId) {
+        String renderId = actionRenderId == null ? "" : actionRenderId;
+        return messageId.length() + ":" + messageId + renderId.length() + ":" + renderId;
+    }
+
+    private void handleFeedbackAcknowledgement(JsonObject payload) {
+        String messageId = stringValue(payload, "messageId");
+        if (isBlank(messageId)) return;
+        JsonElement rawRenderId = payload.get("actionRenderId");
+        String renderId = rawRenderId == null || rawRenderId.isJsonNull()
+                ? null : rawRenderId.getAsString();
+        String key = feedbackKey(messageId, renderId);
+        PendingFeedback pending = pendingFeedback.get(key);
+        if (pending == null) return;
+
+        boolean success = payload.has("success") && payload.get("success").getAsBoolean();
+        String feedbackId = stringValue(payload, "feedbackId");
+        if (success && !isBlank(feedbackId)) {
+            finishFeedback(key, pending, feedbackId, null, null);
+            return;
+        }
+
+        JsonObject error = payload.has("error") && payload.get("error").isJsonObject()
+                ? payload.getAsJsonObject("error") : null;
+        String code = error == null ? "FEEDBACK_REJECTED" : stringValue(error, "code");
+        String message = error == null ? "Feedback was rejected" : stringValue(error, "message");
+        finishFeedback(key, pending, null,
+                isBlank(code) ? "FEEDBACK_REJECTED" : code,
+                isBlank(message) ? "Feedback was rejected" : message);
+    }
+
+    private void finishFeedback(String key, PendingFeedback pending,
+                                String feedbackId, String errorCode,
+                                String errorMessage) {
+        synchronized (pending) {
+            if (!pendingFeedback.remove(key, pending)) return;
+            if (pending.timeout != null) mainHandler.removeCallbacks(pending.timeout);
+        }
+        mainHandler.post(() -> {
+            try {
+                if (errorCode == null) pending.callback.onSuccess(feedbackId);
+                else pending.callback.onFailure(errorCode, errorMessage);
+            } catch (RuntimeException callbackError) {
+                notifyLog("FEEDBACK callback failed: " + callbackError.getClass().getSimpleName());
+            }
+        });
+    }
+
+    private void failPendingFeedback(String code, String message) {
+        for (Map.Entry<String, PendingFeedback> entry : pendingFeedback.entrySet()) {
+            finishFeedback(entry.getKey(), entry.getValue(), null, code, message);
+        }
+    }
+
+    private static final class PendingFeedback {
+        final ArtemisFeedbackCallback callback;
+        volatile Runnable timeout;
+
+        PendingFeedback(ArtemisFeedbackCallback callback) {
+            this.callback = callback;
+        }
     }
 
     public void shutdown() {
@@ -240,6 +416,9 @@ public final class ArtemisSocketClient {
     private void handleMessage(String text) {
         try {
             JsonObject payload = JsonParser.parseString(text).getAsJsonObject();
+            if ("feedback.ack".equals(stringValue(payload, "type"))) {
+                handleFeedbackAcknowledgement(payload);
+            }
             if ("session_start".equals(stringValue(payload, "type"))) {
                 sessionId = stringValue(payload, "sessionId");
                 connected = true;
