@@ -109,7 +109,7 @@ public class ButtonLinkTemplateHolder extends BaseViewHolder {
             tvButtonLinkTitle.setVisibility(View.GONE);
         }
 
-        ButtonLinkTemplateAdapter buttonTypeAdapter = new ButtonLinkTemplateAdapter(recyclerView.getContext(), payloadInner.getButtons(), isLastItem());
+        ButtonLinkTemplateAdapter buttonTypeAdapter = new ButtonLinkTemplateAdapter(recyclerView.getContext(), payloadInner.getButtons(), isLastItem(), payloadInner);
         recyclerView.setAdapter(buttonTypeAdapter);
         buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
         buttonTypeAdapter.setInvokeGenericWebViewInterface(invokeGenericWebViewInterface);

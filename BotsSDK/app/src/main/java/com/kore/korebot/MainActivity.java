@@ -15,7 +15,6 @@ import com.kore.korebot.customtemplates.LinkTemplateHolder;
 import java.util.HashMap;
 
 import kore.botssdk.activity.NewBotChatActivity;
-import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.NotificationModel;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
@@ -90,72 +89,8 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);
 
-        //Flag to show the bot icon beside the bot response
-        SDKConfig.setIsShowIcon(true);
-
-        //Flag to show the bot icon in top position or bottom of the bot response
-        SDKConfig.setIsShowIconTop(false);
-
-        //Flag to show timestamp of each bot and user messages
-        SDKConfig.setIsTimeStampsRequired(true);
-
-        //Flag to show bot header or hide the header
-        SDKConfig.setIsShowHeader(true);
-
-        //Flag to show bot header minimize icon or hide
-        SDKConfig.showHeaderMinimize(true);
-
         //Set the listener to the SDK to get the Bot callbacks to the parent application
-        SDKConfig.setBotStatusUpdateListener(MainActivity.this);
-
-        //Set the date format in which user wants to display the format above the bot and user responses
-        SDKConfig.setBubbleDateFormat("MMM dd'{S}' 'at' h:mm a");
-
-        //Flag to send the custom fonts to the SDK
-        //SDKConfig.setFontFamily(ResourcesCompat.getFont(MainActivity.this, R.font.fss_light), ResourcesCompat.getFont(MainActivity.this, R.font.fss_regular), ResourcesCompat.getFont(MainActivity.this, R.font.fss_bold));
-
-        //Set local branding model by overriding the branding api response
-        SDKConfig.setLocalBranding(false, getLocalBrandingModel());
-
-        // Flag to set status bar color as header background color
-        SDKConfig.setIsUpdateStatusBarColor(true);
-
-        // Flag to set deviceId for notifications
-        SDKConfig.setDeviceId("");
-
-        //Method to reset the bot connection and start a new session by overriding the previous state
-        // SDKConfig.disconnectBotSession(MainActivity.this);
-
-        SDKConfiguration.OverrideKoreConfig.showAttachment = true;
-        SDKConfiguration.OverrideKoreConfig.showASRMicroPhone = true;
-        SDKConfiguration.OverrideKoreConfig.showTextToSpeech = true;
-
-        //Flag to opt to add custom data to every user message sent to bot
-        SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message = true;
-
-        //Flag to opt to add custom data to every user message sent to bot
-        SDKConfiguration.OverrideKoreConfig.disable_alert_on_max_reconnection = true;
-
-        //Flag to opt local notification when application went to background on receive of new bot message
-        SDKConfiguration.OverrideKoreConfig.showLocalNotification = false;
-
-        //Enable the flag if the bot needs to support Emoji shortcuts decryption
-        SDKConfiguration.OverrideKoreConfig.isEmojiShortcutEnable = false;
-
-        //Disable the flag if the bot reconnection not needed inside the SDK
-        SDKConfiguration.OverrideKoreConfig.reconnectionBySDK = false;
-
-        //Enable the flag if the deeplink not needed inside the SDK
-        SDKConfiguration.OverrideKoreConfig.sendAllDeepLink = false;
-
-        //Disable the flag if unsubscribe not needed inside the SDK
-        SDKConfiguration.OverrideKoreConfig.default_notifications = true;
-
-        //Disable the flag if AnsweredByAi not needed for every bot message
-//        SDKConfig.setShowAnsweredByAI(false);
-
-        //Set the agent icon from outside the SDK
-//        SDKConfig.setAgentAvatar(ResourcesCompat.getDrawable(getResources(), R.drawable.button_drawable, getTheme()), "");
+        SDKConfig.setBotStatusUpdateListener(this);
 
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
@@ -220,39 +155,10 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         super.onDestroy();
     }
 
-    private BrandingModel getLocalBrandingModel() {
-        BrandingModel brandingModel = new BrandingModel();
-        brandingModel.setBotchatBgColor("#F3F5F8");
-        brandingModel.setBotchatTextColor("#202124");
-        brandingModel.setButtonActiveBgColor("#0D6EFD");
-        brandingModel.setButtonActiveTextColor("#ffffff");
-        brandingModel.setButtonInactiveBgColor("#0659d2");
-        brandingModel.setButtonInactiveTextColor("#ffffff");
-        brandingModel.setUserchatBgColor("#0D6EFD");
-        brandingModel.setUserchatTextColor("#ffffff");
-        brandingModel.setWidgetHeaderColor("#0D6EFD");
-        brandingModel.setWidgetFooterColor("#FFFFFF");
-        brandingModel.setWidgetFooterBorderColor("#E4E5E7");
-        brandingModel.setWidgetFooterHintColor("#262626");
-        brandingModel.setWidgetFooterHintText("Type your message...");
-        brandingModel.setWidgetTextColor("#ffffff");
-        brandingModel.setWidgetBorderColor("#E4E5E7");
-        brandingModel.setButtonBorderColor("#0D6EFD");
-        brandingModel.setWidgetBodyColor("#ffffff");
-        brandingModel.setBotName("Bot Name");
-        brandingModel.setChatBubbleStyle("square");
-        return brandingModel;
-    }
-
     @Override
     public void onBotConnected() {
         LogUtils.e("Bot Current Status", "Bot Connected");
 
-//        NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
-//        if (notificationModel != null && !SDKConfiguration.OverrideKoreConfig.default_notifications &&
-//                StringUtils.isNotEmpty(notificationModel.getUserId()) && StringUtils.isNotEmpty(notificationModel.getAccessToken()) &&
-//                StringUtils.isNotEmpty(SDKConfiguration.Server.notificationDeviceId))
-//            new PushNotificationRegister().registerPushNotification(notificationModel.getUserId(), notificationModel.getAccessToken(), SDKConfiguration.Server.notificationDeviceId);
     }
 
     @Override

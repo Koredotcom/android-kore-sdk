@@ -73,7 +73,7 @@ public class ButtonTemplateHolder extends BaseViewHolder {
 
         if (botButtonModels != null && !botButtonModels.isEmpty()) {
             buttonTypeAdapter = new ButtonTemplateAdapter(
-                    buttonsList.getContext(), botButtonModels, isLastItem(), payloadInner.isFullWidth(), payloadInner.isStackedButtons(), payloadInner.getVariation()
+                    buttonsList.getContext(), botButtonModels, isLastItem(), payloadInner.isFullWidth(), payloadInner.isStackedButtons(), payloadInner.getVariation(), payloadInner
             );
             buttonsList.setAdapter(buttonTypeAdapter);
             buttonTypeAdapter.setComposeFooterInterface(composeFooterInterface);
