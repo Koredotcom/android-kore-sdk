@@ -24,6 +24,8 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 
@@ -38,17 +40,23 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
     private final boolean isFullWidth;
     private final boolean isStackedButtons;
     private final String variation;
+    private final PayloadInner templatePayload;
 
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
 
     public ButtonTemplateAdapter(Context context, ArrayList<BotButtonModel> buttons, boolean isLastItem, boolean isFullWidth, boolean isStackedButtons, String variation) {
+        this(context, buttons, isLastItem, isFullWidth, isStackedButtons, variation, new PayloadInner());
+    }
+
+    public ButtonTemplateAdapter(Context context, ArrayList<BotButtonModel> buttons, boolean isLastItem, boolean isFullWidth, boolean isStackedButtons, String variation, PayloadInner templatePayload) {
         this.context = context;
         this.buttons = buttons;
         this.isLastItem = isLastItem;
         this.isFullWidth = isFullWidth;
         this.isStackedButtons = isStackedButtons;
         this.variation = variation;
+        this.templatePayload = templatePayload;
 
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, MODE_PRIVATE);
 
@@ -74,8 +82,13 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
     public void onBindViewHolder(ButtonTemplateAdapter.BotButtonViewHolder holder, int position) {
         BotButtonModel buttonMap = buttons.get(position);
         holder.buttonTitle.setText(buttonMap.getTitle());
+        boolean enabled = !isTemplateDisabled();
+        holder.rootLayout.setEnabled(enabled);
+        holder.buttonTitle.setEnabled(enabled);
+        holder.rootLayout.setAlpha(enabled ? 1.0f : 0.5f);
 
         holder.rootLayout.setOnClickListener(v -> {
+            if (isTemplateDisabled()) return;
             try {
                 String type = buttonMap.getType();
                 if (invokeGenericWebViewInterface != null && (BundleConstants.BUTTON_TYPE_USER_INTENT.equals(type) ||
@@ -84,12 +97,9 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
                     if (!StringUtils.isNullOrEmpty(buttonMap.getUrl())) {
                         invokeGenericWebViewInterface.invokeGenericWebView(buttonMap.getUrl());
                     }
-                } else if (isLastItem && composeFooterInterface != null) {
-                    if (!StringUtils.isNullOrEmpty(buttonMap.getPayload())) {
-                        composeFooterInterface.onSendClick(buttonMap.getTitle(), buttonMap.getPayload(), false);
-                    } else {
-                        composeFooterInterface.onSendClick(buttonMap.getTitle(), false);
-                    }
+                } else if ((isLastItem || SDKConfiguration.OverrideKoreConfig.enableButtonClicksOnAnyPosition)
+                        && composeFooterInterface != null) {
+                    sendButtonPayload(buttonMap);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -128,6 +138,27 @@ public class ButtonTemplateAdapter extends RecyclerView.Adapter<ButtonTemplateAd
         if (isFullWidth) {
             holder.rootLayout.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
             holder.buttonTitle.getLayoutParams().width = LinearLayout.LayoutParams.MATCH_PARENT;
+        }
+    }
+
+    private boolean isTemplateDisabled() {
+        return templatePayload.isButtonTemplateSubmitted();
+    }
+
+    private void sendButtonPayload(BotButtonModel button) {
+        // Claim before dispatch: the callback can synchronously rebind the message or trigger a click.
+        templatePayload.setButtonTemplateSubmitted(true);
+        boolean submitted = false;
+        try {
+            if (!StringUtils.isNullOrEmpty(button.getPayload())) {
+                composeFooterInterface.onSendClick(button.getTitle(), button.getPayload(), false);
+            } else {
+                composeFooterInterface.onSendClick(button.getTitle(), false);
+            }
+            submitted = true;
+        } finally {
+            if (!submitted) templatePayload.setButtonTemplateSubmitted(false);
+            notifyDataSetChanged();
         }
     }
 

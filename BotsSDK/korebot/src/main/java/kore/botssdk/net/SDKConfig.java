@@ -21,10 +21,7 @@ public class SDKConfig {
     private static BaseContentFragment customContentFragment = null;
     private static BaseFooterFragment customFooterFragment = null;
     private static BaseHeaderFragment customHeaderFragment = null;
-    private static boolean isShowHeader = true;
-    private static boolean isUpdateStatusBarColor = false;
     private static boolean isShowActionBar = true;
-    private static boolean isShowHeaderMinimize = true;
 
     public static void setFontFamily(Typeface regularTf,
                                      Typeface semiBoldTf,
@@ -90,15 +87,15 @@ public class SDKConfig {
     }
 
     public static boolean isShowHeader() {
-        return isShowHeader;
+        return SDKConfiguration.OverrideKoreConfig.showHeader;
     }
 
     public static void setIsShowHeader(boolean isShowHeader) {
-        SDKConfig.isShowHeader = isShowHeader;
+        SDKConfiguration.OverrideKoreConfig.showHeader = isShowHeader;
     }
 
     public static void showHeaderMinimize(boolean isShowHeaderMinimize) {
-        SDKConfig.isShowHeaderMinimize = isShowHeaderMinimize;
+        SDKConfiguration.OverrideKoreConfig.showHeaderMinimize = isShowHeaderMinimize;
     }
 
     public static void setBotStatusUpdateListener(BotStatusListener botStatusListener) {
@@ -106,7 +103,7 @@ public class SDKConfig {
     }
 
     public static boolean isIsShowHeaderMinimize() {
-        return isShowHeaderMinimize;
+        return SDKConfiguration.OverrideKoreConfig.showHeaderMinimize;
     }
 
     public static void setIsShowIcon(boolean isShow) {
@@ -157,11 +154,11 @@ public class SDKConfig {
     }
 
     public static void setIsUpdateStatusBarColor(boolean isUpdate) {
-        isUpdateStatusBarColor = isUpdate;
+        SDKConfiguration.OverrideKoreConfig.updateStatusBarColor = isUpdate;
     }
 
     public static boolean isUpdateStatusBarColor() {
-        return isUpdateStatusBarColor;
+        return SDKConfiguration.OverrideKoreConfig.updateStatusBarColor;
     }
 
     public static void setShowAnsweredByAI(boolean show) {

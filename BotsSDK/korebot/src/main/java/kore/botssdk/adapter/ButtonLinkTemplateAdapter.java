@@ -25,19 +25,27 @@ import kore.botssdk.listener.ComposeFooterInterface;
 import kore.botssdk.listener.InvokeGenericWebViewInterface;
 import kore.botssdk.models.BotButtonModel;
 import kore.botssdk.models.BotResponse;
+import kore.botssdk.models.PayloadInner;
+import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.StringUtils;
 
 public class ButtonLinkTemplateAdapter extends RecyclerView.Adapter<ButtonLinkTemplateAdapter.ViewHolder> {
     private final ArrayList<BotButtonModel> buttons;
     private final boolean isEnabled;
+    private final PayloadInner templatePayload;
     private ComposeFooterInterface composeFooterInterface;
     private InvokeGenericWebViewInterface invokeGenericWebViewInterface;
     String textColor;
 
     public ButtonLinkTemplateAdapter(Context context, ArrayList<BotButtonModel> buttons, boolean isEnabled) {
+        this(context, buttons, isEnabled, new PayloadInner());
+    }
+
+    public ButtonLinkTemplateAdapter(Context context, ArrayList<BotButtonModel> buttons, boolean isEnabled, PayloadInner templatePayload) {
         this.buttons = buttons;
         this.isEnabled = isEnabled;
+        this.templatePayload = templatePayload;
         SharedPreferences sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
 
         int defaultColor = ContextCompat.getColor(context, R.color.white);
@@ -68,8 +76,9 @@ public class ButtonLinkTemplateAdapter extends RecyclerView.Adapter<ButtonLinkTe
         // WCAG Compliance:
         // 1. Set content description on the clickable container
         holder.bot_options_more.setContentDescription(title);
-        holder.bot_options_more.setEnabled(isEnabled);
-        holder.bot_options_more.setAlpha(isEnabled ? 1.0f : 0.5f);
+        boolean enabled = areButtonsEnabled();
+        holder.bot_options_more.setEnabled(enabled);
+        holder.bot_options_more.setAlpha(enabled ? 1.0f : 0.5f);
 
         // 2. Use AccessibilityDelegate to announce the container as a Button role
         ViewCompat.setAccessibilityDelegate(holder.bot_options_more, new AccessibilityDelegateCompat() {
@@ -77,13 +86,13 @@ public class ButtonLinkTemplateAdapter extends RecyclerView.Adapter<ButtonLinkTe
             public void onInitializeAccessibilityNodeInfo(View host, AccessibilityNodeInfoCompat info) {
                 super.onInitializeAccessibilityNodeInfo(host, info);
                 info.setClassName(Button.class.getName());
-                info.setClickable(isEnabled);
+                info.setClickable(host.isEnabled());
             }
         });
 
         // 3. Singular click listener on the parent container (removes redundant focus points)
         holder.bot_options_more.setOnClickListener(v -> {
-            if (composeFooterInterface != null && invokeGenericWebViewInterface != null && isEnabled) {
+            if (composeFooterInterface != null && invokeGenericWebViewInterface != null && areButtonsEnabled()) {
                 if (BundleConstants.BUTTON_TYPE_WEB_URL.equalsIgnoreCase(buttonTemplate.getType())) {
                     if (!StringUtils.isNullOrEmpty(buttonTemplate.getUrl())) {
                         if (buttonTemplate.isSamePageNavigation())
@@ -96,11 +105,28 @@ public class ButtonLinkTemplateAdapter extends RecyclerView.Adapter<ButtonLinkTe
                 } else if (BundleConstants.BUTTON_TYPE_USER_INTENT.equalsIgnoreCase(buttonTemplate.getType())) {
                     invokeGenericWebViewInterface.handleUserActions(buttonTemplate.getAction(), buttonTemplate.getCustomData());
                 } else {
-                    String payload = buttonTemplate.getPayload();
-                    composeFooterInterface.onSendClick(title, payload, false);
+                    sendButtonPayload(buttonTemplate);
                 }
             }
         });
+    }
+
+    private boolean areButtonsEnabled() {
+        return (isEnabled || SDKConfiguration.OverrideKoreConfig.enableButtonClicksOnAnyPosition)
+                && !templatePayload.isButtonTemplateSubmitted();
+    }
+
+    private void sendButtonPayload(BotButtonModel button) {
+        // Claim before dispatch so rebinding and rapid clicks cannot submit another payload.
+        templatePayload.setButtonTemplateSubmitted(true);
+        boolean submitted = false;
+        try {
+            composeFooterInterface.onSendClick(button.getTitle(), button.getPayload(), false);
+            submitted = true;
+        } finally {
+            if (!submitted) templatePayload.setButtonTemplateSubmitted(false);
+            notifyDataSetChanged();
+        }
     }
 
     private BotButtonModel getItem(int position) {

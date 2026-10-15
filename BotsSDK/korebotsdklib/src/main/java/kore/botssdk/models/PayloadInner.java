@@ -57,6 +57,7 @@ public class PayloadInner {
     private List<List<String>> columns;
     private ArrayList<BotTableDataModel> tableDataModel = null;
     private ArrayList<BotButtonModel> buttons;
+    private transient boolean buttonTemplateSubmitted;
     private ArrayList<QuickReplyTemplate> quick_replies;
     private ArrayList<BotFormTemplateModel> formFields;
     private ArrayList<FeedbackSmileyModel> smileyArrays;
@@ -404,6 +405,14 @@ public class PayloadInner {
 
     public void setButtons(ArrayList<BotButtonModel> buttons) {
         this.buttons = buttons;
+    }
+
+    public boolean isButtonTemplateSubmitted() {
+        return buttonTemplateSubmitted;
+    }
+
+    public void setButtonTemplateSubmitted(boolean buttonTemplateSubmitted) {
+        this.buttonTemplateSubmitted = buttonTemplateSubmitted;
     }
 
     public ArrayList<QuickReplyTemplate> getQuick_replies() {
