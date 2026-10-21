@@ -30,5 +30,14 @@ public interface ComposeFooterInterface {
 
     void onDeleteClick(BaseBotMessage message);
 
+    /** Returns whether a human agent is currently connected to this chat. */
+    default boolean isHumanAgentConnected() {
+        return false;
+    }
+
+    /** Sends the agent-close event and leaves the chat window open. */
+    default void sendAgentCloseEvent() {
+    }
+
 
 }

@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:background="@color/bgBlueSignup"
     android:gravity="center_vertical"
-    android:layout_height="wrap_content">
+    android:orientation="horizontal">
 
     <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvBotName"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dimen_15dp"
-        android:gravity="center"
-        android:layout_weight="1"
-        android:maxLines="2"
         android:layout_marginTop="@dimen/dimen_15dp"
         android:layout_marginEnd="@dimen/dimen_15dp"
         android:layout_marginBottom="@dimen/dimen_15dp"
+        android:gravity="center"
+        android:maxLines="2"
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_header"
@@ -25,8 +26,22 @@
         android:id="@+id/ivHeaderMinimize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:layout_toStartOf="@+id/ivHeaderClose"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window"
+        android:src="@drawable/header_minimis"
+        app:tint="@color/white" />
+
+    <ImageView
+        android:id="@+id/ivHeaderClose"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/dimen_20dp"
         android:contentDescription="@string/button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window"
-        android:src="@drawable/header_minimis"/>
-</LinearLayout>
+        android:src="@drawable/close_filled"
+        app:tint="@color/white" />
+
+</RelativeLayout>

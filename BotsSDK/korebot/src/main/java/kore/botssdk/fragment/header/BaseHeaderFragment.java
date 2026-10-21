@@ -22,6 +22,16 @@ public abstract class BaseHeaderFragment extends Fragment {
         this.invokeGenericWebViewInterface = invokeGenericWebViewInterface;
     }
 
+    /** Returns whether the SDK currently has a human agent connected. */
+    public final boolean isHumanAgentConnected() {
+        return composeFooterInterface != null && composeFooterInterface.isHumanAgentConnected();
+    }
+
+    /** Sends the agent-close event through the SDK without closing the chat window. */
+    public final void sendAgentCloseEvent() {
+        if (composeFooterInterface != null) composeFooterInterface.sendAgentCloseEvent();
+    }
+
     public abstract void setBrandingDetails(BrandingModel brandingModel);
 
     public abstract ImageView getMinimize();
