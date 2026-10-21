@@ -65,8 +65,11 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
         if (brandingModel != null) {
             if (brandingModel.getWidgetHeaderColor() != null)
                 view.setBackgroundColor(Color.parseColor(brandingModel.getWidgetHeaderColor()));
-            if (brandingModel.getWidgetTextColor() != null)
+            if (brandingModel.getWidgetTextColor() != null) {
                 tvBotTitle.setTextColor(Color.parseColor(brandingModel.getWidgetTextColor()));
+                ivHeaderMinimize.setColorFilter(Color.parseColor(brandingModel.getWidgetTextColor()));
+                ivHeaderClose.setColorFilter(Color.parseColor(brandingModel.getWidgetTextColor()));
+            }
         }
     }
 }
