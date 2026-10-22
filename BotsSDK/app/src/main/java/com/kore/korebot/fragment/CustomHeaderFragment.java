@@ -21,6 +21,7 @@ import kore.botssdk.net.SDKConfig;
 public class CustomHeaderFragment extends BaseHeaderFragment {
     private View view;
     ImageView ivHeaderMinimize;
+    TextView tvBotTitle;
 
     @Override
     public void setBrandingDetails(BrandingModel brandingModel) {
@@ -33,6 +34,15 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
         return ivHeaderMinimize;
     }
 
+    @Override
+    public void onAgentConnected(boolean isConnected) {
+        if(isConnected)
+            tvBotTitle.setText("Banamex");
+        else
+            tvBotTitle.setText("Banamex Agente Virtual");
+    }
+
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.bot_header_layout, null);
         updateUI();
@@ -41,11 +51,11 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
 
     private void updateUI() {
         if (view == null) return;
-        TextView tvBotTitle = view.findViewById(R.id.tvBotName);
+        tvBotTitle = view.findViewById(R.id.tvBotName);
         ivHeaderMinimize = view.findViewById(kore.botssdk.R.id.ivHeaderMinimize);
         ImageView ivHeaderClose = view.findViewById(R.id.ivHeaderClose);
 
-        tvBotTitle.setText(ContextCompat.getString(requireContext(), R.string.custom_header));
+        tvBotTitle.setText("Banamex Agente Virtual");
         ivHeaderClose.setOnClickListener(v -> {
             if (SDKConfig.isAgentCloseConfirmationEnabled() && isHumanAgentConnected()) {
                 new AlertDialog.Builder(requireContext())

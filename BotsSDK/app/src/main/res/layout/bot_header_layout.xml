@@ -6,26 +6,43 @@
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="@dimen/dimen_40dp"
+        android:layout_height="@dimen/dimen_40dp"
+        android:src="@drawable/ic_launcher"
+        android:layout_margin="@dimen/dimen_10dp"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/app_name"/>
+
     <kore.botssdk.view.CustomTextViewBold
         android:id="@+id/tvBotName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/dimen_15dp"
-        android:layout_marginTop="@dimen/dimen_15dp"
+        android:layout_toEndOf="@+id/app_icon"
+        android:maxLines="2"
+        android:layout_centerVertical="true"
+        android:text="@string/app_name"
+        android:textSize="@dimen/text_size_header" />
+
+    <kore.botssdk.view.CustomTextView
+        android:id="@+id/tvBotSubTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/app_icon"
+        android:layout_below="@+id/tvBotName"
         android:layout_marginEnd="@dimen/dimen_15dp"
         android:layout_marginBottom="@dimen/dimen_15dp"
-        android:gravity="center"
         android:maxLines="2"
         android:text="@string/app_name"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_header"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_size_normal"
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/ivHeaderMinimize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
         android:layout_toStartOf="@+id/ivHeaderClose"
         android:layout_centerVertical="true"
         android:contentDescription="@string/button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window"
@@ -38,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="@dimen/dimen_20dp"
+        android:layout_marginEnd="@dimen/dimen_10dp"
         android:contentDescription="@string/button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window"
         android:src="@drawable/close_filled"
         app:tint="@color/white" />

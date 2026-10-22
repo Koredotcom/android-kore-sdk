@@ -41,4 +41,7 @@ public abstract class BaseHeaderFragment extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
+
+    public abstract void onAgentConnected(boolean isConnected);
+
 }

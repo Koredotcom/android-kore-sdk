@@ -342,6 +342,8 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         isAgentTransfer = isAgentConnected;
         if (baseFooterFragment != null && baseFooterFragment.isAdded())
             baseFooterFragment.setIsAgentConnected(isAgentConnected);
+        if (botHeaderFragment != null && botHeaderFragment.isAdded())
+            botHeaderFragment.onAgentConnected(isAgentConnected);
     }
 
     @Override
