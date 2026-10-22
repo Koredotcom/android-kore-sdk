@@ -37,9 +37,9 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
     @Override
     public void onAgentConnected(boolean isConnected) {
         if(isConnected)
-            tvBotTitle.setText("Banamex");
+            tvBotTitle.setText("Agent Connected");
         else
-            tvBotTitle.setText("Banamex Agente Virtual");
+            tvBotTitle.setText("Kore.ai Bot");
     }
 
 
@@ -55,7 +55,7 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
         ivHeaderMinimize = view.findViewById(kore.botssdk.R.id.ivHeaderMinimize);
         ImageView ivHeaderClose = view.findViewById(R.id.ivHeaderClose);
 
-        tvBotTitle.setText("Banamex Agente Virtual");
+        tvBotTitle.setText("Kore.ai Bot");
         ivHeaderClose.setOnClickListener(v -> {
             if (SDKConfig.isAgentCloseConfirmationEnabled() && isHumanAgentConnected()) {
                 new AlertDialog.Builder(requireContext())
