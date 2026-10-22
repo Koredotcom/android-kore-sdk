@@ -119,8 +119,10 @@ public class ChatHeaderOneFragment extends BaseHeaderFragment {
             }
         }
 
-        ivBotArrowBack.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
-        ivBotClose.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
+        bindAgentHeader(tvBotTitle, tvBotDesc, ivBotAvatar, llBotAvatar);
+
+        ivBotArrowBack.setOnClickListener(v -> handleHeaderClose());
+        ivBotClose.setOnClickListener(v -> handleHeaderClose());
 
         return view;
     }

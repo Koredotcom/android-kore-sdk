@@ -16,6 +16,8 @@
     <string name="repeat">Please repeat</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="agent_close_confirmation">You are connected to an agent. Do you want to close the agent conversation?</string>
+    <string name="live_chat">Live chat</string>
     <string name="speech_not_available">Speech recognition is not available on this device. Do you want to install Google app to have speech recognition?</string>
     <string name="permission_required">You need to grant the permission to use the microphone</string>
     <string name="enable_google_voice_typing">Please enable Google Voice Typing to use speech recognition!</string>

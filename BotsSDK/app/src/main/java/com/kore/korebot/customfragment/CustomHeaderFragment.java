@@ -26,21 +26,28 @@ import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingHeaderButtonsModel;
 import kore.botssdk.models.BrandingHeaderModel;
 import kore.botssdk.models.BrandingQuickStartButtonActionModel;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.utils.BundleConstants;
 import kore.botssdk.utils.BundleUtils;
 
 public class CustomHeaderFragment extends BaseHeaderFragment {
     private BrandingHeaderModel brandingModel;
+    private TextView tvBotTitle;
 
     @Override
     public void setBrandingDetails(BrandingHeaderModel brandingModel) {
         this.brandingModel = brandingModel;
     }
 
+    @Override
+    public void onAgentConnected(boolean isConnected) {
+        super.onAgentConnected(isConnected);
+    }
+
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(com.kore.korebot.R.layout.custom_header, null);
-        TextView tvBotTitle = view.findViewById(R.id.tvBotTitle);
+        tvBotTitle = view.findViewById(R.id.tvBotTitle);
         TextView tvBotDesc = view.findViewById(R.id.tvBotDesc);
         ImageView ivBotAvatar = view.findViewById(R.id.ivBotAvatar);
         LinearLayout llBotAvatar = view.findViewById(R.id.llBotAvatar);
@@ -90,7 +97,10 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
             }
         }
 
-        ivBotArrowBack.setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
+        ivBotArrowBack.setOnClickListener(v -> {
+            handleHeaderClose();
+        });
+        bindAgentHeader(tvBotTitle, tvBotDesc, ivBotAvatar, llBotAvatar);
 
         return view;
     }

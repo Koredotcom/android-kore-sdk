@@ -20,6 +20,7 @@ public class SDKConfig {
     private static BaseContentFragment customContentFragment = null;
     private static boolean isShowActionBar = true;
     private static boolean isUpdateStatusBarColor = false;
+    private static boolean agentCloseConfirmationEnabled = false;
     private static BotBrandingModel botBrandingModel;
 
     public static void setBotStatusUpdateListener(BotStatusListener botStatusListener) {
@@ -74,6 +75,15 @@ public class SDKConfig {
 
     public static boolean isMinimized() {
         return isMinimized;
+    }
+
+    /** Enables confirmation for custom header close buttons while a human agent is connected. */
+    public static void setAgentCloseConfirmationEnabled(boolean enabled) {
+        agentCloseConfirmationEnabled = enabled;
+    }
+
+    public static boolean isAgentCloseConfirmationEnabled() {
+        return agentCloseConfirmationEnabled;
     }
 
     public static BaseHeaderFragment getCustomHeaderFragment(String size) {

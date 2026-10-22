@@ -21,6 +21,8 @@ public interface BotChatViewListener extends BaseView {
 
     void setIsAgentConnected(boolean isAgentConnected);
 
+    default void setAgentDetails(String name, String profileImage) { }
+
     void enableSendButton();
 
     void processPayload(String payload, BotResponse botResponse);

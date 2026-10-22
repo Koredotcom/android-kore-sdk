@@ -37,4 +37,10 @@ public interface ComposeFooterInterface {
     void sendImage(String fP, String fN, String fPT);
 
     void onDeleteClick(BaseBotMessage message);
+
+    /** Returns whether a human agent is currently connected to this chat. */
+    default boolean isHumanAgentConnected() { return false; }
+
+    /** Sends the agent-close event while keeping the chat open. */
+    default void sendAgentCloseEvent() { }
 }

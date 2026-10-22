@@ -165,6 +165,10 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     private String fileUrl;
     private Dialog progressBar;
     private boolean isAgentTransfer = false;
+    private BaseHeaderFragment activeHeaderFragment;
+    private boolean agentCloseEventSent;
+    private String connectedAgentName;
+    private String connectedAgentProfileImage;
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -230,9 +234,12 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         FragmentTransaction tr = fm.beginTransaction();
 
         if (fragment instanceof BaseHeaderFragment) {
+            activeHeaderFragment = (BaseHeaderFragment) fragment;
             ((BaseHeaderFragment) fragment).setBrandingDetails(brandingHeaderModel);
             ((BaseHeaderFragment) fragment).setComposeFooterInterface(this);
             ((BaseHeaderFragment) fragment).setInvokeGenericWebViewInterface(this);
+            ((BaseHeaderFragment) fragment).setAgentDetails(connectedAgentName, connectedAgentProfileImage);
+            ((BaseHeaderFragment) fragment).onAgentConnected(isAgentTransfer);
         }
         tr.add(R.id.header_container, fragment);
         tr.commitAllowingStateLoss();
@@ -502,7 +509,35 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     @Override
     public void setIsAgentConnected(boolean isAgentConnected) {
         this.isAgentTransfer = isAgentConnected;
+        if (isAgentConnected) agentCloseEventSent = false;
+        else {
+            connectedAgentName = null;
+            connectedAgentProfileImage = null;
+            if (activeHeaderFragment != null) activeHeaderFragment.setAgentDetails(null, null);
+        }
+        if (activeHeaderFragment != null) activeHeaderFragment.onAgentConnected(isAgentConnected);
         composeFooterFragment.setIsAgentConnected(isAgentConnected);
+    }
+
+    @Override
+    public void setAgentDetails(String name, String profileImage) {
+        connectedAgentName = name;
+        connectedAgentProfileImage = profileImage;
+        if (activeHeaderFragment != null) activeHeaderFragment.setAgentDetails(name, profileImage);
+    }
+
+    @Override
+    public boolean isHumanAgentConnected() {
+        return isAgentTransfer;
+    }
+
+    @Override
+    public void sendAgentCloseEvent() {
+        if (botClient != null && isAgentTransfer && !agentCloseEventSent) {
+            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+            agentCloseEventSent = true;
+        }
+        setIsAgentConnected(false);
     }
 
     @Override

@@ -404,8 +404,17 @@ public class BotChatViewModel extends ViewModel {
 
                             if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
                                 setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
+                                AgentInfoModel.AgentInfo agentInfo = botResponse.getMessage().getAgentInfo();
+                                if (agentInfo != null) {
+                                    String name = !StringUtils.isNullOrEmpty(agentInfo.getName()) ? agentInfo.getName()
+                                            : (StringUtils.isNullOrEmpty(agentInfo.getFirstName()) ? "" : agentInfo.getFirstName())
+                                            + (StringUtils.isNullOrEmpty(agentInfo.getLastName()) ? "" : " " + agentInfo.getLastName());
+                                    chatView.setAgentDetails(name, agentInfo.getProfImage());
+                                }
+                                chatView.setIsAgentConnected(true);
                             } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
                                 setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
+                                chatView.setIsAgentConnected(false);
                             }
 
                             if (botResponse.getCustomEvent().equalsIgnoreCase(BotResponse.EVENT)) {
