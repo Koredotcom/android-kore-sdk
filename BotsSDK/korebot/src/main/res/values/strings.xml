@@ -178,6 +178,7 @@
     <string name="to_reorder_the_widgets" translatable="false">to reorder the widgets</string>
     <string name="minimize">Minimize</string>
     <string name="close">Close</string>
+    <string name="agent_close_confirmation">You are connected to an agent. Do you want to close the agent conversation?</string>
     <string name="close_or_minimize">Would you like to close the conversation or minimize.</string>
     <string name="bot_not_connected">Connection to the bot failed after several retries. Please verify your internet connection and try again later.</string>
     <string name="colon" translatable="false">:</string>

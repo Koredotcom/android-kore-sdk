@@ -22,6 +22,7 @@ public class SDKConfig {
     private static BaseFooterFragment customFooterFragment = null;
     private static BaseHeaderFragment customHeaderFragment = null;
     private static boolean isShowActionBar = true;
+    private static boolean agentCloseConfirmationEnabled = false;
 
     public static void setFontFamily(Typeface regularTf,
                                      Typeface semiBoldTf,
@@ -51,6 +52,15 @@ public class SDKConfig {
 
     public static void isWebHook(boolean isWebHook) {
         SDKConfiguration.Client.isWebHook = isWebHook;
+    }
+
+    /** Enables the agent-close confirmation for custom chat-header close buttons. */
+    public static void setAgentCloseConfirmationEnabled(boolean enabled) {
+        agentCloseConfirmationEnabled = enabled;
+    }
+
+    public static boolean isAgentCloseConfirmationEnabled() {
+        return agentCloseConfirmationEnabled;
     }
 
     public static void setDeviceId(String deviceId) {

@@ -51,4 +51,9 @@ public class BotHeaderFragment extends BaseHeaderFragment {
     public ImageView getMinimize() {
         return ivHeaderMinimize;
     }
+
+    @Override
+    public void onAgentConnected(boolean isConnected) {
+
+    }
 }

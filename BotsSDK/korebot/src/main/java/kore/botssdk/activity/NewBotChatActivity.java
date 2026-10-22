@@ -85,6 +85,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     SharedPreferences sharedPreferences;
     private BotChatViewModel mViewModel;
     boolean isAgentTransfer;
+    private boolean agentCloseEventSent;
     private String botName = SDKConfiguration.Client.bot_name;
     private final BroadcastReceiver minimizeBotChatReceiver = new BroadcastReceiver() {
         @Override
@@ -137,8 +138,9 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     private final BroadcastReceiver onDestroyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (isAgentTransfer && botClient != null) {
+            if (isAgentTransfer && botClient != null && !agentCloseEventSent) {
                 botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+                agentCloseEventSent = true;
             }
 
             LogUtils.e("onDestroyReceiver", "onDestroyReceiver called");
@@ -235,6 +237,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.header_container, botHeaderFragment);
             transaction.commitNow();
+            if (botHeaderFragment.getMinimize() != null) {
+                botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
+                botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
+            }
         }
 
         setupTextToSpeech();
@@ -286,6 +292,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                     botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
                     botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
                 }
+
             }
 
             sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, brandingModel.getWidgetHeaderColor()).apply();
@@ -331,9 +338,12 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     public void setIsAgentConnected(boolean isAgentConnected) {
+        if (isAgentConnected) agentCloseEventSent = false;
         isAgentTransfer = isAgentConnected;
         if (baseFooterFragment != null && baseFooterFragment.isAdded())
             baseFooterFragment.setIsAgentConnected(isAgentConnected);
+        if (botHeaderFragment != null && botHeaderFragment.isAdded())
+            botHeaderFragment.onAgentConnected(isAgentConnected);
     }
 
     @Override
@@ -570,8 +580,10 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
     @Override
     protected void onDestroy() {
         unregisterReceiver(closeBotChatReceiver);
-        if (isAgentTransfer && botClient != null)
+        if (isAgentTransfer && botClient != null && !agentCloseEventSent) {
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+            agentCloseEventSent = true;
+        }
 
         NotificationModel notificationModel = SDKConfiguration.Server.getNotificationModel();
         if (SDKConfiguration.OverrideKoreConfig.default_notifications && notificationModel != null && StringUtils.isNotEmpty(notificationModel.getDeviceId()) &&
@@ -603,6 +615,52 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
         super.onPause();
     }
 
+    @Override
+    public boolean isHumanAgentConnected() {
+        return isAgentTransfer;
+    }
+
+    @Override
+    public void sendAgentCloseEvent() {
+        closeAgentConversation();
+    }
+
+    private void closeAgentConversation() {
+        if (botClient != null && isAgentTransfer && !agentCloseEventSent) {
+            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+            agentCloseEventSent = true;
+        }
+        if (mViewModel != null) mViewModel.updateAgentConnectionState(false);
+        else setIsAgentConnected(false);
+    }
+
+    private void closeChat() {
+        if (sharedPreferences == null) return;
+
+        if (botClient != null && isAgentTransfer && !agentCloseEventSent) {
+            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
+            agentCloseEventSent = true;
+        }
+
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(BundleConstants.IS_RECONNECT, false);
+        editor.putInt(BotResponse.HISTORY_COUNT, 0);
+        editor.apply();
+        BotSocketConnectionManager.killInstance();
+
+        if (SDKConfiguration.Server.getBotStatusListener() != null) {
+            SDKConfiguration.Server.getBotStatusListener().onBotDisconnected(
+                    "BotClosed",
+                    "Bot Closed by the user"
+            );
+        }
+
+        Intent intent = new Intent();
+        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
     void showCloseAlert() {
         if (isFinishing() || isDestroyed()) return;
 
@@ -632,28 +690,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
                 }
                 break;
                 case DialogInterface.BUTTON_NEGATIVE: {
-                    if (sharedPreferences != null) {
-                        if (botClient != null && isAgentTransfer)
-                            botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
-
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putBoolean(BundleConstants.IS_RECONNECT, false);
-                        editor.putInt(BotResponse.HISTORY_COUNT, 0);
-                        editor.apply();
-                        BotSocketConnectionManager.killInstance();
-
-                        if (SDKConfiguration.Server.getBotStatusListener() != null) {
-                            SDKConfiguration.Server.getBotStatusListener().onBotDisconnected(
-                                    "BotClosed",
-                                    "Bot Closed by the user"
-                            );
-                        }
-
-                        Intent intent = new Intent();
-                        intent.putExtra(BundleUtils.CHAT_BOT_CLOSE_OR_MINIMIZED, BundleUtils.CHAT_BOT_CLOSE);
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
+                    closeChat();
                 }
                 break;
                 case DialogInterface.BUTTON_NEUTRAL:

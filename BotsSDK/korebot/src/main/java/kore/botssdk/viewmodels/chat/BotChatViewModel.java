@@ -59,6 +59,7 @@ import kore.botssdk.models.ComponentModelPayloadText;
 import kore.botssdk.models.PayloadInner;
 import kore.botssdk.models.PayloadOuter;
 import kore.botssdk.net.RestResponse;
+import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.pushnotification.PushNotificationRegister;
 import kore.botssdk.repository.branding.BrandingRepository;
@@ -114,6 +115,41 @@ public class BotChatViewModel extends ViewModel {
 
     public void setIsActivityResumed(boolean isResumed) {
         isActivityResumed = isResumed;
+    }
+
+    public void updateAgentConnectionState(boolean isConnected) {
+        isAgentTransfer = isConnected;
+        if (!isConnected) setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
+        chatView.setIsAgentConnected(isConnected);
+    }
+
+    private boolean handleAgentConnectionEvent(String payload) {
+        if (!SDKConfig.isAgentCloseConfirmationEnabled() || StringUtils.isNullOrEmpty(payload)) {
+            return false;
+        }
+
+        try {
+            AgentInfoModel agentEvent = gson.fromJson(payload, AgentInfoModel.class);
+            if (agentEvent == null || agentEvent.getMessage() == null ||
+                    StringUtils.isNullOrEmpty(agentEvent.getMessage().getType())) {
+                return false;
+            }
+
+            String eventType = agentEvent.getMessage().getType();
+            if (eventType.equalsIgnoreCase(AGENT_EVENT_CONNECTED)) {
+                setPreferenceObject(agentEvent.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
+                updateAgentConnectionState(true);
+                return true;
+            }
+            if (eventType.equalsIgnoreCase(AGENT_EVENT_DISCONNECTED)) {
+                updateAgentConnectionState(false);
+                return true;
+            }
+        } catch (Exception ignored) {
+            // Non-agent payloads are handled by the normal message parser below.
+        }
+
+        return false;
     }
 
     public BotOptionsModel getDataFromTxt() {
@@ -279,6 +315,8 @@ public class BotChatViewModel extends ViewModel {
      * payload processing
      */
     public void processPayload(String payload, BotResponse botLocalResponse) {
+        if (botLocalResponse == null && handleAgentConnectionEvent(payload)) return;
+
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
         try {
             final BotResponse botResponse = botLocalResponse != null ? botLocalResponse : gson.fromJson(payload, BotResponse.class);
@@ -318,13 +356,15 @@ public class BotChatViewModel extends ViewModel {
 
             botResponse.setBotLanguage(botResponse.getBotLanguage());
             LogUtils.d(LOG_TAG, payload);
-            isAgentTransfer = botResponse.isFromAgent();
+            boolean isAgentMessage = botResponse.isFromAgent();
+            if (!SDKConfig.isAgentCloseConfirmationEnabled()) {
+                isAgentTransfer = isAgentMessage;
+                chatView.setIsAgentConnected(isAgentTransfer);
+            }
 
             if (!StringUtils.isNullOrEmpty(botResponse.getIcon())) SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
 
-            chatView.setIsAgentConnected(isAgentTransfer);
-
-            if (botClient != null && isAgentTransfer) {
+            if (botClient != null && isAgentMessage) {
                 botClient.sendReceipts(BundleConstants.MESSAGE_DELIVERED, botResponse.getMessageId());
                 if (isActivityResumed) {
                     botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.getMessageId());
@@ -390,8 +430,10 @@ public class BotChatViewModel extends ViewModel {
 
                         if (botResponse.getMessage().getType().equalsIgnoreCase(AGENT_EVENT_CONNECTED)) {
                             setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
+                            if (SDKConfig.isAgentCloseConfirmationEnabled()) updateAgentConnectionState(true);
                         } else if (botResponse.getMessage().getType().equalsIgnoreCase(AGENT_EVENT_DISCONNECTED)) {
                             setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
+                            if (SDKConfig.isAgentCloseConfirmationEnabled()) updateAgentConnectionState(false);
                         }
 
                         if (botResponse.getCustomEvent().equalsIgnoreCase(BotResponse.EVENT)) {
