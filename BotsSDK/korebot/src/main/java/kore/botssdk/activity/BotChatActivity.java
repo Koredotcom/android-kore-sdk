@@ -1,6 +1,5 @@
 package kore.botssdk.activity;
 
-import static android.app.Activity.RESULT_OK;
 import static android.view.View.VISIBLE;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_HEADER;
 import static kore.botssdk.activity.GenericWebViewActivity.EXTRA_URL;
@@ -36,7 +35,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -51,17 +49,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
-import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
 import kore.botssdk.R;
-import kore.botssdk.korevg.webrtcclient.General.ACManager;
-import kore.botssdk.korevg.webrtcclient.General.AppUtils;
-import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
@@ -77,6 +70,9 @@ import kore.botssdk.fragment.header.ChatHeaderOneFragment;
 import kore.botssdk.fragment.header.ChatHeaderThreeFragment;
 import kore.botssdk.fragment.header.ChatHeaderTwoFragment;
 import kore.botssdk.fragment.welcome.WelcomeScreenFragment;
+import kore.botssdk.korevg.webrtcclient.General.ACManager;
+import kore.botssdk.korevg.webrtcclient.General.AppUtils;
+import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -109,7 +105,7 @@ import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
-public class BotChatActivity extends BotAppCompactActivity implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
+public class BotChatActivity extends BotAppCompactActivity implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface/*, WidgetComposeFooterInterface*/ {
     private final Gson gson = new Gson();
     private final Handler messageHandler = new Handler();
     boolean isAgentTransfer = false;
@@ -331,7 +327,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         ttsSynthesizer = new TTSSynthesizer(this);
         setupTextToSpeech();
         KoreEventCenter.register(this);
-        attachFragments();
+//        attachFragments();
     }
 
     @Override
@@ -817,35 +813,35 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
         return actNw != null && (actNw.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) || actNw.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH));
     }
 
-    private void attachFragments() {
-        if (SDKConfiguration.Client.enablePanel) {
-            //Fragment Approach
-            FrameLayout composerView = findViewById(R.id.chatLayoutPanelContainer);
-            composerView.setVisibility(VISIBLE);
-            BottomPanelFragment composerFragment = new BottomPanelFragment();
-            Bundle bundle = getIntent().getExtras();
-            if (bundle != null)
-                bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
-
-            composerFragment.setArguments(bundle);
-            getSupportFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
-            composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
-        }
-    }
-
-    @Override
-    public void onPanelSendClick(String message, boolean isFromUtterance) {
-        BotSocketConnectionManager.getInstance().sendMessage(message);
-    }
-
-    @Override
-    public void onPanelSendClick(String message, String payload, boolean isFromUtterance) {
-        if (payload != null) {
-            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
-        } else {
-            BotSocketConnectionManager.getInstance().sendMessage(message);
-        }
-    }
+//    private void attachFragments() {
+//        if (SDKConfiguration.Client.enablePanel) {
+//            //Fragment Approach
+//            FrameLayout composerView = findViewById(R.id.chatLayoutPanelContainer);
+//            composerView.setVisibility(VISIBLE);
+//            BottomPanelFragment composerFragment = new BottomPanelFragment();
+//            Bundle bundle = getIntent().getExtras();
+//            if (bundle != null)
+//                bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
+//
+//            composerFragment.setArguments(bundle);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
+//            composerFragment.setPanelComposeFooterInterface(BotChatActivity.this, SDKConfiguration.Client.identity);
+//        }
+//    }
+//
+//    @Override
+//    public void onPanelSendClick(String message, boolean isFromUtterance) {
+//        BotSocketConnectionManager.getInstance().sendMessage(message);
+//    }
+//
+//    @Override
+//    public void onPanelSendClick(String message, String payload, boolean isFromUtterance) {
+//        if (payload != null) {
+//            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+//        } else {
+//            BotSocketConnectionManager.getInstance().sendMessage(message);
+//        }
+//    }
 
     public void sendImage(String fP, String fN, String fPT) {
         viewModel.sendImage(fP, fN, fPT);
@@ -923,18 +919,15 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     void openNextScreen(String sipUser, boolean isVideoCall) {
         Prefs.setFirstLogin(this, false);
         //start login and open app main screen
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                if (!ACManager.getInstance().isRegisterState()) {
-                    ACManager.getInstance().startLogin(BotChatActivity.this, false, true);
-                }
+        new Thread(() -> {
+            if (!ACManager.getInstance().isRegisterState()) {
+                ACManager.getInstance().startLogin(BotChatActivity.this, false, true);
+            }
 
-                if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(BotChatActivity.this)) {
-                    BotChatActivity.this.runOnUiThread(() -> Toast.makeText(BotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show());
-                } else {
-                    ACManager.getInstance().callNumber(sipUser, isVideoCall);
-                }
+            if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(BotChatActivity.this)) {
+                BotChatActivity.this.runOnUiThread(() -> Toast.makeText(BotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show());
+            } else {
+                ACManager.getInstance().callNumber(sipUser, isVideoCall);
             }
         }).start();
     }

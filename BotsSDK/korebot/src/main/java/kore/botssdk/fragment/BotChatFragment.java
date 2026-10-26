@@ -45,8 +45,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
-import com.kore.ai.widgetsdk.fragments.BottomPanelFragment;
-import com.kore.ai.widgetsdk.listeners.WidgetComposeFooterInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,9 +52,6 @@ import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
-import kore.botssdk.korevg.webrtcclient.General.ACManager;
-import kore.botssdk.korevg.webrtcclient.General.AppUtils;
-import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;
@@ -72,6 +67,9 @@ import kore.botssdk.fragment.header.ChatHeaderOneFragment;
 import kore.botssdk.fragment.header.ChatHeaderThreeFragment;
 import kore.botssdk.fragment.header.ChatHeaderTwoFragment;
 import kore.botssdk.fragment.welcome.WelcomeScreenFragment;
+import kore.botssdk.korevg.webrtcclient.General.ACManager;
+import kore.botssdk.korevg.webrtcclient.General.AppUtils;
+import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -103,7 +101,7 @@ import kore.botssdk.viewmodels.chat.BotChatViewModelFactory;
 import kore.botssdk.websocket.SocketWrapper;
 
 @SuppressWarnings("UnKnownNullness")
-public class BotChatFragment extends Fragment implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface, WidgetComposeFooterInterface {
+public class BotChatFragment extends Fragment implements BotChatViewListener, ComposeFooterInterface, TTSUpdate, InvokeGenericWebViewInterface/*, WidgetComposeFooterInterface */{
     private final Gson gson = new Gson();
     private final Handler messageHandler = new Handler();
     private ProgressBar taskProgressBar;
@@ -275,7 +273,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         ttsSynthesizer = new TTSSynthesizer(requireContext());
         setupTextToSpeech();
         KoreEventCenter.register(this);
-        attachFragments();
+//        attachFragments();
     }
 
     @Override
@@ -642,34 +640,34 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
         }
     }
 
-    private void attachFragments() {
-        if (SDKConfiguration.Client.enablePanel) {
-            //Fragment Approach
-            composerView.setVisibility(VISIBLE);
-            BottomPanelFragment composerFragment = new BottomPanelFragment();
-            Bundle bundle = getArguments();
-            if (bundle != null)
-                bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
-
-            composerFragment.setArguments(bundle);
-            getChildFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
-            composerFragment.setPanelComposeFooterInterface(BotChatFragment.this, SDKConfiguration.Client.identity);
-        }
-    }
-
-    @Override
-    public void onPanelSendClick(String message, boolean isFromUtterance) {
-        BotSocketConnectionManager.getInstance().sendMessage(message);
-    }
-
-    @Override
-    public void onPanelSendClick(String message, String payload, boolean isFromUtterance) {
-        if (payload != null) {
-            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
-        } else {
-            BotSocketConnectionManager.getInstance().sendMessage(message);
-        }
-    }
+//    private void attachFragments() {
+//        if (SDKConfiguration.Client.enablePanel) {
+//            //Fragment Approach
+//            composerView.setVisibility(VISIBLE);
+//            BottomPanelFragment composerFragment = new BottomPanelFragment();
+//            Bundle bundle = getArguments();
+//            if (bundle != null)
+//                bundle.putString("bgColor", sharedPreferences.getString(BotResponse.BUTTON_INACTIVE_BG_COLOR, "#ffffff"));
+//
+//            composerFragment.setArguments(bundle);
+//            getChildFragmentManager().beginTransaction().replace(R.id.chatLayoutPanelContainer, composerFragment).commit();
+//            composerFragment.setPanelComposeFooterInterface(BotChatFragment.this, SDKConfiguration.Client.identity);
+//        }
+//    }
+//
+//    @Override
+//    public void onPanelSendClick(String message, boolean isFromUtterance) {
+//        BotSocketConnectionManager.getInstance().sendMessage(message);
+//    }
+//
+//    @Override
+//    public void onPanelSendClick(String message, String payload, boolean isFromUtterance) {
+//        if (payload != null) {
+//            BotSocketConnectionManager.getInstance().sendPayload(message, payload);
+//        } else {
+//            BotSocketConnectionManager.getInstance().sendMessage(message);
+//        }
+//    }
 
     public void sendImage(String fP, String fN, String fPT) {
         viewModel.sendImage(fP, fN, fPT);

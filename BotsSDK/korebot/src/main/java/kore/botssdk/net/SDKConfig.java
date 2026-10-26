@@ -51,15 +51,15 @@ public class SDKConfig {
         SDKConfiguration.JWTServer.setJwtServerUrl(jwtServerUrl);
     }
 
-    public static void setWidgetBotConfig(String botId, String botName, String clientId, String clientName, String identity, String serverUrl, String jwtTokenUrl) {
-        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setBot_id(botId);
-        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setBot_name(botName);
-        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setClient_id(clientId);
-        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setClient_secret(clientName);
-        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setIdentity(identity);
-        com.kore.ai.widgetsdk.net.SDKConfiguration.Server.setServerUrl(serverUrl);
-        com.kore.ai.widgetsdk.net.SDKConfiguration.JWTServer.setJwtServerUrl(jwtTokenUrl);
-    }
+//    public static void setWidgetBotConfig(String botId, String botName, String clientId, String clientName, String identity, String serverUrl, String jwtTokenUrl) {
+//        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setBot_id(botId);
+//        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setBot_name(botName);
+//        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setClient_id(clientId);
+//        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setClient_secret(clientName);
+//        com.kore.ai.widgetsdk.net.SDKConfiguration.Client.setIdentity(identity);
+//        com.kore.ai.widgetsdk.net.SDKConfiguration.Server.setServerUrl(serverUrl);
+//        com.kore.ai.widgetsdk.net.SDKConfiguration.JWTServer.setJwtServerUrl(jwtTokenUrl);
+//    }
 
     public static void isWebHook(boolean isWebHook) {
         SDKConfiguration.Client.isWebHook = isWebHook;

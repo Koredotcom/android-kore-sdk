@@ -69,5 +69,6 @@
     <dimen name="dimen_1dp">1dp</dimen>
     <dimen name="dimen_50dp">50dp</dimen>
     <dimen name="dimen_4dp">4dp</dimen>
+    <dimen name="dimen_68dp">68dp</dimen>
 
 </resources>

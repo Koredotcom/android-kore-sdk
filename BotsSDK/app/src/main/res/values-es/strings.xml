@@ -46,7 +46,6 @@
     <string name="atatchment_format">%d adjuntos</string>
     <plurals name="attachment_count">
         <item quantity="one">1 adjunto</item>
-        <item quantity="many">%d adjuntos</item>
         <item quantity="other">%d adjuntos</item>
     </plurals>
 
@@ -60,7 +59,6 @@
     <string name="conversation_end">Conversación terminada a las</string>
     <plurals name="confirm_slots">
         <item quantity="one">Confirmar disponibilidad para 1 horario</item>
-        <item quantity="many">Confirmar disponibilidad para %d horarios</item>
         <item quantity="other">Confirmar disponibilidad para %d horarios</item>
     </plurals>
 
@@ -182,4 +180,82 @@
         <item>@string/attachment_upload_video</item>
         <item>@string/attachment_upload_document</item>
     </string-array>
+
+    <!-- Spanish translations and locale copies for the remaining app strings -->
+    <string name="_00_00_00_00" translatable="false">00:00/00:00</string>
+    <string name="_100_match" translatable="false">100% Match</string>
+    <string name="_1_attachment" translatable="false">1 Attachment</string>
+    <string name="_40_99" translatable="false">$40.99</string>
+    <string name="_9_00_am_to_10_15_am" translatable="false">9:00 AM to 10:15 AM</string>
+    <string name="border0" translatable="false">
+        <![CDATA[
+        <style>
+        p.dashed {border-style: dashed;}
+        </style>
+        <body>
+        <p class=“+”dashed“+”>A dashed border.</p>
+        </body>
+        ]]>
+    </string>
+    <string name="border1" translatable="false">
+    <![CDATA[
+        <div style=“display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;”>Sushanth</div>
+     ]]>
+    </string>
+    <string name="bot_chat_bubble_background_color" translatable="false">Bot Chat bubble background color</string>
+    <string name="button_to_close_the_full_table_view">Botón para cerrar la vista completa de la tabla</string>
+    <string name="button_to_display_minimize_close_and_cancel_options_before_exiting_from_chat_window">Botón para mostrar las opciones de minimizar, cerrar y cancelar antes de salir de la ventana de chat</string>
+    <string name="button_to_download_the_pdf">Botón para descargar el PDF</string>
+    <string name="button_to_send_the_message_entered_in_the_text_field">Botón para enviar el mensaje introducido en el campo de texto</string>
+    <string name="button_to_show_all_the_table_content_at_full_view">Botón para mostrar todo el contenido de la tabla en vista completa</string>
+    <string name="button_to_show_the_short_cut_menu_items_of_the_bot">Botón para mostrar los elementos del menú de acceso rápido del bot</string>
+    <string name="colon" translatable="false">:</string>
+    <string name="default_click_time" translatable="false">12:00:AM</string>
+    <string name="downloading_file_name" translatable="false">Downloading to: \"/Downloads/KoreMedia/%s\". Please check in status bar!</string>
+    <string name="drawable_to_display_whether_the_option_is_selected_or_not">Elemento visual para mostrar si la opción está seleccionada o no</string>
+    <string name="icon_28" translatable="false">&#x28;</string>
+    <string name="icon_2d" translatable="false">&#x2d;</string>
+    <string name="icon_33" translatable="false">&#x33;</string>
+    <string name="icon_62" translatable="false">&#x62;</string>
+    <string name="icon_64" translatable="false">&#xe64;</string>
+    <string name="icon_d" translatable="false">&#xd;</string>
+    <string name="icon_e903" translatable="false">&#xe903;</string>
+    <string name="icon_e913" translatable="false">&#xe913;</string>
+    <string name="icon_e914" translatable="false">&#xe914;</string>
+    <string name="icon_e91a" translatable="false">&#xe91a;</string>
+    <string name="icon_e922" translatable="false">&#xe922;</string>
+    <string name="icon_e926" translatable="false">&#xe926;</string>
+    <string name="icon_e927" translatable="false">&#xe927;</string>
+    <string name="icon_e92a" translatable="false">&#xe92a;</string>
+    <string name="icon_e92c" translatable="false">&#xe92c;</string>
+    <string name="icon_e935" translatable="false">&#xe98a;</string>
+    <string name="icon_e93c" translatable="false">&#xe93c;</string>
+    <string name="icon_e943" translatable="false">&#xe943;</string>
+    <string name="icon_e94e" translatable="false">&#xe94e;</string>
+    <string name="icon_e94f" translatable="false">&#xe94f;</string>
+    <string name="icon_e954" translatable="false">&#xe954;</string>
+    <string name="icon_e958" translatable="false">&#xe958;</string>
+    <string name="icon_e959" translatable="false">&#xe959;</string>
+    <string name="icon_e961" translatable="false">&#xe961;</string>
+    <string name="icon_e96c" translatable="false">&#xe96c;</string>
+    <string name="icon_e979" translatable="false">&#xe979;</string>
+    <string name="icon_e995" translatable="false">&#xe995;</string>
+    <string name="icon_e996" translatable="false">&#xe996;</string>
+    <string name="icon_to_open_the_attachment_options">Botón para abrir las opciones de adjuntos</string>
+    <string name="image_icon_of_the_table_content">Icono de imagen del contenido de la tabla</string>
+    <string name="image_name" translatable="false">Image Name</string>
+    <string name="image_to_change_the_input_mode_to_voice">Botón para cambiar el modo de entrada a voz</string>
+    <string name="kevin_peterson" translatable="false">Kevin Peterson</string>
+    <string name="kore_login_icon" translatable="false">kore_login_icon</string>
+    <string name="my_video" translatable="false">My Video</string>
+    <string name="speak_out_the_bot_response_text" translatable="false">Speak out the bot response text</string>
+    <string name="stripped_shirt" translatable="false">Stripped Shirt</string>
+    <string name="sub_title_or_description_of_the_table_content">Subtítulo o descripción del contenido de la tabla</string>
+    <string name="tab1" translatable="false">Tab1</string>
+    <string name="tab2" translatable="false">Tab2</string>
+    <string name="testing" translatable="false">Testing</string>
+    <string name="title_of_the_table_content">Título del contenido de la tabla</string>
+    <string name="to_reorder_the_widgets" translatable="false">to reorder the widgets</string>
+    <string name="what_can_be_improved" translatable="false">What can be Improved ?</string>
+    <string name="y" translatable="false">y</string>
 </resources>

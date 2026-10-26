@@ -7,6 +7,7 @@
     <string name="send">"Send"</string>
     <string name="please_wait">"Please wait…"</string>
     <string name="speak_now">"Speak now"</string>
+    <string name="available_slots">Available Slots</string>
     <string name="no_network">"No network!"</string>
     <string name="click_hear_to_enter_text">click hear to enter text</string>
     <string name="click_hear_to_speak_something">click hear to speak something</string>
@@ -340,4 +341,37 @@
     <string name="sub_title_or_description_of_the_table_content">Sub title or description of the table content</string>
     <string name="image_icon_of_the_table_content">Image icon of the table content</string>
 
+
+    <!-- English defaults for strings translated in other locales -->
+    <string name="bot_sdk_demo">Bot SDK Demo</string>
+    <string name="button">Button</string>
+    <string name="buy">Buy</string>
+    <string name="choose">Choose</string>
+    <string name="dial_in">Dial in</string>
+    <string name="email">Email</string>
+    <string name="hold_and_drag">Hold and drag</string>
+    <string name="join">Join</string>
+    <string name="knowledge_description">Knowledge description</string>
+    <string name="knowledge_title">Knowledge title</string>
+    <string name="loading">Loading…</string>
+    <string name="meeting_notes">Meeting Notes</string>
+    <string name="most_popular_slot">Most popular slot</string>
+    <string name="no_hashtags">No hashtags</string>
+    <string name="no_options">No options</string>
+    <string name="notes">NOTES</string>
+    <string name="please_enter_email">Please enter an email address</string>
+    <string name="schedule_meeting">Schedule Meeting</string>
+    <string name="selected_slots">Selected Slots</string>
+    <string name="send_slots">Send Slots</string>
+    <string name="start_using_the_bots">Start using the bots</string>
+    <string name="suggested">SUGGESTED</string>
+    <string name="tags">Tags</string>
+    <string name="text">Text</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="upi_id">UPI ID</string>
+    <string name="web_pages">Web Pages</string>
+    <string name="what_would_you_like_to_do">What would you like to do?</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="your_articles">Your articles</string>
 </resources>

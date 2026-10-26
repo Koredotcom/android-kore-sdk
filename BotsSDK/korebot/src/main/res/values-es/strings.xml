@@ -44,7 +44,7 @@
     <string name="atatchment_format">%d adjuntos</string>
     <plurals name="attachment_count">
         <item quantity="one">1 adjunto</item>
-        <item quantity="many">%d adjuntos</item>
+        <item quantity="other">%d adjuntos</item>
     </plurals>
 
     <string name="sortable_indicator_content_description">Indicador de orden</string>
@@ -57,7 +57,7 @@
     <string name="conversation_end">Conversación terminada a las</string>
     <plurals name="confirm_slots">
         <item quantity="one">Confirmar disponibilidad para 1 horario</item>
-        <item quantity="many">Confirmar disponibilidad para %d horarios</item>
+        <item quantity="other">Confirmar disponibilidad para %d horarios</item>
     </plurals>
 
     <string name="selected_task_completion">%1$d de %2$d tareas seleccionadas para completar</string>
@@ -188,4 +188,178 @@
         <item>@string/attachment_upload_video</item>
         <item>@string/attachment_upload_document</item>
     </string-array>
+
+    <!-- Spanish translations for the remaining SDK strings -->
+    <string name="_00_00_00_00">00:00/00:00</string>
+    <string name="_1">1</string>
+    <string name="accept">Aceptar</string>
+    <string name="account_textview_status_connected">CONECTADO</string>
+    <string name="account_textview_status_disconnected">DESCONECTADO</string>
+    <string name="account_textview_status_prefix">Estado:</string>
+    <string name="agent_close_confirmation">Estás conectado con un agente. ¿Quieres cerrar la conversación con el agente?</string>
+    <string name="agent_name">Nombre del agente</string>
+    <string name="answered_by_ai">Respondido por IA</string>
+    <string name="arrow_to_expand">Flecha para expandir</string>
+    <string name="ask_for_help">Pedir ayuda</string>
+    <string name="audio_more_options">Más opciones de audio</string>
+    <string name="audio_play_pause_icon">Icono para reproducir o pausar el audio</string>
+    <string name="border0">
+        <![CDATA[
+        <style>
+        p.dashed {border-style: dashed;}
+        </style>
+        <body>
+        <p class=“+”dashed“+”>Un borde discontinuo.</p>
+        </body>
+        ]]>
+    </string>
+    <string name="border1">
+    <![CDATA[
+        <div style=“display: inline-block;margin-bottom: 4px;border: 1px solid;padding-left: 4px;border-radius: 6px;border-style: dashed;”>Sushanth</div>
+     ]]>
+    </string>
+    <string name="call_button_add_call">Añadir llamada</string>
+    <string name="call_button_audio_route">Cambiar ruta de audio</string>
+    <string name="call_button_dtmf">DTMF</string>
+    <string name="call_button_end_call">Finalizar</string>
+    <string name="call_button_hold">Poner en espera</string>
+    <string name="call_button_mute">Silenciar</string>
+    <string name="call_button_switch_call">Cambiar llamada</string>
+    <string name="call_button_switch_camera">Cámara</string>
+    <string name="call_stats_textview_bytes_received_header">Bytes recibidos:</string>
+    <string name="call_stats_textview_bytes_sent_header">Bytes enviados:</string>
+    <string name="call_stats_textview_fraction_lost_header">Fracción perdida:</string>
+    <string name="call_stats_textview_jitter_header">Jitter:</string>
+    <string name="call_stats_textview_packets_lost_header">Paquetes perdidos:</string>
+    <string name="call_stats_textview_packets_received_header">Paquetes recibidos:</string>
+    <string name="call_stats_textview_packets_sent_header">Paquetes enviados:</string>
+    <string name="call_stats_textview_stats_title">Estadísticas de llamadas</string>
+    <string name="call_textview_call_state">Llamada</string>
+    <string name="chat_contact">Contacto:</string>
+    <string name="chat_last_message_contact">de:</string>
+    <string name="chat_last_message_text">Mensaje:</string>
+    <string name="chat_message">Mensaje:</string>
+    <string name="chat_message_sent">Mensaje enviado</string>
+    <string name="chat_send">Enviar</string>
+    <string name="colon">:</string>
+    <string name="default_click_time">12:00 a. m.</string>
+    <string name="dialer_button_call_text">Llamar</string>
+    <string name="dialer_button_video_call_text">Videollamada</string>
+    <string name="didnt_get_a_code">¿No recibiste el código?</string>
+    <string name="downloading_file_name">Descargando en: "/Downloads/KoreMedia/%s". ¡Consulta la barra de estado!</string>
+    <string name="gen_hours_short">h</string>
+    <string name="gen_minutes_short">min</string>
+    <string name="gen_seconds_short">s</string>
+    <string name="gen_today">Hoy</string>
+    <string name="general_settings_button_save_text">Guardar</string>
+    <string name="general_settings_textview_auto_redirect_text">Redirección automática:</string>
+    <string name="general_settings_textview_dtmf_type_text">Tipo de DTMF:</string>
+    <string name="general_settings_textview_log_level_type_text">Nivel de registro:</string>
+    <string name="general_settings_textview_redirect_call_text">Redirigir llamada:</string>
+    <string name="icon_28">(</string>
+    <string name="icon_2d">-</string>
+    <string name="icon_33">3</string>
+    <string name="icon_62">b</string>
+    <string name="icon_64">๤</string>
+    <string name="icon_d">&#xd;</string>
+    <string name="icon_e903"></string>
+    <string name="icon_e913"></string>
+    <string name="icon_e914"></string>
+    <string name="icon_e91a"></string>
+    <string name="icon_e922"></string>
+    <string name="icon_e926"></string>
+    <string name="icon_e927"></string>
+    <string name="icon_e92a"></string>
+    <string name="icon_e92c"></string>
+    <string name="icon_e935"></string>
+    <string name="icon_e93c"></string>
+    <string name="icon_e943"></string>
+    <string name="icon_e94e"></string>
+    <string name="icon_e94f"></string>
+    <string name="icon_e954"></string>
+    <string name="icon_e958"></string>
+    <string name="icon_e959"></string>
+    <string name="icon_e961"></string>
+    <string name="icon_e96c"></string>
+    <string name="icon_e979"></string>
+    <string name="icon_e995"></string>
+    <string name="icon_e996"></string>
+    <string name="icon_to_display_attachment_type">Icono para mostrar el tipo de archivo adjunto</string>
+    <string name="icon_to_display_the_attachment_type_based_on_extension">Icono para mostrar el tipo de archivo adjunto según la extensión</string>
+    <string name="image_name">Nombre de imagen</string>
+    <string name="incoming_audio_call">Llamada de audio entrante…</string>
+    <string name="incoming_call_button_answer_text">Responder</string>
+    <string name="incoming_call_button_answer_video_notification_text">Video</string>
+    <string name="incoming_call_button_answer_video_text">Responder con video</string>
+    <string name="incoming_call_button_decline_text">Rechazar</string>
+    <string name="incoming_call_textview_call_state">Llamada entrante</string>
+    <string name="incoming_video_call">Videollamada entrante…</string>
+    <string name="kevin_peterson">Kevin Peterson</string>
+    <string name="links">Enlaces</string>
+    <string name="listening_tap_end">Escuchando… Toca para terminar</string>
+    <string name="live_chat">Chat en vivo</string>
+    <string name="login_button_advanced_text">Avanzado</string>
+    <string name="login_button_login_text">Iniciar sesión</string>
+    <string name="login_button_start_text">Iniciar</string>
+    <string name="login_checkbox_autologin_text">Inicio de sesión automático (false = tocar para llamar)</string>
+    <string name="login_checkbox_call_disconnect_text">Desconectar si se interrumpe la llamada</string>
+    <string name="login_checkbox_oauth_text">Activar OAuth</string>
+    <string name="login_checkbox_push_text">Usar notificaciones push para llamadas entrantes</string>
+    <string name="login_checkbox_video_hardware_text">Video por hardware (H.264)</string>
+    <string name="login_textview_displayname_text">Nombre mostrado:</string>
+    <string name="login_textview_domain_text">Dominio:</string>
+    <string name="login_textview_oauth_clientid_text">ID de cliente de OAuth</string>
+    <string name="login_textview_oauth_error">Tu sesión ha caducado. Inicia sesión de nuevo.</string>
+    <string name="login_textview_oauth_realm_text">Ámbito de OAuth</string>
+    <string name="login_textview_oauth_url_text">URL de OAuth</string>
+    <string name="login_textview_password_text">Contraseña:</string>
+    <string name="login_textview_port_text">Puerto:</string>
+    <string name="login_textview_second_call_text">Segunda llamada</string>
+    <string name="login_textview_sipaddress_text">Dirección SIP:</string>
+    <string name="login_textview_stunserver_text">Servidor STUN:</string>
+    <string name="login_textview_transfer_call_text">Transferir llamada</string>
+    <string name="login_textview_transport_text">Tipo de transporte:</string>
+    <string name="login_textview_turnserver_text">Servidor TURN:</string>
+    <string name="login_textview_username_text">Nombre de usuario:</string>
+    <string name="menu">Menú</string>
+    <string name="menu_option_exit">Salir</string>
+    <string name="menu_option_settings">Ajustes</string>
+    <string name="my_video">Mi video</string>
+    <string name="no_registration">El cliente no está registrado actualmente</string>
+    <string name="no_remote_contact">El contacto remoto no está definido</string>
+    <string name="notification_text_connected">CONECTADO</string>
+    <string name="notification_text_disconnected">DESCONECTADO</string>
+    <string name="notification_text_in_call">En llamada</string>
+    <string name="notification_text_prefix">El cliente está </string>
+    <string name="oauth_error">Error de OAuth</string>
+    <string name="our_community_is_ready_to_help_you_to_join_our_best_platform">Nuestra comunidad está lista para ayudarte a formar parte de nuestra mejor plataforma</string>
+    <string name="permission_denied_button_continue">Continuar</string>
+    <string name="permission_denied_button_edit">Editar</string>
+    <string name="permission_denied_button_text">Se rechazaron algunos permisos de la aplicación.\nEs posible que la aplicación no funcione correctamente hasta que se concedan todos los permisos.\nPuedes cambiar manualmente los permisos o continuar con el estado actual.</string>
+    <string name="poweredby">Con tecnología de</string>
+    <string name="recent_menu_option_delete_all">Eliminar todo</string>
+    <string name="resend_otp">Reenviar código OTP</string>
+    <string name="reset_pin">Restablecer PIN</string>
+    <string name="schedue_meeting">Programar reunión</string>
+    <string name="session_null_error">La sesión es nula</string>
+    <string name="settings_button_account">Cuenta</string>
+    <string name="settings_button_call_stats">Estadísticas de llamadas</string>
+    <string name="settings_button_general">General</string>
+    <string name="source_item">%s. %s</string>
+    <string name="start_conversation">Iniciar conversación</string>
+    <string name="tab1">Pestaña 1</string>
+    <string name="tab2">Pestaña 2</string>
+    <string name="tablet_info_display_name">Nombre mostrado:</string>
+    <string name="tablet_info_status_name">Estado de conexión:</string>
+    <string name="tablet_info_user_name">Nombre de usuario:</string>
+    <string name="tabs_chat_title">Chat</string>
+    <string name="tabs_contacts_title">Contactos</string>
+    <string name="tabs_dialer_title">Teclado</string>
+    <string name="tabs_recents_title">Recientes</string>
+    <string name="tabs_settings_title">Ajustes</string>
+    <string name="tap_to_send">Toca para enviar</string>
+    <string name="testing">Pruebas</string>
+    <string name="thumbs_up_image">Imagen de pulgar hacia arriba</string>
+    <string name="welcome_to_kore_ai_bot_support">Te damos la bienvenida a Kore.ai\nSoporte de bots</string>
+    <string name="what_can_be_improved">¿Qué se puede mejorar?</string>
 </resources>

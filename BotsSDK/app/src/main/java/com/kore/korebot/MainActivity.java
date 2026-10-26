@@ -14,6 +14,7 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.kore.korebot.customfragment.CustomHeaderFragment;
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
 import java.io.BufferedReader;
@@ -33,6 +34,7 @@ import kore.botssdk.korevg.webrtcclient.Permissions.PermissionManager;
 import kore.botssdk.korevg.webrtcclient.Permissions.PermissionRequest;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.models.BotBrandingModel;
+import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
@@ -65,15 +67,15 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "Please enter client ID";
+        String clientId = "cs-85793e30-ace9-5c27-9ae7-060033c4d66a";
 //        String clientId = getConfigValue("clientId");
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "Please enter client secret";
+        String clientSecret = "ukcwzz+f3sBgRkENx89uqqtzcMmmV0/Kv7KHsBo3IwY=";
 //        String clientSecret = getConfigValue("clientSecret");
 
         //Set botId, This value is mandatory
-        String botId = "Please enter bot ID";
+        String botId = "st-8a564fcb-9b29-5428-b56c-00dd920804db";
 //        String botId = getConfigValue("botId");
 
         //Set identity, This value is mandatory
@@ -81,19 +83,19 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
 //        String identity = getConfigValue("identity");
 
         //Set botName, This value is mandatory
-        String botName = "Please enter bot name";
+        String botName = "Bank Assist Attachment Staging";
 //        String botName = getConfigValue("botName");
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "Please enter server url";
+        String serverUrl = "https://staging-xo.korebots.com/";
 //        String serverUrl = getConfigValue("serverUrl");
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "Please enter branding url";
+        String brandingUrl = "https://staging-xo.korebots.com/";
 //        String brandingUrl = getConfigValue("brandingUrl");
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "Please enter Jwt server url";
+        String jwtServerUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
 //        String jwtServerUrl = getConfigValue("jwtServerUrl");
 
         SDKConfig.setCustomData(getCustomData(jwtToken));

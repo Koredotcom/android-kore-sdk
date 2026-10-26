@@ -61,7 +61,7 @@ dependencies {
         exclude module: 'support-v4'
     }
 
-    implementation(project(':widgetsdk')) {
-        exclude module: 'support-v4'
-    }
+//    implementation(project(':widgetsdk')) {
+//        exclude module: 'support-v4'
+//    }
 }
