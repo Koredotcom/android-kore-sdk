@@ -23,7 +23,7 @@ public class TTSSynthesizer {
     private final MediaPlayer mediaPlayer = new MediaPlayer();
     public static final String LOG_TAG = TTSSynthesizer.class.getSimpleName();
     public final ArrayList<String> que = new ArrayList<>();
-    public boolean ttsEnabled = true;
+    public boolean ttsEnabled = false;
 
 
     public TTSSynthesizer(Context context) {
