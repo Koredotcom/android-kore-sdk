@@ -19,21 +19,21 @@ extends BaseBitrateAdjuster {
     }
 
     @Override
-    public void setTargets(int targetBitrateBps, int targetFps) {
+    public void setTargets(int targetBitrateBps, double targetFramerateFps) {
         if (this.targetBitrateBps > 0 && targetBitrateBps < this.targetBitrateBps) {
             this.deviationBytes = this.deviationBytes * (double)targetBitrateBps / (double)this.targetBitrateBps;
         }
-        super.setTargets(targetBitrateBps, targetFps);
+        super.setTargets(targetBitrateBps, targetFramerateFps);
     }
 
     @Override
     public void reportEncodedFrame(int size) {
-        if (this.targetFps == 0) {
+        if (this.targetFramerateFps == 0.0) {
             return;
         }
-        double expectedBytesPerFrame = (double)this.targetBitrateBps / 8.0 / (double)this.targetFps;
+        double expectedBytesPerFrame = (double)this.targetBitrateBps / 8.0 / this.targetFramerateFps;
         this.deviationBytes += (double)size - expectedBytesPerFrame;
-        this.timeSinceLastAdjustmentMs += 1000.0 / (double)this.targetFps;
+        this.timeSinceLastAdjustmentMs += 1000.0 / this.targetFramerateFps;
         double deviationThresholdBytes = (double)this.targetBitrateBps / 8.0;
         double deviationCap = 3.0 * deviationThresholdBytes;
         this.deviationBytes = Math.min(this.deviationBytes, deviationCap);

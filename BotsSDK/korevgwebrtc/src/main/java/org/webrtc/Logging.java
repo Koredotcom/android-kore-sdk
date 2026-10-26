@@ -59,7 +59,6 @@ public class Logging {
     }
 
     public static void log(Severity severity, String tag, String message) {
-        Level level;
         if (tag == null || message == null) {
             throw new IllegalArgumentException("Logging tag or message may not be null.");
         }
@@ -74,22 +73,19 @@ public class Logging {
             Logging.nativeLog(severity.ordinal(), tag, message);
             return;
         }
+        Level level;
         switch (severity) {
-            case LS_ERROR: {
+            case LS_ERROR:
                 level = Level.SEVERE;
                 break;
-            }
-            case LS_WARNING: {
+            case LS_WARNING:
                 level = Level.WARNING;
                 break;
-            }
-            case LS_INFO: {
+            case LS_INFO:
                 level = Level.INFO;
                 break;
-            }
-            default: {
+            default:
                 level = Level.FINE;
-            }
         }
         fallbackLogger.log(level, tag + ": " + message);
     }

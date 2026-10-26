@@ -6,7 +6,6 @@
  *  android.media.audiofx.AudioEffect
  *  android.media.audiofx.AudioEffect$Descriptor
  *  android.media.audiofx.NoiseSuppressor
- *  android.os.Build$VERSION
  *  androidx.annotation.Nullable
  */
 package org.webrtc.audio;
@@ -14,7 +13,6 @@ package org.webrtc.audio;
 import android.media.audiofx.AcousticEchoCanceler;
 import android.media.audiofx.AudioEffect;
 import android.media.audiofx.NoiseSuppressor;
-import android.os.Build;
 import androidx.annotation.Nullable;
 import java.util.UUID;
 import org.webrtc.Logging;
@@ -35,16 +33,10 @@ class WebRtcAudioEffects {
     private boolean shouldEnableNs;
 
     public static boolean isAcousticEchoCancelerSupported() {
-        if (Build.VERSION.SDK_INT < 18) {
-            return false;
-        }
         return WebRtcAudioEffects.isEffectTypeAvailable(AudioEffect.EFFECT_TYPE_AEC, AOSP_ACOUSTIC_ECHO_CANCELER);
     }
 
     public static boolean isNoiseSuppressorSupported() {
-        if (Build.VERSION.SDK_INT < 18) {
-            return false;
-        }
         return WebRtcAudioEffects.isEffectTypeAvailable(AudioEffect.EFFECT_TYPE_NS, AOSP_NOISE_SUPPRESSOR);
     }
 
@@ -80,6 +72,16 @@ class WebRtcAudioEffects {
         }
         this.shouldEnableNs = enable;
         return true;
+    }
+
+    public boolean toggleNS(boolean enable) {
+        if (this.ns == null) {
+            Logging.e(TAG, "Attempting to enable or disable nonexistent NoiseSuppressor.");
+            return false;
+        }
+        Logging.d(TAG, "toggleNS(" + enable + ")");
+        boolean toggling_succeeded = this.ns.setEnabled(enable) == 0;
+        return toggling_succeeded;
     }
 
     public void enable(int audioSession) {
@@ -129,9 +131,6 @@ class WebRtcAudioEffects {
     }
 
     private boolean effectTypeIsVoIP(UUID type) {
-        if (Build.VERSION.SDK_INT < 18) {
-            return false;
-        }
         return AudioEffect.EFFECT_TYPE_AEC.equals(type) && WebRtcAudioEffects.isAcousticEchoCancelerSupported() || AudioEffect.EFFECT_TYPE_NS.equals(type) && WebRtcAudioEffects.isNoiseSuppressorSupported();
     }
 

@@ -4,21 +4,22 @@
  * Could not load the following classes:
  *  android.graphics.SurfaceTexture
  *  android.opengl.EGLContext
- *  androidx.annotation.Nullable
  *  android.view.Surface
+ *  androidx.annotation.Nullable
  *  javax.microedition.khronos.egl.EGLContext
  */
 package org.webrtc;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.EGLContext;
-import androidx.annotation.Nullable;
 import android.view.Surface;
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import org.webrtc.EglBase10;
 import org.webrtc.EglBase10Impl;
 import org.webrtc.EglBase14;
 import org.webrtc.EglBase14Impl;
+import org.webrtc.RefCounted;
 
 public interface EglBase {
     public static final Object lock = new Object();
@@ -51,9 +52,22 @@ public interface EglBase {
         return 1;
     }
 
+    public static EglBase create(EglConnection eglConnection) {
+        if (eglConnection == null) {
+            return EglBase.create();
+        }
+        if (eglConnection instanceof EglBase14Impl.EglConnection) {
+            return new EglBase14Impl((EglBase14Impl.EglConnection)eglConnection);
+        }
+        if (eglConnection instanceof EglBase10Impl.EglConnection) {
+            return new EglBase10Impl((EglBase10Impl.EglConnection)eglConnection);
+        }
+        throw new IllegalArgumentException("Unrecognized EglConnection");
+    }
+
     public static EglBase create(@Nullable Context sharedContext, int[] configAttributes) {
         if (sharedContext == null) {
-            return EglBase14Impl.isEGL14Supported() ? EglBase.createEgl14(configAttributes) : EglBase.createEgl10(configAttributes);
+            return EglBase.createEgl14(configAttributes);
         }
         if (sharedContext instanceof EglBase14.Context) {
             return EglBase.createEgl14((EglBase14.Context)sharedContext, configAttributes);
@@ -190,6 +204,30 @@ public interface EglBase {
         public static final long NO_CONTEXT = 0L;
 
         public long getNativeEglContext();
+    }
+
+    public static interface EglConnection
+    extends RefCounted {
+        public static EglConnection create(@Nullable Context sharedContext, int[] configAttributes) {
+            if (sharedContext == null) {
+                return EglConnection.createEgl14(configAttributes);
+            }
+            if (sharedContext instanceof EglBase14.Context) {
+                return new EglBase14Impl.EglConnection(((EglBase14.Context)sharedContext).getRawContext(), configAttributes);
+            }
+            if (sharedContext instanceof EglBase10.Context) {
+                return new EglBase10Impl.EglConnection(((EglBase10.Context)sharedContext).getRawContext(), configAttributes);
+            }
+            throw new IllegalArgumentException("Unrecognized Context");
+        }
+
+        public static EglConnection createEgl10(int[] configAttributes) {
+            return new EglBase10Impl.EglConnection(null, configAttributes);
+        }
+
+        public static EglConnection createEgl14(int[] configAttributes) {
+            return new EglBase14Impl.EglConnection(null, configAttributes);
+        }
     }
 }
 

@@ -3,6 +3,7 @@
  */
 package org.webrtc;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import org.webrtc.VideoCodecInfo;
@@ -16,8 +17,8 @@ class H264Utils {
     public static final String H264_LEVEL_3_1 = "1f";
     public static final String H264_CONSTRAINED_HIGH_3_1 = "640c1f";
     public static final String H264_CONSTRAINED_BASELINE_3_1 = "42e01f";
-    public static VideoCodecInfo DEFAULT_H264_BASELINE_PROFILE_CODEC = new VideoCodecInfo("H264", H264Utils.getDefaultH264Params(false));
-    public static VideoCodecInfo DEFAULT_H264_HIGH_PROFILE_CODEC = new VideoCodecInfo("H264", H264Utils.getDefaultH264Params(true));
+    public static VideoCodecInfo DEFAULT_H264_BASELINE_PROFILE_CODEC = new VideoCodecInfo("H264", H264Utils.getDefaultH264Params(false), new ArrayList<String>());
+    public static VideoCodecInfo DEFAULT_H264_HIGH_PROFILE_CODEC = new VideoCodecInfo("H264", H264Utils.getDefaultH264Params(true), new ArrayList<String>());
 
     H264Utils() {
     }

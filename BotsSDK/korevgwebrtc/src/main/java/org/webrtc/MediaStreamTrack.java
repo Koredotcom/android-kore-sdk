@@ -81,6 +81,10 @@ public class MediaStreamTrack {
         }
     }
 
+    public boolean isDisposed() {
+        return this.nativeTrack == 0L;
+    }
+
     private static native String nativeGetId(long var0);
 
     private static native String nativeGetKind(long var0);
@@ -90,6 +94,17 @@ public class MediaStreamTrack {
     private static native boolean nativeSetEnabled(long var0, boolean var2);
 
     private static native State nativeGetState(long var0);
+
+    public static enum State {
+        LIVE,
+        ENDED;
+
+
+        @CalledByNative(value="State")
+        static State fromNativeIndex(int nativeIndex) {
+            return State.values()[nativeIndex];
+        }
+    }
 
     public static enum MediaType {
         MEDIA_TYPE_AUDIO(0),
@@ -113,17 +128,6 @@ public class MediaStreamTrack {
                 return type;
             }
             throw new IllegalArgumentException("Unknown native media type: " + nativeIndex);
-        }
-    }
-
-    public static enum State {
-        LIVE,
-        ENDED;
-
-
-        @CalledByNative(value="State")
-        static State fromNativeIndex(int nativeIndex) {
-            return State.values()[nativeIndex];
         }
     }
 }

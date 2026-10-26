@@ -2,26 +2,26 @@
  * Decompiled with CFR 0.152.
  * 
  * Could not load the following classes:
- *  android.annotation.TargetApi
  *  android.content.Context
  *  android.content.Intent
  *  android.hardware.display.VirtualDisplay
  *  android.media.projection.MediaProjection
  *  android.media.projection.MediaProjection$Callback
  *  android.media.projection.MediaProjectionManager
- *  androidx.annotation.Nullable
+ *  android.os.Build$VERSION
  *  android.view.Surface
+ *  androidx.annotation.Nullable
  */
 package org.webrtc;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.display.VirtualDisplay;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
-import androidx.annotation.Nullable;
+import android.os.Build;
 import android.view.Surface;
+import androidx.annotation.Nullable;
 import org.webrtc.CapturerObserver;
 import org.webrtc.SurfaceTextureHelper;
 import org.webrtc.ThreadUtils;
@@ -29,7 +29,6 @@ import org.webrtc.VideoCapturer;
 import org.webrtc.VideoFrame;
 import org.webrtc.VideoSink;
 
-@TargetApi(value=21)
 public class ScreenCapturerAndroid
 implements VideoCapturer,
 VideoSink {
@@ -89,7 +88,7 @@ VideoSink {
         this.height = height;
         this.mediaProjection = this.mediaProjectionManager.getMediaProjection(-1, this.mediaProjectionPermissionResultData);
         this.mediaProjection.registerCallback(this.mediaProjectionCallback, this.surfaceTextureHelper.getHandler());
-        this.createVirtualDisplay();
+        this.updateVirtualDisplay();
         this.capturerObserver.onCapturerStarted(true);
         this.surfaceTextureHelper.startListening(this);
     }
@@ -129,18 +128,23 @@ VideoSink {
         if (this.virtualDisplay == null) {
             return;
         }
-        ThreadUtils.invokeAtFrontUninterruptibly(this.surfaceTextureHelper.getHandler(), new Runnable(){
+        ThreadUtils.invokeAtFrontUninterruptibly(this.surfaceTextureHelper.getHandler(), this::updateVirtualDisplay);
+    }
 
-            @Override
-            public void run() {
-                ScreenCapturerAndroid.this.virtualDisplay.release();
-                ScreenCapturerAndroid.this.createVirtualDisplay();
-            }
-        });
+    private void updateVirtualDisplay() {
+        this.surfaceTextureHelper.setTextureSize(this.width, this.height);
+        if (this.virtualDisplay == null || Build.VERSION.SDK_INT < 31) {
+            this.createVirtualDisplay();
+        } else {
+            this.virtualDisplay.resize(this.width, this.height, 400);
+            this.virtualDisplay.setSurface(new Surface(this.surfaceTextureHelper.getSurfaceTexture()));
+        }
     }
 
     private void createVirtualDisplay() {
-        this.surfaceTextureHelper.setTextureSize(this.width, this.height);
+        if (this.virtualDisplay != null) {
+            this.virtualDisplay.release();
+        }
         this.virtualDisplay = this.mediaProjection.createVirtualDisplay("WebRTC_ScreenCapture", this.width, this.height, 400, 3, new Surface(this.surfaceTextureHelper.getSurfaceTexture()), null, null);
     }
 

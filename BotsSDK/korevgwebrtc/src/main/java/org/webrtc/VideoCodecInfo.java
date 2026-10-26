@@ -7,7 +7,9 @@
 package org.webrtc;
 
 import androidx.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import org.webrtc.CalledByNative;
@@ -23,14 +25,16 @@ public class VideoCodecInfo {
     public static final String H264_CONSTRAINED_BASELINE_3_1 = "42e01f";
     public final String name;
     public final Map<String, String> params;
+    public final List<String> scalabilityModes;
     @Deprecated
     public final int payload;
 
     @CalledByNative
-    public VideoCodecInfo(String name, Map<String, String> params) {
+    public VideoCodecInfo(String name, Map<String, String> params, List<String> scalabilityModes) {
         this.payload = 0;
         this.name = name;
         this.params = params;
+        this.scalabilityModes = scalabilityModes;
     }
 
     @Deprecated
@@ -38,6 +42,7 @@ public class VideoCodecInfo {
         this.payload = payload;
         this.name = name;
         this.params = params;
+        this.scalabilityModes = new ArrayList<String>();
     }
 
     public boolean equals(@Nullable Object obj) {
@@ -71,6 +76,11 @@ public class VideoCodecInfo {
     @CalledByNative
     Map getParams() {
         return this.params;
+    }
+
+    @CalledByNative
+    List<String> getScalabilityModes() {
+        return this.scalabilityModes;
     }
 }
 

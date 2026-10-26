@@ -8,11 +8,11 @@ import org.webrtc.WrappedNativeVideoEncoder;
 public class LibvpxVp8Encoder
 extends WrappedNativeVideoEncoder {
     @Override
-    public long createNativeVideoEncoder() {
-        return LibvpxVp8Encoder.nativeCreateEncoder();
+    public long createNative(long webrtcEnvRef) {
+        return LibvpxVp8Encoder.nativeCreate(webrtcEnvRef);
     }
 
-    static native long nativeCreateEncoder();
+    static native long nativeCreate(long var0);
 
     @Override
     public boolean isHardwareEncoder() {

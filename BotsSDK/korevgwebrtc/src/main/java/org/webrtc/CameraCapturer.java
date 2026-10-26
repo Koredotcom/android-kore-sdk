@@ -41,7 +41,7 @@ implements CameraVideoCapturer {
         @Override
         public void onDone(CameraSession session) {
             CameraCapturer.this.checkIsOnCameraThread();
-            Logging.d(CameraCapturer.TAG, "Create session done. Switch state: " + (Object)((Object)CameraCapturer.this.switchState));
+            Logging.d(CameraCapturer.TAG, "Create session done. Switch state: " + CameraCapturer.this.switchState);
             CameraCapturer.this.uiThreadHandler.removeCallbacks(CameraCapturer.this.openCameraTimeoutRunnable);
             Object object = CameraCapturer.this.stateLock;
             synchronized (object) {
@@ -76,7 +76,7 @@ implements CameraVideoCapturer {
             Object object = CameraCapturer.this.stateLock;
             synchronized (object) {
                 CameraCapturer.this.capturerObserver.onCapturerStarted(false);
-                CameraCapturer.this.openAttemptsRemaining--;
+                --CameraCapturer.this.openAttemptsRemaining;
                 if (CameraCapturer.this.openAttemptsRemaining <= 0) {
                     Logging.w(CameraCapturer.TAG, "Opening camera failed, passing: " + error);
                     CameraCapturer.this.sessionOpening = false;

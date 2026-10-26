@@ -19,6 +19,7 @@ import org.webrtc.CandidatePairChangeEvent;
 import org.webrtc.CryptoOptions;
 import org.webrtc.DataChannel;
 import org.webrtc.IceCandidate;
+import org.webrtc.IceCandidateErrorEvent;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
 import org.webrtc.MediaStreamTrack;
@@ -228,6 +229,14 @@ public class PeerConnection {
         this.nativeNewGetStats(callback);
     }
 
+    public void getStats(RtpSender sender, RTCStatsCollectorCallback callback) {
+        this.nativeNewGetStatsSender(sender.getNativeRtpSender(), callback);
+    }
+
+    public void getStats(RtpReceiver receiver, RTCStatsCollectorCallback callback) {
+        this.nativeNewGetStatsReceiver(receiver.getNativeRtpReceiver(), callback);
+    }
+
     public boolean setBitrate(Integer min, Integer current, Integer max) {
         return this.nativeSetBitrate(min, current, max);
     }
@@ -353,6 +362,10 @@ public class PeerConnection {
 
     private native void nativeNewGetStats(RTCStatsCollectorCallback var1);
 
+    private native void nativeNewGetStatsSender(long var1, RTCStatsCollectorCallback var3);
+
+    private native void nativeNewGetStatsReceiver(long var1, RTCStatsCollectorCallback var3);
+
     private native RtpSender nativeCreateSender(String var1, String var2);
 
     private native List<RtpSender> nativeGetSenders();
@@ -410,29 +423,23 @@ public class PeerConnection {
         public Integer stableWritableConnectionPingIntervalMs;
         public boolean disableIPv6OnWifi;
         public int maxIPv6Networks;
-        public boolean disableIpv6;
         public boolean enableDscp;
         public boolean enableCpuOveruseDetection;
         public boolean suspendBelowMinBitrate;
         @Nullable
         public Integer screencastMinBitrate;
-        @Nullable
-        public Boolean combinedAudioVideoBwe;
-        @Nullable
-        public Boolean enableDtlsSrtp;
         public AdapterType networkPreference;
         public SdpSemantics sdpSemantics;
         @Nullable
         public TurnCustomizer turnCustomizer;
         public boolean activeResetSrtpParams;
         @Nullable
-        public Boolean allowCodecSwitching;
-        @Nullable
         public CryptoOptions cryptoOptions;
         @Nullable
         public String turnLoggingId;
         public boolean enableImplicitRollback;
         public boolean offerExtmapAllowMixed;
+        public boolean enableIceGatheringOnAnyAddressPorts;
 
         public RTCConfiguration(List<IceServer> iceServers) {
             this.iceServers = iceServers;
@@ -456,21 +463,18 @@ public class PeerConnection {
             this.stableWritableConnectionPingIntervalMs = null;
             this.disableIPv6OnWifi = false;
             this.maxIPv6Networks = 5;
-            this.disableIpv6 = false;
             this.enableDscp = false;
             this.enableCpuOveruseDetection = true;
             this.suspendBelowMinBitrate = false;
             this.screencastMinBitrate = null;
-            this.combinedAudioVideoBwe = null;
-            this.enableDtlsSrtp = null;
             this.networkPreference = AdapterType.UNKNOWN;
-            this.sdpSemantics = SdpSemantics.PLAN_B;
+            this.sdpSemantics = SdpSemantics.UNIFIED_PLAN;
             this.activeResetSrtpParams = false;
             this.cryptoOptions = null;
             this.turnLoggingId = null;
-            this.allowCodecSwitching = null;
             this.enableImplicitRollback = false;
             this.offerExtmapAllowMixed = true;
+            this.enableIceGatheringOnAnyAddressPorts = false;
         }
 
         @CalledByNative(value="RTCConfiguration")
@@ -623,11 +627,6 @@ public class PeerConnection {
         }
 
         @CalledByNative(value="RTCConfiguration")
-        boolean getDisableIpv6() {
-            return this.disableIpv6;
-        }
-
-        @CalledByNative(value="RTCConfiguration")
         boolean getEnableDscp() {
             return this.enableDscp;
         }
@@ -648,18 +647,6 @@ public class PeerConnection {
             return this.screencastMinBitrate;
         }
 
-        @Nullable
-        @CalledByNative(value="RTCConfiguration")
-        Boolean getCombinedAudioVideoBwe() {
-            return this.combinedAudioVideoBwe;
-        }
-
-        @Nullable
-        @CalledByNative(value="RTCConfiguration")
-        Boolean getEnableDtlsSrtp() {
-            return this.enableDtlsSrtp;
-        }
-
         @CalledByNative(value="RTCConfiguration")
         AdapterType getNetworkPreference() {
             return this.networkPreference;
@@ -673,12 +660,6 @@ public class PeerConnection {
         @CalledByNative(value="RTCConfiguration")
         boolean getActiveResetSrtpParams() {
             return this.activeResetSrtpParams;
-        }
-
-        @Nullable
-        @CalledByNative(value="RTCConfiguration")
-        Boolean getAllowCodecSwitching() {
-            return this.allowCodecSwitching;
         }
 
         @Nullable
@@ -701,6 +682,129 @@ public class PeerConnection {
         @CalledByNative(value="RTCConfiguration")
         boolean getOfferExtmapAllowMixed() {
             return this.offerExtmapAllowMixed;
+        }
+
+        @CalledByNative(value="RTCConfiguration")
+        boolean getEnableIceGatheringOnAnyAddressPorts() {
+            return this.enableIceGatheringOnAnyAddressPorts;
+        }
+    }
+
+    public static enum SignalingState {
+        STABLE,
+        HAVE_LOCAL_OFFER,
+        HAVE_LOCAL_PRANSWER,
+        HAVE_REMOTE_OFFER,
+        HAVE_REMOTE_PRANSWER,
+        CLOSED;
+
+
+        @CalledByNative(value="SignalingState")
+        static SignalingState fromNativeIndex(int nativeIndex) {
+            return SignalingState.values()[nativeIndex];
+        }
+    }
+
+    public static enum IceConnectionState {
+        NEW,
+        CHECKING,
+        CONNECTED,
+        COMPLETED,
+        FAILED,
+        DISCONNECTED,
+        CLOSED;
+
+
+        @CalledByNative(value="IceConnectionState")
+        static IceConnectionState fromNativeIndex(int nativeIndex) {
+            return IceConnectionState.values()[nativeIndex];
+        }
+    }
+
+    public static enum PeerConnectionState {
+        NEW,
+        CONNECTING,
+        CONNECTED,
+        DISCONNECTED,
+        FAILED,
+        CLOSED;
+
+
+        @CalledByNative(value="PeerConnectionState")
+        static PeerConnectionState fromNativeIndex(int nativeIndex) {
+            return PeerConnectionState.values()[nativeIndex];
+        }
+    }
+
+    public static enum IceGatheringState {
+        NEW,
+        GATHERING,
+        COMPLETE;
+
+
+        @CalledByNative(value="IceGatheringState")
+        static IceGatheringState fromNativeIndex(int nativeIndex) {
+            return IceGatheringState.values()[nativeIndex];
+        }
+    }
+
+    public static interface Observer {
+        @CalledByNative(value="Observer")
+        public void onSignalingChange(SignalingState var1);
+
+        @CalledByNative(value="Observer")
+        public void onIceConnectionChange(IceConnectionState var1);
+
+        @CalledByNative(value="Observer")
+        default public void onStandardizedIceConnectionChange(IceConnectionState newState) {
+        }
+
+        @CalledByNative(value="Observer")
+        default public void onConnectionChange(PeerConnectionState newState) {
+        }
+
+        @CalledByNative(value="Observer")
+        public void onIceConnectionReceivingChange(boolean var1);
+
+        @CalledByNative(value="Observer")
+        public void onIceGatheringChange(IceGatheringState var1);
+
+        @CalledByNative(value="Observer")
+        public void onIceCandidate(IceCandidate var1);
+
+        @CalledByNative(value="Observer")
+        default public void onIceCandidateError(IceCandidateErrorEvent event) {
+        }
+
+        @CalledByNative(value="Observer")
+        public void onIceCandidatesRemoved(IceCandidate[] var1);
+
+        @CalledByNative(value="Observer")
+        default public void onSelectedCandidatePairChanged(CandidatePairChangeEvent event) {
+        }
+
+        @CalledByNative(value="Observer")
+        public void onAddStream(MediaStream var1);
+
+        @CalledByNative(value="Observer")
+        public void onRemoveStream(MediaStream var1);
+
+        @CalledByNative(value="Observer")
+        public void onDataChannel(DataChannel var1);
+
+        @CalledByNative(value="Observer")
+        public void onRenegotiationNeeded();
+
+        @CalledByNative(value="Observer")
+        default public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
+        }
+
+        @CalledByNative(value="Observer")
+        default public void onRemoveTrack(RtpReceiver receiver) {
+        }
+
+        @CalledByNative(value="Observer")
+        default public void onTrack(RtpTransceiver transceiver) {
         }
     }
 
@@ -855,7 +959,7 @@ public class PeerConnection {
         }
 
         public String toString() {
-            return this.urls + " [" + this.username + ":" + this.password + "] [" + (Object)((Object)this.tlsCertPolicy) + "] [" + this.hostname + "] [" + this.tlsAlpnProtocols + "] [" + this.tlsEllipticCurves + "]";
+            return this.urls + " [" + this.username + ":" + this.password + "] [" + this.tlsCertPolicy + "] [" + this.hostname + "] [" + this.tlsAlpnProtocols + "] [" + this.tlsEllipticCurves + "]";
         }
 
         public boolean equals(@Nullable Object obj) {
@@ -977,124 +1081,10 @@ public class PeerConnection {
         }
     }
 
-    public static interface Observer {
-        @CalledByNative(value="Observer")
-        public void onSignalingChange(SignalingState var1);
-
-        @CalledByNative(value="Observer")
-        public void onIceConnectionChange(IceConnectionState var1);
-
-        @CalledByNative(value="Observer")
-        default public void onStandardizedIceConnectionChange(IceConnectionState newState) {
-        }
-
-        @CalledByNative(value="Observer")
-        default public void onConnectionChange(PeerConnectionState newState) {
-        }
-
-        @CalledByNative(value="Observer")
-        public void onIceConnectionReceivingChange(boolean var1);
-
-        @CalledByNative(value="Observer")
-        public void onIceGatheringChange(IceGatheringState var1);
-
-        @CalledByNative(value="Observer")
-        public void onIceCandidate(IceCandidate var1);
-
-        @CalledByNative(value="Observer")
-        public void onIceCandidatesRemoved(IceCandidate[] var1);
-
-        @CalledByNative(value="Observer")
-        default public void onSelectedCandidatePairChanged(CandidatePairChangeEvent event) {
-        }
-
-        @CalledByNative(value="Observer")
-        public void onAddStream(MediaStream var1);
-
-        @CalledByNative(value="Observer")
-        public void onRemoveStream(MediaStream var1);
-
-        @CalledByNative(value="Observer")
-        public void onDataChannel(DataChannel var1);
-
-        @CalledByNative(value="Observer")
-        public void onRenegotiationNeeded();
-
-        @CalledByNative(value="Observer")
-        default public void onAddTrack(RtpReceiver receiver, MediaStream[] mediaStreams) {
-        }
-
-        @CalledByNative(value="Observer")
-        default public void onRemoveTrack(RtpReceiver receiver) {
-        }
-
-        @CalledByNative(value="Observer")
-        default public void onTrack(RtpTransceiver transceiver) {
-        }
-    }
-
-    public static enum SignalingState {
-        STABLE,
-        HAVE_LOCAL_OFFER,
-        HAVE_LOCAL_PRANSWER,
-        HAVE_REMOTE_OFFER,
-        HAVE_REMOTE_PRANSWER,
-        CLOSED;
-
-
-        @CalledByNative(value="SignalingState")
-        static SignalingState fromNativeIndex(int nativeIndex) {
-            return SignalingState.values()[nativeIndex];
-        }
-    }
-
     public static enum TlsCertPolicy {
         TLS_CERT_POLICY_SECURE,
         TLS_CERT_POLICY_INSECURE_NO_CHECK;
 
-    }
-
-    public static enum PeerConnectionState {
-        NEW,
-        CONNECTING,
-        CONNECTED,
-        DISCONNECTED,
-        FAILED,
-        CLOSED;
-
-
-        @CalledByNative(value="PeerConnectionState")
-        static PeerConnectionState fromNativeIndex(int nativeIndex) {
-            return PeerConnectionState.values()[nativeIndex];
-        }
-    }
-
-    public static enum IceConnectionState {
-        NEW,
-        CHECKING,
-        CONNECTED,
-        COMPLETED,
-        FAILED,
-        DISCONNECTED,
-        CLOSED;
-
-
-        @CalledByNative(value="IceConnectionState")
-        static IceConnectionState fromNativeIndex(int nativeIndex) {
-            return IceConnectionState.values()[nativeIndex];
-        }
-    }
-
-    public static enum IceGatheringState {
-        NEW,
-        GATHERING,
-        COMPLETE;
-
-
-        @CalledByNative(value="IceGatheringState")
-        static IceGatheringState fromNativeIndex(int nativeIndex) {
-            return IceGatheringState.values()[nativeIndex];
-        }
     }
 }
 

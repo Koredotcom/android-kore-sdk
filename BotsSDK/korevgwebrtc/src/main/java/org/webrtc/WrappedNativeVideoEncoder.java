@@ -10,7 +10,7 @@ import org.webrtc.VideoFrame;
 public abstract class WrappedNativeVideoEncoder
 implements VideoEncoder {
     @Override
-    public abstract long createNativeVideoEncoder();
+    public abstract long createNative(long var1);
 
     @Override
     public abstract boolean isHardwareEncoder();

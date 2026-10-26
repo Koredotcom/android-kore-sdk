@@ -3,6 +3,7 @@
  * 
  * Could not load the following classes:
  *  android.media.MediaCodec$BufferInfo
+ *  android.media.MediaCodecInfo
  *  android.media.MediaCrypto
  *  android.media.MediaFormat
  *  android.os.Bundle
@@ -11,6 +12,7 @@
 package org.webrtc;
 
 import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
 import android.media.MediaCrypto;
 import android.media.MediaFormat;
 import android.os.Bundle;
@@ -36,14 +38,20 @@ interface MediaCodecWrapper {
 
     public void releaseOutputBuffer(int var1, boolean var2);
 
+    public MediaFormat getInputFormat();
+
     public MediaFormat getOutputFormat();
 
-    public ByteBuffer[] getInputBuffers();
+    public MediaFormat getOutputFormat(int var1);
 
-    public ByteBuffer[] getOutputBuffers();
+    public ByteBuffer getInputBuffer(int var1);
+
+    public ByteBuffer getOutputBuffer(int var1);
 
     public Surface createInputSurface();
 
     public void setParameters(Bundle var1);
+
+    public MediaCodecInfo getCodecInfo();
 }
 

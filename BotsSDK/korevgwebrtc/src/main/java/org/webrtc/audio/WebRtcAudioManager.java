@@ -6,7 +6,6 @@
  *  android.media.AudioManager
  *  android.media.AudioRecord
  *  android.media.AudioTrack
- *  android.os.Build$VERSION
  */
 package org.webrtc.audio;
 
@@ -14,7 +13,6 @@ import android.content.Context;
 import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
-import android.os.Build;
 import org.webrtc.CalledByNative;
 import org.webrtc.Logging;
 import org.webrtc.audio.WebRtcAudioUtils;
@@ -43,12 +41,14 @@ class WebRtcAudioManager {
         return WebRtcAudioManager.isLowLatencyInputSupported(context) ? WebRtcAudioManager.getLowLatencyFramesPerBuffer(audioManager) : WebRtcAudioManager.getMinInputFrameSize(sampleRate, numberOfInputChannels);
     }
 
-    private static boolean isLowLatencyOutputSupported(Context context) {
+    @CalledByNative
+    static boolean isLowLatencyOutputSupported(Context context) {
         return context.getPackageManager().hasSystemFeature("android.hardware.audio.low_latency");
     }
 
-    private static boolean isLowLatencyInputSupported(Context context) {
-        return Build.VERSION.SDK_INT >= 21 && WebRtcAudioManager.isLowLatencyOutputSupported(context);
+    @CalledByNative
+    static boolean isLowLatencyInputSupported(Context context) {
+        return WebRtcAudioManager.isLowLatencyOutputSupported(context);
     }
 
     @CalledByNative
@@ -63,17 +63,11 @@ class WebRtcAudioManager {
     }
 
     private static int getSampleRateForApiLevel(AudioManager audioManager) {
-        if (Build.VERSION.SDK_INT < 17) {
-            return 16000;
-        }
         String sampleRateString = audioManager.getProperty("android.media.property.OUTPUT_SAMPLE_RATE");
         return sampleRateString == null ? 16000 : Integer.parseInt(sampleRateString);
     }
 
     private static int getLowLatencyFramesPerBuffer(AudioManager audioManager) {
-        if (Build.VERSION.SDK_INT < 17) {
-            return 256;
-        }
         String framesPerBuffer = audioManager.getProperty("android.media.property.OUTPUT_FRAMES_PER_BUFFER");
         return framesPerBuffer == null ? 256 : Integer.parseInt(framesPerBuffer);
     }

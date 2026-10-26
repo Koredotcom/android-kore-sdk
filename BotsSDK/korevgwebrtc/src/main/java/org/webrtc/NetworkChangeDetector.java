@@ -20,14 +20,18 @@ public interface NetworkChangeDetector {
 
     public void destroy();
 
-    public static interface Observer {
-        public void onConnectionTypeChanged(ConnectionType var1);
+    public static abstract class Observer {
+        public abstract void onConnectionTypeChanged(ConnectionType var1);
 
-        public void onNetworkConnect(NetworkInformation var1);
+        public abstract void onNetworkConnect(NetworkInformation var1);
 
-        public void onNetworkDisconnect(long var1);
+        public abstract void onNetworkDisconnect(long var1);
 
-        public void onNetworkPreference(List<ConnectionType> var1, int var2);
+        public abstract void onNetworkPreference(List<ConnectionType> var1, int var2);
+
+        public String getFieldTrialsString() {
+            return "";
+        }
     }
 
     public static class NetworkInformation {

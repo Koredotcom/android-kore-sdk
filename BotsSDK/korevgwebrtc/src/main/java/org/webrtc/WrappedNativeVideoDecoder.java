@@ -10,7 +10,7 @@ import org.webrtc.VideoDecoder;
 public abstract class WrappedNativeVideoDecoder
 implements VideoDecoder {
     @Override
-    public abstract long createNativeVideoDecoder();
+    public abstract long createNative(long var1);
 
     @Override
     public final VideoCodecStatus initDecode(VideoDecoder.Settings settings, VideoDecoder.Callback decodeCallback) {

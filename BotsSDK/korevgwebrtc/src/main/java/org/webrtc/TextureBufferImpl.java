@@ -119,10 +119,12 @@ implements VideoFrame.TextureBuffer {
         return this.applyTransformMatrix(cropAndScaleMatrix, Math.round((float)(this.unscaledWidth * cropWidth) / (float)this.width), Math.round((float)(this.unscaledHeight * cropHeight) / (float)this.height), scaleWidth, scaleHeight);
     }
 
+    @Override
     public int getUnscaledWidth() {
         return this.unscaledWidth;
     }
 
+    @Override
     public int getUnscaledHeight() {
         return this.unscaledHeight;
     }
@@ -135,6 +137,7 @@ implements VideoFrame.TextureBuffer {
         return this.yuvConverter;
     }
 
+    @Override
     public TextureBufferImpl applyTransformMatrix(Matrix transformMatrix, int newWidth, int newHeight) {
         return this.applyTransformMatrix(transformMatrix, newWidth, newHeight, newWidth, newHeight);
     }

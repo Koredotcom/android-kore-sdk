@@ -47,13 +47,7 @@ class NativeLibrary {
         @Override
         public boolean load(String name) {
             Logging.d(TAG, "Loading library: " + name);
-            try {
-                System.loadLibrary(name);
-            }
-            catch (UnsatisfiedLinkError e) {
-                Logging.e(TAG, "Failed to load native library: " + name, e);
-                return false;
-            }
+            System.loadLibrary(name);
             return true;
         }
     }

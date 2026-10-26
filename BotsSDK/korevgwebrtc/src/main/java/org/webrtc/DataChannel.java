@@ -95,6 +95,17 @@ public class DataChannel {
 
     private native boolean nativeSend(byte[] var1, boolean var2);
 
+    public static interface Observer {
+        @CalledByNative(value="Observer")
+        public void onBufferedAmountChange(long var1);
+
+        @CalledByNative(value="Observer")
+        public void onStateChange();
+
+        @CalledByNative(value="Observer")
+        public void onMessage(Buffer var1);
+    }
+
     public static enum State {
         CONNECTING,
         OPEN,
@@ -106,17 +117,6 @@ public class DataChannel {
         static State fromNativeIndex(int nativeIndex) {
             return State.values()[nativeIndex];
         }
-    }
-
-    public static interface Observer {
-        @CalledByNative(value="Observer")
-        public void onBufferedAmountChange(long var1);
-
-        @CalledByNative(value="Observer")
-        public void onStateChange();
-
-        @CalledByNative(value="Observer")
-        public void onMessage(Buffer var1);
     }
 
     public static class Buffer {

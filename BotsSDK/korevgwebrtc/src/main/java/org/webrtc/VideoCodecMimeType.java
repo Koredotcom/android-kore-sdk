@@ -7,7 +7,8 @@ enum VideoCodecMimeType {
     VP8("video/x-vnd.on2.vp8"),
     VP9("video/x-vnd.on2.vp9"),
     H264("video/avc"),
-    AV1("video/av01");
+    AV1("video/av01"),
+    H265("video/hevc");
 
     private final String mimeType;
 
@@ -17,14 +18,6 @@ enum VideoCodecMimeType {
 
     String mimeType() {
         return this.mimeType;
-    }
-
-    static VideoCodecMimeType fromSdpCodecName(String codecName) {
-        return codecName.equals("AV1X") ? AV1 : VideoCodecMimeType.valueOf(codecName);
-    }
-
-    String toSdpCodecName() {
-        return this == AV1 ? "AV1X" : this.name();
     }
 }
 

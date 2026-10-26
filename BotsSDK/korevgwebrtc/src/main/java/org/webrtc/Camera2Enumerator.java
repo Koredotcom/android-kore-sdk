@@ -2,35 +2,34 @@
  * Decompiled with CFR 0.152.
  * 
  * Could not load the following classes:
- *  android.annotation.TargetApi
  *  android.content.Context
  *  android.graphics.Rect
  *  android.graphics.SurfaceTexture
+ *  android.hardware.camera2.CameraAccessException
  *  android.hardware.camera2.CameraCharacteristics
  *  android.hardware.camera2.CameraManager
  *  android.hardware.camera2.params.StreamConfigurationMap
  *  android.os.Build$VERSION
  *  android.os.SystemClock
- *  androidx.annotation.Nullable
- *  android.util.AndroidException
  *  android.util.Range
  *  android.util.Size
+ *  androidx.annotation.Nullable
  */
 package org.webrtc;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
+import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCharacteristics;
 import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.os.Build;
 import android.os.SystemClock;
-import androidx.annotation.Nullable;
-import android.util.AndroidException;
 import android.util.Range;
+import androidx.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +40,6 @@ import org.webrtc.CameraVideoCapturer;
 import org.webrtc.Logging;
 import org.webrtc.Size;
 
-@TargetApi(value=21)
 public class Camera2Enumerator
 implements CameraEnumerator {
     private static final String TAG = "Camera2Enumerator";
@@ -61,7 +59,7 @@ implements CameraEnumerator {
         try {
             return this.cameraManager.getCameraIdList();
         }
-        catch (AndroidException e) {
+        catch (CameraAccessException e) {
             Logging.e(TAG, "Camera access exception", e);
             return new String[0];
         }
@@ -95,16 +93,13 @@ implements CameraEnumerator {
         try {
             return this.cameraManager.getCameraCharacteristics(deviceName);
         }
-        catch (AndroidException e) {
+        catch (CameraAccessException | RuntimeException e) {
             Logging.e(TAG, "Camera access exception", e);
             return null;
         }
     }
 
     public static boolean isSupported(Context context) {
-        if (Build.VERSION.SDK_INT < 21) {
-            return false;
-        }
         CameraManager cameraManager = (CameraManager)context.getSystemService("camera");
         try {
             String[] cameraIds;
@@ -114,7 +109,7 @@ implements CameraEnumerator {
                 return false;
             }
         }
-        catch (AndroidException | RuntimeException e) {
+        catch (CameraAccessException | RuntimeException e) {
             Logging.e(TAG, "Failed to check if camera2 is supported", e);
             return false;
         }
@@ -199,7 +194,10 @@ implements CameraEnumerator {
     }
 
     private static List<Size> convertSizes(android.util.Size[] cameraSizes) {
-        ArrayList<Size> sizes = new ArrayList<Size>();
+        if (cameraSizes == null || cameraSizes.length == 0) {
+            return Collections.emptyList();
+        }
+        ArrayList<Size> sizes = new ArrayList<Size>(cameraSizes.length);
         for (android.util.Size size : cameraSizes) {
             sizes.add(new Size(size.getWidth(), size.getHeight()));
         }

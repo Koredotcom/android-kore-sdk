@@ -7,49 +7,50 @@
 package org.webrtc;
 
 import androidx.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import org.webrtc.LibaomAv1Encoder;
-import org.webrtc.LibvpxVp8Encoder;
-import org.webrtc.LibvpxVp9Encoder;
+import java.util.List;
+import org.webrtc.Logging;
 import org.webrtc.VideoCodecInfo;
-import org.webrtc.VideoCodecMimeType;
 import org.webrtc.VideoEncoder;
 import org.webrtc.VideoEncoderFactory;
+import org.webrtc.WrappedNativeVideoEncoder;
 
 public class SoftwareVideoEncoderFactory
 implements VideoEncoderFactory {
+    private static final String TAG = "SoftwareVideoEncoderFactory";
+    private final long nativeFactory = SoftwareVideoEncoderFactory.nativeCreateFactory();
+
     @Override
     @Nullable
-    public VideoEncoder createEncoder(VideoCodecInfo codecInfo) {
-        String codecName = codecInfo.getName();
-        if (codecName.equalsIgnoreCase(VideoCodecMimeType.VP8.toSdpCodecName())) {
-            return new LibvpxVp8Encoder();
+    public VideoEncoder createEncoder(final VideoCodecInfo info) {
+        if (!SoftwareVideoEncoderFactory.nativeIsSupported(this.nativeFactory, info)) {
+            Logging.w(TAG, "Trying to create encoder for unsupported format. " + info);
+            return null;
         }
-        if (codecName.equalsIgnoreCase(VideoCodecMimeType.VP9.toSdpCodecName()) && LibvpxVp9Encoder.nativeIsSupported()) {
-            return new LibvpxVp9Encoder();
-        }
-        if (codecName.equalsIgnoreCase(VideoCodecMimeType.AV1.toSdpCodecName()) && LibaomAv1Encoder.nativeIsSupported()) {
-            return new LibaomAv1Encoder();
-        }
-        return null;
+        return new WrappedNativeVideoEncoder(){
+
+            @Override
+            public long createNative(long webrtcEnvRef) {
+                return SoftwareVideoEncoderFactory.nativeCreate(SoftwareVideoEncoderFactory.this.nativeFactory, webrtcEnvRef, info);
+            }
+
+            @Override
+            public boolean isHardwareEncoder() {
+                return false;
+            }
+        };
     }
 
     @Override
     public VideoCodecInfo[] getSupportedCodecs() {
-        return SoftwareVideoEncoderFactory.supportedCodecs();
+        return SoftwareVideoEncoderFactory.nativeGetSupportedCodecs(this.nativeFactory).toArray(new VideoCodecInfo[0]);
     }
 
-    static VideoCodecInfo[] supportedCodecs() {
-        ArrayList<VideoCodecInfo> codecs = new ArrayList<VideoCodecInfo>();
-        codecs.add(new VideoCodecInfo(VideoCodecMimeType.VP8.toSdpCodecName(), new HashMap<String, String>()));
-        if (LibvpxVp9Encoder.nativeIsSupported()) {
-            codecs.add(new VideoCodecInfo(VideoCodecMimeType.VP9.toSdpCodecName(), new HashMap<String, String>()));
-        }
-        if (LibaomAv1Encoder.nativeIsSupported()) {
-            codecs.add(new VideoCodecInfo(VideoCodecMimeType.AV1.toSdpCodecName(), new HashMap<String, String>()));
-        }
-        return codecs.toArray(new VideoCodecInfo[codecs.size()]);
-    }
+    private static native long nativeCreateFactory();
+
+    private static native boolean nativeIsSupported(long var0, VideoCodecInfo var2);
+
+    private static native long nativeCreate(long var0, long var2, VideoCodecInfo var4);
+
+    private static native List<VideoCodecInfo> nativeGetSupportedCodecs(long var0);
 }
 

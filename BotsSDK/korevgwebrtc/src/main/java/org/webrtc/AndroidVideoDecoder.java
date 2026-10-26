@@ -5,16 +5,16 @@
  *  android.media.MediaCodec$BufferInfo
  *  android.media.MediaFormat
  *  android.os.SystemClock
- *  androidx.annotation.Nullable
  *  android.view.Surface
+ *  androidx.annotation.Nullable
  */
 package org.webrtc;
 
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.os.SystemClock;
-import androidx.annotation.Nullable;
 import android.view.Surface;
+import androidx.annotation.Nullable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingDeque;
@@ -41,12 +41,6 @@ class AndroidVideoDecoder
 implements VideoDecoder,
 VideoSink {
     private static final String TAG = "AndroidVideoDecoder";
-    private static final String MEDIA_FORMAT_KEY_STRIDE = "stride";
-    private static final String MEDIA_FORMAT_KEY_SLICE_HEIGHT = "slice-height";
-    private static final String MEDIA_FORMAT_KEY_CROP_LEFT = "crop-left";
-    private static final String MEDIA_FORMAT_KEY_CROP_RIGHT = "crop-right";
-    private static final String MEDIA_FORMAT_KEY_CROP_TOP = "crop-top";
-    private static final String MEDIA_FORMAT_KEY_CROP_BOTTOM = "crop-bottom";
     private static final int MEDIA_CODEC_RELEASE_TIMEOUT_MS = 5000;
     private static final int DEQUEUE_INPUT_TIMEOUT_US = 500000;
     private static final int DEQUEUE_OUTPUT_BUFFER_TIMEOUT_US = 100000;
@@ -87,7 +81,7 @@ VideoSink {
         if (!this.isSupportedColorFormat(colorFormat)) {
             throw new IllegalArgumentException("Unsupported color format: " + colorFormat);
         }
-        Logging.d(TAG, "ctor name: " + codecName + " type: " + (Object)((Object)codecType) + " color format: " + colorFormat + " context: " + sharedContext);
+        Logging.d(TAG, "ctor name: " + codecName + " type: " + codecType + " color format: " + colorFormat + " context: " + sharedContext);
         this.mediaCodecWrapperFactory = mediaCodecWrapperFactory;
         this.codecName = codecName;
         this.codecType = codecType;
@@ -110,7 +104,7 @@ VideoSink {
 
     private VideoCodecStatus initDecodeInternal(int width, int height) {
         this.decoderThreadChecker.checkIsOnValidThread();
-        Logging.d(TAG, "initDecodeInternal name: " + this.codecName + " type: " + (Object)((Object)this.codecType) + " width: " + width + " height: " + height);
+        Logging.d(TAG, "initDecodeInternal name: " + this.codecName + " type: " + this.codecType + " width: " + width + " height: " + height + " color format: " + this.colorFormat);
         if (this.outputThread != null) {
             Logging.e(TAG, "initDecodeInternal called while the codec is already running");
             return VideoCodecStatus.FALLBACK_SOFTWARE;
@@ -196,10 +190,10 @@ VideoSink {
             return VideoCodecStatus.ERROR;
         }
         try {
-            buffer = this.codec.getInputBuffers()[index];
+            buffer = this.codec.getInputBuffer(index);
         }
         catch (IllegalStateException e) {
-            Logging.e(TAG, "getInputBuffers failed", e);
+            Logging.e(TAG, "getInputBuffer with index=" + index + " failed", e);
             return VideoCodecStatus.ERROR;
         }
         if (buffer.capacity() < size) {
@@ -303,13 +297,13 @@ VideoSink {
         this.outputThreadChecker.checkIsOnValidThread();
         try {
             MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
-            int result = this.codec.dequeueOutputBuffer(info, 100000L);
-            if (result == -2) {
+            int index = this.codec.dequeueOutputBuffer(info, 100000L);
+            if (index == -2) {
                 this.reformat(this.codec.getOutputFormat());
                 return;
             }
-            if (result < 0) {
-                Logging.v(TAG, "dequeueOutputBuffer returned " + result);
+            if (index < 0) {
+                Logging.v(TAG, "dequeueOutputBuffer returned " + index);
                 return;
             }
             FrameInfo frameInfo = this.frameInfos.poll();
@@ -321,9 +315,9 @@ VideoSink {
             }
             this.hasDecodedFirstFrame = true;
             if (this.surfaceTextureHelper != null) {
-                this.deliverTextureFrame(result, info, rotation, decodeTimeMs);
+                this.deliverTextureFrame(index, info, rotation, decodeTimeMs);
             } else {
-                this.deliverByteFrame(result, info, rotation, decodeTimeMs);
+                this.deliverByteFrame(index, info, rotation, decodeTimeMs);
             }
         }
         catch (IllegalStateException e) {
@@ -378,7 +372,7 @@ VideoSink {
     /*
      * WARNING - Removed try catching itself - possible behaviour change.
      */
-    private void deliverByteFrame(int result, MediaCodec.BufferInfo info, int rotation, Integer decodeTimeMs) {
+    private void deliverByteFrame(int index, MediaCodec.BufferInfo info, int rotation, Integer decodeTimeMs) {
         int sliceHeight;
         int stride;
         int height;
@@ -397,12 +391,12 @@ VideoSink {
         if (info.size < stride * height * 3 / 2 && sliceHeight == height && stride > width) {
             stride = info.size * 2 / (height * 3);
         }
-        ByteBuffer buffer = this.codec.getOutputBuffers()[result];
+        ByteBuffer buffer = this.codec.getOutputBuffer(index);
         buffer.position(info.offset);
         buffer.limit(info.offset + info.size);
         buffer = buffer.slice();
         VideoFrame.Buffer frameBuffer = this.colorFormat == 19 ? this.copyI420Buffer(buffer, stride, sliceHeight, width, height) : this.copyNV12ToI420Buffer(buffer, stride, sliceHeight, width, height);
-        this.codec.releaseOutputBuffer(result, false);
+        this.codec.releaseOutputBuffer(index, false);
         long presentationTimeNs = info.presentationTimeUs * 1000L;
         VideoFrame frame = new VideoFrame(frameBuffer, rotation, presentationTimeNs);
         this.callback.onDecodedFrame(frame, decodeTimeMs, null);
@@ -458,10 +452,10 @@ VideoSink {
         int newHeight;
         int newWidth;
         this.outputThreadChecker.checkIsOnValidThread();
-        Logging.d(TAG, "Decoder format changed: " + format.toString());
-        if (format.containsKey(MEDIA_FORMAT_KEY_CROP_LEFT) && format.containsKey(MEDIA_FORMAT_KEY_CROP_RIGHT) && format.containsKey(MEDIA_FORMAT_KEY_CROP_BOTTOM) && format.containsKey(MEDIA_FORMAT_KEY_CROP_TOP)) {
-            newWidth = 1 + format.getInteger(MEDIA_FORMAT_KEY_CROP_RIGHT) - format.getInteger(MEDIA_FORMAT_KEY_CROP_LEFT);
-            newHeight = 1 + format.getInteger(MEDIA_FORMAT_KEY_CROP_BOTTOM) - format.getInteger(MEDIA_FORMAT_KEY_CROP_TOP);
+        Logging.d(TAG, "Decoder format changed: " + format);
+        if (format.containsKey("crop-left") && format.containsKey("crop-right") && format.containsKey("crop-bottom") && format.containsKey("crop-top")) {
+            newWidth = 1 + format.getInteger("crop-right") - format.getInteger("crop-left");
+            newHeight = 1 + format.getInteger("crop-bottom") - format.getInteger("crop-top");
         } else {
             newWidth = format.getInteger("width");
             newHeight = format.getInteger("height");
@@ -491,11 +485,11 @@ VideoSink {
         }
         object = this.dimensionLock;
         synchronized (object) {
-            if (format.containsKey(MEDIA_FORMAT_KEY_STRIDE)) {
-                this.stride = format.getInteger(MEDIA_FORMAT_KEY_STRIDE);
+            if (format.containsKey("stride")) {
+                this.stride = format.getInteger("stride");
             }
-            if (format.containsKey(MEDIA_FORMAT_KEY_SLICE_HEIGHT)) {
-                this.sliceHeight = format.getInteger(MEDIA_FORMAT_KEY_SLICE_HEIGHT);
+            if (format.containsKey("slice-height")) {
+                this.sliceHeight = format.getInteger("slice-height");
             }
             Logging.d(TAG, "Frame stride and slice height: " + this.stride + " x " + this.sliceHeight);
             this.stride = Math.max(this.width, this.stride);
@@ -552,16 +546,6 @@ VideoSink {
         YuvHelper.copyPlane(src, srcStride, dst, dstStride, width, height);
     }
 
-    private static class DecodedTextureMetadata {
-        final long presentationTimestampUs;
-        final Integer decodeTimeMs;
-
-        DecodedTextureMetadata(long presentationTimestampUs, Integer decodeTimeMs) {
-            this.presentationTimestampUs = presentationTimestampUs;
-            this.decodeTimeMs = decodeTimeMs;
-        }
-    }
-
     private static class FrameInfo {
         final long decodeStartTimeMs;
         final int rotation;
@@ -569,6 +553,16 @@ VideoSink {
         FrameInfo(long decodeStartTimeMs, int rotation) {
             this.decodeStartTimeMs = decodeStartTimeMs;
             this.rotation = rotation;
+        }
+    }
+
+    private static class DecodedTextureMetadata {
+        final long presentationTimestampUs;
+        final Integer decodeTimeMs;
+
+        DecodedTextureMetadata(long presentationTimestampUs, Integer decodeTimeMs) {
+            this.presentationTimestampUs = presentationTimestampUs;
+            this.decodeTimeMs = decodeTimeMs;
         }
     }
 }

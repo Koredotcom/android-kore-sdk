@@ -41,6 +41,11 @@ public class RtpReceiver {
         return RtpReceiver.nativeGetId(this.nativeRtpReceiver);
     }
 
+    long getNativeRtpReceiver() {
+        this.checkRtpReceiverExists();
+        return this.nativeRtpReceiver;
+    }
+
     @CalledByNative
     public void dispose() {
         this.checkRtpReceiverExists();

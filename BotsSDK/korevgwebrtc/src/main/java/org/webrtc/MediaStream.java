@@ -72,7 +72,7 @@ public class MediaStream {
         while (!this.audioTracks.isEmpty()) {
             track = this.audioTracks.get(0);
             this.removeTrack((AudioTrack)track);
-            track.dispose();
+            ((AudioTrack)track).dispose();
         }
         while (!this.videoTracks.isEmpty()) {
             track = this.videoTracks.get(0);

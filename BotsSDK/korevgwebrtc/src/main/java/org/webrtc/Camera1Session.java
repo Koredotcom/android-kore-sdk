@@ -52,12 +52,20 @@ implements CameraSession {
     private SessionState state;
     private boolean firstFrameReported;
 
-    public static void create(CameraSession.CreateSessionCallback callback, CameraSession.Events events, boolean captureToTexture, Context applicationContext, SurfaceTextureHelper surfaceTextureHelper, int cameraId, int width, int height, int framerate) {
+    public static void create(CameraSession.CreateSessionCallback callback, CameraSession.Events events, boolean captureToTexture, Context applicationContext, SurfaceTextureHelper surfaceTextureHelper, String cameraName, int width, int height, int framerate) {
         CameraEnumerationAndroid.CaptureFormat captureFormat;
         Camera camera;
+        int cameraId;
         long constructionTimeNs = System.nanoTime();
-        Logging.d(TAG, "Open camera " + cameraId);
+        Logging.d(TAG, "Open camera " + cameraName);
         events.onCameraOpening();
+        try {
+            cameraId = Camera1Enumerator.getCameraIndex(cameraName);
+        }
+        catch (IllegalArgumentException e) {
+            callback.onFailure(CameraSession.FailureType.ERROR, e.getMessage());
+            return;
+        }
         try {
             camera = Camera.open((int)cameraId);
         }
@@ -66,7 +74,7 @@ implements CameraSession {
             return;
         }
         if (camera == null) {
-            callback.onFailure(CameraSession.FailureType.ERROR, "android.hardware.Camera.open returned null for camera id = " + cameraId);
+            callback.onFailure(CameraSession.FailureType.ERROR, "Camera.open returned null for camera id = " + cameraId);
             return;
         }
         try {
@@ -97,7 +105,14 @@ implements CameraSession {
                 camera.addCallbackBuffer(buffer.array());
             }
         }
-        camera.setDisplayOrientation(0);
+        try {
+            camera.setDisplayOrientation(0);
+        }
+        catch (RuntimeException e) {
+            camera.release();
+            callback.onFailure(CameraSession.FailureType.ERROR, e.getMessage());
+            return;
+        }
         callback.onDone(new Camera1Session(events, captureToTexture, applicationContext, surfaceTextureHelper, cameraId, camera, info, captureFormat, constructionTimeNs));
     }
 
@@ -112,7 +127,7 @@ implements CameraSession {
         if (parameters.isVideoStabilizationSupported()) {
             parameters.setVideoStabilization(true);
         }
-        if (focusModes.contains("continuous-video")) {
+        if (focusModes != null && focusModes.contains("continuous-video")) {
             parameters.setFocusMode("continuous-video");
         }
         camera.setParameters(parameters);
@@ -166,13 +181,13 @@ implements CameraSession {
         this.camera.setErrorCallback(new Camera.ErrorCallback(){
 
             public void onError(int error, Camera camera) {
-                String errorMessage = error == 100 ? "Camera server died!" : "Camera error: " + error;
-                Logging.e(Camera1Session.TAG, errorMessage);
+                Object errorMessage = error == 100 ? "Camera server died!" : "Camera error: " + error;
+                Logging.e(Camera1Session.TAG, (String)errorMessage);
                 Camera1Session.this.stopInternal();
                 if (error == 2) {
                     Camera1Session.this.events.onCameraDisconnected(Camera1Session.this);
                 } else {
-                    Camera1Session.this.events.onCameraError(Camera1Session.this, errorMessage);
+                    Camera1Session.this.events.onCameraError(Camera1Session.this, (String)errorMessage);
                 }
             }
         });
@@ -242,7 +257,7 @@ implements CameraSession {
                     camera1StartTimeMsHistogram.addSample(startTimeMs);
                     Camera1Session.this.firstFrameReported = true;
                 }
-                NV21Buffer frameBuffer = new NV21Buffer(data, ((Camera1Session)Camera1Session.this).captureFormat.width, ((Camera1Session)Camera1Session.this).captureFormat.height, () -> Camera1Session.this.cameraThreadHandler.post(() -> {
+                NV21Buffer frameBuffer = new NV21Buffer(data, Camera1Session.this.captureFormat.width, Camera1Session.this.captureFormat.height, () -> Camera1Session.this.cameraThreadHandler.post(() -> {
                     if (Camera1Session.this.state == SessionState.RUNNING) {
                         Camera1Session.this.camera.addCallbackBuffer(data);
                     }

@@ -2,21 +2,16 @@
  * Decompiled with CFR 0.152.
  * 
  * Could not load the following classes:
- *  android.annotation.TargetApi
  *  android.graphics.SurfaceTexture
- *  android.graphics.SurfaceTexture$OnFrameAvailableListener
  *  android.opengl.GLES20
- *  android.os.Build$VERSION
  *  android.os.Handler
  *  android.os.HandlerThread
  *  androidx.annotation.Nullable
  */
 package org.webrtc;
 
-import android.annotation.TargetApi;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import androidx.annotation.Nullable;
@@ -142,22 +137,13 @@ public class SurfaceTextureHelper {
         }
         this.oesTextureId = GlUtil.generateTexture(36197);
         this.surfaceTexture = new SurfaceTexture(this.oesTextureId);
-        SurfaceTextureHelper.setOnFrameAvailableListener(this.surfaceTexture, st -> {
+        this.surfaceTexture.setOnFrameAvailableListener(st -> {
             if (this.hasPendingTexture) {
                 Logging.d(TAG, "A frame is already pending, dropping frame.");
             }
             this.hasPendingTexture = true;
             this.tryDeliverTextureFrame();
         }, handler);
-    }
-
-    @TargetApi(value=21)
-    private static void setOnFrameAvailableListener(SurfaceTexture surfaceTexture, SurfaceTexture.OnFrameAvailableListener listener, Handler handler) {
-        if (Build.VERSION.SDK_INT >= 21) {
-            surfaceTexture.setOnFrameAvailableListener(listener, handler);
-        } else {
-            surfaceTexture.setOnFrameAvailableListener(listener);
-        }
     }
 
     public void startListening(VideoSink listener) {

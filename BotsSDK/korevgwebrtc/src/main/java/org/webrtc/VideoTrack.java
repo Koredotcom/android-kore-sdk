@@ -34,6 +34,14 @@ extends MediaStreamTrack {
         }
     }
 
+    public void setShouldReceive(boolean shouldReceive) {
+        VideoTrack.nativeSetShouldReceive(this.getNativeMediaStreamTrack(), shouldReceive);
+    }
+
+    public boolean shouldReceive() {
+        return VideoTrack.nativeGetShouldReceive(this.getNativeMediaStreamTrack());
+    }
+
     @Override
     public void dispose() {
         for (long nativeSink : this.sinks.values()) {
@@ -44,7 +52,7 @@ extends MediaStreamTrack {
         super.dispose();
     }
 
-    long getNativeVideoTrack() {
+    public long getNativeVideoTrack() {
         return this.getNativeMediaStreamTrack();
     }
 
@@ -55,5 +63,9 @@ extends MediaStreamTrack {
     private static native long nativeWrapSink(VideoSink var0);
 
     private static native void nativeFreeSink(long var0);
+
+    private static native void nativeSetShouldReceive(long var0, boolean var2);
+
+    private static native boolean nativeGetShouldReceive(long var0);
 }
 

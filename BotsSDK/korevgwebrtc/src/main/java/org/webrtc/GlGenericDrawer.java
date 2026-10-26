@@ -158,17 +158,17 @@ implements RendererCommon.GlDrawer {
         }
     }
 
-    public static interface ShaderCallbacks {
-        public void onNewShader(GlShader var1);
-
-        public void onPrepareShader(GlShader var1, float[] var2, int var3, int var4, int var5, int var6);
-    }
-
     public static enum ShaderType {
         OES,
         RGB,
         YUV;
 
+    }
+
+    public static interface ShaderCallbacks {
+        public void onNewShader(GlShader var1);
+
+        public void onPrepareShader(GlShader var1, float[] var2, int var3, int var4, int var5, int var6);
     }
 }
 

@@ -32,14 +32,7 @@ class MediaCodecUtils {
     static final int COLOR_QCOM_FORMATYUV420PackedSemiPlanar32m = 2141391876;
     static final int[] DECODER_COLOR_FORMATS = new int[]{19, 21, 2141391872, 2141391873, 2141391874, 2141391875, 2141391876};
     static final int[] ENCODER_COLOR_FORMATS = new int[]{19, 21, 2141391872, 2141391876};
-    static final int[] TEXTURE_COLOR_FORMATS = MediaCodecUtils.getTextureColorFormats();
-
-    private static int[] getTextureColorFormats() {
-        if (Build.VERSION.SDK_INT >= 18) {
-            return new int[]{2130708361};
-        }
-        return new int[0];
-    }
+    static final int[] TEXTURE_COLOR_FORMATS = new int[]{2130708361};
 
     @Nullable
     static Integer selectColorFormat(int[] supportedColorFormats, MediaCodecInfo.CodecCapabilities capabilities) {
@@ -64,14 +57,15 @@ class MediaCodecUtils {
         switch (type) {
             case VP8: 
             case VP9: 
-            case AV1: {
+            case AV1: 
+            case H265: {
                 return new HashMap<String, String>();
             }
             case H264: {
                 return H264Utils.getDefaultH264Params(highProfile);
             }
         }
-        throw new IllegalArgumentException("Unsupported codec: " + (Object)((Object)type));
+        throw new IllegalArgumentException("Unsupported codec: " + type);
     }
 
     static boolean isHardwareAccelerated(MediaCodecInfo info) {

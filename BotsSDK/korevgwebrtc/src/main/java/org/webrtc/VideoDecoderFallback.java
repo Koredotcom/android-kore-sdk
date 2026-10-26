@@ -17,10 +17,10 @@ extends WrappedNativeVideoDecoder {
     }
 
     @Override
-    public long createNativeVideoDecoder() {
-        return VideoDecoderFallback.nativeCreateDecoder(this.fallback, this.primary);
+    public long createNative(long webrtcEnvRef) {
+        return VideoDecoderFallback.nativeCreate(webrtcEnvRef, this.fallback, this.primary);
     }
 
-    private static native long nativeCreateDecoder(VideoDecoder var0, VideoDecoder var1);
+    private static native long nativeCreate(long var0, VideoDecoder var2, VideoDecoder var3);
 }
 

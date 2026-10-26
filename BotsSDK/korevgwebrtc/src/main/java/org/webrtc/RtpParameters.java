@@ -61,6 +61,40 @@ public class RtpParameters {
         return this.codecs;
     }
 
+    public static enum DegradationPreference {
+        DISABLED,
+        MAINTAIN_FRAMERATE,
+        MAINTAIN_RESOLUTION,
+        BALANCED;
+
+
+        @CalledByNative(value="DegradationPreference")
+        static DegradationPreference fromNativeIndex(int nativeIndex) {
+            return DegradationPreference.values()[nativeIndex];
+        }
+    }
+
+    public static class Rtcp {
+        private final String cname;
+        private final boolean reducedSize;
+
+        @CalledByNative(value="Rtcp")
+        Rtcp(String cname, boolean reducedSize) {
+            this.cname = cname;
+            this.reducedSize = reducedSize;
+        }
+
+        @CalledByNative(value="Rtcp")
+        public String getCname() {
+            return this.cname;
+        }
+
+        @CalledByNative(value="Rtcp")
+        public boolean getReducedSize() {
+            return this.reducedSize;
+        }
+    }
+
     public static class HeaderExtension {
         private final String uri;
         private final int id;
@@ -86,27 +120,6 @@ public class RtpParameters {
         @CalledByNative(value="HeaderExtension")
         public boolean getEncrypted() {
             return this.encrypted;
-        }
-    }
-
-    public static class Rtcp {
-        private final String cname;
-        private final boolean reducedSize;
-
-        @CalledByNative(value="Rtcp")
-        Rtcp(String cname, boolean reducedSize) {
-            this.cname = cname;
-            this.reducedSize = reducedSize;
-        }
-
-        @CalledByNative(value="Rtcp")
-        public String getCname() {
-            return this.cname;
-        }
-
-        @CalledByNative(value="Rtcp")
-        public boolean getReducedSize() {
-            return this.reducedSize;
         }
     }
 
@@ -175,6 +188,8 @@ public class RtpParameters {
         public Integer numTemporalLayers;
         @Nullable
         public Double scaleResolutionDownBy;
+        @Nullable
+        public String scalabilityMode;
         public Long ssrc;
         public boolean adaptiveAudioPacketTime;
 
@@ -185,7 +200,7 @@ public class RtpParameters {
         }
 
         @CalledByNative(value="Encoding")
-        Encoding(String rid, boolean active, double bitratePriority, int networkPriority, Integer maxBitrateBps, Integer minBitrateBps, Integer maxFramerate, Integer numTemporalLayers, Double scaleResolutionDownBy, Long ssrc, boolean adaptiveAudioPacketTime) {
+        Encoding(String rid, boolean active, double bitratePriority, int networkPriority, Integer maxBitrateBps, Integer minBitrateBps, Integer maxFramerate, Integer numTemporalLayers, Double scaleResolutionDownBy, String scalabilityMode, Long ssrc, boolean adaptiveAudioPacketTime) {
             this.rid = rid;
             this.active = active;
             this.bitratePriority = bitratePriority;
@@ -195,6 +210,7 @@ public class RtpParameters {
             this.maxFramerate = maxFramerate;
             this.numTemporalLayers = numTemporalLayers;
             this.scaleResolutionDownBy = scaleResolutionDownBy;
+            this.scalabilityMode = scalabilityMode;
             this.ssrc = ssrc;
             this.adaptiveAudioPacketTime = adaptiveAudioPacketTime;
         }
@@ -250,6 +266,12 @@ public class RtpParameters {
             return this.scaleResolutionDownBy;
         }
 
+        @Nullable
+        @CalledByNative(value="Encoding")
+        String getScalabilityMode() {
+            return this.scalabilityMode;
+        }
+
         @CalledByNative(value="Encoding")
         Long getSsrc() {
             return this.ssrc;
@@ -258,19 +280,6 @@ public class RtpParameters {
         @CalledByNative(value="Encoding")
         boolean getAdaptivePTime() {
             return this.adaptiveAudioPacketTime;
-        }
-    }
-
-    public static enum DegradationPreference {
-        DISABLED,
-        MAINTAIN_FRAMERATE,
-        MAINTAIN_RESOLUTION,
-        BALANCED;
-
-
-        @CalledByNative(value="DegradationPreference")
-        static DegradationPreference fromNativeIndex(int nativeIndex) {
-            return DegradationPreference.values()[nativeIndex];
         }
     }
 }

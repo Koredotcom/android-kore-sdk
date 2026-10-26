@@ -2,14 +2,12 @@
  * Decompiled with CFR 0.152.
  * 
  * Could not load the following classes:
- *  android.annotation.TargetApi
  *  android.content.Context
  *  android.hardware.camera2.CameraManager
  *  androidx.annotation.Nullable
  */
 package org.webrtc;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.hardware.camera2.CameraManager;
 import androidx.annotation.Nullable;
@@ -20,7 +18,6 @@ import org.webrtc.CameraSession;
 import org.webrtc.CameraVideoCapturer;
 import org.webrtc.SurfaceTextureHelper;
 
-@TargetApi(value=21)
 public class Camera2Capturer
 extends CameraCapturer {
     private final Context context;

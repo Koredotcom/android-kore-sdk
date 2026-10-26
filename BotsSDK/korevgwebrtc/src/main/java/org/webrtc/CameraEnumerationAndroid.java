@@ -56,19 +56,6 @@ public class CameraEnumerationAndroid {
         histogram.addSample(index + 1);
     }
 
-    private static abstract class ClosestComparator<T>
-    implements Comparator<T> {
-        private ClosestComparator() {
-        }
-
-        abstract int diff(T var1);
-
-        @Override
-        public int compare(T t1, T t2) {
-            return this.diff(t1) - this.diff(t2);
-        }
-    }
-
     public static class CaptureFormat {
         public final int width;
         public final int height;
@@ -138,6 +125,19 @@ public class CameraEnumerationAndroid {
             public int hashCode() {
                 return 1 + 65537 * this.min + this.max;
             }
+        }
+    }
+
+    private static abstract class ClosestComparator<T>
+    implements Comparator<T> {
+        private ClosestComparator() {
+        }
+
+        abstract int diff(T var1);
+
+        @Override
+        public int compare(T t1, T t2) {
+            return this.diff(t1) - this.diff(t2);
         }
     }
 }

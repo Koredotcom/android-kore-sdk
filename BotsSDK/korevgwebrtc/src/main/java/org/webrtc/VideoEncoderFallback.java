@@ -17,8 +17,8 @@ extends WrappedNativeVideoEncoder {
     }
 
     @Override
-    public long createNativeVideoEncoder() {
-        return VideoEncoderFallback.nativeCreateEncoder(this.fallback, this.primary);
+    public long createNative(long webrtcEnvRef) {
+        return VideoEncoderFallback.nativeCreate(webrtcEnvRef, this.fallback, this.primary);
     }
 
     @Override
@@ -26,6 +26,6 @@ extends WrappedNativeVideoEncoder {
         return this.primary.isHardwareEncoder();
     }
 
-    private static native long nativeCreateEncoder(VideoEncoder var0, VideoEncoder var1);
+    private static native long nativeCreate(long var0, VideoEncoder var2, VideoEncoder var3);
 }
 

@@ -2,9 +2,9 @@
  * Decompiled with CFR 0.152.
  * 
  * Could not load the following classes:
- *  android.annotation.TargetApi
  *  android.media.MediaCodec
  *  android.media.MediaCodec$BufferInfo
+ *  android.media.MediaCodecInfo
  *  android.media.MediaCrypto
  *  android.media.MediaFormat
  *  android.os.Bundle
@@ -12,8 +12,8 @@
  */
 package org.webrtc;
 
-import android.annotation.TargetApi;
 import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
 import android.media.MediaCrypto;
 import android.media.MediaFormat;
 import android.os.Bundle;
@@ -87,30 +87,43 @@ implements MediaCodecWrapperFactory {
         }
 
         @Override
+        public MediaFormat getInputFormat() {
+            return this.mediaCodec.getInputFormat();
+        }
+
+        @Override
         public MediaFormat getOutputFormat() {
             return this.mediaCodec.getOutputFormat();
         }
 
         @Override
-        public ByteBuffer[] getInputBuffers() {
-            return this.mediaCodec.getInputBuffers();
+        public MediaFormat getOutputFormat(int index) {
+            return this.mediaCodec.getOutputFormat(index);
         }
 
         @Override
-        public ByteBuffer[] getOutputBuffers() {
-            return this.mediaCodec.getOutputBuffers();
+        public ByteBuffer getInputBuffer(int index) {
+            return this.mediaCodec.getInputBuffer(index);
         }
 
         @Override
-        @TargetApi(value=18)
+        public ByteBuffer getOutputBuffer(int index) {
+            return this.mediaCodec.getOutputBuffer(index);
+        }
+
+        @Override
         public Surface createInputSurface() {
             return this.mediaCodec.createInputSurface();
         }
 
         @Override
-        @TargetApi(value=19)
         public void setParameters(Bundle params) {
             this.mediaCodec.setParameters(params);
+        }
+
+        @Override
+        public MediaCodecInfo getCodecInfo() {
+            return this.mediaCodec.getCodecInfo();
         }
     }
 }

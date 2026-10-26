@@ -10,7 +10,7 @@ import org.webrtc.VideoFrame;
 
 public interface VideoDecoder {
     @CalledByNative
-    default public long createNativeVideoDecoder() {
+    default public long createNative(long webrtcEnvRef) {
         return 0L;
     }
 

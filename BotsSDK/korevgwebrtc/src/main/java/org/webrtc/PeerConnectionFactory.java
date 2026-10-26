@@ -27,6 +27,7 @@ import org.webrtc.Loggable;
 import org.webrtc.Logging;
 import org.webrtc.MediaConstraints;
 import org.webrtc.MediaStream;
+import org.webrtc.MediaStreamTrack;
 import org.webrtc.NativeLibrary;
 import org.webrtc.NativeLibraryLoader;
 import org.webrtc.NetEqFactoryFactory;
@@ -34,6 +35,7 @@ import org.webrtc.NetworkControllerFactoryFactory;
 import org.webrtc.NetworkStatePredictorFactoryFactory;
 import org.webrtc.PeerConnection;
 import org.webrtc.PeerConnectionDependencies;
+import org.webrtc.RtpCapabilities;
 import org.webrtc.SSLCertificateVerifier;
 import org.webrtc.VideoDecoderFactory;
 import org.webrtc.VideoEncoderFactory;
@@ -151,12 +153,14 @@ public class PeerConnectionFactory {
     @Nullable
     public PeerConnection createPeerConnection(List<PeerConnection.IceServer> iceServers, MediaConstraints constraints, PeerConnection.Observer observer) {
         PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
+        rtcConfig.sdpSemantics = PeerConnection.SdpSemantics.UNIFIED_PLAN;
         return this.createPeerConnection(rtcConfig, constraints, observer);
     }
 
     @Nullable
     public PeerConnection createPeerConnection(List<PeerConnection.IceServer> iceServers, PeerConnection.Observer observer) {
         PeerConnection.RTCConfiguration rtcConfig = new PeerConnection.RTCConfiguration(iceServers);
+        rtcConfig.sdpSemantics = PeerConnection.SdpSemantics.UNIFIED_PLAN;
         return this.createPeerConnection(rtcConfig, observer);
     }
 
@@ -197,6 +201,16 @@ public class PeerConnectionFactory {
     public AudioTrack createAudioTrack(String id, AudioSource source) {
         this.checkPeerConnectionFactoryExists();
         return new AudioTrack(PeerConnectionFactory.nativeCreateAudioTrack(this.nativeFactory, id, source.getNativeAudioSource()));
+    }
+
+    public RtpCapabilities getRtpReceiverCapabilities(MediaStreamTrack.MediaType mediaType) {
+        this.checkPeerConnectionFactoryExists();
+        return PeerConnectionFactory.nativeGetRtpReceiverCapabilities(this.nativeFactory, mediaType);
+    }
+
+    public RtpCapabilities getRtpSenderCapabilities(MediaStreamTrack.MediaType mediaType) {
+        this.checkPeerConnectionFactoryExists();
+        return PeerConnectionFactory.nativeGetRtpSenderCapabilities(this.nativeFactory, mediaType);
     }
 
     public boolean startAecDump(int file_descriptor, int filesize_limit_bytes) {
@@ -264,9 +278,6 @@ public class PeerConnectionFactory {
         PeerConnectionFactory.printStackTrace(this.signalingThread, printNativeStackTraces);
         PeerConnectionFactory.printStackTrace(this.workerThread, printNativeStackTraces);
         PeerConnectionFactory.printStackTrace(this.networkThread, printNativeStackTraces);
-        if (printNativeStackTraces) {
-            PeerConnectionFactory.nativePrintStackTracesOfRegisteredThreads();
-        }
     }
 
     @CalledByNative
@@ -329,7 +340,9 @@ public class PeerConnectionFactory {
 
     private static native void nativePrintStackTrace(int var0);
 
-    private static native void nativePrintStackTracesOfRegisteredThreads();
+    private static native RtpCapabilities nativeGetRtpSenderCapabilities(long var0, MediaStreamTrack.MediaType var2);
+
+    private static native RtpCapabilities nativeGetRtpReceiverCapabilities(long var0, MediaStreamTrack.MediaType var2);
 
     public static class Builder {
         @Nullable
@@ -429,34 +442,6 @@ public class PeerConnectionFactory {
         }
     }
 
-    public static class Options {
-        static final int ADAPTER_TYPE_UNKNOWN = 0;
-        static final int ADAPTER_TYPE_ETHERNET = 1;
-        static final int ADAPTER_TYPE_WIFI = 2;
-        static final int ADAPTER_TYPE_CELLULAR = 4;
-        static final int ADAPTER_TYPE_VPN = 8;
-        static final int ADAPTER_TYPE_LOOPBACK = 16;
-        static final int ADAPTER_TYPE_ANY = 32;
-        public int networkIgnoreMask;
-        public boolean disableEncryption;
-        public boolean disableNetworkMonitor;
-
-        @CalledByNative(value="Options")
-        int getNetworkIgnoreMask() {
-            return this.networkIgnoreMask;
-        }
-
-        @CalledByNative(value="Options")
-        boolean getDisableEncryption() {
-            return this.disableEncryption;
-        }
-
-        @CalledByNative(value="Options")
-        boolean getDisableNetworkMonitor() {
-            return this.disableNetworkMonitor;
-        }
-    }
-
     public static class InitializationOptions {
         final Context applicationContext;
         final String fieldTrials;
@@ -540,6 +525,34 @@ public class PeerConnectionFactory {
         private ThreadInfo(Thread thread, int tid) {
             this.thread = thread;
             this.tid = tid;
+        }
+    }
+
+    public static class Options {
+        public static final int ADAPTER_TYPE_UNKNOWN = 0;
+        public static final int ADAPTER_TYPE_ETHERNET = 1;
+        public static final int ADAPTER_TYPE_WIFI = 2;
+        public static final int ADAPTER_TYPE_CELLULAR = 4;
+        public static final int ADAPTER_TYPE_VPN = 8;
+        public static final int ADAPTER_TYPE_LOOPBACK = 16;
+        public static final int ADAPTER_TYPE_ANY = 32;
+        public int networkIgnoreMask;
+        public boolean disableEncryption;
+        public boolean disableNetworkMonitor;
+
+        @CalledByNative(value="Options")
+        int getNetworkIgnoreMask() {
+            return this.networkIgnoreMask;
+        }
+
+        @CalledByNative(value="Options")
+        boolean getDisableEncryption() {
+            return this.disableEncryption;
+        }
+
+        @CalledByNative(value="Options")
+        boolean getDisableNetworkMonitor() {
+            return this.disableNetworkMonitor;
         }
     }
 }

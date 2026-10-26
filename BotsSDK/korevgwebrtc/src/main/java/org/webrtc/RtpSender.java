@@ -25,11 +25,11 @@ public class RtpSender {
 
     @CalledByNative
     public RtpSender(long nativeRtpSender) {
+        long nativeDtmfSender;
         this.nativeRtpSender = nativeRtpSender;
         long nativeTrack = RtpSender.nativeGetTrack(nativeRtpSender);
         this.cachedTrack = MediaStreamTrack.createMediaStreamTrack(nativeTrack);
-        long nativeDtmfSender = RtpSender.nativeGetDtmfSender(nativeRtpSender);
-        this.dtmfSender = nativeDtmfSender != 0L ? new DtmfSender(nativeDtmfSender) : null;
+        this.dtmfSender = RtpSender.nativeGetMediaType(nativeRtpSender).equalsIgnoreCase("audio") ? ((nativeDtmfSender = RtpSender.nativeGetDtmfSender(nativeRtpSender)) != 0L ? new DtmfSender(nativeDtmfSender) : null) : null;
     }
 
     public boolean setTrack(@Nullable MediaStreamTrack track, boolean takeOwnership) {
@@ -125,5 +125,7 @@ public class RtpSender {
     private static native String nativeGetId(long var0);
 
     private static native void nativeSetFrameEncryptor(long var0, long var2);
+
+    private static native String nativeGetMediaType(long var0);
 }
 

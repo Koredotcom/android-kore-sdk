@@ -37,6 +37,7 @@ import org.webrtc.VideoEncoderFactory;
 public class HardwareVideoEncoderFactory
 implements VideoEncoderFactory {
     private static final String TAG = "HardwareVideoEncoderFactory";
+    private static final int PERIODIC_KEY_FRAME_INTERVAL_S = 3600;
     private static final int QCOM_VP8_KEY_FRAME_INTERVAL_ANDROID_L_MS = 15000;
     private static final int QCOM_VP8_KEY_FRAME_INTERVAL_ANDROID_M_MS = 20000;
     private static final int QCOM_VP8_KEY_FRAME_INTERVAL_ANDROID_N_MS = 15000;
@@ -72,10 +73,7 @@ implements VideoEncoderFactory {
     @Override
     @Nullable
     public VideoEncoder createEncoder(VideoCodecInfo input) {
-        if (Build.VERSION.SDK_INT < 19) {
-            return null;
-        }
-        VideoCodecMimeType type = VideoCodecMimeType.fromSdpCodecName(input.getName());
+        VideoCodecMimeType type = VideoCodecMimeType.valueOf(input.getName());
         MediaCodecInfo info = this.findCodecForType(type);
         if (info == null) {
             return null;
@@ -94,23 +92,20 @@ implements VideoEncoderFactory {
                 return null;
             }
         }
-        return new HardwareVideoEncoder(new MediaCodecWrapperFactoryImpl(), codecName, type, surfaceColorFormat, yuvColorFormat, input.params, this.getKeyFrameIntervalSec(type), this.getForcedKeyFrameIntervalMs(type, codecName), this.createBitrateAdjuster(type, codecName), this.sharedContext);
+        return new HardwareVideoEncoder(new MediaCodecWrapperFactoryImpl(), codecName, type, surfaceColorFormat, yuvColorFormat, input.params, 3600, this.getForcedKeyFrameIntervalMs(type, codecName), this.createBitrateAdjuster(type, codecName), this.sharedContext);
     }
 
     @Override
     public VideoCodecInfo[] getSupportedCodecs() {
-        if (Build.VERSION.SDK_INT < 19) {
-            return new VideoCodecInfo[0];
-        }
         ArrayList<VideoCodecInfo> supportedCodecInfos = new ArrayList<VideoCodecInfo>();
-        for (VideoCodecMimeType type : new VideoCodecMimeType[]{VideoCodecMimeType.VP8, VideoCodecMimeType.VP9, VideoCodecMimeType.H264, VideoCodecMimeType.AV1}) {
+        for (VideoCodecMimeType type : new VideoCodecMimeType[]{VideoCodecMimeType.VP8, VideoCodecMimeType.VP9, VideoCodecMimeType.H264, VideoCodecMimeType.AV1, VideoCodecMimeType.H265}) {
             MediaCodecInfo codec = this.findCodecForType(type);
             if (codec == null) continue;
-            String name = type.toSdpCodecName();
+            String name = type.name();
             if (type == VideoCodecMimeType.H264 && this.isH264HighProfileSupported(codec)) {
-                supportedCodecInfos.add(new VideoCodecInfo(name, MediaCodecUtils.getCodecProperties(type, true)));
+                supportedCodecInfos.add(new VideoCodecInfo(name, MediaCodecUtils.getCodecProperties(type, true), new ArrayList<String>()));
             }
-            supportedCodecInfos.add(new VideoCodecInfo(name, MediaCodecUtils.getCodecProperties(type, false)));
+            supportedCodecInfos.add(new VideoCodecInfo(name, MediaCodecUtils.getCodecProperties(type, false), new ArrayList<String>()));
         }
         return supportedCodecInfos.toArray(new VideoCodecInfo[supportedCodecInfos.size()]);
     }
@@ -142,6 +137,9 @@ implements VideoEncoderFactory {
     }
 
     private boolean isHardwareSupportedInCurrentSdk(MediaCodecInfo info, VideoCodecMimeType type) {
+        if (Build.VERSION.SDK_INT >= 29) {
+            return info.isHardwareAccelerated();
+        }
         switch (type) {
             case VP8: {
                 return this.isHardwareSupportedInCurrentSdkVp8(info);
@@ -152,6 +150,7 @@ implements VideoEncoderFactory {
             case H264: {
                 return this.isHardwareSupportedInCurrentSdkH264(info);
             }
+            case H265: 
             case AV1: {
                 return false;
             }
@@ -161,7 +160,7 @@ implements VideoEncoderFactory {
 
     private boolean isHardwareSupportedInCurrentSdkVp8(MediaCodecInfo info) {
         String name = info.getName();
-        return name.startsWith("OMX.qcom.") && Build.VERSION.SDK_INT >= 19 || name.startsWith("OMX.Exynos.") && Build.VERSION.SDK_INT >= 23 || name.startsWith("OMX.Intel.") && Build.VERSION.SDK_INT >= 21 && this.enableIntelVp8Encoder;
+        return name.startsWith("OMX.qcom.") || name.startsWith("OMX.Exynos.") && Build.VERSION.SDK_INT >= 23 || name.startsWith("OMX.Intel.") && this.enableIntelVp8Encoder;
     }
 
     private boolean isHardwareSupportedInCurrentSdkVp9(MediaCodecInfo info) {
@@ -174,7 +173,7 @@ implements VideoEncoderFactory {
             return false;
         }
         String name = info.getName();
-        return name.startsWith("OMX.qcom.") && Build.VERSION.SDK_INT >= 19 || name.startsWith("OMX.Exynos.") && Build.VERSION.SDK_INT >= 21;
+        return name.startsWith("OMX.qcom.") || name.startsWith("OMX.Exynos.");
     }
 
     private boolean isMediaCodecAllowed(MediaCodecInfo info) {
@@ -184,31 +183,15 @@ implements VideoEncoderFactory {
         return this.codecAllowedPredicate.test(info);
     }
 
-    private int getKeyFrameIntervalSec(VideoCodecMimeType type) {
-        switch (type) {
-            case VP8: 
-            case VP9: 
-            case AV1: {
-                return 100;
-            }
-            case H264: {
-                return 20;
-            }
-        }
-        throw new IllegalArgumentException("Unsupported VideoCodecMimeType " + (Object)((Object)type));
-    }
-
     private int getForcedKeyFrameIntervalMs(VideoCodecMimeType type, String codecName) {
         if (type == VideoCodecMimeType.VP8 && codecName.startsWith("OMX.qcom.")) {
-            if (Build.VERSION.SDK_INT == 21 || Build.VERSION.SDK_INT == 22) {
+            if (Build.VERSION.SDK_INT < 23) {
                 return 15000;
             }
             if (Build.VERSION.SDK_INT == 23) {
                 return 20000;
             }
-            if (Build.VERSION.SDK_INT > 23) {
-                return 15000;
-            }
+            return 15000;
         }
         return 0;
     }

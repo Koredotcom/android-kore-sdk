@@ -3,10 +3,12 @@
  * 
  * Could not load the following classes:
  *  android.graphics.Matrix
+ *  androidx.annotation.Nullable
  */
 package org.webrtc;
 
 import android.graphics.Matrix;
+import androidx.annotation.Nullable;
 import java.nio.ByteBuffer;
 import org.webrtc.CalledByNative;
 import org.webrtc.RefCounted;
@@ -70,6 +72,35 @@ implements RefCounted {
         this.buffer.release();
     }
 
+    public static interface Buffer
+    extends RefCounted {
+        @CalledByNative(value="Buffer")
+        default public int getBufferType() {
+            return 0;
+        }
+
+        @CalledByNative(value="Buffer")
+        public int getWidth();
+
+        @CalledByNative(value="Buffer")
+        public int getHeight();
+
+        @Nullable
+        @CalledByNative(value="Buffer")
+        public I420Buffer toI420();
+
+        @Override
+        @CalledByNative(value="Buffer")
+        public void retain();
+
+        @Override
+        @CalledByNative(value="Buffer")
+        public void release();
+
+        @CalledByNative(value="Buffer")
+        public Buffer cropAndScale(int var1, int var2, int var3, int var4, int var5, int var6);
+    }
+
     public static interface TextureBuffer
     extends Buffer {
         public Type getType();
@@ -77,6 +108,18 @@ implements RefCounted {
         public int getTextureId();
 
         public Matrix getTransformMatrix();
+
+        default public TextureBuffer applyTransformMatrix(Matrix transformMatrix, int newWidth, int newHeight) {
+            throw new UnsupportedOperationException("Not implemented");
+        }
+
+        default public int getUnscaledWidth() {
+            return this.getWidth();
+        }
+
+        default public int getUnscaledHeight() {
+            return this.getHeight();
+        }
 
         public static enum Type {
             OES(36197),
@@ -118,34 +161,6 @@ implements RefCounted {
 
         @CalledByNative(value="I420Buffer")
         public int getStrideV();
-    }
-
-    public static interface Buffer
-    extends RefCounted {
-        @CalledByNative(value="Buffer")
-        default public int getBufferType() {
-            return 0;
-        }
-
-        @CalledByNative(value="Buffer")
-        public int getWidth();
-
-        @CalledByNative(value="Buffer")
-        public int getHeight();
-
-        @CalledByNative(value="Buffer")
-        public I420Buffer toI420();
-
-        @Override
-        @CalledByNative(value="Buffer")
-        public void retain();
-
-        @Override
-        @CalledByNative(value="Buffer")
-        public void release();
-
-        @CalledByNative(value="Buffer")
-        public Buffer cropAndScale(int var1, int var2, int var3, int var4, int var5, int var6);
     }
 }
 

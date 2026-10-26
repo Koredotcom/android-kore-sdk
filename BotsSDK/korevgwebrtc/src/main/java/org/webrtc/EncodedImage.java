@@ -89,6 +89,31 @@ implements RefCounted {
         return new Builder();
     }
 
+    public static enum FrameType {
+        EmptyFrame(0),
+        VideoFrameKey(3),
+        VideoFrameDelta(4);
+
+        private final int nativeIndex;
+
+        private FrameType(int nativeIndex) {
+            this.nativeIndex = nativeIndex;
+        }
+
+        public int getNative() {
+            return this.nativeIndex;
+        }
+
+        @CalledByNative(value="FrameType")
+        static FrameType fromNativeIndex(int nativeIndex) {
+            for (FrameType type : FrameType.values()) {
+                if (type.getNative() != nativeIndex) continue;
+                return type;
+            }
+            throw new IllegalArgumentException("Unknown native frame type: " + nativeIndex);
+        }
+    }
+
     public static class Builder {
         private ByteBuffer buffer;
         @Nullable
@@ -148,31 +173,6 @@ implements RefCounted {
 
         public EncodedImage createEncodedImage() {
             return new EncodedImage(this.buffer, this.releaseCallback, this.encodedWidth, this.encodedHeight, this.captureTimeNs, this.frameType, this.rotation, this.qp);
-        }
-    }
-
-    public static enum FrameType {
-        EmptyFrame(0),
-        VideoFrameKey(3),
-        VideoFrameDelta(4);
-
-        private final int nativeIndex;
-
-        private FrameType(int nativeIndex) {
-            this.nativeIndex = nativeIndex;
-        }
-
-        public int getNative() {
-            return this.nativeIndex;
-        }
-
-        @CalledByNative(value="FrameType")
-        static FrameType fromNativeIndex(int nativeIndex) {
-            for (FrameType type : FrameType.values()) {
-                if (type.getNative() != nativeIndex) continue;
-                return type;
-            }
-            throw new IllegalArgumentException("Unknown native frame type: " + nativeIndex);
         }
     }
 }

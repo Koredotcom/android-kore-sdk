@@ -14,7 +14,7 @@ import org.webrtc.VideoFrame;
 
 public interface VideoEncoder {
     @CalledByNative
-    default public long createNativeVideoEncoder() {
+    default public long createNative(long webrtcEnvRef) {
         return 0L;
     }
 
@@ -32,8 +32,13 @@ public interface VideoEncoder {
     @CalledByNative
     public VideoCodecStatus encode(VideoFrame var1, EncodeInfo var2);
 
-    @CalledByNative
     public VideoCodecStatus setRateAllocation(BitrateAllocation var1, int var2);
+
+    @CalledByNative
+    default public VideoCodecStatus setRates(RateControlParameters rcParameters) {
+        int framerateFps = (int)Math.ceil(rcParameters.framerateFps);
+        return this.setRateAllocation(rcParameters.bitrate, framerateFps);
+    }
 
     @CalledByNative
     public ScalingSettings getScalingSettings();
@@ -47,8 +52,42 @@ public interface VideoEncoder {
     @CalledByNative
     public String getImplementationName();
 
-    public static interface Callback {
-        public void onEncodedFrame(EncodedImage var1, CodecSpecificInfo var2);
+    @CalledByNative
+    default public EncoderInfo getEncoderInfo() {
+        return new EncoderInfo(1, false);
+    }
+
+    public static class RateControlParameters {
+        public final BitrateAllocation bitrate;
+        public final double framerateFps;
+
+        @CalledByNative(value="RateControlParameters")
+        public RateControlParameters(BitrateAllocation bitrate, double framerateFps) {
+            this.bitrate = bitrate;
+            this.framerateFps = framerateFps;
+        }
+    }
+
+    public static class BitrateAllocation {
+        public final int[][] bitratesBbs;
+
+        @CalledByNative(value="BitrateAllocation")
+        public BitrateAllocation(int[][] bitratesBbs) {
+            this.bitratesBbs = bitratesBbs;
+        }
+
+        public int getSum() {
+            int sum = 0;
+            int[][] nArray = this.bitratesBbs;
+            int n = nArray.length;
+            for (int i = 0; i < n; ++i) {
+                int[] spatialLayer;
+                for (int bitrate : spatialLayer = nArray[i]) {
+                    sum += bitrate;
+                }
+            }
+            return sum;
+        }
     }
 
     public static class ResolutionBitrateLimits {
@@ -83,6 +122,30 @@ public interface VideoEncoder {
         public int getMaxBitrateBps() {
             return this.maxBitrateBps;
         }
+    }
+
+    public static class EncoderInfo {
+        public final int requestedResolutionAlignment;
+        public final boolean applyAlignmentToAllSimulcastLayers;
+
+        public EncoderInfo(int requestedResolutionAlignment, boolean applyAlignmentToAllSimulcastLayers) {
+            this.requestedResolutionAlignment = requestedResolutionAlignment;
+            this.applyAlignmentToAllSimulcastLayers = applyAlignmentToAllSimulcastLayers;
+        }
+
+        @CalledByNative(value="EncoderInfo")
+        public int getRequestedResolutionAlignment() {
+            return this.requestedResolutionAlignment;
+        }
+
+        @CalledByNative(value="EncoderInfo")
+        public boolean getApplyAlignmentToAllSimulcastLayers() {
+            return this.applyAlignmentToAllSimulcastLayers;
+        }
+    }
+
+    public static interface Callback {
+        public void onEncodedFrame(EncodedImage var1, CodecSpecificInfo var2);
     }
 
     public static class ScalingSettings {
@@ -121,28 +184,6 @@ public interface VideoEncoder {
 
         public String toString() {
             return this.on ? "[ " + this.low + ", " + this.high + " ]" : "OFF";
-        }
-    }
-
-    public static class BitrateAllocation {
-        public final int[][] bitratesBbs;
-
-        @CalledByNative(value="BitrateAllocation")
-        public BitrateAllocation(int[][] bitratesBbs) {
-            this.bitratesBbs = bitratesBbs;
-        }
-
-        public int getSum() {
-            int sum = 0;
-            int[][] nArray = this.bitratesBbs;
-            int n = nArray.length;
-            for (int i = 0; i < n; ++i) {
-                int[] spatialLayer;
-                for (int bitrate : spatialLayer = nArray[i]) {
-                    sum += bitrate;
-                }
-            }
-            return sum;
         }
     }
 
