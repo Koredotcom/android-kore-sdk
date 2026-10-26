@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
+
+group = 'com.github.Koredotcom.android-kore-sdk'
+version = System.getenv('VERSION') ?: 'local'
+
+dependencies {
+    api 'androidx.annotation:annotation:1.10.0'
+}
+
+android {
+    namespace 'com.korevg.mv.webrtcsdk'
+    compileSdk 35
+
+    defaultConfig {
+        minSdkVersion 26
+    }
+
+    buildFeatures {
+        buildConfig false
+    }
+
+    publishing {
+        singleVariant('release')
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+                groupId = 'com.github.Koredotcom.android-kore-sdk'
+                artifactId = 'korevgwebrtc'
+                version = System.getenv('VERSION') ?: 'local'
+            }
+        }
+    }
+}

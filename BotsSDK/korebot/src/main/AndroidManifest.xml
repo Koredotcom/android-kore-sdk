@@ -68,18 +68,18 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".audiocodes.webrtcclient.Activities.PermissionDeniedActivity"
+            android:name=".korevg.webrtcclient.Activities.PermissionDeniedActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".audiocodes.webrtcclient.Activities.CallActivity"
+            android:name=".korevg.webrtcclient.Activities.CallActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".audiocodes.webrtcclient.Activities.IncomingCallActivity"
+            android:name=".korevg.webrtcclient.Activities.IncomingCallActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:screenOrientation="locked"
             android:theme="@style/AppTheme"

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".audiocodes.webrtcclient.Activities.MainActivity">
+    tools:context=".korevg.webrtcclient.Activities.MainActivity">
 
     <LinearLayout
         android:id="@+id/dialer_layout_frame"
@@ -64,7 +64,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="1">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -73,14 +73,14 @@
                     android:textSize="20sp"
                     custom:Text="1"
                     style="@style/DialerKeypadButton"/>
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     style="@style/DialerKeypadButton"
                     custom:Text="2\nABC" />
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -96,21 +96,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="1">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     style="@style/DialerKeypadButton"
                     custom:Text="4\nGHI" />
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     style="@style/DialerKeypadButton"
                     custom:Text="5\nJKL" />
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -126,21 +126,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="1">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_7"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     style="@style/DialerKeypadButton"
                     custom:Text="7\nPQRS" />
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_8"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     style="@style/DialerKeypadButton"
                     custom:Text="8\nTUV" />
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_9"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -156,21 +156,21 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="1">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_asterisk"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     style="@style/DialerKeypadButton"
                     custom:Text="*" />
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_0"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     style="@style/DialerKeypadButton"
                     custom:Text="0\n+" />
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/dialer_button_keypad_hash"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -190,14 +190,14 @@
             android:layout_marginLeft="0dp"
             android:layout_weight="0">
 
-            <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+            <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                 android:id="@+id/dialer_button_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 custom:Text="@string/dialer_button_call_text"
                 style="@style/DialerCallButton"
                 android:layout_weight="1"/>
-            <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+            <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                 android:id="@+id/dialer_button_video_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -29,8 +29,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionManager;
-import kore.botssdk.audiocodes.webrtcclient.Permissions.PermissionRequest;
+import kore.botssdk.korevg.webrtcclient.Permissions.PermissionManager;
+import kore.botssdk.korevg.webrtcclient.Permissions.PermissionRequest;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.net.RestResponse;

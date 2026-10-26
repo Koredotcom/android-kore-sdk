@@ -1,0 +1,18 @@
+/*
+ * Decompiled with CFR 0.152.
+ */
+package com.korevg.mv.webrtcsdk.session;
+
+public enum CallTermination {
+    TERMINATED_NOT_FOUND,
+    TERMINATED_DECLINED,
+    TERMINATED_UNKNOWN,
+    TERMINATED_LOCAL,
+    TERMINATED_REMOTE,
+    TERMINATED_MEDIA_FAILED,
+    TERMINATED_REDIRECT,
+    TERMINATED_REDIRECT_STOP,
+    TERMINATED_TRANSFER;
+
+}
+

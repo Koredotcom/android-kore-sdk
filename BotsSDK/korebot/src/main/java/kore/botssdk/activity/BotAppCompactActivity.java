@@ -25,7 +25,7 @@ import androidx.core.view.WindowInsetsCompat;
 import java.util.Objects;
 
 import kore.botssdk.R;
-import kore.botssdk.audiocodes.webrtcclient.db.MySQLiteHelper;
+import kore.botssdk.korevg.webrtcclient.db.MySQLiteHelper;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.utils.BundleConstants;

@@ -1,4 +1,4 @@
 jdk:
   - openjdk17
 install:
-  - ./gradlew :audiocodeswebrtc:publishReleasePublicationToMavenLocal
+  - ./gradlew :korevgwebrtc:publishReleasePublicationToMavenLocal

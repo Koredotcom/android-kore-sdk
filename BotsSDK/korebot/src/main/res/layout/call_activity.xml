@@ -261,7 +261,7 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_1"
                     style="@style/DialerKeypadButton"
                     android:layout_width="wrap_content"
@@ -269,14 +269,14 @@
                     android:text="@string/_1"
                     app:Text="1" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_2"
                     style="@style/DialerKeypadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:Text="2\nABC" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_3"
                     style="@style/DialerKeypadButton"
                     android:layout_width="wrap_content"
@@ -293,21 +293,21 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_4"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:Text="4\nGHI" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_5"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:Text="5\nJKL" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_6"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
@@ -324,21 +324,21 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_7"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:Text="7\nPQRS" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_8"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:Text="8\nTUV" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_9"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
@@ -355,21 +355,21 @@
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_asterisk"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:Text="*" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_0"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     app:Text="0\n+" />
 
-                <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+                <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
                     android:id="@+id/call_button_keypad_hash"
                     style="@style/CallKeypadButton"
                     android:layout_width="wrap_content"

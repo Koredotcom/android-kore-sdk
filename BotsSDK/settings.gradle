@@ -1,4 +1,4 @@
 include ':korebot', ':korebotsdklib'
 include ':widgetsdk'
 include ':app'
-include ':audiocodeswebrtc'
+include ':korevgwebrtc'

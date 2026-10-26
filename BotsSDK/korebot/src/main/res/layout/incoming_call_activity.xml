@@ -70,7 +70,7 @@
 
 
 
-        <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+        <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
             android:id="@+id/incoming_call_button_answer_video"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -83,14 +83,14 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="horizontal">
-        <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+        <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
             android:id="@+id/incoming_call_button_answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:Text="@string/incoming_call_button_answer_text"
             style="@style/IncomingCallButton"
             android:layout_weight="1"/>
-        <kore.botssdk.audiocodes.webrtcclient.Structure.ImageViewWithText
+        <kore.botssdk.korevg.webrtcclient.Structure.ImageViewWithText
             android:id="@+id/incoming_call_button_decline"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

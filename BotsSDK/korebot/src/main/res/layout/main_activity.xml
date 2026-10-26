@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".audiocodes.webrtcclient.Activities.MainActivity">
+    tools:context=".korevg.webrtcclient.Activities.MainActivity">
 
 
     <com.google.android.material.tabs.TabLayout

@@ -54,9 +54,9 @@ import java.util.Objects;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.GenericWebViewActivity;
-import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
-import kore.botssdk.audiocodes.webrtcclient.General.AppUtils;
-import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
+import kore.botssdk.korevg.webrtcclient.General.ACManager;
+import kore.botssdk.korevg.webrtcclient.General.AppUtils;
+import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.dialogs.TemplateBottomSheetFragment;
 import kore.botssdk.event.KoreEventCenter;

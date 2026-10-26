@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".audiocodes.webrtcclient.Activities.MainActivity">
+    tools:context=".korevg.webrtcclient.Activities.MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +27,7 @@
         android:layout_height="match_parent"
         android:id="@+id/frag_0"
         android:layout_weight="5"
-        class="kore.botssdk.audiocodes.webrtcclient.Fragments.TabletButtonsFragment"/>
+        class="kore.botssdk.korevg.webrtcclient.Fragments.TabletButtonsFragment"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -51,7 +51,7 @@
             android:layout_height="match_parent"
             android:id="@+id/frag_1"
             android:layout_weight="1"
-            class="kore.botssdk.audiocodes.webrtcclient.Fragments.TabletInfoFragment"/>
+            class="kore.botssdk.korevg.webrtcclient.Fragments.TabletInfoFragment"/>
             </LinearLayout>
 
     </LinearLayout>

@@ -24,9 +24,9 @@ import android.os.Looper;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.ViewModel;
 
-import com.audiocodes.mv.webrtcsdk.audio.WebRTCAudioManager;
-import com.audiocodes.mv.webrtcsdk.sip.enums.Transport;
-import com.audiocodes.mv.webrtcsdk.useragent.AudioCodesUA;
+import com.korevg.mv.webrtcsdk.audio.WebRTCAudioManager;
+import com.korevg.mv.webrtcsdk.sip.enums.Transport;
+import com.korevg.mv.webrtcsdk.useragent.AudioCodesUA;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
@@ -44,10 +44,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
-import kore.botssdk.audiocodes.webrtcclient.Activities.CallActivity;
-import kore.botssdk.audiocodes.webrtcclient.General.ACManager;
-import kore.botssdk.audiocodes.webrtcclient.General.Prefs;
-import kore.botssdk.audiocodes.webrtcclient.Structure.SipAccount;
+import kore.botssdk.korevg.webrtcclient.Activities.CallActivity;
+import kore.botssdk.korevg.webrtcclient.General.ACManager;
+import kore.botssdk.korevg.webrtcclient.General.Prefs;
+import kore.botssdk.korevg.webrtcclient.Structure.SipAccount;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.events.SocketDataTransferModel;
 import kore.botssdk.listener.BaseSocketConnectionManager;

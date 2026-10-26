@@ -77,11 +77,7 @@ dependencies {
         exclude group: 'org.apache.commons'
     }
 
-    if (project.findProperty('useLocalAudioCodesWebRtc') == 'true') {
-        implementation project(':audiocodeswebrtc')
-    } else {
-        implementation 'com.github.Koredotcom.android-kore-sdk:audiocodeswebrtc:audiocodes-webrtc-0.0.3'
-    }
+    implementation project(':korevgwebrtc')
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'com.google.code.gson:gson:2.13.2'
