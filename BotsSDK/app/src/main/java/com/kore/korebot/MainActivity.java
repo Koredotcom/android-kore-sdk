@@ -67,15 +67,15 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         String jwtToken = "";
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "cs-85793e30-ace9-5c27-9ae7-060033c4d66a";
+        String clientId = "Please enter client id";
 //        String clientId = getConfigValue("clientId");
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "ukcwzz+f3sBgRkENx89uqqtzcMmmV0/Kv7KHsBo3IwY=";
+        String clientSecret = "Please enter client secret";
 //        String clientSecret = getConfigValue("clientSecret");
 
         //Set botId, This value is mandatory
-        String botId = "st-8a564fcb-9b29-5428-b56c-00dd920804db";
+        String botId = "Please enter botId";
 //        String botId = getConfigValue("botId");
 
         //Set identity, This value is mandatory
@@ -87,15 +87,15 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
 //        String botName = getConfigValue("botName");
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "https://staging-xo.korebots.com/";
+        String serverUrl = "Please enter server url";
 //        String serverUrl = getConfigValue("serverUrl");
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "https://staging-xo.korebots.com/";
+        String brandingUrl = "Please enter branding url";
 //        String brandingUrl = getConfigValue("brandingUrl");
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "https://mk2r2rmj21.execute-api.us-east-1.amazonaws.com/dev/";
+        String jwtServerUrl = "Please enter jwt server url";
 //        String jwtServerUrl = getConfigValue("jwtServerUrl");
 
         SDKConfig.setCustomData(getCustomData(jwtToken));
