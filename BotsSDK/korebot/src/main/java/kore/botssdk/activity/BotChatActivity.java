@@ -619,6 +619,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
             agentCloseEventSent = true;
         }
+        if (viewModel != null) viewModel.onAgentConversationClosed();
         setIsAgentConnected(false);
     }
 

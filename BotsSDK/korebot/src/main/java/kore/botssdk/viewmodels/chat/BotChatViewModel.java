@@ -99,6 +99,7 @@ public class BotChatViewModel extends ViewModel {
     BotMetaModel botMetaModel;
     String lastMsgId = "";
     boolean isAgentTransfer = false;
+    private boolean agentConversationClosed = false;
     ArrayList<String> arrMessageList = new ArrayList<>();
     private boolean isActivityResumed = false;
     boolean isStreamMessage = false;
@@ -197,6 +198,12 @@ public class BotChatViewModel extends ViewModel {
         this.botClient = botClient;
         ACManager.getInstance().startLogout();
         sharedPreferences = context.getSharedPreferences(BotResponse.THEME_NAME, Context.MODE_PRIVATE);
+    }
+
+    /** Prevent late agent messages from restoring agent UI after the user closes the conversation. */
+    public void onAgentConversationClosed() {
+        agentConversationClosed = true;
+        isAgentTransfer = false;
     }
 
 
@@ -303,11 +310,17 @@ public class BotChatViewModel extends ViewModel {
                 botClient.sendMsgAcknowledgement(botResponse.getTimestamp(), botResponse.getKey());
 
             LogUtils.d(LOG_TAG, payload);
-            isAgentTransfer = botResponse.isFromAgent();
+            // Agent-originated messages also indicate an active agent session in
+            // deployments that do not deliver a separate agent_connected event.
+            // Ignore late messages after an explicit local close until a new
+            // agent_connected lifecycle event arrives.
+            boolean isFromAgent = botResponse.isFromAgent();
+            if (isFromAgent && !agentConversationClosed) {
+                isAgentTransfer = true;
+                chatView.setIsAgentConnected(true);
+            }
 
-            chatView.setIsAgentConnected(isAgentTransfer);
-
-            if (botClient != null && isAgentTransfer) {
+            if (botClient != null && isFromAgent) {
                 botClient.sendReceipts(BundleConstants.MESSAGE_DELIVERED, botResponse.getMessageId());
                 if (isActivityResumed) {
                     botClient.sendReceipts(BundleConstants.MESSAGE_READ, botResponse.getMessageId());
@@ -403,6 +416,8 @@ public class BotChatViewModel extends ViewModel {
                             }
 
                             if (botResponse.getMessage().getType().equalsIgnoreCase("agent_connected")) {
+                                agentConversationClosed = false;
+                                isAgentTransfer = true;
                                 setPreferenceObject(botResponse.getMessage().getAgentInfo(), BotResponse.AGENT_INFO_KEY);
                                 AgentInfoModel.AgentInfo agentInfo = botResponse.getMessage().getAgentInfo();
                                 if (agentInfo != null) {
@@ -413,6 +428,8 @@ public class BotChatViewModel extends ViewModel {
                                 }
                                 chatView.setIsAgentConnected(true);
                             } else if (botResponse.getMessage().getType().equalsIgnoreCase("agent_disconnected")) {
+                                agentConversationClosed = true;
+                                isAgentTransfer = false;
                                 setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
                                 chatView.setIsAgentConnected(false);
                             }

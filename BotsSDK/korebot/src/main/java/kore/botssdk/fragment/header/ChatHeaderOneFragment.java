@@ -114,7 +114,9 @@ public class ChatHeaderOneFragment extends BaseHeaderFragment {
                     ivBotSupport.setOnClickListener(v -> onClick(buttons.getLive_agent().getAction()));
                 }
                 if (buttons.getClose() != null) {
-                    ivBotClose.setOnClickListener(v -> onClick(buttons.getClose().getAction()));
+                    // Keep the header close behavior consistent while a human agent is connected.
+                    // The configured action applies to the close icon when no agent is connected.
+                    ivBotClose.setOnClickListener(v -> handleHeaderClose());
                 }
             }
         }

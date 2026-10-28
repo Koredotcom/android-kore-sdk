@@ -54,7 +54,9 @@ public abstract class BaseHeaderFragment extends Fragment {
     }
 
     protected final void handleHeaderClose() {
-        if (SDKConfig.isAgentCloseConfirmationEnabled() && isHumanAgentConnected()) {
+        // Prefer the connection state delivered to this header. The footer callback can
+        // lag behind (or be unavailable in custom headers) during an agent handoff.
+        if (SDKConfig.isAgentCloseConfirmationEnabled() && (agentConnected || isHumanAgentConnected())) {
             new AlertDialog.Builder(requireContext())
                     .setMessage(R.string.agent_close_confirmation)
                     .setCancelable(false)

@@ -535,6 +535,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
             agentCloseEventSent = true;
         }
+        if (viewModel != null) viewModel.onAgentConversationClosed();
         setIsAgentConnected(false);
     }
 
