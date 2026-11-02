@@ -48,17 +48,21 @@
 
     <RelativeLayout
         android:id="@+id/rlTitle"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginStart="@dimen/dimen_10dp"
-        android:layout_toEndOf="@+id/llBotAvatar"
+        android:layout_marginEnd="@dimen/dimen_5dp"
+        android:layout_toEndOf="@id/llBotAvatar"
+        android:layout_toStartOf="@id/ivBotHelp"
         tools:ignore="RelativeOverlap">
 
         <kore.botssdk.view.CustomTextViewBold
             android:id="@+id/tvBotTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@string/app_name"
             android:textColor="@color/kora_grey"
             android:textSize="@dimen/text_size_sub_header"
@@ -66,9 +70,11 @@
 
         <kore.botssdk.view.CustomTextView
             android:id="@+id/tvBotDesc"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tvBotTitle"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/kora_grey"
             android:textSize="@dimen/text_size_normal"
             android:textStyle="bold" />

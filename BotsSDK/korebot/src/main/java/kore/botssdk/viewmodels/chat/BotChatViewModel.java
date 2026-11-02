@@ -138,6 +138,8 @@ public class BotChatViewModel extends ViewModel {
             if (data == null) return;
             if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE)) {
 
+                handler.post(() -> chatView.refreshClickToCallAvailability());
+
                 if (!isStreamMessage)
                     processPayload(data.getPayLoad(), null);
                 else processStreamMessage(data.getPayLoad());
@@ -150,6 +152,11 @@ public class BotChatViewModel extends ViewModel {
                 startTimeout(messageId);
                 chatView.updateContentListOnSend(botRequest);
             }
+        }
+
+        @Override
+        public void onClickToCallAvailabilityChanged() {
+            handler.post(() -> chatView.refreshClickToCallAvailability());
         }
 
         private void startTimeout(long messageId) {

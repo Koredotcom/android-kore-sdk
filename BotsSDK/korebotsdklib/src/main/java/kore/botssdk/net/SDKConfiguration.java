@@ -132,6 +132,8 @@ public class SDKConfiguration {
         public static String identity = "PLEASE_ENTER_IDENTITY";
         public static String bot_name = "Kore.ai Bot";
         public static String bot_id = "st-fc50f8c4-91a0-5ae7-bff2-283ad3c81700";
+        /** Click-to-call flow ID supplied by the host app's botOptions configuration. */
+        public static String clickToCallFlowId = "";
         public static boolean enable_ack_delivery = false;
 
         //Webhook

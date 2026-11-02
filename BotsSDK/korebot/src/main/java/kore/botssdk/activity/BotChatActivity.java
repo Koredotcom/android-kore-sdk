@@ -72,6 +72,7 @@ import kore.botssdk.fragment.header.ChatHeaderTwoFragment;
 import kore.botssdk.fragment.welcome.WelcomeScreenFragment;
 import kore.botssdk.korevg.webrtcclient.General.ACManager;
 import kore.botssdk.korevg.webrtcclient.General.AppUtils;
+import kore.botssdk.korevg.webrtcclient.General.ClickToCallManager;
 import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.korevg.webrtcclient.Activities.AudioCodesWebViewCallActivity;
 import kore.botssdk.listener.BaseSocketConnectionManager;
@@ -388,7 +389,9 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     public void onEvent(SocketDataTransferModel data) {
         if (data == null) return;
         if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE)) {
-            processPayload(data.getPayLoad(), null);
+            boolean isClickToCallControl = ClickToCallManager.onSocketMessage(data.getPayLoad());
+            if (composeFooterFragment != null) composeFooterFragment.refreshClickToCallAvailability();
+            if (!isClickToCallControl) processPayload(data.getPayLoad(), null);
         } else if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE)) {
             if (botContentFragment != null) {
                 botContentFragment.updateContentListOnSend(data.getBotRequest());
@@ -524,6 +527,7 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
 
     @Override
     public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
+        if (composeFooterFragment != null) composeFooterFragment.refreshClickToCallAvailability();
         if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
             taskProgressBar.setVisibility(View.GONE);
             composeFooterFragment.enableSendButton();
@@ -531,9 +535,18 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
     }
 
     @Override
+    public void refreshClickToCallAvailability() {
+        if (composeFooterFragment != null) composeFooterFragment.refreshClickToCallAvailability();
+    }
+
+    @Override
     public void onBrandingDetails(BotBrandingModel botBrandingModel) {
         if (botBrandingModel != null) {
-            botName = botBrandingModel.getHeader().getTitle().getName();
+            BrandingHeaderModel brandingHeader = botBrandingModel.getHeader();
+            if (brandingHeader != null && brandingHeader.getTitle() != null
+                    && !StringUtils.isNullOrEmpty(brandingHeader.getTitle().getName())) {
+                botName = brandingHeader.getTitle().getName();
+            }
             if (botBrandingModel.getHeader() != null) {
                 sharedPreferences.edit().putString(BundleConstants.STATUS_BAR_COLOR, botBrandingModel.getHeader().getBg_color()).apply();
                 changeStatusBarColor(SDKConfig.isUpdateStatusBarColor() ? sharedPreferences.getString(BundleConstants.STATUS_BAR_COLOR, "#FF3F51B5") : "");
@@ -557,8 +570,9 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             }
             BrandingHeaderModel header = botBrandingModel.getHeader();
             if (header != null) {
-                BaseHeaderFragment customHeaderFragment = SDKConfig.getCustomHeaderFragment(header.getSize());
-                switch (header.getSize()) {
+                String headerSize = header.getSize();
+                BaseHeaderFragment customHeaderFragment = SDKConfig.getCustomHeaderFragment(headerSize);
+                switch (headerSize != null ? headerSize : "") {
                     case HEADER_SIZE_COMPACT:
                         addHeaderFragmentToActivity(customHeaderFragment != null ? customHeaderFragment : new ChatHeaderOneFragment(), header);
                         break;

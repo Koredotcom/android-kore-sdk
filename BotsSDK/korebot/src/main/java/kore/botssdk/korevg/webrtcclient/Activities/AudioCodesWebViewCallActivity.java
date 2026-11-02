@@ -38,6 +38,7 @@ import kore.botssdk.BuildConfig;
 import kore.botssdk.bot.BotClient;
 import kore.botssdk.korevg.webrtcclient.General.ACManager;
 import kore.botssdk.korevg.webrtcclient.General.AppUtils;
+import kore.botssdk.korevg.webrtcclient.General.ClickToCallManager;
 import kore.botssdk.models.EventIceServersModel;
 import kore.botssdk.models.EventMessageModel;
 import kore.botssdk.models.EventModel;
@@ -59,6 +60,7 @@ public class AudioCodesWebViewCallActivity extends Activity {
     private WebViewAssetLoader assetLoader;
     private String callConfigJson;
     private boolean videoCall;
+    private boolean clickToCall;
     private boolean callScriptStarted;
     private boolean callConnected;
     private boolean finishingCall;
@@ -87,6 +89,21 @@ public class AudioCodesWebViewCallActivity extends Activity {
         } catch (JSONException | IllegalArgumentException exception) {
             Toast.makeText(host, "Unable to prepare the WebView call: " + exception.getMessage(), Toast.LENGTH_LONG).show();
             return true;
+        }
+    }
+
+    /** Starts an outbound click-to-call using the same bundled AudioCodes WebView engine. */
+    public static boolean launchClickToCall(Activity host) {
+        try {
+            JSONObject input = ClickToCallManager.makeCallConfig(host);
+            Intent intent = new Intent(host, AudioCodesWebViewCallActivity.class);
+            intent.putExtra(EXTRA_CONFIG, input.toString());
+            ClickToCallManager.sendStartEvent();
+            host.startActivity(intent);
+            return true;
+        } catch (JSONException | IllegalStateException exception) {
+            Toast.makeText(host, "Unable to prepare click-to-call: " + exception.getMessage(), Toast.LENGTH_LONG).show();
+            return false;
         }
     }
 
@@ -178,7 +195,9 @@ public class AudioCodesWebViewCallActivity extends Activity {
             return;
         }
         try {
-            videoCall = "video".equals(new JSONObject(callConfigJson).optString("callType"));
+            JSONObject config = new JSONObject(callConfigJson);
+            videoCall = "video".equals(config.optString("callType"));
+            clickToCall = config.optBoolean("isClickToCall", false);
         } catch (JSONException exception) {
             finish();
             return;
@@ -338,6 +357,7 @@ public class AudioCodesWebViewCallActivity extends Activity {
     }
 
     private void notifyCallTerminated() {
+        if (clickToCall) return;
         if (terminationSent) return;
         terminationSent = true;
         EventModel eventModel = AppUtils.getEventModel();

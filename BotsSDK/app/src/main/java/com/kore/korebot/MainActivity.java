@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         //Initialize the bot with bot config
         //You can pass client id and client secret as empty when you pass jwt token
         SDKConfig.initialize(botId, botName, clientId, clientSecret, identity, jwtToken, serverUrl, brandingUrl, jwtServerUrl);
+        SDKConfig.setClickToCallFlowId(BuildConfig.KORE_CLICK_TO_CALL_FLOW_ID);
 
         //Inject the custom template like below
         SDKConfig.setCustomTemplateViewHolder("link", LinkTemplateHolder.class);

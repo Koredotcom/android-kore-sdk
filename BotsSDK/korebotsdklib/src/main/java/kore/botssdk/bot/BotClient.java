@@ -211,4 +211,30 @@ public class BotClient {
         LogUtils.d("BotClient", "Payload : " + jsonPayload);
         SocketWrapper.getInstance(mContext).sendAgentMessage(jsonPayload);
     }
+
+    /** Sends the RTM control event used by the web SDK's click-to-call flow. */
+    public void sendClickToCallEvent(String eventName, String messageType, boolean clickToCallEnabled) {
+        RestResponse.BotCustomData eventCustomData = new RestResponse.BotCustomData();
+        if (customData != null) eventCustomData.putAll(customData);
+        eventCustomData.put("botToken", getAccessToken());
+        eventCustomData.put("rtmType", "mobile");
+
+        RestResponse.BotMessage message = new RestResponse.BotMessage("", messageType, null);
+        message.setCustomData(eventCustomData);
+
+        BotInfoModel info = botInfoModel;
+        if (info == null) {
+            info = new BotInfoModel(SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id, eventCustomData);
+        }
+
+        RestResponse.BotPayLoad payload = new RestResponse.BotPayLoad();
+        payload.setEvent(eventName);
+        payload.setMessage(message);
+        payload.setBotInfo(info);
+        payload.setResourceid("/bot.message");
+        if (clickToCallEnabled) payload.setClickToCallEnabled(true);
+        payload.setMeta(new RestResponse.Meta(TimeZone.getDefault().getID(), Locale.getDefault().getISO3Language()));
+
+        SocketWrapper.getInstance(mContext).sendAgentMessage(new Gson().toJson(payload));
+    }
 }

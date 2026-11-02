@@ -3,15 +3,20 @@ apply plugin: 'maven-publish'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 
+def jitpackGroup = System.getenv('GROUP') && System.getenv('ARTIFACT')
+        ? "${System.getenv('GROUP')}.${System.getenv('ARTIFACT')}"
+        : 'com.github.Koredotcom.android-kore-sdk'
+def jitpackVersion = System.getenv('VERSION') ?: '11.0.2'
+
 afterEvaluate {
     publishing {
         publications {
             // Creates a Maven publication called "release".
             release(MavenPublication) {
                 from components.release
-                groupId 'kore.botsdk'
+                groupId jitpackGroup
                 artifactId 'korebot'
-                version '11.0.2'
+                version jitpackVersion
             }
         }
     }

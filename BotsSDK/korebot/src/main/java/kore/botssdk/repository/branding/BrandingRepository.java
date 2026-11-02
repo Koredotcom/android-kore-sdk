@@ -27,6 +27,7 @@ import retrofit2.Response;
 
 @SuppressWarnings("UnKnownNullness")
 public class BrandingRepository {
+    private static final String LOG_TAG = "BrandingRepository";
     private final BotChatViewListener botChatView;
     private final Context context;
     private final Gson gson = new Gson();
@@ -47,14 +48,27 @@ public class BrandingRepository {
                     BotActiveThemeModel botActiveThemeModel = response.body();
                     if (botActiveThemeModel != null && botActiveThemeModel.getV3() != null) {
                         BotBrandingModel botOptionsModel = botActiveThemeModel.getV3();
+                        LogUtils.d(LOG_TAG, "Branding API returned v3 sections: header="
+                                + (botOptionsModel.getHeader() != null) + ", footer="
+                                + (botOptionsModel.getFooter() != null) + ", body="
+                                + (botOptionsModel.getBody() != null) + ", general="
+                                + (botOptionsModel.getGeneral() != null));
                         onBrandingDetails(botOptionsModel);
-                    } else getBrandingDataFromTxt();
-                } else getBrandingDataFromTxt();
+                    } else {
+                        LogUtils.e(LOG_TAG, "Branding API succeeded but response body or v3 config is missing; using bundled branding.");
+                        getBrandingDataFromTxt();
+                    }
+                } else {
+                    LogUtils.e(LOG_TAG, "Branding API failed with HTTP " + response.code()
+                            + " (" + response.message() + "); using bundled branding.");
+                    getBrandingDataFromTxt();
+                }
             }
 
             @Override
             public void onFailure(@NonNull Call<BotActiveThemeModel> call, @NonNull Throwable t) {
-                LogUtils.e("getBrandingDetails", t.toString());
+                LogUtils.e(LOG_TAG, "Branding API request failed: " + t.getClass().getSimpleName()
+                        + ": " + t.getMessage() + "; using bundled branding.");
                 getBrandingDataFromTxt();
             }
         });
@@ -79,16 +93,35 @@ public class BrandingRepository {
 
     private void onBrandingDetails(BotBrandingModel botBrandingModel) {
         if (botBrandingModel != null) {
-            BotBrandingModel configModel = SDKConfig.getBotBrandingConfigModel() != null ? SDKConfig.getBotBrandingConfigModel() : botBrandingModel;
+            BotBrandingModel appBrandingOverride = SDKConfig.getBotBrandingConfigModel();
+            BotBrandingModel configModel = appBrandingOverride != null ? appBrandingOverride : botBrandingModel;
+            LogUtils.d(LOG_TAG, "Applying branding with source="
+                    + (appBrandingOverride != null ? "SDKConfig override" : "API/bundled response"));
 
             if (configModel.getGeneral() != null && configModel.getGeneral().getColors() != null && configModel.getGeneral().getColors().isUseColorPaletteOnly()) {
-                configModel.getHeader().setBg_color(configModel.getGeneral().getColors().getSecondary());
-                configModel.getFooter().setBg_color(configModel.getGeneral().getColors().getSecondary());
-                configModel.getFooter().getCompose_bar().setOutline_color(configModel.getGeneral().getColors().getPrimary());
-                configModel.getFooter().getCompose_bar().setInline_color(configModel.getGeneral().getColors().getSecondary_text());
-                configModel.getHeader().setAvatar_bg_color(configModel.getGeneral().getColors().getPrimary());
-                configModel.getHeader().getTitle().setColor(configModel.getGeneral().getColors().getPrimary_text());
-                configModel.getHeader().getSub_title().setColor(configModel.getGeneral().getColors().getPrimary_text());
+                String secondary = configModel.getGeneral().getColors().getSecondary();
+                String primary = configModel.getGeneral().getColors().getPrimary();
+                String primaryText = configModel.getGeneral().getColors().getPrimary_text();
+                String secondaryText = configModel.getGeneral().getColors().getSecondary_text();
+
+                if (configModel.getHeader() != null) {
+                    if (!StringUtils.isNullOrEmpty(secondary)) configModel.getHeader().setBg_color(secondary);
+                    if (!StringUtils.isNullOrEmpty(primary)) configModel.getHeader().setAvatar_bg_color(primary);
+                    if (configModel.getHeader().getTitle() != null && !StringUtils.isNullOrEmpty(primaryText))
+                        configModel.getHeader().getTitle().setColor(primaryText);
+                    if (configModel.getHeader().getSub_title() != null && !StringUtils.isNullOrEmpty(primaryText))
+                        configModel.getHeader().getSub_title().setColor(primaryText);
+                }
+
+                if (configModel.getFooter() != null) {
+                    if (!StringUtils.isNullOrEmpty(secondary)) configModel.getFooter().setBg_color(secondary);
+                    if (configModel.getFooter().getCompose_bar() != null) {
+                        if (!StringUtils.isNullOrEmpty(primary))
+                            configModel.getFooter().getCompose_bar().setOutline_color(primary);
+                        if (!StringUtils.isNullOrEmpty(secondaryText))
+                            configModel.getFooter().getCompose_bar().setInline_color(secondaryText);
+                    }
+                }
             }
 
             botBrandingModel = botBrandingModel.updateWith(configModel);

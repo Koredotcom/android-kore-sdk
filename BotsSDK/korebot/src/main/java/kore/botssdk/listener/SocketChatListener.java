@@ -8,4 +8,6 @@ public interface SocketChatListener {
     void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection);
     void onMessage(SocketDataTransferModel data);
     void onStartCompleted(boolean isReconnect);
+
+    default void onClickToCallAvailabilityChanged() { }
 }

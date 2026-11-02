@@ -53,7 +53,9 @@ public class ChatHeaderOneFragment extends BaseHeaderFragment {
             String title = brandingHeaderModel.getTitle() != null ? brandingHeaderModel.getTitle().getName() : null;
             tvBotTitle.setText(!TextUtils.isEmpty(title) ? title : SDKConfiguration.Client.bot_name);
             tvBotDesc.setText(brandingHeaderModel.getSub_title() != null ? brandingHeaderModel.getSub_title().getName() : null);
-            view.setBackgroundColor(Color.parseColor(brandingHeaderModel.getBg_color()));
+            if (!StringUtils.isNullOrEmpty(brandingHeaderModel.getBg_color())) {
+                view.setBackgroundColor(Color.parseColor(brandingHeaderModel.getBg_color()));
+            }
 
             if (brandingHeaderModel.getTitle() != null && !StringUtils.isNullOrEmpty(brandingHeaderModel.getTitle().getColor())) {
                 tvBotTitle.setTextColor(Color.parseColor(brandingHeaderModel.getTitle().getColor()));
@@ -96,16 +98,19 @@ public class ChatHeaderOneFragment extends BaseHeaderFragment {
 
             if (brandingHeaderModel.getButtons() != null) {
                 BrandingHeaderButtonsModel buttons = brandingHeaderModel.getButtons();
-                ColorStateList bgColorTint = ColorStateList.valueOf(Color.parseColor(brandingHeaderModel.getIcons_color()));
-                ivBotArrowBack.setBackgroundTintList(bgColorTint);
+                ColorStateList bgColorTint = StringUtils.isNullOrEmpty(brandingHeaderModel.getIcons_color())
+                        ? null : ColorStateList.valueOf(Color.parseColor(brandingHeaderModel.getIcons_color()));
+                if (bgColorTint != null) ivBotArrowBack.setBackgroundTintList(bgColorTint);
 
                 ivBotHelp.setVisibility(buttons.getHelp() != null && buttons.getHelp().isShow() ? View.VISIBLE : View.GONE);
                 ivBotSupport.setVisibility(buttons.getLive_agent() != null && buttons.getLive_agent().isShow() ? View.VISIBLE : View.GONE);
                 ivBotClose.setVisibility(buttons.getClose() != null && buttons.getClose().isShow() ? View.VISIBLE : View.GONE);
 
-                ivBotHelp.setBackgroundTintList(bgColorTint);
-                ivBotSupport.setBackgroundTintList(bgColorTint);
-                ivBotClose.setBackgroundTintList(bgColorTint);
+                if (bgColorTint != null) {
+                    ivBotHelp.setBackgroundTintList(bgColorTint);
+                    ivBotSupport.setBackgroundTintList(bgColorTint);
+                    ivBotClose.setBackgroundTintList(bgColorTint);
+                }
 
                 if (buttons.getHelp() != null) {
                     ivBotHelp.setOnClickListener(v -> onClick(buttons.getHelp().getAction()));

@@ -49,6 +49,7 @@ android {
         buildConfigField "String", "KORE_SERVER_URL", asBuildConfigString(localKoreConfig.getProperty('kore.serverUrl', ''))
         buildConfigField "String", "KORE_BRANDING_URL", asBuildConfigString(localKoreConfig.getProperty('kore.brandingUrl', ''))
         buildConfigField "String", "KORE_JWT_SERVER_URL", asBuildConfigString(localKoreConfig.getProperty('kore.jwtServerUrl', ''))
+        buildConfigField "String", "KORE_CLICK_TO_CALL_FLOW_ID", asBuildConfigString(localKoreConfig.getProperty('kore.clickToCallFlowId', ''))
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -69,6 +69,7 @@ import kore.botssdk.fragment.header.ChatHeaderTwoFragment;
 import kore.botssdk.fragment.welcome.WelcomeScreenFragment;
 import kore.botssdk.korevg.webrtcclient.General.ACManager;
 import kore.botssdk.korevg.webrtcclient.General.AppUtils;
+import kore.botssdk.korevg.webrtcclient.General.ClickToCallManager;
 import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.korevg.webrtcclient.Activities.AudioCodesWebViewCallActivity;
 import kore.botssdk.listener.BaseSocketConnectionManager;
@@ -339,7 +340,9 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     public void onEvent(SocketDataTransferModel data) {
         if (data == null) return;
         if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_TEXT_MESSAGE)) {
-            processPayload(data.getPayLoad(), null);
+            boolean isClickToCallControl = ClickToCallManager.onSocketMessage(data.getPayLoad());
+            if (composeFooterFragment != null) composeFooterFragment.refreshClickToCallAvailability();
+            if (!isClickToCallControl) processPayload(data.getPayLoad(), null);
         } else if (data.getEvent_type().equals(BaseSocketConnectionManager.EVENT_TYPE.TYPE_MESSAGE_UPDATE)) {
             if (botContentFragment != null) {
                 botContentFragment.updateContentListOnSend(data.getBotRequest());
@@ -444,6 +447,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
 
     @Override
     public void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection) {
+        if (composeFooterFragment != null) composeFooterFragment.refreshClickToCallAvailability();
         if (state == BaseSocketConnectionManager.CONNECTION_STATE.CONNECTED) {
             taskProgressBar.setVisibility(View.GONE);
             composeFooterFragment.enableSendButton();
@@ -451,9 +455,18 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     }
 
     @Override
+    public void refreshClickToCallAvailability() {
+        if (composeFooterFragment != null) composeFooterFragment.refreshClickToCallAvailability();
+    }
+
+    @Override
     public void onBrandingDetails(BotBrandingModel botBrandingModel) {
         if (botBrandingModel != null) {
-            botName = botBrandingModel.getHeader().getTitle().getName();
+            BrandingHeaderModel brandingHeader = botBrandingModel.getHeader();
+            if (brandingHeader != null && brandingHeader.getTitle() != null
+                    && !StringUtils.isNullOrEmpty(brandingHeader.getTitle().getName())) {
+                botName = brandingHeader.getTitle().getName();
+            }
             if (!isWelcomeVisible && botBrandingModel.getWelcome_screen() != null && botBrandingModel.getWelcome_screen().isShow()) {
                 isWelcomeVisible = true;
                 WelcomeScreenFragment fragment = new WelcomeScreenFragment();
@@ -473,8 +486,9 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             }
             BrandingHeaderModel header = botBrandingModel.getHeader();
             if (header != null) {
-                BaseHeaderFragment customHeaderFragment = SDKConfig.getCustomHeaderFragment(header.getSize());
-                switch (header.getSize()) {
+                String headerSize = header.getSize();
+                BaseHeaderFragment customHeaderFragment = SDKConfig.getCustomHeaderFragment(headerSize);
+                switch (headerSize != null ? headerSize : "") {
                     case HEADER_SIZE_COMPACT:
                         addHeaderFragmentToActivity(customHeaderFragment != null ? customHeaderFragment : new ChatHeaderOneFragment(), header);
                         break;

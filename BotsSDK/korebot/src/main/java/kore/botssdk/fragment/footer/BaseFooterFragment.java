@@ -133,6 +133,9 @@ public abstract class BaseFooterFragment extends Fragment implements ComposeFoot
 
     public abstract void setBotBrandingModel(BotBrandingModel botBrandingModel);
 
+    /** Refreshes optional click-to-call controls when their RTM configuration arrives. */
+    public void refreshClickToCallAvailability() { }
+
     void getBundleInfo() {
         Bundle bundle = getArguments();
         if (bundle != null) {

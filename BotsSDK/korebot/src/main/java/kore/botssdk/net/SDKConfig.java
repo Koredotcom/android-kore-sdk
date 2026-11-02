@@ -40,6 +40,7 @@ public class SDKConfig {
     }
 
     public static void initialize(String botId, String botName, String clientId, String clientName, String identity, String jwtToken, String serverUrl, String brandingUrl, String jwtServerUrl) {
+        SDKConfiguration.Client.clickToCallFlowId = "";
         SDKConfiguration.Client.setBot_id(botId);
         SDKConfiguration.Client.setBot_name(botName);
         SDKConfiguration.Client.setClient_id(clientId);
@@ -49,6 +50,14 @@ public class SDKConfig {
         SDKConfiguration.Server.setServerUrl(serverUrl);
         SDKConfiguration.Server.setBrandingUrl(brandingUrl);
         SDKConfiguration.JWTServer.setJwtServerUrl(jwtServerUrl);
+    }
+
+    /**
+     * Sets the click-to-call flow ID from the host app's botOptions configuration.
+     * Call this after initialize() and before opening the chat.
+     */
+    public static void setClickToCallFlowId(String clickToCallFlowId) {
+        SDKConfiguration.Client.clickToCallFlowId = clickToCallFlowId == null ? "" : clickToCallFlowId.trim();
     }
 
 //    public static void setWidgetBotConfig(String botId, String botName, String clientId, String clientName, String identity, String serverUrl, String jwtTokenUrl) {

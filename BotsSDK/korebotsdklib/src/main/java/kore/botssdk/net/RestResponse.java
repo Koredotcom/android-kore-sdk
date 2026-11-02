@@ -187,6 +187,7 @@ public class RestResponse {
         private Object id = clientMessageId;
         private String client = "Android";
         private String event;
+        private Boolean isClickToCallEnabled;
 
         public void setEvent(String event) {
             this.event = event;
@@ -250,6 +251,10 @@ public class RestResponse {
 
         public void setResourceid(String resourceid) {
             this.resourceid = resourceid;
+        }
+
+        public void setClickToCallEnabled(Boolean clickToCallEnabled) {
+            isClickToCallEnabled = clickToCallEnabled;
         }
 
         public BotInfoModel getBotInfo() {

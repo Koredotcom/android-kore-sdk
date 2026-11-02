@@ -11,6 +11,8 @@ public interface BotChatViewListener extends BaseView {
 
     void onConnectionStateChanged(BaseSocketConnectionManager.CONNECTION_STATE state, boolean isReconnection);
 
+    default void refreshClickToCallAvailability() { }
+
     void onBrandingDetails(BotBrandingModel brandingModel);
 
     void updateContentListOnSend(BotRequest botRequest);

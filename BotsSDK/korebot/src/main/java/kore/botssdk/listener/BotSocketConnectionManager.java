@@ -28,6 +28,7 @@ import kore.botssdk.event.KoreEventCenter;
 import kore.botssdk.events.AuthTokenUpdateEvent;
 import kore.botssdk.events.NetworkEvents;
 import kore.botssdk.events.SocketDataTransferModel;
+import kore.botssdk.korevg.webrtcclient.General.ClickToCallManager;
 import kore.botssdk.models.BotInfoModel;
 import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.JWTTokenResponse;
@@ -92,10 +93,13 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
             chatListener.onConnectionStateChanged(connection_state, isReconnection);
         }
         botClient.sendMessage(null);
+        ClickToCallManager.onSocketOpened(botClient);
+        if (chatListener != null) chatListener.onClickToCallAvailabilityChanged();
     }
 
     @Override
     public void onClose(int code, String reason) {
+        ClickToCallManager.onSocketClosed();
         connection_state = CONNECTION_STATE.CONNECTED_BUT_DISCONNECTED;
         if (chatListener != null) {
             chatListener.onConnectionStateChanged(connection_state, false);
@@ -110,7 +114,10 @@ public class BotSocketConnectionManager extends BaseSocketConnectionManager {
 
     @Override
     public void onTextMessage(String payload) {
-        persistBotMessage(payload, false, null);
+        boolean isClickToCallControl = ClickToCallManager.onSocketMessage(payload);
+        if (!isClickToCallControl) {
+            persistBotMessage(payload, false, null);
+        }
         if (chatListener != null) {
             chatListener.onMessage(new SocketDataTransferModel(EVENT_TYPE.TYPE_TEXT_MESSAGE, payload, null, false));
         }

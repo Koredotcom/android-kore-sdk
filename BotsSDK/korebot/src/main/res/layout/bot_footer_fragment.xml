@@ -72,6 +72,19 @@
                     android:src="@drawable/attachment_comp"
                     android:visibility="gone" />
 
+                <ImageView
+                    android:id="@+id/ivClickToCall"
+                    android:layout_width="@dimen/dimen_20dp"
+                    android:layout_height="@dimen/dimen_20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="@dimen/dimen_10dp"
+                    android:layout_toEndOf="@+id/ivAttachment"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Connect to a voice agent"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_click_to_call"
+                    android:visibility="gone" />
+
             </RelativeLayout>
 
             <LinearLayout

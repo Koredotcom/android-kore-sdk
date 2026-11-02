@@ -50,6 +50,8 @@ import kore.botssdk.listener.TTSUpdate;
 import kore.botssdk.models.BotBrandingModel;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingFooterModel;
+import kore.botssdk.korevg.webrtcclient.Activities.AudioCodesWebViewCallActivity;
+import kore.botssdk.korevg.webrtcclient.General.ClickToCallManager;
 import kore.botssdk.net.SDKConfiguration;
 import kore.botssdk.speech.GoogleVoiceTypingDisabledException;
 import kore.botssdk.speech.Speech;
@@ -84,6 +86,8 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     private ComposebarAttachmentAdapter composebarAttachmentAdapter;
     private RecyclerView attachmentRecycler;
     private ImageView ivAttachment;
+    private ImageView ivClickToCall;
+    private boolean clickToCallShown;
     private String outLineColor;
 
     @Override
@@ -118,6 +122,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         newMenuLogo = view.findViewById(R.id.newMenuLogo);
         progress = view.findViewById(R.id.progress);
         ivAttachment = view.findViewById(R.id.ivAttachment);
+        ivClickToCall = view.findViewById(R.id.ivClickToCall);
         attachmentRecycler = view.findViewById(R.id.attachment_recycler);
         rlSpeaker = view.findViewById(R.id.rlSpeaker);
         ivSpeaker = view.findViewById(R.id.ivSpeaker);
@@ -162,6 +167,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
                 ToastUtils.showToast(getActivity(), "You can upload only one file");
             }
         });
+        ivClickToCall.setOnClickListener(view1 -> showClickToCallConfirmation());
     }
 
     SharedPreferences getSharedPreferences() {
@@ -171,6 +177,12 @@ public class ComposeFooterFragment extends BaseFooterFragment {
     @Override
     public void setBotBrandingModel(BotBrandingModel botBrandingModel) {
         this.botBrandingModel = botBrandingModel;
+        BrandingFooterModel callBrandingFooter = botBrandingModel == null ? null : botBrandingModel.getFooter();
+        clickToCallShown = callBrandingFooter != null
+                && callBrandingFooter.getButtons() != null
+                && callBrandingFooter.getButtons().getClick_to_call() != null
+                && callBrandingFooter.getButtons().getClick_to_call().isShow();
+        ClickToCallManager.configure(botClient, clickToCallShown);
         if (botBrandingModel != null) {
             if (botBrandingModel.getFooter() != null) {
                 BrandingFooterModel footerModel = botBrandingModel.getFooter();
@@ -232,6 +244,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
                     recAudioImg.setImageTintList(ColorStateList.valueOf(Color.parseColor(footerModel.getIcons_color())));
                     keyboardImg.setImageTintList(ColorStateList.valueOf(Color.parseColor(footerModel.getIcons_color())));
                     audioSpeakTts.setImageTintList(ColorStateList.valueOf(Color.parseColor(footerModel.getIcons_color())));
+                    ivClickToCall.setImageTintList(ColorStateList.valueOf(Color.parseColor(footerModel.getIcons_color())));
                     editTextMessage.setHintTextColor(Color.parseColor(footerModel.getIcons_color()));
                 }
 
@@ -258,6 +271,34 @@ public class ComposeFooterFragment extends BaseFooterFragment {
                     recAudioImg.setVisibility(View.VISIBLE);
             }
         }
+        updateClickToCallButton();
+    }
+
+    @Override
+    public void refreshClickToCallAvailability() {
+        updateClickToCallButton();
+    }
+
+    private void updateClickToCallButton() {
+        if (ivClickToCall == null) return;
+        ivClickToCall.setVisibility(clickToCallShown ? View.VISIBLE : View.GONE);
+        boolean ready = clickToCallShown && ClickToCallManager.isReady();
+        ivClickToCall.setEnabled(ready);
+        ivClickToCall.setAlpha(ready ? 1.0f : 0.45f);
+    }
+
+    private void showClickToCallConfirmation() {
+        if (!ClickToCallManager.isReady()) {
+            ToastUtils.showToast(getActivity(), "Click-to-call is not ready yet");
+            return;
+        }
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Connect to Voice Agent?")
+                .setMessage("Your current conversation will end before connecting you to a live voice agent. Do you want to continue?")
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setPositiveButton("Continue", (dialog, which) ->
+                        AudioCodesWebViewCallActivity.launchClickToCall(requireActivity()))
+                .show();
     }
 
     @Override
@@ -286,6 +327,7 @@ public class ComposeFooterFragment extends BaseFooterFragment {
         ivSpeaker.setOnClickListener(v -> onButtonClick());
         audioSpeakTts.setOnClickListener(onTTSEnableSwitchClickListener);
         recAudioImg.setOnClickListener(onVoiceModeActivated);
+        ivClickToCall.setOnClickListener(v -> showClickToCallConfirmation());
         newMenuLogo.setOnClickListener(v -> {
             if (botOptionsModel != null && !botOptionsModel.isEmpty()) {
                 OptionsActionSheetFragment bottomSheetDialog = new OptionsActionSheetFragment();
