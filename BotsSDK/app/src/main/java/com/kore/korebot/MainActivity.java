@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -18,12 +17,10 @@ import com.kore.korebot.customfragment.CustomHeaderFragment;
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -64,39 +61,31 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
 //        SDKConfig.setCustomHeaderFragment(BotResponse.HEADER_SIZE_COMPACT, new CustomHeaderFragment());
 
         //If token is empty sdk token generation will happen. if not empty we will use this token for bot connection.
-        String jwtToken = "";
+        String jwtToken = BuildConfig.KORE_JWT_TOKEN;
 
         //Set clientId, If jwtToken is empty this value is mandatory
-        String clientId = "Please enter client id";
-//        String clientId = getConfigValue("clientId");
+        String clientId = BuildConfig.KORE_CLIENT_ID;
 
         //Set clientSecret, If jwtToken is empty this value is mandatory
-        String clientSecret = "Please enter client secret";
-//        String clientSecret = getConfigValue("clientSecret");
+        String clientSecret = BuildConfig.KORE_CLIENT_SECRET;
 
         //Set botId, This value is mandatory
-        String botId = "Please enter botId";
-//        String botId = getConfigValue("botId");
+        String botId = BuildConfig.KORE_BOT_ID;
 
         //Set identity, This value is mandatory
-        String identity = "Please enter identity";
-//        String identity = getConfigValue("identity");
+        String identity = BuildConfig.KORE_IDENTITY;
 
         //Set botName, This value is mandatory
-        String botName = "Bank Assist Attachment Staging";
-//        String botName = getConfigValue("botName");
+        String botName = BuildConfig.KORE_BOT_NAME;
 
         //Set serverUrl, This value is mandatory
-        String serverUrl = "Please enter server url";
-//        String serverUrl = getConfigValue("serverUrl");
+        String serverUrl = BuildConfig.KORE_SERVER_URL;
 
         //Set brandingUrl, This value is mandatory
-        String brandingUrl = "Please enter branding url";
-//        String brandingUrl = getConfigValue("brandingUrl");
+        String brandingUrl = BuildConfig.KORE_BRANDING_URL;
 
         //Set jwtServerUrl, This value is mandatory
-        String jwtServerUrl = "Please enter jwt server url";
-//        String jwtServerUrl = getConfigValue("jwtServerUrl");
+        String jwtServerUrl = BuildConfig.KORE_JWT_SERVER_URL;
 
         SDKConfig.setCustomData(getCustomData(jwtToken));
 
@@ -123,6 +112,12 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         SDKConfig.enableWidgetPanel(false);
 
         SDKConfig.setIsUpdateStatusBarColor(false);
+
+        // Confirm before closing a conversation while a human agent is connected.
+        SDKConfig.setAgentCloseConfirmationEnabled(true);
+
+        // Use the AudioCodes WebView call path in this demo app's debug and release builds.
+        SDKConfiguration.OverrideKoreConfig.useAudioCodesWebViewForAgentCalls = true;
 
         //Flag to opt to add custom data to every user message sent to bot
         SDKConfiguration.OverrideKoreConfig.update_custom_data_to_user_message = true;
@@ -278,21 +273,6 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         queryParams.put("q3", "connect");
         return queryParams;
     }
-
-//    public String getConfigValue(String name) {
-//        try {
-//            InputStream rawResource = getResources().openRawResource(R.raw.config);
-//            Properties properties = new Properties();
-//            properties.load(rawResource);
-//            return properties.getProperty(name);
-//        } catch (Resources.NotFoundException e) {
-//            Log.e(MainActivity.class.getSimpleName(), "Unable to find the config file: " + e.getMessage());
-//        } catch (IOException e) {
-//            Log.e(MainActivity.class.getSimpleName(), "Failed to open config file.");
-//        }
-//
-//        return null;
-//    }
 
     @Override
     public void onBotConnected() {

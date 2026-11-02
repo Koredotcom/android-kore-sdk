@@ -42,8 +42,10 @@ public class ACManager implements AudioCodesEventListener {
     private static final String TAG = "ACManager";
 
     private static ACManager instance;
-    private boolean registerState;
+    private volatile boolean registerState;
+    private volatile boolean sdkInitialized;
     private Context context;
+    private SipAccount pendingAgentSipAccount;
 
     public static synchronized ACManager getInstance() {
         if (instance == null) {
@@ -57,6 +59,10 @@ public class ACManager implements AudioCodesEventListener {
     }
 
     public void startLogin(Context context, boolean autologin, boolean disconnectCall) {
+        startLogin(context, autologin, disconnectCall, Prefs.getSipAccount(context));
+    }
+
+    private void startLogin(Context context, boolean autologin, boolean disconnectCall, SipAccount sipAccount) {
         this.context = context;
         Log.d(TAG, "startLogin");
         boolean loginit = false;
@@ -67,15 +73,17 @@ public class ACManager implements AudioCodesEventListener {
         } catch (Exception e) {
             Log.d(TAG, "can't set log level");
         }
-        initWebRTC(context, Prefs.getSipAccount(context));
+        initWebRTC(context, sipAccount);
         Prefs.setAutoLogin(context, autologin);
         Prefs.setDisconnectBrokenConnection(context, disconnectCall);
         try {
+            sdkInitialized = true;
             AudioCodesUA.getInstance().login(context.getApplicationContext(), autologin);
             if (!loginit) {
                 initACUA();
             }
         } catch (Exception e) {
+            sdkInitialized = false;
             Log.d(TAG, "Error in login: " + e);
             Toast.makeText(context, "Error in login", Toast.LENGTH_SHORT).show();
         }
@@ -90,9 +98,41 @@ public class ACManager implements AudioCodesEventListener {
         Log.d(TAG, "startLogout");
         try {
             AudioCodesUA.getInstance().logout();
+            sdkInitialized = false;
         } catch (Exception e) {
             Log.d(TAG, "Error in logout");
         }
+    }
+
+    public synchronized void setPendingAgentSipAccount(SipAccount sipAccount) {
+        pendingAgentSipAccount = sipAccount;
+    }
+
+    public synchronized void clearPendingAgentSipAccount() {
+        pendingAgentSipAccount = null;
+    }
+
+    /**
+     * Reinitialize the native WebRTC stack with the configuration from the incoming call event.
+     * ICE servers must be set before AudioCodesUA.login initializes its PeerConnectionFactory.
+     * Agent calls use the SDK's non-registrar mode, so they cannot wait for a registration event.
+     */
+    public void startAgentCall(Context context, String sipUser, boolean videoCall) {
+        SipAccount callAccount;
+        synchronized (this) {
+            callAccount = pendingAgentSipAccount;
+            pendingAgentSipAccount = null;
+        }
+        if (callAccount == null) callAccount = Prefs.getSipAccount(context);
+
+        if (sdkInitialized || registerState) {
+            startLogout();
+        }
+
+        startLogin(context, false, true, callAccount);
+        // PJSIP serializes initialization and the call on its worker executor. Keep the
+        // existing direct-call behavior; this flow intentionally does not register first.
+        callNumber(sipUser, videoCall);
     }
 
     public void initWebRTC(Context context, SipAccount sipAccount) {
@@ -105,6 +145,8 @@ public class ACManager implements AudioCodesEventListener {
         String displayName = sipAccount.getDisplayName();
 
         Log.d(TAG, "sipAccount: " + sipAccount);
+        Log.d(TAG, "Configuring WebRTC with ICE server count: "
+                + (sipAccount.getIceServers() == null ? 0 : sipAccount.getIceServers().size()));
 
         //   AudioCodesUA.getInstance().setContactRewrite(true);
 

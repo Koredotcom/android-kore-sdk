@@ -28,6 +28,9 @@ import com.korevg.mv.webrtcsdk.audio.WebRTCAudioManager;
 import com.korevg.mv.webrtcsdk.sip.enums.Transport;
 import com.korevg.mv.webrtcsdk.useragent.AudioCodesUA;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.File;
@@ -45,6 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import kore.botssdk.R;
 import kore.botssdk.activity.BotChatActivity;
 import kore.botssdk.korevg.webrtcclient.Activities.CallActivity;
+import kore.botssdk.korevg.webrtcclient.Activities.AudioCodesWebViewCallActivity;
 import kore.botssdk.korevg.webrtcclient.General.ACManager;
 import kore.botssdk.korevg.webrtcclient.General.Prefs;
 import kore.botssdk.korevg.webrtcclient.Structure.SipAccount;
@@ -218,7 +222,7 @@ public class BotChatViewModel extends ViewModel {
             if (botResponse.isEndChunk())
                 isStreamMessage = false;
 
-            if (!StringUtils.isNullOrEmpty(botResponse.getIcon()))
+            if (!botResponse.isFromAgent() && !StringUtils.isNullOrEmpty(botResponse.getIcon()))
                 SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
 
             PayloadOuter payOuter = null;
@@ -268,10 +272,87 @@ public class BotChatViewModel extends ViewModel {
     }
 
     /**
+     * Handles agent lifecycle events before generic event parsing. These events also have a
+     * `message` object, so routing them through EventModel first can silently skip disconnects.
+     */
+    private boolean handleAgentLifecycleEvent(String payload) {
+        final JsonObject root;
+        try {
+            JsonElement parsed = JsonParser.parseString(payload);
+            if (!parsed.isJsonObject()) return false;
+            root = parsed.getAsJsonObject();
+        } catch (RuntimeException ignored) {
+            return false;
+        }
+
+        JsonObject message = root.has("message") && root.get("message").isJsonObject()
+                ? root.getAsJsonObject("message") : null;
+        String lifecycleType = getAgentLifecycleType(message);
+        if (lifecycleType == null) lifecycleType = getAgentLifecycleType(root);
+        if (lifecycleType == null) return false;
+
+        AgentInfoModel.AgentInfo agentInfo = null;
+        try {
+            AgentInfoModel event = gson.fromJson(root, AgentInfoModel.class);
+            if (event != null && event.getMessage() != null) {
+                agentInfo = event.getMessage().getAgentInfo();
+            }
+        } catch (RuntimeException ignored) {
+            // The lifecycle transition still needs to reset the UI if optional agent details are malformed.
+        }
+
+        if ("agent_connected".equalsIgnoreCase(lifecycleType)) {
+            agentConversationClosed = false;
+            isAgentTransfer = true;
+            setPreferenceObject(agentInfo == null ? "" : agentInfo, BotResponse.AGENT_INFO_KEY);
+            if (agentInfo == null) {
+                chatView.setAgentDetails(null, null);
+            } else {
+                String name = !StringUtils.isNullOrEmpty(agentInfo.getName()) ? agentInfo.getName()
+                        : (StringUtils.isNullOrEmpty(agentInfo.getFirstName()) ? "" : agentInfo.getFirstName())
+                        + (StringUtils.isNullOrEmpty(agentInfo.getLastName()) ? "" : " " + agentInfo.getLastName());
+                chatView.setAgentDetails(name, agentInfo.getProfImage());
+            }
+            chatView.setIsAgentConnected(true);
+        } else {
+            agentConversationClosed = true;
+            isAgentTransfer = false;
+            setPreferenceObject("", BotResponse.AGENT_INFO_KEY);
+            chatView.setAgentDetails(null, null);
+            chatView.setIsAgentConnected(false);
+        }
+        return true;
+    }
+
+    private static String getAgentLifecycleType(JsonObject object) {
+        if (object == null) return null;
+        String type = getJsonString(object, "type");
+        if ("agent_connected".equalsIgnoreCase(type) || "agent_disconnected".equalsIgnoreCase(type)) {
+            return type;
+        }
+        String event = getJsonString(object, "event");
+        if ("agent_connected".equalsIgnoreCase(event) || "agent_disconnected".equalsIgnoreCase(event)) {
+            return event;
+        }
+        String customEvent = getJsonString(object, "customEvent");
+        if ("agent_connected".equalsIgnoreCase(customEvent) || "agent_disconnected".equalsIgnoreCase(customEvent)) {
+            return customEvent;
+        }
+        return null;
+    }
+
+    private static String getJsonString(JsonObject object, String key) {
+        JsonElement value = object.get(key);
+        return value != null && value.isJsonPrimitive() ? value.getAsString() : null;
+    }
+
+    /**
      * payload processing
      */
     public void processPayload(String payload, BotResponse botLocalResponse) {
         if (botLocalResponse == null) BotSocketConnectionManager.getInstance().stopDelayMsgTimer();
+        if (botLocalResponse == null && payload != null && !payload.isEmpty()
+                && handleAgentLifecycleEvent(payload)) return;
 
         if (payload.contains("Form_Submitted")) {
             Intent intent = new Intent("finish_activity");
@@ -303,7 +384,8 @@ public class BotChatViewModel extends ViewModel {
                 throw new RuntimeException(e);
             }
 
-            if (!StringUtils.isNullOrEmpty(botResponse.getIcon()) && StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
+            if (!botResponse.isFromAgent() && !StringUtils.isNullOrEmpty(botResponse.getIcon())
+                    && StringUtils.isNullOrEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
                 SDKConfiguration.BubbleColors.setIcon_url(botResponse.getIcon());
 
             if (botClient != null && enable_ack_delivery)
@@ -381,10 +463,11 @@ public class BotChatViewModel extends ViewModel {
                                 sipAccount.setDomain(eventMessageModel.getDomain());
                                 sipAccount.setProxy(getProxyUrl(eventMessageModel.getAddresses().get(0)));
                                 sipAccount.setPort(5060);
-                                sipAccount.setTransport(Transport.UDP);
+                                sipAccount.setTransport(Transport.TCP);
                                 sipAccount.setIceServers(eventMessageModel.getIceServer());
 
                                 Prefs.setSipAccount(context, sipAccount);
+                                ACManager.getInstance().setPendingAgentSipAccount(sipAccount);
                                 Prefs.setAutoRedirect(context, true);
 
                                 chatView.showAlertDialog(eventModel);
@@ -392,6 +475,7 @@ public class BotChatViewModel extends ViewModel {
                         } else if (eventModel.getMessage().getType().equalsIgnoreCase(BundleConstants.TERMINATE_AGENT_WEBRTC)) {
 
                             chatView.hideAlertDialog();
+                            AudioCodesWebViewCallActivity.terminateActiveCall();
 
                             if (ACManager.getInstance().getActiveSession() != null) {
                                 int sessionIndex = ACManager.getInstance().getActiveSession().getSessionID();
@@ -434,7 +518,7 @@ public class BotChatViewModel extends ViewModel {
                                 chatView.setIsAgentConnected(false);
                             }
 
-                            if (botResponse.getCustomEvent().equalsIgnoreCase(BotResponse.EVENT)) {
+                            if (BotResponse.EVENT.equalsIgnoreCase(botResponse.getCustomEvent())) {
                                 if (botResponse.getMessage() != null && !StringUtils.isNullOrEmpty(botResponse.getMessage().getType()) && botResponse.getMessage().getType().equalsIgnoreCase(BundleConstants.TYPING))
                                     chatView.showTypingStatus();
                             }

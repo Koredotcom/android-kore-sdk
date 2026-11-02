@@ -223,6 +223,8 @@ public class SDKConfiguration {
     }
 
     public static class OverrideKoreConfig {
+        /** Opt in to the AudioCodes WebView agent-call implementation. */
+        public static boolean useAudioCodesWebViewForAgentCalls = false;
         public static boolean isEmojiShortcutEnable = true;
         public static int typing_indicator_timeout = 10000;
         public static boolean history_enable = true;

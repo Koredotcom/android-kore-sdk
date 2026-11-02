@@ -397,11 +397,7 @@ public class ChatAdapter extends RecyclerView.Adapter<BaseViewHolder> implements
         holder.setBottomSheetDialog(bottomSheetDialog);
         holder.setMsgTime(baseBotMessage.getTimeStamp(), baseBotMessage instanceof BotRequest, getItemViewType(position));
         if (baseBotMessage instanceof BotResponse) {
-            if (StringUtils.isNotEmpty(((BotResponse) baseBotMessage).getIcon()))
-                holder.setBotIcon(((BotResponse) baseBotMessage).getIcon());
-            else if (StringUtils.isNotEmpty(SDKConfiguration.BubbleColors.getIcon_url()))
-                holder.setBotIcon(SDKConfiguration.BubbleColors.getIcon_url());
-            else holder.setBotIcon(null);
+            applyBotIcon(holder, (BotResponse) baseBotMessage);
         }
         Integer headerPosition = headersMap.get(baseBotMessage.getFormattedDate());
         holder.setTimeStamp(headerPosition != null && headerPosition == position ? baseBotMessage.getFormattedDate() : null);

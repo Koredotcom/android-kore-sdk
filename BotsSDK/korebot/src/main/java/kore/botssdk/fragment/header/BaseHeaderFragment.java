@@ -96,6 +96,7 @@ public abstract class BaseHeaderFragment extends Fragment {
     private void updateAgentHeader() {
         if (headerTitle == null || headerSubtitle == null || headerAvatar == null || avatarContainer == null) return;
         if (!agentConnected) {
+            Glide.with(this).clear(headerAvatar);
             headerTitle.setText(defaultTitle);
             headerSubtitle.setText(defaultSubtitle);
             headerAvatar.setImageDrawable(defaultAvatar);
@@ -107,6 +108,7 @@ public abstract class BaseHeaderFragment extends Fragment {
         headerTitle.setText(!TextUtils.isEmpty(agentName) ? agentName : "Agent");
         headerSubtitle.setText(R.string.live_chat);
         if (!TextUtils.isEmpty(agentProfileImage)) {
+            Glide.with(this).clear(headerAvatar);
             Glide.with(this).load(agentProfileImage)
                     .apply(RequestOptions.bitmapTransform(new CircleCrop()))
                     .error(R.drawable.agent_icon)

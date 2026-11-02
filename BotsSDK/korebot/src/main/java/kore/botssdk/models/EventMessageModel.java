@@ -14,7 +14,6 @@ public class EventMessageModel {
     private ArrayList<String> addresses;
     private String domain;
     private List<EventIceServersModel> iceServers;
-    ArrayList<PeerConnection.IceServer> iceServer = new ArrayList<>();
     private boolean restoreCall;
     private boolean screenShare;
     private String firstName;
@@ -100,11 +99,26 @@ public class EventMessageModel {
     }
 
     public ArrayList<PeerConnection.IceServer> getIceServer() {
+        ArrayList<PeerConnection.IceServer> result = new ArrayList<>();
+        if (iceServers == null) return result;
+
         for (EventIceServersModel eventIceServersModel : iceServers) {
-            PeerConnection.IceServer iceServer1 = new PeerConnection.IceServer(eventIceServersModel.getUrl(), eventIceServersModel.getUsername() != null ? eventIceServersModel.getUsername() : "", eventIceServersModel.getCredential() != null ? eventIceServersModel.getCredential() : "", PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK, getDomain());
-            iceServer.add(iceServer1);
+            if (eventIceServersModel == null) continue;
+            String username = eventIceServersModel.getUsername() != null ? eventIceServersModel.getUsername() : "";
+            String credential = eventIceServersModel.getCredential() != null ? eventIceServersModel.getCredential() : "";
+            List<String> urls = eventIceServersModel.getIceUrls();
+            if (urls.isEmpty()) continue;
+
+            // This hostname is the optional TURN/TLS certificate hostname, not the SIP domain.
+            // Passing the SIP domain here makes WebRTC reject DNS-based ICE URLs.
+            PeerConnection.IceServer.Builder builder = PeerConnection.IceServer.builder(urls)
+                    .setUsername(username)
+                    .setPassword(credential)
+                    .setTlsCertPolicy(PeerConnection.TlsCertPolicy.TLS_CERT_POLICY_INSECURE_NO_CHECK)
+                    .setHostname("");
+            result.add(builder.createIceServer());
         }
-        return iceServer;
+        return result;
     }
 }
 

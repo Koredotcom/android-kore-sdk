@@ -73,6 +73,7 @@ import kore.botssdk.fragment.welcome.WelcomeScreenFragment;
 import kore.botssdk.korevg.webrtcclient.General.ACManager;
 import kore.botssdk.korevg.webrtcclient.General.AppUtils;
 import kore.botssdk.korevg.webrtcclient.General.Prefs;
+import kore.botssdk.korevg.webrtcclient.Activities.AudioCodesWebViewCallActivity;
 import kore.botssdk.listener.BaseSocketConnectionManager;
 import kore.botssdk.listener.BotChatViewListener;
 import kore.botssdk.listener.BotSocketConnectionManager;
@@ -907,30 +908,26 @@ public class BotChatActivity extends BotAppCompactActivity implements BotChatVie
             }
         });
 
-        tvCallReject.setOnClickListener(v -> alertDialog.dismiss());
+        tvCallReject.setOnClickListener(v -> {
+            ACManager.getInstance().clearPendingAgentSipAccount();
+            alertDialog.dismiss();
+        });
 
         alertDialog.show();
     }
 
     @Override
     public void hideAlertDialog() {
+        ACManager.getInstance().clearPendingAgentSipAccount();
         if (alertDialog != null && alertDialog.isShowing()) alertDialog.dismiss();
     }
 
     void openNextScreen(String sipUser, boolean isVideoCall) {
         Prefs.setFirstLogin(this, false);
+        if (AudioCodesWebViewCallActivity.launchIfEnabled(this, sipUser, isVideoCall)) return;
         //start login and open app main screen
-        new Thread(() -> {
-            if (!ACManager.getInstance().isRegisterState()) {
-                ACManager.getInstance().startLogin(BotChatActivity.this, false, true);
-            }
-
-            if (!ACManager.getInstance().isRegisterState() && Prefs.getAutoLogin(BotChatActivity.this)) {
-                BotChatActivity.this.runOnUiThread(() -> Toast.makeText(BotChatActivity.this, R.string.no_registration, Toast.LENGTH_SHORT).show());
-            } else {
-                ACManager.getInstance().callNumber(sipUser, isVideoCall);
-            }
-        }).start();
+        new Thread(() -> ACManager.getInstance().startAgentCall(
+                BotChatActivity.this, sipUser, isVideoCall)).start();
     }
 
     @Override

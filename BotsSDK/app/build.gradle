@@ -2,9 +2,23 @@ plugins {
     id 'com.android.application'
 }
 
+def localKoreConfig = new java.util.Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { localKoreConfig.load(it) }
+}
+def asBuildConfigString = { String value ->
+    String escaped = (value ?: '').replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n').replace('\r', '\\r')
+    return '"' + escaped + '"'
+}
+
 android {
     namespace 'com.kore.korebot'
     compileSdk 35
+
+    buildFeatures {
+        buildConfig true
+    }
 
     dataBinding {
         enabled = true
@@ -25,6 +39,16 @@ android {
         targetSdk 35
         versionCode 1
         versionName "1.0"
+
+        buildConfigField "String", "KORE_JWT_TOKEN", asBuildConfigString(localKoreConfig.getProperty('kore.jwtToken', ''))
+        buildConfigField "String", "KORE_CLIENT_ID", asBuildConfigString(localKoreConfig.getProperty('kore.clientId', ''))
+        buildConfigField "String", "KORE_CLIENT_SECRET", asBuildConfigString(localKoreConfig.getProperty('kore.clientSecret', ''))
+        buildConfigField "String", "KORE_BOT_ID", asBuildConfigString(localKoreConfig.getProperty('kore.botId', ''))
+        buildConfigField "String", "KORE_IDENTITY", asBuildConfigString(localKoreConfig.getProperty('kore.identity', ''))
+        buildConfigField "String", "KORE_BOT_NAME", asBuildConfigString(localKoreConfig.getProperty('kore.botName', ''))
+        buildConfigField "String", "KORE_SERVER_URL", asBuildConfigString(localKoreConfig.getProperty('kore.serverUrl', ''))
+        buildConfigField "String", "KORE_BRANDING_URL", asBuildConfigString(localKoreConfig.getProperty('kore.brandingUrl', ''))
+        buildConfigField "String", "KORE_JWT_SERVER_URL", asBuildConfigString(localKoreConfig.getProperty('kore.jwtServerUrl', ''))
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

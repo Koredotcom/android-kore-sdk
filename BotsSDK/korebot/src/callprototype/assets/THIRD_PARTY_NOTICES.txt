@@ -1,0 +1,8 @@
+Internal debug prototype asset copied from Koredotcom/iOS-kore-sdk
+Commit: 17ef39b0f3c0ab8f697ba982e6dfea271699e763
+Path: Sources/KoreBotSDK/AudioCodes/ac_webrtc.min.js
+
+The bundled file includes JsSIP v3.10.0 (MIT) and AudioCodes WebRTC API v1.19.0.
+The embedded AudioCodes notice reads: Copyright 2023 AudioCodes Ltd. All rights reserved.
+This prototype preserves the original minified bundle and its notices. Confirm the applicable
+AudioCodes redistribution terms before placing the bundle in a release SDK artifact.

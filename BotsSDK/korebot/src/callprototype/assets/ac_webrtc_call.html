@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <title>Agent call</title>
+  <style>
+    :root { color-scheme: dark; font-family: sans-serif; }
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #101828; color: white; }
+    #stage { position: relative; width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    #remote { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #101828; }
+    #local { position: absolute; z-index: 2; top: 18px; right: 18px; width: 112px; height: 158px; border-radius: 12px; object-fit: cover; background: #344054; transform: scaleX(-1); }
+    #info { z-index: 3; width: 100%; padding: 24px; text-align: center; text-shadow: 0 1px 4px #000; }
+    #agent { font-size: 20px; font-weight: 600; }
+    #status { margin-top: 12px; font-size: 16px; }
+    #timer { margin-top: 8px; font-size: 14px; }
+    #controls { z-index: 3; position: absolute; bottom: max(34px, env(safe-area-inset-bottom)); display: flex; gap: 18px; }
+    button { min-width: 76px; border: 0; border-radius: 28px; padding: 13px 18px; color: white; background: #475467; font-size: 15px; }
+    #end { background: #d92d20; }
+    .audio #remote, .audio #local { width: 1px; height: 1px; opacity: 0; }
+    .audio #info { margin-bottom: 70px; }
+    #error { display: none; z-index: 5; position: absolute; inset: 0; padding: 32px; background: #101828; text-align: center; }
+  </style>
+  <script src="/assets/ac_webrtc.min.js"></script>
+</head>
+<body>
+  <div id="stage" class="audio">
+    <video id="remote" autoplay playsinline></video>
+    <video id="local" autoplay muted playsinline></video>
+    <div id="info">
+      <div id="agent">Agent</div>
+      <div id="status">Preparing secure call…</div>
+      <div id="timer">00:00</div>
+    </div>
+    <div id="controls">
+      <button id="mute" type="button">Mute</button>
+      <button id="camera" type="button" hidden>Camera off</button>
+      <button id="end" type="button">End</button>
+    </div>
+    <div id="error"></div>
+  </div>
+  <script>
+    (() => {
+      const post = (type, detail = '') => {
+        try { window.AndroidCallBridge.onEvent(type, String(detail || '')); } catch (_) {}
+      };
+      let phone = null;
+      let activeCall = null;
+      let stopping = false;
+      let connectedAt = 0;
+      let timerId = 0;
+      const remote = document.getElementById('remote');
+      const local = document.getElementById('local');
+      const stage = document.getElementById('stage');
+      const status = document.getElementById('status');
+      const timer = document.getElementById('timer');
+      const errorBox = document.getElementById('error');
+
+      const sdkReady = typeof AudioCodesUA === 'function' && typeof JsSIP !== 'undefined';
+      if (!sdkReady) {
+        post('error', 'AudioCodes WebRTC JavaScript bundle did not initialize');
+        return;
+      }
+      post('ready');
+
+      const setStatus = (value) => { status.textContent = value; };
+      const setError = (value) => {
+        errorBox.textContent = value;
+        errorBox.style.display = 'grid';
+        errorBox.style.placeItems = 'center';
+        setStatus('Call could not connect');
+      };
+      const updateTimer = () => {
+        if (!connectedAt) return;
+        const elapsed = Math.floor((Date.now() - connectedAt) / 1000);
+        timer.textContent = `${String(Math.floor(elapsed / 60)).padStart(2, '0')}:${String(elapsed % 60).padStart(2, '0')}`;
+      };
+
+      window.startAgentCall = async (input) => {
+        try {
+          stopping = false;
+          stage.className = input.callType === 'video' ? 'video' : 'audio';
+          document.getElementById('agent').textContent = input.agentName || 'Agent';
+          const cameraButton = document.getElementById('camera');
+          cameraButton.hidden = input.callType !== 'video';
+          setStatus('Connecting to call service…');
+
+          phone = new AudioCodesUA();
+          let resolveLogin;
+          let rejectLogin;
+          const loginPromise = new Promise((resolve, reject) => {
+            resolveLogin = resolve;
+            rejectLogin = reject;
+          });
+
+          phone.setServerConfig(input.addresses, input.domain, input.iceServers);
+          phone.setReconnectIntervals(2, 30);
+          phone.setRegisterExpires(600);
+          phone.setUseSessionTimer(false);
+          phone.setDtmfOptions(true, null, null);
+          phone.setBrowsersConstraints({
+            chrome: { audio: { echoCancellation: true } },
+            firefox: { audio: { echoCancellation: true } },
+            safari: { audio: { echoCancellation: true } },
+            ios_safari: { audio: { echoCancellation: true } }
+          });
+          phone.setEnableAddVideo(true);
+          phone.setModes({ ice_timeout_fix: 2000, chrome_rtp_timeout_fix: 13, ringing_header_mode: 'Allow-Events: talk,hold,conference' });
+          phone.setAccount(input.sipIdentity, input.sipIdentity, input.sipIdentity, input.sipIdentity);
+          phone.setListeners({
+            loginStateChanged: (_loggedIn, cause) => {
+              if (cause === 'connected') resolveLogin();
+              if (cause === 'login failed') rejectLogin(new Error('AudioCodes login failed'));
+            },
+            outgoingCallProgress: () => setStatus('Calling agent…'),
+            callConfirmed: () => {
+              connectedAt = Date.now();
+              setStatus('Connected');
+              timerId = window.setInterval(updateTimer, 250);
+              post('connected');
+            },
+            callTerminated: (_call, _message, cause) => {
+              activeCall = null;
+              if (timerId) window.clearInterval(timerId);
+              timerId = 0;
+              if (!stopping) post('terminated', cause || 'Call ended');
+            },
+            callShowStreams: (_call, localStream, remoteStream) => {
+              if (localStream instanceof MediaStream) local.srcObject = localStream;
+              if (remoteStream instanceof MediaStream) {
+                remote.srcObject = remoteStream;
+                remote.volume = 1;
+                remote.play().catch(() => {});
+              }
+            },
+            incomingCall: (call) => call && call.reject && call.reject(),
+            callHoldStateChanged: () => {},
+            callScreenSharingEnded: () => {}
+          });
+
+          phone.init(true);
+          await Promise.race([
+            loginPromise,
+            new Promise((_resolve, reject) => window.setTimeout(() => reject(new Error('Timed out connecting to the Contact Center SBC')), 15000))
+          ]);
+          setStatus('Calling agent…');
+          activeCall = input.callType === 'video'
+            ? phone.call(phone.VIDEO, input.target, input.headers || [])
+            : phone.call(phone.AUDIO, input.target, input.headers || []);
+        } catch (error) {
+          setError(error && error.message ? error.message : String(error));
+          post('error', error && error.message ? error.message : String(error));
+        }
+      };
+
+      window.stopAgentCall = () => {
+        stopping = true;
+        if (timerId) window.clearInterval(timerId);
+        timerId = 0;
+        try { if (activeCall && activeCall.terminate) activeCall.terminate(); } catch (_) {}
+        try { if (phone && phone.logout) phone.logout(); } catch (_) {}
+        try { if (phone && phone.deinit) phone.deinit(); } catch (_) {}
+        if (remote.srcObject) remote.srcObject.getTracks().forEach((track) => track.stop());
+        if (local.srcObject) local.srcObject.getTracks().forEach((track) => track.stop());
+        remote.srcObject = null;
+        local.srcObject = null;
+        activeCall = null;
+        phone = null;
+      };
+
+      document.getElementById('mute').addEventListener('click', (event) => {
+        const muted = event.currentTarget.dataset.muted !== 'true';
+        event.currentTarget.dataset.muted = String(muted);
+        event.currentTarget.textContent = muted ? 'Unmute' : 'Mute';
+        if (activeCall && activeCall.muteAudio) activeCall.muteAudio(muted);
+      });
+      document.getElementById('camera').addEventListener('click', (event) => {
+        const enabled = event.currentTarget.dataset.enabled !== 'true';
+        event.currentTarget.dataset.enabled = String(enabled);
+        event.currentTarget.textContent = enabled ? 'Camera off' : 'Camera on';
+        if (activeCall && activeCall.muteVideo) activeCall.muteVideo(!enabled);
+      });
+      document.getElementById('end').addEventListener('click', () => post('endCall'));
+    })();
+  </script>
+</body>
+</html>

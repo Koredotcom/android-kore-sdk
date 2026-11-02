@@ -107,7 +107,7 @@ public class SipAccount {
                 ", domain='" + domain + '\'' +
                 ", transport=" + transport +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", password='[REDACTED]'" +
                 ", displayName='" + displayName + '\'' +
                 '}';
     }

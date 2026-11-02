@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -70,7 +71,8 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
     View addVideoButton;
     boolean dtmfEnabled = false;
     boolean guiInitialized;
-    int count = 0;
+    private boolean callTimerRunning;
+    private long callTimerStartedAt;
     WebRTCAudioManager ac;
     WebRTCAudioManager.AudioRoute route = WebRTCAudioManager.AudioRoute.EARPIECE;
     final Handler timerHandler = new Handler();
@@ -406,16 +408,30 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         runnable = new Runnable() {
             @Override
             public void run() {
-                count++;
-                int hours = count / 3600;
-                int minutes = (count % 3600) / 60;
-                int secs = count % 60;
+                if (!callTimerRunning) return;
+
+                // Remove any duplicate callback already queued for this Runnable.
+                timerHandler.removeCallbacks(this);
+                long elapsedMillis = Math.max(0L, SystemClock.elapsedRealtime() - callTimerStartedAt);
+                long elapsedSeconds = elapsedMillis / 1000L;
+                long hours = elapsedSeconds / 3600L;
+                long minutes = (elapsedSeconds % 3600L) / 60L;
+                long secs = elapsedSeconds % 60L;
                 String time = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, secs);
                 contactNameTextView.setText(time);
 
-                timerHandler.postDelayed(this, 1000);
+                long delayToNextSecond = 1000L - (elapsedMillis % 1000L);
+                timerHandler.postDelayed(this, delayToNextSecond);
             }
         };
+    }
+
+    private void startCallTimer() {
+        if (callTimerRunning || runnable == null) return;
+        callTimerRunning = true;
+        callTimerStartedAt = SystemClock.elapsedRealtime();
+        timerHandler.removeCallbacks(runnable);
+        timerHandler.post(runnable);
     }
 
     void setHold(boolean hold) {
@@ -481,8 +497,7 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
                 callStateTextView.setText(callState);
 
                 if (session.getCallState().toString().equalsIgnoreCase(BundleConstants.CONNECTED)) {
-                    if (count == 0)
-                        timerHandler.postDelayed(runnable, 1000);
+                    startCallTimer();
                 }
 
                 //List<NativeContactObject> nativeContactObjectList = NativeContactUtils.getContactListByPhoneNumber(session.getRemoteNumber().getUserName());
@@ -584,8 +599,8 @@ public class CallActivity extends BaseAppCompatActivity implements AudioCodesSes
         unregisterReceiver(callTerminateReceiver);
         //CallBackHandler.unregisterCallStateChanged(callStateChanged);
         CallBackHandler.unregisterLoginStateChange(loginStateChanged);
+        callTimerRunning = false;
         timerHandler.removeCallbacks(runnable);
-        count = 0;
     }
 
     @Override
