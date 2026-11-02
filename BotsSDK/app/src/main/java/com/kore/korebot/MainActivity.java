@@ -1,7 +1,5 @@
 package com.kore.korebot;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +11,6 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
-import com.kore.korebot.customfragment.CustomHeaderFragment;
 import com.kore.korebot.customtemplates.LinkTemplateHolder;
 
 import java.io.BufferedReader;
@@ -21,7 +18,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +27,6 @@ import kore.botssdk.korevg.webrtcclient.Permissions.PermissionManager;
 import kore.botssdk.korevg.webrtcclient.Permissions.PermissionRequest;
 import kore.botssdk.listener.BotSocketConnectionManager;
 import kore.botssdk.models.BotBrandingModel;
-import kore.botssdk.models.BotResponse;
 import kore.botssdk.net.RestResponse;
 import kore.botssdk.net.SDKConfig;
 import kore.botssdk.net.SDKConfiguration;
