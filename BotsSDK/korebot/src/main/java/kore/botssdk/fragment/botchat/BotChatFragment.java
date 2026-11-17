@@ -154,7 +154,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
             transaction.commitNow();
             if (botHeaderFragment.getMinimize() != null) {
                 botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
-                botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
+                botHeaderFragment.getMinimize().setOnClickListener(v -> botHeaderFragment.handleCloseClick(this::showCloseAlert));
             }
         }
 
@@ -219,7 +219,7 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
                 {
                     botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
                     botHeaderFragment.getMinimize().setOnClickListener(v -> {
-                        showCloseAlert();
+                        botHeaderFragment.handleCloseClick(this::showCloseAlert);
                     });
                 }
 
@@ -248,7 +248,10 @@ public class BotChatFragment extends Fragment implements BotChatViewListener, Co
     public void setIsAgentConnected(boolean isAgentConnected) {
         if (isAgentConnected) agentCloseEventSent = false;
         isAgentTransfer = isAgentConnected;
-        baseFooterFragment.setIsAgentConnected(isAgentConnected);
+        if (baseFooterFragment != null && baseFooterFragment.isAdded())
+            baseFooterFragment.setIsAgentConnected(isAgentConnected);
+        if (botHeaderFragment != null && botHeaderFragment.isAdded())
+            botHeaderFragment.onAgentConnected(isAgentConnected);
     }
 
     public void setActivityCloseListener(BotChatCloseListener activityCloseListener) {

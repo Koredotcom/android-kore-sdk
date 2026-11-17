@@ -94,12 +94,12 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
                 flags[i] = strBuilder.getSpanFlags(existingSpans[i]);
             }
 
-            // 2. Add links for plain text URLs and optionally phone numbers.
-            int linkifyMask = Linkify.WEB_URLS;
-            if (SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers) {
-                linkifyMask |= Linkify.PHONE_NUMBERS;
+            Linkify.addLinks(strBuilder, Linkify.WEB_URLS);
+
+            if(SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers) {
+                // 2. Add links for plain text URLs and Phone numbers
+                Linkify.addLinks(strBuilder, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
             }
-            Linkify.addLinks(strBuilder, linkifyMask);
 
             // 3. Re-apply all original spans to ensure NO formatting is lost
             for (int i = 0; i < existingSpans.length; i++) {

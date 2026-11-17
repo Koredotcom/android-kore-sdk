@@ -30,7 +30,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.gson.Gson;
 
@@ -58,7 +57,6 @@ import kore.botssdk.models.BotRequest;
 import kore.botssdk.models.BotResponse;
 import kore.botssdk.models.BrandingModel;
 import kore.botssdk.models.NotificationModel;
-import kore.botssdk.models.UserInfo;
 import kore.botssdk.net.BrandingRestBuilder;
 import kore.botssdk.net.RestBuilder;
 import kore.botssdk.net.SDKConfig;
@@ -180,13 +178,14 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
         mViewModel.connectToBot(sharedPreferences.getBoolean(BundleConstants.IS_RECONNECT, false));
 
-        LocalBroadcastManager.getInstance(this).registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT), RECEIVER_NOT_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT), RECEIVER_EXPORTED);
             registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR), RECEIVER_EXPORTED);
             registerReceiver(minimizeBotChatReceiver, new IntentFilter(MINIMIZE_CHAT_BOT_EVENT), RECEIVER_EXPORTED);
         } else {
+            registerReceiver(onDestroyReceiver, new IntentFilter(BundleConstants.DESTROY_EVENT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(CLOSE_CHAT_BOT_EVENT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(BOT_RECONNECT));
             registerReceiver(closeBotChatReceiver, new IntentFilter(CHAT_CLEAR));
@@ -239,7 +238,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
             transaction.commitNow();
             if (botHeaderFragment.getMinimize() != null) {
                 botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
-                botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
+                botHeaderFragment.getMinimize().setOnClickListener(v -> botHeaderFragment.handleCloseClick(this::showCloseAlert));
             }
         }
 
@@ -290,7 +289,7 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
                 if (botHeaderFragment.getMinimize() != null) {
                     botHeaderFragment.getMinimize().setVisibility(SDKConfig.isIsShowHeaderMinimize() ? View.VISIBLE : View.GONE);
-                    botHeaderFragment.getMinimize().setOnClickListener(v -> showCloseAlert());
+                    botHeaderFragment.getMinimize().setOnClickListener(v -> botHeaderFragment.handleCloseClick(this::showCloseAlert));
                 }
 
             }
@@ -579,7 +578,11 @@ public class NewBotChatActivity extends BotAppCompactActivity implements BotChat
 
     @Override
     protected void onDestroy() {
-        unregisterReceiver(closeBotChatReceiver);
+        try {
+            unregisterReceiver(onDestroyReceiver);
+            unregisterReceiver(closeBotChatReceiver);
+            unregisterReceiver(minimizeBotChatReceiver);
+        } catch (Exception ignored) {}
         if (isAgentTransfer && botClient != null && !agentCloseEventSent) {
             botClient.sendAgentCloseMessage("", SDKConfiguration.Client.bot_name, SDKConfiguration.Client.bot_id);
             agentCloseEventSent = true;

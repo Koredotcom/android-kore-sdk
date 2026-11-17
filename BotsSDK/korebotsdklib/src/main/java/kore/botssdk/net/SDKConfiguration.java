@@ -312,7 +312,7 @@ public class SDKConfiguration {
         /** Convert supported emoji shortcuts in bot text to emoji characters. */
         public static boolean isEmojiShortcutEnable = false;
         /** Automatically link phone numbers in chat messages. Defaults to true for backward compatibility. */
-        public static boolean linkifyPhoneNumbers = true;
+        public static boolean linkifyPhoneNumbers = false;
         /** Stored typing-indicator timeout in milliseconds; populated by branding, not read by the current renderer. */
         public static int typing_indicator_timeout = 10000;
         /** Allow the SDK to retrieve previous chat messages. */
