@@ -15,12 +15,14 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Patterns;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -398,8 +400,10 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 flags[i] = strBuilder.getSpanFlags(existingSpans[i]);
             }
 
-            // 2. Add links for plain text URLs and Phone numbers
-            Linkify.addLinks(strBuilder, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
+            Linkify.addLinks(strBuilder, Linkify.WEB_URLS);
+            if (SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers) {
+                Linkify.addLinks(strBuilder, Patterns.PHONE, "tel:");
+            }
 
             // 3. Re-apply all original spans to ensure NO formatting is lost
             for (int i = 0; i < existingSpans.length; i++) {
@@ -536,6 +540,13 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
         final String url = span.getURL();
         ClickableSpan clickable = new ClickableSpan() {
+            @Override
+            public void updateDrawState(@NonNull TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(true);
+            }
+
+            @Override
             public void onClick(@NonNull View view) {
                 if (url != null && url.startsWith("tel:")) {
                     try {
@@ -559,7 +570,13 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         if (textualContent != null && !textualContent.isEmpty()) {
             textualContent = unescapeHtml4(textualContent.trim());
             SpannableStringBuilder strBuilder = new SpannableStringBuilder(textualContent);
-            Linkify.addLinks(strBuilder, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
+
+            Linkify.addLinks(strBuilder, Linkify.WEB_URLS);
+
+            if(SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers) {
+                Linkify.addLinks(strBuilder, Patterns.PHONE, "tel:");
+            }
+
             URLSpan[] urls = strBuilder.getSpans(0, strBuilder.length(), URLSpan.class);
 
             for (URLSpan span : urls) {

@@ -9,14 +9,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.content.ContextCompat;
 
 import com.kore.korebot.R;
 
 import kore.botssdk.fragment.header.BaseHeaderFragment;
 import kore.botssdk.models.BrandingModel;
-import kore.botssdk.net.SDKConfig;
 
 public class CustomHeaderFragment extends BaseHeaderFragment {
     private View view;
@@ -57,19 +54,9 @@ public class CustomHeaderFragment extends BaseHeaderFragment {
 
         tvBotTitle.setText("Kore.ai Bot");
         ivHeaderClose.setOnClickListener(v -> {
-            if (SDKConfig.isAgentCloseConfirmationEnabled() && isHumanAgentConnected()) {
-                new AlertDialog.Builder(requireContext())
-                        .setMessage(kore.botssdk.R.string.agent_close_confirmation)
-                        .setCancelable(false)
-                        .setPositiveButton(kore.botssdk.R.string.yes,
-                                (dialog, which) -> sendAgentCloseEvent())
-                        .setNegativeButton(kore.botssdk.R.string.no,
-                                (dialog, which) -> dialog.dismiss())
-                        .show();
-            } else if (ivHeaderMinimize != null) {
-                // Reuse the SDK's normal close/minimize/cancel flow.
-                ivHeaderMinimize.performClick();
-            }
+            handleCloseClick(() -> {
+                if (ivHeaderMinimize != null) ivHeaderMinimize.performClick();
+            });
         });
 
         if (brandingModel != null) {

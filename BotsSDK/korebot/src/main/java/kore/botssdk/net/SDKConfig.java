@@ -54,7 +54,7 @@ public class SDKConfig {
         SDKConfiguration.Client.isWebHook = isWebHook;
     }
 
-    /** Enables the agent-close confirmation for custom chat-header close buttons. */
+    /** Enables agent-close confirmation on default and custom chat-header close buttons. */
     public static void setAgentCloseConfirmationEnabled(boolean enabled) {
         agentCloseConfirmationEnabled = enabled;
     }
@@ -173,5 +173,13 @@ public class SDKConfig {
 
     public static void setShowAnsweredByAI(boolean show) {
         SDKConfiguration.OverrideKoreConfig.showAnsweredByAI = show;
+    }
+
+    public static void setLinkifyPhoneNumbers(boolean enable) {
+        SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers = enable;
+    }
+
+    public static boolean isLinkifyPhoneNumbers() {
+        return SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers;
     }
 }
