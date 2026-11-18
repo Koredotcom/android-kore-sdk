@@ -174,4 +174,12 @@ public class SDKConfig {
     public static void setShowAnsweredByAI(boolean show) {
         SDKConfiguration.OverrideKoreConfig.showAnsweredByAI = show;
     }
+
+    public static void setLinkifyPhoneNumbers(boolean enable) {
+        SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers = enable;
+    }
+
+    public static boolean isLinkifyPhoneNumbers() {
+        return SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers;
+    }
 }

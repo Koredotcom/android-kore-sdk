@@ -92,6 +92,9 @@ public class MainActivity extends AppCompatActivity implements BotStatusListener
         //Set the listener to the SDK to get the Bot callbacks to the parent application
         SDKConfig.setBotStatusUpdateListener(this);
 
+//        //Disable phone number linkification
+//        SDKConfig.setLinkifyPhoneNumbers(false);
+
         Button launchBotBtn = findViewById(R.id.launchBotBtn);
         launchBotBtn.setOnClickListener(view -> launchBotChatActivity());
     }

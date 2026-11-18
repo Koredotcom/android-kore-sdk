@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.text.SpannableStringBuilder;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -95,10 +96,8 @@ public class RequestTextTemplateHolder extends BaseViewHolder {
             }
 
             Linkify.addLinks(strBuilder, Linkify.WEB_URLS);
-
-            if(SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers) {
-                // 2. Add links for plain text URLs and Phone numbers
-                Linkify.addLinks(strBuilder, Linkify.WEB_URLS | Linkify.PHONE_NUMBERS);
+            if (SDKConfiguration.OverrideKoreConfig.linkifyPhoneNumbers) {
+                Linkify.addLinks(strBuilder, Patterns.PHONE, "tel:");
             }
 
             // 3. Re-apply all original spans to ensure NO formatting is lost
