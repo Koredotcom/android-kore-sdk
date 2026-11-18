@@ -22,7 +22,7 @@ public class SDKConfig {
     private static BaseFooterFragment customFooterFragment = null;
     private static BaseHeaderFragment customHeaderFragment = null;
     private static boolean isShowActionBar = true;
-    private static boolean agentCloseConfirmationEnabled = true;
+    private static boolean agentCloseConfirmationEnabled = false;
 
     public static void setFontFamily(Typeface regularTf,
                                      Typeface semiBoldTf,
